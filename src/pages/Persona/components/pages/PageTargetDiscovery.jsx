@@ -1,10 +1,12 @@
 //타겟 디스커버리리
 import React, { useEffect, useState, useRef } from "react";
 import styled, { css } from "styled-components";
-import { useAtom } from "jotai";
+import { useAtom } from "jotai";  
 import { palette } from "../../../../assets/styles/Palette";
+import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
+
 import {
   ButtonGroup,
   Button,
@@ -49,6 +51,14 @@ import {
   ListRowWrap,
   ListRowItem,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
+import { 
+  IS_LOGGED_IN,
+  TARGET_DISCOVERY_INFO,
+  TARGET_DISCOVERY_PERSONA,
+  SELECTED_TARGET_DISCOVERY_PERSONA,
+  TARGET_DISCOVERY_SCENARIO,
+  TARGET_DISCOVERY_FINAL_REPORT
+} from "../../../../pages/AtomStates";
 import images from "../../../../assets/styles/Images";
 import {
   H4,
@@ -59,8 +69,18 @@ import {
   Body2,
   Body3,
 } from "../../../../assets/styles/Typography";
+import MoleculeToolPersonaCard from "../molecules/MoleculeToolPersonaCard";
+import { InterviewXTargetDiscoveryPersonaRequest, InterviewXTargetDiscoveryScenarioRequest, InterviewXTargetDiscoveryFinalReportRequest } from "../../../../utils/indexedDB";
+
 
 const PageTargetDiscovery = () => {
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(TARGET_DISCOVERY_INFO);
+  const [targetDiscoveryPersona, setTargetDiscoveryPersona] = useAtom(TARGET_DISCOVERY_PERSONA);
+  const [selectedTargetDiscoveryPersona, setSelectedTargetDiscoveryPersona] = useAtom(SELECTED_TARGET_DISCOVERY_PERSONA);
+  const [targetDiscoveryScenario, setTargetDiscoveryScenario] = useAtom(TARGET_DISCOVERY_SCENARIO);
+  const [targetDiscoveryFinalReport, setTargetDiscoveryFinalReport] = useAtom(TARGET_DISCOVERY_FINAL_REPORT);
+
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupMore, setShowPopupMore] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -86,7 +106,9 @@ const PageTargetDiscovery = () => {
     personaInfo: "",
     personaScenario: "",
   });
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [specificSituation, setSpecificSituation] = useState("");
+  const [processedScenarios, setProcessedScenarios] = useState([]);
   const calculateDropDirection = () => {
     if (selectBoxRef.current) {
       const rect = selectBoxRef.current.getBoundingClientRect();
@@ -135,6 +157,7 @@ const PageTargetDiscovery = () => {
     });
   };
 
+
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
     setCompletedSteps([...completedSteps, currentStep]);
@@ -159,6 +182,400 @@ const PageTargetDiscovery = () => {
   const handleTargetCustomerChange = (e) => {
     setTargetCustomer(e.target.value);
   };
+
+  const handleSubmitBusinessInfo = async () => {
+    try {
+      setIsLoading(true);
+
+      const businessData = {
+        type: "ix_target_discovery_persona",
+        business: businessDescription,
+        target: targetCustomer,
+        specific_situation: specificSituation,
+        country: selectedPurpose
+      };
+
+      // Validation logic
+    if (!businessData.business || !businessData.target) {
+      setShowPopupError(true);
+      return;
+    }
+
+
+      // API 호출 대신 더미 데이터 사용
+    const dummyResponse = { 
+      "target_discovery_persona": [
+        {
+            "title": "새로운 집 인테리어 계획 중인 젊은 부부",
+            "content": {
+                "who": "30대 초반, 젊은 부부, 직장인, 신혼집 인테리어에 관심이 많고, 디자인 감각이 뛰어남, 합리적인 가격대의 고급 인테리어를 선호함",
+                "when": "새로운 집으로 이사하기 전, 인테리어 디자인 및 제품 구매 단계",
+                "where": "새로운 집, 온라인, 인테리어 매장",
+                "what": "집 전체의 통일된 인테리어 디자인, 고품질의 가구 및 소품, 합리적인 가격, 디자인 트렌드 반영",
+                "how": "온라인 플랫폼에서 디자인 영감을 얻고, 제품을 비교하며 구매, 커뮤니티 활동 참여를 통해 정보 공유 및 조언 획득",
+                "why": "최신 트렌드를 반영한 아름답고 실용적인 공간을 만들고 싶어함.  전문가의 도움 없이 직접 인테리어를 계획하고 시공하는 것을 선호함",
+                "keywords": [
+                    "신혼집 인테리어",
+                    "DIY 인테리어", 
+                    "합리적 가격" 
+                ]
+            }
+        },
+        {
+            "title": "인테리어에 투자하는 싱글 남성",
+            "content": {
+                "who": "30대 중반, 싱글 남성, 전문직 종사자, 높은 소득, 개인 취향이 뚜렷하고 고급 인테리어에 관심이 많음, 혼자 사는 공간을 개성있게 꾸미고 싶어함",
+                "when": "새로운 집으로 이사 후, 개인 공간을 꾸미기 위해",
+                "where": "새로운 집, 고급 인테리어 매장, 디자인 전시회",
+                "what": "개성이 드러나는 고급 인테리어, 수입 가구 및 소품, 나만의 공간을 위한 맞춤 디자인",
+                "how": "고급 인테리어 매장 직접 방문, 수입 제품 구매, 전문 디자이너와 상담",
+                "why": "고품격 인테리어를 통해 삶의 질을 높이고 싶어함. 자신만의 개성을 담은 공간을 만들고 싶어함",
+                "keywords": [
+                    "고급 인테리어",
+                    "맞춤 디자인",
+                    "개성 표현"
+                ]
+            }
+        },
+        {
+            "title": "집꾸미기에 열정적인 젊은 여성",
+            "content": {
+                "who": "20대 후반, 젊은 여성, 직장인, 인테리어에 대한 높은 관심과 지식, 개성 있는 공간을 추구하며, SNS 활동 활발함",
+                "when": "새로운 집으로 이사 후,  자신만의 감각적인 공간을 연출하고 싶을 때",
+                "where": "새로운 집, 온라인 쇼핑몰,  인테리어 소품샵",
+                "what": "트렌디한 인테리어 디자인, 감각적인 소품, 나만의 스타일을 반영한 공간 연출, 인테리어 정보 공유",
+                "how": "온라인 플랫폼을 통해 디자인 영감을 얻고, 다양한 제품을 비교하며 구매,  SNS에 인테리어 사진을 공유하며 정보를 얻고 교류함",
+                "why": "자신의 개성과 취향을 반영한 감각적인 공간을 만들고,  SNS를 통해 인테리어 경험을 공유하고 싶어함",
+                "keywords": [
+                    "감각적 인테리어",
+                    "SNS 공유",
+                    "개성 표현"
+                ]
+            }
+        },
+        {
+            "title": "반려동물과 함께 사는 30대 여성",
+            "content": {
+                "who": "30대 후반, 여성, 직장인, 반려동물과 함께 생활, 반려동물 친화적인 인테리어에 관심이 많음",
+                "when": "새로운 집으로 이사 후, 반려동물과 편안하게 생활할 수 있는 공간을 만들고 싶을 때",
+                "where": "새로운 집, 반려동물 용품점, 온라인 쇼핑몰",
+                "what": "반려동물과 함께 생활하기에 안전하고 편리한 인테리어, 반려동물 가구 및 용품,  반려동물과 함께 즐길 수 있는 공간",
+                "how": "온라인 플랫폼을 통해 반려동물 친화적인 인테리어 정보를 얻고, 반려동물 용품을 구매, 커뮤니티 활동을 통해 정보를 얻음",
+                "why": "반려동물과 함께 행복하고 편안하게 생활할 수 있는 공간을 만들고 싶어함",
+                "keywords": [
+                    "반려동물 인테리어",
+                    "반려동물 가구",
+                    "동물 친화적"
+                ]
+            }
+        },
+        {
+            "title": "미니멀 라이프를 추구하는 젊은 남성",
+            "content": {
+                "who": "20대 후반, 남성, 직장인, 미니멀리즘 라이프스타일에 관심이 많음,  정돈된 공간을 선호함",
+                "when": "새로운 집으로 이사 후,  미니멀한 인테리어를 구축하고 싶을 때",
+                "where": "새로운 집,  미니멀리즘 가구 매장, 온라인 쇼핑몰",
+                "what": "깔끔하고 기능적인 미니멀 인테리어,  수납 공간 확보,  필요한 가구 및 소품만 구매",
+                "how": "온라인 플랫폼에서 미니멀 인테리어 정보를 얻고,  필요한 가구 및 소품만 구매",
+                "why": "정돈되고 깔끔한 공간에서 효율적으로 생활하고 싶어함",
+                "keywords": [
+                    "미니멀 인테리어",
+                    "수납 공간",
+                    "심플 디자인"
+                ]
+            }
+        },
+        {
+            "title": "홈 오피스를 꾸미는 재택근무자",
+            "content": {
+                "who": "30대 중반, 남성/여성, 재택근무자,  효율적인 업무 환경 조성에 관심이 많음",
+                "when": "새로운 집으로 이사 후,  집에서 업무를 볼 수 있는 효율적인 홈 오피스를 꾸미고 싶을 때",
+                "where": "새로운 집,  가구 매장, 사무용품 매장, 온라인 쇼핑몰",
+                "what": "업무 효율을 높이는 가구 및 소품,  넓은 작업 공간,  쾌적한 업무 환경",
+                "how": "온라인 플랫폼과 오프라인 매장을 통해  홈 오피스 가구 및 소품 구매,  인테리어 정보를 얻음",
+                "why": "집에서도 효율적으로 업무를 볼 수 있는 공간을 만들고 싶어함",
+                "keywords": [
+                    "홈 오피스",
+                    "업무 효율",
+                    "쾌적한 환경"
+                ]
+            }
+        },
+        {
+            "title": "취미 공간을 꾸미는 40대 남성",
+            "content": {
+                "who": "40대 초반, 남성,  자신만의 취미 공간을 갖고 싶어하며,  취미 활동에 필요한 공간을 꾸미고 싶어함",
+                "when": "새로운 집으로 이사 후, 취미 활동을 위한 공간을 마련하고 싶을 때",
+                "where": "새로운 집, 취미 용품 매장, 온라인 쇼핑몰",
+                "what": "취미 활동에 필요한 가구 및 소품,  취미 활동에 집중할 수 있는 공간",
+                "how": "온라인 플랫폼과 오프라인 매장을 통해 취미 활동에 필요한 물품 구매",
+                "why": "자신의 취미 생활을 위한 전용 공간을 마련하고 싶어함",
+                "keywords": [
+                    "취미 공간",
+                    "취미 활동",
+                    "전용 공간"
+                ]
+            }
+        },
+        {
+            "title": "가족과 함께하는 공간을 중시하는 40대 부부",
+            "content": {
+                "who": "40대 중반, 부부, 자녀 1명 이상,  가족 구성원 모두가 편안하게 생활할 수 있는 공간을 중요하게 생각함",
+                "when": "새로운 집으로 이사 후,  가족 구성원 모두를 위한 공간을 만들고 싶을 때",
+                "where": "새로운 집, 가구 매장, 온라인 쇼핑몰",
+                "what": "넓고 편안한 거실,  아이들을 위한 놀이 공간,  가족 구성원 모두가 편하게 사용할 수 있는 가구 및 소품",
+                "how": "온라인 플랫폼과 오프라인 매장을 통해  가족 구성원을 위한 가구 및 소품 구매",
+                "why": "가족 구성원 모두가 편안하고 행복하게 생활할 수 있는 공간을 만들고 싶어함",
+                "keywords": [
+                    "가족 공간",
+                    "가족 친화적",
+                    "편안한 공간"
+                ]
+            }
+        },
+        {
+            "title": "집에서 독서를 즐기는 50대 남성",
+            "content": {
+                "who": "50대 후반, 남성, 은퇴 후 여유 시간이 많아짐,  독서를 좋아하며,  조용하고 편안한 독서 공간을 원함",
+                "when": "새로운 집으로 이사 후,  독서를 위한 편안한 공간을 만들고 싶을 때",
+                "where": "새로운 집, 서점, 온라인 쇼핑몰",
+                "what": "조용하고 편안한 독서 공간,  편안한 의자와 조명,  책장",
+                "how": "온라인 플랫폼과 오프라인 매장을 통해 독서 공간을 위한 가구 및 소품 구매",
+                "why": "조용하고 편안한 공간에서 독서를 즐기고 싶어함",
+                "keywords": [
+                    "독서 공간",
+                    "조용한 분위기",
+                    "편안함"
+                ]
+            }
+        },
+        {
+            "title": "홈트레이닝 공간을 꾸미는 건강을 중시하는 20대 여성",
+            "content": {
+                "who": "20대 중반, 여성,  건강을 중시하고,  집에서 운동을 하는 것을 좋아함",
+                "when": "새로운 집으로 이사 후,  홈트레이닝을 위한 공간을 만들고 싶을 때",
+                "where": "새로운 집,  운동 용품 매장, 온라인 쇼핑몰",
+                "what": "운동 기구,  운동을 위한 충분한 공간,  쾌적한 운동 환경",
+                "how": "온라인 플랫폼과 오프라인 매장을 통해  홈트레이닝에 필요한 운동 기구 및 용품 구매",
+                "why": "집에서 편리하게 운동하고 싶어함",
+                "keywords": [
+                    "홈트레이닝",
+                    "운동 공간",
+                    "건강 관리"
+                ]
+            }
+        }
+    ]
+    };
+    setTargetDiscoveryPersona(dummyResponse.target_discovery_persona);
+
+    
+    const response = await InterviewXTargetDiscoveryPersonaRequest(businessData,isLoggedIn);
+
+    if (!response?.target_discovery_persona || 
+      !Array.isArray(response.target_discovery_persona) ||
+       response.target_discovery_persona.length === 0) {
+      setShowPopupError(true);
+      return;
+    }
+
+    // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
+    setTargetDiscoveryPersona(response.target_discovery_persona || []);
+    setTargetDiscoveryInfo(businessData);
+  
+      // API 호출 성공시 다음 단계로 이동
+      handleNextStep(1);
+      setIsLoading(false);
+      
+    } catch (error) {
+      console.error('Error submitting business info:', error);
+      setShowPopupError(true);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowPopupError(true);
+            break;
+          case 504:
+            setShowPopupError(true);
+            break;
+          default:
+            setShowPopupError(true);
+            break;
+        }
+      } else {
+        setShowPopupError(true);
+      }
+    } finally {
+          setIsLoading(false);
+        }
+      };
+
+  const [loadingPersonas, setLoadingPersonas] = useState({});
+  const handleSubmitPersonas = async () => {
+    handleNextStep(2);
+    try {
+      // setIsLoading(true);
+
+      const scenarioResults = [];  // 각 페르소나의 시나리오를 저장할 배열
+      
+      console.log("selectedPersonas", selectedPersonas);
+      const selectedPersonaData = targetDiscoveryPersona.filter((persona, index) => 
+        selectedPersonas.includes(index)
+      );
+      setSelectedTargetDiscoveryPersona(selectedPersonaData);
+      console.log("selectedPersonaData", selectedPersonaData);
+  
+    //  각 페르소나에 대해 순차적으로 API 호출
+    for (const persona of selectedPersonaData) {
+
+      const isDuplicate = selectedTargetDiscoveryPersona.some(
+        existingPersona => existingPersona.title === persona.title
+      );
+
+     const dummyScenarios = {
+      target_discovery_scenario: {
+        potential_customer_info: {
+          gender: "여성",
+          age: "20",
+          main_use_purpose: [
+            "신혼집 인테리어 디자인 영감 얻기",
+            "합리적인 가격의 고품질 인테리어 제품 구매",
+            "다양한 인테리어 스타일 비교 및 선택",
+            "DIY 인테리어 정보 공유 및 조언 얻기"
+          ],
+          pain_points: [
+            "원하는 스타일의 제품을 찾기 어려움", 
+            "제품 가격 비교의 어려움",
+            "신뢰할 수 있는 인테리어 정보 부족",
+            "DIY 인테리어 관련 정보 부족 및 전문가 도움 접근 어려움",
+            "온라인 플랫폼에서의 제품 실물 확인 어려움"
+          ]
+        },
+        usage_scenario: {
+          description: "30대 초반 직장인인 수진(가명)씨와 남편은...",
+          key_sentence: "신뢰할 수 있는 정보와 전문가 도움, 실제 제품 확인이 중요하다."
+        }
+      }
+    };
+
+    // setLoadingPersonas(prev => ({
+    //   ...prev,
+    //   [persona.title]: true
+    // }));
+
+    // const isDuplicate = selectedTargetDiscoveryPersona.some(
+    //   existingPersona => existingPersona.title === persona.title
+    // );
+
+    // // 중복이 아닌 경우에만 처리
+    // if (!isDuplicate) {
+    //   const apiRequestData = {
+    //     type: "ix_target_discovery_persona",
+    //     business: targetDiscoveryInfo.business,
+    //     target_discovery_persona: persona,
+    //     specific_situation: targetDiscoveryInfo.specific_situation,
+    //     country: targetDiscoveryInfo.country
+    //   };
+
+    //   console.log("Current persona request:", apiRequestData);
+      
+    //   // API 호출
+    //   // const response = await InterviewXTargetDiscoveryScenarioRequest(apiRequestData,isLoggedIn);
+
+  //    // 응답 데이터 유효성 검사
+  //    if (!response?.target_discovery_scenario?.potential_customer_info || 
+  //     !response?.target_discovery_scenario?.usage_scenario) {
+  //   setShowPopupError(true);
+  //   return;
+  // }
+
+
+     // 이전 결과를 유지하면서 새로운 결과 추가
+    //  setTargetDiscoveryScenario(prev => [...prev, response?.target_discovery_scenario]);
+
+    
+      // 처리가 완료된 페르소나의 로딩 상태를 false로 설정
+    //   setLoadingPersonas(prev => ({
+    //     ...prev,
+    //     [persona.title]: false
+    //   }));
+    // }
+    
+
+    if (!isDuplicate) {
+  
+    setTargetDiscoveryScenario(dummyScenarios.target_discovery_scenario);
+    // setProcessedScenarios(dummyScenarios.target_discovery_scenario);
+    }
+
+
+    }
+ 
+    } catch (error) {
+      console.error('Error submitting personas:', error);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowPopupError(true);
+            break;
+          case 504:
+            setShowPopupError(true);
+            break;
+          default:
+            setShowPopupError(true);
+            break;
+        }
+      } else {
+        setShowPopupError(true);
+      }
+    } finally {
+          setIsLoading(false);
+        }
+      };
+  
+
+  const handleSubmitScenario = async () => {
+    try {
+      // setIsLoading(true);
+      
+      // 선택된 페르소나와 시나리오 데이터 구성
+      // const scenarioData = {
+      //   type: "ix_target_discovery_persona"
+      //   target: targetDiscoveryInfo.target,
+      //   target_discovery_persona: selectedTargetDiscoveryPersona,
+      //   target_discovery_scenario: targetDiscoveryScenario
+      // };
+
+      // console.log("Submitting scenario data:", scenarioData);
+
+      // API 호출 로직이 들어갈 자리
+      // const response = await InterviewXTargetDiscoveryFinalReportRequest(scenarioData,isLoggedIn);
+      // setTargetDiscoveryFinalReport(response.target_discovery_final_report);
+
+      setIsLoading(false);
+      handleNextStep(3);
+
+      } catch (error) {
+        console.error('Error submitting scenario:', error);
+        if (error.response) {
+          switch (error.response.status) {
+            case 500:
+              setShowPopupError(true);
+              break;
+            case 504:
+              setShowPopupError(true);
+              break;
+            default:
+              setShowPopupError(true);
+              break;
+          }
+        } else {
+          setShowPopupError(true);
+        }
+      } finally {
+            setIsLoading(false);
+          }
+        };
 
   return (
     <>
@@ -215,150 +632,245 @@ const PageTargetDiscovery = () => {
 
             {activeTab === 1 && (
               <TabContent5>
-                <div className="title">
-                  <H3 color="gray800">Find Your Potential Customers</H3>
-                  <Body3 color="gray800">혹시 놓치고 있는 고객은 없을까요? 잠재력있는 고객을 체계적으로 확인해보세요 </Body3>
-                </div>
-
-                <div className="content">
-                  <TabContent5Item required>
+                {isLoading ? (
+                  <div style={{ 
+                    width: "100%", 
+                    display: "flex", 
+                    justifyContent: "center",
+                    minHeight: "200px",
+                    alignItems: "center"
+                  }}>
+                    <AtomPersonaLoader message="잠재 고객을 분석하고 있어요" />
+                  </div>
+                ) : (
+                  <>
                     <div className="title">
-                      <Body1 color="gray700">비즈니스 설명</Body1>
-                      <Body1 color="red">*</Body1>
+                      <H3 color="gray800">Find Your Potential Customers</H3>
+                      <Body3 color="gray800">혹시 놓치고 있는 고객은 없을까요? 잠재력있는 고객을 체계적으로 확인해보세요 </Body3>
                     </div>
-                    <FormBox Large>
-                      <CustomTextarea 
-                        Edit 
-                        rows={4} 
-                        placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)" 
-                        onChange={handleBusinessDescriptionChange}
-                        value={businessDescription}
-                        maxLength={150}
-                        status="valid" 
-                      />
-                      <Body2 color="gray300" align="right">
-                        {businessDescription.length} / 150
-                      </Body2>
-                    </FormBox>
-                  </TabContent5Item>
 
-                  <TabContent5Item required>
-                    <div className="title">
-                      <Body1 color="gray700">타겟 고객</Body1>
-                      <Body1 color="red">*</Body1>
-                    </div>
-                    <CustomInput
-                      type="text"
-                      placeholder="핵심 타겟 고객 군을 작성해주세요 (예: 20대 여성 등)"
-                      value={targetCustomer}
-                      onChange={handleTargetCustomerChange}
-                    />
-                  </TabContent5Item>
+                    <div className="content">
+                      <TabContent5Item required>
+                        <div className="title">
+                          <Body1 color="gray700">비즈니스 설명</Body1>
+                          <Body1 color="red">*</Body1>
+                        </div>
+                        <FormBox Large>
+                          <CustomTextarea 
+                            Edit 
+                            rows={4} 
+                            placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)" 
+                            onChange={handleBusinessDescriptionChange}
+                            value={businessDescription}
+                            maxLength={150}
+                            status="valid" 
+                          />
+                          <Body2 color="gray300" align="right">
+                            {businessDescription.length} / 150
+                          </Body2>
+                        </FormBox>
+                      </TabContent5Item>
 
-                  <TabContent5Item>
-                    <div className="title">
-                      <Body1 color="gray700">분석하고자 하는 특정 상황</Body1>
-                    </div>
-                    <CustomInput
-                      type="text"
-                      placeholder="특별히 분석하고자 하는 특정 상황이 있으신 경우, 입력해주세요 (예: 전기자전거의 배터리가 없는 상황 등)"
-                    />
-                  </TabContent5Item>
-
-                  <TabContent5Item>
-                    <div className="title">
-                      <Body1 color="gray700">타겟 국가</Body1>
-                    </div>
-                    
-                    <SelectBox ref={selectBoxRef}>
-                      <SelectBoxTitle onClick={handleSelectBoxClick}>
-                        <Body2 color={selectedPurpose ? "gray800" : "gray300"}>
-                          {selectedPurpose ||
-                            "특정 타겟 국가가 있는 경우 선택해주세요"}
-                        </Body2>
-                        <images.ChevronDown
-                          width="24px"
-                          height="24px"
-                          color={palette.gray500}
-                          style={{
-                            transform: isSelectBoxOpen
-                              ? "rotate(180deg)"
-                              : "rotate(0deg)",
-                            transition: "transform 0.3s ease",
-                          }}
+                      <TabContent5Item required>
+                        <div className="title">
+                          <Body1 color="gray700">타겟 고객</Body1>
+                          <Body1 color="red">*</Body1>
+                        </div>
+                        <CustomInput
+                          type="text"
+                          placeholder="핵심 타겟 고객 군을 작성해주세요 (예: 20대 여성 등)"
+                          value={targetCustomer}
+                          onChange={handleTargetCustomerChange}
                         />
-                      </SelectBoxTitle>
+                      </TabContent5Item>
 
-                      {isSelectBoxOpen && (
-                        <SelectBoxList dropUp={dropUp}>
-                          <SelectBoxItem
-                            onClick={() => handlePurposeSelect("대한민국")}
-                          >
-                            <Body2 color="gray700" align="left">
-                              대한민국
-                            </Body2>
-                          </SelectBoxItem>
-                          <SelectBoxItem
-                            onClick={() =>
-                              handlePurposeSelect("미국")
-                            }
-                          >
-                            <Body2 color="gray700" align="left">
-                              미국
-                            </Body2>
-                          </SelectBoxItem>
-                          <SelectBoxItem
-                            onClick={() =>
-                              handlePurposeSelect("중국")
-                            }
-                          >
-                            <Body2 color="gray700" align="left">
-                              중국
-                            </Body2>
-                          </SelectBoxItem>
-                          <SelectBoxItem
-                            onClick={() => handlePurposeSelect("일본")}
-                          >
-                            <Body2 color="gray700" align="left">
-                              일본
-                            </Body2>
-                          </SelectBoxItem>
-                          <SelectBoxItem
-                            onClick={() => handlePurposeSelect("베트남")}
-                          >
-                            <Body2 color="gray700" align="left">
-                              베트남
-                            </Body2>
-                          </SelectBoxItem>
-                        </SelectBoxList>
-                      )}
-                    </SelectBox>
-                  </TabContent5Item>
-                </div>
+                      <TabContent5Item>
+                        <div className="title">
+                          <Body1 color="gray700">분석하고자 하는 특정 상황</Body1>
+                        </div>
+                        <CustomInput
+                          type="text"
+                          placeholder="특별히 분석하고자 하는 특정 상황이 있으신 경우, 입력해주세요 (예: 전기자전거의 배터리가 없는 상황 등)"
+                          value={specificSituation}
+                          onChange={(e) => setSpecificSituation(e.target.value)}
+                        />
+                      </TabContent5Item>
 
-                <Button 
-                  Other 
-                  Primary 
-                  Fill 
-                  Round
-                  onClick={() => setShowPopupError(true)}
-                  disabled={!isRequiredFieldsFilled()}
-                >
-                    다음
-                </Button>
+                      <TabContent5Item>
+                        <div className="title">
+                          <Body1 color="gray700">타겟 국가</Body1>
+                        </div>
+                        
+                        <SelectBox ref={selectBoxRef}>
+                          <SelectBoxTitle onClick={handleSelectBoxClick}>
+                            <Body2 color={selectedPurpose ? "gray800" : "gray300"}>
+                              {selectedPurpose ||
+                                "특정 타겟 국가가 있는 경우 선택해주세요"}
+                            </Body2>
+                            <images.ChevronDown
+                              width="24px"
+                              height="24px"
+                              color={palette.gray500}
+                              style={{
+                                transform: isSelectBoxOpen
+                                  ? "rotate(180deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.3s ease",
+                              }}
+                            />
+                          </SelectBoxTitle>
+
+                          {isSelectBoxOpen && (
+                            <SelectBoxList dropUp={dropUp}>
+                              <SelectBoxItem
+                                onClick={() => handlePurposeSelect("대한민국")}
+                              >
+                                <Body2 color="gray700" align="left">
+                                  대한민국
+                                </Body2>
+                              </SelectBoxItem>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect("미국")
+                                }
+                              >
+                                <Body2 color="gray700" align="left">
+                                  미국
+                                </Body2>
+                              </SelectBoxItem>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect("중국")
+                                }
+                              >
+                                <Body2 color="gray700" align="left">
+                                  중국
+                                </Body2>
+                              </SelectBoxItem>
+                              <SelectBoxItem
+                                onClick={() => handlePurposeSelect("일본")}
+                              >
+                                <Body2 color="gray700" align="left">
+                                  일본
+                                </Body2>
+                              </SelectBoxItem>
+                              <SelectBoxItem
+                                onClick={() => handlePurposeSelect("베트남")}
+                              >
+                                <Body2 color="gray700" align="left">
+                                  베트남
+                                </Body2>
+                              </SelectBoxItem>
+                            </SelectBoxList>
+                          )}
+                        </SelectBox>
+                      </TabContent5Item>
+                    </div>
+
+                    <Button 
+                      Other 
+                      Primary 
+                      Fill 
+                      Round
+                      onClick={handleSubmitBusinessInfo}
+                      disabled={!isRequiredFieldsFilled()}
+                    >
+                      다음
+                    </Button>
+                  </>
+                )}
               </TabContent5>
             )}
 
             {activeTab === 2 && completedSteps.includes(1) && (
               <TabContent5>
-                <div className="title">
-                  <H3 color="gray800">Contextual Inquiry Analysis</H3>
-                  <Body3 color="gray800">비즈니스에 적합한 다양한 페르소나를 기반으로 잠재고객을 분석합니다</Body3>
-                </div>
+                {isLoading ? (
+                  <div style={{ 
+                    width: "100%", 
+                    display: "flex", 
+                    justifyContent: "center",
+                    minHeight: "200px",
+                    alignItems: "center"
+                  }}>
+                    <AtomPersonaLoader message="맞춤 페르소나를 찾고 있어요..." />
+                  </div>
+                ) : (
+                  <>
+                    <div className="title">
+                      <H3 color="gray800">Contextual Inquiry Analysis</H3>
+                      <Body3 color="gray800">비즈니스에 적합한 다양한 페르소나를 기반으로 잠재고객을 분석합니다</Body3>
+                    </div>
 
-                <div className="content">
-                  <CardGroupWrap>
-                    <ListBoxItem 
+                    <div className="content">
+                    
+                      <CardGroupWrap>
+                        {targetDiscoveryPersona.map((persona, index) => (
+                          <MoleculeToolPersonaCard
+                            key={`persona-${index}`}
+                            title={persona.title}
+                            keywords={persona.content.keywords}
+                            checked={selectedPersonas.includes(index)}
+                            onSelect={() => handleCheckboxChange(index)}
+                            currentSelection={selectedPersonas.length}
+                            personaData={persona}
+                            viewType="list"
+                            popupType="basic"
+                            onDetailClick={() => setShowPopup(true)}
+                          />
+                        ))}
+                      </CardGroupWrap>
+                      {/* <CardGroupWrap>
+
+                      <MoleculeToolPersonaCard
+                          title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                          keywords={['키워드1', '키워드2', '키워드3']}
+                          checked={selectedPersonas.includes(0)}  // 'persona1' -> 0
+                          onSelect={() => handleCheckboxChange(0)}  // 'persona1' -> 0
+                          currentSelection={selectedPersonas.length}
+                          personaData={{
+                            persona: "가족과 함께 여가를 보내는 활동 지향형 소비자",
+                            persona_view: "가족과 함께 여가를 보내는 활동 지향형 소비자",
+                            keyword: ["키워드1", "키워드2", "키워드3"],
+                            persona_keyword: ["키워드1", "키워드2", "키워드3"],
+                            who: "30대 초반 신혼부부, 맞벌이 직장인, 인테리어에 관심이 많은 수진씨",
+                            when: "신혼집 인테리어를 계획하고 준비하는 시기, DIY 인테리어 정보를 찾을 때",
+                            where: "인테리어 콘텐츠 공유 커뮤니티, 커머스 플랫폼, 온라인 쇼핑몰",
+                            what: "신혼집에 맞는 인테리어 디자인 영감, 합리적인 가격대의 고급 가구와 소품",
+                            how: "온라인 플랫폼에서 디자인 사진과 영상 탐색, 커뮤니티 참여를 통한 정보 공유",
+                            why: "신뢰할 수 있는 정보와 전문가의 조언을 통해 만족스러운 인테리어 결과물을 얻기 위해"
+                          }}
+                          viewType="list"
+                          popupType="basic"
+                          onDetailClick={() => setShowPopup(true)}
+                        />
+
+                        <MoleculeToolPersonaCard
+                          title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                          keywords={['키워드1', '키워드2', '키워드3']}
+                          checked={selectedPersonas.includes(1)}  // 'persona2' -> 1
+                          onSelect={() => handleCheckboxChange(1)}  // 'persona2' -> 1
+                          currentSelection={selectedPersonas.length}
+                          personaData={{
+                            persona: "가족과 함께 여가를 보내는 활동 지향형 소비자",
+                            persona_view: "가족과 함께 여가를 보내는 활동 지향형 소비자",
+                            keyword: ["키워드1", "키워드2", "키워드3"],
+                            persona_keyword: ["키워드1", "키워드2", "키워드3"],
+                            who: "30대 초반 신혼부부, 맞벌이 직장인, 인테리어에 관심이 많은 수진씨",
+                            when: "신혼집 인테리어를 계획하고 준비하는 시기, DIY 인테리어 정보를 찾을 때",
+                            where: "인테리어 콘텐츠 공유 커뮤니티, 커머스 플랫폼, 온라인 쇼핑몰",
+                            what: "신혼집에 맞는 인테리어 디자인 영감, 합리적인 가격대의 고급 가구와 소품",
+                            how: "온라인 플랫폼에서 디자인 사진과 영상 탐색, 커뮤니티 참여를 통한 정보 공유",
+                            why: "신뢰할 수 있는 정보와 전문가의 조언을 통해 만족스러운 인테리어 결과물을 얻기 위해"
+                          }}
+                          viewType="list"
+                          popupType="basic"
+                          onDetailClick={() => setShowPopup(true)}
+                        />
+                      </CardGroupWrap>
+                      */}
+
+{/* 
+                      <ListBoxItem 
                       NoBg
                       selected={selectedPersonas.includes('persona1')} 
                       active={selectedPersonas.includes('persona1')}
@@ -441,31 +953,38 @@ const PageTargetDiscovery = () => {
                         </CustomButton>
                       </ListButton>
                     </ListBoxItem>
-                  </CardGroupWrap>
+                  </CardGroupWrap> */}
 
-                  <BottomBar W100>
-                    <Body2
-                      color={selectedPersonas.length === 0 ? "gray300" : "gray800"}
-                    >
-                      시나리오 분석을 원하는 페르소나를 선택해주세요 ({selectedPersonas.length}/5)
-                    </Body2>
-                    <Button
-                      Large
-                      Primary
-                      Round
-                      Fill
-                      disabled={selectedPersonas.length === 0}
-                      onClick={() => handleNextStep(2)}
-                    >
-                      다음
-                      <images.ChevronRight
-                        width="20"
-                        height="20"
-                        color={palette.white}
-                      />
-                    </Button>
-                  </BottomBar>
-                </div>
+
+                      <BottomBar W100>
+                        <Body2
+                          color={selectedPersonas.length === 0 ? "gray300" : "gray800"}
+                        >
+                          시나리오 분석을 원하는 페르소나를 선택해주세요 ({selectedPersonas.length}/5)
+                        </Body2>
+                        <Button
+                          Large
+                          Primary
+                          Round
+                          Fill
+                          disabled={selectedPersonas.length === 0}
+                          // onClick={() => {
+                          //   setIsLoading(false); // 다음 단계로 넘어갈 때 로딩 종료
+                          //   handleNextStep(2);
+                          // }}
+                          onClick={handleSubmitPersonas}
+                        >
+                          다음
+                          <images.ChevronRight
+                            width="20"
+                            height="20"
+                            color={palette.white}
+                          />
+                        </Button>
+                      </BottomBar>
+                    </div>
+                  </>
+                )}
               </TabContent5>
             )}
 
@@ -477,7 +996,57 @@ const PageTargetDiscovery = () => {
                 </div>
 
                 <div className="content">
-                  <CardGroupWrap>
+                <CardGroupWrap>
+                  {selectedTargetDiscoveryPersona.map((persona, index) => (
+                    <MoleculeToolPersonaCard
+                      key={index}
+                      title={persona.title}
+                      keywords={persona.content.keywords}
+                      viewType="list"
+                      hideCheckCircle={true}
+                      popupType="detail"
+                    // personaData={{
+                    //   ...persona,
+                    //   target_discovery_scenario: persona.target_discovery_scenario
+                    // }}
+                      personaData={persona}
+                      personaScenario={targetDiscoveryScenario}
+                      onDetailClick={() => setShowPopupMore(true)}
+                    />
+                  ))}
+                  
+                  {isLoading && (
+                    <Body1 color="gray800">
+                      페르소나 분석 중...
+                    </Body1>
+                  )}
+                </CardGroupWrap>
+
+                  {/* <CardGroupWrap>
+                    <MoleculeToolPersonaCard
+                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+
+                      keywords={["키워드1", "키워드2", "키워드3"]}
+                      viewType="list"
+                      hideCheckCircle={true}
+                      popupType="detail"
+                      personaData={{
+                        persona: "가족과 함께 여가를 보내는 활동 지향형 소비자",
+                        persona_view: "가족과 함께 여가를 보내는 활동 지향형 소비자",
+                        keyword: ["키워드1", "키워드2", "키워드3"],
+                        persona_keyword: ["키워드1", "키워드2", "키워드3"],
+                        who: "30대 초반 신혼부부, 맞벌이 직장인, 인테리어에 관심이 많은 수진씨",
+                        when: "신혼집 인테리어를 계획하고 준비하는 시기, DIY 인테리어 정보를 찾을 때",
+                        where: "인테리어 콘텐츠 공유 커뮤니티, 커머스 플랫폼, 온라인 쇼핑몰",
+                        what: "신혼집에 맞는 인테리어 디자인 영감, 합리적인 가격대의 고급 가구와 소품",
+                        how: "온라인 플랫폼에서 디자인 사진과 영상 탐색, 커뮤니티 참여를 통한 정보 공유",
+                        why: "신뢰할 수 있는 정보와 전문가의 조언을 통해 만족스러운 인테리어 결과물을 얻기 위해"
+                      }}
+                      
+                      onDetailClick={() => setShowPopupMore(true)}
+                    />
+                  </CardGroupWrap> */}
+                  {/* <CardGroupWrap>
                     <ListBoxItem>
                       <ListText>
                         <ListTitle>
@@ -537,18 +1106,18 @@ const PageTargetDiscovery = () => {
                         </CustomButton>
                       </ListButton>
                     </ListBoxItem>
-                  </CardGroupWrap>
+                  </CardGroupWrap> */}
 
                   <BottomBar W100>
                     <Body2 color="gray800">
-                      5명의 페르소나에 대한 잠재고객 가능성을 분석해드릴게요
+                      {selectedPersonas.length}명의 페르소나에 대한 잠재고객 가능성을 분석해드릴게요
                     </Body2>
                     <Button
                       Large
                       Primary
                       Round
                       Fill
-                      onClick={() => handleNextStep(3)}
+                      onClick={handleSubmitScenario}
                     >
                       다음
                       <images.ChevronRight
@@ -585,6 +1154,90 @@ const PageTargetDiscovery = () => {
                     </Body3>
                   </div>
                 </InsightAnalysis>
+{/* 
+
+                <ListBoxWrap>
+      <ListBoxItem>
+        <ListBoxTitle>
+          <div>
+            <Body1 color="gray800">신혼집 인테리어를 준비하는 30대 초반 젊은 부부</Body1>
+            <Keyword>
+              <Badge Keyword>Strong Potential</Badge>
+              {targetDiscoveryFinalReport?.potential_rank_1?.keywords?.map((keyword, index) => (
+                <Badge key={index} Keyword>#{keyword}</Badge>
+              ))}
+            </Keyword>
+          </div>
+          <CustomButton
+            Medium
+            PrimaryLightest
+            Fill
+          >
+            자세히
+          </CustomButton>
+        </ListBoxTitle>
+
+        <ListBoxContent>
+          <Body3 color="gray700" align="left">
+            {targetDiscoveryFinalReport?.potential_rank_1?.discovery_criteria}
+          </Body3>
+        </ListBoxContent>
+      </ListBoxItem>
+
+      <ListBoxItem>
+        <ListBoxTitle>
+          <div>
+            <Body1 color="gray800">고급 인테리어를 추구하는 30대 중반 싱글 남성</Body1>
+            <Keyword>
+              <Badge Keyword>Potential</Badge>
+              {targetDiscoveryFinalReport?.potential_rank_2?.keywords?.map((keyword, index) => (
+                <Badge key={index} Keyword>#{keyword}</Badge>
+              ))}
+            </Keyword>
+          </div>
+          <CustomButton
+            Medium
+            PrimaryLightest
+            Fill
+          >
+            자세히
+          </CustomButton>
+        </ListBoxTitle>
+
+        <ListBoxContent>
+          <Body3 color="gray700" align="left">
+            {targetDiscoveryFinalReport?.potential_rank_2?.rank_reason}
+          </Body3>
+        </ListBoxContent>
+      </ListBoxItem>
+
+      <ListBoxItem>
+        <ListBoxTitle>
+          <div>
+            <Body1 color="gray800">트렌디한 인테리어를 선호하는 20대 후반 젊은 여성</Body1>
+            <Keyword>
+              <Badge Keyword>Potential</Badge>
+              {targetDiscoveryFinalReport?.potential_rank_3?.keywords?.map((keyword, index) => (
+                <Badge key={index} Keyword>#{keyword}</Badge>
+              ))}
+            </Keyword>
+          </div>
+          <CustomButton
+            Medium
+            PrimaryLightest
+            Fill
+          >
+            자세히
+          </CustomButton>
+        </ListBoxTitle>
+
+        <ListBoxContent>
+          <Body3 color="gray700" align="left">
+            {targetDiscoveryFinalReport?.potential_rank_3?.rank_reason}
+          </Body3>
+        </ListBoxContent>
+      </ListBoxItem>
+    </ListBoxWrap> */}
 
                 <ListBoxWrap>
                   <ListBoxItem>
@@ -815,7 +1468,7 @@ const PageTargetDiscovery = () => {
         <PopupWrap
           Check
           title="리포트가 저장되었습니다."
-          message="저장된 리포트는 ‘보관함’을 확인해주세요"
+          message="저장된 리포트는 '보관함'을 확인해주세요"
           buttonType="Outline"
           closeText="보관함 바로가기"
           confirmText="리포트 계속 확인"
