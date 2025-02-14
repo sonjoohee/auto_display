@@ -790,7 +790,7 @@ export const getTermkeyResult = async (termkey) => {
         }
 
         // state가 0이 아닐 때 (처리가 완료되었을 때) 즉시 결과 반환
-        if (response.data.state !== 0) {
+        if (response.data.state == 1) {
           // console.log("처리 완료, 결과 반환");
           return response.data;
         }
@@ -1897,6 +1897,99 @@ export const AlarmList = async (isLoggedIn) => {
   }
 };
 
+// !===============================================
+// !TOOL 관련 API
+// !===============================================
+
+//TOOL 생성 api
+export const createToolOnServer = async (data, isLoggedIn) => {
+  if (isLoggedIn) {
+    try {
+      const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
+
+      if (!token) {
+        throw new Error("액세스 토큰이 존재하지 않습니다.");
+      }
+
+      const PUT_DATA = {
+        createDate: new Date().toLocaleString("ko-KR", {
+          timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+        ...data,
+      };
+      const response = await axios.post(
+        "https://wishresearch.kr/panels/tool/create_tool",
+        PUT_DATA, // POST 요청에 보낼 데이터가 없는 경우 빈 객체 전달
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // 쿠키와 자격 증명 포함 (필요 시)
+        }
+      );
+
+      // console.log(response.data.inserted_id);
+      return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
+    } catch (error) {
+      console.error("Error creating chat on server:", error);
+      throw error;
+    }
+  }
+};
+
+//TOOL 업데이트 api
+export const updateToolOnServer = async (toolId, updateData, isLoggedIn) => {
+  // console.log("🚀 ~ projectId:", projectId);
+  // console.log("🚀 ~ updateData:", updateData);
+  if (isLoggedIn) {
+    // 사용자 로그인 시 서버에 저장
+    try {
+      const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
+      // console.log("token", token);
+
+      if (!token) {
+        throw new Error("액세스 토큰이 존재하지 않습니다.");
+      }
+
+      if (!toolId) {
+        throw new Error("TOOL ID가 필요합니다.");
+      }
+      const PUT_DATA = {
+        id: toolId,
+        ...updateData,
+        updateDate: new Date().toLocaleString("ko-KR", {
+          timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+      };
+      await axios.put(
+        `https://wishresearch.kr/panels/tool/update_tool`,
+        PUT_DATA,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // 쿠키와 함께 자격 증명을 전달 (optional)
+        }
+      );
+    } catch (error) {
+      console.error("Error updating project on server:", error);
+    }
+  }
+};
 
 //타겟 디스커버리 페르소나 찾기
 export const InterviewXTargetDiscoveryPersonaRequest = async (
@@ -1913,10 +2006,13 @@ export const InterviewXTargetDiscoveryPersonaRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-
+    const PUT_DATA = {
+      type: "ix_target_discovery_persona",
+      ...data,
+    };
     const response = await axios.post(
-      "https://wishresearch.kr/panels/tool/create_tool",
-      data,
+      "https://wishresearch.kr/panels/tool/create_tool_temp",
+      PUT_DATA,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -1931,7 +2027,7 @@ export const InterviewXTargetDiscoveryPersonaRequest = async (
     }
 
     await new Promise((resolve) => setTimeout(resolve, response.data.time));
-  
+
     console.log("타겟 디스커버리 페르소나 찾기 API 응답:", response);
     const result = await getTermkeyResult(response.data.objectId);
     console.log("타겟 디스커버리 페르소나 찾기 API 응답:", result);
@@ -1944,10 +2040,8 @@ export const InterviewXTargetDiscoveryPersonaRequest = async (
   }
 };
 
-
-
 //타겟 디스커버리 페르소나 시나리오
-export const  InterviewXTargetDiscoveryScenarioRequest = async (
+export const InterviewXTargetDiscoveryScenarioRequest = async (
   data,
   isLoggedIn
 ) => {
@@ -1962,9 +2056,13 @@ export const  InterviewXTargetDiscoveryScenarioRequest = async (
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
 
+    const PUT_DATA = {
+      type: "ix_target_discovery_scenario",
+      ...data,
+    };
     const response = await axios.post(
-      "https://wishresearch.kr/project/panels/tool/create_tool",
-      data,
+      "https://wishresearch.kr/panels/tool/create_tool_temp",
+      PUT_DATA,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -1989,9 +2087,8 @@ export const  InterviewXTargetDiscoveryScenarioRequest = async (
   }
 };
 
-
 //타겟 디스커버리 최종 보고서
-export const  InterviewXTargetDiscoveryFinalReportRequest= async (
+export const InterviewXTargetDiscoveryFinalReportRequest = async (
   data,
   isLoggedIn
 ) => {
@@ -2006,9 +2103,13 @@ export const  InterviewXTargetDiscoveryFinalReportRequest= async (
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
 
+    const PUT_DATA = {
+      type: "ix_target_discovery_final_report",
+      ...data,
+    };
     const response = await axios.post(
-      "https://wishresearch.kr/panels/tool/create_tool",
-      data,
+      "https://wishresearch.kr/panels/tool/create_tool_temp",
+      PUT_DATA,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -2032,4 +2133,3 @@ export const  InterviewXTargetDiscoveryFinalReportRequest= async (
     throw error;
   }
 };
-

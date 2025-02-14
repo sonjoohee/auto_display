@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
@@ -123,145 +122,12 @@ const MoleculeToolPersonaCard = ({
     }
   };
 
-  const handleRequestClick = () => {
-    setShowRequestPopup(true);
-  };
-
-  const handleRequestPersona = async () => {
-    setSelectedPersonaForPopup(null);
-
-    try {
-      // 현재 서버에 저장된 requestedPersona 값을 가져옴
-      const currentProject = await getProjectByIdFromIndexedDB(
-        projectId,
-        isLoggedIn
-      );
-      const currentRequestedPersona = currentProject?.requestedPersona || [];
-
-      // 중복 체크
-      const isDuplicate = currentRequestedPersona.some(
-        (persona) => persona.persona === personaData.persona
-      );
-
-      if (!isDuplicate) {
-        // 새로운 requestedPersona 배열 생성
-        const newRequestedPersona = [
-          ...currentRequestedPersona,
-          { ...personaData, status: "ing" },
-        ];
-
-        // 서버 업데이트
-        await updateProjectOnServer(
-          projectId,
-          {
-            businessPersonaList: newRequestedPersona,
-          },
-          isLoggedIn
-        );
-        const checkDate = new Date().toLocaleString("ko-KR", {
-          timeZone: "Asia/Seoul",
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        });
-        const requestData = {
-          projectId: projectId,
-          requestDate: checkDate,
-          businessAnalysis: businessAnalysis,
-          personaRequest: { ...personaData, status: "ing" },
-        };
-        createRequestPersonaOnServer(requestData, isLoggedIn);
-        setRequestStatus(false);
-      } else {
-        console.error("이미 요청된 페르소나입니다.");
-      }
-    } catch (error) {
-      console.error("페르소나 요청 중 오류 발생:", error);
-    }
-  };
-
-  // const handleCloseRequestPopup = () => {
-  //   setShowRequestPopup(false);
-  //   setRequestStatus(false);
-  // };
-
   const handleDetailClick = () => {
     if (popupType === "basic") {
       setShowBasicPopup(true);
     } else {
       setShowDetailPopup(true);
     }
-  };
-
-  const creditUse = async () => {
-    // 팝업 닫기
-    setShowRequestPopup(false);
-
-    let accessToken = sessionStorage.getItem("accessToken");
-    if (!accessToken) {
-      console.error("토큰이 없습니다.");
-      return;
-    }
-
-    // 크레딧 사용전 사용 확인
-    try {
-      const response = await axios.post(
-        "https://wishresearch.kr/api/user/credit/check",
-        {
-          // target: eventState ? "event_credit" : "business_credit",
-          target: "event_credit",
-          mount: creditRequestBusinessPersona,
-          // mount: 10,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    } catch (error) {
-      console.error(error);
-      setShowCreditPopup(true);
-      return;
-    }
-
-    // 크레딧 소모 API 요청
-    try {
-      const response = await axios.post(
-        "https://wishresearch.kr/api/user/credit/use",
-        {
-          title: "현재 미정 어떻게받을지 정해야함!",
-          service_type: "페르소나 모집 요청",
-          target: "",
-          state: "use",
-          mount: creditRequestBusinessPersona,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    } catch (error) {
-      console.error("크레딧 소모 중 오류 발생:", error);
-      return;
-    }
-
-    // 크레딧 사용 후 사용자 정보 새로고침
-    accessToken = sessionStorage.getItem("accessToken");
-    if (accessToken) {
-      const userCreditValue = await UserCreditInfo(isLoggedIn);
-
-      // 전역 상태의 크레딧 정보 업데이트
-      setUserCredits(userCreditValue);
-    }
-
-    handleRequestPersona();
   };
 
   return (
@@ -275,10 +141,7 @@ const MoleculeToolPersonaCard = ({
         >
           <MainContent>
             {!hideCheckCircle && (
-              <CheckCircle
-                $isChecked={isChecked}
-                onClick={handleCheck}
-              />
+              <CheckCircle $isChecked={isChecked} onClick={handleCheck} />
             )}
             <ListText>
               <ListTitle>
@@ -312,15 +175,18 @@ const MoleculeToolPersonaCard = ({
       {/* 기본 정보 팝업 */}
       {showBasicPopup && (
         <InterviewPopup>
-          <div style={{maxWidth: "565px"}}>
-            <div className="header" style={{gap: "16px"}}>
+          <div style={{ maxWidth: "565px" }}>
+            <div className="header" style={{ gap: "16px" }}>
               <H4>
                 {/* {isBasic ? personaData?.persona_view : personaData?.persona} */}
                 {isBasic ? personaData?.title : personaData?.title}
-                <span className="close" onClick={() => setShowBasicPopup(false)} />
+                <span
+                  className="close"
+                  onClick={() => setShowBasicPopup(false)}
+                />
               </H4>
               <div className="keywords">
-                 {/*personaData.content.keywords*/}
+                {/*personaData.content.keywords*/}
                 {/* {isBasic ? (
                   <>
                     <Status>#{personaData?.persona_keyword?.[0] || ''}</Status>
@@ -335,47 +201,94 @@ const MoleculeToolPersonaCard = ({
                   </>
                 )} */}
 
-{isBasic ? (
-  <>
-    <Status>#{personaData?.content?.keywords?.[0] || ''}</Status>
-    <Status>#{personaData?.content?.keywords?.[1] || ''}</Status>
-    <Status>#{personaData?.content?.keywords?.[2] || ''}</Status>
-  </>
-) : (
-  <>
-    <Status>#{personaData?.content?.keywords?.[0] || ''}</Status>
-    <Status>#{personaData?.content?.keywords?.[1] || ''}</Status>
-    <Status>#{personaData?.content?.keywords?.[2] || ''}</Status>
-  </>
-)}
+                {isBasic ? (
+                  <>
+                    <Status>
+                      #{personaData?.content?.keywords?.[0] || ""}
+                    </Status>
+                    <Status>
+                      #{personaData?.content?.keywords?.[1] || ""}
+                    </Status>
+                    <Status>
+                      #{personaData?.content?.keywords?.[2] || ""}
+                    </Status>
+                  </>
+                ) : (
+                  <>
+                    <Status>
+                      #{personaData?.content?.keywords?.[0] || ""}
+                    </Status>
+                    <Status>
+                      #{personaData?.content?.keywords?.[1] || ""}
+                    </Status>
+                    <Status>
+                      #{personaData?.content?.keywords?.[2] || ""}
+                    </Status>
+                  </>
+                )}
               </div>
             </div>
             {/*personaData.content.who, when, where, what, how, why*/}
             <div className="content type2">
               <ListRowWrap>
                 <ListRowItem>
-                  <Body1 color="gray700" align="left">누가<br />(Who) </Body1>
-                  <Body3 color="gray700" align="left">{personaData?.content?.who || ''}</Body3>
+                  <Body1 color="gray700" align="left">
+                    누가
+                    <br />
+                    (Who){" "}
+                  </Body1>
+                  <Body3 color="gray700" align="left">
+                    {personaData?.content?.who || ""}
+                  </Body3>
                 </ListRowItem>
                 <ListRowItem>
-                  <Body1 color="gray700" align="left">언제<br />(When)</Body1>
-                  <Body3 color="gray700" align="left">{personaData?.content?.when || ''}</Body3>
+                  <Body1 color="gray700" align="left">
+                    언제
+                    <br />
+                    (When)
+                  </Body1>
+                  <Body3 color="gray700" align="left">
+                    {personaData?.content?.when || ""}
+                  </Body3>
                 </ListRowItem>
                 <ListRowItem>
-                  <Body1 color="gray700" align="left">어디서<br />(Where)</Body1>
-                  <Body3 color="gray700" align="left">{personaData?.content?.where || ''}</Body3>
+                  <Body1 color="gray700" align="left">
+                    어디서
+                    <br />
+                    (Where)
+                  </Body1>
+                  <Body3 color="gray700" align="left">
+                    {personaData?.content?.where || ""}
+                  </Body3>
                 </ListRowItem>
                 <ListRowItem>
-                  <Body1 color="gray700" align="left">무엇을<br />(What)</Body1>
-                  <Body3 color="gray700" align="left">{personaData?.content?.what || ''}</Body3>
+                  <Body1 color="gray700" align="left">
+                    무엇을
+                    <br />
+                    (What)
+                  </Body1>
+                  <Body3 color="gray700" align="left">
+                    {personaData?.content?.what || ""}
+                  </Body3>
                 </ListRowItem>
                 <ListRowItem>
-                  <Body1 color="gray700" align="left">어떻게<br />(How)</Body1>
-                  <Body3 color="gray700" align="left">{personaData?.content?.how || ''}</Body3>
+                  <Body1 color="gray700" align="left">
+                    어떻게
+                    <br />
+                    (How)
+                  </Body1>
+                  <Body3 color="gray700" align="left">
+                    {personaData?.content?.how || ""}
+                  </Body3>
                 </ListRowItem>
                 <ListRowItem>
-                  <Body1 color="gray700" align="left">왜<br />(Why)</Body1>
-                  <Body3 color="gray700" align="left">{personaData?.content?.why || ''}</Body3>
+                  <Body1 color="gray700" align="left">
+                    왜<br />
+                    (Why)
+                  </Body1>
+                  <Body3 color="gray700" align="left">
+                    {personaData?.content?.why || ""}
+                  </Body3>
                 </ListRowItem>
               </ListRowWrap>
             </div>
@@ -391,14 +304,23 @@ const MoleculeToolPersonaCard = ({
               <H4>
                 {/* {isBasic ? personaData?.persona_view : personaData?.persona} */}
                 {personaData?.title}
-                <span className="close" onClick={() => setShowDetailPopup(false)} />
+                <span
+                  className="close"
+                  onClick={() => setShowDetailPopup(false)}
+                />
               </H4>
               <p className="info">
-                <Sub3>{personaScenario?.potential_customer_info?.gender || ''}</Sub3>
                 <Sub3>
-                  {personaScenario?.potential_customer_info?.age ? 
-                    (personaScenario?.potential_customer_info?.age.includes("세") ? personaScenario?.potential_customer_info?.age : `${personaScenario?.potential_customer_info?.age}세`)
-                    : ''}
+                  {personaScenario?.potential_customer_info?.gender || ""}
+                </Sub3>
+                <Sub3>
+                  {personaScenario?.potential_customer_info?.age
+                    ? personaScenario?.potential_customer_info?.age.includes(
+                        "세"
+                      )
+                      ? personaScenario?.potential_customer_info?.age
+                      : `${personaScenario?.potential_customer_info?.age}세`
+                    : ""}
                 </Sub3>
 
                 {/* <Sub3>{personaData?.target_discovery_scenario?.potential_customer_info?.gender || ''}</Sub3>
@@ -407,7 +329,7 @@ const MoleculeToolPersonaCard = ({
                         `${personaData.target_discovery_scenario.potential_customer_info.age}세`
                         : ''}
                 </Sub3> */}
-                <Sub3>{personaData?.residence || ''}</Sub3>
+                <Sub3>{personaData?.residence || ""}</Sub3>
               </p>
             </div>
 
@@ -426,19 +348,18 @@ const MoleculeToolPersonaCard = ({
                 </>
               )} */}
               {isBasic ? (
-              <>
-                <Status>#{personaData?.content?.keywords?.[0] || ''}</Status>
-                <Status>#{personaData?.content?.keywords?.[1] || ''}</Status>
-                <Status>#{personaData?.content?.keywords?.[2] || ''}</Status>
-              </>
-            ) : (
-              <>
-                <Status>#{personaData?.content?.keywords?.[0] || ''}</Status>
-                <Status>#{personaData?.content?.keywords?.[1] || ''}</Status>
-                <Status>#{personaData?.content?.keywords?.[2] || ''}</Status>
-              </>
-            )}
-       
+                <>
+                  <Status>#{personaData?.content?.keywords?.[0] || ""}</Status>
+                  <Status>#{personaData?.content?.keywords?.[1] || ""}</Status>
+                  <Status>#{personaData?.content?.keywords?.[2] || ""}</Status>
+                </>
+              ) : (
+                <>
+                  <Status>#{personaData?.content?.keywords?.[0] || ""}</Status>
+                  <Status>#{personaData?.content?.keywords?.[1] || ""}</Status>
+                  <Status>#{personaData?.content?.keywords?.[2] || ""}</Status>
+                </>
+              )}
             </div>
 
             <div className="content">
@@ -461,28 +382,63 @@ const MoleculeToolPersonaCard = ({
                 <TabContent>
                   <ListRowWrap>
                     <ListRowItem>
-                      <Body1 color="gray700" align="left">누가<br />(Who) </Body1>
-                      <Body3 color="gray700" align="left">{personaData?.content?.who || ''}</Body3>
+                      <Body1 color="gray700" align="left">
+                        누가
+                        <br />
+                        (Who){" "}
+                      </Body1>
+                      <Body3 color="gray700" align="left">
+                        {personaData?.content?.who || ""}
+                      </Body3>
                     </ListRowItem>
                     <ListRowItem>
-                      <Body1 color="gray700" align="left">언제<br />(When)</Body1>
-                      <Body3 color="gray700" align="left">{personaData?.content?.when || ''}</Body3>
+                      <Body1 color="gray700" align="left">
+                        언제
+                        <br />
+                        (When)
+                      </Body1>
+                      <Body3 color="gray700" align="left">
+                        {personaData?.content?.when || ""}
+                      </Body3>
                     </ListRowItem>
                     <ListRowItem>
-                      <Body1 color="gray700" align="left">어디서<br />(Where)</Body1>
-                      <Body3 color="gray700" align="left">{personaData?.content?.where || ''}</Body3>
+                      <Body1 color="gray700" align="left">
+                        어디서
+                        <br />
+                        (Where)
+                      </Body1>
+                      <Body3 color="gray700" align="left">
+                        {personaData?.content?.where || ""}
+                      </Body3>
                     </ListRowItem>
                     <ListRowItem>
-                      <Body1 color="gray700" align="left">무엇을<br />(What)</Body1>
-                      <Body3 color="gray700" align="left">{personaData?.content?.what || ''}</Body3>
+                      <Body1 color="gray700" align="left">
+                        무엇을
+                        <br />
+                        (What)
+                      </Body1>
+                      <Body3 color="gray700" align="left">
+                        {personaData?.content?.what || ""}
+                      </Body3>
                     </ListRowItem>
                     <ListRowItem>
-                      <Body1 color="gray700" align="left">어떻게<br />(How)</Body1>
-                      <Body3 color="gray700" align="left">{personaData?.content?.how || ''}</Body3>
+                      <Body1 color="gray700" align="left">
+                        어떻게
+                        <br />
+                        (How)
+                      </Body1>
+                      <Body3 color="gray700" align="left">
+                        {personaData?.content?.how || ""}
+                      </Body3>
                     </ListRowItem>
                     <ListRowItem>
-                      <Body1 color="gray700" align="left">왜<br />(Why)</Body1>
-                      <Body3 color="gray700" align="left">{personaData?.content?.why || ''}</Body3>
+                      <Body1 color="gray700" align="left">
+                        왜<br />
+                        (Why)
+                      </Body1>
+                      <Body3 color="gray700" align="left">
+                        {personaData?.content?.why || ""}
+                      </Body3>
                     </ListRowItem>
                   </ListRowWrap>
                 </TabContent>
@@ -491,64 +447,17 @@ const MoleculeToolPersonaCard = ({
                 <TabContent>
                   {/* <Body1 color="gray700">{personaData?.scenarioTitle || ''}</Body1>
                   <Body3 color="gray700">{personaData?.scenario || ''}</Body3> */}
-                  <Body1 color="gray700">{personaScenario?.usage_scenario?.key_sentence || ''}</Body1>
-                  <Body3 color="gray700">{personaScenario?.usage_scenario?.description || ''}</Body3>
+                  <Body1 color="gray700">
+                    {personaScenario?.usage_scenario?.key_sentence || ""}
+                  </Body1>
+                  <Body3 color="gray700">
+                    {personaScenario?.usage_scenario?.description || ""}
+                  </Body3>
                 </TabContent>
-                //  <TabContent>
-                //  <Body1 color="gray700">
-                //      {personaData?.target_discovery_scenario?.usage_scenario?.key_sentence || ''}
-                //  </Body1>
-                //  <Body3 color="gray700">
-                //      {personaData?.target_discovery_scenario?.usage_scenario?.description || ''}
-                //  </Body3>
-                // </TabContent>
               )}
             </div>
           </div>
         </InterviewPopup>
-      )}
-
-      {/* 모집 요청 팝업 추가 */}
-      {showRequestPopup && (
-        <PopupWrap
-          Event
-          title="페르소나 모집 요청"
-          message={
-            <>
-              현재 베타서비스 기간으로 이벤트 크레딧이 소진됩니다.
-              {/* 현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다. */}
-              <br />
-              (10 크레딧)
-              {/* ({creditRequestBusinessPersona} 크레딧) */}
-            </>
-          }
-          buttonType="Outline"
-          closeText="취소"
-          confirmText="시작하기"
-          isModal={false}
-          onCancel={() => setShowRequestPopup(false)}
-          onConfirm={() => {
-            // handleCloseRequestPopup();
-            creditUse();
-          }}
-        />
-      )}
-      {showCreditPopup && (
-        <PopupWrap
-          Warning
-          title="크레딧이 모두 소진되었습니다"
-          message={
-            <>
-              보유한 크레딧이 부족합니다.
-              <br />
-              크레딧을 충전한 후 다시 시도해주세요.
-            </>
-          }
-          buttonType="Outline"
-          closeText="확인"
-          isModal={false}
-          onCancel={() => setShowCreditPopup(false)}
-        />
       )}
     </>
   );
