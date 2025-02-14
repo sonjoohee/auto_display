@@ -400,14 +400,14 @@ export const TabButtonType5 = styled(TabButton)`
   pointer-events: ${props => props.disabled ? 'none' : 'auto'};
 
   + button {
-    padding-left: 100px;
+    padding-left: 80px;
 
     &:before {
       position: absolute;
       left: 20px;
       top: 50%;
       transform: translateY(-50%);
-      width: 60px;
+      width: 40px;
       height: 1px;
       background: ${palette.gray300};
       content: "";
@@ -415,7 +415,7 @@ export const TabButtonType5 = styled(TabButton)`
 
     &:after {
       position: absolute;
-      left: 72px;
+      left: 75px;
       top: 50%;
       transform: translateY(-50%) rotate(45deg);
       width: 7px;
@@ -1964,6 +1964,77 @@ export const Persona = styled.div`
   }}
 `;
 
+export const ListBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0 !important;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid ${palette.outlineGray};
+
+  > div {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 16px;
+
+    + div {
+      border-top: 1px solid ${palette.outlineGray};
+    }
+
+    span {
+      flex-shrink: 0;
+
+      &.number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        font-size: 0.63rem;
+        color: ${palette.white};
+        margin-top: 3px;
+        border-radius: 2px;
+        background: ${palette.primary};
+      }
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+
+      .tag {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+      }
+    }
+  }
+`;
+
+export const ListGroup = styled.div`
+  display: flex;
+  flex-direction: row !important;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  > div {
+    flex: 1 1 48%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 48%;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid ${palette.outlineGray};
+  }
+`;
+
 export const ListBoxGroup = styled.ul`
   display: flex;
   flex-direction: column;
@@ -2214,6 +2285,13 @@ export const BoxWrap = styled.div`
   strong {
     text-align: left;
   }
+
+  ${(props) =>
+    props.Column &&
+    css`
+      flex-direction: column;
+      gap: 0 !important;
+    `}
 `;
 
 export const InterviewPopup = styled.div`
@@ -3612,4 +3690,12 @@ export const ExploreCard = styled.div`
         visibility: visible;
       }
     `}
+`;
+
+export const TextWrap = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
 `;

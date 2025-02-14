@@ -29,6 +29,7 @@ const PopupWrap = ({
   isRadioSelected,
   isFormValid,
   Wide,
+  Wide1000,
   TitleFlex,
   TitleBorder,
   showTabs,
@@ -39,6 +40,7 @@ const PopupWrap = ({
   eventTitle,
   trialState,
   creditRequestCustomPersona,
+  customAlertBox,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -136,44 +138,48 @@ const PopupWrap = ({
   return (
     <PopupBox>
       {isModal ? (
-        <ModalPopup Wide={Wide} TitleBorder={TitleBorder}>
+        <ModalPopup Wide={Wide} Wide1000={Wide1000} TitleBorder={TitleBorder}>
           <Header>
             {title}
             <CloseButton TitleFlex={TitleFlex} onClick={handleClose} />
           </Header>
 
+          {customAlertBox}
+
           {showTabs && tabs && (
             <>
-              <AlertBox {...(eventState ? { Green: true } : { Blue: true })}>
-                {eventState ?? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M18.5 10C18.5 14.6944 14.6944 18.5 10 18.5C5.30558 18.5 1.5 14.6944 1.5 10C1.5 5.30558 5.30558 1.5 10 1.5C14.6944 1.5 18.5 5.30558 18.5 10ZM20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10ZM10.729 12.2828L10.871 6H9.11619L9.27103 12.2828H10.729ZM10.0065 13.0943C9.45166 13.1004 8.99362 13.5246 9.00007 14.041C8.99362 14.5697 9.45166 15 10.0065 15C10.542 15 11 14.5697 11 14.041C11 13.5246 10.542 13.1004 10.0065 13.0943Z"
-                      fill="#34C759"
-                    />
-                  </svg>
-                )}
-                {eventState ? (
-                  <Sub3 color="green">
-                    {eventTitle} 기간으로 이벤트 크레딧이 사용되고 있습니다 (
-                    {creditRequestCustomPersona.toLocaleString()} 크레딧이
-                    소진됩니다.)
-                  </Sub3>
-                ) : (
-                  <Sub3 color="blue">
-                    {creditRequestCustomPersona.toLocaleString()} 크레딧이
-                    소진됩니다.
-                  </Sub3>
-                )}
-              </AlertBox>
+              {eventState !== false && (
+                <AlertBox {...(eventState ? { Green: true } : { Blue: true })}>
+                  {eventState ?? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M18.5 10C18.5 14.6944 14.6944 18.5 10 18.5C5.30558 18.5 1.5 14.6944 1.5 10C1.5 5.30558 5.30558 1.5 10 1.5C14.6944 1.5 18.5 5.30558 18.5 10ZM20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10ZM10.729 12.2828L10.871 6H9.11619L9.27103 12.2828H10.729ZM10.0065 13.0943C9.45166 13.1004 8.99362 13.5246 9.00007 14.041C8.99362 14.5697 9.45166 15 10.0065 15C10.542 15 11 14.5697 11 14.041C11 13.5246 10.542 13.1004 10.0065 13.0943Z"
+                        fill="#34C759"
+                      />
+                    </svg>
+                  )}
+                  {eventState ? (
+                    <Sub3 color="green">
+                      {eventTitle} 기간으로 이벤트 크레딧이 사용되고 있습니다 (
+                      {creditRequestCustomPersona.toLocaleString()} 크레딧이
+                      소진됩니다.)
+                    </Sub3>
+                  ) : (
+                    <Sub3 color="blue">
+                      {creditRequestCustomPersona.toLocaleString()} 크레딧이
+                      소진됩니다.
+                    </Sub3>
+                  )}
+                </AlertBox>
+              )}
 
               <TabWrapContainer>
                 {tabs.map((tab, index) => (
@@ -297,7 +303,12 @@ export const AlertPopup = styled.div`
 export const ModalPopup = styled(AlertPopup)`
   gap: ${(props) => (props.TitleBorder ? "20px" : "32px")};
   // max-width: 800px;
-  max-width: ${(props) => (props.Wide ? "820px" : "583px")};
+  max-width: ${(props) =>
+    props.Wide
+      ? "820px"
+      : props.Wide1000
+      ? "1000px"
+      : "583px"};
   padding: 32px;
 `;
 
