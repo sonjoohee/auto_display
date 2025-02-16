@@ -280,7 +280,7 @@ const PageMyProject = () => {
                           <br />
                           추천 페르소나와 인터뷰를 완료하시면 결과 리포트를
                           확인할 수 있습니다.
-                          <span>맞춤페르소나와 인터뷰 진행하기</span>
+                          <span>AI 페르소나와 인터뷰 진행하기</span>
                         </div>
                       </div>
                     </ViewInfoNodata>

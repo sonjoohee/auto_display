@@ -269,7 +269,7 @@ const OrganismCustomization = ({
 
   const loadInterviewQuestions = (title) => {
     // 질문 로딩 로직을 여기에 추가합니다.
-    console.log("Loading interview questions for:", title);
+    // console.log("Loading interview questions for:", title);
     // 실제 질문 로딩 로직을 여기에 추가
   };
 

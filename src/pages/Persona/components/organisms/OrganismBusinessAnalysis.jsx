@@ -412,7 +412,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       try {
         if (personaButtonState1 === 1) {
           setIsLoadingBusinessAnalysis(true);
-          console.log("data", data);
+          // console.log("data", data);
           // 버튼 클릭으로 API 호출
           // let response = await axios.post(
           //   "https://wishresearch.kr/person/business_category",

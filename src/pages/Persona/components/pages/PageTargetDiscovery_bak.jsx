@@ -59,7 +59,6 @@ import {
   TARGET_DISCOVERY_SCENARIO,
   TARGET_DISCOVERY_FINAL_REPORT,
   TOOL_ID,
-  TOOL_STEP,
 } from "../../../../pages/AtomStates";
 import images from "../../../../assets/styles/Images";
 import {
@@ -77,12 +76,10 @@ import {
   InterviewXTargetDiscoveryScenarioRequest,
   InterviewXTargetDiscoveryFinalReportRequest,
   createToolOnServer,
-  updateToolOnServer,
 } from "../../../../utils/indexedDB";
 
 const PageTargetDiscovery = () => {
   const [toolId, setToolId] = useAtom(TOOL_ID);
-  const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
     TARGET_DISCOVERY_INFO
@@ -140,7 +137,6 @@ const PageTargetDiscovery = () => {
   };
 
   const handleSelectBoxClick = () => {
-    if (toolStep >= 1) return;
     calculateDropDirection();
     setIsSelectBoxOpen(!isSelectBoxOpen);
   };
@@ -166,7 +162,6 @@ const PageTargetDiscovery = () => {
   };
 
   const handleCheckboxChange = (personaId) => {
-    if (toolStep >= 2) return;
     setSelectedPersonas((prev) => {
       if (prev.includes(personaId)) {
         return prev.filter((id) => id !== personaId);
@@ -242,14 +237,12 @@ const PageTargetDiscovery = () => {
       const responseToolId = await createToolOnServer(
         {
           type: "ix_target_discovery_persona",
-          completed_step: 1,
-          target_discovery_persona: response.response.target_discovery_persona,
           ...businessData,
         },
         isLoggedIn
       );
       setToolId(responseToolId);
-      setToolStep(1);
+
       console.log("🚀 ~ handleSubmitBusinessInfo ~ responseToolId:", toolId);
 
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
@@ -302,65 +295,83 @@ const PageTargetDiscovery = () => {
 
       //  각 페르소나에 대해 순차적으로 API 호출
       for (const persona of selectedPersonaData) {
-        setLoadingPersonas((prev) => ({
-          ...prev,
-          [persona.title]: true,
-        }));
-
         const isDuplicate = selectedTargetDiscoveryPersona.some(
           (existingPersona) => existingPersona.title === persona.title
         );
 
-        // 중복이 아닌 경우에만 처리
+        const dummyScenarios = {
+          target_discovery_scenario: {
+            potential_customer_info: {
+              gender: "여성",
+              age: "20",
+              main_use_purpose: [
+                "신혼집 인테리어 디자인 영감 얻기",
+                "합리적인 가격의 고품질 인테리어 제품 구매",
+                "다양한 인테리어 스타일 비교 및 선택",
+                "DIY 인테리어 정보 공유 및 조언 얻기",
+              ],
+              pain_points: [
+                "원하는 스타일의 제품을 찾기 어려움",
+                "제품 가격 비교의 어려움",
+                "신뢰할 수 있는 인테리어 정보 부족",
+                "DIY 인테리어 관련 정보 부족 및 전문가 도움 접근 어려움",
+                "온라인 플랫폼에서의 제품 실물 확인 어려움",
+              ],
+            },
+            usage_scenario: {
+              description: "30대 초반 직장인인 수진(가명)씨와 남편은...",
+              key_sentence:
+                "신뢰할 수 있는 정보와 전문가 도움, 실제 제품 확인이 중요하다.",
+            },
+          },
+        };
+
+        // setLoadingPersonas(prev => ({
+        //   ...prev,
+        //   [persona.title]: true
+        // }));
+
+        // const isDuplicate = selectedTargetDiscoveryPersona.some(
+        //   existingPersona => existingPersona.title === persona.title
+        // );
+
+        // // 중복이 아닌 경우에만 처리
+        // if (!isDuplicate) {
+        //   const apiRequestData = {
+        //     type: "ix_target_discovery_persona",
+        //     business: targetDiscoveryInfo.business,
+        //     target_discovery_persona: persona,
+        //     specific_situation: targetDiscoveryInfo.specific_situation,
+        //     country: targetDiscoveryInfo.country
+        //   };
+
+        //   console.log("Current persona request:", apiRequestData);
+
+        //   // API 호출
+        //   // const response = await InterviewXTargetDiscoveryScenarioRequest(apiRequestData,isLoggedIn);
+
+        //    // 응답 데이터 유효성 검사
+        //    if (!response?.target_discovery_scenario?.potential_customer_info ||
+        //     !response?.target_discovery_scenario?.usage_scenario) {
+        //   setShowPopupError(true);
+        //   return;
+        // }
+
+        // 이전 결과를 유지하면서 새로운 결과 추가
+        //  setTargetDiscoveryScenario(prev => [...prev, response?.target_discovery_scenario]);
+
+        // 처리가 완료된 페르소나의 로딩 상태를 false로 설정
+        //   setLoadingPersonas(prev => ({
+        //     ...prev,
+        //     [persona.title]: false
+        //   }));
+        // }
+
         if (!isDuplicate) {
-          const apiRequestData = {
-            business: targetDiscoveryInfo.business,
-            target_discovery_persona: persona,
-            specific_situation: targetDiscoveryInfo.specific_situation,
-            country: targetDiscoveryInfo.country,
-          };
-
-          console.log("Current persona request:", apiRequestData);
-
-          // API 호출
-          const response = await InterviewXTargetDiscoveryScenarioRequest(
-            apiRequestData,
-            isLoggedIn
-          );
-
-          // 응답 데이터 유효성 검사
-          if (
-            !response?.response?.target_discovery_scenario
-              ?.potential_customer_info ||
-            !response?.response?.target_discovery_scenario?.usage_scenario
-          ) {
-            setShowPopupError(true);
-            return;
-          }
-
-          // 이전 결과를 유지하면서 새로운 결과 추가
-          setTargetDiscoveryScenario((prev) => [
-            ...prev,
-            response?.response?.target_discovery_scenario,
-          ]);
-
-          // 처리가 완료된 페르소나의 로딩 상태를 false로 설정
-          setLoadingPersonas((prev) => ({
-            ...prev,
-            [persona.title]: false,
-          }));
+          setTargetDiscoveryScenario(dummyScenarios.target_discovery_scenario);
+          // setProcessedScenarios(dummyScenarios.target_discovery_scenario);
         }
       }
-
-      updateToolOnServer(
-        toolId,
-        {
-          completed_step: 2,
-          target_discovery_scenario: targetDiscoveryScenario,
-        },
-        isLoggedIn
-      );
-      setToolStep(2);
     } catch (error) {
       console.error("Error submitting personas:", error);
       if (error.response) {
@@ -522,7 +533,6 @@ const PageTargetDiscovery = () => {
                         </div>
                         <FormBox Large>
                           <CustomTextarea
-                            disabled={toolStep >= 1}
                             Edit
                             rows={4}
                             placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
@@ -543,7 +553,6 @@ const PageTargetDiscovery = () => {
                           <Body1 color="red">*</Body1>
                         </div>
                         <CustomInput
-                          disabled={toolStep >= 1}
                           type="text"
                           placeholder="핵심 타겟 고객 군을 작성해주세요 (예: 20대 여성 등)"
                           value={targetCustomer}
@@ -558,7 +567,6 @@ const PageTargetDiscovery = () => {
                           </Body1>
                         </div>
                         <CustomInput
-                          disabled={toolStep >= 1}
                           type="text"
                           placeholder="특별히 분석하고자 하는 특정 상황이 있으신 경우, 입력해주세요 (예: 전기자전거의 배터리가 없는 상황 등)"
                           value={specificSituation}
@@ -641,7 +649,7 @@ const PageTargetDiscovery = () => {
                       Fill
                       Round
                       onClick={handleSubmitBusinessInfo}
-                      disabled={!isRequiredFieldsFilled() || toolStep >= 1}
+                      disabled={!isRequiredFieldsFilled()}
                     >
                       다음
                     </Button>
@@ -691,6 +699,141 @@ const PageTargetDiscovery = () => {
                           />
                         ))}
                       </CardGroupWrap>
+                      {/* <CardGroupWrap>
+
+                      <MoleculeToolPersonaCard
+                          title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                          keywords={['키워드1', '키워드2', '키워드3']}
+                          checked={selectedPersonas.includes(0)}  // 'persona1' -> 0
+                          onSelect={() => handleCheckboxChange(0)}  // 'persona1' -> 0
+                          currentSelection={selectedPersonas.length}
+                          personaData={{
+                            persona: "가족과 함께 여가를 보내는 활동 지향형 소비자",
+                            persona_view: "가족과 함께 여가를 보내는 활동 지향형 소비자",
+                            keyword: ["키워드1", "키워드2", "키워드3"],
+                            persona_keyword: ["키워드1", "키워드2", "키워드3"],
+                            who: "30대 초반 신혼부부, 맞벌이 직장인, 인테리어에 관심이 많은 수진씨",
+                            when: "신혼집 인테리어를 계획하고 준비하는 시기, DIY 인테리어 정보를 찾을 때",
+                            where: "인테리어 콘텐츠 공유 커뮤니티, 커머스 플랫폼, 온라인 쇼핑몰",
+                            what: "신혼집에 맞는 인테리어 디자인 영감, 합리적인 가격대의 고급 가구와 소품",
+                            how: "온라인 플랫폼에서 디자인 사진과 영상 탐색, 커뮤니티 참여를 통한 정보 공유",
+                            why: "신뢰할 수 있는 정보와 전문가의 조언을 통해 만족스러운 인테리어 결과물을 얻기 위해"
+                          }}
+                          viewType="list"
+                          popupType="basic"
+                          onDetailClick={() => setShowPopup(true)}
+                        />
+
+                        <MoleculeToolPersonaCard
+                          title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+                          keywords={['키워드1', '키워드2', '키워드3']}
+                          checked={selectedPersonas.includes(1)}  // 'persona2' -> 1
+                          onSelect={() => handleCheckboxChange(1)}  // 'persona2' -> 1
+                          currentSelection={selectedPersonas.length}
+                          personaData={{
+                            persona: "가족과 함께 여가를 보내는 활동 지향형 소비자",
+                            persona_view: "가족과 함께 여가를 보내는 활동 지향형 소비자",
+                            keyword: ["키워드1", "키워드2", "키워드3"],
+                            persona_keyword: ["키워드1", "키워드2", "키워드3"],
+                            who: "30대 초반 신혼부부, 맞벌이 직장인, 인테리어에 관심이 많은 수진씨",
+                            when: "신혼집 인테리어를 계획하고 준비하는 시기, DIY 인테리어 정보를 찾을 때",
+                            where: "인테리어 콘텐츠 공유 커뮤니티, 커머스 플랫폼, 온라인 쇼핑몰",
+                            what: "신혼집에 맞는 인테리어 디자인 영감, 합리적인 가격대의 고급 가구와 소품",
+                            how: "온라인 플랫폼에서 디자인 사진과 영상 탐색, 커뮤니티 참여를 통한 정보 공유",
+                            why: "신뢰할 수 있는 정보와 전문가의 조언을 통해 만족스러운 인테리어 결과물을 얻기 위해"
+                          }}
+                          viewType="list"
+                          popupType="basic"
+                          onDetailClick={() => setShowPopup(true)}
+                        />
+                      </CardGroupWrap>
+                      */}
+
+                      {/* 
+                      <ListBoxItem 
+                      NoBg
+                      selected={selectedPersonas.includes('persona1')} 
+                      active={selectedPersonas.includes('persona1')}
+                    >
+                      <div>
+                        <CheckBoxButton 
+                          id="persona1"
+                          name="persona1"
+                          checked={selectedPersonas.includes('persona1')}
+                          onChange={() => handleCheckboxChange('persona1')}
+                        />
+                      </div>
+                      <ListText>
+                        <ListTitle>
+                          <Body1 color={selectedPersonas.includes('persona1') ? "primary" : "gray800"}>가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                        </ListTitle>
+
+                        <ListSubtitle>
+                            <Badge Keyword>
+                              #키워드1
+                            </Badge>
+                            <Badge Keyword>
+                              #키워드2
+                            </Badge>
+                            <Badge Keyword>
+                              #키워드3
+                            </Badge>
+                        </ListSubtitle>
+                      </ListText>
+                      <ListButton>
+                        <CustomButton
+                          Medium
+                          PrimaryLightest
+                          Fill
+                          onClick={() => setShowPopup(true)}
+                        >
+                          자세히
+                        </CustomButton>
+                      </ListButton>
+                    </ListBoxItem>
+
+                    <ListBoxItem 
+                      NoBg
+                      selected={selectedPersonas.includes('persona2')} 
+                      active={selectedPersonas.includes('persona2')}
+                    >
+                      <div>
+                        <CheckBoxButton 
+                          id="persona2"
+                          name="persona2"
+                          checked={selectedPersonas.includes('persona2')}
+                          onChange={() => handleCheckboxChange('persona2')}
+                        />
+                      </div>
+                      <ListText>
+                        <ListTitle>
+                          <Body1 color={selectedPersonas.includes('persona2') ? "primary" : "gray800"}>가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                        </ListTitle>
+
+                        <ListSubtitle>
+                            <Badge Keyword>
+                              #키워드1
+                            </Badge>
+                            <Badge Keyword>
+                              #키워드2
+                            </Badge>
+                            <Badge Keyword>
+                              #키워드3
+                            </Badge>
+                        </ListSubtitle>
+                      </ListText>
+                      <ListButton>
+                        <CustomButton
+                          Medium
+                          PrimaryLightest
+                          Fill
+                          onClick={() => setShowPopup(true)}
+                        >
+                          자세히
+                        </CustomButton>
+                      </ListButton>
+                    </ListBoxItem>
+                  </CardGroupWrap> */}
 
                       <BottomBar W100>
                         <Body2
@@ -762,6 +905,92 @@ const PageTargetDiscovery = () => {
                       <Body1 color="gray800">페르소나 분석 중...</Body1>
                     )}
                   </CardGroupWrap>
+
+                  {/* <CardGroupWrap>
+                    <MoleculeToolPersonaCard
+                      title="가족과 함께 여가를 보내는 활동 지향형 소비자"
+
+                      keywords={["키워드1", "키워드2", "키워드3"]}
+                      viewType="list"
+                      hideCheckCircle={true}
+                      popupType="detail"
+                      personaData={{
+                        persona: "가족과 함께 여가를 보내는 활동 지향형 소비자",
+                        persona_view: "가족과 함께 여가를 보내는 활동 지향형 소비자",
+                        keyword: ["키워드1", "키워드2", "키워드3"],
+                        persona_keyword: ["키워드1", "키워드2", "키워드3"],
+                        who: "30대 초반 신혼부부, 맞벌이 직장인, 인테리어에 관심이 많은 수진씨",
+                        when: "신혼집 인테리어를 계획하고 준비하는 시기, DIY 인테리어 정보를 찾을 때",
+                        where: "인테리어 콘텐츠 공유 커뮤니티, 커머스 플랫폼, 온라인 쇼핑몰",
+                        what: "신혼집에 맞는 인테리어 디자인 영감, 합리적인 가격대의 고급 가구와 소품",
+                        how: "온라인 플랫폼에서 디자인 사진과 영상 탐색, 커뮤니티 참여를 통한 정보 공유",
+                        why: "신뢰할 수 있는 정보와 전문가의 조언을 통해 만족스러운 인테리어 결과물을 얻기 위해"
+                      }}
+                      
+                      onDetailClick={() => setShowPopupMore(true)}
+                    />
+                  </CardGroupWrap> */}
+                  {/* <CardGroupWrap>
+                    <ListBoxItem>
+                      <ListText>
+                        <ListTitle>
+                          <Body1 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                        </ListTitle>
+
+                        <ListSubtitle>
+                            <Badge Keyword>
+                              #키워드1
+                            </Badge>
+                            <Badge Keyword>
+                              #키워드2
+                            </Badge>
+                            <Badge Keyword>
+                              #키워드3
+                            </Badge>
+                        </ListSubtitle>
+                      </ListText>
+                      <ListButton>
+                        <CustomButton
+                          Medium
+                          PrimaryLightest
+                          Fill
+                          onClick={() => setShowPopupMore(true)}
+                        >
+                          자세히
+                        </CustomButton>
+                      </ListButton>
+                    </ListBoxItem>
+
+                    <ListBoxItem>
+                      <ListText>
+                        <ListTitle>
+                          <Body1 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                        </ListTitle>
+
+                        <ListSubtitle>
+                            <Badge Keyword>
+                              #키워드1
+                            </Badge>
+                            <Badge Keyword>
+                              #키워드2
+                            </Badge>
+                            <Badge Keyword>
+                              #키워드3
+                            </Badge>
+                        </ListSubtitle>
+                      </ListText>
+                      <ListButton>
+                        <CustomButton
+                          Medium
+                          PrimaryLightest
+                          Fill
+                          onClick={() => setShowPopupMore(true)}
+                        >
+                          자세히
+                        </CustomButton>
+                      </ListButton>
+                    </ListBoxItem>
+                  </CardGroupWrap> */}
 
                   <BottomBar W100>
                     <Body2 color="gray800">

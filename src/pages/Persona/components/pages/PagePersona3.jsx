@@ -470,7 +470,7 @@ const PagePersona3 = () => {
       (item) => item.id === purpose
     );
 
-    console.log("🚀 ~ handlePurposeSelect ~ selectedPurpose:", selectedPurpose);
+    // console.log("🚀 ~ handlePurposeSelect ~ selectedPurpose:", selectedPurpose);
     setSelectedInterviewPurposeData(selectedPurpose);
     // setSelectedInterviewPurpose(selectedPurpose?.view_title);
     setSelectedInterviewPurpose(purpose);

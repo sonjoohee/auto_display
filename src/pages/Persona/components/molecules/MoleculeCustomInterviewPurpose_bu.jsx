@@ -46,7 +46,7 @@ const MoleculeCustomInterviewPurpose = ({
   setRegenerateCount,
   NoBackground,
 }) => {
-  console.log("🚀 ~ purpose:", purpose);
+  // console.log("🚀 ~ purpose:", purpose);
   const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
     useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
   const [businessAnalysis] = useAtom(BUSINESS_ANALYSIS);

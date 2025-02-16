@@ -102,14 +102,14 @@ const OrganismPriceReport = () => {
         const maxRetries = 10;
 
         while (
-          retryCount < maxRetries &&
-          (!response1 ||
-            !response1.data ||
-            typeof response1.data !== "object" ||
-            !response1.data.hasOwnProperty("price_scrap_report") ||
-            typeof response1.data.price_scrap_report !== "object") ||
-            !response1.data.price_scrap_report.price_range_groups ||
-            response1.data.price_scrap_report.price_range_groups.length === 0
+          (retryCount < maxRetries &&
+            (!response1 ||
+              !response1.data ||
+              typeof response1.data !== "object" ||
+              !response1.data.hasOwnProperty("price_scrap_report") ||
+              typeof response1.data.price_scrap_report !== "object")) ||
+          !response1.data.price_scrap_report.price_range_groups ||
+          response1.data.price_scrap_report.price_range_groups.length === 0
         ) {
           response1 = await axios.post(
             "https://wishresearch.kr/panels/price_scrap",
@@ -152,17 +152,21 @@ const OrganismPriceReport = () => {
         retryCount = 0;
 
         while (
-          retryCount < maxRetries &&
-          (!response2 ||
-            !response2.data ||
-            typeof response2.data !== "object" ||
-            !response2.data.hasOwnProperty(
-              "price_analysis_persona_recommand_report"
-            ) ||
-            typeof response2.data.price_analysis_persona_recommand_report !==
-              "object") ||
-            !response2.data.price_analysis_persona_recommand_report.price_analysis ||
-            Object.keys(response2.data.price_analysis_persona_recommand_report.price_analysis).length === 0
+          (retryCount < maxRetries &&
+            (!response2 ||
+              !response2.data ||
+              typeof response2.data !== "object" ||
+              !response2.data.hasOwnProperty(
+                "price_analysis_persona_recommand_report"
+              ) ||
+              typeof response2.data.price_analysis_persona_recommand_report !==
+                "object")) ||
+          !response2.data.price_analysis_persona_recommand_report
+            .price_analysis ||
+          Object.keys(
+            response2.data.price_analysis_persona_recommand_report
+              .price_analysis
+          ).length === 0
         ) {
           response2 = await axios.post(
             "https://wishresearch.kr/panels/price_analysis",
@@ -246,8 +250,13 @@ const OrganismPriceReport = () => {
         setConversationStage(3);
         setConversation(updatedConversation);
 
-        await saveConversation(
-          { changingConversation: { conversation: updatedConversation, conversationStage: 3, priceScrapData: priceScrap, priceReportData: priceReport, buttonState: {
+        await saveConversation({
+          changingConversation: {
+            conversation: updatedConversation,
+            conversationStage: 3,
+            priceScrapData: priceScrap,
+            priceReportData: priceReport,
+            buttonState: {
               ...buttonState,
               priceEnough: 1,
             },
@@ -540,7 +549,15 @@ const OrganismPriceReport = () => {
   return (
     <>
       {isLoadingPrice || priceStartButtonState ? (
-        <Wrap style={{minWidth: "520px", minHeight: "600px", display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <Wrap
+          style={{
+            minWidth: "520px",
+            minHeight: "600px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Loader />
         </Wrap>
       ) : (

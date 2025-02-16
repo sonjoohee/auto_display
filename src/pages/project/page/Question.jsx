@@ -73,7 +73,7 @@ const Question = () => {
   // quest 다시정렬하기.
   const outData = modules.question.product_question?.map((dataValue) => {
     roof++;
-    console.log(roof);
+    // console.log(roof);
     const questionTitle = dataValue.title
       .replace(/{product_info}/g, modules.question.product_info)
       .replace(/{product_object}/g, modules.question.product_object)
@@ -113,8 +113,8 @@ const Question = () => {
       });
     });
 
-    console.log("____!!!", ageData);
-    console.log("____!!!", genderData);
+    // console.log("____!!!", ageData);
+    // console.log("____!!!", genderData);
 
     /////////////////
 
@@ -123,14 +123,14 @@ const Question = () => {
     let genderPoint = [];
     let joinPoint = [];
 
-    console.log("Data ::", dataValue.Participants);
+    // console.log("Data ::", dataValue.Participants);
 
     //남성찾기
     const filteredParticipantsM = Object.entries(dataValue.Participants).filter(
       ([key]) => key.endsWith("M")
     );
 
-    console.log("남성찾기::", filteredParticipantsM);
+    // console.log("남성찾기::", filteredParticipantsM);
     // 여성찾기
     const filteredParticipantsF = Object.entries(dataValue.Participants).filter(
       ([key]) => key.endsWith("F")
@@ -141,7 +141,7 @@ const Question = () => {
       dataValue.Participants
     ).filter(([key]) => key.includes(changeAge + changeGender));
 
-    console.log("filteredParticipantsAll!!!", filteredParticipantsAll);
+    // console.log("filteredParticipantsAll!!!", filteredParticipantsAll);
 
     const filteredParticipants10 = Object.entries(
       dataValue.Participants
@@ -227,8 +227,8 @@ const Question = () => {
       joinPoint.push({ target, value: valueAll });
     }
 
-    console.log("0=전체 // 1=남성 // 2=여성  //// 상태값:: ", clickGender);
-    console.log("agePoint", genderPoint);
+    // console.log("0=전체 // 1=남성 // 2=여성  //// 상태값:: ", clickGender);
+    // console.log("agePoint", genderPoint);
     const newData = {
       ...dataValue, // Include all existing data
       title: questionTitle, // Replace the title with the updated one
@@ -237,13 +237,13 @@ const Question = () => {
       joinChart: joinPoint,
     };
 
-    console.log("NENENEN ::", newData.genderChart);
+    // console.log("NENENEN ::", newData.genderChart);
 
     return newData;
   });
 
-  console.log("중요한 out데이터", outData);
-  console.log("클릭타입!!", clickType);
+  // console.log("중요한 out데이터", outData);
+  // console.log("클릭타입!!", clickType);
 
   return (
     <>

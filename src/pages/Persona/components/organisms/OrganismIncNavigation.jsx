@@ -159,7 +159,8 @@ import OrganismReportPopup from "../../../Expert_Insight/components/organisms/Or
 
 const OrganismIncNavigation = () => {
   const location = useLocation();
-  const [customPersonaList, setCustomPersonaList] = useAtom(CUSTOM_PERSONA_LIST);
+  const [customPersonaList, setCustomPersonaList] =
+    useAtom(CUSTOM_PERSONA_LIST);
   const [, setRefreshTrigger] = useAtom(PROJECT_REFRESH_TRIGGER);
   const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
     PROJECT_LOAD_BUTTON_STATE
@@ -609,7 +610,7 @@ const OrganismIncNavigation = () => {
 
     // 두 아코디언이 열렸을 때의 총 높이 계산
     const totalHeight = reportHeight + chatHeight; // 조건 없이 둘 다 더함
-    //  console.log("Total Height:", totalHeight);
+    //  // console.log("Total Height:", totalHeight);
 
     return totalHeight > maxSidebarHeight; // maxSidebarHeight와 비교하여 넘는지 확인
   };
@@ -695,7 +696,7 @@ const OrganismIncNavigation = () => {
   }, [historyEditBoxRef]);
 
   const editBoxToggle = (index, event, category) => {
-    // console.log('editBoxPosition:', editBoxPosition);
+    // console.log("editBoxPosition:", editBoxPosition);
     if (editToggleIndex === index) {
       setEditToggleIndex(null);
       return;

@@ -16,7 +16,7 @@ const PageBlog = () => {
           page_id: process.env.REACT_APP_NOTION_PAGE_ID,
         });
 
-        console.log('Notion Response:', response);
+        // console.log("Notion Response:", response);
         setPosts([response]);
       } catch (error) {
         console.error("Error fetching Notion page:", error);

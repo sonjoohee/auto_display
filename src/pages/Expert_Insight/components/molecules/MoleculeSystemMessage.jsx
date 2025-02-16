@@ -146,11 +146,11 @@ const SystemMessageContainer = styled.div`
   flex-direction: ${(props) => (props.Myself ? "row-reverse" : "row")};
   gap: 18px;
   // margin-top: ${(props) => (props.isMobile ? "0px" : "12px")};
-  margin-top:12px;
+  margin-top: 12px;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     flex-direction: ${(props) => (props.Myself ? "row-reverse" : "column")};
-    margin-top:0;
+    margin-top: 0;
   }
 `;
 

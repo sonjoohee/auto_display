@@ -974,7 +974,7 @@ const PagePersona2 = () => {
 
         const updatedList = [...businessPersonaList, ...newPersonas]; // 누적된 리스트
         // setBusinessPersonaList(updatedList);
-        // console.log('businessPersonaList:', businessPersonaList);
+        // console.log("businessPersonaList:", businessPersonaList);
         // 기존 상태에 새로운 페르소나를 추가
         // setBusinessPersonaList(updatedList);
 
@@ -1466,10 +1466,7 @@ const PagePersona2 = () => {
           ...prev,
           { ...typeToRemove, wasSelected: true },
         ];
-        console.log(
-          "🚀 ~ setUnselectedTypes ~ updatedUnselected:",
-          updatedUnselected
-        );
+
         // originalUnselectedTypes의 순서를 기준으로 정렬
         return updatedUnselected.sort((a, b) => {
           const aIndex = originalUnselectedTypes.findIndex(
@@ -1553,14 +1550,6 @@ const PagePersona2 = () => {
         projectLoadButtonState
       );
       if (savedProjectInfo?.businessPersonaList) {
-        console.log(
-          "🚀 ~ reloadBusinessPersonaList ~ savedProjectInfo?.businessPersonaList:",
-          savedProjectInfo?.businessPersonaList
-        );
-        console.log(
-          "🚀 ~ reloadBusinessPersonaList ~ visibleSelectedTypes:",
-          selectedTypes
-        );
         setDisplayedPersonas(
           savedProjectInfo.businessPersonaList.filter((persona) =>
             selectedTypes.some(

@@ -284,9 +284,7 @@ const OrganismProjectCard = ({ project, index }) => {
                     Round
                     onClick={() => navigateToPersonaPage(project._id)}
                   >
-                    <Body2 color="primary">
-                      맞춤페르소나와 인터뷰 진행하기
-                    </Body2>
+                    <Body2 color="primary">AI 페르소나와 인터뷰 진행하기</Body2>
                   </Button>
                 </Body2>
               </div>
