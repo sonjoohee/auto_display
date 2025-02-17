@@ -73,6 +73,7 @@ const MoleculeToolPersonaCard = ({
   isExist = false,
   onDetailClick,
   popupType = "basic",
+  key,
 }) => {
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
@@ -309,7 +310,7 @@ const MoleculeToolPersonaCard = ({
                   onClick={() => setShowDetailPopup(false)}
                 />
               </H4>
-              <p className="info">
+              {/* <p className="info">
                 <Sub3>
                   {personaScenario?.potential_customer_info?.gender || ""}
                 </Sub3>
@@ -323,14 +324,8 @@ const MoleculeToolPersonaCard = ({
                     : ""}
                 </Sub3>
 
-                {/* <Sub3>{personaData?.target_discovery_scenario?.potential_customer_info?.gender || ''}</Sub3>
-                <Sub3>
-                    {personaData?.target_discovery_scenario?.potential_customer_info?.age ? 
-                        `${personaData.target_discovery_scenario.potential_customer_info.age}세`
-                        : ''}
-                </Sub3> */}
                 <Sub3>{personaData?.residence || ""}</Sub3>
-              </p>
+              </p> */}
             </div>
 
             <div className="keywords">
