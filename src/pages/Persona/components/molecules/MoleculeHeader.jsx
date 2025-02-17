@@ -204,7 +204,7 @@ const MoleculeHeader = () => {
           <Title>
             {isTargetDiscoveryPage && targetDiscoveryInfo.business
               ? targetDiscoveryInfo.business
-              : "타겟 디스커버리"}
+              : ""}
           </Title>
         }
         {(personaStep > 0 ||
