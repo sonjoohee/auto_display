@@ -26,13 +26,8 @@ import {
   ContentsWrap,
   MainContent,
   Badge,
-  TabWrapType2,
-  TabButtonType2,
-  TabWrapType3,
-  TabButtonType3,
   TabWrapType4,
   TabButtonType4,
-  TabContent,
   TabWrapType5,
   TabButtonType5,
   TabContent5,
@@ -44,22 +39,12 @@ import {
   ListButton,
   BottomBar,
   BgBoxItem,
-  ListBoxWrap,
   ListBoxItem,
-  ListBoxTitle,
-  ListBoxContent,
-  Keyword,
-  InterviewPopup,
-  Status,
-  ListRowWrap,
-  ListRowItem,
-  BoxWrap,
-  PopupContent,
-  PopupTitle,
-  PopupTitle2,
   TextWrap,
   ListBox,
-  ListGroup,
+  Table,
+  TableHeader,
+  TableBody,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import {
@@ -1241,7 +1226,7 @@ const PageIdeaGenerator = () => {
         </ReadMorePopup>
       )}
 
-      {/* {showPopupMore && ( */}
+      {showPopupMore && (
         <PopupWrap
           Wide1000
           title={
@@ -1407,7 +1392,7 @@ const PageIdeaGenerator = () => {
             </>
           }
         />
-      {/* )} */}
+      )}
 
       {showPopupError && (
         <PopupWrap
@@ -1556,25 +1541,6 @@ const IdeaRankingTable = styled.div`
   padding: 24px 20px;
   border-radius: 10px;
   border: 1px solid ${palette.outlineGray};
-`;
-
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-
-  th,
-  td {
-    padding: 16px 0;
-  }
-`;
-
-const TableHeader = styled.thead`
-`;
-
-const TableBody = styled.tbody`
-  tr {
-    border-top: 1px solid ${palette.outlineGray};
-  }
 `;
 
 const SunburstChart = styled.div`
