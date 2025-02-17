@@ -198,9 +198,7 @@ const PageCustomerValueAnalyzer = () => {
 
   // 고객 여정 맵 API 호출 시작
   useEffect(() => {
-    console.log("🚀 ~ useEffect ~ activeTab:", activeTab);
     if (activeTab === 2 && customerValueAnalyzerPersona.length > 0) {
-      console.log("🚀 ~ useEffect ~ customerValueAnalyzerPersona:", customerValueAnalyzerPersona);
       // 첫 번째 카드 호출 시작
       handleAnalyzeJourneyMap(
         customerValueAnalyzerInfo.target_list[0],
@@ -408,7 +406,6 @@ const PageCustomerValueAnalyzer = () => {
       const response = await InterviewXCustomerValueAnalyzerJourneyMapRequest(
         date, isLoggedIn
       );
-      console.log("🚀 ~ handleAnalyzeJourneyMap ~ response:", response);
       setCardStatuses(prev => ({
         ...prev,
         [index]: 'completed'

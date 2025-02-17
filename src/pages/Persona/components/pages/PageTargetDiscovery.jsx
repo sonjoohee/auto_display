@@ -521,7 +521,7 @@ const PageTargetDiscovery = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="맞춤 페르소나를 찾고 있어요..." />
+                    <AtomPersonaLoader message="잠재 고객을 분석하고 있어요..." />
                   </div>
                 ) : (
                   <>
@@ -789,7 +789,11 @@ const PageTargetDiscovery = () => {
                       Primary
                       Round
                       Fill
-                      disabled={toolStep >= 3}
+                      disabled={
+                        toolStep >= 3 || 
+                        !targetDiscoveryScenario || 
+                        targetDiscoveryScenario.length !== selectedTargetDiscoveryPersona.length
+                      }
                       onClick={handleSubmitScenario}
                     >
                       다음

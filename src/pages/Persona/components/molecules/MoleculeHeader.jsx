@@ -23,6 +23,7 @@ import {
   PERSONA_STEP,
   USER_CREDITS,
   IS_LOGGED_IN,
+  TARGET_DISCOVERY_INFO,
 } from "../../../AtomStates";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import { UserCreditInfo } from "../../../../utils/indexedDB";
@@ -43,6 +44,7 @@ const MoleculeHeader = () => {
   const [isLoggedInState, setIsLoggedInState] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [alarms, setAlarms] = useState([]);
+  const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(TARGET_DISCOVERY_INFO);
 
   const navigate = useNavigate();
 
@@ -63,6 +65,9 @@ const MoleculeHeader = () => {
 
   // Payment 경로 체크 추가
   const isPaymentPage = location.pathname === "/Payment";
+
+  // TargetDiscovery 경로 체크 추가
+  const isTargetDiscoveryPage = location.pathname === "/TargetDiscovery";
 
   const handleAlertToggle = () => {
     if (showAlert) {
@@ -193,6 +198,11 @@ const MoleculeHeader = () => {
   return (
     <>
       <HeaderWrap>
+        {
+          <Title>
+            {isTargetDiscoveryPage && targetDiscoveryInfo.business ? targetDiscoveryInfo.business : ""}
+          </Title>
+        }
         {(personaStep > 0 ||
           isMyProjectPage ||
           isMyProfilePage ||
