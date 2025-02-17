@@ -81,12 +81,10 @@ const MoleculeToolPersonaCard = ({
   disabled = false,
   additionalContent,
 }) => {
-
   const [isChecked, setIsChecked] = useState(checked);
   const [showBasicPopup, setShowBasicPopup] = useState(false);
   const [showDetailPopup, setShowDetailPopup] = useState(false);
   const [activeTab1, setActiveTab1] = useState("personaInfo");
- 
 
   useEffect(() => {
     setIsChecked(checked);
@@ -149,17 +147,15 @@ const MoleculeToolPersonaCard = ({
                 PrimaryLightest
                 Fill
                 onClick={handleDetailClick}
-                disabled={disabled}
-                $loading={buttonText === "대기중"}
+                disabled={buttonText === "대기중" || buttonText === "호출중"}
+                $loading={buttonText === "대기중" || buttonText === "호출중"}
               >
                 {buttonText}
               </CustomButton>
             </ListButton>
           </MainContent>
           {additionalContent && (
-            <ListBoxContent>
-              {additionalContent}
-            </ListBoxContent>
+            <ListBoxContent>{additionalContent}</ListBoxContent>
           )}
         </ListBoxItem>
       )}
@@ -178,7 +174,6 @@ const MoleculeToolPersonaCard = ({
                 />
               </H4>
               <div className="keywords">
-               
                 {isBasic ? (
                   <>
                     <Status>
@@ -206,7 +201,7 @@ const MoleculeToolPersonaCard = ({
                 )}
               </div>
             </div>
-        
+
             <div className="content type2">
               <ListRowWrap>
                 <ListRowItem>
@@ -280,7 +275,6 @@ const MoleculeToolPersonaCard = ({
           <div>
             <div className="header">
               <H4>
-        
                 {personaData?.title}
                 <span
                   className="close"
@@ -293,19 +287,21 @@ const MoleculeToolPersonaCard = ({
                 </Sub3>
                 <Sub3>
                   {personaScenario?.potential_customer_info?.age
-                    ? String(personaScenario.potential_customer_info.age).includes("세")
+                    ? String(
+                        personaScenario.potential_customer_info.age
+                      ).includes("세")
                       ? personaScenario.potential_customer_info.age
-                      : String(personaScenario.potential_customer_info.age).endsWith("반")
-                        ? personaScenario.potential_customer_info.age
-                        : `${personaScenario.potential_customer_info.age}세`
+                      : String(
+                          personaScenario.potential_customer_info.age
+                        ).endsWith("반")
+                      ? personaScenario.potential_customer_info.age
+                      : `${personaScenario.potential_customer_info.age}세`
                     : ""}
                 </Sub3>
-     
               </p>
             </div>
 
             <div className="keywords">
-            
               {isBasic ? (
                 <>
                   <Status>#{personaData?.content?.keywords?.[0] || ""}</Status>
@@ -404,7 +400,6 @@ const MoleculeToolPersonaCard = ({
               )}
               {activeTab1 === "personaScenario" && (
                 <TabContent>
-          
                   <Body1 color="gray700">
                     {personaScenario?.usage_scenario?.key_sentence || ""}
                   </Body1>
@@ -425,32 +420,38 @@ export default MoleculeToolPersonaCard;
 
 const CustomButton = styled(Button)`
   min-width: 92px;
-  opacity: ${props => props.disabled ? 0.5 : 1};
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-  
-  ${props => props.$loading && css`
-    position: relative;
-    border: 1px solid ${palette.outlineGray} !important;
-    background: ${palette.chatGray} !important;
-    color: ${palette.gray700} !important;
-    opacity: 1;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 
-    &:after {
-      // content: '';
-      width: 12px;
-      height: 12px;
-      border: 2px solid ${palette.primary};
-      border-top: 2px solid transparent;
-      border-radius: 50%;
-      margin-left: 8px;
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  `}
+  ${(props) =>
+    props.$loading &&
+    css`
+      position: relative;
+      border: 1px solid ${palette.outlineGray} !important;
+      background: ${palette.chatGray} !important;
+      color: ${palette.gray700} !important;
+      opacity: 1;
+
+      &:after {
+        // content: '';
+        width: 12px;
+        height: 12px;
+        border: 2px solid ${palette.primary};
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        margin-left: 8px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    `}
 `;
 
 const CardContainer = styled.div`
