@@ -76,6 +76,12 @@ export const SelectBoxItem = styled.div`
   &:hover {
     background-color: ${palette.primaryLightest};
   }
+
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
+  }
 `;
 
 export const SelectBoxTitle = styled.div`
