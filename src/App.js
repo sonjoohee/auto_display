@@ -54,6 +54,7 @@ import PagePersonaSelect from "./pages/Design_Page/PagePersonaSelect";
 import PagePayment from "./pages/Persona/components/pages/PagePayment";
 import PageTargetDiscovery from "./pages/Persona/components/pages/PageTargetDiscovery";
 import PageCustomerValueAnalyzer from "./pages/Persona/components/pages/PageCustomerValueAnalyzer";
+import PageIdeaGenerator from "./pages/Persona/components/pages/PageIdeaGenerator";
 
 import PageMyProfile from "./pages/Persona/components/pages/PageMyProfile";
 
@@ -415,6 +416,15 @@ function App() {
             element={
               <RequireToken>
                 <PageCustomerValueAnalyzer />
+              </RequireToken>
+            }
+          ></Route>
+
+          <Route
+            path="/IdeaGenerator"
+            element={
+              <RequireToken>
+                <PageIdeaGenerator />
               </RequireToken>
             }
           ></Route>

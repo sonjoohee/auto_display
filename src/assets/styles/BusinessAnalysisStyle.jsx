@@ -379,6 +379,17 @@ export const TabButtonType4 = styled(TabButton)`
       background: ${palette.white};
     `
   }
+
+  ${({ active }) =>
+    active
+    ? `
+      color: ${palette.gray700};
+      background: ${palette.chatGray};
+    `
+    : `
+      background: ${palette.white};
+    `
+  }
 `;
 
 export const TabWrapType5 = styled(TabWrap)`
@@ -503,6 +514,7 @@ export const TabContent5Item = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
+  width: 100%;
 
   .title {
     display: flex;
@@ -2013,6 +2025,25 @@ export const ListBox = styled.div`
         gap: 12px;
         width: 100%;
       }
+
+      .ul-list {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+
+        li {
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          gap: 8px;
+
+          &:before {
+            content: "•";
+            color: ${palette.gray700};
+          }
+        }
+      }
     }
   }
 `;
@@ -2063,10 +2094,41 @@ export const ListBoxGroup = styled.ul`
 
 export const CardGroupWrap = styled.div`
   display: flex;
-  flex-direction: ${(props) => (props.column ? "column" : "row")};
+  flex-direction: ${(props) => (
+    props.column 
+    ? "column" 
+    : props.row
+    ? "row"
+    : "column"
+  )};
   gap: 15px !important;
   flex-wrap: wrap;
-  width: 100%;
+  width: ${(props) => (
+    props.column 
+    ? "100%" 
+    : "100%"
+  )};
+
+  > div {
+    flex: 1;
+    max-width: ${(props) => (
+      props.column 
+      ? "100%"
+      : props.row
+      ? "50%"
+      : "100%"
+    )};
+    width: ${(props) => (
+      props.column 
+      ? "100%" 
+      : "100%"
+    )};
+    justify-content: ${(props) => (
+      props.column 
+      ? "flex-start"
+      : "space-between"
+    )};
+  }
 `;
 
 export const ListBoxItem = styled.div`
@@ -3698,4 +3760,18 @@ export const TextWrap = styled.div`
   align-items: center;
   gap: 8px;
   width: 100%;
+`;
+
+export const SunburstChart = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
 `;
