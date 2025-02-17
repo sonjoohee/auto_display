@@ -426,7 +426,7 @@ export const TabButtonType5 = styled(TabButton)`
 
     &:after {
       position: absolute;
-      left: 75px;
+      left: 55px;
       top: 50%;
       transform: translateY(-50%) rotate(45deg);
       width: 7px;
@@ -3773,5 +3773,24 @@ export const SunburstChart = styled.div`
   svg {
     max-width: 100%;
     height: auto;
+  }
+`;
+
+export const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 16px 0;
+  }
+`;
+
+export const TableHeader = styled.thead`
+`;
+
+export const TableBody = styled.tbody`
+  tr {
+    border-top: 1px solid ${palette.outlineGray};
   }
 `;
