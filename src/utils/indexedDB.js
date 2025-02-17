@@ -1991,6 +1991,30 @@ export const updateToolOnServer = async (toolId, updateData, isLoggedIn) => {
   }
 };
 
+// TOOL 단건 조회      
+export const getToolOnServer = async (toolId, isLoggedIn) => {
+
+  if (isLoggedIn) {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      const response = await axios.get(
+        `https://wishresearch.kr/panels/tool/tool_detail/${toolId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching tool from server:", error);
+      throw error;
+    }
+  }
+};
+
+
 //타겟 디스커버리 페르소나 찾기
 export const InterviewXTargetDiscoveryPersonaRequest = async (
   data,
