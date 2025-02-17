@@ -2108,6 +2108,11 @@ export const CardGroupWrap = styled.div`
     ? "100%" 
     : "100%"
   )};
+  margin-bottom: ${(props) => (
+    props.row
+    ? "0"
+    : "140px"
+  )};
 
   > div {
     flex: 1;
