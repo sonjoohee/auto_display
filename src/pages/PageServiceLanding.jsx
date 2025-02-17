@@ -242,7 +242,7 @@ const PageServiceLanding = () => {
             <span className="subtext01">SCALABLE RESEARCH</span>
           </p>
           <p>
-            PERSONA<br />AI-DRIVEN<br />INSIGHT
+            EXPERIENCE<br />AI-DRIVEN<br />INSIGHT
             <span className="subtext02">
               HUMAN CONTEXT AI<br />
               AI FEEDBACK<br />
