@@ -285,19 +285,6 @@ const MoleculeToolPersonaCard = ({
                 <Sub3>
                   {personaScenario?.potential_customer_info?.gender || ""}
                 </Sub3>
-                <Sub3>
-                  {personaScenario?.potential_customer_info?.age
-                    ? String(
-                        personaScenario.potential_customer_info.age
-                      ).includes("세")
-                      ? personaScenario.potential_customer_info.age
-                      : String(
-                          personaScenario.potential_customer_info.age
-                        ).endsWith("반")
-                      ? personaScenario.potential_customer_info.age
-                      : `${personaScenario.potential_customer_info.age}세`
-                    : ""}
-                </Sub3>
               </p>
             </div>
 
