@@ -437,7 +437,7 @@ const PageTargetDiscovery = () => {
 
   const getButtonText = (persona, hasScenarioData, isLoading) => {
     if (isLoading) {
-      return "호출중";
+      return "대기중";
     } else if (hasScenarioData) {
       return "자세히";
     }
