@@ -529,6 +529,7 @@ export const TARGET_DISCOVERY_INFO = atom({
 export const TARGET_DISCOVERY_PERSONA = atom([]);
 export const SELECTED_TARGET_DISCOVERY_PERSONA = atom([]);
 export const TARGET_DISCOVERY_SCENARIO = atom([]);
+export const SELECTED_TARGET_DISCOVERY_SCENARIO = atom([]);
 export const TARGET_DISCOVERY_FINAL_REPORT = atom({});
 
 export const TOOL_ID = atom("");

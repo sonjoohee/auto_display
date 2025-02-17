@@ -10,6 +10,7 @@ import {
   Body3,
   Sub3,
   Caption2,
+  H5,
 } from "../../../../assets/styles/Typography";
 import {
   ListBoxItem,
@@ -29,6 +30,7 @@ import {
   TabContent,
   ListRowWrap,
   ListRowItem,
+  ListBoxContent,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import axios from "axios";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
@@ -74,31 +76,17 @@ const MoleculeToolPersonaCard = ({
   onDetailClick,
   popupType = "basic",
   key,
+  selectedIndex,
+  buttonText = "자세히",
+  disabled = false,
+  additionalContent,
 }) => {
-  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  const [creditRequestBusinessPersona] = useAtom(
-    CREDIT_REQUEST_BUSINESS_PERSONA
-  );
-  const [eventState] = useAtom(EVENT_STATE);
-  const [eventTitle] = useAtom(EVENT_TITLE);
-  const [trialState] = useAtom(TRIAL_STATE);
 
-  const [isChecked, setIsChecked] = useState(false);
-  const [requestStatus, setRequestStatus] = useState(isRequest);
-  const [showRequestPopup, setShowRequestPopup] = useState(false);
-
-  const [selectedPersonaForPopup, setSelectedPersonaForPopup] = useState(null);
+  const [isChecked, setIsChecked] = useState(checked);
   const [showBasicPopup, setShowBasicPopup] = useState(false);
   const [showDetailPopup, setShowDetailPopup] = useState(false);
   const [activeTab1, setActiveTab1] = useState("personaInfo");
-  const [showPopup, setShowPopup] = useState(false);
-  const [showCreditPopup, setShowCreditPopup] = useState(false);
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-
-  console.log("personaScenario", personaScenario);
+ 
 
   useEffect(() => {
     setIsChecked(checked);
@@ -133,7 +121,6 @@ const MoleculeToolPersonaCard = ({
 
   return (
     <>
-      {/* 리스트 버전 */}
       {viewType === "list" && (
         <ListBoxItem
           TitleFlex={TitleFlex}
@@ -146,18 +133,15 @@ const MoleculeToolPersonaCard = ({
             )}
             <ListText>
               <ListTitle>
-                <Body1>{title}</Body1>
+                <H5 color="gray800">{title}</H5>
               </ListTitle>
-
-              {keywords?.length > 0 && (
-                <ListSubtitle>
-                  {keywords.map((keyword, index) => (
-                    <Badge Keyword key={index}>
-                      #{keyword}
-                    </Badge>
-                  ))}
-                </ListSubtitle>
-              )}
+              <ListSubtitle>
+                {keywords?.map((keyword, index) => (
+                  <Badge key={index} Keyword>
+                    #{keyword}
+                  </Badge>
+                ))}
+              </ListSubtitle>
             </ListText>
             <ListButton>
               <CustomButton
@@ -165,11 +149,18 @@ const MoleculeToolPersonaCard = ({
                 PrimaryLightest
                 Fill
                 onClick={handleDetailClick}
+                disabled={disabled}
+                $loading={buttonText === "호출중"}
               >
-                자세히
+                {buttonText}
               </CustomButton>
             </ListButton>
           </MainContent>
+          {additionalContent && (
+            <ListBoxContent>
+              {additionalContent}
+            </ListBoxContent>
+          )}
         </ListBoxItem>
       )}
 
@@ -187,21 +178,7 @@ const MoleculeToolPersonaCard = ({
                 />
               </H4>
               <div className="keywords">
-                {/*personaData.content.keywords*/}
-                {/* {isBasic ? (
-                  <>
-                    <Status>#{personaData?.persona_keyword?.[0] || ''}</Status>
-                    <Status>#{personaData?.persona_keyword?.[1] || ''}</Status>
-                    <Status>#{personaData?.persona_keyword?.[2] || ''}</Status>
-                  </>
-                ) : (
-                  <>
-                    <Status>#{personaData?.keyword?.[0] || ''}</Status>
-                    <Status>#{personaData?.keyword?.[1] || ''}</Status>
-                    <Status>#{personaData?.keyword?.[2] || ''}</Status>
-                  </>
-                )} */}
-
+               
                 {isBasic ? (
                   <>
                     <Status>
@@ -229,7 +206,7 @@ const MoleculeToolPersonaCard = ({
                 )}
               </div>
             </div>
-            {/*personaData.content.who, when, where, what, how, why*/}
+        
             <div className="content type2">
               <ListRowWrap>
                 <ListRowItem>
@@ -303,45 +280,32 @@ const MoleculeToolPersonaCard = ({
           <div>
             <div className="header">
               <H4>
-                {/* {isBasic ? personaData?.persona_view : personaData?.persona} */}
+        
                 {personaData?.title}
                 <span
                   className="close"
                   onClick={() => setShowDetailPopup(false)}
                 />
               </H4>
-              {/* <p className="info">
+              <p className="info">
                 <Sub3>
                   {personaScenario?.potential_customer_info?.gender || ""}
                 </Sub3>
                 <Sub3>
                   {personaScenario?.potential_customer_info?.age
-                    ? personaScenario?.potential_customer_info?.age.includes(
-                        "세"
-                      )
-                      ? personaScenario?.potential_customer_info?.age
-                      : `${personaScenario?.potential_customer_info?.age}세`
+                    ? String(personaScenario.potential_customer_info.age).includes("세")
+                      ? personaScenario.potential_customer_info.age
+                      : String(personaScenario.potential_customer_info.age).endsWith("반")
+                        ? personaScenario.potential_customer_info.age
+                        : `${personaScenario.potential_customer_info.age}세`
                     : ""}
                 </Sub3>
-
-                <Sub3>{personaData?.residence || ""}</Sub3>
-              </p> */}
+     
+              </p>
             </div>
 
             <div className="keywords">
-              {/* {isBasic ? (
-                <>
-                  <Status>#{personaData?.persona_keyword?.[0] || ''}</Status>
-                  <Status>#{personaData?.persona_keyword?.[1] || ''}</Status>
-                  <Status>#{personaData?.persona_keyword?.[2] || ''}</Status>
-                </>
-              ) : (
-                <>
-                  <Status>#{personaData?.keyword?.[0] || ''}</Status>
-                  <Status>#{personaData?.keyword?.[1] || ''}</Status>
-                  <Status>#{personaData?.keyword?.[2] || ''}</Status>
-                </>
-              )} */}
+            
               {isBasic ? (
                 <>
                   <Status>#{personaData?.content?.keywords?.[0] || ""}</Status>
@@ -440,8 +404,7 @@ const MoleculeToolPersonaCard = ({
               )}
               {activeTab1 === "personaScenario" && (
                 <TabContent>
-                  {/* <Body1 color="gray700">{personaData?.scenarioTitle || ''}</Body1>
-                  <Body3 color="gray700">{personaData?.scenario || ''}</Body3> */}
+          
                   <Body1 color="gray700">
                     {personaScenario?.usage_scenario?.key_sentence || ""}
                   </Body1>
@@ -462,6 +425,28 @@ export default MoleculeToolPersonaCard;
 
 const CustomButton = styled(Button)`
   min-width: 92px;
+  opacity: ${props => props.disabled ? 0.5 : 1};
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  
+  ${props => props.$loading && css`
+    position: relative;
+    &:after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border: 2px solid ${palette.primary};
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      margin-left: 8px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `}
 `;
 
 const CardContainer = styled.div`
