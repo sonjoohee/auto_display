@@ -133,7 +133,7 @@ const MoleculeToolPersonaCard = ({
             )}
             <ListText>
               <ListTitle>
-                <H5 color="gray800">{title}</H5>
+                <Body1 color="gray800">{title}</Body1>
               </ListTitle>
               <ListSubtitle>
                 {keywords?.map((keyword, index) => (
@@ -432,7 +432,6 @@ const CustomButton = styled(Button)`
     position: relative;
     &:after {
       content: '';
-      position: absolute;
       width: 12px;
       height: 12px;
       border: 2px solid ${palette.primary};
