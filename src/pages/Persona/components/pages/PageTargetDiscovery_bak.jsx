@@ -59,7 +59,7 @@ import {
   TARGET_DISCOVERY_SCENARIO,
   TARGET_DISCOVERY_FINAL_REPORT,
   TOOL_ID,
-} from "../../../../pages/AtomStates";
+} from "../../../AtomStates";
 import images from "../../../../assets/styles/Images";
 import {
   H4,
