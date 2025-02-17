@@ -47,13 +47,9 @@ const IncNavigation = () => {
         <SubTitle>
           <div>
             <img src={images.ClockCounterclockwise} alt="" />
-            AI 전문가 대화내역
+            Explore 사용 내역
           </div>
-          <img 
-            src={images.IconClose2} 
-            alt="닫기" 
-            onClick={handleCloseSubNav}
-          />
+          <img src={images.IconClose2} alt="닫기" onClick={handleCloseSubNav} />
         </SubTitle>
 
         <HistoryWrap>
@@ -80,7 +76,7 @@ const IncNavigation = () => {
               </li>
             </ul>
           </HistoryList>
-        </HistoryWrap>        
+        </HistoryWrap>
       </SubNavigation>
     </>
   );
@@ -156,7 +152,7 @@ const SubNavigation = styled.div`
   border-right: 1px solid ${palette.outlineGray};
   background: ${palette.white};
   z-index: 100;
-  transform: translateX(${props => props.show ? '0' : '-100%'});
+  transform: translateX(${(props) => (props.show ? "0" : "-100%")});
   transition: transform 0.3s ease-in-out;
 `;
 
