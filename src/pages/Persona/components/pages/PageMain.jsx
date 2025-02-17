@@ -1529,13 +1529,13 @@ const PageMain = () => {
           </label>
 
           <FloatingMenuItem onClick={() => navigate("/MarketingLanding")}>
-            <Sub2 color="primary">창업 MBTI로 유형 분석하기</Sub2>
+            <Sub2 color="gray800">창업 MBTI로 유형 분석하기</Sub2>
             <div className="icon">
               <images.Tag width="15" height="16" color={palette.primary} />
             </div>
           </FloatingMenuItem>
           <FloatingMenuItem onClick={() => handleSubmit()}>
-            <Sub2 color="primary">내 아이템 잠재력 진단 받기</Sub2>
+            <Sub2 color="gray800">내 아이템 잠재력 진단 받기</Sub2>
             <div className="icon">
               <images.Report2 width="16" height="16" color={palette.primary} />
             </div>

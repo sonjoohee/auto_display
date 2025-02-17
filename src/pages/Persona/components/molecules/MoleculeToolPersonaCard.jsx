@@ -150,7 +150,7 @@ const MoleculeToolPersonaCard = ({
                 Fill
                 onClick={handleDetailClick}
                 disabled={disabled}
-                $loading={buttonText === "호출중"}
+                $loading={buttonText === "대기중"}
               >
                 {buttonText}
               </CustomButton>
@@ -430,8 +430,13 @@ const CustomButton = styled(Button)`
   
   ${props => props.$loading && css`
     position: relative;
+    border: 1px solid ${palette.outlineGray} !important;
+    background: ${palette.chatGray} !important;
+    color: ${palette.gray700} !important;
+    opacity: 1;
+
     &:after {
-      content: '';
+      // content: '';
       width: 12px;
       height: 12px;
       border: 2px solid ${palette.primary};
