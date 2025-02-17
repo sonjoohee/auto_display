@@ -297,6 +297,8 @@ import ImgExplore09 from "../images/img-explore09.png";
 import ImgExploreNoData from "../images/img-explore-nodata.png";
 
 import LightningChargeFill from "../icons/LightningChargeFill";
+import Tag from "../icons/Tag";
+import Report2 from "../icons/Report2";
 
 const images = {
   Logo,
@@ -586,6 +588,8 @@ const images = {
   ImgExploreNoData,
 
   LightningChargeFill,
+  Tag,
+  Report2,
 }
 
 export default images;
