@@ -851,10 +851,13 @@ const OrganismIncNavigation = () => {
         //     (chat) => chat.business_info !== null && chat.business_info !== ""
         //   ) // business_info가 비었으면(기초보고서 생성 전) 히스토리에 남기지 않음
         //   .sort((a, b) => b.timestamp - a.timestamp); // 최근 날짜 순으로 정렬
-        const sortedChatList = response.data
-          // .filter((chat) => chat.business !== null && chat.business !== "") // business_info가 비었으면(기초보고서 생성 전) 히스토리에 남기지 않음
-          .sort((a, b) => b.createDate - a.createDate); // 최근 날짜 순으로 정렬
+        const sortedChatList = response.data.sort((a, b) => {
+          const dateA = b.updateDate || b.createDate;
+          const dateB = a.updateDate || a.createDate;
+          return dateA - dateB;
+        }); // 최근 날짜 순으로 정렬
 
+        console.log("🚀 ~ fetchChatList ~ sortedChatList:", sortedChatList);
         // console.log("🚀 ~ fetchChatList ~ sortedChatList:", sortedChatList);
         setChatList(sortedChatList);
       } catch (error) {
@@ -1048,7 +1051,7 @@ const OrganismIncNavigation = () => {
       setToolLoading(false);
       // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
       setToolStep(chatData.completed_step);
-      setToolId(chatData._id);
+      setToolId(chatData.id);
       setTargetDiscoveryInfo({
         type: chatData.type,
         business: chatData.business,

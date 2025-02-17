@@ -198,6 +198,10 @@ const PageTargetDiscovery = () => {
           Array.isArray(targetDiscoveryPersona) &&
           Array.isArray(selectedTargetDiscoveryPersona)
         ) {
+          console.log(
+            "🚀 ~ interviewLoading ~ selectedTargetDiscoveryPersona:",
+            selectedTargetDiscoveryPersona
+          );
           // 이미 선택된 페르소나들의 인덱스 찾기
           const selectedIndices = (targetDiscoveryPersona ?? [])
             .map((persona, index) => {
@@ -226,6 +230,10 @@ const PageTargetDiscovery = () => {
           Array.isArray(targetDiscoveryScenario) &&
           Array.isArray(targetDiscoveryPersona)
         ) {
+          console.log(
+            "🚀 ~ interviewLoading ~ targetDiscoveryPersona:",
+            targetDiscoveryPersona
+          );
           const matchedScenarioData = (targetDiscoveryScenario ?? [])
             .map((scenario) => {
               const matchedPersona = (targetDiscoveryPersona ?? []).find(
@@ -334,7 +342,6 @@ const PageTargetDiscovery = () => {
       setToolId(responseToolId);
       setToolStep(1);
       console.log("🚀 ~ handleSubmitBusinessInfo ~ responseToolId:", toolId);
-
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
       setTargetDiscoveryPersona(
         response.response.target_discovery_persona || []
@@ -404,30 +411,50 @@ const PageTargetDiscovery = () => {
             apiRequestData,
             isLoggedIn
           );
-
           if (
             !response?.response?.target_discovery_scenario
               ?.potential_customer_info ||
             !response?.response?.target_discovery_scenario?.usage_scenario
           ) {
+            console.log("🚀 ~ handleSubmitPersonas ~ response:", response);
             setShowPopupError(true);
             return;
           }
-          setTargetDiscoveryScenario((prev) => [
-            ...prev,
-            response?.response?.target_discovery_scenario,
-          ]);
 
+          console.log(
+            "🚀 ~ handleSubmitPersonas ~ response33333333:",
+            targetDiscoveryScenario
+          );
+          setTargetDiscoveryScenario((prev) => {
+            // prev가 없는 경우 빈 배열로 초기화
+            const currentScenarios = prev || [];
+            return [
+              ...currentScenarios,
+              response?.response?.target_discovery_scenario,
+            ].filter(Boolean); // null/undefined 값 제거
+          });
+          console.log(
+            "🚀 ~ handleSubmitPersonas ~ response4444444:",
+            response?.response?.target_discovery_scenario
+          );
           // API 호출이 완료되면 해당 페르소나의 로딩 상태를 false로 설정
           setLoadingPersonas((prev) => ({
             ...prev,
             [persona.title]: false,
           }));
 
+          console.log(
+            "🚀 ~ handleSubmitPersonas ~ allScenarios:",
+            allScenarios
+          );
           allScenarios.push({
             ...persona, // 기존 페르소나 데이터 유지
             scenario: response.response.target_discovery_scenario, // 시나리오 데이터 추가
           });
+          console.log(
+            "🚀 ~ handleSubmitPersonas ~ response555555",
+            response?.response?.target_discovery_scenario
+          );
         }
       }
       setSelectedTargetDiscoveryScenario(allScenarios);
@@ -439,6 +466,15 @@ const PageTargetDiscovery = () => {
         {
           completed_step: 2,
           target_discovery_scenario: allScenarios,
+          updateDate: new Date().toLocaleString("ko-KR", {
+            timeZone: "Asia/Seoul",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }),
         },
         isLoggedIn
       );
@@ -507,6 +543,15 @@ const PageTargetDiscovery = () => {
           completed_step: 4,
           target_discovery_final_report:
             response.response.target_discovery_final_report,
+          updateDate: new Date().toLocaleString("ko-KR", {
+            timeZone: "Asia/Seoul",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }),
         },
         isLoggedIn
       );
@@ -867,10 +912,6 @@ const PageTargetDiscovery = () => {
                           (scenarioData) => scenarioData.title === persona.title
                         );
 
-                      console.log(
-                        "🚀 ~ {selectedTargetDiscoveryPersona.map ~ matchingScenarioData:",
-                        matchingScenarioData
-                      );
                       const hasScenarioData = Boolean(
                         matchingScenarioData?.scenario
                       );

@@ -1921,6 +1921,15 @@ export const createToolOnServer = async (data, isLoggedIn) => {
           minute: "2-digit",
           second: "2-digit",
         }),
+        updateDate: new Date().toLocaleString("ko-KR", {
+          timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
         ...data,
       };
       const response = await axios.post(
@@ -1991,9 +2000,8 @@ export const updateToolOnServer = async (toolId, updateData, isLoggedIn) => {
   }
 };
 
-// TOOL 단건 조회      
+// TOOL 단건 조회
 export const getToolOnServer = async (toolId, isLoggedIn) => {
-
   if (isLoggedIn) {
     try {
       const accessToken = sessionStorage.getItem("accessToken");
@@ -2014,9 +2022,8 @@ export const getToolOnServer = async (toolId, isLoggedIn) => {
   }
 };
 
-// TOOL 리스트 조회      
+// TOOL 리스트 조회
 export const getToolListOnServer = async (size, page, isLoggedIn) => {
-
   if (isLoggedIn) {
     try {
       const accessToken = sessionStorage.getItem("accessToken");
