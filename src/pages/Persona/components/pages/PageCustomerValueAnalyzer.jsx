@@ -179,11 +179,12 @@ const PageCustomerValueAnalyzer = () => {
       const response = await getToolListOnServer(size, page, isLoggedIn);
       const targetDiscoveryData = response.data.filter(item => item.type === "ix_target_discovery_persona");
       
-      // if (targetDiscoveryData.target_discovery_scenario.lenght > 0) {
-      if (targetDiscoveryData.length > 0) {
-        setTargetDiscoveryList(prev => [...prev, ...targetDiscoveryData]);
-        console.log("🚀 ~ getAllTargetDiscovery ~ targetDiscoveryData:", targetDiscoveryData);
-      }
+      setTargetDiscoveryList(prev => {
+        const newItems = targetDiscoveryData.filter(item => 
+          item?.target_discovery_scenario?.length > 0
+        );
+        return [...prev, ...newItems];
+      });
       
       if (response.count <= page * size) {
         break;
@@ -546,8 +547,7 @@ const PageCustomerValueAnalyzer = () => {
                                 key={index}
                                 onClick={() => {
                                   handlePurposeSelect(item.business, 'customerList');
-                                  setTargetCustomers(item.target_discovery_persona.map(persona => persona.title));
-                                  // setTargetCustomers(item.target_discovery_scenario.map(persona => persona.title));
+                                  setTargetCustomers(item.target_discovery_scenario.map(persona => persona.title));
                                 }}
                               >
                                 <Body2 color="gray700" align="left">
@@ -706,16 +706,19 @@ const PageCustomerValueAnalyzer = () => {
                     {customerValueAnalyzerPersona.map((content, index) => (
                       <MoleculeCustomerValueCard
                         key={index}
+                        id={`persona-${index}`}
                         title={customerValueAnalyzerInfo.target_list[index]}
                         content={content}
                         status={cardStatuses[index]}
-                      onAnalyze={() => handleAnalyzeJourneyMap(
-                        customerValueAnalyzerInfo.target_list[index],
-                        content,
-                        index
-                      )}
-                    />
-                  ))}
+                        isSelected={selectedPersonas.includes(`persona-${index}`)}
+                        onSelect={(id) => handleCheckboxChange(id)}
+                        onAnalyze={() => handleAnalyzeJourneyMap(
+                          customerValueAnalyzerInfo.target_list[index],
+                          content,
+                          index
+                        )}
+                      />
+                    ))}
                   </CardGroupWrap>
                   <BottomBar W100>
                     <Body2
@@ -943,12 +946,6 @@ const PageCustomerValueAnalyzer = () => {
           body={
             <>
               <ListGroup>
-                <div>
-                  <Body1 color="gray800" align="left">뛰어난 지속력</Body1>
-                  <Sub3 color="gray800" align="left">
-                    시간에 민감한 페르소나에게 수정 화장은 시간 낭비이자 업무 효율 저하의 원인입니다. 하루 종일 지속되는 메이크업은 그녕의 프로페셔널한 이미지 유지와 업무 집중도 향상에 직결됩니다.  
-                  </Sub3>
-                </div>
                 <div>
                   <Body1 color="gray800" align="left">뛰어난 지속력</Body1>
                   <Sub3 color="gray800" align="left">

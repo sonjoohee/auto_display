@@ -71,6 +71,9 @@ const MoleculeCustomerValueCard = ({
   content,
   status, // 'waiting' | 'loading' | 'completed'
   onAnalyze, // API 요청을 시작하는 함수
+  isSelected, // 선택 여부
+  onSelect, // 선택 이벤트 핸들러
+  id, // 카드 식별자
 }) => {
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(CUSTOMER_VALUE_ANALYZER_INFO);
@@ -123,21 +126,20 @@ const MoleculeCustomerValueCard = ({
     <>
         <ListBoxItem 
             NoBg
-            // selected={selectedPersonas.includes('persona1')} 
-            // active={selectedPersonas.includes('persona1')}
+            selected={isSelected}
+            active={isSelected}
         >
             <div>
             <CheckBoxButton 
-                // id="persona1"
-                // name="persona1"
-                // checked={selectedPersonas.includes('persona1')}
-                // onChange={() => handleCheckboxChange('persona1')}
+                id={id}
+                name={id}
+                checked={isSelected}
+                onChange={() => onSelect(id)}
             />
             </div>
             <ListText>
             <ListTitle>
-                {/* <Body1 color={selectedPersonas.includes('persona1') ? "primary" : "gray800"}> */}
-                <Body1 color="gray800">
+                <Body1 color={isSelected ? "primary" : "gray800"}>
                 {title}
                 </Body1>
             </ListTitle>
