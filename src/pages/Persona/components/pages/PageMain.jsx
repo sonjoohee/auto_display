@@ -1244,7 +1244,7 @@ const PageMain = () => {
                   </div>
                 </ExploreCard>,
 
-                <ExploreCard Expert key="expert-1" {...(!accessableExpert && { Ready: true })}>
+                <ExploreCard Expert Ready key="expert-1" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
@@ -1272,7 +1272,7 @@ const PageMain = () => {
                   </div>
                 </ExploreCard>,
                 
-                <ExploreCard Expert key="expert-2" {...(!accessableExpert && { Ready: true })}>
+                <ExploreCard Expert Ready key="expert-2" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
@@ -1297,7 +1297,7 @@ const PageMain = () => {
                   </div>
                 </ExploreCard>,
                 
-                <ExploreCard Expert key="expert-3" {...(!accessableExpert && { Ready: true })}>
+                <ExploreCard Expert Ready key="expert-3" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
@@ -1322,7 +1322,7 @@ const PageMain = () => {
                   </div>
                 </ExploreCard>,
                 
-                <ExploreCard Expert key="expert-4" {...(!accessableExpert && { Ready: true })}>
+                <ExploreCard Expert Ready key="expert-4" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
@@ -1347,7 +1347,7 @@ const PageMain = () => {
                   </div>
                 </ExploreCard>,
 
-                <ExploreCard Expert key="expert-5" style={{ cursor: 'default' }}>
+                <ExploreCard Expert Ready key="expert-5" style={{ cursor: 'default' }}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
