@@ -157,6 +157,7 @@ import {
   H4,
   Body1,
   Body3,
+  Sub2,
   Sub3,
   Caption1,
   Caption2,
@@ -1431,7 +1432,29 @@ const PageMain = () => {
           </CopyRight>
         </MainContent>
 
-        <QuickMenu showText={showText} showHint={showHint}>
+        <FloatingMenu>
+          <input type="checkbox" id="floatingMenu" name="floatingMenu" />
+          <label htmlFor="floatingMenu">
+            <span>
+              <img src={images.LogoSymbolWhite} alt="" />
+            </span>
+          </label>
+
+          <FloatingMenuItem onClick={() => navigate("/MarketingLanding")}>
+            <Sub2 color="primary">창업 MBTI로 유형 분석하기</Sub2>
+            <div className="icon">
+              <images.Tag width="15" height="16" color={palette.primary} />
+            </div>
+          </FloatingMenuItem>
+          <FloatingMenuItem onClick={() => navigate("/")}>
+            <Sub2 color="primary">내 아이템 잠재력 진단 받기</Sub2>
+            <div className="icon">
+              <images.Report2 width="16" height="16" color={palette.primary} />
+            </div>
+          </FloatingMenuItem>
+        </FloatingMenu>
+
+        {/* <QuickMenu showText={showText} showHint={showHint}>
           {showHint && <span>창업 MBTI 진행하기</span>}
           <button
             onMouseEnter={() => setShowText(true)}
@@ -1443,7 +1466,7 @@ const PageMain = () => {
             </p>
             <span>창업 MBTI로 창업 스타일 찾기</span>
           </button>
-        </QuickMenu>
+        </QuickMenu> */}
       </ContentsWrap>
       {isPopupRegex && (
         <Popup
@@ -1605,6 +1628,127 @@ const PageMain = () => {
 };
 
 export default PageMain;
+
+const FloatingMenu = styled.div`
+  position: fixed;
+  bottom: 3%;
+  right: 3%;
+
+  input {
+    display: none;
+
+    &:checked ~ label span {
+      img {
+        opacity: 0;
+      }
+
+      &:before,
+      &:after {
+        opacity: 1;
+      }
+    }
+
+    &:checked ~ div {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
+
+      &:nth-child(3) {
+        transition-duration: 180ms;
+        transform: translate3d(0, -95px, 0);
+      }
+
+      &:nth-child(4) {
+        transition-duration: 280ms;
+        transform: translate3d(0, -150px, 0);
+      }
+    }
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: ${palette.primary};
+    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+
+      &:before,
+      &:after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 16px;
+        height: 3px;
+        border-radius: 4px;
+        background: ${palette.white};
+        content: "";
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      &:before {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      &:after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+      
+      img {
+        width: 100%;
+        height: 100%;
+        transition: opacity 0.3s ease;
+      }
+    }
+  }
+`;
+
+const FloatingMenuItem = styled.div`
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 200px;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  pointer-events: none;
+  opacity: 0;
+
+  .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.15);
+    background: ${palette.white};
+    
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
 
 const MainContent = styled.div`
   display: flex;
