@@ -166,6 +166,7 @@ const PageTargetDiscovery = () => {
   };
 
   const handleCheckboxChange = (personaId) => {
+    console.log("🚀 ~ handleCheckboxChange ~ personaId:", personaId);
     if (toolStep >= 2) return;
     setSelectedPersonas((prev) => {
       if (prev.includes(personaId)) {
@@ -753,7 +754,7 @@ const PageTargetDiscovery = () => {
                         //   target_discovery_scenario: persona.target_discovery_scenario
                         // }}
                         personaData={persona}
-                        personaScenario={targetDiscoveryScenario}
+                        personaScenario={targetDiscoveryScenario[index]}
                         onDetailClick={() => setShowPopupMore(true)}
                       />
                     ))}
