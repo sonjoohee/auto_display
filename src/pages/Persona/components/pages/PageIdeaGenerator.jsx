@@ -902,7 +902,7 @@ const PageIdeaGenerator = () => {
                   </div>
                 </SegmentContent>
 
-                <div className="content" style={{marginBottom: "280px"}}>
+                <div className="content">
                   {selectedInterviewType === "yesTarget" ? (
                     <>                      
                       <TabContent5Item>
