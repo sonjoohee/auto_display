@@ -169,7 +169,7 @@ import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-import { CreditInfo } from "../../../../utils/indexedDB";
+import { CreditInfo, createChatOnServer } from "../../../../utils/indexedDB";
 
 const PageMain = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -1003,6 +1003,42 @@ const PageMain = () => {
     return false;
   };
 
+  const axiosConfig = {
+    timeout: 100000, // 100초
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  };
+
+  const handleSubmit = async () => {
+    if (!isLoggedIn) {
+      try {
+        // 로그인 요청
+        const response = await axios.get(
+          "https://wishresearch.kr/api/user/marketing/",
+          axiosConfig
+        );
+
+        const accessToken = response.data.access_token;
+
+        // accessToken을 세션 스토리지에 저장
+        sessionStorage.setItem("accessToken", accessToken);
+      } catch (error) {
+        console.error("로그인 중 오류가 발생했습니다.", error);
+      }
+    }
+
+    const newConversationId = await createChatOnServer();
+    setConversationId(newConversationId); // 생성된 대화 ID 설정
+
+    setIsMarketing(true);
+    setMarketingHaveIdea(true);
+    setSelectedExpertIndex("11");
+
+    navigate("/MarketingSetting/1");
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -1446,7 +1482,7 @@ const PageMain = () => {
               <images.Tag width="15" height="16" color={palette.primary} />
             </div>
           </FloatingMenuItem>
-          <FloatingMenuItem onClick={() => navigate("/")}>
+          <FloatingMenuItem onClick={() => handleSubmit()}>
             <Sub2 color="primary">내 아이템 잠재력 진단 받기</Sub2>
             <div className="icon">
               <images.Report2 width="16" height="16" color={palette.primary} />
