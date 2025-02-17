@@ -535,6 +535,19 @@ export const TARGET_DISCOVERY_FINAL_REPORT = atom({});
 export const TOOL_ID = atom("");
 export const TOOL_STEP = atom(0);
 
+export const CUSTOMER_VALUE_ANALYZER_INFO = atom({
+  business: "",
+  target_list: [],
+  analysis_scope: ""
+});
+export const CUSTOMER_VALUE_ANALYZER_PERSONA = atom([]);
+export const CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA = atom([]);
+export const CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP = atom({});
+export const CUSTOMER_VALUE_ANALYZER_FACTOR = atom({});
+export const CUSTOMER_VALUE_ANALYZER_CLUSTERING = atom([]);
+export const CUSTOMER_VALUE_ANALYZER_POSITIONING = atom([]);
+export const CUSTOMER_VALUE_ANALYZER_FINAL_REPORT = atom({}); 
+
 // setConversation([]);
 // setConversationStage(1);
 // setInputBusinessInfo("");
