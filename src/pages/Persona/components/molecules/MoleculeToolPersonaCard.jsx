@@ -427,30 +427,51 @@ const CustomButton = styled(Button)`
     props.$loading &&
     css`
       position: relative;
+      justify-content: ${props.children === "호출중" ? "space-between" : "center"};
       border: 1px solid ${palette.outlineGray} !important;
       background: ${palette.chatGray} !important;
       color: ${palette.gray700} !important;
       opacity: 1;
 
-      &:after {
-        // content: '';
-        width: 12px;
-        height: 12px;
-        border: 2px solid ${palette.primary};
-        border-top: 2px solid transparent;
-        border-radius: 50%;
-        margin-left: 8px;
-        animation: spin 1s linear infinite;
-      }
+      ${props.children === "호출중" &&
+      css`
+        &:after {
+          // width: 12px;
+          // height: 12px;
+          // border: 2px solid ${palette.primary};
+          // border-top: 2px solid transparent;
+          // border-radius: 50%;
+          // margin-left: 8px;
+          // animation: spin 1s linear infinite;
 
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
+          content: '';
+          width: 3px;
+          height: 3px;
+          border-radius: 50%;
+          display: block;
+          position: relative;
+          margin-right: 8px;
+          background: ${palette.white};
+          box-shadow: -10px 0 ${palette.white}, 10px 0 ${palette.white};
+          box-sizing: border-box;
+          animation: shadowPulse 2s linear infinite;
         }
-        100% {
-          transform: rotate(360deg);
+
+        @keyframes shadowPulse {
+          33% {
+            background: ${palette.white};
+            box-shadow: -10px 0 ${palette.primary}, 10px 0 ${palette.white};
+          }
+          66% {
+            background: ${palette.primary};
+            box-shadow: -10px 0 ${palette.white}, 10px 0 ${palette.white};
+          }
+          100% {
+            background: ${palette.white};
+            box-shadow: -10px 0 ${palette.white}, 10px 0 ${palette.primary};
+          }
         }
-      }
+      `}
     `}
 `;
 
