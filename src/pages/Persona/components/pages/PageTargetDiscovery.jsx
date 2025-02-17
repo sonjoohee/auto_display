@@ -198,51 +198,51 @@ const PageTargetDiscovery = () => {
           Array.isArray(targetDiscoveryPersona) &&
           Array.isArray(selectedTargetDiscoveryPersona)
         ) {
-          const selectedIndices = selectedTargetDiscoveryPersona
-            .map((selected) =>
-              targetDiscoveryPersona.findIndex(
-                (persona) => persona?.title === selected?.title
+          // 이미 선택된 페르소나들의 인덱스 찾기
+          const selectedIndices = targetDiscoveryPersona
+            .map((persona, index) => {
+              // targetDiscoveryScenario에 있는 페르소나만 선택
+              return targetDiscoveryScenario.some(
+                (scenario) => scenario.title === persona.title
               )
-            )
+                ? index
+                : -1;
+            })
             .filter((index) => index !== -1);
 
+          // selectedPersonas 상태 업데이트
           setSelectedPersonas(selectedIndices);
+
+          // 선택된 페르소나 데이터 설정
+          const selectedPersonaData = selectedIndices
+            .map((index) => targetDiscoveryPersona[index])
+            .filter(Boolean);
+
+          setSelectedTargetDiscoveryPersona(selectedPersonaData);
         }
 
         // 시나리오 설정 (Step 3)
         if (
           Array.isArray(targetDiscoveryScenario) &&
-          Array.isArray(targetDiscoveryPersona) &&
-          Array.isArray(selectedTargetDiscoveryPersona)
+          Array.isArray(targetDiscoveryPersona)
         ) {
-          setTargetDiscoveryScenario(targetDiscoveryScenario || []);
-
-          // 시나리오와 매칭되는 페르소나 찾아서 데이터 결합
           const matchedScenarioData = targetDiscoveryScenario
             .map((scenario) => {
-              // 시나리오의 title과 동일한 title을 가진 페르소나 찾기
               const matchedPersona = targetDiscoveryPersona.find(
                 (persona) => persona?.title === scenario?.title
-              );
-              console.log("🚀 ~ .map ~ matchedPersona:", matchedPersona);
-
-              // 선택된 페르소나에서도 매칭되는 데이터 찾기
-              const selectedPersona = targetDiscoveryScenario.find(
-                (selected) => selected?.title === scenario?.title
               );
 
               if (!matchedPersona) return null;
 
               return {
-                ...matchedPersona, // 페르소나 기본 정보
-                ...selectedPersona, // 선택된 페르소나 정보
+                ...matchedPersona,
                 title: scenario?.title || "",
                 content: matchedPersona?.content || {},
                 keywords: matchedPersona?.content?.keywords || [],
-                scenario: scenario || {}, // 시나리오 데이터
+                scenario: scenario || {},
               };
             })
-            .filter((item) => item && item.title); // null이 아니고 title이 있는 데이터만 필터링
+            .filter((item) => item && item.title);
 
           setSelectedTargetDiscoveryScenario(matchedScenarioData);
         }
@@ -869,7 +869,19 @@ const PageTargetDiscovery = () => {
                 <div className="content">
                   <CardGroupWrap>
                     {selectedTargetDiscoveryPersona.map((persona, index) => {
-                      const hasScenarioData = targetDiscoveryScenario[index];
+                      // selectedTargetDiscoveryScenario에서 매칭되는 시나리오 데이터 찾기
+                      const matchingScenarioData =
+                        selectedTargetDiscoveryScenario.find(
+                          (scenarioData) => scenarioData.title === persona.title
+                        );
+
+                      console.log(
+                        "🚀 ~ {selectedTargetDiscoveryPersona.map ~ matchingScenarioData:",
+                        matchingScenarioData
+                      );
+                      const hasScenarioData = Boolean(
+                        matchingScenarioData?.scenario
+                      );
                       const isLoading = loadingPersonas[persona.title];
 
                       return (
@@ -881,7 +893,7 @@ const PageTargetDiscovery = () => {
                           hideCheckCircle={true}
                           popupType="detail"
                           personaData={persona}
-                          personaScenario={targetDiscoveryScenario[index]}
+                          personaScenario={matchingScenarioData?.scenario} // scenario 객체만 전달
                           onDetailClick={() => setShowPopupMore(true)}
                           selectedIndex={index}
                           buttonText={getButtonText(
