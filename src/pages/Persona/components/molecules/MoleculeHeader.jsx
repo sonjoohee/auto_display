@@ -44,7 +44,9 @@ const MoleculeHeader = () => {
   const [isLoggedInState, setIsLoggedInState] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [alarms, setAlarms] = useState([]);
-  const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(TARGET_DISCOVERY_INFO);
+  const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
+    TARGET_DISCOVERY_INFO
+  );
 
   const navigate = useNavigate();
 
@@ -200,7 +202,9 @@ const MoleculeHeader = () => {
       <HeaderWrap>
         {
           <Title>
-            {isTargetDiscoveryPage && targetDiscoveryInfo.business ? targetDiscoveryInfo.business : ""}
+            {isTargetDiscoveryPage && targetDiscoveryInfo.business
+              ? targetDiscoveryInfo.business
+              : "타겟 디스커버리"}
           </Title>
         }
         {(personaStep > 0 ||

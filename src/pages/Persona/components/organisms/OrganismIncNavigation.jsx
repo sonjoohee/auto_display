@@ -148,8 +148,20 @@ import {
   IS_SHOW_TOAST,
   PROJECT_REFRESH_TRIGGER,
   CUSTOM_PERSONA_LIST,
+  TARGET_DISCOVERY_INFO,
+  TARGET_DISCOVERY_PERSONA,
+  TARGET_DISCOVERY_SCENARIO,
+  SELECTED_TARGET_DISCOVERY_SCENARIO,
+  TARGET_DISCOVERY_FINAL_REPORT,
+  TOOL_ID,
+  TOOL_STEP,
+  TOOL_LOADING,
 } from "../../../AtomStates";
-import { getAllConversationsFromIndexedDB } from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
+import {
+  getAllConversationsFromIndexedDB,
+  getToolListOnServer,
+  getToolOnServer,
+} from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup"; // 계정설정 팝업 컴포넌트 임포트
 import MoleculeSignPopup from "../../../Login_Sign/components/molecules/MoleculeSignPopup"; // 회원가입 팝업 컴포넌트 임포트
@@ -158,6 +170,31 @@ import { useSaveConversation } from "../../../Expert_Insight/components/atoms/At
 import OrganismReportPopup from "../../../Expert_Insight/components/organisms/OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismIncNavigation = () => {
+  // export const TARGET_DISCOVERY_PERSONA = atom([]);
+  // export const SELECTED_TARGET_DISCOVERY_PERSONA = atom([]);
+  // export const TARGET_DISCOVERY_SCENARIO = atom([]);
+  // export const SELECTED_TARGET_DISCOVERY_SCENARIO = atom([]);
+  // export const TARGET_DISCOVERY_FINAL_REPORT = atom({});
+
+  // export const TOOL_ID = atom("");
+  // export const TOOL_STEP = atom(0);
+  const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
+  const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
+    TARGET_DISCOVERY_INFO
+  );
+  const [targetDiscoveryPersona, setTargetDiscoveryPersona] = useAtom(
+    TARGET_DISCOVERY_PERSONA
+  );
+  const [targetDiscoveryScenario, setTargetDiscoveryScenario] = useAtom(
+    TARGET_DISCOVERY_SCENARIO
+  );
+  const [selectedTargetDiscoveryScenario, setSelectedTargetDiscoveryScenario] =
+    useAtom(SELECTED_TARGET_DISCOVERY_SCENARIO);
+  const [targetDiscoveryFinalReport, setTargetDiscoveryFinalReport] = useAtom(
+    TARGET_DISCOVERY_FINAL_REPORT
+  );
+  const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const location = useLocation();
   const [customPersonaList, setCustomPersonaList] =
     useAtom(CUSTOM_PERSONA_LIST);
@@ -799,20 +836,26 @@ const OrganismIncNavigation = () => {
           setChatList([]); // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
           return;
         }
-        const response = await axios.get(
-          "https://wishresearch.kr/panels/chat_list",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        // const response = await axios.get(
+        //   "https://wishresearch.kr/panels/chat_list",
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${accessToken}`,
+        //     },
+        //   }
+        // // );
+        const response = await getToolListOnServer(1000, 1, isLoggedIn);
+        console.log("🚀 ~ fetchChatList ~ response:", response);
+        // const sortedChatList = response.data
+        //   .filter(
+        //     (chat) => chat.business_info !== null && chat.business_info !== ""
+        //   ) // business_info가 비었으면(기초보고서 생성 전) 히스토리에 남기지 않음
+        //   .sort((a, b) => b.timestamp - a.timestamp); // 최근 날짜 순으로 정렬
         const sortedChatList = response.data
-          .filter(
-            (chat) => chat.business_info !== null && chat.business_info !== ""
-          ) // business_info가 비었으면(기초보고서 생성 전) 히스토리에 남기지 않음
-          .sort((a, b) => b.timestamp - a.timestamp); // 최근 날짜 순으로 정렬
+          // .filter((chat) => chat.business !== null && chat.business !== "") // business_info가 비었으면(기초보고서 생성 전) 히스토리에 남기지 않음
+          .sort((a, b) => b.createDate - a.createDate); // 최근 날짜 순으로 정렬
 
+        console.log("🚀 ~ fetchChatList ~ sortedChatList:", sortedChatList);
         setChatList(sortedChatList);
       } catch (error) {
         console.error("대화 목록 가져오기 오류:", error);
@@ -854,126 +897,169 @@ const OrganismIncNavigation = () => {
 
     try {
       const accessToken = sessionStorage.getItem("accessToken");
-      const response = await axios.get(
-        `https://wishresearch.kr/panels/chat/${conversationId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      const chatData = response.data.chat_data;
+      // const response = await axios.get(
+      //   `https://wishresearch.kr/panels/chat/${conversationId}`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${accessToken}`,
+      //     },
+      //   }
+      // );
+      const response = await getToolOnServer(conversationId, isLoggedIn);
+      const chatData = response;
       // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
-      setSavedTimestamp(chatData.timestamp); // 대화 날짜 설정
-      setSelectedExpertIndex(
-        chatData.expert_index !== undefined ? chatData.expert_index : "0"
-      );
-      setConversationId(chatData.id); // 대화 ID 설정
-      setConversation(chatData.conversation); // 이전 대화 내역 설정
-      setConversationStage(chatData.conversationStage); // 대화 단계 설정
-      setInputBusinessInfo(chatData.inputBusinessInfo); // 비즈니스 정보 설정
-      setTitleOfBusinessInfo(chatData.analysisReportData.title); // 분석 데이터 설정
-      setMainFeaturesOfBusinessInformation(
-        chatData.analysisReportData.mainFeatures
-      ); // 주요 특징 설정
-      setMainCharacteristicOfBusinessInformation(
-        chatData.analysisReportData.mainCharacter
-      ); // 주요 특징 설정
-      setBusinessInformationTargetCustomer(
-        chatData.analysisReportData.mainCustomer
-      ); // 목표 고객 설정
+      // setSavedTimestamp(chatData.createDate); // 대화 날짜 설정
+      // setSelectedExpertIndex(
+      //   chatData.expert_index !== undefined ? chatData.expert_index : "0"
+      // );
+      // setConversationId(chatData.id); // 대화 ID 설정
+      // setConversation(chatData.conversation); // 이전 대화 내역 설정
+      // setConversationStage(chatData.conversationStage); // 대화 단계 설정
+      // setInputBusinessInfo(chatData.inputBusinessInfo); // 비즈니스 정보 설정
+      // setTitleOfBusinessInfo(chatData.analysisReportData.title); // 분석 데이터 설정
+      // setMainFeaturesOfBusinessInformation(
+      //   chatData.analysisReportData.mainFeatures
+      // ); // 주요 특징 설정
+      // setMainCharacteristicOfBusinessInformation(
+      //   chatData.analysisReportData.mainCharacter
+      // ); // 주요 특징 설정
+      // setBusinessInformationTargetCustomer(
+      //   chatData.analysisReportData.mainCustomer
+      // ); // 목표 고객 설정
 
-      // 전문가 보고서 데이터 복구
-      setStrategyReportData(chatData.strategyReportData || {});
+      // // 전문가 보고서 데이터 복구
+      // setStrategyReportData(chatData.strategyReportData || {});
 
-      // 필요하다면 추가 상태 업데이트
-      setSelectedAdditionalKeyword(chatData.selectedAdditionalKeyword || []);
-      setAdditionalReportData(chatData.additionalReportData || []);
-      setCustomerAdditionalReportData(
-        chatData.customerAdditionalReportData || []
-      );
-      setSelectedCustomerAdditionalKeyword(
-        chatData.selectedCustomerAdditionalKeyword || []
-      );
+      // // 필요하다면 추가 상태 업데이트
+      // setSelectedAdditionalKeyword(chatData.selectedAdditionalKeyword || []);
+      // setAdditionalReportData(chatData.additionalReportData || []);
+      // setCustomerAdditionalReportData(
+      //   chatData.customerAdditionalReportData || []
+      // );
+      // setSelectedCustomerAdditionalKeyword(
+      //   chatData.selectedCustomerAdditionalKeyword || []
+      // );
 
-      setSelectedPocOptions(chatData.selectedPocOptions || []);
-      setSelectedPocTarget(chatData.selectedPocTarget || {});
-      setRecommendedTargetData(chatData.recommendedTargetData || {});
-      setPocPersonaList(chatData.pocPersonaList || []);
-      setPocDetailReportData(chatData.pocDetailReportData || {});
+      // setSelectedPocOptions(chatData.selectedPocOptions || []);
+      // setSelectedPocTarget(chatData.selectedPocTarget || {});
+      // setRecommendedTargetData(chatData.recommendedTargetData || {});
+      // setPocPersonaList(chatData.pocPersonaList || []);
+      // setPocDetailReportData(chatData.pocDetailReportData || {});
 
-      setIdeaFeatureData(chatData.ideaFeatureData || []);
-      setIdeaRequirementData(chatData.ideaRequirementData || []);
-      setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
-      setIdeaRequirementDataTemp(chatData.ideaRequirementData || []);
+      // setIdeaFeatureData(chatData.ideaFeatureData || []);
+      // setIdeaRequirementData(chatData.ideaRequirementData || []);
+      // setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
+      // setIdeaRequirementDataTemp(chatData.ideaRequirementData || []);
 
-      setIdeaList(chatData.ideaList || []);
-      setIdeaGroup(chatData.ideaGroup || {});
-      setIdeaPriority(chatData.ideaPriority || []);
-      setIdeaMiroState(chatData.ideaMiroState || 0);
+      // setIdeaList(chatData.ideaList || []);
+      // setIdeaGroup(chatData.ideaGroup || {});
+      // setIdeaPriority(chatData.ideaPriority || []);
+      // setIdeaMiroState(chatData.ideaMiroState || 0);
 
-      setButtonState(chatData.buttonState || {});
+      // setButtonState(chatData.buttonState || {});
 
-      setGrowthHackerRecommendedSolution(
-        chatData.growthHackerRecommendedSolution || []
-      );
-      setGrowthHackerReportData(chatData.growthHackerReportData || []);
-      setGrowthHackerDetailReportData(
-        chatData.growthHackerDetailReportData || []
-      );
-      setGrowthHackerSelectedSolution(
-        chatData.growthHackerSelectedSolution || []
-      );
-      setKpiQuestionList(chatData.KpiQuestionList || []);
+      // setGrowthHackerRecommendedSolution(
+      //   chatData.growthHackerRecommendedSolution || []
+      // );
+      // setGrowthHackerReportData(chatData.growthHackerReportData || []);
+      // setGrowthHackerDetailReportData(
+      //   chatData.growthHackerDetailReportData || []
+      // );
+      // setGrowthHackerSelectedSolution(
+      //   chatData.growthHackerSelectedSolution || []
+      // );
+      // setKpiQuestionList(chatData.KpiQuestionList || []);
 
-      setPriceReportData(chatData.priceReportData || {});
-      setPriceScrapData(chatData.priceScrapData || {});
-      setPriceProduct(chatData.priceProduct || []);
-      setPriceSelectedProductSegmentation(
-        chatData.priceSelectedProductSegmentation || []
-      );
-      setPriceProductSegmentation(chatData.priceProductSegmentation || []);
+      // setPriceReportData(chatData.priceReportData || {});
+      // setPriceScrapData(chatData.priceScrapData || {});
+      // setPriceProduct(chatData.priceProduct || []);
+      // setPriceSelectedProductSegmentation(
+      //   chatData.priceSelectedProductSegmentation || []
+      // );
+      // setPriceProductSegmentation(chatData.priceProductSegmentation || []);
 
-      setCaseReportData(chatData.caseReportData || []);
-      setCaseHashTag(chatData.caseHashTag || []);
+      // setCaseReportData(chatData.caseReportData || []);
+      // setCaseHashTag(chatData.caseHashTag || []);
 
-      setSurveyGuidelineDetailReportData(
-        chatData.surveyGuidelineDetailReportData || {}
-      );
-      setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
-      setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
-      setSurveyGoalFixed(chatData.surveyGoalFixed || []);
-      setSurveyQuestionList(chatData.surveyQuestionList || []);
+      // setSurveyGuidelineDetailReportData(
+      //   chatData.surveyGuidelineDetailReportData || {}
+      // );
+      // setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
+      // setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
+      // setSurveyGoalFixed(chatData.surveyGoalFixed || []);
+      // setSurveyQuestionList(chatData.surveyQuestionList || []);
 
-      setBmModelSuggestionReportData(
-        chatData.bmModelSuggestionReportData || []
-      );
-      setBmQuestionList(chatData.bmQuestionList || []);
-      setBmSelectedProblemOptions(chatData.bmSelectedProblemOptions || {});
-      setBmOrLean(chatData.bmOrLean || "");
-      setBmBmAutoReportData(chatData.bmBmAutoReportData || []);
-      setBmLeanAutoReportData(chatData.bmLeanAutoReportData || []);
-      setBmBmAdsReportData(chatData.bmBmAdsReportData || []);
-      setBmLeanAdsReportData(chatData.bmLeanAdsReportData || []);
-      setBmBmCustomReportData(chatData.bmBmCustomReportData || []);
-      setBmLeanCustomReportData(chatData.bmLeanCustomReportData || []);
+      // setBmModelSuggestionReportData(
+      //   chatData.bmModelSuggestionReportData || []
+      // );
+      // setBmQuestionList(chatData.bmQuestionList || []);
+      // setBmSelectedProblemOptions(chatData.bmSelectedProblemOptions || {});
+      // setBmOrLean(chatData.bmOrLean || "");
+      // setBmBmAutoReportData(chatData.bmBmAutoReportData || []);
+      // setBmLeanAutoReportData(chatData.bmLeanAutoReportData || []);
+      // setBmBmAdsReportData(chatData.bmBmAdsReportData || []);
+      // setBmLeanAdsReportData(chatData.bmLeanAdsReportData || []);
+      // setBmBmCustomReportData(chatData.bmBmCustomReportData || []);
+      // setBmLeanCustomReportData(chatData.bmLeanCustomReportData || []);
 
-      setIsMarketing(chatData.isMarketing || false);
-      setMarketingMbtiResult(chatData.marketingMbtiResult || {});
-      setMarketingResearchReportData(
-        chatData.marketingResearchReportData || []
-      );
-      setMarketingBmReportData(chatData.marketingBmReportData || []);
-      setMarketingCustomerData(chatData.marketingCustomerData || []);
-      setMarketingSelectedCustomer(chatData.marketingSelectedCustomer || []);
-      setMarketingFinalCustomer(chatData.marketingFinalCustomer || {});
-      setMarketingFinalReportData(chatData.marketingFinalReportData || []);
+      // setIsMarketing(chatData.isMarketing || false);
+      // setMarketingMbtiResult(chatData.marketingMbtiResult || {});
+      // setMarketingResearchReportData(
+      //   chatData.marketingResearchReportData || []
+      // );
+      // setMarketingBmReportData(chatData.marketingBmReportData || []);
+      // setMarketingCustomerData(chatData.marketingCustomerData || []);
+      // setMarketingSelectedCustomer(chatData.marketingSelectedCustomer || []);
+      // setMarketingFinalCustomer(chatData.marketingFinalCustomer || {});
+      // setMarketingFinalReportData(chatData.marketingFinalReportData || []);
 
-      setStrategyConsultantReportData(
-        chatData.strategyConsultantReportData || []
-      );
+      // setStrategyConsultantReportData(
+      //   chatData.strategyConsultantReportData || []
+      // );
 
+      // export const TARGET_DISCOVERY_INFO = atom({
+      //   type: "",
+      //   business: "",
+      //   target: "",
+      //   specific_situation: "",
+      //   country: "",
+      // });
+
+      // export const TARGET_DISCOVERY_PERSONA = atom([]);
+      // export const SELECTED_TARGET_DISCOVERY_PERSONA = atom([]);
+      // export const TARGET_DISCOVERY_SCENARIO = atom([]);
+      // export const SELECTED_TARGET_DISCOVERY_SCENARIO = atom([]);
+      // export const TARGET_DISCOVERY_FINAL_REPORT = atom({});
+
+      // export const TOOL_ID = atom("");
+      // export const TOOL_STEP = atom(0);
+      setToolStep(1);
+      setToolId("");
+      setTargetDiscoveryInfo({
+        type: "",
+        business: "",
+        target: "",
+        specific_situation: "",
+        country: "",
+      });
+      setTargetDiscoveryPersona([]);
+      setTargetDiscoveryScenario([]);
+      setTargetDiscoveryFinalReport({});
+      setToolLoading(false);
+      console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
+      setToolStep(chatData.completed_step);
+      setToolId(chatData._id);
+      setTargetDiscoveryInfo({
+        type: chatData.type,
+        business: chatData.business,
+        target: chatData.target,
+        specific_situation: chatData.specific_situation,
+        country: chatData.country,
+      });
+      setTargetDiscoveryPersona(chatData.target_discovery_persona);
+      setTargetDiscoveryScenario(chatData.target_discovery_scenario);
+      setTargetDiscoveryFinalReport(chatData.target_discovery_final_report);
+      setToolLoading(true);
       if (chatData.isMarketing) {
         const updatedConversation = [...chatData.conversation];
 
@@ -1032,7 +1118,7 @@ const OrganismIncNavigation = () => {
       setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
 
       // 페이지를 대화가 이어지는 형태로 전환
-      navigate(`/conversation/${conversationId}`);
+      navigate(`/TargetDiscovery`);
     } catch (error) {
       console.error("대화 내용 가져오기 오류:", error);
     }
@@ -1380,7 +1466,7 @@ const OrganismIncNavigation = () => {
             </svg> */}
 
             {/* <img src={images.Clock} alt="히스토리" /> */}
-            <span>전문가챗</span>
+            <span>Explore</span>
           </li>
 
           {/*<li className="storagebox">
@@ -1516,7 +1602,7 @@ const OrganismIncNavigation = () => {
               color={palette.gray700}
             />
             {/* <img src={images.ClockCounterclockwise} alt="" /> */}
-            AI 전문가 대화내역
+            Explore 사용 내역
           </div>
           <img
             src={images.ArrowBarLeft}
@@ -1535,34 +1621,37 @@ const OrganismIncNavigation = () => {
           {chatList && chatList.length > 0 ? (
             <>
               <HistoryList>
-                <strong>최근 대화</strong>
-                {chatList.some(
-                  (chat) => Date.now() - chat.timestamp <= 604800000
-                ) ? (
+                {/* <strong>최근 사용 내역</strong> */}
+                {true ? (
+                  // chatList.some(
+                  //   (chat) => Date.now() - chat.timestamp <= 604800000
+                  // )
                   <>
                     <ul>
                       {chatList
-                        .filter(
-                          (chat) => Date.now() - chat.timestamp <= 604800000
-                        )
+                        // .filter(
+                        //   (chat) => Date.now() - chat.timestamp <= 604800000
+                        // )
                         .map((chat) => (
                           <li
                             key={chat.id}
                             className={`toggle ${
-                              editToggleIndex === chat.id ? "active" : ""
+                              editToggleIndex === chat._id ? "active" : ""
                             }`}
                           >
-                            <p onClick={() => handleConversationClick(chat.id)}>
-                              {chat.view_name || chat.business_info}
+                            <p
+                              onClick={() => handleConversationClick(chat._id)}
+                            >
+                              {chat.view_name || chat.business}
                             </p>
                             <span
-                              id={`insight-toggle-${chat.id}`}
+                              id={`insight-toggle-${chat._id}`}
                               style={{
                                 display: "inline-block",
                                 cursor: "pointer",
                               }}
                               onClick={(event) =>
-                                editBoxToggle(chat.id, event, "recent")
+                                editBoxToggle(chat._id, event, "recent")
                               }
                               className="toggle"
                             >
@@ -1638,13 +1727,13 @@ const OrganismIncNavigation = () => {
                   </>
                 ) : (
                   <NoData Small>
-                    <Sub3 color="gray300">대화내역 없음</Sub3>
+                    <Sub3 color="gray300">사용 내역 없음</Sub3>
                   </NoData>
                 )}
               </HistoryList>
 
-              <HistoryList>
-                <strong>지난 7일 대화</strong>
+              {/* <HistoryList>
+                <strong>지난 7일 사용 내역</strong>
                 {chatList.some(
                   (chat) =>
                     Date.now() - chat.timestamp > 604800000 &&
@@ -1752,13 +1841,13 @@ const OrganismIncNavigation = () => {
                   </>
                 ) : (
                   <NoData Small>
-                    <Sub3 color="gray300">대화내역 없음</Sub3>
+                    <Sub3 color="gray300">사용 내역 없음</Sub3>
                   </NoData>
                 )}
               </HistoryList>
 
               <HistoryList>
-                <strong>지난 30일 대화</strong>
+                <strong>지난 30일 사용 내역</strong>
                 {chatList.some(
                   (chat) => Date.now() - chat.timestamp > 2592000000
                 ) ? (
@@ -1862,14 +1951,14 @@ const OrganismIncNavigation = () => {
                   </>
                 ) : (
                   <NoData Small>
-                    <Sub3 color="gray300">대화내역 없음</Sub3>
+                    <Sub3 color="gray300">사용 내역 없음</Sub3>
                   </NoData>
                 )}
-              </HistoryList>
+              </HistoryList> */}
             </>
           ) : (
             <ul>
-              <p>최근 대화 내역이 없습니다</p>
+              <p>최근 사용 내역이 없습니다.</p>
             </ul>
           )}
         </HistoryWrap>

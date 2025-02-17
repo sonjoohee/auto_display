@@ -61,6 +61,7 @@ import {
   TOOL_ID,
   TOOL_STEP,
   SELECTED_TARGET_DISCOVERY_SCENARIO,
+  TOOL_LOADING,
 } from "../../../../pages/AtomStates";
 import images from "../../../../assets/styles/Images";
 import {
@@ -84,6 +85,7 @@ import {
 const PageTargetDiscovery = () => {
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
+  const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
     TARGET_DISCOVERY_INFO
@@ -129,10 +131,9 @@ const PageTargetDiscovery = () => {
     personaScenario: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingScenario, setIsLoadingScenario] = useState(false);  // 시나리오 단계용 로딩 상태 추가
+  const [isLoadingScenario, setIsLoadingScenario] = useState(false); // 시나리오 단계용 로딩 상태 추가
   const [specificSituation, setSpecificSituation] = useState("");
   const [loadingPersonas, setLoadingPersonas] = useState({});
-
 
   const calculateDropDirection = () => {
     if (selectBoxRef.current) {
@@ -170,6 +171,101 @@ const PageTargetDiscovery = () => {
       setSelectedInterviewPurpose("product_experience_new");
     }
   };
+  //저장되었던 인터뷰 로드
+  useEffect(() => {
+    const interviewLoading = async () => {
+      if (toolLoading) {
+        // 활성 탭 설정 (기본값 1)
+        setActiveTab(toolStep || 1);
+        console.log("🚀 ~ interviewLoading ~ toolStep:", toolStep);
+        // 비즈니스 정보 설정 (Step 1)
+        if (targetDiscoveryInfo) {
+          setBusinessDescription(targetDiscoveryInfo?.business || "");
+          setTargetCustomer(targetDiscoveryInfo?.target || "");
+          setSpecificSituation(targetDiscoveryInfo?.specific_situation || "");
+          setSelectedPurpose(targetDiscoveryInfo?.country || "");
+        }
+
+        // 완료된 단계 설정
+        const completedStepsArray = [];
+        for (let i = 1; i <= (toolStep || 1); i++) {
+          completedStepsArray.push(i);
+        }
+        setCompletedSteps(completedStepsArray);
+
+        // 페르소나 설정 (Step 2)
+        if (
+          Array.isArray(targetDiscoveryPersona) &&
+          Array.isArray(selectedTargetDiscoveryPersona)
+        ) {
+          const selectedIndices = selectedTargetDiscoveryPersona
+            .map((selected) =>
+              targetDiscoveryPersona.findIndex(
+                (persona) => persona?.title === selected?.title
+              )
+            )
+            .filter((index) => index !== -1);
+
+          setSelectedPersonas(selectedIndices);
+        }
+
+        // 시나리오 설정 (Step 3)
+        if (
+          Array.isArray(targetDiscoveryScenario) &&
+          Array.isArray(targetDiscoveryPersona) &&
+          Array.isArray(selectedTargetDiscoveryPersona)
+        ) {
+          setTargetDiscoveryScenario(targetDiscoveryScenario || []);
+
+          // 시나리오와 매칭되는 페르소나 찾아서 데이터 결합
+          const matchedScenarioData = targetDiscoveryScenario
+            .map((scenario) => {
+              // 시나리오의 title과 동일한 title을 가진 페르소나 찾기
+              const matchedPersona = targetDiscoveryPersona.find(
+                (persona) => persona?.title === scenario?.title
+              );
+              console.log("🚀 ~ .map ~ matchedPersona:", matchedPersona);
+
+              // 선택된 페르소나에서도 매칭되는 데이터 찾기
+              const selectedPersona = targetDiscoveryScenario.find(
+                (selected) => selected?.title === scenario?.title
+              );
+
+              if (!matchedPersona) return null;
+
+              return {
+                ...matchedPersona, // 페르소나 기본 정보
+                ...selectedPersona, // 선택된 페르소나 정보
+                title: scenario?.title || "",
+                content: matchedPersona?.content || {},
+                keywords: matchedPersona?.content?.keywords || [],
+                scenario: scenario || {}, // 시나리오 데이터
+              };
+            })
+            .filter((item) => item && item.title); // null이 아니고 title이 있는 데이터만 필터링
+
+          setSelectedTargetDiscoveryScenario(matchedScenarioData);
+        }
+        console.log(
+          "🚀 ~ interviewLoading ~ targetDiscoveryScenario:",
+          targetDiscoveryScenario
+        );
+
+        console.log(
+          "🚀 ~ selectedTargetDiscoveryPersona ~ persona:",
+          selectedTargetDiscoveryPersona
+        );
+        // 최종 리포트 설정 (Step 4)
+        if (targetDiscoveryFinalReport) {
+          setTargetDiscoveryFinalReport(targetDiscoveryFinalReport || {});
+        }
+
+        return;
+      }
+    };
+    interviewLoading();
+    setToolLoading(false);
+  }, [toolLoading]);
 
   const handleCheckboxChange = (personaId) => {
     console.log("🚀 ~ handleCheckboxChange ~ personaId:", personaId);
@@ -220,7 +316,7 @@ const PageTargetDiscovery = () => {
         specific_situation: specificSituation,
         country: selectedPurpose,
       };
-  
+
       const response = await InterviewXTargetDiscoveryPersonaRequest(
         businessData,
         isLoggedIn
@@ -287,13 +383,17 @@ const PageTargetDiscovery = () => {
       );
       setSelectedTargetDiscoveryPersona(selectedPersonaData);
 
-      let allScenarios = [];  // 모든 시나리오를 저장할 배열
-      
+      console.log(
+        "🚀 ~ handleSubmitPersonas ~ selectedPersonaData:",
+        selectedPersonaData
+      );
+      let allScenarios = []; // 모든 시나리오를 저장할 배열
+
       for (const persona of selectedPersonaData) {
         // 현재 페르소나의 로딩 상태를 true로 설정
-        setLoadingPersonas(prev => ({
+        setLoadingPersonas((prev) => ({
           ...prev,
-          [persona.title]: true
+          [persona.title]: true,
         }));
 
         const isDuplicate = selectedTargetDiscoveryPersona.some(
@@ -314,25 +414,28 @@ const PageTargetDiscovery = () => {
           );
 
           if (
-            !response?.response?.target_discovery_scenario?.potential_customer_info ||
+            !response?.response?.target_discovery_scenario
+              ?.potential_customer_info ||
             !response?.response?.target_discovery_scenario?.usage_scenario
           ) {
             setShowPopupError(true);
             return;
           }
-          setTargetDiscoveryScenario(prev => [...prev, response?.response?.target_discovery_scenario]);
+          setTargetDiscoveryScenario((prev) => [
+            ...prev,
+            response?.response?.target_discovery_scenario,
+          ]);
 
           // API 호출이 완료되면 해당 페르소나의 로딩 상태를 false로 설정
-          setLoadingPersonas(prev => ({
+          setLoadingPersonas((prev) => ({
             ...prev,
-            [persona.title]: false
+            [persona.title]: false,
           }));
 
           allScenarios.push({
-            ...persona,  // 기존 페르소나 데이터 유지
-            scenario: response.response.target_discovery_scenario  // 시나리오 데이터 추가
+            ...persona, // 기존 페르소나 데이터 유지
+            scenario: response.response.target_discovery_scenario, // 시나리오 데이터 추가
           });
-          
         }
       }
       setSelectedTargetDiscoveryScenario(allScenarios);
@@ -349,7 +452,6 @@ const PageTargetDiscovery = () => {
       );
 
       setToolStep(2);
-
     } catch (error) {
       console.error("Error submitting personas:", error);
       setLoadingPersonas({}); // 에러 발생 시 모든 로딩 상태 초기화
@@ -371,68 +473,76 @@ const PageTargetDiscovery = () => {
       }
     } finally {
     }
-    };
+  };
 
   const handleSubmitScenario = async () => {
     try {
-      setIsLoadingScenario(true); 
+      setIsLoadingScenario(true);
       handleNextStep(3);
 
       const scenarioData = {
         business: targetDiscoveryInfo.business,
         target: targetDiscoveryInfo.target,
         target_discovery_persona: selectedTargetDiscoveryPersona,
-        target_discovery_scenario: targetDiscoveryScenario
+        target_discovery_scenario: targetDiscoveryScenario,
       };
 
-      const response = await InterviewXTargetDiscoveryFinalReportRequest(scenarioData,isLoggedIn);
+      const response = await InterviewXTargetDiscoveryFinalReportRequest(
+        scenarioData,
+        isLoggedIn
+      );
       console.log("🚀 ~ handleSubmitScenario ~ response:", response);
 
       if (
-        !response?.response?.target_discovery_final_report?.potential_rank_1?.title ||
-        !response?.response?.target_discovery_final_report?.potential_rank_1?.discovery_criteria ||
-        !response?.response?.target_discovery_final_report?.potential_rank_1?.selection_criteria
+        !response?.response?.target_discovery_final_report?.potential_rank_1
+          ?.title ||
+        !response?.response?.target_discovery_final_report?.potential_rank_1
+          ?.discovery_criteria ||
+        !response?.response?.target_discovery_final_report?.potential_rank_1
+          ?.selection_criteria
       ) {
         setIsLoadingScenario(false);
         return;
       }
-      setTargetDiscoveryFinalReport(response.response.target_discovery_final_report);
+      setTargetDiscoveryFinalReport(
+        response.response.target_discovery_final_report
+      );
 
       // 모든 시나리오를 한번에 저장
       await updateToolOnServer(
         toolId,
         {
           completed_step: 4,
-          target_discovery_final_report: response.response.target_discovery_final_report,
+          target_discovery_final_report:
+            response.response.target_discovery_final_report,
         },
         isLoggedIn
       );
       setToolStep(3);
 
-      setIsLoadingScenario(false); 
+      setIsLoadingScenario(false);
       handleNextStep(3);
- 
-  } catch (error) {
-    console.error("Error submitting scenario:", error);
-    setShowPopupError(true);
-    if (error.response) {
-      switch (error.response.status) {
-        case 500:
-          setShowPopupError(true);
-          break;
-        case 504:
-          setShowPopupError(true);
-          break;
-        default:
-          setShowPopupError(true);
-          break;
-      }
-    } else {
+    } catch (error) {
+      console.error("Error submitting scenario:", error);
       setShowPopupError(true);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowPopupError(true);
+            break;
+          case 504:
+            setShowPopupError(true);
+            break;
+          default:
+            setShowPopupError(true);
+            break;
+        }
+      } else {
+        setShowPopupError(true);
+      }
+    } finally {
+      setIsLoadingScenario(false);
     }
-  } finally {
-    setIsLoadingScenario(false);  
-  }
   };
 
   const getButtonText = (persona, hasScenarioData, isLoading) => {
@@ -728,7 +838,9 @@ const PageTargetDiscovery = () => {
                           Primary
                           Round
                           Fill
-                          disabled={selectedPersonas.length === 0 || toolStep >= 2}
+                          disabled={
+                            selectedPersonas.length === 0 || toolStep >= 2
+                          }
                           onClick={handleSubmitPersonas}
                         >
                           다음
@@ -759,7 +871,7 @@ const PageTargetDiscovery = () => {
                     {selectedTargetDiscoveryPersona.map((persona, index) => {
                       const hasScenarioData = targetDiscoveryScenario[index];
                       const isLoading = loadingPersonas[persona.title];
-                      
+
                       return (
                         <MoleculeToolPersonaCard
                           key={index}
@@ -772,7 +884,11 @@ const PageTargetDiscovery = () => {
                           personaScenario={targetDiscoveryScenario[index]}
                           onDetailClick={() => setShowPopupMore(true)}
                           selectedIndex={index}
-                          buttonText={getButtonText(persona, hasScenarioData, isLoading)}
+                          buttonText={getButtonText(
+                            persona,
+                            hasScenarioData,
+                            isLoading
+                          )}
                           disabled={isLoading}
                         />
                       );
@@ -790,9 +906,10 @@ const PageTargetDiscovery = () => {
                       Round
                       Fill
                       disabled={
-                        toolStep >= 3 || 
-                        !targetDiscoveryScenario || 
-                        targetDiscoveryScenario.length !== selectedTargetDiscoveryPersona.length
+                        toolStep >= 3 ||
+                        !targetDiscoveryScenario ||
+                        targetDiscoveryScenario.length !==
+                          selectedTargetDiscoveryPersona.length
                       }
                       onClick={handleSubmitScenario}
                     >
@@ -811,13 +928,15 @@ const PageTargetDiscovery = () => {
             {activeTab === 4 && completedSteps.includes(3) && (
               <TabContent5 Small>
                 {isLoadingScenario ? (
-                  <div style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    minHeight: "200px",
-                    alignItems: "center",
-                  }}>
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      minHeight: "200px",
+                      alignItems: "center",
+                    }}
+                  >
                     <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
                   </div>
                 ) : (
@@ -833,49 +952,62 @@ const PageTargetDiscovery = () => {
                     <InsightAnalysis>
                       <div className="title">
                         <H4 color="gray800">
-                          잠재력이 가장 높은 페르소나는 {targetDiscoveryFinalReport?.potential_rank_1?.title}입니다.
+                          잠재력이 가장 높은 페르소나는{" "}
+                          {targetDiscoveryFinalReport?.potential_rank_1?.title}
+                          입니다.
                         </H4>
-                        <Button Primary onClick={() => setShowPopupSave(true)}>
+                        {/* <Button Primary onClick={() => setShowPopupSave(true)}>
                           리포트 저장하기
-                        </Button>
+                        </Button> */}
                       </div>
 
                       <div className="content">
                         <Body3 color="gray700">
-                          {targetDiscoveryFinalReport?.potential_rank_1?.discovery_criteria}
+                          {
+                            targetDiscoveryFinalReport?.potential_rank_1
+                              ?.discovery_criteria
+                          }
                         </Body3>
 
                         <Body3 color="gray700">
-                          {targetDiscoveryFinalReport?.potential_rank_1?.selection_criteria}
+                          {
+                            targetDiscoveryFinalReport?.potential_rank_1
+                              ?.selection_criteria
+                          }
                         </Body3>
                       </div>
                     </InsightAnalysis>
 
                     <ListBoxWrap>
-                      {targetDiscoveryFinalReport && 
+                      {targetDiscoveryFinalReport &&
                         Object.keys(targetDiscoveryFinalReport)
-                          .filter(key => key.startsWith('potential_rank_'))
+                          .filter((key) => key.startsWith("potential_rank_"))
                           .map((rankKey) => {
-                            const rank = parseInt(rankKey.split('_').pop());
-                            const rankData = targetDiscoveryFinalReport[rankKey];
-                        
+                            const rank = parseInt(rankKey.split("_").pop());
+                            const rankData =
+                              targetDiscoveryFinalReport[rankKey];
+
                             return (
                               <MoleculeToolPersonaCard
                                 key={rankKey}
                                 title={rankData?.title}
                                 keywords={[
-                                  ...(rankKey === 'potential_rank_1' ? ['Strong Potential'] : []),
-                                  ...(rankData?.keywords || [])
+                                  ...(rankKey === "potential_rank_1"
+                                    ? ["Strong Potential"]
+                                    : []),
+                                  ...(rankData?.keywords || []),
                                 ]}
                                 hideCheckCircle={true}
                                 viewType="list"
                                 popupType="detail"
-                                personaData={selectedTargetDiscoveryScenario?.find(item => 
-                                  item.title === rankData?.title
+                                personaData={selectedTargetDiscoveryScenario?.find(
+                                  (item) => item.title === rankData?.title
                                 )}
-                                personaScenario={selectedTargetDiscoveryScenario?.find(item => 
-                                  item.title === rankData?.title
-                                )?.scenario}
+                                personaScenario={
+                                  selectedTargetDiscoveryScenario?.find(
+                                    (item) => item.title === rankData?.title
+                                  )?.scenario
+                                }
                                 additionalContent={
                                   <Body3 color="gray700" align="left">
                                     {rankData?.rank_reason}
@@ -883,17 +1015,17 @@ const PageTargetDiscovery = () => {
                                 }
                               />
                             );
-                        })}
+                          })}
                     </ListBoxWrap>
 
-                    <Button 
-                      Small 
-                      Primary 
+                    {/* <Button
+                      Small
+                      Primary
                       onClick={() => setShowPopupSave(true)}
-                      style={{ whiteSpace: 'nowrap' }}
+                      style={{ whiteSpace: "nowrap" }}
                     >
                       리포트 저장하기
-                    </Button>
+                    </Button> */}
                   </>
                 )}
               </TabContent5>
@@ -901,8 +1033,6 @@ const PageTargetDiscovery = () => {
           </TargetDiscoveryWrap>
         </MainContent>
       </ContentsWrap>
-
-     
 
       {showPopupError && (
         <PopupWrap
