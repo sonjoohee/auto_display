@@ -272,7 +272,7 @@ const MoleculeToolPersonaCard = ({
       {/* 상세 정보 팝업 */}
       {showDetailPopup && (
         <InterviewPopup>
-          <div>
+          <div style={{ maxWidth: "565px" }}>
             <div className="header">
               <H4>
                 {personaData?.title}
@@ -388,10 +388,14 @@ const MoleculeToolPersonaCard = ({
               {activeTab1 === "personaScenario" && (
                 <TabContent>
                   <Body1 color="gray700">
-                    {personaScenario?.usage_scenario?.key_sentence || ""}
+                    {personaScenario?.usage_scenario?.key_sentence ||
+                      personaScenario?.scenario?.usage_scenario?.key_sentence ||
+                      ""}
                   </Body1>
                   <Body3 color="gray700">
-                    {personaScenario?.usage_scenario?.description || ""}
+                    {personaScenario?.usage_scenario?.description ||
+                      personaScenario?.scenario?.usage_scenario?.description ||
+                      ""}
                   </Body3>
                 </TabContent>
               )}
@@ -414,7 +418,9 @@ const CustomButton = styled(Button)`
     props.$loading &&
     css`
       position: relative;
-      justify-content: ${props.children === "호출중" ? "space-between" : "center"};
+      justify-content: ${props.children === "호출중"
+        ? "space-between"
+        : "center"};
       border: 1px solid ${palette.outlineGray} !important;
       background: ${palette.chatGray} !important;
       color: ${palette.gray700} !important;
@@ -431,7 +437,7 @@ const CustomButton = styled(Button)`
           // margin-left: 8px;
           // animation: spin 1s linear infinite;
 
-          content: '';
+          content: "";
           width: 3px;
           height: 3px;
           border-radius: 50%;

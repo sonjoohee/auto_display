@@ -176,19 +176,19 @@ const PageTargetDiscovery = () => {
     const interviewLoading = async () => {
       if (toolLoading) {
         // 활성 탭 설정 (기본값 1)
-        setActiveTab(toolStep || 1);
-        console.log("🚀 ~ interviewLoading ~ toolStep:", toolStep);
+        setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
+
         // 비즈니스 정보 설정 (Step 1)
         if (targetDiscoveryInfo) {
-          setBusinessDescription(targetDiscoveryInfo?.business || "");
-          setTargetCustomer(targetDiscoveryInfo?.target || "");
-          setSpecificSituation(targetDiscoveryInfo?.specific_situation || "");
-          setSelectedPurpose(targetDiscoveryInfo?.country || "");
+          setBusinessDescription(targetDiscoveryInfo?.business ?? "");
+          setTargetCustomer(targetDiscoveryInfo?.target ?? "");
+          setSpecificSituation(targetDiscoveryInfo?.specific_situation ?? "");
+          setSelectedPurpose(targetDiscoveryInfo?.country ?? "");
         }
 
         // 완료된 단계 설정
         const completedStepsArray = [];
-        for (let i = 1; i <= (toolStep || 1); i++) {
+        for (let i = 1; i <= (toolStep ?? 1); i++) {
           completedStepsArray.push(i);
         }
         setCompletedSteps(completedStepsArray);
@@ -199,11 +199,11 @@ const PageTargetDiscovery = () => {
           Array.isArray(selectedTargetDiscoveryPersona)
         ) {
           // 이미 선택된 페르소나들의 인덱스 찾기
-          const selectedIndices = targetDiscoveryPersona
+          const selectedIndices = (targetDiscoveryPersona ?? [])
             .map((persona, index) => {
               // targetDiscoveryScenario에 있는 페르소나만 선택
-              return targetDiscoveryScenario.some(
-                (scenario) => scenario.title === persona.title
+              return (targetDiscoveryScenario ?? []).some(
+                (scenario) => scenario?.title === persona?.title
               )
                 ? index
                 : -1;
@@ -215,7 +215,7 @@ const PageTargetDiscovery = () => {
 
           // 선택된 페르소나 데이터 설정
           const selectedPersonaData = selectedIndices
-            .map((index) => targetDiscoveryPersona[index])
+            .map((index) => targetDiscoveryPersona?.[index])
             .filter(Boolean);
 
           setSelectedTargetDiscoveryPersona(selectedPersonaData);
@@ -226,38 +226,30 @@ const PageTargetDiscovery = () => {
           Array.isArray(targetDiscoveryScenario) &&
           Array.isArray(targetDiscoveryPersona)
         ) {
-          const matchedScenarioData = targetDiscoveryScenario
+          const matchedScenarioData = (targetDiscoveryScenario ?? [])
             .map((scenario) => {
-              const matchedPersona = targetDiscoveryPersona.find(
+              const matchedPersona = (targetDiscoveryPersona ?? []).find(
                 (persona) => persona?.title === scenario?.title
               );
 
               if (!matchedPersona) return null;
 
               return {
-                ...matchedPersona,
-                title: scenario?.title || "",
-                content: matchedPersona?.content || {},
-                keywords: matchedPersona?.content?.keywords || [],
-                scenario: scenario || {},
+                ...(matchedPersona ?? {}),
+                title: scenario?.title ?? "",
+                content: matchedPersona?.content ?? {},
+                keywords: matchedPersona?.content?.keywords ?? [],
+                scenario: scenario ?? {},
               };
             })
-            .filter((item) => item && item.title);
+            .filter((item) => item?.title);
 
           setSelectedTargetDiscoveryScenario(matchedScenarioData);
         }
-        console.log(
-          "🚀 ~ interviewLoading ~ targetDiscoveryScenario:",
-          targetDiscoveryScenario
-        );
 
-        console.log(
-          "🚀 ~ selectedTargetDiscoveryPersona ~ persona:",
-          selectedTargetDiscoveryPersona
-        );
         // 최종 리포트 설정 (Step 4)
         if (targetDiscoveryFinalReport) {
-          setTargetDiscoveryFinalReport(targetDiscoveryFinalReport || {});
+          setTargetDiscoveryFinalReport(targetDiscoveryFinalReport ?? {});
         }
 
         return;
