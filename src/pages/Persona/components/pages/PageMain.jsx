@@ -870,6 +870,9 @@ const PageMain = () => {
         case "2":
           navigate("/CustomerValueAnalyzer");
           break;
+        case "3":
+          navigate("/IdeaGenerator");
+          break;
       }
     } else {
       setIsPopupLogin(true);
@@ -1279,30 +1282,30 @@ const PageMain = () => {
                   </div>
                 </ExploreCard>,
                 
-                // <ExploreCard Research key="research-3">
-                //   <span>
-                //     <images.LightningChargeFill color={palette.gray700} />
-                //     Tool
-                //   </span>
-                //   <p><img src={images.ImgExplore07} alt="" /></p>
-                //   <Body1 color="gray800">
-                //     <em>준비중</em>
-                //     아이디어 제너레이터
-                //   </Body1>
+                <ExploreCard Research key="research-3" {...(!accessableExpert && { Ready: true })}>
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore07} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    아이디어 제너레이터
+                  </Body1>
 
-                //   <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
-                //     <span>
-                //       <images.LightningChargeFill color={palette.white} />
-                //       Tool
-                //     </span>
+                  <div className="overlay" onClick={() => { hadleToolSelect("3"); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
 
-                //     <div className="text">
-                //       <Body1 color="white">아이디어 제너레이터</Body1>
-                //       <Caption1 color="white" align="left">Mandal Art 기법을 활용하여 창의적이고 구조적인 아이디어를 발산하고 구체화 하는 툴</Caption1>
-                //       <i />
-                //     </div>
-                //   </div>
-                // </ExploreCard>,
+                    <div className="text">
+                      <Body1 color="white"><em>준비중</em>아이디어 제너레이터</Body1>
+                      <Caption1 color="white" align="left">Mandal Art 기법을 활용하여 창의적이고 구조적인 아이디어를 발산하고 구체화 하는 툴</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
 
                 // <ExploreCard Research key="research-4">
                 //   <span>
