@@ -60,6 +60,7 @@ import {
   TARGET_DISCOVERY_FINAL_REPORT,
   TOOL_ID,
   TOOL_STEP,
+  SELECTED_TARGET_DISCOVERY_SCENARIO,
 } from "../../../../pages/AtomStates";
 import images from "../../../../assets/styles/Images";
 import {
@@ -98,6 +99,8 @@ const PageTargetDiscovery = () => {
   const [targetDiscoveryFinalReport, setTargetDiscoveryFinalReport] = useAtom(
     TARGET_DISCOVERY_FINAL_REPORT
   );
+  const [selectedTargetDiscoveryScenario, setSelectedTargetDiscoveryScenario] =
+    useAtom(SELECTED_TARGET_DISCOVERY_SCENARIO);
 
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupMore, setShowPopupMore] = useState(false);
@@ -126,8 +129,11 @@ const PageTargetDiscovery = () => {
     personaScenario: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingScenario, setIsLoadingScenario] = useState(false);  // 시나리오 단계용 로딩 상태 추가
   const [specificSituation, setSpecificSituation] = useState("");
-  const [processedScenarios, setProcessedScenarios] = useState([]);
+  const [loadingPersonas, setLoadingPersonas] = useState({});
+
+
   const calculateDropDirection = () => {
     if (selectBoxRef.current) {
       const rect = selectBoxRef.current.getBoundingClientRect();
@@ -214,29 +220,17 @@ const PageTargetDiscovery = () => {
         specific_situation: specificSituation,
         country: selectedPurpose,
       };
-      console.log(
-        "🚀 ~ handleSubmitBusinessInfo ~ businessData:",
-        businessData
-      );
-
-      // // Validation logic
-      // if (!businessData.business || !businessData.target) {
-      //   setShowPopupError(true);
-      //   return;
-      // }
-
+  
       const response = await InterviewXTargetDiscoveryPersonaRequest(
         businessData,
         isLoggedIn
       );
 
-      console.log("🚀 ~ handleSubmitBusinessInfo ~ response:", response);
       if (
         !response?.response.target_discovery_persona ||
         !Array.isArray(response.response.target_discovery_persona) ||
         response.response.target_discovery_persona.length === 0
       ) {
-        console.log("🚀 ~ handleSubmitBusinessInfo ~ response:", response);
         setShowPopupError(true);
         return;
       }
@@ -285,34 +279,27 @@ const PageTargetDiscovery = () => {
     }
   };
 
-  const [loadingPersonas, setLoadingPersonas] = useState({});
-
   const handleSubmitPersonas = async () => {
     handleNextStep(2);
     try {
-      // setIsLoading(true);
-
-      const scenarioResults = []; // 각 페르소나의 시나리오를 저장할 배열
-
-      console.log("selectedPersonas", selectedPersonas);
       const selectedPersonaData = targetDiscoveryPersona.filter(
         (persona, index) => selectedPersonas.includes(index)
       );
       setSelectedTargetDiscoveryPersona(selectedPersonaData);
-      console.log("selectedPersonaData", selectedPersonaData);
 
-      //  각 페르소나에 대해 순차적으로 API 호출
+      let allScenarios = [];  // 모든 시나리오를 저장할 배열
+      
       for (const persona of selectedPersonaData) {
-        setLoadingPersonas((prev) => ({
+        // 현재 페르소나의 로딩 상태를 true로 설정
+        setLoadingPersonas(prev => ({
           ...prev,
-          [persona.title]: true,
+          [persona.title]: true
         }));
 
         const isDuplicate = selectedTargetDiscoveryPersona.some(
           (existingPersona) => existingPersona.title === persona.title
         );
 
-        // 중복이 아닌 경우에만 처리
         if (!isDuplicate) {
           const apiRequestData = {
             business: targetDiscoveryInfo.business,
@@ -321,49 +308,52 @@ const PageTargetDiscovery = () => {
             country: targetDiscoveryInfo.country,
           };
 
-          console.log("Current persona request:", apiRequestData);
-
-          // API 호출
           const response = await InterviewXTargetDiscoveryScenarioRequest(
             apiRequestData,
             isLoggedIn
           );
 
-          // 응답 데이터 유효성 검사
           if (
-            !response?.response?.target_discovery_scenario
-              ?.potential_customer_info ||
+            !response?.response?.target_discovery_scenario?.potential_customer_info ||
             !response?.response?.target_discovery_scenario?.usage_scenario
           ) {
             setShowPopupError(true);
             return;
           }
+          setTargetDiscoveryScenario(prev => [...prev, response?.response?.target_discovery_scenario]);
 
-          // 이전 결과를 유지하면서 새로운 결과 추가
-          setTargetDiscoveryScenario((prev) => [
+          // API 호출이 완료되면 해당 페르소나의 로딩 상태를 false로 설정
+          setLoadingPersonas(prev => ({
             ...prev,
-            response?.response?.target_discovery_scenario,
-          ]);
-
-          // 처리가 완료된 페르소나의 로딩 상태를 false로 설정
-          setLoadingPersonas((prev) => ({
-            ...prev,
-            [persona.title]: false,
+            [persona.title]: false
           }));
+
+          allScenarios.push({
+            ...persona,  // 기존 페르소나 데이터 유지
+            scenario: response.response.target_discovery_scenario  // 시나리오 데이터 추가
+          });
+          
         }
       }
+      setSelectedTargetDiscoveryScenario(allScenarios);
+      console.log("🚀 ~ handleSubmitPersonas ~ allScenarios:", allScenarios);
 
-      updateToolOnServer(
+      // 모든 시나리오를 한번에 저장
+      await updateToolOnServer(
         toolId,
         {
           completed_step: 2,
-          target_discovery_scenario: targetDiscoveryScenario,
+          target_discovery_scenario: allScenarios,
         },
         isLoggedIn
       );
+
       setToolStep(2);
+
     } catch (error) {
       console.error("Error submitting personas:", error);
+      setLoadingPersonas({}); // 에러 발생 시 모든 로딩 상태 초기화
+      setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
           case 500:
@@ -380,50 +370,78 @@ const PageTargetDiscovery = () => {
         setShowPopupError(true);
       }
     } finally {
-      setIsLoading(false);
     }
-  };
+    };
 
   const handleSubmitScenario = async () => {
     try {
-      // setIsLoading(true);
-
-      // 선택된 페르소나와 시나리오 데이터 구성
-      // const scenarioData = {
-      //   type: "ix_target_discovery_persona"
-      //   target: targetDiscoveryInfo.target,
-      //   target_discovery_persona: selectedTargetDiscoveryPersona,
-      //   target_discovery_scenario: targetDiscoveryScenario
-      // };
-
-      // console.log("Submitting scenario data:", scenarioData);
-
-      // API 호출 로직이 들어갈 자리
-      // const response = await InterviewXTargetDiscoveryFinalReportRequest(scenarioData,isLoggedIn);
-      // setTargetDiscoveryFinalReport(response.target_discovery_final_report);
-
-      setIsLoading(false);
+      setIsLoadingScenario(true); 
       handleNextStep(3);
-    } catch (error) {
-      console.error("Error submitting scenario:", error);
-      if (error.response) {
-        switch (error.response.status) {
-          case 500:
-            setShowPopupError(true);
-            break;
-          case 504:
-            setShowPopupError(true);
-            break;
-          default:
-            setShowPopupError(true);
-            break;
-        }
-      } else {
-        setShowPopupError(true);
+
+      const scenarioData = {
+        business: targetDiscoveryInfo.business,
+        target: targetDiscoveryInfo.target,
+        target_discovery_persona: selectedTargetDiscoveryPersona,
+        target_discovery_scenario: targetDiscoveryScenario
+      };
+
+      const response = await InterviewXTargetDiscoveryFinalReportRequest(scenarioData,isLoggedIn);
+      console.log("🚀 ~ handleSubmitScenario ~ response:", response);
+
+      if (
+        !response?.response?.target_discovery_final_report?.potential_rank_1?.title ||
+        !response?.response?.target_discovery_final_report?.potential_rank_1?.discovery_criteria ||
+        !response?.response?.target_discovery_final_report?.potential_rank_1?.selection_criteria
+      ) {
+        setIsLoadingScenario(false);
+        return;
       }
-    } finally {
-      setIsLoading(false);
+      setTargetDiscoveryFinalReport(response.response.target_discovery_final_report);
+
+      // 모든 시나리오를 한번에 저장
+      await updateToolOnServer(
+        toolId,
+        {
+          completed_step: 4,
+          target_discovery_final_report: response.response.target_discovery_final_report,
+        },
+        isLoggedIn
+      );
+      setToolStep(3);
+
+      setIsLoadingScenario(false); 
+      handleNextStep(3);
+ 
+  } catch (error) {
+    console.error("Error submitting scenario:", error);
+    setShowPopupError(true);
+    if (error.response) {
+      switch (error.response.status) {
+        case 500:
+          setShowPopupError(true);
+          break;
+        case 504:
+          setShowPopupError(true);
+          break;
+        default:
+          setShowPopupError(true);
+          break;
+      }
+    } else {
+      setShowPopupError(true);
     }
+  } finally {
+    setIsLoadingScenario(false);  
+  }
+  };
+
+  const getButtonText = (persona, hasScenarioData, isLoading) => {
+    if (isLoading) {
+      return "호출중";
+    } else if (hasScenarioData) {
+      return "자세히";
+    }
+    return "대기중";
   };
 
   return (
@@ -503,7 +521,7 @@ const PageTargetDiscovery = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="잠재 고객을 분석하고 있어요" />
+                    <AtomPersonaLoader message="잠재 고객을 분석하고 있어요..." />
                   </div>
                 ) : (
                   <>
@@ -689,6 +707,7 @@ const PageTargetDiscovery = () => {
                             viewType="list"
                             popupType="basic"
                             onDetailClick={() => setShowPopup(true)}
+                            selectedIndex={index}
                           />
                         ))}
                       </CardGroupWrap>
@@ -709,11 +728,7 @@ const PageTargetDiscovery = () => {
                           Primary
                           Round
                           Fill
-                          disabled={selectedPersonas.length === 0}
-                          // onClick={() => {
-                          //   setIsLoading(false); // 다음 단계로 넘어갈 때 로딩 종료
-                          //   handleNextStep(2);
-                          // }}
+                          disabled={selectedPersonas.length === 0 || toolStep >= 2}
                           onClick={handleSubmitPersonas}
                         >
                           다음
@@ -741,27 +756,27 @@ const PageTargetDiscovery = () => {
 
                 <div className="content">
                   <CardGroupWrap>
-                    {selectedTargetDiscoveryPersona.map((persona, index) => (
-                      <MoleculeToolPersonaCard
-                        key={index}
-                        title={persona.title}
-                        keywords={persona.content.keywords}
-                        viewType="list"
-                        hideCheckCircle={true}
-                        popupType="detail"
-                        // personaData={{
-                        //   ...persona,
-                        //   target_discovery_scenario: persona.target_discovery_scenario
-                        // }}
-                        personaData={persona}
-                        personaScenario={targetDiscoveryScenario[index]}
-                        onDetailClick={() => setShowPopupMore(true)}
-                      />
-                    ))}
-
-                    {isLoading && (
-                      <Body1 color="gray800">페르소나 분석 중...</Body1>
-                    )}
+                    {selectedTargetDiscoveryPersona.map((persona, index) => {
+                      const hasScenarioData = targetDiscoveryScenario[index];
+                      const isLoading = loadingPersonas[persona.title];
+                      
+                      return (
+                        <MoleculeToolPersonaCard
+                          key={index}
+                          title={persona.title}
+                          keywords={persona.content.keywords}
+                          viewType="list"
+                          hideCheckCircle={true}
+                          popupType="detail"
+                          personaData={persona}
+                          personaScenario={targetDiscoveryScenario[index]}
+                          onDetailClick={() => setShowPopupMore(true)}
+                          selectedIndex={index}
+                          buttonText={getButtonText(persona, hasScenarioData, isLoading)}
+                          disabled={isLoading}
+                        />
+                      );
+                    })}
                   </CardGroupWrap>
 
                   <BottomBar W100>
@@ -774,6 +789,11 @@ const PageTargetDiscovery = () => {
                       Primary
                       Round
                       Fill
+                      disabled={
+                        toolStep >= 3 || 
+                        !targetDiscoveryScenario || 
+                        targetDiscoveryScenario.length !== selectedTargetDiscoveryPersona.length
+                      }
                       onClick={handleSubmitScenario}
                     >
                       다음
@@ -790,477 +810,99 @@ const PageTargetDiscovery = () => {
 
             {activeTab === 4 && completedSteps.includes(3) && (
               <TabContent5 Small>
-                <BgBoxItem primaryLightest>
-                  <H3 color="gray800">타겟디스커버리 인사이트 분석</H3>
-                  <Body3 color="gray800">
-                    잠재 고객과 시나리오 분석을 통해 새로운 전략적 방향을
-                    탐색해보세요
-                  </Body3>
-                </BgBoxItem>
+                {isLoadingScenario ? (
+                  <div style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    minHeight: "200px",
+                    alignItems: "center",
+                  }}>
+                    <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
+                  </div>
+                ) : (
+                  <>
+                    <BgBoxItem primaryLightest>
+                      <H3 color="gray800">타겟디스커버리 인사이트 분석</H3>
+                      <Body3 color="gray800">
+                        잠재 고객과 시나리오 분석을 통해 새로운 전략적 방향을
+                        탐색해보세요
+                      </Body3>
+                    </BgBoxItem>
 
-                <InsightAnalysis>
-                  <div className="title">
-                    <H4 color="gray800">
-                      잠재력이 가장 높은 페르소나는 OOO 입니다.
-                    </H4>
-                    <Button Primary onClick={() => setShowPopupSave(true)}>
+                    <InsightAnalysis>
+                      <div className="title">
+                        <H4 color="gray800">
+                          잠재력이 가장 높은 페르소나는 {targetDiscoveryFinalReport?.potential_rank_1?.title}입니다.
+                        </H4>
+                        <Button Primary onClick={() => setShowPopupSave(true)}>
+                          리포트 저장하기
+                        </Button>
+                      </div>
+
+                      <div className="content">
+                        <Body3 color="gray700">
+                          {targetDiscoveryFinalReport?.potential_rank_1?.discovery_criteria}
+                        </Body3>
+
+                        <Body3 color="gray700">
+                          {targetDiscoveryFinalReport?.potential_rank_1?.selection_criteria}
+                        </Body3>
+                      </div>
+                    </InsightAnalysis>
+
+                    <ListBoxWrap>
+                      {targetDiscoveryFinalReport && 
+                        Object.keys(targetDiscoveryFinalReport)
+                          .filter(key => key.startsWith('potential_rank_'))
+                          .map((rankKey) => {
+                            const rank = parseInt(rankKey.split('_').pop());
+                            const rankData = targetDiscoveryFinalReport[rankKey];
+                        
+                            return (
+                              <MoleculeToolPersonaCard
+                                key={rankKey}
+                                title={rankData?.title}
+                                keywords={[
+                                  ...(rankKey === 'potential_rank_1' ? ['Strong Potential'] : []),
+                                  ...(rankData?.keywords || [])
+                                ]}
+                                hideCheckCircle={true}
+                                viewType="list"
+                                popupType="detail"
+                                personaData={selectedTargetDiscoveryScenario?.find(item => 
+                                  item.title === rankData?.title
+                                )}
+                                personaScenario={selectedTargetDiscoveryScenario?.find(item => 
+                                  item.title === rankData?.title
+                                )?.scenario}
+                                additionalContent={
+                                  <Body3 color="gray700" align="left">
+                                    {rankData?.rank_reason}
+                                  </Body3>
+                                }
+                              />
+                            );
+                        })}
+                    </ListBoxWrap>
+
+                    <Button 
+                      Small 
+                      Primary 
+                      onClick={() => setShowPopupSave(true)}
+                      style={{ whiteSpace: 'nowrap' }}
+                    >
                       리포트 저장하기
                     </Button>
-                  </div>
-
-                  <div className="content">
-                    <Body3 color="gray700">
-                      인터뷰 결과, 스마트홈 스피커의 음성 인식률과 반응 속도는
-                      높게 평가되었으나, 개인 맞춤형 기능 부족 및 정보 보안에
-                      대한 우려가 주요 문제점으로 나타났습니다. 특히, 워킹맘
-                      답변자는 자녀를 위한 교육 콘텐츠 및 안전 기능 강화의
-                      필요성을 강조했고, 50대 가장 답변자는 가족 구성원 모두가
-                      쉽게 사용할 수 있는 가족 친화적인 인터페이스 부족을
-                      지적했습니다. 49세 남성 답변자는 개인정보 보안 및 유출에
-                      대한 우려를 표명하며, 이에 대한 강화된 보안 시스템 구축의
-                      필요성을 언급했습니다. 이러한 문제들은 사용자의 스마트홈
-                      스피커에 대한 전반적인 만족도를 저해할 수 있는 요인으로
-                      작용합니다. 따라서 사용자의 니즈를 충족하고, 불안감을
-                      해소하는 것이 중요한 과제입니다.
-                    </Body3>
-
-                    <Body3 color="gray700">
-                      인터뷰 데이터를 통해 도출된 문제점을 해결하고 사용자
-                      경험을 개선할 수 있는 기회는 다음과 같습니다. 첫째, 가격
-                      경쟁력 강화를 위해 다양한 할인 혜택 및 패키지 상품을
-                      개발하고, 경쟁사 가격과 비교 분석하여 합리적인 가격 정책을
-                      수립해야 합니다. 둘째, 세탁물 관리의 투명성을 높이기 위해
-                      세탁 과정을 사진 또는 영상으로 촬영하여 고객에게 제공하는
-                      기능을 추가하고, 세탁 전후 의류 상태 비교 사진 제공을 통해
-                      고객의 불안감을 해소해야 합니다. 셋째, 세탁 사고에 대한
-                      보상 체계 마련을 통해 고객의 신뢰를 확보하는 것이
-                      중요합니다. 이는 보험 가입 및 명확한 보상 절차를
-                      마련함으로써 이루어질 수 있습니다. 이러한 개선을 통해
-                      서비스의 신뢰도를 높이고 고객 만족도를 향상시킬 수 있을
-                      것입니다..
-                    </Body3>
-                  </div>
-                </InsightAnalysis>
-                {/* 
-
-                <ListBoxWrap>
-      <ListBoxItem>
-        <ListBoxTitle>
-          <div>
-            <Body1 color="gray800">신혼집 인테리어를 준비하는 30대 초반 젊은 부부</Body1>
-            <Keyword>
-              <Badge Keyword>Strong Potential</Badge>
-              {targetDiscoveryFinalReport?.potential_rank_1?.keywords?.map((keyword, index) => (
-                <Badge key={index} Keyword>#{keyword}</Badge>
-              ))}
-            </Keyword>
-          </div>
-          <CustomButton
-            Medium
-            PrimaryLightest
-            Fill
-          >
-            자세히
-          </CustomButton>
-        </ListBoxTitle>
-
-        <ListBoxContent>
-          <Body3 color="gray700" align="left">
-            {targetDiscoveryFinalReport?.potential_rank_1?.discovery_criteria}
-          </Body3>
-        </ListBoxContent>
-      </ListBoxItem>
-
-      <ListBoxItem>
-        <ListBoxTitle>
-          <div>
-            <Body1 color="gray800">고급 인테리어를 추구하는 30대 중반 싱글 남성</Body1>
-            <Keyword>
-              <Badge Keyword>Potential</Badge>
-              {targetDiscoveryFinalReport?.potential_rank_2?.keywords?.map((keyword, index) => (
-                <Badge key={index} Keyword>#{keyword}</Badge>
-              ))}
-            </Keyword>
-          </div>
-          <CustomButton
-            Medium
-            PrimaryLightest
-            Fill
-          >
-            자세히
-          </CustomButton>
-        </ListBoxTitle>
-
-        <ListBoxContent>
-          <Body3 color="gray700" align="left">
-            {targetDiscoveryFinalReport?.potential_rank_2?.rank_reason}
-          </Body3>
-        </ListBoxContent>
-      </ListBoxItem>
-
-      <ListBoxItem>
-        <ListBoxTitle>
-          <div>
-            <Body1 color="gray800">트렌디한 인테리어를 선호하는 20대 후반 젊은 여성</Body1>
-            <Keyword>
-              <Badge Keyword>Potential</Badge>
-              {targetDiscoveryFinalReport?.potential_rank_3?.keywords?.map((keyword, index) => (
-                <Badge key={index} Keyword>#{keyword}</Badge>
-              ))}
-            </Keyword>
-          </div>
-          <CustomButton
-            Medium
-            PrimaryLightest
-            Fill
-          >
-            자세히
-          </CustomButton>
-        </ListBoxTitle>
-
-        <ListBoxContent>
-          <Body3 color="gray700" align="left">
-            {targetDiscoveryFinalReport?.potential_rank_3?.rank_reason}
-          </Body3>
-        </ListBoxContent>
-      </ListBoxItem>
-    </ListBoxWrap> */}
-
-                <ListBoxWrap>
-                  <ListBoxItem>
-                    <ListBoxTitle>
-                      <div>
-                        <Body1 color="gray800">
-                          가족과 함께 여가를 보내는 활동 지향형 소비자
-                        </Body1>
-                        <Keyword>
-                          <Badge Keyword>Strong Potential</Badge>
-                          <Badge Keyword>#키워드</Badge>
-                          <Badge Keyword>#키워드</Badge>
-                        </Keyword>
-                      </div>
-                      <CustomButton Medium PrimaryLightest Fill>
-                        자세히
-                      </CustomButton>
-                    </ListBoxTitle>
-
-                    <ListBoxContent>
-                      <Body3 color="gray700" align="left">
-                        인터뷰 결과, 스마트홈 스피커의 음성 인식률과 반응 속도는
-                        높게 평가되었으나, 개인 맞춤형 기능 부족 및 정보 보안에
-                        대한 우려가 주요 문제점으로 나타났습니다. 특히, 워킹맘
-                        답변자는 자녀를 위한 교육 콘텐츠 및 안전 기능 강화의
-                        필요성을 강조했고, 50대 가장 답변자는 가족 구성원 모두가
-                        쉽게 사용할 수 있는 가족 친화적인 인터페이스 부족을
-                        지적했습니다.
-                      </Body3>
-                    </ListBoxContent>
-                  </ListBoxItem>
-
-                  <ListBoxItem>
-                    <ListBoxTitle>
-                      <div>
-                        <Body1 color="gray800">
-                          가족과 함께 여가를 보내는 활동 지향형 소비자
-                        </Body1>
-                        <Keyword>
-                          <Badge Keyword>Strong Potential</Badge>
-                          <Badge Keyword>#키워드</Badge>
-                          <Badge Keyword>#키워드</Badge>
-                        </Keyword>
-                      </div>
-                      <CustomButton Medium PrimaryLightest Fill>
-                        자세히
-                      </CustomButton>
-                    </ListBoxTitle>
-
-                    <ListBoxContent>
-                      <Body3 color="gray700" align="left">
-                        인터뷰 결과, 스마트홈 스피커의 음성 인식률과 반응 속도는
-                        높게 평가되었으나, 개인 맞춤형 기능 부족 및 정보 보안에
-                        대한 우려가 주요 문제점으로 나타났습니다. 특히, 워킹맘
-                        답변자는 자녀를 위한 교육 콘텐츠 및 안전 기능 강화의
-                        필요성을 강조했고, 50대 가장 답변자는 가족 구성원 모두가
-                        쉽게 사용할 수 있는 가족 친화적인 인터페이스 부족을
-                        지적했습니다.
-                      </Body3>
-                    </ListBoxContent>
-                  </ListBoxItem>
-
-                  <ListBoxItem>
-                    <ListBoxTitle>
-                      <div>
-                        <Body1 color="gray800">
-                          가족과 함께 여가를 보내는 활동 지향형 소비자
-                        </Body1>
-                        <Keyword>
-                          <Badge Keyword>Strong Potential</Badge>
-                          <Badge Keyword>#키워드</Badge>
-                          <Badge Keyword>#키워드</Badge>
-                        </Keyword>
-                      </div>
-                      <CustomButton Medium PrimaryLightest Fill>
-                        자세히
-                      </CustomButton>
-                    </ListBoxTitle>
-
-                    <ListBoxContent>
-                      <Body3 color="gray700" align="left">
-                        인터뷰 결과, 스마트홈 스피커의 음성 인식률과 반응 속도는
-                        높게 평가되었으나, 개인 맞춤형 기능 부족 및 정보 보안에
-                        대한 우려가 주요 문제점으로 나타났습니다. 특히, 워킹맘
-                        답변자는 자녀를 위한 교육 콘텐츠 및 안전 기능 강화의
-                        필요성을 강조했고, 50대 가장 답변자는 가족 구성원 모두가
-                        쉽게 사용할 수 있는 가족 친화적인 인터페이스 부족을
-                        지적했습니다.
-                      </Body3>
-                    </ListBoxContent>
-                  </ListBoxItem>
-                </ListBoxWrap>
-
-                <Button Small Primary onClick={() => setShowPopupSave(true)}>
-                  리포트 저장하기
-                </Button>
+                  </>
+                )}
               </TabContent5>
             )}
           </TargetDiscoveryWrap>
         </MainContent>
       </ContentsWrap>
 
-      {showPopup && (
-        <InterviewPopup>
-          <div style={{ maxWidth: "565px" }}>
-            <div className="header" style={{ gap: "16px" }}>
-              <H4>
-                시간이 부족한 바쁜 프리랜서
-                <span className="close" onClick={() => setShowPopup(false)} />
-              </H4>
-              <div className="keywords">
-                <Status>#시간 관리</Status>
-                <Status>#페르소나 키워드</Status>
-                <Status>#업무 효율율</Status>
-              </div>
-            </div>
-
-            <div className="content type2">
-              <ListRowWrap>
-                <ListRowItem>
-                  <Body1 color="gray700" align="left">
-                    누가
-                    <br />
-                    (Who){" "}
-                  </Body1>
-                  <Body3 color="gray700" align="left">
-                    40대 이상, 자녀 독립 후 여유로운 삶을 추구하는 고소득층,
-                    전원주택/별장 소유자. DIY, 인테리어, 건축 관련 취미를 가짐
-                  </Body3>
-                </ListRowItem>
-                <ListRowItem>
-                  <Body1 color="gray700" align="left">
-                    언제
-                    <br />
-                    (When)
-                  </Body1>
-                  <Body3 color="gray700" align="left">
-                    주택 리모델링, 증축 계획 시, 또는 새로운 공간 활용
-                    아이디어를 얻고 싶을 때
-                  </Body3>
-                </ListRowItem>
-                <ListRowItem>
-                  <Body1 color="gray700" align="left">
-                    어디서
-                    <br />
-                    (Where)
-                  </Body1>
-                  <Body3 color="gray700" align="left">
-                    개인 주택, 별장, 세컨하우스 등
-                  </Body3>
-                </ListRowItem>
-                <ListRowItem>
-                  <Body1 color="gray700" align="left">
-                    무엇을
-                    <br />
-                    (What)
-                  </Body1>
-                  <Body3 color="gray700" align="left">
-                    전원적인 삶의 질을 높이고, 개성을 표현할 수 있는 인테리어
-                    아이디어, 지역 특색을 살린 공간 디자인에 대한 정보
-                  </Body3>
-                </ListRowItem>
-                <ListRowItem>
-                  <Body1 color="gray700" align="left">
-                    어떻게
-                    <br />
-                    (How)
-                  </Body1>
-                  <Body3 color="gray700" align="left">
-                    플랫폼을 통해 전문가의 자문, 맞춤형 디자인 제안, 지역 기반의
-                    시공업체 정보 획득, 커뮤니티 참여를 통한 정보 공유
-                  </Body3>
-                </ListRowItem>
-                <ListRowItem>
-                  <Body1 color="gray700" align="left">
-                    왜<br />
-                    (Why)
-                  </Body1>
-                  <Body3 color="gray700" align="left">
-                    기존의 획일화된 인테리어에서 벗어나, 자신만의 취향과
-                    라이프스타일을 반영한 공간을 창출하고, 지역사회와의 연결을
-                    강화하고자 함.
-                  </Body3>
-                </ListRowItem>
-              </ListRowWrap>
-            </div>
-          </div>
-        </InterviewPopup>
-      )}
-
-      {showPopupMore && (
-        <InterviewPopup>
-          <div style={{ maxWidth: "565px" }}>
-            <div className="header">
-              <H4>
-                시간이 부족한 바쁜 프리랜서
-                <span
-                  className="close"
-                  onClick={() => setShowPopupMore(false)}
-                />
-              </H4>
-              <p className="info">
-                <Sub3>여성</Sub3>
-                <Sub3>25세</Sub3>
-              </p>
-            </div>
-
-            <div className="keywords">
-              <Status>#시간 관리</Status>
-              <Status>#페르소나 키워드</Status>
-              <Status>#업무 효율율</Status>
-            </div>
-
-            <div className="content">
-              <TabWrapType2>
-                <TabButtonType2
-                  isActive={activeTab1 === "personaInfo"}
-                  onClick={() => setActiveTab1("personaInfo")}
-                >
-                  페르소나 정보
-                </TabButtonType2>
-                <TabButtonType2
-                  isActive={activeTab1 === "personaScenario"}
-                  onClick={() => setActiveTab1("personaScenario")}
-                >
-                  페르소나 시나리오
-                </TabButtonType2>
-              </TabWrapType2>
-
-              {activeTab1 === "personaInfo" && (
-                <TabContent>
-                  <ListRowWrap>
-                    <ListRowItem>
-                      <Body1 color="gray700" align="left">
-                        누가
-                        <br />
-                        (Who){" "}
-                      </Body1>
-                      <Body3 color="gray700" align="left">
-                        40대 이상, 자녀 독립 후 여유로운 삶을 추구하는 고소득층,
-                        전원주택/별장 소유자. DIY, 인테리어, 건축 관련 취미를
-                        가짐
-                      </Body3>
-                    </ListRowItem>
-                    <ListRowItem>
-                      <Body1 color="gray700" align="left">
-                        언제
-                        <br />
-                        (When)
-                      </Body1>
-                      <Body3 color="gray700" align="left">
-                        주택 리모델링, 증축 계획 시, 또는 새로운 공간 활용
-                        아이디어를 얻고 싶을 때
-                      </Body3>
-                    </ListRowItem>
-                    <ListRowItem>
-                      <Body1 color="gray700" align="left">
-                        어디서
-                        <br />
-                        (Where)
-                      </Body1>
-                      <Body3 color="gray700" align="left">
-                        개인 주택, 별장, 세컨하우스 등
-                      </Body3>
-                    </ListRowItem>
-                    <ListRowItem>
-                      <Body1 color="gray700" align="left">
-                        무엇을
-                        <br />
-                        (What)
-                      </Body1>
-                      <Body3 color="gray700" align="left">
-                        전원적인 삶의 질을 높이고, 개성을 표현할 수 있는
-                        인테리어 아이디어, 지역 특색을 살린 공간 디자인에 대한
-                        정보
-                      </Body3>
-                    </ListRowItem>
-                    <ListRowItem>
-                      <Body1 color="gray700" align="left">
-                        어떻게
-                        <br />
-                        (How)
-                      </Body1>
-                      <Body3 color="gray700" align="left">
-                        플랫폼을 통해 전문가의 자문, 맞춤형 디자인 제안, 지역
-                        기반의 시공업체 정보 획득, 커뮤니티 참여를 통한 정보
-                        공유
-                      </Body3>
-                    </ListRowItem>
-                    <ListRowItem>
-                      <Body1 color="gray700" align="left">
-                        왜<br />
-                        (Why)
-                      </Body1>
-                      <Body3 color="gray700" align="left">
-                        기존의 획일화된 인테리어에서 벗어나, 자신만의 취향과
-                        라이프스타일을 반영한 공간을 창출하고, 지역사회와의
-                        연결을 강화하고자 함.
-                      </Body3>
-                    </ListRowItem>
-                  </ListRowWrap>
-                </TabContent>
-              )}
-              {activeTab1 === "personaScenario" && (
-                <TabContent>
-                  <Body1 color="gray700">
-                    신뢰할 수 있는 정보와 전문가 도움, 실제 제품 확인이
-                    중요하다.
-                  </Body1>
-                  <Body3 color="gray700">
-                    30대 초반 직장인인 수진(가명)씨와 남편은 새롭게 마련한
-                    신혼집 인테리어를 위해 인테리어 콘텐츠 공유 커뮤니티 및
-                    커머스 플랫폼을 이용한다. 수진씨는 온라인 플랫폼에서 다양한
-                    인테리어 디자인 사진과 영상을 보며 디자인 영감을 얻고,
-                    마음에 드는 가구와 소품을 찾는다. 하지만, 제품의 실제
-                    색감이나 재질을 확인할 수 없어 고민하고, 비슷한 스타일의
-                    제품을 여러 사이트에서 비교하는 데 어려움을 느낀다. 또한,
-                    합리적인 가격대의 고급 인테리어 제품을 찾고 싶지만, 제품
-                    정보가 부족하거나 가격 비교가 어려워 시간이 많이 소요된다.
-                    DIY 인테리어에 관심이 많아 커뮤니티에 참여하여 다른
-                    사용자들과 정보를 공유하고, 조언을 구하지만 전문적인 도움이
-                    부족하다고 느낀다. 특히, 전문가의 도움 없이 직접 인테리어를
-                    계획하고 시공하는 데 어려움을 겪고 있으며, 실제 시공 후
-                    결과물에 대한 불확실성 때문에 고민이 많다. 경쟁 플랫폼에서는
-                    더욱 다양한 스타일과 제품을 제공하지만, 수진씨는 자신들의
-                    취향에 맞는 신뢰할 수 있는 정보와 전문가의 조언을 원한다.
-                    플랫폼에서 제품 구매 후 실제 사용 후기를 확인하고, 전문가의
-                    디자인 컨설팅 서비스를 추가로 제공한다면 더욱 만족스러울
-                    것이다.
-                  </Body3>
-                </TabContent>
-              )}
-            </div>
-          </div>
-        </InterviewPopup>
-      )}
+     
 
       {showPopupError && (
         <PopupWrap
@@ -1468,7 +1110,6 @@ const Name = styled.div`
   font-weight: 400;
   line-height: 1.5;
   color: ${palette.gray800};
-  text-align: left;
 
   span {
     font-size: 0.75rem;

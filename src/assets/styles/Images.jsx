@@ -294,6 +294,8 @@ import ImgExplore06 from "../images/img-explore06.png";
 import ImgExplore07 from "../images/img-explore07.png";
 import ImgExplore08 from "../images/img-explore08.png";
 import ImgExplore09 from "../images/img-explore09.png";
+import ImgExplore10 from "../images/img-explore10.png";
+import ImgExplore11 from "../images/img-explore11.png";
 import ImgExploreNoData from "../images/img-explore-nodata.png";
 
 import LightningChargeFill from "../icons/LightningChargeFill";
@@ -585,6 +587,8 @@ const images = {
   ImgExplore07,
   ImgExplore08,
   ImgExplore09,
+  ImgExplore10,
+  ImgExplore11,
   ImgExploreNoData,
 
   LightningChargeFill,

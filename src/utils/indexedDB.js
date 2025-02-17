@@ -2014,6 +2014,28 @@ export const getToolOnServer = async (toolId, isLoggedIn) => {
   }
 };
 
+// TOOL 리스트 조회      
+export const getToolListOnServer = async (size, page, isLoggedIn) => {
+
+  if (isLoggedIn) {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      const response = await axios.get(
+        `https://wishresearch.kr/panels/tool/tool_list?size=${size}&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching tool from server:", error);
+      throw error;
+    }
+  }
+};
 
 //타겟 디스커버리 페르소나 찾기
 export const InterviewXTargetDiscoveryPersonaRequest = async (
@@ -2154,6 +2176,282 @@ export const InterviewXTargetDiscoveryFinalReportRequest = async (
   } catch (error) {
     console.error("타겟 디스커버리 최종 보고서 API 중 오류 발생:", error);
     console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// 고객 핵심 가치 분석기 페르소나 찾기
+export const InterviewXCustomerValueAnalyzerPersonaRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+    const PUT_DATA = {
+      type: "ix_customer_value_persona",
+      ...data,
+    };
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/tool/create_tool_temp",
+      PUT_DATA,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// 고객 핵심 가치 분석기 저니맵
+export const InterviewXCustomerValueAnalyzerJourneyMapRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+    const PUT_DATA = {
+      type: "ix_customer_value_journey_map",
+      ...data,
+    };
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/tool/create_tool_temp",
+      PUT_DATA,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// 고객 핵심 가치 분석기 팩터
+export const InterviewXCustomerValueAnalyzerFactorRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+    const PUT_DATA = {
+      type: "ix_customer_value_factor",
+      ...data,
+    };
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/tool/create_tool_temp",
+      PUT_DATA,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// 고객 핵심 가치 분석기 클러스터링
+export const InterviewXCustomerValueAnalyzerClusteringRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+    const PUT_DATA = {
+      type: "ix_customer_value_clustering",
+      ...data,
+    };
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/tool/create_tool_temp",
+      PUT_DATA,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// 고객 핵심 가치 분석기 포지셔닝
+export const InterviewXCustomerValueAnalyzerPositioningRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+    const PUT_DATA = {
+      type: "ix_customer_value_positioning",
+      ...data,
+    };
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/tool/create_tool_temp",
+      PUT_DATA,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// 고객 핵심 가치 분석기 최종 보고서
+export const InterviewXCustomerValueAnalyzerFinalReportRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+    const PUT_DATA = {
+      type: "ix_customer_value_final_report",
+      ...data,
+    };
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/tool/create_tool_temp",
+      PUT_DATA,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 };

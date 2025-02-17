@@ -1096,16 +1096,16 @@ const PageMain = () => {
                 <Caption1 color="gray700">All</Caption1>
               </TabButtonType4>
               <TabButtonType4 
-                isActive={activeTab === "expert"}
-                onClick={() => setActiveTab("expert")}
-              >
-                <Caption1 color="gray700">Business Expert</Caption1>
-              </TabButtonType4>
-              <TabButtonType4 
                 isActive={activeTab === "research"}
                 onClick={() => setActiveTab("research")}
               >
                 <Caption1 color="gray700">Research Tool</Caption1>
+              </TabButtonType4>
+              <TabButtonType4 
+                isActive={activeTab === "expert"}
+                onClick={() => setActiveTab("expert")}
+              >
+                <Caption1 color="gray700">Business Expert</Caption1>
               </TabButtonType4>
               {/* <TabButtonType4 
                 isActive={activeTab === "analysis"}
@@ -1118,6 +1118,132 @@ const PageMain = () => {
             <ExploreList>
               {[
                 // Expert 카드들
+
+                <ExploreCard Research key="research-1" {...(!accessableExpert && { Ready: true })}>
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore05} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    타겟 디스커버리
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { hadleToolSelect("1"); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white"><em>준비중</em>타겟 디스커버리</Body1>
+                      <Caption1 color="white" align="left">Contextual Inquiry  및 시나리오 분석 기법을 활용해 제품 및 서비스의 잠재고객 탐색 툴</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+                
+                <ExploreCard Research key="research-2" {...(!accessableExpert && { Ready: true })}>
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore06} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    고객 핵심 가치 분석기
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { hadleToolSelect("2"); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white"><em>준비중</em>고객 핵심 가치 분석기</Body1>
+                      <Caption1 color="white" align="left">고객여정맵을 기반으로 핵심 구매 요인을 도출하고 고객 중심의 경쟁력을 강화하는 툴</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+                
+                <ExploreCard Research key="research-3" {...(!accessableExpert && { Ready: true })}>
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore07} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    아이디어 제너레이터
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { hadleToolSelect("3"); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white"><em>준비중</em>아이디어 제너레이터</Body1>
+                      <Caption1 color="white" align="left">Mandal Art 기법을 활용하여 창의적이고 구조적인 아이디어를 발산하고 구체화 하는 툴</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+                
+                <ExploreCard Research Ready key="research-4">
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore10} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    디자인 감성 분석기
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white"><em>준비중</em>디자인 감성 분석기</Body1>
+                      <Caption1 color="white" align="left">디자인 분야별 평가 기준을 적용해 감성적인 특징을 정량적으로 분석하는 툴</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+                
+                <ExploreCard Research Ready key="research-5">
+                  <span>
+                    <images.LightningChargeFill color={palette.gray700} />
+                    Tool
+                  </span>
+                  <p><img src={images.ImgExplore11} alt="" /></p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    디자인 적합성 분석기
+                  </Body1>
+
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
+                    <span>
+                      <images.LightningChargeFill color={palette.white} />
+                      Tool
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white"><em>준비중</em>디자인 적합성 분석기</Body1>
+                      <Caption1 color="white" align="left">이미지가 마케팅 활용에 적합한지 다양한 기준으로 평가하여 적합성을 판단하는 툴</Caption1>
+                      <i />
+                    </div>
+                  </div>
+                </ExploreCard>,
+
                 <ExploreCard Expert key="expert-1" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
@@ -1220,7 +1346,7 @@ const PageMain = () => {
                     </div>
                   </div>
                 </ExploreCard>,
-                
+
                 <ExploreCard Expert key="expert-5" style={{ cursor: 'default' }}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
@@ -1233,80 +1359,6 @@ const PageMain = () => {
                   </Body1>
                 </ExploreCard>,
 
-                <ExploreCard Research key="research-1" {...(!accessableExpert && { Ready: true })}>
-                  <span>
-                    <images.LightningChargeFill color={palette.gray700} />
-                    Tool
-                  </span>
-                  <p><img src={images.ImgExplore05} alt="" /></p>
-                  <Body1 color="gray800">
-                    <em>준비중</em>
-                    타겟 디스커버리
-                  </Body1>
-
-                  <div className="overlay" onClick={() => { hadleToolSelect("1"); }}>
-                    <span>
-                      <images.LightningChargeFill color={palette.white} />
-                      Tool
-                    </span>
-
-                    <div className="text">
-                      <Body1 color="white"><em>준비중</em>타겟 디스커버리</Body1>
-                      <Caption1 color="white" align="left">Contextual Inquiry  및 시나리오 분석 기법을 활용해 제품 및 서비스의 잠재고객 탐색 툴</Caption1>
-                      <i />
-                    </div>
-                  </div>
-                </ExploreCard>,
-                
-                <ExploreCard Research key="research-2" {...(!accessableExpert && { Ready: true })}>
-                  <span>
-                    <images.LightningChargeFill color={palette.gray700} />
-                    Tool
-                  </span>
-                  <p><img src={images.ImgExplore06} alt="" /></p>
-                  <Body1 color="gray800">
-                    <em>준비중</em>
-                    고객 핵심 가치 분석기
-                  </Body1>
-
-                  <div className="overlay" onClick={() => { hadleToolSelect("2"); }}>
-                    <span>
-                      <images.LightningChargeFill color={palette.white} />
-                      Tool
-                    </span>
-
-                    <div className="text">
-                      <Body1 color="white"><em>준비중</em>고객 핵심 가치 분석기</Body1>
-                      <Caption1 color="white" align="left">고객여정맵을 기반으로 핵심 구매 요인을 도출하고 고객 중심의 경쟁력을 강화하는 툴</Caption1>
-                      <i />
-                    </div>
-                  </div>
-                </ExploreCard>,
-                
-                <ExploreCard Research key="research-3" {...(!accessableExpert && { Ready: true })}>
-                  <span>
-                    <images.LightningChargeFill color={palette.gray700} />
-                    Tool
-                  </span>
-                  <p><img src={images.ImgExplore07} alt="" /></p>
-                  <Body1 color="gray800">
-                    <em>준비중</em>
-                    아이디어 제너레이터
-                  </Body1>
-
-                  <div className="overlay" onClick={() => { hadleToolSelect("3"); }}>
-                    <span>
-                      <images.LightningChargeFill color={palette.white} />
-                      Tool
-                    </span>
-
-                    <div className="text">
-                      <Body1 color="white"><em>준비중</em>아이디어 제너레이터</Body1>
-                      <Caption1 color="white" align="left">Mandal Art 기법을 활용하여 창의적이고 구조적인 아이디어를 발산하고 구체화 하는 툴</Caption1>
-                      <i />
-                    </div>
-                  </div>
-                </ExploreCard>,
 
                 // <ExploreCard Research key="research-4">
                 //   <span>

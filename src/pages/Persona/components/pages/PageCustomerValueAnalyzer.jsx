@@ -10,6 +10,10 @@ import {
   Button,
   IconButton,
 } from "../../../../assets/styles/ButtonStyle";
+
+import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
+import MoleculeCustomerValueCard from "../molecules/MoleculeCustomerValueCard";
+
 import { 
   FormBox, 
   CustomTextarea, 
@@ -74,7 +78,44 @@ import {
   Caption2,
 } from "../../../../assets/styles/Typography";
 
+import {
+  IS_LOGGED_IN,
+  TOOL_ID,
+  TOOL_STEP,
+  CUSTOMER_VALUE_ANALYZER_INFO,
+  CUSTOMER_VALUE_ANALYZER_PERSONA,
+  CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP,
+  CUSTOMER_VALUE_ANALYZER_FACTOR,
+  CUSTOMER_VALUE_ANALYZER_CLUSTERING,
+  CUSTOMER_VALUE_ANALYZER_POSITIONING,
+  CUSTOMER_VALUE_ANALYZER_FINAL_REPORT,
+} from "../../../../pages/AtomStates";
+
+import {
+  createToolOnServer,
+  updateToolOnServer,
+  getToolOnServer,
+  InterviewXCustomerValueAnalyzerPersonaRequest,
+  getToolListOnServer,
+  InterviewXCustomerValueAnalyzerJourneyMapRequest,
+  InterviewXCustomerValueAnalyzerFactorRequest,
+  InterviewXCustomerValueAnalyzerClusteringRequest,
+  InterviewXCustomerValueAnalyzerPositioningRequest,
+  InterviewXCustomerValueAnalyzerFinalReportRequest,
+} from "../../../../utils/indexedDB";
+
 const PageCustomerValueAnalyzer = () => {
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [toolStep, setToolStep] = useAtom(TOOL_STEP);
+  const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(CUSTOMER_VALUE_ANALYZER_INFO);
+  const [customerValueAnalyzerPersona, setCustomerValueAnalyzerPersona] = useAtom(CUSTOMER_VALUE_ANALYZER_PERSONA);
+  const [customerValueAnalyzerJourneyMap, setCustomerValueAnalyzerJourneyMap] = useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
+  const [customerValueAnalyzerFactor, setCustomerValueAnalyzerFactor] = useAtom(CUSTOMER_VALUE_ANALYZER_FACTOR);
+  const [customerValueAnalyzerClustering, setCustomerValueAnalyzerClustering] = useAtom(CUSTOMER_VALUE_ANALYZER_CLUSTERING);
+  const [customerValueAnalyzerPositioning, setCustomerValueAnalyzerPositioning] = useAtom(CUSTOMER_VALUE_ANALYZER_POSITIONING);
+  const [customerValueAnalyzerFinalReport, setCustomerValueAnalyzerFinalReport] = useAtom(CUSTOMER_VALUE_ANALYZER_FINAL_REPORT);
+
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupMore, setShowPopupMore] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -99,7 +140,7 @@ const PageCustomerValueAnalyzer = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]);  // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
-  const [targetCustomers, setTargetCustomers] = useState(['', '', '']);
+  const [targetCustomers, setTargetCustomers] = useState(['']);
   const [personaData, setPersonaData] = useState({
     personaInfo: "",
     personaScenario: "",
@@ -117,6 +158,139 @@ const PageCustomerValueAnalyzer = () => {
 
   const customerListRef = useRef(null);
   const analysisScopeRef = useRef(null);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [targetDiscoveryList, setTargetDiscoveryList] = useState([]);
+
+  const [cardStatuses, setCardStatuses] = useState({});
+
+  // 스크롤 초기화
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // 타겟 디스커버리 리스트 가져오기
+  useEffect(() => {
+    const getAllTargetDiscovery = async () => {
+      let page = 1;
+      const size = 10;
+      
+    while (true) {
+      const response = await getToolListOnServer(size, page, isLoggedIn);
+      const targetDiscoveryData = response.data.filter(item => item.type === "ix_target_discovery_persona");
+      
+      setTargetDiscoveryList(prev => {
+        const newItems = targetDiscoveryData.filter(item => 
+          item?.target_discovery_scenario?.length > 0
+        );
+        return [...prev, ...newItems];
+      });
+      
+      if (response.count <= page * size) {
+        break;
+      }
+      page++;
+      }
+    };
+
+    getAllTargetDiscovery();
+  }, []);
+
+  // 고객 여정 맵 API 호출 시작
+  useEffect(() => {
+    if (activeTab === 2 && customerValueAnalyzerPersona.length > 0) {
+      // 첫 번째 카드 호출 시작
+      handleAnalyzeJourneyMap(
+        customerValueAnalyzerInfo.target_list[0],
+        customerValueAnalyzerPersona[0],
+        0
+      );
+      
+      // 나머지 카드들을 대기 상태로 설정
+      const initialStatuses = {};
+      customerValueAnalyzerPersona.forEach((_, index) => {
+        if (index > 0) {
+          initialStatuses[index] = 'waiting';
+        }
+      });
+      setCardStatuses(prev => ({
+        ...prev,
+        ...initialStatuses
+      }));
+    }
+  }, [activeTab, customerValueAnalyzerPersona]);
+
+  const handleSubmitBusinessInfo = async () => {
+    try {
+      setIsLoading(true);
+
+      const businessData = {
+        business: businessDescription,
+        target_list: targetCustomers,
+        analysis_scope: selectedPurposes.analysisScope,
+      };
+
+      const response = await InterviewXCustomerValueAnalyzerPersonaRequest(
+        businessData,
+        isLoggedIn
+      );
+
+      if (
+        !response?.response.customer_value_persona ||
+        !Array.isArray(response.response.customer_value_persona) ||
+        response.response.customer_value_persona.length === 0
+      ) {
+        setShowPopupError(true);
+        return;
+      }
+
+      const responseToolId = await createToolOnServer(
+        {
+          type: "ix_customer_value_persona",
+          completed_step: 1,
+          customer_value_persona: response.response.customer_value_persona,
+          ...businessData,
+        },
+        isLoggedIn
+      );
+      setToolId(responseToolId);
+      setToolStep(1);
+
+      // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
+      setCustomerValueAnalyzerPersona(
+        response.response.customer_value_persona || []
+      );
+      setCustomerValueAnalyzerInfo(businessData);
+
+      // API 호출 성공시 다음 단계로 이동
+      handleNextStep(1);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error submitting business info:", error);
+      setShowPopupError(true);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowPopupError(true);
+            break;
+          case 504:
+            setShowPopupError(true);
+            break;
+          default:
+            setShowPopupError(true);
+            break;
+        }
+      } else {
+        setShowPopupError(true);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTargetDiscoveryClick = (business) => {
+    setBusinessDescription(business);
+  };
 
   const calculateDropDirection = (ref, selectBoxId) => {
     if (ref.current) {
@@ -150,6 +324,10 @@ const PageCustomerValueAnalyzer = () => {
       ...prev,
       [selectBoxId]: false
     }));
+
+    if (selectBoxId === "customerList") {
+      setBusinessDescription(purpose);
+    }
   };
 
   const handleContactInputChange = (field, value) => {
@@ -211,6 +389,46 @@ const PageCustomerValueAnalyzer = () => {
     });
   };
 
+  const handleAnalyzeJourneyMap = async (title, content, index) => {
+    setCardStatuses(prev => ({
+      ...prev,
+      [index]: 'loading'
+    }));
+
+    const date = {
+      business: customerValueAnalyzerInfo.business,
+      target: title,
+      analysis_scope: customerValueAnalyzerInfo.analysis_scope,
+      analysis_purpose: content,
+    }
+    
+    try {
+      const response = await InterviewXCustomerValueAnalyzerJourneyMapRequest(
+        date, isLoggedIn
+      );
+      setCardStatuses(prev => ({
+        ...prev,
+        [index]: 'completed'
+      }));
+
+      // 다음 카드가 있다면 자동으로 분석 시작
+      if (index + 1 < customerValueAnalyzerPersona.length) {
+        handleAnalyzeJourneyMap(
+          customerValueAnalyzerInfo.target_list[index + 1],
+          customerValueAnalyzerPersona[index + 1],
+          index + 1
+        );
+      }
+
+    } catch (error) {
+      console.error("Error analyzing journey map:", error);
+      setCardStatuses(prev => ({
+        ...prev,
+        [index]: 'error'
+      }));
+    }
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -266,6 +484,20 @@ const PageCustomerValueAnalyzer = () => {
 
             {activeTab === 1 && (
               <TabContent5>
+                {isLoading ? (
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      minHeight: "200px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <AtomPersonaLoader message="잠재 고객을 분석하고 있어요" />
+                  </div>
+                ) : (
+                <>
                 <div className="title">
                   <H3 color="gray800">Define Your Key Customer</H3>
                   <Body3 color="gray800">고객 여정 분석을 원하는 주요 고객군을 입력하세요</Body3>
@@ -296,31 +528,31 @@ const PageCustomerValueAnalyzer = () => {
 
                       {selectBoxStates.customerList && (
                         <SelectBoxList dropUp={dropUpStates.customerList}>
-                          <SelectBoxItem
-                            onClick={() => handlePurposeSelect("진행된 프로젝트가 없습니다. 타겟 디스커버리를 먼저 진행해주세요", 'customerList')}
-                          >
-                            <Body2 color="gray700" align="left">
-                              진행된 프로젝트가 없습니다. 타겟 디스커버리를 먼저 진행해주세요
-                            </Body2>
-                          </SelectBoxItem>
-                          <SelectBoxItem
-                            onClick={() =>
-                              handlePurposeSelect("{Businss}", 'customerList')
-                            }
-                          >
-                            <Body2 color="gray700" align="left">
-                              (Businss)
-                            </Body2>
-                          </SelectBoxItem>
-                          <SelectBoxItem
-                            onClick={() =>
-                              handlePurposeSelect("{Businss1}", 'customerList')
-                            }
-                          >
-                            <Body2 color="gray700" align="left">
-                              (Businss1)
-                            </Body2>
-                          </SelectBoxItem>
+                          {targetDiscoveryList.length === 0 ? (
+                            <SelectBoxItem
+                              disabled={toolStep >= 1}
+                              onClick={() => handlePurposeSelect("진행된 프로젝트가 없습니다. 타겟 디스커버리를 먼저 진행해주세요", 'customerList')}
+                            >
+                              <Body2 color="gray700" align="left">
+                                진행된 프로젝트가 없습니다. 타겟 디스커버리를 먼저 진행해주세요
+                              </Body2>
+                            </SelectBoxItem>
+                          ) : (
+                            targetDiscoveryList.map((item, index) => (
+                              <SelectBoxItem
+                                disabled={toolStep >= 1}
+                                key={index}
+                                onClick={() => {
+                                  handlePurposeSelect(item.business, 'customerList');
+                                  setTargetCustomers(item.target_discovery_scenario.map(persona => persona.title));
+                                }}
+                              >
+                                <Body2 color="gray700" align="left">
+                                  {item.business}
+                                </Body2>
+                              </SelectBoxItem>
+                            ))
+                          )}
                         </SelectBoxList>
                       )}
                     </SelectBox>
@@ -335,6 +567,7 @@ const PageCustomerValueAnalyzer = () => {
                     </div>
                     <FormBox Large>
                       <CustomTextarea 
+                        disabled={toolStep >= 1}
                         Edit 
                         rows={4} 
                         placeholder="비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)" 
@@ -356,6 +589,7 @@ const PageCustomerValueAnalyzer = () => {
                     </div>
                     {targetCustomers.map((customer, index) => (
                       <CustomInput
+                        disabled={toolStep >= 1}
                         key={index}
                         type="text"
                         placeholder="핵심 타겟 고객 군을 작성해주세요 (예: 20대 여성 등)"
@@ -371,7 +605,7 @@ const PageCustomerValueAnalyzer = () => {
                           setTargetCustomers(prev => [...prev, '']);
                         }
                       }}
-                      disabled={targetCustomers.length >= 5}
+                      disabled={targetCustomers.length >= 5 || toolStep >= 1}
                     >
                       <Body2 color="gray300">+ 추가하기</Body2>
                     </Button>
@@ -385,6 +619,7 @@ const PageCustomerValueAnalyzer = () => {
                     
                     <SelectBox ref={analysisScopeRef}>
                       <SelectBoxTitle 
+                        disabled={toolStep >= 1}
                         onClick={() => handleSelectBoxClick('analysisScope', analysisScopeRef)}
                       >
                         <Body2 color={selectedPurposes.analysisScope ? "gray800" : "gray300"}>
@@ -405,6 +640,7 @@ const PageCustomerValueAnalyzer = () => {
                       {selectBoxStates.analysisScope && (
                         <SelectBoxList dropUp={dropUpStates.analysisScope}>
                           <SelectBoxItem
+                            disabled={toolStep >= 1}
                             onClick={() => handlePurposeSelect("시간 흐름 기반 여정 분석 | 제품/서비스의 전체적인 사용자 여정을 기반으로 분석", 'analysisScope')}
                           >
                             <Body1 color="gray700" align="left" style={{display: "flex", alignItems: "center"}}>
@@ -413,6 +649,7 @@ const PageCustomerValueAnalyzer = () => {
                             </Body1>
                           </SelectBoxItem>
                           <SelectBoxItem
+                            disabled={toolStep >= 1}
                             onClick={() =>
                               handlePurposeSelect("상황 중심 여정 분석 | 특정 이벤트나 고객 경험을 중심으로 여정 분석", 'analysisScope')
                             }
@@ -423,6 +660,7 @@ const PageCustomerValueAnalyzer = () => {
                             </Body1>
                           </SelectBoxItem>
                           <SelectBoxItem
+                            disabled={toolStep >= 1}
                             onClick={() =>
                               handlePurposeSelect("목적 기반 여정 분석 | 고객이 제품/서비스를 사용하여 달성하려는 목표를 중심으로 여정 분석", 'analysisScope')
                             }
@@ -443,11 +681,13 @@ const PageCustomerValueAnalyzer = () => {
                   Primary 
                   Fill 
                   Round
-                  onClick={() => setShowPopupError(true)}
-                  disabled={!isRequiredFieldsFilled()}
+                  onClick={() => handleSubmitBusinessInfo()}
+                  disabled={!isRequiredFieldsFilled() || toolStep >= 1}
                 >
                     다음
                 </Button>
+                </>
+                )}
               </TabContent5>
             )}
 
@@ -460,95 +700,23 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
                   <CardGroupWrap>
-                    <ListBoxItem 
-                      NoBg
-                      selected={selectedPersonas.includes('persona1')} 
-                      active={selectedPersonas.includes('persona1')}
-                    >
-                      <div>
-                        <CheckBoxButton 
-                          id="persona1"
-                          name="persona1"
-                          checked={selectedPersonas.includes('persona1')}
-                          onChange={() => handleCheckboxChange('persona1')}
-                        />
-                      </div>
-                      <ListText>
-                        <ListTitle>
-                          <Body1 color={selectedPersonas.includes('persona1') ? "primary" : "gray800"}>
-                            가족과 함께 여가를 보내는 활동 지향형 소비자
-                          </Body1>
-                        </ListTitle>
-
-                        <ListSubtitle>
-                            <Badge Keyword>
-                              #키워드1
-                            </Badge>
-                            <Badge Keyword>
-                              #키워드2
-                            </Badge>
-                            <Badge Keyword>
-                              #키워드3
-                            </Badge>
-                        </ListSubtitle>
-                      </ListText>
-                      <ListButton>
-                        <CustomButton
-                          Medium
-                          PrimaryLightest
-                          Fill
-                          onClick={() => setShowPopup(true)}
-                        >
-                          자세히
-                        </CustomButton>
-                      </ListButton>
-                    </ListBoxItem>
-
-                    <ListBoxItem 
-                      NoBg
-                      selected={selectedPersonas.includes('persona2')} 
-                      active={selectedPersonas.includes('persona2')}
-                    >
-                      <div>
-                        <CheckBoxButton 
-                          id="persona2"
-                          name="persona2"
-                          checked={selectedPersonas.includes('persona2')}
-                          onChange={() => handleCheckboxChange('persona2')}
-                        />
-                      </div>
-                      <ListText>
-                        <ListTitle>
-                          <Body1 color={selectedPersonas.includes('persona2') ? "primary" : "gray800"}>
-                            가족과 함께 여가를 보내는 활동 지향형 소비자
-                          </Body1>
-                        </ListTitle>
-
-                        <ListSubtitle>
-                            <Badge Keyword>
-                              #키워드1
-                            </Badge>
-                            <Badge Keyword>
-                              #키워드2
-                            </Badge>
-                            <Badge Keyword>
-                              #키워드3
-                            </Badge>
-                        </ListSubtitle>
-                      </ListText>
-                      <ListButton>
-                        <CustomButton
-                          Medium
-                          PrimaryLightest
-                          Fill
-                          onClick={() => setShowPopup(true)}
-                        >
-                          자세히
-                        </CustomButton>
-                      </ListButton>
-                    </ListBoxItem>
+                    {customerValueAnalyzerPersona.map((content, index) => (
+                      <MoleculeCustomerValueCard
+                        key={index}
+                        id={`persona-${index}`}
+                        title={customerValueAnalyzerInfo.target_list[index]}
+                        content={content}
+                        status={cardStatuses[index]}
+                        isSelected={selectedPersonas.includes(`persona-${index}`)}
+                        onSelect={(id) => handleCheckboxChange(id)}
+                        onAnalyze={() => handleAnalyzeJourneyMap(
+                          customerValueAnalyzerInfo.target_list[index],
+                          content,
+                          index
+                        )}
+                      />
+                    ))}
                   </CardGroupWrap>
-
                   <BottomBar W100>
                     <Body2
                       color={selectedPersonas.length === 0 ? "gray300" : "gray800"}
@@ -748,122 +916,6 @@ const PageCustomerValueAnalyzer = () => {
         </MainContent>
       </ContentsWrap>
 
-      {showPopup && (
-        <PopupWrap
-          Wide1000
-          title={
-            <>
-              <H4 color="gray800" align="left">
-                (Persona name)의 (Business)<br />고객 여정 분석
-              </H4>
-            </>
-          }
-          buttonType="Fill"
-          isModal={true}
-          showTabs={true}
-          tabs={["고객 여정 맵", "여정별 상세 설명"]}
-          activeTab={activeTabIndex}
-          onTabChange={(index) => setActiveTabIndex(index)}
-          eventState={false}
-          creditRequestCustomPersona={1}
-          customAlertBox={
-            <TextWrap>
-              <Body2 color="gray800" align="left">
-                이 비즈니스 아이템은 참신하고 현재의 시장 동향과 맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형 디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장 기회를 가집니다. 다만, 참신함이 곧 블루 오션을 의미하지 않으므로, 진입 전략은 사용자 친화적 디자인, 가족의 참여를 유도하는 마케팅, 맞춤형 프로그램으로 보강해야 합니다.
-              </Body2>
-            </TextWrap>
-          }
-          body={
-            <>
-              {activeTabIndex === 0 && (
-                <>
-                  <BoxWrap>
-                    My Working Day
-                  </BoxWrap>
-                </>
-              )}
-
-              {activeTabIndex === 1 && (
-                <>
-                  <ListBox>
-                    <div>
-                      <span className="number">1</span>
-                      <div>
-                        <Sub1 color="gray800">유저저니맵 1 단계</Sub1>
-                        <Body2 color="gray700" align="left">이 비즈니스 아이템은 참신하고 현재의 시장 동향과 맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형 디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장 기회를 가집니다.</Body2>
-                        <div className="tag">
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <span className="number">2</span>
-                      <div>
-                        <Sub1 color="gray800">유저저니맵 2 단계</Sub1>
-                        <Body2 color="gray700" align="left">이 비즈니스 아이템은 참신하고 현재의 시장 동향과 맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형 디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장 기회를 가집니다.</Body2>
-                        <div className="tag">
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <span className="number">3</span>
-                      <div>
-                        <Sub1 color="gray800">유저저니맵 3 단계</Sub1>
-                        <Body2 color="gray700" align="left">이 비즈니스 아이템은 참신하고 현재의 시장 동향과 맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형 디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장 기회를 가집니다.</Body2>
-                        <div className="tag">
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <span className="number">4</span>
-                      <div>
-                        <Sub1 color="gray800">유저저니맵 4 단계</Sub1>
-                        <Body2 color="gray700" align="left">이 비즈니스 아이템은 참신하고 현재의 시장 동향과 맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형 디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장 기회를 가집니다.</Body2>
-                        <div className="tag">
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <span className="number">5</span>
-                      <div>
-                        <Sub1 color="gray800">유저저니맵 5 단계</Sub1>
-                        <Body2 color="gray700" align="left">이 비즈니스 아이템은 참신하고 현재의 시장 동향과 맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형 디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장 기회를 가집니다.</Body2>
-                        <div className="tag">
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                        </div>
-                      </div>
-                    </div>
-                  </ListBox>
-                </>
-              )}
-            </>
-          }
-        />
-      )}
-
-
       {showPopupMore && (
         <PopupWrap
           Wide1000
@@ -891,24 +943,6 @@ const PageCustomerValueAnalyzer = () => {
           body={
             <>
               <ListGroup>
-                <div>
-                  <Body1 color="gray800" align="left">뛰어난 지속력</Body1>
-                  <Sub3 color="gray800" align="left">
-                    시간에 민감한 페르소나에게 수정 화장은 시간 낭비이자 업무 효율 저하의 원인입니다. 하루 종일 지속되는 메이크업은 그녕의 프로페셔널한 이미지 유지와 업무 집중도 향상에 직결됩니다.  
-                  </Sub3>
-                </div>
-                <div>
-                  <Body1 color="gray800" align="left">뛰어난 지속력</Body1>
-                  <Sub3 color="gray800" align="left">
-                    시간에 민감한 페르소나에게 수정 화장은 시간 낭비이자 업무 효율 저하의 원인입니다. 하루 종일 지속되는 메이크업은 그녕의 프로페셔널한 이미지 유지와 업무 집중도 향상에 직결됩니다.  
-                  </Sub3>
-                </div>
-                <div>
-                  <Body1 color="gray800" align="left">뛰어난 지속력</Body1>
-                  <Sub3 color="gray800" align="left">
-                    시간에 민감한 페르소나에게 수정 화장은 시간 낭비이자 업무 효율 저하의 원인입니다. 하루 종일 지속되는 메이크업은 그녕의 프로페셔널한 이미지 유지와 업무 집중도 향상에 직결됩니다.  
-                  </Sub3>
-                </div>
                 <div>
                   <Body1 color="gray800" align="left">뛰어난 지속력</Body1>
                   <Sub3 color="gray800" align="left">
