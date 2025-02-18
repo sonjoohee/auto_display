@@ -2101,8 +2101,7 @@ export const CardGroupWrap = styled.div`
   gap: 15px !important;
   flex-wrap: wrap;
   width: ${(props) => (props.column ? "100%" : "100%")};
-  margin-bottom: ${(props) =>
-    props.column ? "140px" : props.column2 ? "0" : "0"};
+  margin-bottom: ${(props) => (props.column ? "140px" : "0")};
 
   > div {
     flex: 1;
