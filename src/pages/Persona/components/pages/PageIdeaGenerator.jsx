@@ -1099,7 +1099,7 @@ const PageIdeaGenerator = () => {
                 </div>
 
                 <div className="content">
-                  <CardGroupWrap column>
+                  <CardGroupWrap column style={{ marginBottom: "140px" }}>
                     <ListBoxItem>
                       <ListText>
                         <Body1 color="gray800">Key Value 1</Body1>
