@@ -905,7 +905,7 @@ const PageIdeaGenerator = () => {
                 <div className="content">
                   {selectedInterviewType === "yesTarget" ? (
                     <>                      
-                      <TabContent5Item>
+                      <TabContent5Item style={{marginBottom: "140px"}}>
                         <div className="title">
                           <Body1 color="gray700">어떤 고객을 중심으로 아이디어를 도출하시겠습니까?</Body1>
                         </div>
@@ -922,7 +922,7 @@ const PageIdeaGenerator = () => {
                     </>
                   ) : selectedInterviewType === "noTarget" ? (
                     <>
-                      <CardGroupWrap>
+                      <CardGroupWrap column>
                         <ListBoxItem 
                           NoBg
                           selected={selectedPersonas.includes('persona1')} 

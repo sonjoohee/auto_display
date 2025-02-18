@@ -560,7 +560,7 @@ const PagePersona3 = () => {
                     인터뷰 방식
                   </Body2>
 
-                  <CardGroupWrap>
+                  <CardGroupWrap column>
                     <ListBoxItem active={selectedInterviewType === "multiple"}>
                       <div>
                         <RadioButton

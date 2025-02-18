@@ -841,7 +841,7 @@ const PageTargetDiscovery = () => {
                     </div>
 
                     <div className="content">
-                      <CardGroupWrap>
+                      <CardGroupWrap column>
                         {targetDiscoveryPersona.map((persona, index) => (
                           <MoleculeToolPersonaCard
                             key={`persona-${index}`}
@@ -904,7 +904,7 @@ const PageTargetDiscovery = () => {
                 </div>
 
                 <div className="content">
-                  <CardGroupWrap>
+                  <CardGroupWrap column>
                     {selectedTargetDiscoveryPersona.map((persona, index) => {
                       // selectedTargetDiscoveryScenario에서 매칭되는 시나리오 데이터 찾기
                       const matchingScenarioData =
