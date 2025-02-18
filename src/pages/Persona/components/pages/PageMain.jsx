@@ -1550,11 +1550,10 @@ const PageMain = () => {
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
                   </span>
-                  <p>
+                  <p style={{ marginBottom: "25px" }}>
                     <img src={images.ImgExploreNoData} alt="" />
                   </p>
                   <Body1 color="gray300">
-                    <em>준비중</em>
                     Coming Soon
                   </Body1>
                 </ExploreCard>,
