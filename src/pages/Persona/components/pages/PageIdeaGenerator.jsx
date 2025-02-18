@@ -888,7 +888,7 @@ const PageIdeaGenerator = () => {
                       아이디어 도출하고 싶은 고객이 있으신가요?
                     </Body2>
 
-                    <CardGroupWrap row>
+                    <CardGroupWrap rowW50>
                       <ListBoxItem
                         active={selectedInterviewType === "yesTarget"}
                       >
@@ -970,7 +970,7 @@ const PageIdeaGenerator = () => {
                     </>
                   ) : selectedInterviewType === "noTarget" ? (
                     <>
-                      <CardGroupWrap column>
+                      <CardGroupWrap column style={{ marginBottom: "140px" }}>
                         <ListBoxItem
                           NoBg
                           selected={selectedPersonas.includes("persona1")}
@@ -1099,7 +1099,7 @@ const PageIdeaGenerator = () => {
                 </div>
 
                 <div className="content">
-                  <CardGroupWrap>
+                  <CardGroupWrap column style={{ marginBottom: "140px" }}>
                     <ListBoxItem>
                       <ListText>
                         <Body1 color="gray800">Key Value 1</Body1>

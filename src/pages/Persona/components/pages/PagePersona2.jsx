@@ -1870,7 +1870,7 @@ const PagePersona2 = () => {
                             </TypeMore>
                           </CategoryView>
 
-                          <CardGroupWrap>
+                          <CardGroupWrap column={viewType === "list"} style={{ marginBottom: "0" }}>
                             {customPersonaList.map((persona, index) => (
                               <MoleculeCustomPersonaCard
                                 key={index}

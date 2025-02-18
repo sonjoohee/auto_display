@@ -878,7 +878,7 @@ const PageCustomerValueAnalyzer = () => {
                 </div>
 
                 <div className="content">
-                  <CardGroupWrap>
+                  <CardGroupWrap column style={{ marginBottom: "140px" }}>
                     {customerValueAnalyzerPersona.map((content, index) => (
                       <MoleculeCustomerValueCard
                         key={index}
@@ -940,7 +940,7 @@ const PageCustomerValueAnalyzer = () => {
                 </div>
 
                 <div className="content">
-                  <CardGroupWrap>
+                  <CardGroupWrap column style={{ marginBottom: "140px" }}>
                     <ListBoxItem>
                       <ListText>
                         <ListTitle>
