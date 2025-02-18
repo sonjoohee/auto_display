@@ -1554,7 +1554,6 @@ const PageMain = () => {
                     <img src={images.ImgExploreNoData} alt="" />
                   </p>
                   <Body1 color="gray300">
-                    <em>준비중</em>
                     Coming Soon
                   </Body1>
                 </ExploreCard>,
