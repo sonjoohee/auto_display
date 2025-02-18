@@ -1,4 +1,4 @@
-//타겟 디스커버리리
+//타겟 탐색기리
 import React, { useEffect, useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
@@ -1019,7 +1019,7 @@ const PageTargetDiscovery = () => {
             {activeTab === 4 && completedSteps.includes(3) && (
               <TabContent5 Small>
                 <BgBoxItem primaryLightest>
-                  <H3 color="gray800">타겟디스커버리 인사이트 분석</H3>
+                  <H3 color="gray800">타겟 탐색기 인사이트 분석</H3>
                   <Body3 color="gray800">
                     잠재 고객과 시나리오 분석을 통해 새로운 전략적 방향을
                     탐색해보세요

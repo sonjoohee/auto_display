@@ -232,7 +232,7 @@ const MoleculeHeader = () => {
                 : isTargetDiscoveryPage && targetDiscoveryInfo.business
                 ? targetDiscoveryInfo.business
                 : isTargetDiscoveryPage && !targetDiscoveryInfo.business
-                ? "타겟 디스커버리"
+                ? "타겟 탐색기"
                 : "새로운 프로젝트"}
               {isPersona3Page && (
                 <>

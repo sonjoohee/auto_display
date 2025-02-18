@@ -1,4 +1,4 @@
-//타겟 디스커버리리
+//타겟 탐색기리
 import React, { useEffect, useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
@@ -382,12 +382,7 @@ const PageTargetDiscovery = () => {
       );
       setSelectedTargetDiscoveryPersona(selectedPersonaData);
 
-      console.log(
-        "🚀 ~ handleSubmitPersonas ~ selectedPersonaData:",
-        selectedPersonaData
-      );
-      let allScenarios = []; // 모든 시나리오를 저장할 배열
-
+      // 각 페르소나에 대해 개별적으로 시나리오 요청 및 상태 업데이트
       for (const persona of selectedPersonaData) {
         // 현재 페르소나의 로딩 상태를 true로 설정
         setLoadingPersonas((prev) => ({
@@ -395,77 +390,74 @@ const PageTargetDiscovery = () => {
           [persona.title]: true,
         }));
 
-        const isDuplicate = selectedTargetDiscoveryPersona.some(
-          (existingPersona) => existingPersona.title === persona.title
-        );
-
-        if (!isDuplicate) {
-          const apiRequestData = {
-            business: targetDiscoveryInfo.business,
-            target_discovery_persona: persona,
-            specific_situation: targetDiscoveryInfo.specific_situation,
-            country: targetDiscoveryInfo.country,
-          };
-
-          const response = await InterviewXTargetDiscoveryScenarioRequest(
-            apiRequestData,
-            isLoggedIn
+        try {
+          const isDuplicate = selectedTargetDiscoveryPersona.some(
+            (existingPersona) => existingPersona.title === persona.title
           );
-          if (
-            !response?.response?.target_discovery_scenario
-              ?.potential_customer_info ||
-            !response?.response?.target_discovery_scenario?.usage_scenario
-          ) {
-            console.log("🚀 ~ handleSubmitPersonas ~ response:", response);
-            setShowPopupError(true);
-            return;
+
+          if (!isDuplicate) {
+            const apiRequestData = {
+              business: targetDiscoveryInfo.business,
+              target_discovery_persona: persona,
+              specific_situation: targetDiscoveryInfo.specific_situation,
+              country: targetDiscoveryInfo.country,
+            };
+
+            const response = await InterviewXTargetDiscoveryScenarioRequest(
+              apiRequestData,
+              isLoggedIn
+            );
+
+            if (
+              !response?.response?.target_discovery_scenario
+                ?.potential_customer_info ||
+              !response?.response?.target_discovery_scenario?.usage_scenario
+            ) {
+              console.log("🚀 ~ handleSubmitPersonas ~ response:", response);
+              setShowPopupError(true);
+              return;
+            }
+
+            // 개별 시나리오 데이터 업데이트
+            setTargetDiscoveryScenario((prev) => {
+              const currentScenarios = prev || [];
+              return [
+                ...currentScenarios,
+                response?.response?.target_discovery_scenario,
+              ].filter(Boolean);
+            });
+
+            // 현재 페르소나의 로딩 상태를 false로 설정
+            setLoadingPersonas((prev) => ({
+              ...prev,
+              [persona.title]: false,
+            }));
+
+            // 개별 시나리오 데이터를 selectedTargetDiscoveryScenario에 추가
+            setSelectedTargetDiscoveryScenario((prev) => [
+              ...(prev || []),
+              {
+                ...persona,
+                scenario: response.response.target_discovery_scenario,
+              },
+            ]);
           }
-
-          console.log(
-            "🚀 ~ handleSubmitPersonas ~ response33333333:",
-            targetDiscoveryScenario
-          );
-          setTargetDiscoveryScenario((prev) => {
-            // prev가 없는 경우 빈 배열로 초기화
-            const currentScenarios = prev || [];
-            return [
-              ...currentScenarios,
-              response?.response?.target_discovery_scenario,
-            ].filter(Boolean); // null/undefined 값 제거
-          });
-          console.log(
-            "🚀 ~ handleSubmitPersonas ~ response4444444:",
-            response?.response?.target_discovery_scenario
-          );
-          // API 호출이 완료되면 해당 페르소나의 로딩 상태를 false로 설정
+        } catch (error) {
+          // 에러 발생 시 현재 페르소나의 로딩 상태를 false로 설정
           setLoadingPersonas((prev) => ({
             ...prev,
             [persona.title]: false,
           }));
-
-          console.log(
-            "🚀 ~ handleSubmitPersonas ~ allScenarios:",
-            allScenarios
-          );
-          allScenarios.push({
-            ...persona, // 기존 페르소나 데이터 유지
-            scenario: response.response.target_discovery_scenario, // 시나리오 데이터 추가
-          });
-          console.log(
-            "🚀 ~ handleSubmitPersonas ~ response555555",
-            response?.response?.target_discovery_scenario
-          );
+          console.error(`Error processing persona ${persona.title}:`, error);
         }
       }
-      setSelectedTargetDiscoveryScenario(allScenarios);
-      console.log("🚀 ~ handleSubmitPersonas ~ allScenarios:", allScenarios);
 
-      // 모든 시나리오를 한번에 저장
+      // 모든 시나리오를 서버에 저장
       await updateToolOnServer(
         toolId,
         {
           completed_step: 2,
-          target_discovery_scenario: allScenarios,
+          target_discovery_scenario: selectedTargetDiscoveryScenario,
           updateDate: new Date().toLocaleString("ko-KR", {
             timeZone: "Asia/Seoul",
             year: "numeric",
@@ -482,7 +474,8 @@ const PageTargetDiscovery = () => {
       setToolStep(2);
     } catch (error) {
       console.error("Error submitting personas:", error);
-      setLoadingPersonas({}); // 에러 발생 시 모든 로딩 상태 초기화
+      // 에러 발생 시 모든 로딩 상태 초기화
+      setLoadingPersonas({});
       setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
@@ -499,7 +492,6 @@ const PageTargetDiscovery = () => {
       } else {
         setShowPopupError(true);
       }
-    } finally {
     }
   };
 
@@ -988,7 +980,7 @@ const PageTargetDiscovery = () => {
                 ) : (
                   <>
                     <BgBoxItem primaryLightest>
-                      <H3 color="gray800">타겟디스커버리 인사이트 분석</H3>
+                      <H3 color="gray800">타겟 탐색기 인사이트 분석</H3>
                       <Body3 color="gray800">
                         잠재 고객과 시나리오 분석을 통해 새로운 전략적 방향을
                         탐색해보세요
