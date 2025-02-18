@@ -364,7 +364,7 @@ export const TabWrapType4 = styled(TabWrap)`
   gap: 16px !important;
 `;
 
-export const TabButtonType4 = styled(TabButton)`
+export const TabButtonType4Main = styled(TabButton)`
   padding: 6px 12px;
   border-radius: 4px;
   border: 1px solid ${palette.outlineGray};
@@ -379,6 +379,13 @@ export const TabButtonType4 = styled(TabButton)`
       background: ${palette.white};
     `
   }
+`;
+
+export const TabButtonType4 = styled(TabButton)`
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid ${palette.outlineGray};
+  cursor: pointer;
 
   ${({ active }) =>
     active

@@ -728,7 +728,7 @@ const PageCustomerValueAnalyzer = () => {
                       Primary
                       Round
                       Fill
-                      disabled={selectedPersonas.length === 0}
+                      disabled={selectedPersonas.length === 0 || Object.values(cardStatuses).some(status => status === 'loading' || status === 'waiting')}
                       onClick={() => handleNextStep(2)}
                     >
                       다음
