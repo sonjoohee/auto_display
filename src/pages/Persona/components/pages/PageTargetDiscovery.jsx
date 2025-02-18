@@ -933,6 +933,7 @@ const PageTargetDiscovery = () => {
                       const hasScenarioData = Boolean(
                         matchingScenarioData?.scenario
                       );
+                      console.log("matchingScenarioData", matchingScenarioData);
                       const isLoading = loadingPersonas[persona.title];
 
                       return (

@@ -74,6 +74,7 @@ const MoleculeCustomerValueCard = ({
   isSelected, // 선택 여부
   onSelect, // 선택 이벤트 핸들러
   id, // 카드 식별자
+  journeyMapData // 새로운 prop 추가
 }) => {
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(CUSTOMER_VALUE_ANALYZER_INFO);
@@ -87,7 +88,8 @@ const MoleculeCustomerValueCard = ({
   const [showDetailPopup, setShowDetailPopup] = useState(false);
   const [activeTab, setActiveTab] = useState("personaInfo");
   const [activeTabIndex, setActiveTabIndex] = useState(0);
-
+  console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
+  
   const renderButton = () => {
     switch (status) {
       case 'waiting':
@@ -159,7 +161,7 @@ const MoleculeCustomerValueCard = ({
           title={
             <>
               <H4 color="gray800" align="left">
-                (Persona name)의 (Business)<br />고객 여정 분석
+                {title}의 {content}<br />고객 여정 분석
               </H4>
             </>
           }
@@ -185,7 +187,7 @@ const MoleculeCustomerValueCard = ({
               {activeTabIndex === 0 && (
                 <>
                   <BoxWrap>
-                    My Working Day
+                    {journeyMapData?.journey_map_image || "Journey map 이미지가 없습니다."}
                   </BoxWrap>
                 </>
               )}
@@ -193,75 +195,26 @@ const MoleculeCustomerValueCard = ({
               {activeTabIndex === 1 && (
                 <>
                   <ListBox>
-                    <div>
-                      <span className="number">1</span>
-                      <div>
-                        <Sub1 color="gray800">유저저니맵 1 단계</Sub1>
-                        <Body2 color="gray700" align="left">이 비즈니스 아이템은 참신하고 현재의 시장 동향과 맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형 디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장 기회를 가집니다.</Body2>
-                        <div className="tag">
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
+                    {Object.entries(journeyMapData).map(([key, step], index) => {
+                      // conclusion은 제외
+                      if (key === 'conclusion') return null;
+                      
+                      return (
+                        <div key={index}>
+                          <span className="number">{index + 1}</span>
+                          <div>
+                            <Sub1 color="gray800">{step.title}</Sub1>
+                            <Body2 color="gray700" align="left">{step.detail}</Body2>
+                            <div className="tag">
+                              <Sub3 color="gray800">#{step.emotion}</Sub3>
+                              {step.mot !== "해당 없음" && (
+                                <Sub3 color="gray800">#{step.mot}</Sub3>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <span className="number">2</span>
-                      <div>
-                        <Sub1 color="gray800">유저저니맵 2 단계</Sub1>
-                        <Body2 color="gray700" align="left">이 비즈니스 아이템은 참신하고 현재의 시장 동향과 맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형 디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장 기회를 가집니다.</Body2>
-                        <div className="tag">
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <span className="number">3</span>
-                      <div>
-                        <Sub1 color="gray800">유저저니맵 3 단계</Sub1>
-                        <Body2 color="gray700" align="left">이 비즈니스 아이템은 참신하고 현재의 시장 동향과 맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형 디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장 기회를 가집니다.</Body2>
-                        <div className="tag">
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <span className="number">4</span>
-                      <div>
-                        <Sub1 color="gray800">유저저니맵 4 단계</Sub1>
-                        <Body2 color="gray700" align="left">이 비즈니스 아이템은 참신하고 현재의 시장 동향과 맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형 디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장 기회를 가집니다.</Body2>
-                        <div className="tag">
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <span className="number">5</span>
-                      <div>
-                        <Sub1 color="gray800">유저저니맵 5 단계</Sub1>
-                        <Body2 color="gray700" align="left">이 비즈니스 아이템은 참신하고 현재의 시장 동향과 맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형 디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장 기회를 가집니다.</Body2>
-                        <div className="tag">
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                          <Sub3 color="gray800">#키워드</Sub3>
-                        </div>
-                      </div>
-                    </div>
+                      );
+                    })}
                   </ListBox>
                 </>
               )}
