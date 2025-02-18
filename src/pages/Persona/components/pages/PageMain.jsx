@@ -1550,7 +1550,7 @@ const PageMain = () => {
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
                   </span>
-                  <p style={{ marginBottom: "25px" }}>
+                  <p>
                     <img src={images.ImgExploreNoData} alt="" />
                   </p>
                   <Body1 color="gray300">
