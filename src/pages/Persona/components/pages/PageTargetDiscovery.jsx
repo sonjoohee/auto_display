@@ -382,13 +382,11 @@ const PageTargetDiscovery = () => {
       );
       setSelectedTargetDiscoveryPersona(selectedPersonaData);
 
-
       // 순차적으로 처리
       for (let i = 0; i < selectedPersonaData.length; i++) {
         const persona = selectedPersonaData[i];
         
         // 현재 페르소나 로딩 상태 설정
-
         setLoadingPersonas((prev) => ({
           ...prev,
           [persona.title]: true
@@ -419,9 +417,7 @@ const PageTargetDiscovery = () => {
             return;
           }
 
-
           // 현재 페르소나의 시나리오 데이터 추가
-
           setTargetDiscoveryScenario((prev) => {
             const currentScenarios = prev || [];
             return [
@@ -430,14 +426,11 @@ const PageTargetDiscovery = () => {
             ].filter(Boolean);
           });
 
-
           // 현재 페르소나의 로딩 상태 해제
-
           setLoadingPersonas((prev) => ({
             ...prev,
             [persona.title]: false
           }));
-
 
           // selectedTargetDiscoveryScenario 업데이트
           setSelectedTargetDiscoveryScenario((prev) => [
@@ -450,13 +443,11 @@ const PageTargetDiscovery = () => {
         }
       }
 
-
       // 모든 시나리오를 한번에 저장
       await updateToolOnServer(
         toolId,
         {
           completed_step: 2,
-
           target_discovery_scenario: selectedTargetDiscoveryScenario,
           updateDate: new Date().toLocaleString("ko-KR", {
             timeZone: "Asia/Seoul",
@@ -467,7 +458,6 @@ const PageTargetDiscovery = () => {
             minute: "2-digit",
             second: "2-digit",
           }),
-
         },
         isLoggedIn
       );

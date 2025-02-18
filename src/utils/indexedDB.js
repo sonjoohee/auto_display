@@ -2081,9 +2081,9 @@ export const InterviewXTargetDiscoveryPersonaRequest = async (
 
     await new Promise((resolve) => setTimeout(resolve, response.data.time));
 
-    // console.log("타겟 디스커버리 페르소나 찾기 API 응답:", response);
+    console.log("타겟 디스커버리 페르소나 찾기 API 응답:", response);
     const result = await getTermkeyResult(response.data.objectId);
-    // console.log("타겟 디스커버리 페르소나 찾기 API 응답:", result);
+    console.log("타겟 디스커버리 페르소나 찾기 API 응답:", result);
 
     return result;
   } catch (error) {
