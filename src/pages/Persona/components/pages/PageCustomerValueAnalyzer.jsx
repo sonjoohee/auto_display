@@ -104,6 +104,7 @@ import {
   InterviewXCustomerValueAnalyzerFinalReportRequest,
 } from "../../../../utils/indexedDB";
 
+
 const PageCustomerValueAnalyzer = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [toolId, setToolId] = useAtom(TOOL_ID);
@@ -172,51 +173,135 @@ const PageCustomerValueAnalyzer = () => {
   // 타겟 디스커버리 리스트 가져오기
   useEffect(() => {
     const getAllTargetDiscovery = async () => {
-      let page = 1;
-      const size = 10;
-      
-    while (true) {
-      const response = await getToolListOnServer(size, page, isLoggedIn);
-      const targetDiscoveryData = response.data.filter(item => item.type === "ix_target_discovery_persona");
-      
-      setTargetDiscoveryList(prev => {
-        const newItems = targetDiscoveryData.filter(item => 
-          item?.target_discovery_scenario?.length > 0
-        );
-        return [...prev, ...newItems];
-      });
-      
-      if (response.count <= page * size) {
-        break;
-      }
-      page++;
+      try {
+        let page = 1;
+        const size = 10;
+        let allItems = [];
+        
+        while (true) {
+          const response = await getToolListOnServer(size, page, isLoggedIn);
+          
+          // Check if response exists and has data
+          if (!response || !response.data) {
+            console.error('Invalid response from server');
+            break;
+          }
+
+          const targetDiscoveryData = response.data.filter(item => 
+            item.type === "ix_target_discovery_persona"
+          );
+          
+          const newItems = targetDiscoveryData.filter(item => 
+            item?.target_discovery_scenario?.length > 0
+          );
+          
+          allItems = [...allItems, ...newItems];
+          
+          // Check if we've reached the end of the data
+          if (!response.count || response.count <= page * size) {
+            break;
+          }
+          
+          page++;
+        }
+
+        setTargetDiscoveryList(allItems);
+      } catch (error) {
+        console.error('Error fetching target discovery list:', error);
+        setTargetDiscoveryList([]); // Set empty array on error
       }
     };
 
     getAllTargetDiscovery();
-  }, []);
+  }, [isLoggedIn]);
 
   // 고객 여정 맵 API 호출 시작
   useEffect(() => {
-    if (activeTab === 2 && customerValueAnalyzerPersona.length > 0) {
-      // 첫 번째 카드 호출 시작
-      handleAnalyzeJourneyMap(
-        customerValueAnalyzerInfo.target_list[0],
-        customerValueAnalyzerPersona[0],
-        0
-      );
-      
-      // 나머지 카드들을 대기 상태로 설정
-      const initialStatuses = {};
-      customerValueAnalyzerPersona.forEach((_, index) => {
-        if (index > 0) {
-          initialStatuses[index] = 'waiting';
+    if (activeTab === 2 && 
+        customerValueAnalyzerPersona.length > 0 && 
+        toolStep < 2) {  // toolStep이 2보다 작을 때만 API 호출
+      // 모든 카드의 상태를 waiting으로 초기화
+      const initialLoadingStates = customerValueAnalyzerPersona.reduce((acc, _, index) => {
+        acc[index] = 'waiting';
+        return acc;
+      }, {});
+      setCardStatuses(initialLoadingStates);
+
+      // 순차적으로 API 호출을 처리하는 함수
+      const processSequentially = async () => {
+        for (let index = 0; index < customerValueAnalyzerPersona.length; index++) {
+          try {
+            // 현재 카드만 loading으로 변경
+            setCardStatuses(prev => ({
+              ...prev,
+              [index]: 'loading'
+            }));
+
+            const data = {
+              business: customerValueAnalyzerInfo.business,
+              target: customerValueAnalyzerInfo.target_list[index],
+              analysis_scope: customerValueAnalyzerInfo.analysis_scope,
+              analysis_purpose: customerValueAnalyzerPersona[index]
+            };
+
+            const response = await InterviewXCustomerValueAnalyzerJourneyMapRequest(
+              data,
+              isLoggedIn
+            );
+            console.log("Journey Map 응답:", response);
+            
+            setCustomerValueAnalyzerJourneyMap(prev => {
+              // prev가 undefined인 경우 빈 배열로 초기화
+              const currentJourneyMaps = Array.isArray(prev) ? prev : [];
+              // 새로운 journey map이 존재하는 경우에만 추가
+              if (response?.response?.customer_value_journey_map) {
+                return [...currentJourneyMaps, response.response.customer_value_journey_map];
+              }
+              return currentJourneyMaps;
+            });
+
+            // 성공적인 응답 후 카드 상태 업데이트
+            if (response?.response?.customer_value_journey_map) {
+              setCardStatuses(prev => ({
+                ...prev,
+                [index]: 'completed'
+              }));
+            }
+
+
+              // 모든 시나리오를 한번에 저장
+              await updateToolOnServer(
+                toolId,
+                {
+                  completed_step: 2,
+                  customer_value_journey_map:
+                    response.response.customer_value_journey_map,
+                },
+                isLoggedIn
+              );
+              setToolStep(2);
+
+
+
+
+          } catch (error) {
+            console.error(`Journey Map API 호출 실패 (카드 ${index}):`, error);
+            setCardStatuses(prev => ({
+              ...prev,
+              [index]: 'error'
+            }));
+          }
         }
-      });
-      setCardStatuses(prev => ({
-        ...prev,
-        ...initialStatuses
-      }));
+      };
+
+      processSequentially();
+    } else if (activeTab === 2 && toolStep >= 2) {
+      // 이미 완료된 단계인 경우 카드 상태만 completed로 설정
+      const completedStates = customerValueAnalyzerPersona.reduce((acc, _, index) => {
+        acc[index] = 'completed';
+        return acc;
+      }, {});
+      setCardStatuses(completedStates);
     }
   }, [activeTab, customerValueAnalyzerPersona]);
 
@@ -234,6 +319,7 @@ const PageCustomerValueAnalyzer = () => {
         businessData,
         isLoggedIn
       );
+      console.log("response", response);
 
       if (
         !response?.response.customer_value_persona ||
@@ -387,46 +473,6 @@ const PageCustomerValueAnalyzer = () => {
       newTargetCustomers[index] = value;
       return newTargetCustomers;
     });
-  };
-
-  const handleAnalyzeJourneyMap = async (title, content, index) => {
-    setCardStatuses(prev => ({
-      ...prev,
-      [index]: 'loading'
-    }));
-
-    const date = {
-      business: customerValueAnalyzerInfo.business,
-      target: title,
-      analysis_scope: customerValueAnalyzerInfo.analysis_scope,
-      analysis_purpose: content,
-    }
-    
-    try {
-      const response = await InterviewXCustomerValueAnalyzerJourneyMapRequest(
-        date, isLoggedIn
-      );
-      setCardStatuses(prev => ({
-        ...prev,
-        [index]: 'completed'
-      }));
-
-      // 다음 카드가 있다면 자동으로 분석 시작
-      if (index + 1 < customerValueAnalyzerPersona.length) {
-        handleAnalyzeJourneyMap(
-          customerValueAnalyzerInfo.target_list[index + 1],
-          customerValueAnalyzerPersona[index + 1],
-          index + 1
-        );
-      }
-
-    } catch (error) {
-      console.error("Error analyzing journey map:", error);
-      setCardStatuses(prev => ({
-        ...prev,
-        [index]: 'error'
-      }));
-    }
   };
 
   return (
@@ -709,11 +755,7 @@ const PageCustomerValueAnalyzer = () => {
                         status={cardStatuses[index]}
                         isSelected={selectedPersonas.includes(`persona-${index}`)}
                         onSelect={(id) => handleCheckboxChange(id)}
-                        onAnalyze={() => handleAnalyzeJourneyMap(
-                          customerValueAnalyzerInfo.target_list[index],
-                          content,
-                          index
-                        )}
+                        journeyMapData={customerValueAnalyzerJourneyMap[index]}
                       />
                     ))}
                   </CardGroupWrap>
