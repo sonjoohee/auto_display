@@ -283,7 +283,14 @@ const MoleculeToolPersonaCard = ({
               </H4>
               <p className="info">
                 <Sub3>
-                  {personaScenario?.potential_customer_info?.gender || ""}
+                  {personaScenario?.potential_customer_info?.gender ||
+                    personaScenario?.scenario?.potential_customer_info
+                      ?.gender ||
+                    ""}{" "}
+                  |{" "}
+                  {personaScenario?.potential_customer_info?.age ||
+                    personaScenario?.scenario?.potential_customer_info?.age ||
+                    ""}
                 </Sub3>
               </p>
             </div>
