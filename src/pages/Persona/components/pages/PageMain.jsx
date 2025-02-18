@@ -1045,8 +1045,10 @@ const PageMain = () => {
   // 3초마다 텍스트 변경하는 useEffect 추가
   useEffect(() => {
     const interval = setInterval(() => {
-      setFloatingText(prev => 
-        prev === "창업 MBTI 테스트" ? "내 아이템 잠재력 확인" : "창업 MBTI 테스트"
+      setFloatingText((prev) =>
+        prev === "창업 MBTI 테스트"
+          ? "내 아이템 잠재력 확인"
+          : "창업 MBTI 테스트"
       );
     }, 3000);
 
@@ -1173,11 +1175,7 @@ const PageMain = () => {
               {[
                 // Expert 카드들
 
-                <ExploreCard
-                  Research
-                  key="research-1"
-                  {...(!accessableExpert && { Ready: true })}
-                >
+                <ExploreCard Research key="research-1" {...{ Ready: false }}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Tool
@@ -1553,9 +1551,8 @@ const PageMain = () => {
                   <p>
                     <img src={images.ImgExploreNoData} alt="" />
                   </p>
-                  <Body1 color="gray300">
-                    Coming Soon
-                  </Body1>
+                  <div style={{ height: "10px" }}></div>
+                  <Body1 color="gray300">Coming Soon</Body1>
                 </ExploreCard>,
 
                 // <ExploreCard Research key="research-4">
