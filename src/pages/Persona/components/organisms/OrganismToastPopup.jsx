@@ -125,7 +125,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
             return {
               persona: persona,
-              persona_view: persona.persona_view,
               personaImg: persona.personaImg,
               gender: gender,
               age: age,
@@ -614,7 +613,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
   const renderAnswers = (questionIndex) => {
     const questionAnswers = answers[questionIndex] || [];
-    console.log("🚀 ~ renderAnswers ~ questionAnswers:", questionAnswers);
 
     return (
       <>
@@ -629,7 +627,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               </Thumb>
 
               <div>
-                {answer.persona.request_persona_type !== "preset"
+                {answer.persona.request_persona_type
                   ? answer.persona.persona
                   : answer.persona.persona_view}
                 <p>
@@ -698,7 +696,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 />
               </Thumb>
               <div>
-                {answer.persona.request_persona_type !== "preset"
+                {answer.persona.request_persona_type
                   ? answer.persona.persona
                   : answer.persona.persona_view}
                 <p>

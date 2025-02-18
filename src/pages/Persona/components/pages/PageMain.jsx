@@ -146,7 +146,7 @@ import {
   TRIAL_STATE,
   ACCESSABLE_EXPERT,
 } from "../../../AtomStates";
-import {
+import { 
   ContentsWrap,
   TabWrapType4,
   TabButtonType4Main,
@@ -945,38 +945,38 @@ const PageMain = () => {
     {
       prefix: "패션 브랜드 운영자들은 '",
       keyword: "개인 스타일 추천을 위한 코디 서비스",
-      suffix: "' 키워드로 검색했어요.",
+      suffix: "' 키워드로 검색했어요."
     },
     {
       prefix: "교육 스타트업 창업자들은 '",
       keyword: "AI 기반 영어 회화 튜터 앱",
-      suffix: "' 키워드로 검색했어요.",
+      suffix: "' 키워드로 검색했어요."
     },
     {
       prefix: "피트니스 전문가들은 '",
       keyword: "홈트레이닝에 최적화된 운동 코치",
-      suffix: "' 키워드로 검색했어요.",
+      suffix: "' 키워드로 검색했어요."
     },
     {
       prefix: "모빌리티 스타트업은 '",
       keyword: "실시간 도로 환경 인식 및 위험 예측 AI 모델",
-      suffix: "' 키워드로 검색했어요.",
+      suffix: "' 키워드로 검색했어요."
     },
     {
       prefix: "마케팅 담당자들은 '",
-      keyword: "SNS에서 자연스럽게 확산되는 바이럴 광고",
-      suffix: "' 키워드로 검색했어요.",
+      keyword: "SNS에서 자연스럽게 확산되는 바이럴 광고", 
+      suffix: "' 키워드로 검색했어요."
     },
     {
       prefix: "행사 주최자들은 '",
       keyword: "스마트 홈 가전 신제품 출시 체험회",
-      suffix: "' 키워드로 검색했어요.",
+      suffix: "' 키워드로 검색했어요."
     },
     {
       prefix: "축제 기획자들은 '",
       keyword: "지역 문화와 예술을 만나는 전통 축제",
-      suffix: "' 키워드로 검색했어요.",
-    },
+      suffix: "' 키워드로 검색했어요."
+    }
   ]);
   const [currentKeywordIndex, setCurrentKeywordIndex] = useState(0);
 
@@ -995,11 +995,11 @@ const PageMain = () => {
   // 카드 필터링 함수 수정
   const filterCards = (card) => {
     if (activeTab === "all") return true;
-
+    
     if (card.props.Expert) return activeTab === "expert";
     if (card.props.Research) return activeTab === "research";
     if (card.props.Analysis) return activeTab === "analysis";
-
+    
     return false;
   };
 
@@ -1104,50 +1104,40 @@ const PageMain = () => {
               </InputWrap>
 
               <KeywordSearch>
-                <Sub3 color="gray500">
-                  {searchKeywords[currentKeywordIndex].prefix}
-                </Sub3>
+                <Sub3 color="gray500">{searchKeywords[currentKeywordIndex].prefix}</Sub3>
                 <div>
-                  <Sub3
-                    color="primary"
+                  <Sub3 
+                    color="primary" 
                     style={{
                       opacity: 1,
-                      transition: "opacity 0.5s ease-in-out",
+                      transition: 'opacity 0.5s ease-in-out'
                     }}
                   >
                     {searchKeywords[currentKeywordIndex].keyword}
                   </Sub3>
                 </div>
-                <Sub3 color="gray500">
-                  {searchKeywords[currentKeywordIndex].suffix}
-                </Sub3>
+                <Sub3 color="gray500">{searchKeywords[currentKeywordIndex].suffix}</Sub3>
               </KeywordSearch>
             </div>
           </MainSearchWrap>
 
           <ExploreWrap>
             <H4 align="left">Explore</H4>
-
+            
             <TabWrapType4>
-
               <TabButtonType4Main 
-
                 isActive={activeTab === "all"}
                 onClick={() => setActiveTab("all")}
               >
                 <Caption1 color="gray700">All</Caption1>
-
               </TabButtonType4Main>
               <TabButtonType4Main 
-
                 isActive={activeTab === "research"}
                 onClick={() => setActiveTab("research")}
               >
                 <Caption1 color="gray700">Research Tool</Caption1>
-
               </TabButtonType4Main>
               <TabButtonType4Main 
-
                 isActive={activeTab === "expert"}
                 onClick={() => setActiveTab("expert")}
               >
@@ -1165,226 +1155,143 @@ const PageMain = () => {
               {[
                 // Expert 카드들
 
-                <ExploreCard
-                  Research
-                  key="research-1"
-                  {...(!accessableExpert && { Ready: true })}
-                >
+                <ExploreCard Research key="research-1" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Tool
                   </span>
-                  <p>
-                    <img src={images.ImgExplore05} alt="" />
-                  </p>
+                  <p><img src={images.ImgExplore05} alt="" /></p>
                   <Body1 color="gray800">
                     <em>준비중</em>
-                    타겟 탐색기
+                    타겟 디스커버리
                   </Body1>
 
-                  <div
-                    className="overlay"
-                    onClick={() => {
-                      hadleToolSelect("1");
-                    }}
-                  >
+                  <div className="overlay" onClick={() => { hadleToolSelect("1"); }}>
                     <span>
                       <images.LightningChargeFill color={palette.white} />
                       Tool
                     </span>
 
                     <div className="text">
-                      <Body1 color="white">
-                        <em>준비중</em>타겟 탐색기
-                      </Body1>
-                      <Caption1 color="white" align="left">
-                        맥락적 조사 및 시나리오 분석 기법을 활용해 제품 및
-                        서비스의 잠재고객 탐색 툴
-                      </Caption1>
+                      <Body1 color="white"><em>준비중</em>타겟 디스커버리</Body1>
+                      <Caption1 color="white" align="left">Contextual Inquiry  및 시나리오 분석 기법을 활용해 제품 및 서비스의 잠재고객 탐색 툴</Caption1>
                       <i />
                     </div>
                   </div>
                 </ExploreCard>,
-
                 
                 <ExploreCard Research key="research-2" {...(!accessableExpert && { Ready: true })}>
-
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Tool
                   </span>
-                  <p>
-                    <img src={images.ImgExplore06} alt="" />
-                  </p>
+                  <p><img src={images.ImgExplore06} alt="" /></p>
                   <Body1 color="gray800">
                     <em>준비중</em>
                     고객 핵심 가치 분석기
                   </Body1>
 
-                  <div
-                    className="overlay"
-                    onClick={() => {
-                      hadleToolSelect("2");
-                    }}
-                  >
+                  <div className="overlay" onClick={() => { hadleToolSelect("2"); }}>
                     <span>
                       <images.LightningChargeFill color={palette.white} />
                       Tool
                     </span>
 
                     <div className="text">
-                      <Body1 color="white">
-                        <em>준비중</em>고객 핵심 가치 분석기
-                      </Body1>
-                      <Caption1 color="white" align="left">
-                        고객여정맵을 기반으로 핵심 구매 요인을 도출하고 고객
-                        중심의 경쟁력을 강화하는 툴
-                      </Caption1>
+                      <Body1 color="white"><em>준비중</em>고객 핵심 가치 분석기</Body1>
+                      <Caption1 color="white" align="left">고객여정맵을 기반으로 핵심 구매 요인을 도출하고 고객 중심의 경쟁력을 강화하는 툴</Caption1>
                       <i />
                     </div>
                   </div>
                 </ExploreCard>,
-
-                <ExploreCard
-                  Research
-                  Ready
-                  key="research-3"
-                  {...(!accessableExpert && { Ready: true })}
-                >
+                
+                <ExploreCard Research Ready key="research-3" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Tool
                   </span>
-                  <p>
-                    <img src={images.ImgExplore07} alt="" />
-                  </p>
+                  <p><img src={images.ImgExplore07} alt="" /></p>
                   <Body1 color="gray800">
                     <em>준비중</em>
-                    아이디어 생성기
+                    아이디어 제너레이터
                   </Body1>
 
-                  <div
-                    className="overlay"
-                    onClick={() => {
-                      hadleToolSelect("3");
-                    }}
-                  >
+                  <div className="overlay" onClick={() => { hadleToolSelect("3"); }}>
                     <span>
                       <images.LightningChargeFill color={palette.white} />
                       Tool
                     </span>
 
                     <div className="text">
-                      <Body1 color="white">
-                        <em>준비중</em>아이디어 생성기
-                      </Body1>
-                      <Caption1 color="white" align="left">
-                        만다라트 기법을 활용하여 창의적이고 구조적인 아이디어를
-                        발산하고 구체화 하는 툴
-                      </Caption1>
+                      <Body1 color="white"><em>준비중</em>아이디어 제너레이터</Body1>
+                      <Caption1 color="white" align="left">Mandal Art 기법을 활용하여 창의적이고 구조적인 아이디어를 발산하고 구체화 하는 툴</Caption1>
                       <i />
                     </div>
                   </div>
                 </ExploreCard>,
-
+                
                 <ExploreCard Research Ready key="research-4">
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Tool
                   </span>
-                  <p>
-                    <img src={images.ImgExplore10} alt="" />
-                  </p>
+                  <p><img src={images.ImgExplore10} alt="" /></p>
                   <Body1 color="gray800">
                     <em>준비중</em>
                     디자인 감성 분석기
                   </Body1>
 
-                  <div
-                    className="overlay"
-                    onClick={() => {
-                      setIsComingSoon(true);
-                    }}
-                  >
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
                     <span>
                       <images.LightningChargeFill color={palette.white} />
                       Tool
                     </span>
 
                     <div className="text">
-                      <Body1 color="white">
-                        <em>준비중</em>디자인 감성 분석기
-                      </Body1>
-                      <Caption1 color="white" align="left">
-                        디자인 분야별 평가 기준을 적용해 감성적인 특징을
-                        정량적으로 분석하는 툴
-                      </Caption1>
+                      <Body1 color="white"><em>준비중</em>디자인 감성 분석기</Body1>
+                      <Caption1 color="white" align="left">디자인 분야별 평가 기준을 적용해 감성적인 특징을 정량적으로 분석하는 툴</Caption1>
                       <i />
                     </div>
                   </div>
                 </ExploreCard>,
-
+                
                 <ExploreCard Research Ready key="research-5">
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Tool
                   </span>
-                  <p>
-                    <img src={images.ImgExplore11} alt="" />
-                  </p>
+                  <p><img src={images.ImgExplore11} alt="" /></p>
                   <Body1 color="gray800">
                     <em>준비중</em>
                     디자인 적합성 분석기
                   </Body1>
 
-                  <div
-                    className="overlay"
-                    onClick={() => {
-                      setIsComingSoon(true);
-                    }}
-                  >
+                  <div className="overlay" onClick={() => { setIsComingSoon(true); }}>
                     <span>
                       <images.LightningChargeFill color={palette.white} />
                       Tool
                     </span>
 
                     <div className="text">
-                      <Body1 color="white">
-                        <em>준비중</em>디자인 적합성 분석기
-                      </Body1>
-                      <Caption1 color="white" align="left">
-                        이미지가 마케팅 활용에 적합한지 다양한 기준으로 평가하여
-                        적합성을 판단하는 툴
-                      </Caption1>
+                      <Body1 color="white"><em>준비중</em>디자인 적합성 분석기</Body1>
+                      <Caption1 color="white" align="left">이미지가 마케팅 활용에 적합한지 다양한 기준으로 평가하여 적합성을 판단하는 툴</Caption1>
                       <i />
                     </div>
                   </div>
                 </ExploreCard>,
 
-                <ExploreCard
-                  Expert
-                  Ready
-                  key="expert-1"
-                  {...(!accessableExpert && { Ready: true })}
-                >
+                <ExploreCard Expert Ready key="expert-1" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
                   </span>
-                  <p>
-                    <img src={images.ImgExplore01} alt="" />
-                  </p>
+                  <p><img src={images.ImgExplore01} alt="" /></p>
                   <Body1 color="gray800">
                     <em>준비중</em>
                     전략 컨설턴트
                   </Body1>
 
-                  <div
-                    className="overlay"
-                    onClick={() => {
-                      handledExpertSelect("1");
-                    }}
-                  >
+                  <div className="overlay" onClick={() => { handledExpertSelect("1"); }}>
                     <span>
                       <images.LightningChargeFill color={palette.white} />
                       Expert
@@ -1395,159 +1302,99 @@ const PageMain = () => {
                         <em>준비중</em>
                         전략 컨설턴트
                       </Body1>
-                      <Caption1 color="white" align="left">
-                        차별화된 비즈니스 전략과 리스크 분석을 통해 시장
-                        경쟁력을 강화하는 방법을 제시드려요
-                      </Caption1>
+                      <Caption1 color="white" align="left">차별화된 비즈니스 전략과 리스크 분석을 통해 시장 경쟁력을 강화하는 방법을 제시드려요</Caption1>
                       <i />
                     </div>
                   </div>
                 </ExploreCard>,
-
-                <ExploreCard
-                  Expert
-                  Ready
-                  key="expert-2"
-                  {...(!accessableExpert && { Ready: true })}
-                >
+                
+                <ExploreCard Expert Ready key="expert-2" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
                   </span>
-                  <p>
-                    <img src={images.ImgExplore02} alt="" />
-                  </p>
+                  <p><img src={images.ImgExplore02} alt="" /></p>
                   <Body1 color="gray800">
                     <em>준비중</em>
                     가격 분석 전문가
                   </Body1>
 
-                  <div
-                    className="overlay"
-                    onClick={() => {
-                      handledExpertSelect("7");
-                    }}
-                  >
+                  <div className="overlay" onClick={() => { handledExpertSelect("7"); }}>
                     <span>
                       <images.LightningChargeFill color={palette.white} />
                       Expert
                     </span>
 
                     <div className="text">
-                      <Body1 color="white">
-                        <em>준비중</em>가격 분석 전문가
-                      </Body1>
-                      <Caption1 color="white" align="left">
-                        시장 데이터 기반 최적 가격을 분석하여 수익성과 경쟁력을
-                        극대화할 수 있어요 (제품 한정)
-                      </Caption1>
+                      <Body1 color="white"><em>준비중</em>가격 분석 전문가</Body1>
+                      <Caption1 color="white" align="left">시장 데이터 기반 최적 가격을 분석하여 수익성과 경쟁력을 극대화할 수 있어요 (제품 한정)</Caption1>
                       <i />
                     </div>
                   </div>
                 </ExploreCard>,
-
-                <ExploreCard
-                  Expert
-                  Ready
-                  key="expert-3"
-                  {...(!accessableExpert && { Ready: true })}
-                >
+                
+                <ExploreCard Expert Ready key="expert-3" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
                   </span>
-                  <p>
-                    <img src={images.ImgExplore03} alt="" />
-                  </p>
+                  <p><img src={images.ImgExplore03} alt="" /></p>
                   <Body1 color="gray800">
                     <em>준비중</em>
                     BM 전문가
                   </Body1>
 
-                  <div
-                    className="overlay"
-                    onClick={() => {
-                      handledExpertSelect("9");
-                    }}
-                  >
+                  <div className="overlay" onClick={() => { handledExpertSelect("9"); }}>
                     <span>
                       <images.LightningChargeFill color={palette.white} />
                       Expert
                     </span>
 
                     <div className="text">
-                      <Body1 color="white">
-                        <em>준비중</em>BM 전문가
-                      </Body1>
-                      <Caption1 color="white" align="left">
-                        비즈니스 모델을 설계하고 최적화하여 지속 가능한 수익
-                        구조를 구축하는 방향을 설정해드려요{" "}
-                      </Caption1>
+                      <Body1 color="white"><em>준비중</em>BM 전문가</Body1>
+                      <Caption1 color="white" align="left">비즈니스 모델을 설계하고 최적화하여 지속 가능한 수익 구조를 구축하는 방향을 설정해드려요 </Caption1>
                       <i />
                     </div>
                   </div>
                 </ExploreCard>,
-
-                <ExploreCard
-                  Expert
-                  Ready
-                  key="expert-4"
-                  {...(!accessableExpert && { Ready: true })}
-                >
+                
+                <ExploreCard Expert Ready key="expert-4" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
                   </span>
-                  <p>
-                    <img src={images.ImgExplore04} alt="" />
-                  </p>
+                  <p><img src={images.ImgExplore04} alt="" /></p>
                   <Body1 color="gray800">
                     <em>준비중</em>
                     그로스 해커
                   </Body1>
 
-                  <div
-                    className="overlay"
-                    onClick={() => {
-                      handledExpertSelect("6");
-                    }}
-                  >
+                  <div className="overlay" onClick={() => { handledExpertSelect("6"); }}>
                     <span>
                       <images.LightningChargeFill color={palette.white} />
                       Expert
                     </span>
 
                     <div className="text">
-                      <Body1 color="white">
-                        <em>준비중</em>그로스 해커
-                      </Body1>
-                      <Caption1 color="white" align="left">
-                        사용자 여정을 분석하여 각 마케팅 퍼널 단계별 최적의
-                        전략을 도출하고 실행 방안을 제시드려요
-                      </Caption1>
+                      <Body1 color="white"><em>준비중</em>그로스 해커</Body1>
+                      <Caption1 color="white" align="left">사용자 여정을 분석하여 각 마케팅 퍼널 단계별 최적의 전략을 도출하고 실행 방안을 제시드려요</Caption1>
                       <i />
                     </div>
                   </div>
                 </ExploreCard>,
 
-                <ExploreCard
-                  Expert
-                  Ready
-                  key="expert-5"
-                  style={{ cursor: "default" }}
-                >
+                <ExploreCard Expert Ready key="expert-5" style={{ cursor: 'default' }}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Expert
                   </span>
-                  <p>
-                    <img src={images.ImgExploreNoData} alt="" />
-                  </p>
+                  <p><img src={images.ImgExploreNoData} alt="" /></p>
                   <Body1 color="gray300">
                     <em>준비중</em>
                     Coming Soon
                   </Body1>
                 </ExploreCard>,
+
 
                 // <ExploreCard Research key="research-4">
                 //   <span>
@@ -1573,7 +1420,7 @@ const PageMain = () => {
                 //     </div>
                 //   </div>
                 // </ExploreCard>,
-
+                
                 // <ExploreCard Research key="research-5">
                 //   <span>
                 //     <images.LightningChargeFill color={palette.gray700} />
@@ -1682,13 +1529,13 @@ const PageMain = () => {
           </label>
 
           <FloatingMenuItem onClick={() => navigate("/MarketingLanding")}>
-            <Sub2 color="primary">창업 MBTI로 유형 분석하기</Sub2>
+            <Sub2 color="gray800">창업 MBTI로 유형 분석하기</Sub2>
             <div className="icon">
               <images.Tag width="15" height="16" color={palette.primary} />
             </div>
           </FloatingMenuItem>
           <FloatingMenuItem onClick={() => handleSubmit()}>
-            <Sub2>내 아이템 잠재력 진단 받기</Sub2>
+            <Sub2 color="gray800">내 아이템 잠재력 진단 받기</Sub2>
             <div className="icon">
               <images.Report2 width="16" height="16" color={palette.primary} />
             </div>
@@ -1917,7 +1764,7 @@ const FloatingMenu = styled.div`
     background: ${palette.primary};
     box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.15);
     cursor: pointer;
-
+    
     span {
       display: flex;
       align-items: center;
@@ -1946,7 +1793,7 @@ const FloatingMenu = styled.div`
       &:after {
         transform: translate(-50%, -50%) rotate(-45deg);
       }
-
+      
       img {
         width: 100%;
         height: 100%;
@@ -1979,7 +1826,7 @@ const FloatingMenuItem = styled.div`
     border-radius: 50%;
     box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.15);
     background: ${palette.white};
-
+    
     img {
       width: 100%;
       height: 100%;
@@ -2134,7 +1981,7 @@ const KeywordSearch = styled.div`
     flex-direction: column;
     overflow: hidden;
     min-height: 21px;
-
+    
     p {
       transition: opacity 0.5s ease-in-out;
     }
