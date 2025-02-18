@@ -1031,6 +1031,8 @@ const PageTargetDiscovery = () => {
                             const rankData =
                               targetDiscoveryFinalReport[rankKey];
 
+                            if (!rankData?.title) return null;
+
                             return (
                               <MoleculeToolPersonaCard
                                 key={rankKey}
