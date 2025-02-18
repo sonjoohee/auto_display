@@ -2109,9 +2109,9 @@ export const CardGroupWrap = styled.div`
     : "100%"
   )};
   margin-bottom: ${(props) => (
-    props.row
-    ? "0"
-    : "140px"
+    props.column
+    ? "140px"
+    : "0"
   )};
 
   > div {
