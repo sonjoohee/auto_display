@@ -2134,6 +2134,7 @@ export const ListBoxItem = styled.div`
   display: flex;
   align-items: center;
   // justify-content: space-between;
+  justify-content: ${(props) => (props.FlexStart ? "flex-start !important" : "space-between")};
   gap: 16px;
   width: 100%;
   padding: ${(props) => (props.Small ? "12px 20px" : "24px 20px")};
