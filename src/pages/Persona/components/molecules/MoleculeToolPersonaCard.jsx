@@ -135,9 +135,15 @@ const MoleculeToolPersonaCard = ({
               </ListTitle>
               <ListSubtitle>
                 {keywords?.map((keyword, index) => (
-                  <Badge key={index} Keyword>
-                    #{keyword}
-                  </Badge>
+                  keyword === "Strong Potential" ? (
+                    <StrongPotentialBadge key={index}>
+                      {keyword}
+                    </StrongPotentialBadge>
+                  ) : (
+                    <Badge key={index} Keyword>
+                      #{keyword}
+                    </Badge>
+                  )
                 ))}
               </ListSubtitle>
             </ListText>
@@ -806,4 +812,9 @@ const RecruitButton = styled.button`
     width: 16px;
     height: 16px;
   }
+`;
+
+const StrongPotentialBadge = styled(Badge)`
+  color: #ED7EED;
+  background-color: rgba(237, 126, 237, 0.06);
 `;
