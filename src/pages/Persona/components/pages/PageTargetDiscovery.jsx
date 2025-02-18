@@ -382,20 +382,17 @@ const PageTargetDiscovery = () => {
       );
       setSelectedTargetDiscoveryPersona(selectedPersonaData);
 
-      console.log(
-        "🚀 ~ handleSubmitPersonas ~ selectedPersonaData:",
-        selectedPersonaData
-      );
-      let allScenarios = []; // 모든 시나리오를 저장할 배열
-
-      for (const persona of selectedPersonaData) {
-        // 현재 페르소나의 로딩 상태를 true로 설정
+      // 순차적으로 처리
+      for (let i = 0; i < selectedPersonaData.length; i++) {
+        const persona = selectedPersonaData[i];
+        
+        // 현재 페르소나 로딩 상태 설정
         setLoadingPersonas((prev) => ({
           ...prev,
-          [persona.title]: true,
+          [persona.title]: true
         }));
 
-        const isDuplicate = selectedTargetDiscoveryPersona.some(
+        const isDuplicate = selectedTargetDiscoveryScenario.some(
           (existingPersona) => existingPersona.title === persona.title
         );
 
@@ -411,61 +408,47 @@ const PageTargetDiscovery = () => {
             apiRequestData,
             isLoggedIn
           );
+
           if (
-            !response?.response?.target_discovery_scenario
-              ?.potential_customer_info ||
+            !response?.response?.target_discovery_scenario?.potential_customer_info ||
             !response?.response?.target_discovery_scenario?.usage_scenario
           ) {
-            console.log("🚀 ~ handleSubmitPersonas ~ response:", response);
             setShowPopupError(true);
             return;
           }
 
-          console.log(
-            "🚀 ~ handleSubmitPersonas ~ response33333333:",
-            targetDiscoveryScenario
-          );
+          // 현재 페르소나의 시나리오 데이터 추가
           setTargetDiscoveryScenario((prev) => {
-            // prev가 없는 경우 빈 배열로 초기화
             const currentScenarios = prev || [];
             return [
               ...currentScenarios,
               response?.response?.target_discovery_scenario,
-            ].filter(Boolean); // null/undefined 값 제거
+            ].filter(Boolean);
           });
-          console.log(
-            "🚀 ~ handleSubmitPersonas ~ response4444444:",
-            response?.response?.target_discovery_scenario
-          );
-          // API 호출이 완료되면 해당 페르소나의 로딩 상태를 false로 설정
+
+          // 현재 페르소나의 로딩 상태 해제
           setLoadingPersonas((prev) => ({
             ...prev,
-            [persona.title]: false,
+            [persona.title]: false
           }));
 
-          console.log(
-            "🚀 ~ handleSubmitPersonas ~ allScenarios:",
-            allScenarios
-          );
-          allScenarios.push({
-            ...persona, // 기존 페르소나 데이터 유지
-            scenario: response.response.target_discovery_scenario, // 시나리오 데이터 추가
-          });
-          console.log(
-            "🚀 ~ handleSubmitPersonas ~ response555555",
-            response?.response?.target_discovery_scenario
-          );
+          // selectedTargetDiscoveryScenario 업데이트
+          setSelectedTargetDiscoveryScenario((prev) => [
+            ...prev,
+            {
+              ...persona,
+              scenario: response.response.target_discovery_scenario,
+            },
+          ]);
         }
       }
-      setSelectedTargetDiscoveryScenario(allScenarios);
-      console.log("🚀 ~ handleSubmitPersonas ~ allScenarios:", allScenarios);
 
       // 모든 시나리오를 한번에 저장
       await updateToolOnServer(
         toolId,
         {
           completed_step: 2,
-          target_discovery_scenario: allScenarios,
+          target_discovery_scenario: selectedTargetDiscoveryScenario,
           updateDate: new Date().toLocaleString("ko-KR", {
             timeZone: "Asia/Seoul",
             year: "numeric",
@@ -482,7 +465,7 @@ const PageTargetDiscovery = () => {
       setToolStep(2);
     } catch (error) {
       console.error("Error submitting personas:", error);
-      setLoadingPersonas({}); // 에러 발생 시 모든 로딩 상태 초기화
+      setLoadingPersonas({});
       setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
@@ -499,7 +482,6 @@ const PageTargetDiscovery = () => {
       } else {
         setShowPopupError(true);
       }
-    } finally {
     }
   };
 
@@ -583,12 +565,38 @@ const PageTargetDiscovery = () => {
   };
 
   const getButtonText = (persona, hasScenarioData, isLoading) => {
-    if (isLoading) {
+    // 현재 페르소나가 호출 중인 경우
+    if (loadingPersonas[persona.title]) {
       return "호출중";
-    } else if (hasScenarioData) {
+    }
+    
+    // 현재 페르소나의 시나리오 데이터가 있는 경우 (호출 완료)
+    if (hasScenarioData) {
       return "자세히";
     }
-    return "대기중";
+    
+    // 이전 페르소나들 중 하나라도 호출 중인 경우
+    const currentIndex = selectedTargetDiscoveryPersona.findIndex(p => p.title === persona.title);
+    const isAnyPreviousLoading = selectedTargetDiscoveryPersona
+      .slice(0, currentIndex)
+      .some(p => loadingPersonas[p.title]);
+      
+    if (isAnyPreviousLoading) {
+      return "대기중";
+    }
+    
+    // 이전 페르소나들의 호출이 모두 완료되고, 현재 페르소나가 대기 중인 경우
+    if (!hasScenarioData && !loadingPersonas[persona.title]) {
+      const previousAllCompleted = selectedTargetDiscoveryPersona
+        .slice(0, currentIndex)
+        .every(p => selectedTargetDiscoveryScenario.some(s => s.title === p.title));
+        
+      if (!previousAllCompleted) {
+        return "대기중";
+      }
+    }
+    
+    return "자세히";
   };
 
   return (
