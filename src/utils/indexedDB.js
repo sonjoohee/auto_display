@@ -2044,7 +2044,7 @@ export const getToolListOnServer = async (size, page, isLoggedIn) => {
   }
 };
 
-//타겟 디스커버리 페르소나 찾기
+//타겟 탐색기 페르소나 찾기
 export const InterviewXTargetDiscoveryPersonaRequest = async (
   data,
   isLoggedIn
@@ -2081,19 +2081,19 @@ export const InterviewXTargetDiscoveryPersonaRequest = async (
 
     await new Promise((resolve) => setTimeout(resolve, response.data.time));
 
-    console.log("타겟 디스커버리 페르소나 찾기 API 응답:", response);
+    console.log("타겟 탐색기 페르소나 찾기 API 응답:", response);
     const result = await getTermkeyResult(response.data.objectId);
-    console.log("타겟 디스커버리 페르소나 찾기 API 응답:", result);
+    console.log("타겟 탐색기 페르소나 찾기 API 응답:", result);
 
     return result;
   } catch (error) {
-    console.error("타겟 디스커버리 페르소나 찾기 API 중 오류 발생:", error);
+    console.error("타겟 탐색기 페르소나 찾기 API 중 오류 발생:", error);
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
   }
 };
 
-//타겟 디스커버리 페르소나 시나리오
+//타겟 탐색기 페르소나 시나리오
 export const InterviewXTargetDiscoveryScenarioRequest = async (
   data,
   isLoggedIn
@@ -2134,13 +2134,13 @@ export const InterviewXTargetDiscoveryScenarioRequest = async (
     const result = await getTermkeyResult(response.data.objectId);
     return result;
   } catch (error) {
-    console.error("타겟 디스커버리 페르소나 시나리오 API 중 오류 발생:", error);
+    console.error("타겟 탐색기 페르소나 시나리오 API 중 오류 발생:", error);
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
   }
 };
 
-//타겟 디스커버리 최종 보고서
+//타겟 탐색기 최종 보고서
 export const InterviewXTargetDiscoveryFinalReportRequest = async (
   data,
   isLoggedIn
@@ -2181,7 +2181,7 @@ export const InterviewXTargetDiscoveryFinalReportRequest = async (
     const result = await getTermkeyResult(response.data.objectId);
     return result;
   } catch (error) {
-    console.error("타겟 디스커버리 최종 보고서 API 중 오류 발생:", error);
+    console.error("타겟 탐색기 최종 보고서 API 중 오류 발생:", error);
     console.error("오류 상세:", error.response?.data || error.message);
     throw error;
   }
