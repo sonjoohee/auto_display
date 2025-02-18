@@ -2099,8 +2099,10 @@ export const CardGroupWrap = styled.div`
   flex-direction: ${(props) => (props.column ? "column" : "row")};
   gap: 15px !important;
   flex-wrap: wrap;
+
   width: 100%;
   margin-bottom: ${(props) => (props.column ? "0" : "140px")};
+
 
   > div {
     flex: ${(props) => (props.column ? "1" : "0 0 calc(33.333% - 10px)")};

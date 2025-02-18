@@ -198,10 +198,6 @@ const PageTargetDiscovery = () => {
           Array.isArray(targetDiscoveryPersona) &&
           Array.isArray(selectedTargetDiscoveryPersona)
         ) {
-          console.log(
-            "🚀 ~ interviewLoading ~ selectedTargetDiscoveryPersona:",
-            selectedTargetDiscoveryPersona
-          );
           // 이미 선택된 페르소나들의 인덱스 찾기
           const selectedIndices = (targetDiscoveryPersona ?? [])
             .map((persona, index) => {
@@ -230,10 +226,6 @@ const PageTargetDiscovery = () => {
           Array.isArray(targetDiscoveryScenario) &&
           Array.isArray(targetDiscoveryPersona)
         ) {
-          console.log(
-            "🚀 ~ interviewLoading ~ targetDiscoveryPersona:",
-            targetDiscoveryPersona
-          );
           const matchedScenarioData = (targetDiscoveryScenario ?? [])
             .map((scenario) => {
               const matchedPersona = (targetDiscoveryPersona ?? []).find(
@@ -512,6 +504,10 @@ const PageTargetDiscovery = () => {
         target_discovery_persona: selectedTargetDiscoveryPersona,
         target_discovery_scenario: targetDiscoveryScenario,
       };
+      console.log(
+        "🚀 ~ handleSubmitScenario ~ scenarioData.targetDiscoveryScenario:",
+        targetDiscoveryScenario
+      );
 
       const response = await InterviewXTargetDiscoveryFinalReportRequest(
         scenarioData,
@@ -913,7 +909,6 @@ const PageTargetDiscovery = () => {
                       const hasScenarioData = Boolean(
                         matchingScenarioData?.scenario
                       );
-                      console.log("matchingScenarioData", matchingScenarioData);
                       const isLoading = loadingPersonas[persona.title];
 
                       return (
