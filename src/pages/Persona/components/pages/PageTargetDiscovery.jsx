@@ -382,10 +382,6 @@ const PageTargetDiscovery = () => {
       );
       setSelectedTargetDiscoveryPersona(selectedPersonaData);
 
-      console.log(
-        "🚀 ~ handleSubmitPersonas ~ selectedPersonaData:",
-        selectedPersonaData
-      );
       let allScenarios = []; // 모든 시나리오를 저장할 배열
 
       for (const persona of selectedPersonaData) {
@@ -416,15 +412,10 @@ const PageTargetDiscovery = () => {
               ?.potential_customer_info ||
             !response?.response?.target_discovery_scenario?.usage_scenario
           ) {
-            console.log("🚀 ~ handleSubmitPersonas ~ response:", response);
             setShowPopupError(true);
             return;
           }
 
-          console.log(
-            "🚀 ~ handleSubmitPersonas ~ response33333333:",
-            targetDiscoveryScenario
-          );
           setTargetDiscoveryScenario((prev) => {
             // prev가 없는 경우 빈 배열로 초기화
             const currentScenarios = prev || [];
@@ -433,32 +424,20 @@ const PageTargetDiscovery = () => {
               response?.response?.target_discovery_scenario,
             ].filter(Boolean); // null/undefined 값 제거
           });
-          console.log(
-            "🚀 ~ handleSubmitPersonas ~ response4444444:",
-            response?.response?.target_discovery_scenario
-          );
+
           // API 호출이 완료되면 해당 페르소나의 로딩 상태를 false로 설정
           setLoadingPersonas((prev) => ({
             ...prev,
             [persona.title]: false,
           }));
 
-          console.log(
-            "🚀 ~ handleSubmitPersonas ~ allScenarios:",
-            allScenarios
-          );
           allScenarios.push({
             ...persona, // 기존 페르소나 데이터 유지
             scenario: response.response.target_discovery_scenario, // 시나리오 데이터 추가
           });
-          console.log(
-            "🚀 ~ handleSubmitPersonas ~ response555555",
-            response?.response?.target_discovery_scenario
-          );
         }
       }
       setSelectedTargetDiscoveryScenario(allScenarios);
-      console.log("🚀 ~ handleSubmitPersonas ~ allScenarios:", allScenarios);
 
       // 모든 시나리오를 한번에 저장
       await updateToolOnServer(
@@ -466,15 +445,6 @@ const PageTargetDiscovery = () => {
         {
           completed_step: 2,
           target_discovery_scenario: allScenarios,
-          updateDate: new Date().toLocaleString("ko-KR", {
-            timeZone: "Asia/Seoul",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-          }),
         },
         isLoggedIn
       );

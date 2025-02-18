@@ -812,7 +812,7 @@ const OrganismIncNavigation = () => {
         //   }
         // // );
         const response = await getToolListOnServer(1000, 1, isLoggedIn);
-        console.log("🚀 ~ fetchChatList ~ response:", response);
+        // console.log("🚀 ~ fetchChatList ~ response:", response);
         // const sortedChatList = response.data
         //   .filter(
         //     (chat) => chat.business_info !== null && chat.business_info !== ""
@@ -822,7 +822,6 @@ const OrganismIncNavigation = () => {
           // .filter((chat) => chat.business !== null && chat.business !== "") // business_info가 비었으면(기초보고서 생성 전) 히스토리에 남기지 않음
           .sort((a, b) => b.createDate - a.createDate); // 최근 날짜 순으로 정렬
 
-        console.log("🚀 ~ fetchChatList ~ sortedChatList:", sortedChatList);
         setChatList(sortedChatList);
       } catch (error) {
         console.error("대화 목록 가져오기 오류:", error);
