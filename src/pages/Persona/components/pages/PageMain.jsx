@@ -1180,7 +1180,7 @@ const PageMain = () => {
                   </div>
                 </ExploreCard>,
                 
-                <ExploreCard Research Ready key="research-2" {...(!accessableExpert && { Ready: true })}>
+                <ExploreCard Research key="research-2" {...(!accessableExpert && { Ready: true })}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Tool
