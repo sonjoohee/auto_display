@@ -1,4 +1,4 @@
-//타겟 디스커버리리
+//타겟 탐색기리
 import React, { useEffect, useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
@@ -198,10 +198,6 @@ const PageTargetDiscovery = () => {
           Array.isArray(targetDiscoveryPersona) &&
           Array.isArray(selectedTargetDiscoveryPersona)
         ) {
-          console.log(
-            "🚀 ~ interviewLoading ~ selectedTargetDiscoveryPersona:",
-            selectedTargetDiscoveryPersona
-          );
           // 이미 선택된 페르소나들의 인덱스 찾기
           const selectedIndices = (targetDiscoveryPersona ?? [])
             .map((persona, index) => {
@@ -230,10 +226,6 @@ const PageTargetDiscovery = () => {
           Array.isArray(targetDiscoveryScenario) &&
           Array.isArray(targetDiscoveryPersona)
         ) {
-          console.log(
-            "🚀 ~ interviewLoading ~ targetDiscoveryPersona:",
-            targetDiscoveryPersona
-          );
           const matchedScenarioData = (targetDiscoveryScenario ?? [])
             .map((scenario) => {
               const matchedPersona = (targetDiscoveryPersona ?? []).find(
@@ -268,7 +260,6 @@ const PageTargetDiscovery = () => {
   }, [toolLoading]);
 
   const handleCheckboxChange = (personaId) => {
-    console.log("🚀 ~ handleCheckboxChange ~ personaId:", personaId);
     if (toolStep >= 2) return;
     setSelectedPersonas((prev) => {
       if (prev.includes(personaId)) {
@@ -341,7 +332,6 @@ const PageTargetDiscovery = () => {
       );
       setToolId(responseToolId);
       setToolStep(1);
-      console.log("🚀 ~ handleSubmitBusinessInfo ~ responseToolId:", toolId);
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
       setTargetDiscoveryPersona(
         response.response.target_discovery_persona || []
@@ -382,82 +372,88 @@ const PageTargetDiscovery = () => {
       );
       setSelectedTargetDiscoveryPersona(selectedPersonaData);
 
-
-      // 순차적으로 처리
-      for (let i = 0; i < selectedPersonaData.length; i++) {
-        const persona = selectedPersonaData[i];
-        
-        // 현재 페르소나 로딩 상태 설정
-
+      let allScenarios = []; // 모든 시나리오를 저장할 배열
+      // 각 페르소나에 대해 개별적으로 시나리오 요청 및 상태 업데이트
+      for (const persona of selectedPersonaData) {
+        // 현재 페르소나의 로딩 상태를 true로 설정
         setLoadingPersonas((prev) => ({
           ...prev,
-          [persona.title]: true
+          [persona.title]: true,
         }));
 
-        const isDuplicate = selectedTargetDiscoveryScenario.some(
-          (existingPersona) => existingPersona.title === persona.title
-        );
-
-        if (!isDuplicate) {
-          const apiRequestData = {
-            business: targetDiscoveryInfo.business,
-            target_discovery_persona: persona,
-            specific_situation: targetDiscoveryInfo.specific_situation,
-            country: targetDiscoveryInfo.country,
-          };
-
-          const response = await InterviewXTargetDiscoveryScenarioRequest(
-            apiRequestData,
-            isLoggedIn
+        try {
+          const isDuplicate = selectedTargetDiscoveryPersona.some(
+            (existingPersona) => existingPersona.title === persona.title
           );
 
-          if (
-            !response?.response?.target_discovery_scenario?.potential_customer_info ||
-            !response?.response?.target_discovery_scenario?.usage_scenario
-          ) {
-            setShowPopupError(true);
-            return;
+          if (!isDuplicate) {
+            const apiRequestData = {
+              business: targetDiscoveryInfo.business,
+              target_discovery_persona: persona,
+              specific_situation: targetDiscoveryInfo.specific_situation,
+              country: targetDiscoveryInfo.country,
+            };
+
+            const response = await InterviewXTargetDiscoveryScenarioRequest(
+              apiRequestData,
+              isLoggedIn
+            );
+
+            if (
+              !response?.response?.target_discovery_scenario
+                ?.potential_customer_info ||
+              !response?.response?.target_discovery_scenario?.usage_scenario
+            ) {
+              console.log("🚀 ~ handleSubmitPersonas ~ response:", response);
+              setShowPopupError(true);
+              return;
+            }
+
+            // 개별 시나리오 데이터 업데이트
+            setTargetDiscoveryScenario((prev) => {
+              const currentScenarios = prev || [];
+              return [
+                ...currentScenarios,
+                response?.response?.target_discovery_scenario,
+              ].filter(Boolean);
+            });
+
+            // 현재 페르소나의 로딩 상태를 false로 설정
+            setLoadingPersonas((prev) => ({
+              ...prev,
+              [persona.title]: false,
+            }));
+
+            // 개별 시나리오 데이터를 selectedTargetDiscoveryScenario에 추가
+            setSelectedTargetDiscoveryScenario((prev) => [
+              ...(prev || []),
+              {
+                ...persona,
+                scenario: response.response.target_discovery_scenario,
+              },
+            ]);
+            allScenarios.push({
+              ...persona, // 기존 페르소나 데이터 유지
+              scenario: response.response.target_discovery_scenario, // 시나리오 데이터 추가
+            });
           }
-
-
-          // 현재 페르소나의 시나리오 데이터 추가
-
-          setTargetDiscoveryScenario((prev) => {
-            const currentScenarios = prev || [];
-            return [
-              ...currentScenarios,
-              response?.response?.target_discovery_scenario,
-            ].filter(Boolean);
-          });
-
-
-          // 현재 페르소나의 로딩 상태 해제
-
+        } catch (error) {
+          // 에러 발생 시 현재 페르소나의 로딩 상태를 false로 설정
           setLoadingPersonas((prev) => ({
             ...prev,
-            [persona.title]: false
+            [persona.title]: false,
           }));
-
-
-          // selectedTargetDiscoveryScenario 업데이트
-          setSelectedTargetDiscoveryScenario((prev) => [
-            ...prev,
-            {
-              ...persona,
-              scenario: response.response.target_discovery_scenario,
-            },
-          ]);
+          console.error(`Error processing persona ${persona.title}:`, error);
         }
       }
 
-
-      // 모든 시나리오를 한번에 저장
+      setSelectedTargetDiscoveryScenario(allScenarios);
+      // 모든 시나리오를 서버에 저장
       await updateToolOnServer(
         toolId,
         {
           completed_step: 2,
-
-          target_discovery_scenario: selectedTargetDiscoveryScenario,
+          target_discovery_scenario: allScenarios,
           updateDate: new Date().toLocaleString("ko-KR", {
             timeZone: "Asia/Seoul",
             year: "numeric",
@@ -467,7 +463,6 @@ const PageTargetDiscovery = () => {
             minute: "2-digit",
             second: "2-digit",
           }),
-
         },
         isLoggedIn
       );
@@ -475,6 +470,7 @@ const PageTargetDiscovery = () => {
       setToolStep(2);
     } catch (error) {
       console.error("Error submitting personas:", error);
+      // 에러 발생 시 모든 로딩 상태 초기화
       setLoadingPersonas({});
       setShowPopupError(true);
       if (error.response) {
@@ -506,6 +502,10 @@ const PageTargetDiscovery = () => {
         target_discovery_persona: selectedTargetDiscoveryPersona,
         target_discovery_scenario: targetDiscoveryScenario,
       };
+      console.log(
+        "🚀 ~ handleSubmitScenario ~ scenarioData.targetDiscoveryScenario:",
+        targetDiscoveryScenario
+      );
 
       const response = await InterviewXTargetDiscoveryFinalReportRequest(
         scenarioData,
@@ -575,38 +575,12 @@ const PageTargetDiscovery = () => {
   };
 
   const getButtonText = (persona, hasScenarioData, isLoading) => {
-    // 현재 페르소나가 호출 중인 경우
-    if (loadingPersonas[persona.title]) {
+    if (isLoading) {
       return "호출중";
-    }
-    
-    // 현재 페르소나의 시나리오 데이터가 있는 경우 (호출 완료)
-    if (hasScenarioData) {
+    } else if (hasScenarioData) {
       return "자세히";
     }
-    
-    // 이전 페르소나들 중 하나라도 호출 중인 경우
-    const currentIndex = selectedTargetDiscoveryPersona.findIndex(p => p.title === persona.title);
-    const isAnyPreviousLoading = selectedTargetDiscoveryPersona
-      .slice(0, currentIndex)
-      .some(p => loadingPersonas[p.title]);
-      
-    if (isAnyPreviousLoading) {
-      return "대기중";
-    }
-    
-    // 이전 페르소나들의 호출이 모두 완료되고, 현재 페르소나가 대기 중인 경우
-    if (!hasScenarioData && !loadingPersonas[persona.title]) {
-      const previousAllCompleted = selectedTargetDiscoveryPersona
-        .slice(0, currentIndex)
-        .every(p => selectedTargetDiscoveryScenario.some(s => s.title === p.title));
-        
-      if (!previousAllCompleted) {
-        return "대기중";
-      }
-    }
-    
-    return "자세히";
+    return "대기중";
   };
 
   return (
@@ -859,7 +833,7 @@ const PageTargetDiscovery = () => {
                     </div>
 
                     <div className="content">
-                      <CardGroupWrap column>
+                      <CardGroupWrap column style={{ marginBottom: "140px" }}>
                         {targetDiscoveryPersona.map((persona, index) => (
                           <MoleculeToolPersonaCard
                             key={`persona-${index}`}
@@ -922,7 +896,7 @@ const PageTargetDiscovery = () => {
                 </div>
 
                 <div className="content">
-                  <CardGroupWrap column>
+                  <CardGroupWrap column style={{ marginBottom: "140px" }}>
                     {selectedTargetDiscoveryPersona.map((persona, index) => {
                       // selectedTargetDiscoveryScenario에서 매칭되는 시나리오 데이터 찾기
                       const matchingScenarioData =
@@ -933,7 +907,6 @@ const PageTargetDiscovery = () => {
                       const hasScenarioData = Boolean(
                         matchingScenarioData?.scenario
                       );
-                      console.log("matchingScenarioData", matchingScenarioData);
                       const isLoading = loadingPersonas[persona.title];
 
                       return (
@@ -1006,7 +979,7 @@ const PageTargetDiscovery = () => {
                 ) : (
                   <>
                     <BgBoxItem primaryLightest>
-                      <H3 color="gray800">타겟디스커버리 인사이트 분석</H3>
+                      <H3 color="gray800">타겟 탐색기 인사이트 분석</H3>
                       <Body3 color="gray800">
                         잠재 고객과 시나리오 분석을 통해 새로운 전략적 방향을
                         탐색해보세요
@@ -1050,6 +1023,8 @@ const PageTargetDiscovery = () => {
                             const rank = parseInt(rankKey.split("_").pop());
                             const rankData =
                               targetDiscoveryFinalReport[rankKey];
+
+                            if (!rankData?.title) return null;
 
                             return (
                               <MoleculeToolPersonaCard

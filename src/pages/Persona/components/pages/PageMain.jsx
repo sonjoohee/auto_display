@@ -1039,6 +1039,22 @@ const PageMain = () => {
     navigate("/MarketingSetting/1");
   };
 
+  // 새로운 state 추가
+  const [floatingText, setFloatingText] = useState("창업 MBTI 테스트");
+
+  // 3초마다 텍스트 변경하는 useEffect 추가
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFloatingText((prev) =>
+        prev === "창업 MBTI 테스트"
+          ? "내 아이템 잠재력 확인"
+          : "창업 MBTI 테스트"
+      );
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <>
       <ContentsWrap>
@@ -1129,25 +1145,19 @@ const PageMain = () => {
             <H4 align="left">Explore</H4>
 
             <TabWrapType4>
-
-              <TabButtonType4Main 
-
+              <TabButtonType4Main
                 isActive={activeTab === "all"}
                 onClick={() => setActiveTab("all")}
               >
                 <Caption1 color="gray700">All</Caption1>
-
               </TabButtonType4Main>
-              <TabButtonType4Main 
-
+              <TabButtonType4Main
                 isActive={activeTab === "research"}
                 onClick={() => setActiveTab("research")}
               >
                 <Caption1 color="gray700">Research Tool</Caption1>
-
               </TabButtonType4Main>
-              <TabButtonType4Main 
-
+              <TabButtonType4Main
                 isActive={activeTab === "expert"}
                 onClick={() => setActiveTab("expert")}
               >
@@ -1165,11 +1175,7 @@ const PageMain = () => {
               {[
                 // Expert 카드들
 
-                <ExploreCard
-                  Research
-                  key="research-1"
-                  {...(!accessableExpert && { Ready: true })}
-                >
+                <ExploreCard Research key="research-1" {...{ Ready: false }}>
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Tool
@@ -1206,9 +1212,11 @@ const PageMain = () => {
                   </div>
                 </ExploreCard>,
 
-                
-                <ExploreCard Research key="research-2" {...(!accessableExpert && { Ready: true })}>
-
+                <ExploreCard
+                  Research
+                  key="research-2"
+                  {...(!accessableExpert && { Ready: true })}
+                >
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Tool
@@ -1543,10 +1551,8 @@ const PageMain = () => {
                   <p>
                     <img src={images.ImgExploreNoData} alt="" />
                   </p>
-                  <Body1 color="gray300">
-                    <em>준비중</em>
-                    Coming Soon
-                  </Body1>
+                  <div style={{ height: "10px" }}></div>
+                  <Body1 color="gray300">Coming Soon</Body1>
                 </ExploreCard>,
 
                 // <ExploreCard Research key="research-4">
@@ -1681,14 +1687,16 @@ const PageMain = () => {
             </span>
           </label>
 
+          <span>{floatingText}</span>
+
           <FloatingMenuItem onClick={() => navigate("/MarketingLanding")}>
-            <Sub2 color="primary">창업 MBTI로 유형 분석하기</Sub2>
+            <Sub2 color="gray800">창업 MBTI로 유형 분석하기</Sub2>
             <div className="icon">
               <images.Tag width="15" height="16" color={palette.primary} />
             </div>
           </FloatingMenuItem>
           <FloatingMenuItem onClick={() => handleSubmit()}>
-            <Sub2>내 아이템 잠재력 진단 받기</Sub2>
+            <Sub2 color="gray800">내 아이템 잠재력 진단 받기</Sub2>
             <div className="icon">
               <images.Report2 width="16" height="16" color={palette.primary} />
             </div>
@@ -1875,8 +1883,42 @@ const FloatingMenu = styled.div`
   bottom: 3%;
   right: 3%;
 
+  > span {
+    position: absolute;
+    right: 0;
+    bottom: 50px;
+    width: auto;
+    white-space: nowrap;
+    font-size: 0.88rem;
+    color: ${palette.white};
+    line-height: 1.5;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: ${palette.gray800};
+    animation: textFadeInOut 3s infinite;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+
+    &:after {
+      position: absolute;
+      bottom: -5px;
+      right: 12px;
+      transform: rotate(45deg);
+      width: 17px;
+      height: 17px;
+      border-radius: 6px;
+      background: ${palette.gray800};
+      content: "";
+    }
+  }
+
   input {
     display: none;
+
+    /* 체크되었을 때 floating text 숨기기 */
+    &:checked ~ span {
+      opacity: 0;
+      visibility: hidden;
+    }
 
     &:checked ~ label span {
       img {
@@ -1895,12 +1937,12 @@ const FloatingMenu = styled.div`
       pointer-events: auto;
       transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
 
-      &:nth-child(3) {
+      &:nth-child(4) {
         transition-duration: 180ms;
         transform: translate3d(0, -95px, 0);
       }
 
-      &:nth-child(4) {
+      &:nth-child(5) {
         transition-duration: 280ms;
         transform: translate3d(0, -150px, 0);
       }
