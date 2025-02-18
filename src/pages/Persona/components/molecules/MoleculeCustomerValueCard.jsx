@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
@@ -19,6 +19,7 @@ import {
     BoxWrap,
     ListBox,
     TextWrap,
+    ListGroup,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { 
     FormBox, 
@@ -66,6 +67,52 @@ import {
     InterviewXCustomerValueAnalyzerFinalReportRequest,
   } from "../../../../utils/indexedDB";
 
+
+const MermaidDiagram = ({ code }) => {
+  const elementId = useRef(`mermaid-diagram-${Date.now()}`);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js";
+    script.async = true;
+
+    script.onload = async () => {
+      try {
+        window.mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          securityLevel: 'loose',
+          logLevel: 'error',
+          themeVariables: {
+            background: '#ffffff',
+            primaryColor: '#D6EBFF',
+            secondaryColor: '#D7DBFE',
+            tertiaryColor: '#E8E4FF',
+            journeyHoverColor: '#226FFF20'
+          }
+        });
+
+        window.mermaid.contentLoaded();
+      } catch (error) {
+        console.error("Mermaid rendering error:", error);
+      }
+    };
+
+    document.body.appendChild(script);
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
+
+  return (
+    <div className="mermaid">
+      {code}
+    </div>
+  );
+};
+
 const MoleculeCustomerValueCard = ({
   title,
   content,
@@ -74,7 +121,10 @@ const MoleculeCustomerValueCard = ({
   isSelected, // 선택 여부
   onSelect, // 선택 이벤트 핸들러
   id, // 카드 식별자
-  journeyMapData // 새로운 prop 추가
+  journeyMapData, // 새로운 prop 추가
+  hideCheckCircle, // 새로운 prop 추가
+  activeTab, // 새로운 prop 추가
+  factor, // 새로운 prop 추가
 }) => {
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(CUSTOMER_VALUE_ANALYZER_INFO);
@@ -86,10 +136,50 @@ const MoleculeCustomerValueCard = ({
   const [customerValueAnalyzerFinalReport, setCustomerValueAnalyzerFinalReport] = useAtom(CUSTOMER_VALUE_ANALYZER_FINAL_REPORT);
 
   const [showDetailPopup, setShowDetailPopup] = useState(false);
-  const [activeTab, setActiveTab] = useState("personaInfo");
   const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [mermaidData, setMermaidData] = useState('');
+  const [isMermaidLoaded, setIsMermaidLoaded] = useState(false);
+  const elementId = useRef(`mermaid-diagram-${Date.now()}`);
+
   console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
   
+  useEffect(() => {
+    if (showDetailPopup && activeTabIndex === 0) {
+      const script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js";
+      script.async = true;
+
+      script.onload = async () => {
+        try {
+          window.mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+            logLevel: 'error',
+            themeVariables: {
+              background: '#ffffff',
+              primaryColor: '#D6EBFF',
+              secondaryColor: '#D7DBFE',
+              tertiaryColor: '#E8E4FF',
+              journeyHoverColor: '#226FFF20'
+            }
+          });
+
+          window.mermaid.contentLoaded();
+        } catch (error) {
+          console.error("Mermaid rendering error:", error);
+        }
+      };
+
+      document.body.appendChild(script);
+      return () => {
+        if (document.body.contains(script)) {
+          document.body.removeChild(script);
+        }
+      };
+    }
+  }, [showDetailPopup, activeTabIndex]);
+
   const renderButton = () => {
     switch (status) {
       case 'waiting':
@@ -124,38 +214,52 @@ const MoleculeCustomerValueCard = ({
     }
   };
 
-  return (
-    <>
-        <ListBoxItem 
-            NoBg
-            selected={isSelected}
-            active={isSelected}
-        >
-            <div>
-            <CheckBoxButton 
-                id={id}
-                name={id}
-                checked={isSelected}
-                onChange={() => onSelect(id)}
-            />
-            </div>
-            <ListText>
-            <ListTitle>
-                <Body1 color={isSelected ? "primary" : "gray800"}>
-                {title}
-                </Body1>
-            </ListTitle>
-
-            <ListSubtitle>
-                {content}
-            </ListSubtitle>
-            </ListText>
-            <ListButton>
-                {renderButton()}
-            </ListButton>
-        </ListBoxItem>
-
-      {showDetailPopup && (
+  const renderPopup = () => {
+    if (activeTab === 3) {
+      return (
+        <PopupWrap
+          Wide1000
+          title={
+            <>
+              <H4 color="gray800" align="left">
+                {title}의 {content}<br />구매 핵심 요인 분석
+              </H4>
+            </>
+          }
+          buttonType="Fill"
+          isModal={true}
+          showTabs={true}
+          activeTab={activeTabIndex}
+          onTabChange={(index) => setActiveTabIndex(index)}
+          eventState={false}
+          customAlertBox={
+            <TextWrap>
+              <Body2 color="gray800" align="left">
+                {factor?.conclusion || "결론이 없습니다."}
+              </Body2>
+            </TextWrap>
+          }
+          body={
+            <>
+              <ListGroup>
+                {factor?.key_buying_factors?.map((factorItem, index) => (
+                  <div key={index}>
+                    <Body1 color="gray800" align="left">{factorItem.title}</Body1>
+                    <Sub3 color="gray800" align="left">
+                      {factorItem.reason}
+                    </Sub3>
+                  </div>
+                ))}
+              </ListGroup>
+            </>
+          }
+          onClose={() => setShowDetailPopup(false)}
+          onCancel={() => setShowDetailPopup(false)}
+        />
+      );
+    } else {
+      // 기존 팝업 내용
+      return (
         <PopupWrap
           Wide1000
           title={
@@ -172,11 +276,10 @@ const MoleculeCustomerValueCard = ({
           activeTab={activeTabIndex}
           onTabChange={(index) => setActiveTabIndex(index)}
           eventState={false}
-          creditRequestCustomPersona={1}
           customAlertBox={
             <TextWrap>
               <Body2 color="gray800" align="left">
-                이 비즈니스 아이템은 참신하고 현재의 시장 동향과 맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형 디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장 기회를 가집니다. 다만, 참신함이 곧 블루 오션을 의미하지 않으므로, 진입 전략은 사용자 친화적 디자인, 가족의 참여를 유도하는 마케팅, 맞춤형 프로그램으로 보강해야 합니다.
+                {journeyMapData?.conclusion || "결론이 없습니다."}
               </Body2>
             </TextWrap>
           }
@@ -185,43 +288,76 @@ const MoleculeCustomerValueCard = ({
           body={
             <>
               {activeTabIndex === 0 && (
-                <>
-                  <BoxWrap>
-                    {journeyMapData?.journey_map_image || "Journey map 이미지가 없습니다."}
-                  </BoxWrap>
-                </>
+                <BoxWrap>
+                  {journeyMapData?.journey_map_image || (
+                    <div className="mermaid">
+                      {journeyMapData?.mermaid}
+                    </div>
+                  )}
+                </BoxWrap>
               )}
-
               {activeTabIndex === 1 && (
-                <>
-                  <ListBox>
-                    {Object.entries(journeyMapData).map(([key, step], index) => {
-                      // conclusion은 제외
-                      if (key === 'conclusion') return null;
-                      
-                      return (
-                        <div key={index}>
-                          <span className="number">{index + 1}</span>
-                          <div>
-                            <Sub1 color="gray800">{step.title}</Sub1>
-                            <Body2 color="gray700" align="left">{step.detail}</Body2>
-                            <div className="tag">
-                              <Sub3 color="gray800">#{step.emotion}</Sub3>
-                              {step.mot !== "해당 없음" && (
-                                <Sub3 color="gray800">#{step.mot}</Sub3>
-                              )}
-                            </div>
+                <ListBox>
+                  {Object.entries(journeyMapData).map(([key, step], index) => {
+                    if (key === 'conclusion' || key.startsWith('section') || key === 'mermaid') return null;
+                    return (
+                      <div key={index}>
+                        <span className="number">{index + 1}</span>
+                        <div>
+                          <Sub1 color="gray800">유저저니맵 {key.replace('step', '')}단계</Sub1>
+                          <Body2 color="gray700" align="left">{step.detail}</Body2>
+                          <div className="tag">
+                            {step.emotion && step.emotion.split(',').map((emotion, i) => (
+                              <Sub3 key={i} color="gray800">#{emotion.trim()}</Sub3>
+                            ))}
                           </div>
                         </div>
-                      );
-                    })}
-                  </ListBox>
-                </>
+                      </div>
+                    );
+                  })}
+                </ListBox>
               )}
             </>
           }
         />
-      )}
+      );
+    }
+  };
+
+  return (
+    <>
+        <ListBoxItem 
+            NoBg
+            selected={isSelected}
+            active={isSelected}
+        >
+            {!hideCheckCircle && (
+              <div>
+                <CheckBoxButton 
+                    id={id}
+                    name={id}
+                    checked={isSelected}
+                    onChange={() => onSelect(id)}
+                />
+              </div>
+            )}
+            <ListText>
+            <ListTitle>
+                <Body1 color={isSelected ? "primary" : "gray800"}>
+                {title}
+                </Body1>
+            </ListTitle>
+
+            <ListSubtitle>
+                {content}
+            </ListSubtitle>
+            </ListText>
+            <ListButton>
+                {renderButton()}
+            </ListButton>
+        </ListBoxItem>
+
+      {showDetailPopup && renderPopup()}
     </>
   );
 };
@@ -279,14 +415,14 @@ const CustomButton = styled(Button)`
     `}
 `;
 
-const ListGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+// const ListGroup = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   gap: 24px;
 
-  > div {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-`;
+//   > div {
+//     display: flex;
+//     flex-direction: column;
+//     gap: 8px;
+//   }
+// `;

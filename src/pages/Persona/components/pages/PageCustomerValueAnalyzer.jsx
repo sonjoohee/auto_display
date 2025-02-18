@@ -84,6 +84,7 @@ import {
   TOOL_STEP,
   CUSTOMER_VALUE_ANALYZER_INFO,
   CUSTOMER_VALUE_ANALYZER_PERSONA,
+  CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA,
   CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP,
   CUSTOMER_VALUE_ANALYZER_FACTOR,
   CUSTOMER_VALUE_ANALYZER_CLUSTERING,
@@ -111,6 +112,7 @@ const PageCustomerValueAnalyzer = () => {
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(CUSTOMER_VALUE_ANALYZER_INFO);
   const [customerValueAnalyzerPersona, setCustomerValueAnalyzerPersona] = useAtom(CUSTOMER_VALUE_ANALYZER_PERSONA);
+  const [customerValueAnalyzerSelectedPersona, setCustomerValueAnalyzerSelectedPersona] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA);
   const [customerValueAnalyzerJourneyMap, setCustomerValueAnalyzerJourneyMap] = useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
   const [customerValueAnalyzerFactor, setCustomerValueAnalyzerFactor] = useAtom(CUSTOMER_VALUE_ANALYZER_FACTOR);
   const [customerValueAnalyzerClustering, setCustomerValueAnalyzerClustering] = useAtom(CUSTOMER_VALUE_ANALYZER_CLUSTERING);
@@ -267,8 +269,6 @@ const PageCustomerValueAnalyzer = () => {
                 [index]: 'completed'
               }));
             }
-
-
               // 모든 시나리오를 한번에 저장
               await updateToolOnServer(
                 toolId,
@@ -282,18 +282,11 @@ const PageCustomerValueAnalyzer = () => {
               setToolStep(2);
 
 
-
-
           } catch (error) {
             console.error(`Journey Map API 호출 실패 (카드 ${index}):`, error);
-            setCardStatuses(prev => ({
-              ...prev,
-              [index]: 'error'
-            }));
           }
         }
       };
-
       processSequentially();
     } else if (activeTab === 2 && toolStep >= 2) {
       // 이미 완료된 단계인 경우 카드 상태만 completed로 설정
@@ -304,6 +297,7 @@ const PageCustomerValueAnalyzer = () => {
       setCardStatuses(completedStates);
     }
   }, [activeTab, customerValueAnalyzerPersona]);
+
 
   const handleSubmitBusinessInfo = async () => {
     try {
@@ -346,7 +340,9 @@ const PageCustomerValueAnalyzer = () => {
       setCustomerValueAnalyzerPersona(
         response.response.customer_value_persona || []
       );
+
       setCustomerValueAnalyzerInfo(businessData);
+      console.log("customerValueAnalyzerInfo", customerValueAnalyzerInfo);
 
       // API 호출 성공시 다음 단계로 이동
       handleNextStep(1);
@@ -430,14 +426,13 @@ const PageCustomerValueAnalyzer = () => {
     }
   };
 
-  const handleCheckboxChange = (personaId) => {
+  const handleCheckboxChange = (index) => {
     setSelectedPersonas(prev => {
-      if (prev.includes(personaId)) {
-        return prev.filter(id => id !== personaId);
+      if (prev.includes(index)) {
+        return prev.filter(id => id !== index);
       } else {
-        // 최대 5개까지만 선택 가능
         if (prev.length >= 5) return prev;
-        return [...prev, personaId];
+        return [...prev, index];
       }
     });
   };
@@ -473,6 +468,224 @@ const PageCustomerValueAnalyzer = () => {
       newTargetCustomers[index] = value;
       return newTargetCustomers;
     });
+  };
+
+  const handleSubmitPersonas = async () => {
+    handleNextStep(2);
+    try {
+      const selectedPersonaData = selectedPersonas.map(index => ({
+        content: customerValueAnalyzerPersona[index],
+        target: customerValueAnalyzerInfo.target_list[index],
+        journeyMap: customerValueAnalyzerJourneyMap[index]
+      }));
+      setCustomerValueAnalyzerSelectedPersona(selectedPersonaData);
+
+      // 초기 상태를 'waiting'으로 설정
+      const initialLoadingStates = selectedPersonaData.reduce((acc, _, index) => {
+        acc[index] = 'waiting';
+        return acc;
+      }, {});
+      setCardStatuses(initialLoadingStates);
+
+      const results = [];
+      for (let i = 0; i < selectedPersonaData.length; i++) {
+        setCardStatuses(prev => ({
+          ...prev,
+          [i]: 'loading'
+        }));
+
+        const persona = selectedPersonaData[i];
+        const requestData = {
+          business: customerValueAnalyzerInfo.business,
+          target: persona.target,
+          analysis_scope: customerValueAnalyzerInfo.analysis_scope,
+          customer_value_journey_map: persona.journeyMap
+        };
+
+        const response = await InterviewXCustomerValueAnalyzerFactorRequest(requestData, isLoggedIn);
+        console.log("response", response);
+        
+        if (response?.response?.customer_value_factor) {
+          results.push(response.response.customer_value_factor);
+        }
+        
+        setCardStatuses(prev => ({
+          ...prev,
+          [i]: 'completed'
+        }));
+
+        await updateToolOnServer(
+          toolId,
+          {
+            completed_step: 3,
+            customer_value_factor: results,
+          },
+          isLoggedIn
+        );
+      }
+      setToolStep(3);
+
+      setCustomerValueAnalyzerFactor(results);
+      
+    } catch (error) {
+      console.error('Error submitting personas:', error);
+      setShowPopupError(true);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowPopupError(true);
+            break;
+          case 504:
+            setShowPopupError(true);
+            break;
+          default:
+            setShowPopupError(true);
+            break;
+        }
+      } else {
+        setShowPopupError(true);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+
+  const handleReport = async () => {
+    try {
+      setIsLoading(true);
+      handleNextStep(3);
+
+      const clusteringData = {
+        customer_value_factor_data: customerValueAnalyzerFactor,
+      };
+
+      // 클러스터링 요청
+      const clusteringResponse = await InterviewXCustomerValueAnalyzerClusteringRequest(clusteringData, isLoggedIn);
+      console.log("Clustering response:", clusteringResponse);
+
+      if (!clusteringResponse || !clusteringResponse.response || !clusteringResponse.response.customer_value_clustering) {
+        console.error("Invalid clustering response");
+        return; 
+      }
+      setCustomerValueAnalyzerClustering(clusteringResponse.response.customer_value_clustering);
+
+      const positioningData = {
+        customer_value_factor_data: customerValueAnalyzerFactor,
+        customer_value_clustering: clusteringResponse.response.customer_value_clustering,
+      };
+
+      // 포지셔닝 요청
+      const positioningResponse = await InterviewXCustomerValueAnalyzerPositioningRequest(positioningData, isLoggedIn);
+      console.log("Positioning response:", positioningResponse);
+    
+      if (!positioningResponse || !positioningResponse.response || !positioningResponse.response.customer_value_positioning) {
+        console.error("Invalid positioning response");
+        return; 
+    }
+      setCustomerValueAnalyzerPositioning(positioningResponse.response.customer_value_positioning);
+
+      const finalReportData = {
+        business: customerValueAnalyzerInfo.business,
+        customer_value_factor_data: customerValueAnalyzerFactor,
+        customer_value_clustering:clusteringResponse.response.customer_value_clustering,
+        customer_value_positioning: positioningResponse.response.customer_value_positioning,
+      };
+
+      // 최종 리포트 요청
+      const finalReportResponse = await InterviewXCustomerValueAnalyzerFinalReportRequest(finalReportData, isLoggedIn);
+      console.log("Final report response:", finalReportResponse);
+
+      if (!finalReportResponse || !finalReportResponse.response || !finalReportResponse.response.customer_value_final_report) {
+        console.error("Invalid final report response");
+        return; 
+      }
+
+      setCustomerValueAnalyzerFinalReport(finalReportResponse.response.customer_value_final_report);
+      console.log("customerValueAnalyzerFinalReport", customerValueAnalyzerFinalReport);  
+
+
+      await updateToolOnServer(
+        toolId,
+        {
+          completed_step: 4,
+          customer_value_clustering: clusteringResponse.response.customer_value_clustering,
+          customer_value_positioning: positioningResponse.response.customer_value_positioning,
+          customer_value_final_report: finalReportResponse.response.customer_value_final_report,
+        },
+        isLoggedIn
+      );
+
+
+    } catch (error) {
+      console.error("Error in handleReport:", error);
+      setShowPopupError(true);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowPopupError(true);
+            break;
+          case 504:
+            setShowPopupError(true);
+            break;
+          default:
+            setShowPopupError(true);
+            break;
+        }
+      } else {
+        setShowPopupError(true);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+  const MermaidDiagram = ({ code }) => {
+    const diagramRef = useRef(null);
+
+    useEffect(() => {
+      const script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js";
+      script.async = true;
+
+      script.onload = () => {
+        try {
+          window.mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+            logLevel: 'error',
+            themeVariables: {
+              background: '#ffffff',
+              primaryColor: '#D6EBFF',
+              secondaryColor: '#D7DBFE',
+              tertiaryColor: '#E8E4FF',
+              journeyHoverColor: '#226FFF20'
+            }
+          });
+
+          // Render the diagram using the provided code
+          window.mermaid.render('mermaid-diagram', code, (svgCode) => {
+            if (diagramRef.current) {
+              diagramRef.current.innerHTML = svgCode;
+            }
+          });
+        } catch (error) {
+          console.error("Mermaid rendering error:", error);
+        }
+      };
+
+      document.body.appendChild(script);
+      return () => {
+        if (document.body.contains(script)) {
+          document.body.removeChild(script);
+        }
+      };
+    }, [code]);
+
+    return <div ref={diagramRef} className="mermaid" />;
   };
 
   return (
@@ -746,18 +959,26 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
                   <CardGroupWrap>
-                    {customerValueAnalyzerPersona.map((content, index) => (
-                      <MoleculeCustomerValueCard
-                        key={index}
-                        id={`persona-${index}`}
-                        title={customerValueAnalyzerInfo.target_list[index]}
-                        content={content}
-                        status={cardStatuses[index]}
-                        isSelected={selectedPersonas.includes(`persona-${index}`)}
-                        onSelect={(id) => handleCheckboxChange(id)}
-                        journeyMapData={customerValueAnalyzerJourneyMap[index]}
-                      />
-                    ))}
+                  
+                    {customerValueAnalyzerPersona.map((content, index) => {
+                      console.log('Persona Data:', {
+                        content,
+                        targetCustomer: customerValueAnalyzerInfo.target_list[index],
+                      });
+                      
+                      return (
+                        <MoleculeCustomerValueCard
+                          key={index}
+                          id={index}
+                          title={customerValueAnalyzerInfo.target_list[index]}
+                          content={content}
+                          status={cardStatuses[index]}
+                          isSelected={selectedPersonas.includes(index)}
+                          onSelect={(id) => handleCheckboxChange(id)}
+                          journeyMapData={customerValueAnalyzerJourneyMap[index]}
+                        />
+                      );
+                    })}
                   </CardGroupWrap>
                   <BottomBar W100>
                     <Body2
@@ -771,7 +992,8 @@ const PageCustomerValueAnalyzer = () => {
                       Round
                       Fill
                       disabled={selectedPersonas.length === 0 || Object.values(cardStatuses).some(status => status === 'loading' || status === 'waiting')}
-                      onClick={() => handleNextStep(2)}
+                      // onClick={() => handleNextStep(2)}
+                      onClick={() =>  handleSubmitPersonas()}
                     >
                       다음
                       <images.ChevronRight
@@ -794,81 +1016,35 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
                   <CardGroupWrap>
-                    <ListBoxItem>
-                      <ListText>
-                        <ListTitle>
-                          <Body1 color="gray800">
-                            가족과 함께 여가를 보내는 활동 지향형 소비자
-                          </Body1>
-                        </ListTitle>
-
-                        <ListSubtitle>
-                            <Badge Keyword>
-                              #키워드1
-                            </Badge>
-                            <Badge Keyword>
-                              #키워드2
-                            </Badge>
-                            <Badge Keyword>
-                              #키워드3
-                            </Badge>
-                        </ListSubtitle>
-                      </ListText>
-                      <ListButton>
-                        <CustomButton
-                          Medium
-                          PrimaryLightest
-                          Fill
-                          onClick={() => setShowPopupMore(true)}
-                        >
-                          자세히
-                        </CustomButton>
-                      </ListButton>
-                    </ListBoxItem>
-
-                    <ListBoxItem>
-                      <ListText>
-                        <ListTitle>
-                          <Body1 color="gray800">
-                            가족과 함께 여가를 보내는 활동 지향형 소비자
-                          </Body1>
-                        </ListTitle>
-
-                        <ListSubtitle>
-                            <Badge Keyword>
-                              #키워드1
-                            </Badge>
-                            <Badge Keyword>
-                              #키워드2
-                            </Badge>
-                            <Badge Keyword>
-                              #키워드3
-                            </Badge>
-                        </ListSubtitle>
-                      </ListText>
-                      <ListButton>
-                        <CustomButton
-                          Medium
-                          PrimaryLightest
-                          Fill
-                          onClick={() => setShowPopupMore(true)}
-                        >
-                          자세히
-                        </CustomButton>
-                      </ListButton>
-                    </ListBoxItem>
+                    {customerValueAnalyzerSelectedPersona.map((persona, index) => (
+                      <MoleculeCustomerValueCard
+                        key={index}
+                        id={index}
+                        title={persona.target}
+                        content={persona.content}
+                        status={cardStatuses[index]}
+                        // isSelected={true}
+                        // onSelect={(id) => handleCheckboxChange(id)}
+                        factor={customerValueAnalyzerFactor[index]}
+                        journeyMapData={persona.journeyMap}
+                        showOnlySelected={true}
+                        hideCheckCircle={true}
+                        activeTab={3}
+                      />
+                    ))}
                   </CardGroupWrap>
 
                   <BottomBar W100>
                     <Body2 color="gray800">
-                      5명의 페르소나에 대한 잠재고객 가능성을 분석해드릴게요
+                      {selectedPersonas.length}명의 페르소나에 대한 잠재고객 가능성을 분석해드릴게요
                     </Body2>
                     <Button
                       Large
                       Primary
                       Round
                       Fill
-                      onClick={() => handleNextStep(3)}
+                      // onClick={() => handleNextStep(3)}
+                      onClick={ handleReport}
                     >
                       다음
                       <images.ChevronRight
@@ -884,74 +1060,89 @@ const PageCustomerValueAnalyzer = () => {
 
             {activeTab === 4 && completedSteps.includes(3) && (
               <TabContent5 Small>
-                <BgBoxItem primaryLightest>
-                  <H3 color="gray800">타겟디스커버리 인사이트 분석</H3>
-                  <Body3 color="gray800">잠재 고객과 시나리오 분석을 통해 새로운 전략적 방향을 탐색해보세요</Body3>
-                </BgBoxItem>
-
-                <InsightAnalysis>
-                  <div className="title">
-                    <div>
-                      <TabWrapType4>
-                        <TabButtonType4>종합 분석 결과</TabButtonType4>
-                        <TabButtonType4>클러스터링 항목 상세 보기</TabButtonType4>
-                      </TabWrapType4>
-                    </div>
-                    <Button Primary onClick={() => setShowPopupSave(true)}>리포트 저장하기</Button>
+                {isLoading ? (
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      minHeight: "200px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
                   </div>
+                ) : (
+                  <>
+                    <BgBoxItem primaryLightest>
+                      <H3 color="gray800">타겟디스커버리 인사이트 분석</H3>
+                      <Body3 color="gray800">잠재 고객과 시나리오 분석을 통해 새로운 전략적 방향을 탐색해보세요</Body3>
+                    </BgBoxItem>
 
-                  <div className="content">
-                    <H4 color="gray800">
-                      페르소나별 고객 여정 분석 결과, 임신·육아 정보 플랫폼의 핵심 구매 요소는<br />
-                      신뢰성 높은 전문가 상담, 체계적인 정부 지원 안내, 그리고 개인 맞춤 큐레이션으로 분석됩니다.
-                    </H4>
-
-                    <Body3 color="gray700">
-                      첫째, 정보 신뢰성 부족으로 인해 고객들은 부정확한 정보를 접하거나 전문가 상담이 지연되는 문제를 겪고 있다. 특히 출산을 앞둔 산모나 다둥이 부모는 검증된 전문가의 실시간 답변을 원하지만, 플랫폼 내 상담 속도와 신뢰성에 대한 불만족도가 높다. 둘째, 육아 지원 서비스 부족으로 고객들은 시간과 비용의 부담을 크게 느낀다. 다둥이 부모의 경우 믿을 수 있는 육아 도우미 매칭이 어렵고, 정부 지원 정보도 산발적으로 제공되어 실질적인 도움을 받지 못하고 있다. 셋째, 개인 맞춤형 정보 부족이 고객의 피로감을 유발한다. 임신/출산/육아 단계별로 필요한 정보가 다르지만, 대부분의 플랫폼은 일반적인 정보를 나열하는 수준에 그쳐 사용자가 원하는 정보를 찾기 어려운 구조다.
-                    </Body3>
-
-                    <Body3 color="gray700">
-                      AI 기반 전문가 상담 시스템을 도입하여 고객이 1분 내 신뢰할 수 있는 답변을 받을 수 있도록 개선한다. 전문가의 즉각적인 응답이 가능한 "AI+전문가 하이브리드 모델"을 구축해 상담 대기 시간을 단축하고, 의료진과의 협업을 통해 신뢰도를 보장해야 한다. 육아 도우미 매칭 및 지원금 연계 서비스를 플랫폼 내에서 제공하여, 고객이 검증된 도우미를 직접 연결하고 정부 지원 혜택을 손쉽게 확인할 수 있도록 한다. 이는 사용자 충성도를 높이고 유료 서비스로 확장할 수 있는 기회를 제공한다. 마지막으로 AI 맞춤형 정보 큐레이션을 통해 사용자의 관심사, 임신 주수, 육아 스타일을 분석하여 개별 맞춤형 정보를 자동 제공하는 시스템을 구축해야 한다. 이를 통해 사용자는 원하는 정보를 신속하게 찾을 수 있으며, 플랫폼에 대한 의존도가 증가해 장기적인 사용자 유지율을 높이는 비즈니스 기회를 창출할 수 있다.
-                    </Body3>
-                  </div>
-                </InsightAnalysis>
-
-                <ValueMapWrap>
-                  <div>
-                    <H4 color="gray800" align="left" style={{marginBottom: "12px"}}>고객 경험 & 핵심 가치 맵</H4>
-                    <BoxWrap Column>
-                      <Body3 color="gray700">가로축 (X축) - 영향력 : 많은 사람들이 중요하게 여기는 구매 결정 요인의 영향 정도</Body3>
-                      <Body3 color="gray700">세로축 (Y축) - 불만족도 : 사람들이 해당 구매 요인에 대해 불만족을 느끼는 정도 </Body3>
-                    </BoxWrap>
-                  </div>
-
-                  <ValueMap>
-                    <div className="title">
-                      <div>
-                        <span className="must-fix" />
-                        <Caption2 color="gray700">Must Fix : 최우선 해결 요소</Caption2>
+                    <InsightAnalysis>
+                      <div className="title">
+                        <div>
+                          <TabWrapType4>
+                            <TabButtonType4>종합 분석 결과</TabButtonType4>
+                            <TabButtonType4>클러스터링 항목 상세 보기</TabButtonType4>
+                          </TabWrapType4>
+                        </div>
+                        <Button Primary onClick={() => setShowPopupSave(true)}>리포트 저장하기</Button>
                       </div>
-                      <div>
-                        <span className="niche-pain" />
-                        <Caption2 color="gray700">Niche Pain : 니치 불편 요소</Caption2>
-                      </div>
-                      <div>
-                        <span className="key-strengths" />
-                        <Caption2 color="gray700">Key Strengths : 차별화 요소</Caption2>
-                      </div>
-                      <div>
-                        <span className="low-impact" />
-                        <Caption2 color="gray700">Low Impact : 저관여 요소</Caption2>
-                      </div>
-                    </div>
 
-                    <div className="content">
-                      고객경험 & 핵심 가치 맵맵
-                    </div>
-                  </ValueMap>
-                </ValueMapWrap>
+                      <div className="content">
+                        <H4 color="gray800">
+                          {`페르소나별 고객 여정 분석 결과, ${customerValueAnalyzerInfo.business}의 핵심 구매 요소는`}
+                          <br />
+                          {customerValueAnalyzerFinalReport.title.join(", ")}으로 분석됩니다.
+                        </H4>
 
-                <Button Small Primary onClick={() => setShowPopupSave(true)}>리포트 저장하기</Button>
+                        <Body3 color="gray700">{customerValueAnalyzerFinalReport.content_1}</Body3>
+
+                        <Body3 color="gray700">{customerValueAnalyzerFinalReport.content_2}</Body3>
+                      </div>
+                    </InsightAnalysis>
+
+                    <ValueMapWrap>
+                      <div>
+                        <H4 color="gray800" align="left" style={{marginBottom: "12px"}}>고객 경험 & 핵심 가치 맵</H4>
+                        <BoxWrap Column>
+                          <Body3 color="gray700">가로축 (X축) - 영향력 : 많은 사람들이 중요하게 여기는 구매 결정 요인의 영향 정도</Body3>
+                          <Body3 color="gray700">세로축 (Y축) - 불만족도 : 사람들이 해당 구매 요인에 대해 불만족을 느끼는 정도 </Body3>
+                        </BoxWrap>
+                      </div>
+
+                      <ValueMap>
+                        <div className="title">
+                          <div>
+                            <span className="must-fix" />
+                            <Caption2 color="gray700">Must Fix : 최우선 해결 요소</Caption2>
+                          </div>
+                          <div>
+                            <span className="niche-pain" />
+                            <Caption2 color="gray700">Niche Pain : 니치 불편 요소</Caption2>
+                          </div>
+                          <div>
+                            <span className="key-strengths" />
+                            <Caption2 color="gray700">Key Strengths : 차별화 요소</Caption2>
+                          </div>
+                          <div>
+                            <span className="low-impact" />
+                            <Caption2 color="gray700">Low Impact : 저관여 요소</Caption2>
+                          </div>
+                        </div>
+
+                        <div className="content">
+                          <div className="mermaid">
+                          <MermaidDiagram code={customerValueAnalyzerPositioning?.mermaid} />
+                          </div>
+                        </div>
+                      </ValueMap>
+                    </ValueMapWrap>
+
+                    <Button Small Primary onClick={() => setShowPopupSave(true)}>리포트 저장하기</Button>
+                  </>
+                )}
               </TabContent5>
             )}
           </ValueAnalyzerWrap>
@@ -1114,6 +1305,13 @@ const ValueMap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+
+  .mermaid {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
 
   .title {
     display: flex;
