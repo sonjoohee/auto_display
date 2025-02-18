@@ -2096,21 +2096,17 @@ export const ListBoxGroup = styled.ul`
 
 export const CardGroupWrap = styled.div`
   display: flex;
-  flex-direction: ${(props) =>
-    props.column ? "column" : props.row ? "row" : "column"};
+  flex-direction: ${(props) => (props.column ? "column" : "row")};
   gap: 15px !important;
   flex-wrap: wrap;
-  width: ${(props) => (props.column ? "100%" : "100%")};
-  margin-bottom: ${(props) =>
-    props.column ? "140px" : props.column2 ? "0" : "0"};
+  width: 100%;
+  margin-bottom: ${(props) => (props.column ? "0" : "140px")};
 
   > div {
-    flex: 1;
-    max-width: ${(props) =>
-      props.column ? "100%" : props.row ? "50%" : "100%"};
-    width: ${(props) => (props.column ? "100%" : "100%")};
-    justify-content: ${(props) =>
-      props.column ? "flex-start" : "space-between"};
+    flex: ${(props) => (props.column ? "1" : "0 0 calc(33.333% - 10px)")};
+    max-width: ${(props) => (props.column ? "100%" : "calc(33.333% - 10px)")};
+    width: 100%;
+    justify-content: ${(props) => (props.column ? "space-between" : "flex-start")};
   }
 `;
 
@@ -2258,7 +2254,7 @@ export const ListButton = styled.div`
 
 export const CardListItem = styled(ListBoxItem)`
   flex-direction: column;
-  max-width: 262px;
+  max-width: 262px !important;
   text-align: left;
 `;
 
