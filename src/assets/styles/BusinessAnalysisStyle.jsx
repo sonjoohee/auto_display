@@ -33,13 +33,8 @@ export const MainContent = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  max-width: ${(props) => (
-    props.Wide 
-    ? "1024px" 
-    : props.Wide1030
-    ? "1030px"
-    : "816px"
-  )};
+  max-width: ${(props) =>
+    props.Wide ? "1024px" : props.Wide1030 ? "1030px" : "816px"};
   // max-width: 1024px;
   // min-height: 100vh;
   width: 100%;
@@ -372,13 +367,12 @@ export const TabButtonType4Main = styled(TabButton)`
 
   ${({ isActive }) =>
     isActive
-    ? `
+      ? `
       background: ${palette.chatGray};
     `
-    : `
+      : `
       background: ${palette.white};
-    `
-  }
+    `}
 `;
 
 export const TabButtonType4 = styled(TabButton)`
@@ -389,14 +383,13 @@ export const TabButtonType4 = styled(TabButton)`
 
   ${({ active }) =>
     active
-    ? `
+      ? `
       color: ${palette.gray700};
       background: ${palette.chatGray};
     `
-    : `
+      : `
       background: ${palette.white};
-    `
-  }
+    `}
 `;
 
 export const TabWrapType5 = styled(TabWrap)`
@@ -414,8 +407,8 @@ export const TabButtonType5 = styled(TabButton)`
   border-radius: 0;
   border: 0;
   background: transparent;
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-  pointer-events: ${props => props.disabled ? 'none' : 'auto'};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  pointer-events: ${(props) => (props.disabled ? "none" : "auto")};
 
   + button {
     padding-left: 80px;
@@ -469,17 +462,19 @@ export const TabButtonType5 = styled(TabButton)`
     }
   }
 
-  ${({ isActive }) => isActive && css`
-    span {
-      color: ${palette.gray800};
-      background: ${palette.primary};
-      color: ${palette.white};
-    }
+  ${({ isActive }) =>
+    isActive &&
+    css`
+      span {
+        color: ${palette.gray800};
+        background: ${palette.primary};
+        color: ${palette.white};
+      }
 
-    .text {
-      color: ${palette.gray800};
-    }
-  `}
+      .text {
+        color: ${palette.gray800};
+      }
+    `}
 `;
 
 export const TabContent = styled.div`
@@ -2101,45 +2096,21 @@ export const ListBoxGroup = styled.ul`
 
 export const CardGroupWrap = styled.div`
   display: flex;
-  flex-direction: ${(props) => (
-    props.column 
-    ? "column" 
-    : props.row
-    ? "row"
-    : "column"
-  )};
+  flex-direction: ${(props) =>
+    props.column ? "column" : props.row ? "row" : "column"};
   gap: 15px !important;
   flex-wrap: wrap;
-  width: ${(props) => (
-    props.column 
-    ? "100%" 
-    : "100%"
-  )};
-  margin-bottom: ${(props) => (
-    props.column
-    ? "140px"
-    : "0"
-  )};
+  width: ${(props) => (props.column ? "100%" : "100%")};
+  margin-bottom: ${(props) =>
+    props.column ? "140px" : props.column2 ? "0" : "0"};
 
   > div {
     flex: 1;
-    max-width: ${(props) => (
-      props.column 
-      ? "100%"
-      : props.row
-      ? "50%"
-      : "100%"
-    )};
-    width: ${(props) => (
-      props.column 
-      ? "100%" 
-      : "100%"
-    )};
-    justify-content: ${(props) => (
-      props.column 
-      ? "flex-start"
-      : "space-between"
-    )};
+    max-width: ${(props) =>
+      props.column ? "100%" : props.row ? "50%" : "100%"};
+    width: ${(props) => (props.column ? "100%" : "100%")};
+    justify-content: ${(props) =>
+      props.column ? "flex-start" : "space-between"};
   }
 `;
 
@@ -2155,7 +2126,7 @@ export const ListBoxItem = styled.div`
   border: 1px solid
     ${(props) => (props.active ? palette.primary : palette.outlineGray)};
   background: ${(props) =>
-    props.NoBg 
+    props.NoBg
       ? palette.white
       : props.active && props.showQuestions
       ? palette.white
@@ -2204,8 +2175,6 @@ export const ListBoxContent = styled.div`
   padding-top: 16px;
   border-top: 1px solid ${palette.gray200};
 `;
-
-
 
 export const ListBorderItem = styled(ListBoxItem)`
   position: relative;
@@ -2646,26 +2615,19 @@ export const BgBoxItem = styled.div`
   justify-content: flex-start;
   gap: 4px;
   width: 100%;
-  padding: ${(props) => (
-    props.NoOutline 
-    ? "12px" 
-    : props.primaryLightest
-    ? "20px"
-    : "8px 12px"
-  )};
+  padding: ${(props) =>
+    props.NoOutline ? "12px" : props.primaryLightest ? "20px" : "8px 12px"};
   border-radius: ${(props) => (props.primaryLightest ? "15px" : "10px")};
   border: ${(props) =>
     props.NoOutline || props.primaryLightest
-    ? "0" 
-    : `1px solid ${palette.outlineGray}`
-  };
-  background: ${(props) => (
-    props.white 
-    ? palette.white 
-    : props.primaryLightest
-    ? "rgba(34, 111, 255, 0.05)"
-    : palette.chatGray
-  )};
+      ? "0"
+      : `1px solid ${palette.outlineGray}`};
+  background: ${(props) =>
+    props.white
+      ? palette.white
+      : props.primaryLightest
+      ? "rgba(34, 111, 255, 0.05)"
+      : palette.chatGray};
 `;
 
 export const ListRowWrap = styled.div`
@@ -3711,8 +3673,7 @@ export const ExploreCard = styled.div`
           background: ${palette.green};
         }
       }
-    `
-  }
+    `}
 
   ${(props) =>
     props.Ready &&
@@ -3738,7 +3699,8 @@ export const ExploreCard = styled.div`
           letter-spacing: -0.36px;
           padding: 4px 8px;
           border-radius: 50px;
-          border: 1px solid ${palette.outlineGray};
+          border: ${(props) =>
+            props.children ? `1px solid ${palette.outlineGray}` : "none"};
         }
       }
 
@@ -3746,7 +3708,7 @@ export const ExploreCard = styled.div`
         opacity: 0; // 기본적으로는 숨김
         visibility: hidden;
         pointer-events: none; // 오버레이의 클릭 이벤트 차단
-        
+
         em {
           color: ${palette.white};
         }
@@ -3781,7 +3743,7 @@ export const SunburstChart = styled.div`
   width: 100%;
   height: 100%;
   padding: 20px;
-  
+
   svg {
     max-width: 100%;
     height: auto;
@@ -3798,8 +3760,7 @@ export const Table = styled.table`
   }
 `;
 
-export const TableHeader = styled.thead`
-`;
+export const TableHeader = styled.thead``;
 
 export const TableBody = styled.tbody`
   tr {
