@@ -51,10 +51,10 @@ const MoleculeHeader = () => {
   const navigate = useNavigate();
 
   // Persona/3 경로 체크를 위한 조건 수정
-  const isPersona3Page =
-    /^\/Persona\/(3\/[^/]+|3\/Select\/[^/]+|4\/[^/]+|4\/Single\/[^/]+)$/.test(
-      location.pathname
-    );
+  // const isPersona3Page =
+  //   /^\/Persona\/(3\/[^/]+|3\/Select\/[^/]+|4\/[^/]+|4\/Single\/[^/]+)$/.test(
+  //     location.pathname
+  //   );
 
   // 첫 페이지 체크 (루트 경로 확인)
   const isRootPage = location.pathname === "/";
@@ -70,6 +70,14 @@ const MoleculeHeader = () => {
 
   // TargetDiscovery 경로 체크 추가
   const isTargetDiscoveryPage = location.pathname === "/TargetDiscovery";
+
+  const isPersona2Page = location.pathname === "/Persona/2";
+
+  const isPersona3Page = location.pathname === "/Persona/3";
+
+  const isPersona4PageSingle = location.pathname === "/Persona/4/Single";
+
+  const isPersona4Page = location.pathname === "/Persona/4";
 
   const handleAlertToggle = () => {
     if (showAlert) {
@@ -200,17 +208,11 @@ const MoleculeHeader = () => {
   return (
     <>
       <HeaderWrap>
-        {
-          <Title>
-            {isTargetDiscoveryPage && targetDiscoveryInfo.business
-              ? targetDiscoveryInfo.business
-              : ""}
-          </Title>
-        }
         {(personaStep > 0 ||
           isMyProjectPage ||
           isMyProfilePage ||
-          isPaymentPage) && (
+          isPaymentPage ||
+          isTargetDiscoveryPage) && (
           <>
             <Title>
               {isMyProjectPage
@@ -219,8 +221,18 @@ const MoleculeHeader = () => {
                 ? "계정관리"
                 : isPaymentPage
                 ? "크레딧"
-                : businessAnalysis.title
+                : isPersona2Page && businessAnalysis.title
                 ? businessAnalysis.title
+                : isPersona3Page && businessAnalysis.title
+                ? businessAnalysis.title
+                : isPersona4Page && businessAnalysis.title
+                ? businessAnalysis.title
+                : isPersona4PageSingle && businessAnalysis.title
+                ? businessAnalysis.title
+                : isTargetDiscoveryPage && targetDiscoveryInfo.business
+                ? targetDiscoveryInfo.business
+                : isTargetDiscoveryPage && !targetDiscoveryInfo.business
+                ? "타겟 디스커버리"
                 : "새로운 프로젝트"}
               {isPersona3Page && (
                 <>
