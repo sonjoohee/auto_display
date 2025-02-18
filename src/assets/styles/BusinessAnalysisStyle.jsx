@@ -3605,6 +3605,7 @@ export const ExploreCard = styled.div`
     color: ${palette.gray700};
     line-height: 1.55;
     letter-spacing: -0.36px;
+    margin-bottom: auto;
   }
 
   p {
@@ -3612,11 +3613,15 @@ export const ExploreCard = styled.div`
     align-items: center;
     justify-content: center;
     height: 97px;
-    margin-top: auto;
+    // margin-top: auto;
 
     img {
       padding: 10px;
     }
+  }
+
+  ${Body1} {
+    margin-top: auto;
   }
 
   .overlay {
