@@ -664,6 +664,25 @@ const PageCustomerValueAnalyzer = () => {
     }
   };
 
+  const mermaidCode = `
+  quadrantChart
+    title Cost and Results of experiments
+    x-axis Low Cost --> High Cost
+    y-axis Low Reliability --> High Reliability
+    quadrant-1 Consider
+    quadrant-2 Preferred
+    quadrant-3 Modify
+    quadrant-4 Avoid
+    Passive Observation: [0.13, 0.3]
+    Field experiment: [0.4, 0.7]
+    Small scale lab work: [0.4, 0.42]
+    Lab work - Frequent repetition: [0.82, 0.85]
+    Large scale study: [0.8, 0.15]
+    Low impact study: [0.67, 0.56]
+
+ 
+`;
+
 
   const MermaidDiagram = ({ code }) => {
     const diagramRef = useRef(null);
@@ -674,6 +693,7 @@ const PageCustomerValueAnalyzer = () => {
       script.async = true;
 
       script.onload = () => {
+        console.log("Mermaid script loaded");
         try {
           window.mermaid.initialize({
             startOnLoad: true,
@@ -689,12 +709,12 @@ const PageCustomerValueAnalyzer = () => {
             }
           });
 
-          // Render the diagram using the provided code
-          window.mermaid.render('mermaid-diagram', code, (svgCode) => {
-            if (diagramRef.current) {
-              diagramRef.current.innerHTML = svgCode;
-            }
-          });
+          // 다이어그램을 일반적으로 보여주기
+          if (diagramRef.current) {
+            diagramRef.current.innerHTML = `<div class="mermaid">${code}</div>`;
+            window.mermaid.contentLoaded();
+            console.log("Diagram displayed successfully");
+          }
         } catch (error) {
           console.error("Mermaid rendering error:", error);
         }
@@ -708,7 +728,7 @@ const PageCustomerValueAnalyzer = () => {
       };
     }, [code]);
 
-    return <div ref={diagramRef} className="mermaid" />;
+    return <div ref={diagramRef} />;
   };
 
   return (
@@ -1090,7 +1110,7 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
 
-                  <CardGroupWrap>
+                  <CardGroupWrap column >
                   
                     {customerValueAnalyzerPersona.map((content, index) => {
                       console.log('Persona Data:', {
@@ -1107,6 +1127,7 @@ const PageCustomerValueAnalyzer = () => {
                           status={cardStatuses[index]}
                           isSelected={selectedPersonas.includes(index)}
                           onSelect={(id) => handleCheckboxChange(id)}
+                          viewType="list"
                           journeyMapData={customerValueAnalyzerJourneyMap[index]}
                         />
                       );
@@ -1157,7 +1178,7 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
 
-                  <CardGroupWrap>
+                  <CardGroupWrap column>
                     {customerValueAnalyzerSelectedPersona.map((persona, index) => (
                       <MoleculeCustomerValueCard
                         key={index}
@@ -1172,6 +1193,7 @@ const PageCustomerValueAnalyzer = () => {
                         showOnlySelected={true}
                         hideCheckCircle={true}
                         activeTab={3}
+                        viewType="list"
                       />
                     ))}
 
@@ -1282,7 +1304,8 @@ const PageCustomerValueAnalyzer = () => {
 
                         <div className="content">
                           <div className="mermaid">
-                          <MermaidDiagram code={customerValueAnalyzerPositioning?.mermaid} />
+                          {/* <MermaidDiagram code={customerValueAnalyzerPositioning?.mermaid} /> */}
+                          <MermaidDiagram code={mermaidCode} />
                           </div>
                         </div>
                       </ValueMap>
