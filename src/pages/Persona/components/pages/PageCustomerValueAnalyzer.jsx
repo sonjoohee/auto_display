@@ -878,7 +878,7 @@ const PageCustomerValueAnalyzer = () => {
                 </div>
 
                 <div className="content">
-                  <CardGroupWrap>
+                  <CardGroupWrap column>
                     {customerValueAnalyzerPersona.map((content, index) => (
                       <MoleculeCustomerValueCard
                         key={index}
