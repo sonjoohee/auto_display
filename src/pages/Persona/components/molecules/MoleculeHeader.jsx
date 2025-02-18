@@ -75,6 +75,8 @@ const MoleculeHeader = () => {
 
   const isPersona3Page = location.pathname === "/Persona/3";
 
+  const isPersona3PageSelect = location.pathname === "/Persona/3/Select";
+
   const isPersona4PageSingle = location.pathname === "/Persona/4/Single";
 
   const isPersona4Page = location.pathname === "/Persona/4";
@@ -225,6 +227,8 @@ const MoleculeHeader = () => {
                 ? businessAnalysis.title
                 : isPersona3Page && businessAnalysis.title
                 ? businessAnalysis.title
+                : isPersona3PageSelect && businessAnalysis.title
+                ? businessAnalysis.title
                 : isPersona4Page && businessAnalysis.title
                 ? businessAnalysis.title
                 : isPersona4PageSingle && businessAnalysis.title
@@ -234,7 +238,10 @@ const MoleculeHeader = () => {
                 : isTargetDiscoveryPage && !targetDiscoveryInfo.business
                 ? "타겟 탐색기"
                 : "새로운 프로젝트"}
-              {isPersona3Page && (
+              {(isPersona3Page ||
+                isPersona3PageSelect ||
+                isPersona4Page ||
+                isPersona4PageSingle) && (
                 <>
                   <images.ChatPlus
                     color={palette.primary}
