@@ -857,8 +857,6 @@ const OrganismIncNavigation = () => {
           return dateA - dateB;
         }); // 최근 날짜 순으로 정렬
 
-        console.log("🚀 ~ fetchChatList ~ sortedChatList:", sortedChatList);
-        // console.log("🚀 ~ fetchChatList ~ sortedChatList:", sortedChatList);
         setChatList(sortedChatList);
       } catch (error) {
         console.error("대화 목록 가져오기 오류:", error);
