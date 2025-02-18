@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import {
@@ -92,14 +92,14 @@ const MoleculeCustomerValueCard = ({
     switch (status) {
       case 'waiting':
         return (
-          <CustomButton Medium PrimaryLightest Fill disabled>
+          <CustomButton Medium PrimaryLightest Fill disabled $loading>
             대기중
           </CustomButton>
         );
       case 'loading':
         return (
-          <CustomButton Medium PrimaryLightest Fill disabled>
-            생성중
+          <CustomButton Medium PrimaryLightest Fill disabled $loading>
+            호출중
           </CustomButton>
         );
       case 'completed':
@@ -115,10 +115,10 @@ const MoleculeCustomerValueCard = ({
         );
       default:
         return (
-            <CustomButton Medium PrimaryLightest Fill disabled>
-              대기중
-            </CustomButton>
-          );
+          <CustomButton Medium PrimaryLightest Fill disabled $loading>
+            대기중
+          </CustomButton>
+        );
     }
   };
 
@@ -277,6 +277,53 @@ export default MoleculeCustomerValueCard;
 
 const CustomButton = styled(Button)`
   min-width: 92px;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+
+  ${(props) =>
+    props.$loading &&
+    css`
+      position: relative;
+      justify-content: ${props.children === "호출중"
+        ? "space-between"
+        : "center"};
+      border: 1px solid ${palette.outlineGray} !important;
+      background: ${palette.chatGray} !important;
+      color: ${palette.gray700} !important;
+      opacity: 1;
+
+      ${props.children === "호출중" &&
+      css`
+        &:after {
+          content: "";
+          width: 3px;
+          height: 3px;
+          border-radius: 50%;
+          display: block;
+          position: relative;
+          margin-right: 8px;
+          background: ${palette.white};
+          box-shadow: -10px 0 ${palette.white}, 10px 0 ${palette.white};
+          box-sizing: border-box;
+          animation: shadowPulse 2s linear infinite;
+        }
+
+        @keyframes shadowPulse {
+          33% {
+            background: ${palette.white};
+            box-shadow: -10px 0 ${palette.primary}, 10px 0 ${palette.white};
+          }
+          66% {
+            background: ${palette.primary};
+            box-shadow: -10px 0 ${palette.white}, 10px 0 ${palette.white};
+          }
+          100% {
+            background: ${palette.white};
+            box-shadow: -10px 0 ${palette.white}, 10px 0 ${palette.primary};
+          }
+        }
+      `}
+    `}
 `;
 
 const ListGroup = styled.div`
