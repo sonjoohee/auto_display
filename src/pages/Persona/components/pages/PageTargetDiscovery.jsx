@@ -260,7 +260,6 @@ const PageTargetDiscovery = () => {
   }, [toolLoading]);
 
   const handleCheckboxChange = (personaId) => {
-    console.log("🚀 ~ handleCheckboxChange ~ personaId:", personaId);
     if (toolStep >= 2) return;
     setSelectedPersonas((prev) => {
       if (prev.includes(personaId)) {
@@ -333,7 +332,6 @@ const PageTargetDiscovery = () => {
       );
       setToolId(responseToolId);
       setToolStep(1);
-      console.log("🚀 ~ handleSubmitBusinessInfo ~ responseToolId:", toolId);
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
       setTargetDiscoveryPersona(
         response.response.target_discovery_persona || []
