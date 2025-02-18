@@ -149,7 +149,7 @@ import {
 import { 
   ContentsWrap,
   TabWrapType4,
-  TabButtonType4,
+  TabButtonType4Main,
   ExploreList,
   ExploreCard,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
@@ -1125,30 +1125,30 @@ const PageMain = () => {
             <H4 align="left">Explore</H4>
             
             <TabWrapType4>
-              <TabButtonType4 
+              <TabButtonType4Main 
                 isActive={activeTab === "all"}
                 onClick={() => setActiveTab("all")}
               >
                 <Caption1 color="gray700">All</Caption1>
-              </TabButtonType4>
-              <TabButtonType4 
+              </TabButtonType4Main>
+              <TabButtonType4Main 
                 isActive={activeTab === "research"}
                 onClick={() => setActiveTab("research")}
               >
                 <Caption1 color="gray700">Research Tool</Caption1>
-              </TabButtonType4>
-              <TabButtonType4 
+              </TabButtonType4Main>
+              <TabButtonType4Main 
                 isActive={activeTab === "expert"}
                 onClick={() => setActiveTab("expert")}
               >
                 <Caption1 color="gray700">Business Expert</Caption1>
-              </TabButtonType4>
-              {/* <TabButtonType4 
+              </TabButtonType4Main>
+              {/* <TabButtonType4Main 
                 isActive={activeTab === "analysis"}
                 onClick={() => setActiveTab("analysis")}
               >
                 <Caption1 color="gray700">Analysis Tool</Caption1>
-              </TabButtonType4> */}
+              </TabButtonType4Main> */}
             </TabWrapType4>
 
             <ExploreList>
