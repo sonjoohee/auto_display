@@ -125,6 +125,7 @@ const MoleculeCustomerValueCard = ({
   hideCheckCircle, // 새로운 prop 추가
   activeTab, // 새로운 prop 추가
   factor, // 새로운 prop 추가
+  viewType, // 새로운 prop 추가
 }) => {
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(CUSTOMER_VALUE_ANALYZER_INFO);
@@ -326,6 +327,7 @@ const MoleculeCustomerValueCard = ({
 
   return (
     <>
+      {viewType === "list" && (
         <ListBoxItem 
             NoBg
             selected={isSelected}
@@ -356,6 +358,7 @@ const MoleculeCustomerValueCard = ({
                 {renderButton()}
             </ListButton>
         </ListBoxItem>
+      )}
 
       {showDetailPopup && renderPopup()}
     </>
