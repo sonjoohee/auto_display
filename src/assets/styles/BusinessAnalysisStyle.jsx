@@ -517,6 +517,16 @@ export const TabContent5Item = styled.div`
   align-items: flex-start;
   gap: 8px;
   width: 100%;
+  padding-bottom: ${(props) => (
+    props.borderBottom 
+    ? "40px" 
+    : "0"
+  )};
+  border-bottom: ${(props) => (
+    props.borderBottom 
+    ? `1px solid ${palette.gray200}` 
+    : "none"
+  )};
 
   .title {
     display: flex;
@@ -3782,7 +3792,12 @@ export const Table = styled.table`
   }
 `;
 
-export const TableHeader = styled.thead``;
+export const TableHeader = styled.thead`
+  th {
+    padding: 16px 10px;
+    word-break: keep-all;
+  }
+`;
 
 export const TableBody = styled.tbody`
   tr {

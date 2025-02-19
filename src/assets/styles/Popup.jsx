@@ -303,6 +303,8 @@ export const AlertPopup = styled.div`
 export const ModalPopup = styled(AlertPopup)`
   gap: ${(props) => (props.TitleBorder ? "20px" : "32px")};
   // max-width: 800px;
+  height: ${(props) => (props.Wide1000 ? "100%" : "auto")};
+  max-height: ${(props) => (props.Wide1000 ? "800px" : "auto")};
   max-width: ${(props) =>
     props.Wide
       ? "820px"
@@ -330,7 +332,7 @@ export const Body = styled.div`
   gap: ${(props) => (props.TitleFlex ? "20px" : "32px")};
   width: 100%;
   height: 100%;
-  max-height: 60dvh;
+  // max-height: 60dvh;
   padding-right: 10px;
   overflow-y: auto;
   overflow-x: hidden;

@@ -434,10 +434,14 @@ const CustomButton = styled(Button)`
       justify-content: ${props.children === "호출중"
         ? "space-between"
         : "center"};
-      border: 1px solid ${palette.outlineGray} !important;
+      // border: 1px solid ${palette.outlineGray} !important;
+      border: ${props.children === "호출중" 
+        ? `1px solid ${palette.outlineGray}` 
+        : `0`};
       background: ${palette.chatGray} !important;
       color: ${palette.gray700} !important;
-      opacity: 1;
+      // opacity: 1;
+      opacity: ${(props) => (props.children === "호출중" ? 1 : 0.5)};
 
       ${props.children === "호출중" &&
       css`

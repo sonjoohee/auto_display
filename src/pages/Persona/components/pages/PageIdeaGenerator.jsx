@@ -919,7 +919,7 @@ const PageIdeaGenerator = () => {
                 </div>
 
                 <div className="content">
-                  <TabContent5Item>
+                  <TabContent5Item borderBottom>
                     <div className="title">
                       <Body1 color="gray700">비즈니스 핵심 가치 가져오기</Body1>
                     </div>
@@ -1417,6 +1417,13 @@ const PageIdeaGenerator = () => {
 
                         <IdeaRankingTable>
                           <Table>
+                            <colgroup>
+                              <col />
+                              <col width="13%" />
+                              <col width="13%" />
+                              <col width="13%" />
+                              <col width="13%" />
+                            </colgroup>
                             <TableHeader>
                               <tr>
                                 <th></th>
@@ -1445,7 +1452,7 @@ const PageIdeaGenerator = () => {
                               {tableData.map((val, key) => (
                                 <tr key={key}>
                                   <th>
-                                    <Body3 color="gray700">{val.title}</Body3>
+                                    <Body3 color="gray700" align="left">{val.title}</Body3>
                                   </th>
                                   <td>
                                     <Body3 color="gray700">
@@ -1566,12 +1573,12 @@ const PageIdeaGenerator = () => {
                     width={700}
                     height={700}
                     colors={[
-                      "#A88CCC",
-                      "#D98ACF",
-                      "#FE93B5",
-                      "#FFAE91",
-                      "#EED482",
-                      "#CFF69D",
+                      "#D3E2FF",
+                      "#D5C8DA",
+                      "#D3D5E2",
+                      "#B6CBE0",
+                      "#C0D9D3",
+                      "#E3D0CA",
                       "#97FAA4",
                       "#77ECC8",
                       "#7BCDE8",

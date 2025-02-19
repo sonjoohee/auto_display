@@ -139,7 +139,7 @@ const ZoomableSunburst = ({ data, width, height, colors }) => {
         .attrTween("transform", d => () => labelTransform(d.current))
         .style('fill', d => {
           const currentDepth = d.depth - p.depth;
-          return currentDepth === 1 ? palette.gray800 : palette.gray50;
+          return currentDepth === 1 ? palette.gray800 : palette.gray800;
         })
         .each(function(d) {
           const text = d3.select(this);
@@ -193,8 +193,8 @@ const ZoomableSunburst = ({ data, width, height, colors }) => {
       })
       .style('font-weight', '500')
       .style('fill', d => {
-        // depth가 1이면 gray800, 그 외에는 gray50
-        return d.depth === 1 ? palette.gray800 : palette.gray50;
+        // depth가 1이면 gray800, 그 외에는 gray800
+        return d.depth === 1 ? palette.gray800 : palette.gray800;
       });
   }, [data, width, height, colors]);
 

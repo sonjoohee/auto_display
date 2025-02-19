@@ -39,6 +39,7 @@ import {
   Body2,
   Body3,
   Sub1,
+  Sub2,
   Sub3,
 } from "../../../../assets/styles/Typography";
 
@@ -299,7 +300,7 @@ const MoleculeCustomerValueCard = ({
     switch (status) {
       case "waiting":
         return (
-          <CustomButton Medium PrimaryLightest Fill disabled $loading>
+          <CustomButton waiting Medium PrimaryLightest Fill disabled $loading>
             대기중
           </CustomButton>
         );
@@ -322,7 +323,7 @@ const MoleculeCustomerValueCard = ({
         );
       default:
         return (
-          <CustomButton Medium PrimaryLightest Fill disabled $loading>
+          <CustomButton waiting Medium PrimaryLightest Fill disabled $loading>
             대기중
           </CustomButton>
         );
@@ -481,7 +482,7 @@ const MoleculeCustomerValueCard = ({
               <Body1 color={isSelected ? "primary" : "gray800"}>{title}</Body1>
             </ListTitle>
 
-            <ListSubtitle>{content}</ListSubtitle>
+            <Sub2 color="gray500" align="left">{content}</Sub2>
           </ListText>
           <ListButton>{renderButton()}</ListButton>
         </ListBoxItem>
@@ -498,6 +499,10 @@ const CustomButton = styled(Button)`
   min-width: 92px;
   opacity: ${(props) => (props.disabled ? 0.5 : 1)};
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  border: ${(props) => (props.children === "호출중" 
+    ? `1px solid ${palette.outlineGray}` 
+    : `0`
+  )};
 
   ${(props) =>
     props.$loading &&
@@ -506,10 +511,10 @@ const CustomButton = styled(Button)`
       justify-content: ${props.children === "호출중"
         ? "space-between"
         : "center"};
-      border: 1px solid ${palette.outlineGray} !important;
+      // border: 1px solid ${palette.outlineGray} !important;
       background: ${palette.chatGray} !important;
       color: ${palette.gray700} !important;
-      opacity: 1;
+      opacity: ${(props) => (props.children === "호출중" ? 1 : 0.5)};
 
       ${props.children === "호출중" &&
       css`
