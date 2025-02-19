@@ -24,6 +24,7 @@ import {
   USER_CREDITS,
   IS_LOGGED_IN,
   TARGET_DISCOVERY_INFO,
+  IDEA_GENERATOR_INFO,
 } from "../../../AtomStates";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import { UserCreditInfo } from "../../../../utils/indexedDB";
@@ -47,6 +48,7 @@ const MoleculeHeader = () => {
   const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
     TARGET_DISCOVERY_INFO
   );
+  const [ideaGeneratorInfo, setIdeaGeneratorInfo] = useAtom(IDEA_GENERATOR_INFO);
 
   const navigate = useNavigate();
 
@@ -70,6 +72,9 @@ const MoleculeHeader = () => {
 
   // TargetDiscovery 경로 체크 추가
   const isTargetDiscoveryPage = location.pathname === "/TargetDiscovery";
+
+  // IdeaGenerator 경로 체크 추가
+  const isIdeaGeneratorPage = location.pathname === "/IdeaGenerator";
 
   const isPersona2Page = location.pathname === "/Persona/2";
 
@@ -214,7 +219,8 @@ const MoleculeHeader = () => {
           isMyProjectPage ||
           isMyProfilePage ||
           isPaymentPage ||
-          isTargetDiscoveryPage) && (
+          isTargetDiscoveryPage ||
+          isIdeaGeneratorPage) && (
           <>
             <Title>
               {isMyProjectPage
@@ -237,6 +243,10 @@ const MoleculeHeader = () => {
                 ? targetDiscoveryInfo.business
                 : isTargetDiscoveryPage && !targetDiscoveryInfo.business
                 ? "타겟 탐색기"
+                : isIdeaGeneratorPage && ideaGeneratorInfo.business
+                ? ideaGeneratorInfo.business
+                : isIdeaGeneratorPage && !ideaGeneratorInfo.business
+                ? "아이디어 생성기"
                 : "새로운 프로젝트"}
               {(isPersona3Page ||
                 isPersona3PageSelect ||
