@@ -437,12 +437,10 @@ const MoleculeCustomerValueCard = ({
                       <div key={index}>
                         <span className="number">{index + 1}</span>
                         <div>
-                          <Sub1 color="gray800">
-                            유저저니맵 {key.replace("step", "")}단계
-                          </Sub1>
-                          <Body2 color="gray700" align="left">
-                            {step.detail}
-                          </Body2>
+
+                          <Sub1 color="gray800">{step.title}</Sub1>
+                          <Body2 color="gray700" align="left">{step.detail}</Body2>
+
                           <div className="tag">
                             {step.emotion &&
                               step.emotion.split(",").map((emotion, i) => (
