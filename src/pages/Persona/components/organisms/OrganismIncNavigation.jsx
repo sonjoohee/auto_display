@@ -164,6 +164,7 @@ import {
   CUSTOMER_VALUE_ANALYZER_POSITIONING,
   CUSTOMER_VALUE_ANALYZER_FINAL_REPORT,
   CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR,
+  CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA,
 } from "../../../AtomStates";
 import {
   getAllConversationsFromIndexedDB,
@@ -556,6 +557,8 @@ const OrganismIncNavigation = () => {
     useAtom(CUSTOMER_VALUE_ANALYZER_FINAL_REPORT);
   const [customerValueAnalyzerSelectedFactor, setCustomerValueAnalyzerSelectedFactor] =
     useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR);
+  const [customerValueAnalyzerSelectedPersona, setCustomerValueAnalyzerSelectedPersona] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA);
   // useEffect(() => {
   //   setIsSection1Open(false);
   //   setIsSection2Open(false);
@@ -1106,6 +1109,7 @@ const OrganismIncNavigation = () => {
       setCustomerValueAnalyzerClustering([]);
       setCustomerValueAnalyzerPositioning([]);
       setCustomerValueAnalyzerFinalReport({});
+      setCustomerValueAnalyzerSelectedPersona([]);
       setToolLoading(false);
       setToolStep(chatData.completed_step);
       setToolId(chatData.id);
@@ -1119,13 +1123,14 @@ const OrganismIncNavigation = () => {
       setCustomerValueAnalyzerJourneyMap(
         chatData.customer_value_journey_map || []
       );
+      setCustomerValueAnalyzerSelectedPersona(chatData.selected_customer_value_persona || []);
       setCustomerValueAnalyzerFactor(chatData.customer_value_factor || []);
       setCustomerValueAnalyzerClustering(
         chatData.customer_value_clustering || []
       );
-      setCustomerValueAnalyzerSelectedFactor(
-        chatData.customer_value_selected_factor || []
-      );
+      // setCustomerValueAnalyzerSelectedFactor(
+      //   chatData.customer_value_selected_factor || []
+      // );
       setCustomerValueAnalyzerPositioning(
         chatData.customer_value_positioning || []
       );
