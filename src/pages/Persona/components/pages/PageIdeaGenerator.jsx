@@ -166,6 +166,26 @@ const PageIdeaGenerator = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    setBusinessDescription(ideaGeneratorInfo.business);
+    setTargetCustomers(ideaGeneratorInfo.core_value);
+    if (toolStep === 1) {
+      setToolStep(0);
+    } else if (toolStep === 2) {
+      setCompletedSteps([1]);
+      setActiveTab(2);
+      setToolStep(1);
+    }
+    console.log("ideaGeneratorKnowTarget", ideaGeneratorKnowTarget);
+    if (ideaGeneratorKnowTarget) {
+      setSelectedCustomPersona(ideaGeneratorPersona)
+      setSelectedInterviewType("yesTarget");
+      
+    } else {
+      setSelectedInterviewType("noTarget");
+    }
+  }, []);
   
   // 고객핵심가치분석 리스트 가져오기
   useEffect(() => {
@@ -988,6 +1008,7 @@ const PageIdeaGenerator = () => {
                             placeholder="한명만 작성 가능 (예시 : 작성필요)"
                             status="valid"
                             disabled={toolStep >= 2}
+                            value={selectedCustomPersona[0]?.name || ""}
                             onChange={(e) => {
                               const value = e.target.value;
                               setSelectedCustomPersona([{
