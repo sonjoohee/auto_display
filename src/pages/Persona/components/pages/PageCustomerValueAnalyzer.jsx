@@ -211,41 +211,36 @@ const PageCustomerValueAnalyzer = () => {
         setCompletedSteps(completedStepsArray);
 
         // 페르소나 설정 (Step 2)
-        if (
-          Array.isArray(customerValueAnalyzerPersona) &&
-          Array.isArray(customerValueAnalyzerSelectedFactor)
-        ) {
-          const selectedIndices = (customerValueAnalyzerPersona ?? [])
-            .map((persona, index) => {
-              // 페르소나의 타겟이 선택된 요인의 타겟과 일치하는지 확인
-              const isTargetMatch = customerValueAnalyzerSelectedFactor.some(
-                (factor) => factor?.target === persona?.target
-              );
+        if (Array.isArray(customerValueAnalyzerSelectedPersona)) {
+          setCustomerValueAnalyzerSelectedPersona(customerValueAnalyzerSelectedPersona);
 
-              return isTargetMatch ? index : -1;
-            })
-            .filter((index) => index !== -1);
-
+          // 선택된 페르소나의 target을 기반으로 selectedPersonas 설정
+          const selectedTargets = customerValueAnalyzerSelectedPersona.map(persona => persona.target);
+          const selectedIndices = customerValueAnalyzerPersona.reduce((indices, persona, index) => {
+            if (selectedTargets.includes(persona.target)) {
+              indices.push(index);
+            }
+            return indices;
+          }, []);
           setSelectedPersonas(selectedIndices);
+        }
+        console.log("customerValueAnalyzerSele아아아아na", selectedPersonas);
 
-          const selectedPersonaData = selectedIndices
-            .map((index) => customerValueAnalyzerPersona?.[index])
-            .filter(Boolean);
-
-          setCustomerValueAnalyzerSelectedPersona(selectedPersonaData);
+          // 고객 여정 맵 설정 (Step 3)
+        if (Array.isArray(customerValueAnalyzerJourneyMap)) {
+          setCustomerValueAnalyzerJourneyMap(customerValueAnalyzerJourneyMap);
         }
 
-        // 고객 여정 맵 설정 (Step 3)
-      if (Array.isArray(customerValueAnalyzerJourneyMap)) {
-        setCustomerValueAnalyzerJourneyMap(customerValueAnalyzerJourneyMap);
-      }
+        if (Array.isArray(customerValueAnalyzerFactor)) {
+          setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
+        }
 
-      // 최종 리포트 설정 (Step 4)
-      if (customerValueAnalyzerFinalReport) {
-        setCustomerValueAnalyzerFinalReport(
-          customerValueAnalyzerFinalReport ?? {}
-        );
-      }
+        // 최종 리포트 설정 (Step 4)
+        if (customerValueAnalyzerFinalReport) {
+          setCustomerValueAnalyzerFinalReport(
+            customerValueAnalyzerFinalReport ?? {}
+          );
+        }
 
       
         // if (
@@ -552,6 +547,7 @@ const PageCustomerValueAnalyzer = () => {
 
     if (selectBoxId === "customerList") {
       setSelectedBusiness(purpose);
+      setBusinessDescription(purpose);
     }
   };
 
@@ -571,6 +567,7 @@ const PageCustomerValueAnalyzer = () => {
 
 
   const handleCheckboxChange = (index) => {
+    if (toolStep >= 2) return;
     setSelectedPersonas(prev => {
       if (prev.includes(index)) {
         return prev.filter(id => id !== index);
@@ -581,6 +578,7 @@ const PageCustomerValueAnalyzer = () => {
       }
     });
   };
+
 
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -659,7 +657,6 @@ const PageCustomerValueAnalyzer = () => {
             return [...currentFactors, response.response.customer_value_factor];
           });
           results.push({
-            ...persona,
             factor: response.response.customer_value_factor,
           });
         } else {
@@ -675,7 +672,8 @@ const PageCustomerValueAnalyzer = () => {
           toolId,
           {
             completed_step: 3,
-            selected_customer_value_factor: results,
+            customer_value_factor: results,
+            selected_customer_value_persona: selectedPersonaData,
           },
           isLoggedIn
         );
@@ -1289,11 +1287,7 @@ const MermaidDiagram = ({ code }) => {
                   <CardGroupWrap column >
                   
                     {customerValueAnalyzerPersona.map((content, index) => {
-                      console.log('Persona Data:', {
-                        content,
-                        targetCustomer: customerValueAnalyzerInfo.target_list[index],
-                      });
-                      
+                 
                       return (
                         <MoleculeCustomerValueCard
                           key={index}
@@ -1535,16 +1529,6 @@ const MermaidDiagram = ({ code }) => {
           body={
             <>
               <ListGroup>
-                <div>
-                  <Body1 color="gray800" align="left">
-                    뛰어난 지속력
-                  </Body1>
-                  <Sub3 color="gray800" align="left">
-                    시간에 민감한 페르소나에게 수정 화장은 시간 낭비이자 업무
-                    효율 저하의 원인입니다. 하루 종일 지속되는 메이크업은 그녕의
-                    프로페셔널한 이미지 유지와 업무 집중도 향상에 직결됩니다.
-                  </Sub3>
-                </div>
                 <div>
                   <Body1 color="gray800" align="left">
                     뛰어난 지속력
