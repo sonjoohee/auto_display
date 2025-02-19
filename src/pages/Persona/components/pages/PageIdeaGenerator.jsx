@@ -654,11 +654,21 @@ const PageIdeaGenerator = () => {
           }))
         },
         {
-          name: "사회적 가치",
-          children: ideaGeneratorIdea[index].social_value.ideas.map(idea => ({
-            name: idea.name,
-            value: 100
-          }))
+          name: "사회적 가치", 
+          children: Array.isArray(ideaGeneratorIdea[index].social_value.ideas) 
+            ? ideaGeneratorIdea[index].social_value.ideas.map(idea => ({
+                name: idea.name,
+                value: 100
+              }))
+            : Array.isArray(ideaGeneratorIdea[index].social_value.ideas[0])
+              ? ideaGeneratorIdea[index].social_value.ideas[0].map(idea => ({
+                  name: idea.name, 
+                  value: 100
+                }))
+              : [{
+                  name: ideaGeneratorIdea[index].social_value.ideas.name,
+                  value: 100
+                }]
         }
       ]
     });
