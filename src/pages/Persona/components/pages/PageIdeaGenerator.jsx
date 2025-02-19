@@ -90,46 +90,13 @@ import {
   InterviewXIdeaGeneratorFinalReportRequest,
 } from "../../../../utils/indexedDB";
 
-const data = [
-  {
-    key: "1",
-    title: "아이디어",
-    marketSize: "",
-    productConcept: "",
-    implementability: "",
-    uniqueness: "",
-  },
-  {
-    key: "2",
-    title: "아이디어",
-    marketSize: "",
-    productConcept: "",
-    implementability: "",
-    uniqueness: "",
-  },
-  {
-    key: "3",
-    title: "아이디어",
-    marketSize: "",
-    productConcept: "",
-    implementability: "",
-    uniqueness: "",
-  },
-  {
-    key: "4",
-    title: "아이디어",
-    marketSize: "",
-    productConcept: "",
-    implementability: "",
-    uniqueness: "",
-  },
-];
-
 const PageIdeaGenerator = () => {
+  const [tableData, setTableData] = useState([]);
   const [chartData, setChartData] = useState({});
   const [seletedIdeaIndex, setSeletedIdeaIndex] = useState(null);
   const [cardStatuses, setCardStatuses] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingFinalReport, setIsLoadingFinalReport] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupMore, setShowPopupMore] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -366,7 +333,107 @@ const PageIdeaGenerator = () => {
   };
 
   const fetchIdeaGeneratorFinalReport = async () => {
-    // 최종 보고서 API 호출
+    setIsLoadingFinalReport(true);
+    try {
+      // 클러스터링
+      const data1 = {
+        business: businessDescription,
+        core_value: targetCustomers,
+        core_target: ideaGeneratorSelectedPersona,
+        idea_generator_idea: ideaGeneratorIdea,
+      };
+
+      const response1 = await InterviewXIdeaGeneratorClusteringRequest(
+        data1,
+        isLoggedIn
+      );
+      const clusteringData = response1.response.idea_generator_clustering;
+
+      if (
+        !clusteringData ||
+        !Array.isArray(clusteringData) ||
+        clusteringData.length === 0
+      ) {
+        setShowPopupError(true);
+        return;
+      }
+
+      setIdeaGeneratorClustering(clusteringData);
+
+      // 결과 보고서
+      const data2 = {
+        business: businessDescription,
+        core_value: targetCustomers,
+        core_target: ideaGeneratorSelectedPersona,
+        idea_generator_idea: ideaGeneratorIdea,
+        idea_generator_clustering: clusteringData,
+      };
+
+      const response2 = await InterviewXIdeaGeneratorFinalReportRequest(
+        data2,
+        isLoggedIn
+      );
+
+      const finalReportData = response2.response.idea_generator_final_report;
+
+      if (
+        !finalReportData ||
+        !finalReportData instanceof Object ||
+        Object.keys(finalReportData).length === 0
+      ) {
+        setShowPopupError(true);
+        return;
+      }
+
+      setIdeaGeneratorFinalReport(finalReportData);
+
+      setToolStep(4);
+
+      // 클러스터링과 결과 보고서 저장
+      updateToolOnServer(
+        toolId,
+        {
+          completed_step: 4,
+          idea_generator_clustering: clusteringData,
+          idea_generator_final_report: finalReportData,
+        },
+        isLoggedIn
+      );
+
+      // 테이블 데이터 설정
+      setTableData(
+        finalReportData.clusters.map((cluster, index) => ({
+          key: index+1,
+          title: cluster.cluster_name,
+          marketSize: cluster.market_competitiveness.score,
+          productConcept: cluster.attractiveness.score, 
+          implementability: cluster.feasibility.score,
+          uniqueness: cluster.differentiation.score
+        }))
+      )
+
+      setIsLoadingFinalReport(false);
+    } catch (error) {
+      console.error("Error generating final report:", error);
+      setShowPopupError(true);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowPopupError(true);
+            break;
+          case 504:
+            setShowPopupError(true);
+            break;
+          default:
+            setShowPopupError(true);
+            break;
+        }
+      } else {
+        setShowPopupError(true);
+      }
+    } finally {
+      setIsLoadingFinalReport(false);
+    }
   };
 
   const calculateDropDirection = (ref, selectBoxId) => {
@@ -507,14 +574,6 @@ const PageIdeaGenerator = () => {
     setCompletedSteps([...completedSteps, currentStep]);
     setActiveTab(currentStep + 1);
     setShowPopupError(false);
-  };
-
-  // 필수 필드가 모두 입력되었는지 확인하는 함수
-  const isRequiredFieldsFilled = () => {
-    return (
-      businessDescription.trim() !== "" &&
-      targetCustomers.some((customer) => customer.trim() !== "") // 최소 1개 이상의 고객 정보가 입력되었는지 확인
-    );
   };
 
   // 비즈니스 설명 입력 핸들러
@@ -797,7 +856,7 @@ const PageIdeaGenerator = () => {
                       DbExLarge
                       More
                       onClick={() => {
-                        if (targetCustomers.length < 5) {
+                        if (targetCustomers.length < 10) {
                           setTargetCustomers((prev) => [...prev, ""]);
                         }
                       }}
@@ -814,7 +873,10 @@ const PageIdeaGenerator = () => {
                   Fill
                   Round
                   onClick={() => handleNextStep(1)}
-                  disabled={!isRequiredFieldsFilled() || toolStep >= 1}
+                  disabled={ 
+                    businessDescription.trim() === "" || 
+                    targetCustomers.filter((customer) => customer.trim() !== "").length === 0 || 
+                    toolStep >= 1}
                 >
                   다음
                 </Button>
@@ -1042,8 +1104,21 @@ const PageIdeaGenerator = () => {
                     찾아보세요
                   </Body3>
                 </BgBoxItem>
-
-                <InsightAnalysis>
+                {isLoadingFinalReport ? (
+                  <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    minHeight: "200px", 
+                    alignItems: "center",
+                  }}
+                  >
+                  <AtomPersonaLoader message="결과보고서를 작성하고 있습니다." />
+                  </div>
+                ) : (
+                  <>
+                  <InsightAnalysis>
                   {/* <div className="title">
                     <div>
                       <TabWrapType4>
@@ -1068,20 +1143,38 @@ const PageIdeaGenerator = () => {
 
                   <div className="content">
                     <H4 color="gray800">
-                      (Business)의 타겟분석결과
+                      {ideaGeneratorInfo.business}의 타겟분석결과
                       <br />
-                      OOO, OOO, OOO의 요인의 우선순위가 높았습니다.
+                      {(() => {
+                        // 우선순위가 높은 요인 3개 추출
+                        const firstNames = Array.isArray(ideaGeneratorFinalReport.top_3_clusters.first.name) 
+                          ? ideaGeneratorFinalReport.top_3_clusters.first.name 
+                          : [ideaGeneratorFinalReport.top_3_clusters.first.name];
+                        
+                        const secondNames = Array.isArray(ideaGeneratorFinalReport.top_3_clusters.second.name)
+                          ? ideaGeneratorFinalReport.top_3_clusters.second.name
+                          : [ideaGeneratorFinalReport.top_3_clusters.second.name];
+                        
+                        const thirdNames = Array.isArray(ideaGeneratorFinalReport.top_3_clusters.third.name)
+                          ? ideaGeneratorFinalReport.top_3_clusters.third.name
+                          : [ideaGeneratorFinalReport.top_3_clusters.third.name];
+                        
+                        let result = [...firstNames];
+                        
+                        if (result.length < 3) {
+                          result = [...result, ...secondNames.slice(0, 3 - result.length)];
+                        }
+                        
+                        if (result.length < 3) {
+                          result = [...result, ...thirdNames.slice(0, 3 - result.length)];
+                        }
+                        
+                        return result.slice(0, 3).join(', ');
+                      })()}의 요인의 우선순위가 높았습니다.
                     </H4>
 
                     <Body3 color="gray700">
-                      비즈니스 핵심가치 10개를 중심으로 각 가치별 6개의 가치를
-                      적용하여 총 100개의 아이디어를 도출 할 수 있었습니다.
-                      (Business)에 대한 분석 내용과 어떤 부분을 참고해서
-                      봐야한다는 부분을 제시하면 좋을 듯
-                    </Body3>
-
-                    <Body3 color="gray700">
-                      OOO를 기반으로 20개의 아이디어를 선별하였습니다.
+                      {ideaGeneratorFinalReport.conclusion}
                     </Body3>
                   </div>
                 </InsightAnalysis>
@@ -1100,7 +1193,7 @@ const PageIdeaGenerator = () => {
                           <tr>
                             <th></th>
                             <th>
-                              <Body1 color="gray800">시장 규모/성장성성</Body1>
+                              <Body1 color="gray800">시장 규모/성장성</Body1>
                             </th>
                             <th>
                               <Body1 color="gray800">상품 컨셉 매력도</Body1>
@@ -1114,7 +1207,7 @@ const PageIdeaGenerator = () => {
                           </tr>
                         </TableHeader>
                         <TableBody>
-                          {data.map((val, key) => (
+                          {tableData.map((val, key) => (
                             <tr key={key}>
                               <th>
                                 <Body3 color="gray700">{val.title}</Body3>
@@ -1152,6 +1245,8 @@ const PageIdeaGenerator = () => {
                 {/* <Button Small Primary onClick={() => setShowPopupSave(true)}>
                   리포트 저장하기
                 </Button> */}
+                </>
+                )}
               </TabContent5>
             )}
           </IdeaGeneratorWrap>
