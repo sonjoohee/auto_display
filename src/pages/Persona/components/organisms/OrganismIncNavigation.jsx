@@ -156,6 +156,14 @@ import {
   TOOL_ID,
   TOOL_STEP,
   TOOL_LOADING,
+  CUSTOMER_VALUE_ANALYZER_INFO,
+  CUSTOMER_VALUE_ANALYZER_PERSONA,
+  CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP,
+  CUSTOMER_VALUE_ANALYZER_FACTOR,
+  CUSTOMER_VALUE_ANALYZER_CLUSTERING,
+  CUSTOMER_VALUE_ANALYZER_POSITIONING,
+  CUSTOMER_VALUE_ANALYZER_FINAL_REPORT,
+  CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR,
 } from "../../../AtomStates";
 import {
   getAllConversationsFromIndexedDB,
@@ -531,6 +539,23 @@ const OrganismIncNavigation = () => {
     setMarketingRecommendedItemButtonState,
   ] = useAtom(MARKETING_RECOMMENDED_ITEM_BUTTON_STATE);
 
+  const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_INFO
+  );
+  const [customerValueAnalyzerPersona, setCustomerValueAnalyzerPersona] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_PERSONA);
+  const [customerValueAnalyzerJourneyMap, setCustomerValueAnalyzerJourneyMap] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
+  const [customerValueAnalyzerFactor, setCustomerValueAnalyzerFactor] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_FACTOR);
+  const [customerValueAnalyzerClustering, setCustomerValueAnalyzerClustering] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_CLUSTERING);
+  const [customerValueAnalyzerPositioning, setCustomerValueAnalyzerPositioning] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_POSITIONING);
+  const [customerValueAnalyzerFinalReport, setCustomerValueAnalyzerFinalReport] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_FINAL_REPORT);
+  const [customerValueAnalyzerSelectedFactor, setCustomerValueAnalyzerSelectedFactor] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR);
   // useEffect(() => {
   //   setIsSection1Open(false);
   //   setIsSection2Open(false);
@@ -845,7 +870,7 @@ const OrganismIncNavigation = () => {
         //   }
         // // );
         const response = await getToolListOnServer(1000, 1, isLoggedIn);
-        // console.log("🚀 ~ fetchChatList ~ response:", response);
+        console.log("🚀 ~ fetchChatList ~ response:", response);
         // const sortedChatList = response.data
         //   .filter(
         //     (chat) => chat.business_info !== null && chat.business_info !== ""
@@ -908,7 +933,9 @@ const OrganismIncNavigation = () => {
       //   }
       // );
       const response = await getToolOnServer(conversationId, isLoggedIn);
+    
       const chatData = response;
+
       // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
       // setSavedTimestamp(chatData.createDate); // 대화 날짜 설정
       // setSelectedExpertIndex(
@@ -1062,6 +1089,49 @@ const OrganismIncNavigation = () => {
       setTargetDiscoveryScenario(chatData.target_discovery_scenario);
       setTargetDiscoveryFinalReport(chatData.target_discovery_final_report);
       setToolLoading(true);
+
+      // customer value persona 타입일 경우
+
+      setToolStep(1);
+      setToolId("");
+      setCustomerValueAnalyzerInfo({
+        business: "",
+        target_list: [],
+        analysis_scope: "",
+        analysis_purpose: "",
+      });
+      setCustomerValueAnalyzerPersona([]);
+      setCustomerValueAnalyzerJourneyMap([]);
+      setCustomerValueAnalyzerFactor([]);
+      setCustomerValueAnalyzerClustering([]);
+      setCustomerValueAnalyzerPositioning([]);
+      setCustomerValueAnalyzerFinalReport({});
+      setToolLoading(false);
+      setToolStep(chatData.completed_step);
+      setToolId(chatData.id);
+      setCustomerValueAnalyzerInfo({
+        business: chatData.business,
+        target_list: chatData.target_list,
+        analysis_scope: chatData.analysis_scope,
+        analysis_purpose: chatData.analysis_purpose,
+      });
+      setCustomerValueAnalyzerPersona(chatData.customer_value_persona || []);
+      setCustomerValueAnalyzerJourneyMap(
+        chatData.customer_value_journey_map || []
+      );
+      setCustomerValueAnalyzerFactor(chatData.customer_value_factor || []);
+      setCustomerValueAnalyzerClustering(
+        chatData.customer_value_clustering || []
+      );
+      setCustomerValueAnalyzerSelectedFactor(
+        chatData.customer_value_selected_factor || []
+      );
+      setCustomerValueAnalyzerPositioning(
+        chatData.customer_value_positioning || []
+      );
+      setCustomerValueAnalyzerFinalReport(chatData.customer_value_final_report || {});
+      setToolLoading(true);
+
       if (chatData.isMarketing) {
         const updatedConversation = [...chatData.conversation];
 
@@ -1120,7 +1190,13 @@ const OrganismIncNavigation = () => {
       setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
 
       // 페이지를 대화가 이어지는 형태로 전환
-      navigate(`/TargetDiscovery`);
+      // navigate(`/TargetDiscovery`);
+
+      if (chatData.type === "ix_customer_value_persona") {
+        navigate(`/CustomerValueAnalyzer`);
+      } else {
+        navigate(`/TargetDiscovery`);
+      }
     } catch (error) {
       console.error("대화 내용 가져오기 오류:", error);
     }
