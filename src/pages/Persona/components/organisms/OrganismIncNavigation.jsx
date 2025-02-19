@@ -194,6 +194,7 @@ const OrganismIncNavigation = () => {
   const [ideaGeneratorIdea, setIdeaGeneratorIdea] = useAtom(IDEA_GENERATOR_IDEA);
   const [ideaGeneratorClustering, setIdeaGeneratorClustering] = useAtom(IDEA_GENERATOR_CLUSTERING);
   const [ideaGeneratorFinalReport, setIdeaGeneratorFinalReport] = useAtom(IDEA_GENERATOR_FINAL_REPORT);
+  const [ideaGeneratorSelectedPersona, setIdeaGeneratorSelectedPersona] = useAtom(IDEA_GENERATOR_SELECTED_PERSONA);
   
   // export const TARGET_DISCOVERY_PERSONA = atom([]);
   // export const SELECTED_TARGET_DISCOVERY_PERSONA = atom([]);
@@ -1152,7 +1153,18 @@ const OrganismIncNavigation = () => {
       );
       setCustomerValueAnalyzerFinalReport(chatData.customer_value_final_report || {});
       setToolLoading(true);
-
+      
+      setIdeaGeneratorInfo({
+        business: chatData.business,
+        core_value: chatData.core_value,
+      });
+      setIdeaGeneratorPersona(chatData.idea_generator_persona || []);
+      setIdeaGeneratorIdea(chatData.idea_generator_idea || []);
+      setIdeaGeneratorClustering(chatData.idea_generator_clustering || []);
+      setIdeaGeneratorFinalReport(chatData.idea_generator_final_report || {});
+      setIdeaGeneratorSelectedPersona(chatData.idea_generator_selected_persona || []);
+      setIdeaGeneratorKnowTarget(chatData.idea_generator_know_target || false);
+      
       if (chatData.isMarketing) {
         const updatedConversation = [...chatData.conversation];
 
@@ -1215,6 +1227,8 @@ const OrganismIncNavigation = () => {
 
       if (chatData.type === "ix_customer_value_persona") {
         navigate(`/CustomerValueAnalyzer`);
+      } else if (chatData.type === "ix_idea_generator_persona") {
+        navigate(`/IdeaGenerator`);
       } else {
         navigate(`/TargetDiscovery`);
       }
