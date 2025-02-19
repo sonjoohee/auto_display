@@ -5,6 +5,9 @@ import { useAtom } from "jotai";
 import { palette } from "../../../../assets/styles/Palette";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
+import MoleculeIdeaGeneratorCard from "../molecules/MoleculeIdeaGeneratorCard";
+import MoleculeIdeaGeneratorCard2 from "../molecules/MoleculeIdeaGeneratorCard2";
+import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
 import {
   ButtonGroup,
   Button,
@@ -61,6 +64,32 @@ import {
 } from "../../../../assets/styles/Typography";
 import ZoomableSunburst from "../../../../components/Charts/ZoomableSunburst";
 
+import {
+  IDEA_GENERATOR_INFO,
+  IDEA_GENERATOR_KNOW_TARGET,
+  IDEA_GENERATOR_CUSTOM_TARGET,
+  IDEA_GENERATOR_PERSONA,
+  IDEA_GENERATOR_IDEA,
+  IDEA_GENERATOR_CLUSTERING,
+  IDEA_GENERATOR_FINAL_REPORT,
+  TOOL_LOADING,
+  IS_LOGGED_IN,
+  TOOL_ID,
+  TOOL_STEP,
+  IDEA_GENERATOR_SELECTED_PERSONA,
+} from "../../../../pages/AtomStates";
+
+import {
+  createToolOnServer,
+  updateToolOnServer,
+  getToolOnServer,
+  getToolListOnServer,
+  InterviewXIdeaGeneratorPersonaRequest,
+  InterviewXIdeaGeneratorIdeaRequest,
+  InterviewXIdeaGeneratorClusteringRequest,
+  InterviewXIdeaGeneratorFinalReportRequest,
+} from "../../../../utils/indexedDB";
+
 const data = [
   {
     key: "1",
@@ -96,434 +125,16 @@ const data = [
   },
 ];
 
-// ideaData 수정
-const ideaData = {
-  name: "비즈니스 아이디어",
-  children: [
-    {
-      name: "경제적 가치",
-      children: [
-        {
-          name: "맞춤형 렌탈 서비스",
-          children: [
-            { name: "맞춤형 렌탈 서비스1", value: 100 },
-            { name: "맞춤형 렌탈 서비스2", value: 80 },
-            { name: "맞춤형 렌탈 서비스3", value: 60 },
-          ],
-        },
-        {
-          name: "중고 거래 플랫폼 연동",
-          children: [
-            { name: "중고 거래 플랫폼 연동1", value: 90 },
-            { name: "중고 거래 플랫폼 연동2", value: 70 },
-            { name: "중고 거래 플랫폼 연동3", value: 85 },
-          ],
-        },
-        {
-          name: "포인트 적립 & 할인 혜택",
-          children: [
-            { name: "포인트 적립 & 할인 혜택1", value: 90 },
-            { name: "포인트 적립 & 할인 혜택2", value: 70 },
-            { name: "포인트 적립 & 할인 혜택3", value: 85 },
-          ],
-        },
-        {
-          name: "DIY 디자인 튜터링",
-          children: [
-            { name: "DIY 디자인 튜터링1", value: 90 },
-            { name: "DIY 디자인 튜터링2", value: 70 },
-            { name: "DIY 디자인 튜터링3", value: 85 },
-          ],
-        },
-        {
-          name: "가성비 인테리어 세트",
-          children: [
-            { name: "가성비 인테리어 세트1", value: 90 },
-            { name: "가성비 인테리어 세트2", value: 70 },
-            { name: "가성비 인테리어 세트3", value: 85 },
-          ],
-        },
-        {
-          name: "금융 상품 연계 서비스",
-          children: [
-            { name: "금융 상품 연계 서비스1", value: 90 },
-            { name: "금융 상품 연계 서비스2", value: 70 },
-            { name: "금융 상품 연계 서비스3", value: 85 },
-          ],
-        },
-        {
-          name: "리퍼브 상품 & B급 상품 특별전",
-          children: [
-            { name: "리퍼브 상품 & B급 상품 특별전1", value: 90 },
-            { name: "리퍼브 상품 & B급 상품 특별전2", value: 70 },
-            { name: "리퍼브 상품 & B급 상품 특별전3", value: 85 },
-          ],
-        },
-        {
-          name: "인테리어 비용 예측 서비스",
-          children: [
-            { name: "인테리어 비용 예측 서비스1", value: 90 },
-            { name: "인테리어 비용 예측 서비스", value: 70 },
-            { name: "인테리어 비용 예측 서비스3", value: 85 },
-          ],
-        },
-      ],
-    },
-    {
-      name: "기능적 가치",
-      children: [
-        {
-          name: "맞춤형 공간 분석 & 추천",
-          children: [
-            { name: "맞춤형 공간 분석 & 추천1", value: 95 },
-            { name: "맞춤형 공간 분석 & 추천2", value: 75 },
-            { name: "맞춤형 공간 분석 & 추천3", value: 85 },
-          ],
-        },
-        {
-          name: "3D 가상 시뮬레이션",
-          children: [
-            { name: "3D 가상 시뮬레이션1", value: 90 },
-            { name: "3D 가상 시뮬레이션2", value: 80 },
-            { name: "3D 가상 시뮬레이션3", value: 70 },
-          ],
-        },
-        {
-          name: "반려동물 친화적 디자인 필터",
-          children: [
-            { name: "반려동물 친화적 디자인 필터1", value: 90 },
-            { name: "반려동물 친화적 디자인 필터2", value: 80 },
-            { name: "반려동물 친화적 디자인 필터3", value: 70 },
-          ],
-        },
-        {
-          name: "AI 기반 스타일 큐레이션",
-          children: [
-            { name: "AI 기반 스타일 큐레이션1", value: 90 },
-            { name: "AI 기반 스타일 큐레이션2", value: 80 },
-            { name: "AI 기반 스타일 큐레이션3", value: 70 },
-          ],
-        },
-        {
-          name: "간편 시공 서비스 연계",
-          children: [
-            { name: "간편 시공 서비스 연계1", value: 90 },
-            { name: "간편 시공 서비스 연계2", value: 80 },
-            { name: "간편 시공 서비스 연계3", value: 70 },
-          ],
-        },
-        {
-          name: "스마트 홈 연동",
-          children: [
-            { name: "스마트 홈 연동1", value: 90 },
-            { name: "스마트 홈 연동2", value: 80 },
-            { name: "스마트 홈 연동3", value: 70 },
-          ],
-        },
-        {
-          name: "제품 비교 분석 기능",
-          children: [
-            { name: "제품 비교 분석 기능1", value: 90 },
-            { name: "제품 비교 분석 기능2", value: 80 },
-            { name: "제품 비교 분석 기능3", value: 70 },
-          ],
-        },
-        {
-          name: "전문가 Q&A 게시판",
-          children: [
-            { name: "전문가 Q&A 게시판1", value: 90 },
-            { name: "전문가 Q&A 게시판2", value: 80 },
-            { name: "전문가 Q&A 게시판3", value: 70 },
-          ],
-        },
-      ],
-    },
-    {
-      name: "환경적 가치",
-      children: [
-        {
-          name: "친환경 소재 제품 강조",
-          children: [
-            { name: "친환경 소재 제품 강조1", value: 95 },
-            { name: "친환경 소재 제품 강조2", value: 75 },
-            { name: "친환경 소재 제품 강조3", value: 85 },
-          ],
-        },
-        {
-          name: "업사이클링 & 리사이클링 디자인",
-          children: [
-            { name: "업사이클링 & 리사이클링 디자인1", value: 90 },
-            { name: "업사이클링 & 리사이클링 디자인2", value: 80 },
-            { name: "업사이클링 & 리사이클링 디자인3", value: 70 },
-          ],
-        },
-        {
-          name: "탄소 배출량 정보 제공",
-          children: [
-            { name: "탄소 배출량 정보 제공1", value: 90 },
-            { name: "탄소 배출량 정보 제공2", value: 80 },
-            { name: "탄소 배출량 정보 제공3", value: 70 },
-          ],
-        },
-        {
-          name: "중고 제품 활성화",
-          children: [
-            { name: "중고 제품 활성화1", value: 90 },
-            { name: "중고 제품 활성화2", value: 80 },
-            { name: "중고 제품 활성화3", value: 70 },
-          ],
-        },
-        {
-          name: "친환경 포장재 사용",
-          children: [
-            { name: "친환경 포장재 사용1", value: 90 },
-            { name: "친환경 포장재 사용2", value: 80 },
-            { name: "친환경 포장재 사용3", value: 70 },
-          ],
-        },
-        {
-          name: "에너지 효율 제품 추천",
-          children: [
-            { name: "에너지 효율 제품 추천1", value: 90 },
-            { name: "에너지 효율 제품 추천2", value: 80 },
-            { name: "에너지 효율 제품 추천3", value: 70 },
-          ],
-        },
-        {
-          name: "공기 정화 기능 제품",
-          children: [
-            { name: "공기 정화 기능 제품1", value: 90 },
-            { name: "공기 정화 기능 제품2", value: 80 },
-            { name: "공기 정화 기능 제품3", value: 70 },
-          ],
-        },
-        {
-          name: "기부 캠페인 연계",
-          children: [
-            { name: "기부 캠페인 연계1", value: 90 },
-            { name: "기부 캠페인 연계2", value: 80 },
-            { name: "기부 캠페인 연계3", value: 70 },
-          ],
-        },
-      ],
-    },
-    {
-      name: "교육적 가치",
-      children: [
-        {
-          name: "인테리어 튜토리얼 제공",
-          children: [
-            { name: "인테리어 튜토리얼 제공1", value: 95 },
-            { name: "인테리어 튜토리얼 제공2", value: 75 },
-            { name: "인테리어 튜토리얼 제공3", value: 85 },
-          ],
-        },
-        {
-          name: "전문가 강좌 & 웨비나",
-          children: [
-            { name: "전문가 강좌 & 웨비나1", value: 90 },
-            { name: "전문가 강좌 & 웨비나2", value: 80 },
-            { name: "전문가 강좌 & 웨비나3", value: 70 },
-          ],
-        },
-        {
-          name: "공간별 맞춤 가이드",
-          children: [
-            { name: "공간별 맞춤 가이드1", value: 90 },
-            { name: "공간별 맞춤 가이드2", value: 80 },
-            { name: "공간별 맞춤 가이드3", value: 70 },
-          ],
-        },
-        {
-          name: "반려동물 인테리어 교육",
-          children: [
-            { name: "반려동물 인테리어 교육1", value: 90 },
-            { name: "반려동물 인테리어 교육2", value: 80 },
-            { name: "반려동물 인테리어 교육3", value: 70 },
-          ],
-        },
-        {
-          name: "디자인 트렌드 리포트",
-          children: [
-            { name: "디자인 트렌드 리포트1", value: 90 },
-            { name: "디자인 트렌드 리포트2", value: 80 },
-            { name: "디자인 트렌드 리포트3", value: 70 },
-          ],
-        },
-        {
-          name: "DIY 워크숍",
-          children: [
-            { name: "DIY 워크숍1", value: 90 },
-            { name: "DIY 워크숍2", value: 80 },
-            { name: "DIY 워크숍3", value: 70 },
-          ],
-        },
-        {
-          name: "커뮤니티 기반 노하우 공유",
-          children: [
-            { name: "커뮤니티 기반 노하우 공유1", value: 90 },
-            { name: "커뮤니티 기반 노하우 공유2", value: 80 },
-            { name: "커뮤니티 기반 노하우 공유3", value: 70 },
-          ],
-        },
-        {
-          name: "AR 체험 가이드",
-          children: [
-            { name: "AR 체험 가이드1", value: 90 },
-            { name: "AR 체험 가이드2", value: 80 },
-            { name: "AR 체험 가이드3", value: 70 },
-          ],
-        },
-      ],
-    },
-    {
-      name: "감성적 가치",
-      children: [
-        {
-          name: "맞춤형 테마 공간 제안",
-          children: [
-            { name: "맞춤형 테마 공간 제안1", value: 95 },
-            { name: "맞춤형 테마 공간 제안2", value: 75 },
-            { name: "맞춤형 테마 공간 제안3", value: 85 },
-          ],
-        },
-        {
-          name: "힐링 & 휴식 공간 제안",
-          children: [
-            { name: "힐링 & 휴식 공간 제안1", value: 90 },
-            { name: "힐링 & 휴식 공간 제안2", value: 80 },
-            { name: "힐링 & 휴식 공간 제안3", value: 70 },
-          ],
-        },
-        {
-          name: "사진 기반 스토리텔링",
-          children: [
-            { name: "사진 기반 스토리텔링1", value: 90 },
-            { name: "사진 기반 스토리텔링2", value: 80 },
-            { name: "사진 기반 스토리텔링3", value: 70 },
-          ],
-        },
-        {
-          name: "긍정적 피드백 시스템",
-          children: [
-            { name: "긍정적 피드백 시스템1", value: 90 },
-            { name: "긍정적 피드백 시스템2", value: 80 },
-            { name: "긍정적 피드백 시스템3", value: 70 },
-          ],
-        },
-        {
-          name: "반려동물 사진 갤러리",
-          children: [
-            { name: "반려동물 사진 갤러리1", value: 90 },
-            { name: "반려동물 사진 갤러리2", value: 80 },
-            { name: "반려동물 사진 갤러리3", value: 70 },
-          ],
-        },
-        {
-          name: "계절별 인테리어 테마",
-          children: [
-            { name: "계절별 인테리어 테마1", value: 90 },
-            { name: "계절별 인테리어 테마2", value: 80 },
-            { name: "계절별 인테리어 테마3", value: 70 },
-          ],
-        },
-        {
-          name: "나만의 공간 큐레이션",
-          children: [
-            { name: "나만의 공간 큐레이션1", value: 90 },
-            { name: "나만의 공간 큐레이션2", value: 80 },
-            { name: "나만의 공간 큐레이션3", value: 70 },
-          ],
-        },
-        {
-          name: "향기 & 사운드 추천",
-          children: [
-            { name: "향기 & 사운드 추천1", value: 90 },
-            { name: "향기 & 사운드 추천2", value: 80 },
-            { name: "향기 & 사운드 추천3", value: 70 },
-          ],
-        },
-      ],
-    },
-    {
-      name: "사회적 가치",
-      children: [
-        {
-          name: "커뮤니티 기반 정보 교류",
-          children: [
-            { name: "커뮤니티 기반 정보 교류1", value: 95 },
-            { name: "커뮤니티 기반 정보 교류2", value: 75 },
-            { name: "커뮤니티 기반 정보 교류3", value: 85 },
-          ],
-        },
-        {
-          name: "반려동물 동반 모임 지원",
-          children: [
-            { name: "반려동물 동반 모임 지원1", value: 90 },
-            { name: "반려동물 동반 모임 지원2", value: 80 },
-            { name: "반려동물 동반 모임 지원3", value: 70 },
-          ],
-        },
-        {
-          name: "재능 기부 플랫폼 연계",
-          children: [
-            { name: "재능 기부 플랫폼 연계1", value: 90 },
-            { name: "재능 기부 플랫폼 연계2", value: 80 },
-            { name: "재능 기부 플랫폼 연계3", value: 70 },
-          ],
-        },
-        {
-          name: "지역 사회 연계",
-          children: [
-            { name: "지역 사회 연계1", value: 90 },
-            { name: "지역 사회 연계2", value: 80 },
-            { name: "지역 사회 연계3", value: 70 },
-          ],
-        },
-        {
-          name: "소셜 미디어 연동",
-          children: [
-            { name: "소셜 미디어 연동1", value: 90 },
-            { name: "소셜 미디어 연동2", value: 80 },
-            { name: "소셜 미디어 연동3", value: 70 },
-          ],
-        },
-        {
-          name: "자선 경매 & 바자회 개최",
-          children: [
-            { name: "자선 경매 & 바자회 개최1", value: 90 },
-            { name: "자선 경매 & 바자회 개최2", value: 80 },
-            { name: "자선 경매 & 바자회 개최3", value: 70 },
-          ],
-        },
-        {
-          name: "파트너십 프로그램",
-          children: [
-            { name: "파트너십 프로그램1", value: 90 },
-            { name: "파트너십 프로그램2", value: 80 },
-            { name: "파트너십 프로그램3", value: 70 },
-          ],
-        },
-        {
-          name: "사회적 기업 제품 판매",
-          children: [
-            { name: "사회적 기업 제품 판매1", value: 90 },
-            { name: "사회적 기업 제품 판매2", value: 80 },
-            { name: "사회적 기업 제품 판매3", value: 70 },
-          ],
-        },
-      ],
-    },
-  ],
-};
-
 const PageIdeaGenerator = () => {
+  const [chartData, setChartData] = useState({});
+  const [seletedIdeaIndex, setSeletedIdeaIndex] = useState(null);
+  const [cardStatuses, setCardStatuses] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupMore, setShowPopupMore] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
-  const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [selectedPurposes, setSelectedPurposes] = useState({
     customerList: "",
@@ -543,7 +154,7 @@ const PageIdeaGenerator = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
-  const [targetCustomers, setTargetCustomers] = useState(["", "", ""]);
+  const [targetCustomers, setTargetCustomers] = useState([""]);
   const [personaData, setPersonaData] = useState({
     personaInfo: "",
     personaScenario: "",
@@ -561,6 +172,202 @@ const PageIdeaGenerator = () => {
 
   const customerListRef = useRef(null);
   const analysisScopeRef = useRef(null);
+
+  const [customerValueList, setCustomerValueList] = useState([]);
+
+  const [ideaGeneratorInfo, setIdeaGeneratorInfo] = useAtom(IDEA_GENERATOR_INFO);
+  const [ideaGeneratorKnowTarget, setIdeaGeneratorKnowTarget] = useAtom(IDEA_GENERATOR_KNOW_TARGET);
+  const [ideaGeneratorCustomTarget, setIdeaGeneratorCustomTarget] = useAtom(IDEA_GENERATOR_CUSTOM_TARGET);
+  const [ideaGeneratorPersona, setIdeaGeneratorPersona] = useAtom(IDEA_GENERATOR_PERSONA);
+  const [ideaGeneratorSelectedPersona, setIdeaGeneratorSelectedPersona] = useAtom(IDEA_GENERATOR_SELECTED_PERSONA);
+  const [ideaGeneratorIdea, setIdeaGeneratorIdea] = useAtom(IDEA_GENERATOR_IDEA);
+  const [ideaGeneratorClustering, setIdeaGeneratorClustering] = useAtom(IDEA_GENERATOR_CLUSTERING);
+  const [ideaGeneratorFinalReport, setIdeaGeneratorFinalReport] = useAtom(IDEA_GENERATOR_FINAL_REPORT);
+  const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [toolStep, setToolStep] = useAtom(TOOL_STEP);
+
+
+  const [selectedPersona, setSelectedPersona] = useState(null); // 아직 잘 모르겠습니다
+  const [selectedCustomPersona, setSelectedCustomPersona] = useState(null); // 제가 원하는 타겟 고객이 있습니다
+
+
+  const [selectedDetailPersona, setSelectedDetailPersona] = useState(null);
+
+  // 스크롤 초기화
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
+  // 고객핵심가치분석 리스트 가져오기
+  useEffect(() => {
+    const getAllTargetDiscovery = async () => {
+      try {
+        let page = 1;
+        const size = 10;
+        let allItems = [];
+
+        while (true) {
+          const response = await getToolListOnServer(size, page, isLoggedIn);
+
+          // Check if response exists and has data
+          if (!response || !response.data) {
+            console.error("Invalid response from server");
+            break;
+          }
+
+          const newItems = response.data.filter(
+            (item) => item.type === "ix_customer_value_persona" && item.completed_step === 4
+          );
+
+          allItems = [...allItems, ...newItems];
+
+          // Check if we've reached the end of the data
+          if (!response.count || response.count <= page * size) {
+            break;
+          }
+
+          page++;
+        }
+
+        setCustomerValueList(allItems);
+      } catch (error) {
+        console.error("Error fetching target discovery list:", error);
+        setCustomerValueList([]); // Set empty array on error
+      }
+    };
+
+    getAllTargetDiscovery();
+  }, [isLoggedIn]);
+
+  const fetchIdeaGeneratorPersona = async () => {
+    if (ideaGeneratorPersona.length) {
+      return;
+    }
+
+    try {
+      const businessData = {
+        business: businessDescription,
+        core_value: targetCustomers,
+      };
+
+      const response = await InterviewXIdeaGeneratorPersonaRequest(
+        businessData,
+        isLoggedIn
+      );
+
+      if (
+        !response?.response.idea_generator_persona ||
+        !Array.isArray(response.response.idea_generator_persona) ||
+        response.response.idea_generator_persona.length === 0
+      ) {
+        setShowPopupError(true);
+        return;
+      }
+
+      // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
+      setIdeaGeneratorPersona(
+        response.response.idea_generator_persona || []
+      );
+
+      updateToolOnServer(
+        toolId,
+        {
+          idea_generator_persona: response.response.idea_generator_persona,
+        },
+        isLoggedIn
+      );
+
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error submitting business info:", error);
+      setShowPopupError(true);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowPopupError(true);
+            break;
+          case 504:
+            setShowPopupError(true);
+            break;
+          default:
+            setShowPopupError(true);
+            break;
+        }
+      } else {
+        setShowPopupError(true);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchIdeaGeneratorIdea = async () => {
+    if (ideaGeneratorIdea.length) {
+      return;
+    }
+
+    try {
+      // 모든 카드의 상태를 waiting으로 초기화
+      const initialLoadingStates = ideaGeneratorInfo.core_value.reduce(
+        (acc, _, index) => {
+          acc[index] = "waiting";
+          return acc;
+        },
+        {}
+      );
+      setCardStatuses(initialLoadingStates);
+
+      const results = [];
+      
+      // 순차적으로 API 호출
+      for (let index = 0; index < ideaGeneratorInfo.core_value.length; index++) {
+        // 현재 카드 상태를 loading으로 변경
+        setCardStatuses(prev => ({
+          ...prev,
+          [index]: "loading"
+        }));
+
+        const data = {
+          business: ideaGeneratorInfo.business,
+          core_value: ideaGeneratorInfo.core_value[index],
+          core_target: selectedInterviewType === "yesTarget" ? selectedCustomPersona : ideaGeneratorPersona[selectedPersona]
+        };
+
+        const response = await InterviewXIdeaGeneratorIdeaRequest(data, isLoggedIn);
+
+        console.log("response", response);
+
+        if (response?.response?.idea_generator_idea) {
+          results.push(response.response.idea_generator_idea);
+          setIdeaGeneratorIdea(prev => [...prev, response.response.idea_generator_idea]);
+          
+          // 성공적인 응답 후 카드 상태 업데이트
+          setCardStatuses(prev => ({
+            ...prev,
+            [index]: "completed"
+          }));
+        }
+      }
+
+      // 서버에 결과 저장
+      await updateToolOnServer(
+        toolId,
+        {
+          idea_generator_idea: results,
+        },
+        isLoggedIn
+      );
+
+    } catch (error) {
+      console.error("Error generating ideas:", error);
+    }
+  };
+
+  const fetchIdeaGeneratorFinalReport = async () => {
+    // 최종 보고서 API 호출
+  };
 
   const calculateDropDirection = (ref, selectBoxId) => {
     if (ref.current) {
@@ -594,6 +401,10 @@ const PageIdeaGenerator = () => {
       ...prev,
       [selectBoxId]: false,
     }));
+
+    if (selectBoxId === "customerList") {
+      setBusinessDescription(purpose);
+    }
   };
 
   const handleContactInputChange = (field, value) => {
@@ -603,27 +414,96 @@ const PageIdeaGenerator = () => {
     }));
   };
 
-  const handleSelectPersona = () => {
-    if (selectedPersonas.length > 0) {
-      setSelectedInterviewType("multiple");
-      setSelectedInterviewPurpose("product_experience_new");
+  // handleCheckboxChange 함수 수정
+  const handleCheckboxChange = (index) => {
+    // 이미 선택된 항목을 다시 클릭하면 선택 해제
+    if (selectedPersona === index) {
+      setSelectedPersona(null);
+    } else {
+      // 다른 항목을 선택하면 해당 항목으로 변경
+      setSelectedPersona(index);
     }
   };
 
-  const handleCheckboxChange = (personaId) => {
-    setSelectedPersonas((prev) => {
-      if (prev.includes(personaId)) {
-        return prev.filter((id) => id !== personaId);
-      } else {
-        // 최대 5개까지만 선택 가능
-        if (prev.length >= 5) return prev;
-        return [...prev, personaId];
-      }
-    });
-  };
-
   // 다음 단계로 이동하는 함수
-  const handleNextStep = (currentStep) => {
+  const handleNextStep = async (currentStep) => {
+
+    if (currentStep === 1) {
+
+        setIdeaGeneratorInfo({
+          business: businessDescription,
+          core_value: targetCustomers.filter(value => value !== ""),
+        });
+
+        setToolStep(1);
+
+      const responseToolId = await createToolOnServer(
+          {
+            type: "ix_idea_generator_persona",
+            completed_step: 1,
+            business: businessDescription,
+            core_value: targetCustomers.filter(value => value !== ""),
+          },
+          isLoggedIn
+        );
+
+        setToolId(responseToolId);
+        
+    } 
+    
+    else if (currentStep === 2) {
+
+      if (selectedPersona === null) {
+        // 제가 원하는 타겟 고객이 있습니다
+        setIdeaGeneratorPersona(selectedCustomPersona);
+        setIdeaGeneratorSelectedPersona(selectedCustomPersona);
+
+        updateToolOnServer(
+          toolId,
+          {
+            idea_generator_selected_persona: selectedCustomPersona,
+            idea_generator_persona: selectedCustomPersona,
+          },
+          isLoggedIn
+        );
+      } else {
+        // 아직 잘 모르겠습니다
+        setIdeaGeneratorSelectedPersona(ideaGeneratorPersona[selectedPersona]);
+
+        updateToolOnServer(
+          toolId,
+          {
+            idea_generator_selected_persona: ideaGeneratorPersona[selectedPersona],
+          },
+          isLoggedIn
+        );
+      }
+      
+      setToolStep(2);
+      setIdeaGeneratorKnowTarget(selectedInterviewType);
+      updateToolOnServer(
+        toolId,
+        {
+          completed_step: 2,
+          idea_generator_Know_Target: selectedInterviewType === "yesTarget" ? true : false,
+        },
+        isLoggedIn
+      );
+      fetchIdeaGeneratorIdea();
+    } 
+    
+    else if (currentStep === 3) {
+      setToolStep(3);
+      updateToolOnServer(
+        toolId,
+        {
+          completed_step: 3,
+        },
+        isLoggedIn
+      );
+      fetchIdeaGeneratorFinalReport();
+    }
+
     setCompletedSteps([...completedSteps, currentStep]);
     setActiveTab(currentStep + 1);
     setShowPopupError(false);
@@ -655,10 +535,77 @@ const PageIdeaGenerator = () => {
   };
 
   const handleInterviewTypeSelect = (type) => {
+    if (ideaGeneratorPersona.length === 0) {
+      setIsLoading(true);
+    }
     setSelectedInterviewType(type);
+    setSelectedCustomPersona(null);
+    setSelectedPersona(null);
+
+    if (type === "noTarget") {
+      fetchIdeaGeneratorPersona();
+    }
   };
 
   const [activeAnalysisTab, setActiveAnalysisTab] = useState("summary");
+
+  // 팝업을 보여주는 함수
+  const handleShowDetail = (persona) => {
+    setSelectedDetailPersona(persona);
+    setShowPopup(true);
+  };
+
+  const handleShowDetailMore = (index) => {
+    setChartData({
+      name: ideaGeneratorInfo.core_value[index],
+      children: [
+        {
+          name: "경제적 가치",
+          children: ideaGeneratorIdea[index].economic_value.ideas.map(idea => ({
+            name: idea.name,
+            value: 100
+          }))
+        },
+        {
+          name: "기능적 가치",
+          children: ideaGeneratorIdea[index].functional_value.ideas.map(idea => ({
+            name: idea.name,
+            value: 100
+          }))
+        },
+        {
+          name: "환경적 가치",
+          children: ideaGeneratorIdea[index].environmental_value.ideas.map(idea => ({
+            name: idea.name,
+            value: 100
+          }))
+        },
+        {
+          name: "교육적 가치",
+          children: ideaGeneratorIdea[index].educational_value.ideas.map(idea => ({
+            name: idea.name,
+            value: 100
+          }))
+        },
+        {
+          name: "감정적 가치",
+          children: ideaGeneratorIdea[index].emotional_value.ideas.map(idea => ({
+            name: idea.name,
+            value: 100
+          }))
+        },
+        {
+          name: "사회적 가치",
+          children: ideaGeneratorIdea[index].social_value.ideas.map(idea => ({
+            name: idea.name,
+            value: 100
+          }))
+        }
+      ]
+    });
+    setSeletedIdeaIndex(index);
+    setShowPopupMore(true);
+  };
 
   return (
     <>
@@ -771,7 +718,9 @@ const PageIdeaGenerator = () => {
 
                       {selectBoxStates.customerList && (
                         <SelectBoxList dropUp={dropUpStates.customerList}>
+                          {customerValueList.length === 0 ? (
                           <SelectBoxItem
+                            disabled={toolStep >= 1}
                             onClick={() =>
                               handlePurposeSelect(
                                 "진행된 프로젝트가 없습니다. 타겟 탐색기를 먼저 진행해주세요",
@@ -784,24 +733,22 @@ const PageIdeaGenerator = () => {
                               진행해주세요
                             </Body2>
                           </SelectBoxItem>
+                          ) : (
+                          customerValueList.map((item, index) => (
                           <SelectBoxItem
-                            onClick={() =>
-                              handlePurposeSelect("{Businss}", "customerList")
-                            }
+                            disabled={toolStep >= 1}
+                            key={index}
+                            onClick={() => {
+                              handlePurposeSelect(item.business, "customerList");
+                              setTargetCustomers(item.customer_value_factor[0].key_buying_factors.map(factor => factor.title));
+                            }}
                           >
                             <Body2 color="gray700" align="left">
-                              (Businss)
+                              {item.business}
                             </Body2>
                           </SelectBoxItem>
-                          <SelectBoxItem
-                            onClick={() =>
-                              handlePurposeSelect("{Businss1}", "customerList")
-                            }
-                          >
-                            <Body2 color="gray700" align="left">
-                              (Businss1)
-                            </Body2>
-                          </SelectBoxItem>
+                          ))
+                          )}
                         </SelectBoxList>
                       )}
                     </SelectBox>
@@ -814,6 +761,7 @@ const PageIdeaGenerator = () => {
                     </div>
                     <FormBox Large>
                       <CustomTextarea
+                        disabled={toolStep >= 1}
                         Edit
                         rows={4}
                         placeholder="비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
@@ -835,6 +783,7 @@ const PageIdeaGenerator = () => {
                     </div>
                     {targetCustomers.map((customer, index) => (
                       <CustomInput
+                        disabled={toolStep >= 1}
                         key={index}
                         type="text"
                         placeholder="핵심 가치를 작성해주세요 (예: 안전한 송금 등)"
@@ -852,7 +801,7 @@ const PageIdeaGenerator = () => {
                           setTargetCustomers((prev) => [...prev, ""]);
                         }
                       }}
-                      disabled={targetCustomers.length >= 5}
+                      disabled={targetCustomers.length >= 10 || toolStep >= 1}
                     >
                       <Body2 color="gray300">+ 추가하기</Body2>
                     </Button>
@@ -864,8 +813,8 @@ const PageIdeaGenerator = () => {
                   Primary
                   Fill
                   Round
-                  onClick={() => setShowPopupError(true)}
-                  disabled={!isRequiredFieldsFilled()}
+                  onClick={() => handleNextStep(1)}
+                  disabled={!isRequiredFieldsFilled() || toolStep >= 1}
                 >
                   다음
                 </Button>
@@ -910,6 +859,7 @@ const PageIdeaGenerator = () => {
                             id="radio1"
                             name="radioGroup1"
                             checked={selectedInterviewType === "yesTarget"}
+                            disabled={toolStep >= 2}
                             onChange={() =>
                               handleInterviewTypeSelect("yesTarget")
                             }
@@ -938,6 +888,7 @@ const PageIdeaGenerator = () => {
                             id="radio1"
                             name="radioGroup1"
                             checked={selectedInterviewType === "noTarget"}
+                            disabled={toolStep >= 2}
                             onChange={() =>
                               handleInterviewTypeSelect("noTarget")
                             }
@@ -964,101 +915,48 @@ const PageIdeaGenerator = () => {
                             rows={4}
                             placeholder="한명만 작성 가능 (예시 : 작성필요)"
                             status="valid"
+                            disabled={toolStep >= 2}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              setSelectedCustomPersona([{
+                                name: value,
+                                description: "",
+                                keywords: [],
+                              }]);
+                            }}
                           />
                         </FormBox>
                       </TabContent5Item>
                     </>
                   ) : selectedInterviewType === "noTarget" ? (
                     <>
-                      <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                        <ListBoxItem
-                          NoBg
-                          selected={selectedPersonas.includes("persona1")}
-                          active={selectedPersonas.includes("persona1")}
+                      {isLoading ? (
+                        <div
+                          style={{
+                            width: "100%",
+                            display: "flex",
+                            justifyContent: "center",
+                            minHeight: "200px",
+                            alignItems: "center",
+                          }}
                         >
-                          <div>
-                            <CheckBoxButton
-                              id="persona1"
-                              name="persona1"
-                              checked={selectedPersonas.includes("persona1")}
-                              onChange={() => handleCheckboxChange("persona1")}
+                        <AtomPersonaLoader message="잠재 고객을 분석하고 있어요" />
+                      </div>
+                      ) : (
+                        <CardGroupWrap column style={{ marginBottom: "140px" }}>
+                          {ideaGeneratorPersona.map((persona, index) => (
+                            <MoleculeIdeaGeneratorCard
+                              key={index}
+                              id={index}
+                              persona={persona}
+                              isSelected={selectedPersona === index}
+                              disabled={toolStep >= 2 ? true : false}
+                              onSelect={() => handleCheckboxChange(index)}
+                              onShowDetail={() => handleShowDetail(persona)}
                             />
-                          </div>
-                          <ListText>
-                            <ListTitle>
-                              <Body1
-                                color={
-                                  selectedPersonas.includes("persona1")
-                                    ? "primary"
-                                    : "gray800"
-                                }
-                              >
-                                가족과 함께 여가를 보내는 활동 지향형 소비자
-                              </Body1>
-                            </ListTitle>
-
-                            <ListSubtitle>
-                              <Badge Keyword>#키워드1</Badge>
-                              <Badge Keyword>#키워드2</Badge>
-                              <Badge Keyword>#키워드3</Badge>
-                            </ListSubtitle>
-                          </ListText>
-                          <ListButton>
-                            <CustomButton
-                              Medium
-                              PrimaryLightest
-                              Fill
-                              onClick={() => setShowPopup(true)}
-                            >
-                              자세히
-                            </CustomButton>
-                          </ListButton>
-                        </ListBoxItem>
-
-                        <ListBoxItem
-                          NoBg
-                          selected={selectedPersonas.includes("persona2")}
-                          active={selectedPersonas.includes("persona2")}
-                        >
-                          <div>
-                            <CheckBoxButton
-                              id="persona2"
-                              name="persona2"
-                              checked={selectedPersonas.includes("persona2")}
-                              onChange={() => handleCheckboxChange("persona2")}
-                            />
-                          </div>
-                          <ListText>
-                            <ListTitle>
-                              <Body1
-                                color={
-                                  selectedPersonas.includes("persona2")
-                                    ? "primary"
-                                    : "gray800"
-                                }
-                              >
-                                가족과 함께 여가를 보내는 활동 지향형 소비자
-                              </Body1>
-                            </ListTitle>
-
-                            <ListSubtitle>
-                              <Badge Keyword>#키워드1</Badge>
-                              <Badge Keyword>#키워드2</Badge>
-                              <Badge Keyword>#키워드3</Badge>
-                            </ListSubtitle>
-                          </ListText>
-                          <ListButton>
-                            <CustomButton
-                              Medium
-                              PrimaryLightest
-                              Fill
-                              onClick={() => setShowPopup(true)}
-                            >
-                              자세히
-                            </CustomButton>
-                          </ListButton>
-                        </ListBoxItem>
-                      </CardGroupWrap>
+                          ))}
+                        </CardGroupWrap>
+                      )}
                     </>
                   ) : (
                     <></>
@@ -1073,7 +971,7 @@ const PageIdeaGenerator = () => {
                       Primary
                       Round
                       Fill
-                      disabled={selectedPersonas.length === 0}
+                      disabled={selectedPersona === null && selectedCustomPersona === null || toolStep >= 2}
                       onClick={() => handleNextStep(2)}
                     >
                       다음
@@ -1100,48 +998,27 @@ const PageIdeaGenerator = () => {
 
                 <div className="content">
                   <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                    <ListBoxItem>
-                      <ListText>
-                        <Body1 color="gray800">Key Value 1</Body1>
-                      </ListText>
-                      <ListButton>
-                        <CustomButton
-                          Medium
-                          PrimaryLightest
-                          Fill
-                          onClick={() => setShowPopupMore(true)}
-                        >
-                          30개 아이디어 확인
-                        </CustomButton>
-                      </ListButton>
-                    </ListBoxItem>
-
-                    <ListBoxItem>
-                      <ListText>
-                        <Body1 color="gray800">Key Value 1</Body1>
-                      </ListText>
-                      <ListButton>
-                        <CustomButton
-                          Medium
-                          PrimaryLightest
-                          Fill
-                          onClick={() => setShowPopupMore(true)}
-                        >
-                          30개 아이디어 확인
-                        </CustomButton>
-                      </ListButton>
-                    </ListBoxItem>
+                    {ideaGeneratorInfo.core_value.map((coreValue, index) => (
+                      <MoleculeIdeaGeneratorCard2
+                        key={index}
+                        id={index}
+                        coreValue={coreValue}
+                        status={cardStatuses[index]}
+                        onShowDetail={() => handleShowDetailMore(index)}
+                      />
+                    ))}
                   </CardGroupWrap>
 
                   <BottomBar W100>
                     <Body2 color="gray800">
-                      시나리오 분석을 원하는 페르소나를 선택해주세요
+                      종합 분석 결과를 확인해보세요
                     </Body2>
                     <Button
                       Large
                       Primary
                       Round
                       Fill
+                      disabled={toolStep >= 3 || ideaGeneratorIdea.length < ideaGeneratorInfo.core_value.length}
                       onClick={() => handleNextStep(3)}
                     >
                       다음
@@ -1167,7 +1044,7 @@ const PageIdeaGenerator = () => {
                 </BgBoxItem>
 
                 <InsightAnalysis>
-                  <div className="title">
+                  {/* <div className="title">
                     <div>
                       <TabWrapType4>
                         <TabButtonType4
@@ -1187,7 +1064,7 @@ const PageIdeaGenerator = () => {
                     <Button Primary onClick={() => setShowPopupSave(true)}>
                       리포트 저장하기
                     </Button>
-                  </div>
+                  </div> */}
 
                   <div className="content">
                     <H4 color="gray800">
@@ -1272,20 +1149,21 @@ const PageIdeaGenerator = () => {
                   </TabContent5Item>
                 )}
 
-                <Button Small Primary onClick={() => setShowPopupSave(true)}>
+                {/* <Button Small Primary onClick={() => setShowPopupSave(true)}>
                   리포트 저장하기
-                </Button>
+                </Button> */}
               </TabContent5>
             )}
           </IdeaGeneratorWrap>
         </MainContent>
       </ContentsWrap>
 
-      {showPopup && (
+      {showPopup && selectedDetailPersona && (
         <ReadMorePopup
           onClick={(e) => {
             if (e.target === e.currentTarget) {
               setShowPopup(false);
+              setSelectedDetailPersona(null);
             }
           }}
         >
@@ -1293,12 +1171,12 @@ const PageIdeaGenerator = () => {
             <div className="title">
               <div>
                 <Body1 color="gray800">
-                  가족과 함께 여가를 보내는 활동 지향형 소비자
+                  {selectedDetailPersona.name}
                 </Body1>
                 <div className="keyword">
-                  <Badge Keyword>#키워드1</Badge>
-                  <Badge Keyword>#키워드2</Badge>
-                  <Badge Keyword>#키워드3</Badge>
+                  {selectedDetailPersona.keywords.map((keyword, index) => (
+                    <Badge Keyword key={index}>#{keyword}</Badge>
+                  ))}
                 </div>
               </div>
               <Caption1 color="primary">상</Caption1>
@@ -1306,30 +1184,26 @@ const PageIdeaGenerator = () => {
 
             <div className="content">
               <Body3 color="gray700" align="left">
-                인터뷰 결과, 스마트홈 스피커의 음성 인식률과 반응 속도는 높게
-                평가되었으나, 개인 맞춤형 기능 부족 및 정보 보안에 대한 우려가
-                주요 문제점으로 나타났습니다. 특히, 워킹맘 답변자는 자녀를 위한
-                교육 콘텐츠 및 안전 기능 강화의 필요성을 강조했고, 50대 가장
-                답변자는 가족 구성원 모두가 쉽게 사용할 수 있는 가족 친화적인
-                인터페이스 부족을 지적했습니다.
+                {selectedDetailPersona.description}
               </Body3>
             </div>
           </div>
         </ReadMorePopup>
       )}
 
-      {showPopupMore && (
+      {showPopupMore && seletedIdeaIndex !== null && (
         <PopupWrap
           Wide1000
           title={
             <>
               <H4 color="gray800" align="left">
-                (Key Value)의 (Business)
+                {ideaGeneratorInfo.core_value[seletedIdeaIndex]}의 {ideaGeneratorInfo.business}
                 <br />
-                아이디어 도출하기기
+                아이디어 도출하기
               </H4>
             </>
           }
+          onCancel={() => setShowPopupMore(false)}
           buttonType="Fill"
           isModal={true}
           showTabs={true}
@@ -1341,12 +1215,7 @@ const PageIdeaGenerator = () => {
           customAlertBox={
             <TextWrap>
               <Body2 color="gray800" align="left">
-                이 비즈니스 아이템은 참신하고 현재의 시장 동향과 맞아떨어집니다.
-                특히 비대면 교육과 시니어 맞춤형 디지털 플랫폼의 필요성이
-                증가하는 상황에서 유망한 성장 기회를 가집니다. 다만, 참신함이 곧
-                블루 오션을 의미하지 않으므로, 진입 전략은 사용자 친화적 디자인,
-                가족의 참여를 유도하는 마케팅, 맞춤형 프로그램으로 보강해야
-                합니다.
+                {ideaGeneratorIdea[seletedIdeaIndex].conclusion}
               </Body2>
             </TextWrap>
           }
@@ -1355,7 +1224,7 @@ const PageIdeaGenerator = () => {
               {activeTabIndex === 0 && (
                 <SunburstChart>
                   <ZoomableSunburst
-                    data={ideaData}
+                    data={chartData}
                     width={700}
                     height={700}
                     colors={[
@@ -1382,113 +1251,34 @@ const PageIdeaGenerator = () => {
                       <div>
                         <Sub1 color="gray800">경제적 가치 중심</Sub1>
                         <Body2 color="gray700" align="left">
-                          이 비즈니스 아이템은 참신하고 현재의 시장 동향과
-                          맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형
-                          디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장
-                          기회를 가집니다.
+                          {ideaGeneratorIdea[seletedIdeaIndex].economic_value.solution}
                         </Body2>
                         <ul className="ul-list">
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명 아이디어 설명 아이디어
-                              설명 아이디어 설명 아이디어 설명 아이디어 설명
-                              아이디어 설명 아이디어 설명 아이디어 설명 아이디어
-                              설명 아이디어 설명 아이디어 설명 아이디어 설명
-                              아이디어 설명 아이디어 설명 아이디어 설명 아이디어
-                              설명 아이디어 설명 아이디어 설명 아이디어 설명
-                              아이디어 설명
+                          {ideaGeneratorIdea[seletedIdeaIndex].economic_value.ideas.map((item, index) => (
+                            <li key={index}>
+                              <Body2 color="gray700" align="left">
+                                {item.name} : {item.description}
                             </Body2>
                           </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
+                          ))}
                         </ul>
                       </div>
                     </div>
-
                     <div>
                       <span className="number">2</span>
                       <div>
                         <Sub1 color="gray800">기능적 가치 중심</Sub1>
                         <Body2 color="gray700" align="left">
-                          이 비즈니스 아이템은 참신하고 현재의 시장 동향과
-                          맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형
-                          디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장
-                          기회를 가집니다.
+                          {ideaGeneratorIdea[seletedIdeaIndex].functional_value.solution}
                         </Body2>
                         <ul className="ul-list">
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
+                          {ideaGeneratorIdea[seletedIdeaIndex].functional_value.ideas.map((item, index) => (
+                            <li key={index}>
+                              <Body2 color="gray700" align="left">
+                                {item.name} : {item.description}
+                              </Body2>
+                            </li>
+                          ))}
                         </ul>
                       </div>
                     </div>
@@ -1498,52 +1288,16 @@ const PageIdeaGenerator = () => {
                       <div>
                         <Sub1 color="gray800">환경적 가치 중심</Sub1>
                         <Body2 color="gray700" align="left">
-                          이 비즈니스 아이템은 참신하고 현재의 시장 동향과
-                          맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형
-                          디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장
-                          기회를 가집니다.
+                          {ideaGeneratorIdea[seletedIdeaIndex].environmental_value.solution}
                         </Body2>
                         <ul className="ul-list">
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
+                          {ideaGeneratorIdea[seletedIdeaIndex].environmental_value.ideas.map((item, index) => (
+                            <li key={index}>
+                              <Body2 color="gray700" align="left">
+                                {item.name} : {item.description}
+                              </Body2>
+                            </li>
+                          ))}
                         </ul>
                       </div>
                     </div>
@@ -1553,52 +1307,16 @@ const PageIdeaGenerator = () => {
                       <div>
                         <Sub1 color="gray800">교육적 가치 중심</Sub1>
                         <Body2 color="gray700" align="left">
-                          이 비즈니스 아이템은 참신하고 현재의 시장 동향과
-                          맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형
-                          디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장
-                          기회를 가집니다.
+                          {ideaGeneratorIdea[seletedIdeaIndex].educational_value.solution}
                         </Body2>
                         <ul className="ul-list">
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
+                          {ideaGeneratorIdea[seletedIdeaIndex].educational_value.ideas.map((item, index) => (
+                            <li key={index}>
+                              <Body2 color="gray700" align="left">
+                                {item.name} : {item.description}
+                              </Body2>
+                            </li>
+                          ))}
                         </ul>
                       </div>
                     </div>
@@ -1608,52 +1326,16 @@ const PageIdeaGenerator = () => {
                       <div>
                         <Sub1 color="gray800">감정적 가치 중심</Sub1>
                         <Body2 color="gray700" align="left">
-                          이 비즈니스 아이템은 참신하고 현재의 시장 동향과
-                          맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형
-                          디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장
-                          기회를 가집니다.
+                          {ideaGeneratorIdea[seletedIdeaIndex].emotional_value.solution}
                         </Body2>
                         <ul className="ul-list">
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
+                          {ideaGeneratorIdea[seletedIdeaIndex].emotional_value.ideas.map((item, index) => (
+                            <li key={index}>
+                              <Body2 color="gray700" align="left">
+                                {item.name} : {item.description}
+                              </Body2>
+                            </li>
+                          ))}
                         </ul>
                       </div>
                     </div>
@@ -1663,52 +1345,16 @@ const PageIdeaGenerator = () => {
                       <div>
                         <Sub1 color="gray800">사회적 가치 중심</Sub1>
                         <Body2 color="gray700" align="left">
-                          이 비즈니스 아이템은 참신하고 현재의 시장 동향과
-                          맞아떨어집니다. 특히 비대면 교육과 시니어 맞춤형
-                          디지털 플랫폼의 필요성이 증가하는 상황에서 유망한 성장
-                          기회를 가집니다.
+                          {ideaGeneratorIdea[seletedIdeaIndex].social_value.solution}
                         </Body2>
                         <ul className="ul-list">
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
-                          <li>
-                            <Body2 color="gray700" align="left">
-                              아이디어 1 : 아이디어 설명
-                            </Body2>
-                          </li>
+                          {ideaGeneratorIdea[seletedIdeaIndex].social_value.ideas.map((item, index) => (
+                            <li key={index}>
+                              <Body2 color="gray700" align="left">
+                                {item.name} : {item.description}
+                              </Body2>
+                            </li>
+                          ))}
                         </ul>
                       </div>
                     </div>
