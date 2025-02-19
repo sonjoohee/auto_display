@@ -164,6 +164,14 @@ import {
   CUSTOMER_VALUE_ANALYZER_POSITIONING,
   CUSTOMER_VALUE_ANALYZER_FINAL_REPORT,
   CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR,
+  IDEA_GENERATOR_INFO,
+  IDEA_GENERATOR_KNOW_TARGET,
+  IDEA_GENERATOR_CUSTOM_TARGET,
+  IDEA_GENERATOR_PERSONA,
+  IDEA_GENERATOR_IDEA,
+  IDEA_GENERATOR_CLUSTERING,
+  IDEA_GENERATOR_FINAL_REPORT,
+  IDEA_GENERATOR_SELECTED_PERSONA,
 } from "../../../AtomStates";
 import {
   getAllConversationsFromIndexedDB,
@@ -178,6 +186,14 @@ import { useSaveConversation } from "../../../Expert_Insight/components/atoms/At
 import OrganismReportPopup from "../../../Expert_Insight/components/organisms/OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismIncNavigation = () => {
+  const [ideaGeneratorInfo, setIdeaGeneratorInfo] = useAtom(IDEA_GENERATOR_INFO);
+  const [ideaGeneratorKnowTarget, setIdeaGeneratorKnowTarget] = useAtom(IDEA_GENERATOR_KNOW_TARGET);
+  const [ideaGeneratorCustomTarget, setIdeaGeneratorCustomTarget] = useAtom(IDEA_GENERATOR_CUSTOM_TARGET);
+  const [ideaGeneratorPersona, setIdeaGeneratorPersona] = useAtom(IDEA_GENERATOR_PERSONA);
+  const [ideaGeneratorIdea, setIdeaGeneratorIdea] = useAtom(IDEA_GENERATOR_IDEA);
+  const [ideaGeneratorClustering, setIdeaGeneratorClustering] = useAtom(IDEA_GENERATOR_CLUSTERING);
+  const [ideaGeneratorFinalReport, setIdeaGeneratorFinalReport] = useAtom(IDEA_GENERATOR_FINAL_REPORT);
+  
   // export const TARGET_DISCOVERY_PERSONA = atom([]);
   // export const SELECTED_TARGET_DISCOVERY_PERSONA = atom([]);
   // export const TARGET_DISCOVERY_SCENARIO = atom([]);

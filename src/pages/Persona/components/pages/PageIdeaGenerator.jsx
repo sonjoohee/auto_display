@@ -799,7 +799,7 @@ const PageIdeaGenerator = () => {
                             key={index}
                             onClick={() => {
                               handlePurposeSelect(item.business, "customerList");
-                              setTargetCustomers(item.customer_value_factor[0].key_buying_factors.map(factor => factor.title));
+                              setTargetCustomers(item.customer_value_persona.map(factor => factor));
                             }}
                           >
                             <Body2 color="gray700" align="left">
