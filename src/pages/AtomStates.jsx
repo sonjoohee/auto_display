@@ -539,9 +539,11 @@ export const CUSTOMER_VALUE_ANALYZER_INFO = atom({
   business: "",
   target_list: [],
   analysis_scope: "",
+  analysis_purpose: "",
 });
 export const CUSTOMER_VALUE_ANALYZER_PERSONA = atom([]);
 export const CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA = atom([]);
+export const CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR = atom([]);
 export const CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP = atom({});
 export const CUSTOMER_VALUE_ANALYZER_FACTOR = atom({});
 export const CUSTOMER_VALUE_ANALYZER_CLUSTERING = atom([]);

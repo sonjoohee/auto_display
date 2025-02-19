@@ -126,6 +126,7 @@ const MoleculeCustomerValueCard = ({
   activeTab, // 새로운 prop 추가
   factor, // 새로운 prop 추가
   viewType, // 새로운 prop 추가
+  business, // 새로운 prop 추가
 }) => {
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(CUSTOMER_VALUE_ANALYZER_INFO);
@@ -223,7 +224,7 @@ const MoleculeCustomerValueCard = ({
           title={
             <>
               <H4 color="gray800" align="left">
-                {title}의 {content}<br />구매 핵심 요인 분석
+                {title}의 {business}<br />구매 핵심 요인 분석
               </H4>
             </>
           }
@@ -266,7 +267,7 @@ const MoleculeCustomerValueCard = ({
           title={
             <>
               <H4 color="gray800" align="left">
-                {title}의 {content}<br />고객 여정 분석
+                {title}의 {business}<br />고객 여정 분석
               </H4>
             </>
           }
