@@ -107,22 +107,39 @@ import {
   InterviewXCustomerValueAnalyzerFinalReportRequest,
 } from "../../../../utils/indexedDB";
 
-
-
 const PageCustomerValueAnalyzer = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
-  const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(CUSTOMER_VALUE_ANALYZER_INFO);
-  const [customerValueAnalyzerPersona, setCustomerValueAnalyzerPersona] = useAtom(CUSTOMER_VALUE_ANALYZER_PERSONA);
-  const [customerValueAnalyzerSelectedPersona, setCustomerValueAnalyzerSelectedPersona] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA);
-  const [customerValueAnalyzerJourneyMap, setCustomerValueAnalyzerJourneyMap] = useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
-  const [customerValueAnalyzerFactor, setCustomerValueAnalyzerFactor] = useAtom(CUSTOMER_VALUE_ANALYZER_FACTOR);
-  const [customerValueAnalyzerClustering, setCustomerValueAnalyzerClustering] = useAtom(CUSTOMER_VALUE_ANALYZER_CLUSTERING);
-  const [customerValueAnalyzerPositioning, setCustomerValueAnalyzerPositioning] = useAtom(CUSTOMER_VALUE_ANALYZER_POSITIONING);
-  const [customerValueAnalyzerFinalReport, setCustomerValueAnalyzerFinalReport] = useAtom(CUSTOMER_VALUE_ANALYZER_FINAL_REPORT);
-  const [customerValueAnalyzerSelectedFactor, setCustomerValueAnalyzerSelectedFactor] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR);
+  const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_INFO
+  );
+  const [customerValueAnalyzerPersona, setCustomerValueAnalyzerPersona] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_PERSONA);
+  const [
+    customerValueAnalyzerSelectedPersona,
+    setCustomerValueAnalyzerSelectedPersona,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA);
+  const [customerValueAnalyzerJourneyMap, setCustomerValueAnalyzerJourneyMap] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
+  const [customerValueAnalyzerFactor, setCustomerValueAnalyzerFactor] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_FACTOR
+  );
+  const [customerValueAnalyzerClustering, setCustomerValueAnalyzerClustering] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_CLUSTERING);
+  const [
+    customerValueAnalyzerPositioning,
+    setCustomerValueAnalyzerPositioning,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_POSITIONING);
+  const [
+    customerValueAnalyzerFinalReport,
+    setCustomerValueAnalyzerFinalReport,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_FINAL_REPORT);
+  const [
+    customerValueAnalyzerSelectedFactor,
+    setCustomerValueAnalyzerSelectedFactor,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR);
 
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupMore, setShowPopupMore] = useState(false);
@@ -182,8 +199,7 @@ const PageCustomerValueAnalyzer = () => {
     window.scrollTo(0, 0);
   }, []);
 
-
-   //저장되었던 인터뷰 로드
+  //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
       console.log("toolLoading", toolLoading);
@@ -194,7 +210,9 @@ const PageCustomerValueAnalyzer = () => {
         // 비즈니스 정보 설정 (Step 1)
         console.log("customerValueAnalyzerInfo", customerValueAnalyzerInfo);
         if (customerValueAnalyzerInfo) {
-          setBusinessDescription(customerValueAnalyzerInfo?.analysis_purpose ?? "");
+          setBusinessDescription(
+            customerValueAnalyzerInfo?.analysis_purpose ?? ""
+          );
           setTargetCustomers(customerValueAnalyzerInfo?.target_list ?? [""]);
           setSelectedPurposes((prev) => ({
             ...prev,
@@ -212,21 +230,38 @@ const PageCustomerValueAnalyzer = () => {
 
         // 페르소나 설정 (Step 2)
         if (Array.isArray(customerValueAnalyzerSelectedPersona)) {
-          setCustomerValueAnalyzerSelectedPersona(customerValueAnalyzerSelectedPersona);
+          setCustomerValueAnalyzerSelectedPersona(
+            customerValueAnalyzerSelectedPersona
+          );
 
           // 선택된 페르소나의 target을 기반으로 selectedPersonas 설정
-          const selectedTargets = customerValueAnalyzerSelectedPersona.map(persona => persona.target);
-          const selectedIndices = customerValueAnalyzerPersona
-            .map((persona, index) => 
-              selectedTargets.includes(persona.target) ? index : -1
-            )
-            .filter((index) => index !== -1);
-          console.log("11111111111111111111111selectedTargets", selectedTargets);
-  
-          console.log("222222222222222222222222222selectedIndices", selectedIndices);
-          setSelectedPersonas(selectedIndices);
+          const selectedTargets = customerValueAnalyzerSelectedPersona.map(
+            (persona) => persona.target
+          );
+
+          // customerValueAnalyzerPersona가 있는지 확인하고 매칭
+          if (
+            Array.isArray(customerValueAnalyzerPersona) &&
+            customerValueAnalyzerPersona.length > 0
+          ) {
+            const selectedIndices = customerValueAnalyzerPersona
+              .map((persona, index) => {
+                // content 객체에서 target 값을 찾아 비교
+                const personaTarget =
+                  customerValueAnalyzerInfo?.target_list?.[index];
+                return selectedTargets.includes(personaTarget) ? index : -1;
+              })
+              .filter((index) => index !== -1);
+
+            console.log("Selected Targets:", selectedTargets);
+            console.log("Selected Indices:", selectedIndices);
+
+            if (selectedIndices.length > 0) {
+              setSelectedPersonas(selectedIndices);
+            }
+          }
         }
-          // 고객 여정 맵 설정 (Step 3)
+        // 고객 여정 맵 설정 (Step 3)
         if (Array.isArray(customerValueAnalyzerJourneyMap)) {
           setCustomerValueAnalyzerJourneyMap(customerValueAnalyzerJourneyMap);
         }
@@ -316,7 +351,11 @@ const PageCustomerValueAnalyzer = () => {
       // 순차적으로 API 호출을 처리하는 함수
       const processSequentially = async () => {
         let journeyMapData = [];
-        for (let index = 0; index < customerValueAnalyzerPersona.length; index++) {
+        for (
+          let index = 0;
+          index < customerValueAnalyzerPersona.length;
+          index++
+        ) {
           try {
             // 현재 카드만 loading으로 변경
             setCardStatuses((prev) => ({
@@ -380,7 +419,6 @@ const PageCustomerValueAnalyzer = () => {
               isLoggedIn
             );
             setToolStep(2);
-
           } catch (error) {
             console.error(`Journey Map API 호출 실패 (카드 ${index}):`, error);
           }
@@ -400,7 +438,6 @@ const PageCustomerValueAnalyzer = () => {
       setCardStatuses(completedStates);
     }
   }, [activeTab, customerValueAnalyzerPersona, apiCallCompleted]);
-
 
   const handleSubmitBusinessInfo = async () => {
     try {
@@ -434,7 +471,7 @@ const PageCustomerValueAnalyzer = () => {
           type: "ix_customer_value_persona",
           completed_step: 1,
           customer_value_persona: response.response.customer_value_persona,
-          ...businessData, 
+          ...businessData,
         },
         isLoggedIn
       );
@@ -532,20 +569,17 @@ const PageCustomerValueAnalyzer = () => {
     }
   };
 
-
   const handleCheckboxChange = (index) => {
     if (toolStep >= 3) return;
-    setSelectedPersonas(prev => {
+    setSelectedPersonas((prev) => {
       if (prev.includes(index)) {
-        return prev.filter(id => id !== index);
-
+        return prev.filter((id) => id !== index);
       } else {
         if (prev.length >= 5) return prev;
         return [...prev, index];
       }
     });
   };
-
 
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -585,25 +619,28 @@ const PageCustomerValueAnalyzer = () => {
     setToolStep(3);
     setApiCallCompletedFactor(false);
     try {
-      const selectedPersonaData = selectedPersonas.map(index => ({
+      const selectedPersonaData = selectedPersonas.map((index) => ({
         content: customerValueAnalyzerPersona[index],
         target: customerValueAnalyzerInfo.target_list[index],
-        journeyMap: customerValueAnalyzerJourneyMap[index]
+        journeyMap: customerValueAnalyzerJourneyMap[index],
       }));
       setCustomerValueAnalyzerSelectedPersona(selectedPersonaData);
 
       // 초기 상태를 'waiting'으로 설정
-      const initialLoadingStates = selectedPersonaData.reduce((acc, _, index) => {
-        acc[index] = 'waiting';
-        return acc;
-      }, {});
+      const initialLoadingStates = selectedPersonaData.reduce(
+        (acc, _, index) => {
+          acc[index] = "waiting";
+          return acc;
+        },
+        {}
+      );
       setCardStatuses(initialLoadingStates);
 
       const results = [];
       for (let i = 0; i < selectedPersonaData.length; i++) {
-        setCardStatuses(prev => ({
+        setCardStatuses((prev) => ({
           ...prev,
-          [i]: 'loading'
+          [i]: "loading",
         }));
 
         const persona = selectedPersonaData[i];
@@ -611,23 +648,26 @@ const PageCustomerValueAnalyzer = () => {
           business: customerValueAnalyzerInfo.business,
           target: persona.target,
           analysis_scope: customerValueAnalyzerInfo.analysis_scope,
-          customer_value_journey_map: persona.journeyMap
+          customer_value_journey_map: persona.journeyMap,
         };
 
         try {
-          const response = await InterviewXCustomerValueAnalyzerFactorRequest(requestData, isLoggedIn);
+          const response = await InterviewXCustomerValueAnalyzerFactorRequest(
+            requestData,
+            isLoggedIn
+          );
           if (response?.response?.customer_value_factor) {
             results.push(response.response.customer_value_factor);
-            setCardStatuses(prev => ({
+            setCardStatuses((prev) => ({
               ...prev,
-              [i]: 'completed'
+              [i]: "completed",
             }));
           }
         } catch (error) {
-          console.error('Error:', error);
-          setCardStatuses(prev => ({
+          console.error("Error:", error);
+          setCardStatuses((prev) => ({
             ...prev,
-            [i]: 'error'
+            [i]: "error",
           }));
         }
       }
@@ -644,7 +684,7 @@ const PageCustomerValueAnalyzer = () => {
         isLoggedIn
       );
     } catch (error) {
-      console.error('Error submitting personas:', error);
+      console.error("Error submitting personas:", error);
       setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
@@ -666,8 +706,6 @@ const PageCustomerValueAnalyzer = () => {
     }
   };
 
-
-
   const handleReport = async () => {
     try {
       setIsLoading(true);
@@ -678,62 +716,98 @@ const PageCustomerValueAnalyzer = () => {
       };
 
       // 클러스터링 요청
-      const clusteringResponse = await InterviewXCustomerValueAnalyzerClusteringRequest(clusteringData, isLoggedIn);
+      const clusteringResponse =
+        await InterviewXCustomerValueAnalyzerClusteringRequest(
+          clusteringData,
+          isLoggedIn
+        );
       console.log("Clustering response:", clusteringResponse);
 
-      if (!clusteringResponse || !clusteringResponse.response || !clusteringResponse.response.customer_value_clustering) {
+      if (
+        !clusteringResponse ||
+        !clusteringResponse.response ||
+        !clusteringResponse.response.customer_value_clustering
+      ) {
         console.error("Invalid clustering response");
-        return; 
+        return;
       }
-      setCustomerValueAnalyzerClustering(clusteringResponse.response.customer_value_clustering);
+      setCustomerValueAnalyzerClustering(
+        clusteringResponse.response.customer_value_clustering
+      );
 
       const positioningData = {
         customer_value_factor_data: customerValueAnalyzerFactor,
-        customer_value_clustering: clusteringResponse.response.customer_value_clustering,
+        customer_value_clustering:
+          clusteringResponse.response.customer_value_clustering,
       };
 
       // 포지셔닝 요청
-      const positioningResponse = await InterviewXCustomerValueAnalyzerPositioningRequest(positioningData, isLoggedIn);
+      const positioningResponse =
+        await InterviewXCustomerValueAnalyzerPositioningRequest(
+          positioningData,
+          isLoggedIn
+        );
       console.log("Positioning response:", positioningResponse);
-    
-      if (!positioningResponse || !positioningResponse.response || !positioningResponse.response.customer_value_positioning) {
+
+      if (
+        !positioningResponse ||
+        !positioningResponse.response ||
+        !positioningResponse.response.customer_value_positioning
+      ) {
         console.error("Invalid positioning response");
-        return; 
-    }
-      setCustomerValueAnalyzerPositioning(positioningResponse.response.customer_value_positioning);
+        return;
+      }
+      setCustomerValueAnalyzerPositioning(
+        positioningResponse.response.customer_value_positioning
+      );
 
       const finalReportData = {
         business: customerValueAnalyzerInfo.business,
         customer_value_factor_data: customerValueAnalyzerFactor,
-        customer_value_clustering:clusteringResponse.response.customer_value_clustering,
-        customer_value_positioning: positioningResponse.response.customer_value_positioning,
+        customer_value_clustering:
+          clusteringResponse.response.customer_value_clustering,
+        customer_value_positioning:
+          positioningResponse.response.customer_value_positioning,
       };
 
       // 최종 리포트 요청
-      const finalReportResponse = await InterviewXCustomerValueAnalyzerFinalReportRequest(finalReportData, isLoggedIn);
+      const finalReportResponse =
+        await InterviewXCustomerValueAnalyzerFinalReportRequest(
+          finalReportData,
+          isLoggedIn
+        );
       console.log("Final report response:", finalReportResponse);
 
-      if (!finalReportResponse || !finalReportResponse.response || !finalReportResponse.response.customer_value_final_report) {
+      if (
+        !finalReportResponse ||
+        !finalReportResponse.response ||
+        !finalReportResponse.response.customer_value_final_report
+      ) {
         console.error("Invalid final report response");
-        return; 
+        return;
       }
 
-      setCustomerValueAnalyzerFinalReport(finalReportResponse.response.customer_value_final_report);
-      console.log("customerValueAnalyzerFinalReport", customerValueAnalyzerFinalReport);  
-
+      setCustomerValueAnalyzerFinalReport(
+        finalReportResponse.response.customer_value_final_report
+      );
+      console.log(
+        "customerValueAnalyzerFinalReport",
+        customerValueAnalyzerFinalReport
+      );
 
       await updateToolOnServer(
         toolId,
         {
           completed_step: 4,
-          customer_value_clustering: clusteringResponse.response.customer_value_clustering,
-          customer_value_positioning: positioningResponse.response.customer_value_positioning,
-          customer_value_final_report: finalReportResponse.response.customer_value_final_report,
+          customer_value_clustering:
+            clusteringResponse.response.customer_value_clustering,
+          customer_value_positioning:
+            positioningResponse.response.customer_value_positioning,
+          customer_value_final_report:
+            finalReportResponse.response.customer_value_final_report,
         },
         isLoggedIn
       );
-
-
     } catch (error) {
       console.error("Error in handleReport:", error);
       setShowPopupError(true);
@@ -757,118 +831,131 @@ const PageCustomerValueAnalyzer = () => {
     }
   };
 
-//   const mermaidCode = `
-//   quadrantChart
-//     title Cost and Results of experiments
-//     x-axis Low Cost --> High Cost
-//     y-axis Low Reliability --> High Reliability
-//     quadrant-1 Consider
-//     quadrant-2 Preferred
-//     quadrant-3 Modify
-//     quadrant-4 Avoid
-//     Passive Observation: [0.13, 0.3]
-//     Field experiment: [0.4, 0.7]
-//     Small scale lab work: [0.4, 0.42]
-//     Lab work - Frequent repetition: [0.82, 0.85]
-//     Large scale study: [0.8, 0.15]
-//     Low impact study: [0.67, 0.56]
-// `;
+  //   const mermaidCode = `
+  //   quadrantChart
+  //     title Cost and Results of experiments
+  //     x-axis Low Cost --> High Cost
+  //     y-axis Low Reliability --> High Reliability
+  //     quadrant-1 Consider
+  //     quadrant-2 Preferred
+  //     quadrant-3 Modify
+  //     quadrant-4 Avoid
+  //     Passive Observation: [0.13, 0.3]
+  //     Field experiment: [0.4, 0.7]
+  //     Small scale lab work: [0.4, 0.42]
+  //     Lab work - Frequent repetition: [0.82, 0.85]
+  //     Large scale study: [0.8, 0.15]
+  //     Low impact study: [0.67, 0.56]
+  // `;
 
+  const mermaidCode = customerValueAnalyzerPositioning?.mermaid || "";
+  const cleanMermaidCode = mermaidCode.replace(/quadrant-\d\s+[^\n]+\n/g, "");
 
-const mermaidCode = customerValueAnalyzerPositioning?.mermaid || '';
-const cleanMermaidCode = mermaidCode.replace(/quadrant-\d\s+[^\n]+\n/g, '');
+  const MermaidDiagram = ({ code }) => {
+    const [imageUrl, setImageUrl] = useState("");
+    const elementId = useRef(`mermaid-diagram-${Date.now()}`);
 
-const MermaidDiagram = ({ code }) => {
-  const [imageUrl, setImageUrl] = useState('');
-  const elementId = useRef(`mermaid-diagram-${Date.now()}`);
+    useEffect(() => {
+      const script = document.createElement("script");
+      script.src =
+        "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js";
+      script.async = true;
 
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js";
-    script.async = true;
+      script.onload = async () => {
+        try {
+          window.mermaid.initialize({
+            startOnLoad: true,
+            theme: "default",
+            securityLevel: "loose",
+            logLevel: "error",
+            themeVariables: {
+              background: "#ffffff",
+              quadrantPointFill: "#226FFF",
+              quadrantPointStroke: "#226FFF",
+              quadrantXAxisTextFill: "#333333",
+              quadrantYAxisTextFill: "#333333",
+              quadrant1Fill: "#D3E2FF",
+              // quadrant1Fill: "#E0E4EB",
+              quadrant2Fill: "#E0E4EB",
+              // quadrant2Fill: "#D3E2FF",
+              quadrant3Fill: "#F6F6F6",
+              quadrant4Fill: "#E9F1FF",
+            },
+          });
 
-    script.onload = async () => {
-      try {
-        window.mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          securityLevel: 'loose',
-          logLevel: 'error',
-          themeVariables: {
-            background: '#ffffff',
-            quadrantPointFill: '#226FFF',
-            quadrantPointStroke: '#226FFF',
-            quadrantXAxisTextFill: '#333333',
-            quadrantYAxisTextFill: '#333333',
-            quadrant1Fill: '#E0E4EB',
-            quadrant2Fill: '#D3E2FF',
-            quadrant3Fill: '#F6F6F6',
-            quadrant4Fill: '#E9F1FF'
-          }
-        });
+          const { svg: originalSvg } = await window.mermaid.render(
+            elementId.current,
+            code
+          );
 
-        const { svg: originalSvg } = await window.mermaid.render(elementId.current, code);
-        
-        const parser = new DOMParser();
-        const svgDoc = parser.parseFromString(originalSvg, 'image/svg+xml');
-        const svgElement = svgDoc.querySelector('svg');
-        
-        svgElement.setAttribute('viewBox', '0 0 500 500'); // 여백을 줄이기 위해 viewBox 조정
-        svgElement.setAttribute('width', '100%');
-        svgElement.setAttribute('height', '100%');
-        svgElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-        
-        const modifiedSvg = svgElement.outerHTML;
-        
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const img = new Image();
-           
+          const parser = new DOMParser();
+          const svgDoc = parser.parseFromString(originalSvg, "image/svg+xml");
+          const svgElement = svgDoc.querySelector("svg");
+
+          svgElement.setAttribute("viewBox", "0 0 500 500"); // 여백을 줄이기 위해 viewBox 조정
+          svgElement.setAttribute("width", "100%");
+          svgElement.setAttribute("height", "100%");
+          svgElement.setAttribute("preserveAspectRatio", "xMidYMid meet");
+
+          const modifiedSvg = svgElement.outerHTML;
+
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          const img = new Image();
+
           img.onload = () => {
             const scaleFactor = 2; // 해상도를 두 배로 높이기 위한 스케일 팩터
             canvas.width = 500; // 고정된 너비
             canvas.height = 500; // 고정된 높이
-            
+
             ctx.scale(scaleFactor, scaleFactor); // 스케일 적용
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0, canvas.width / scaleFactor, canvas.height / scaleFactor);
-            
-            const pngUrl = canvas.toDataURL('image/png', 1.0);
+            ctx.drawImage(
+              img,
+              0,
+              0,
+              canvas.width / scaleFactor,
+              canvas.height / scaleFactor
+            );
+
+            const pngUrl = canvas.toDataURL("image/png", 1.0);
             setImageUrl(pngUrl);
           };
 
-          img.src = 'data:image/svg+xml;base64,' + window.btoa(unescape(encodeURIComponent(modifiedSvg)));
+          img.src =
+            "data:image/svg+xml;base64," +
+            window.btoa(unescape(encodeURIComponent(modifiedSvg)));
         } catch (error) {
           console.error("Mermaid rendering error:", error);
         }
       };
 
-    document.body.appendChild(script);
+      document.body.appendChild(script);
 
-    return () => {
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-    };
-  }, [code]);
+      return () => {
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+      };
+    }, [code]);
 
-  return (
-    <DiagramContainer>
-      {imageUrl && (
-        <img 
-          src={imageUrl} 
-          alt="Mermaid Diagram" 
-          style={{ 
-            width: '100%',
-            height: 'auto',
-            objectFit: 'contain'
-          }} 
-        />
-      )}
-    </DiagramContainer>
-  );
-};
+    return (
+      <DiagramContainer>
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt="Mermaid Diagram"
+            style={{
+              width: "100%",
+              height: "auto",
+              objectFit: "contain",
+            }}
+          />
+        )}
+      </DiagramContainer>
+    );
+  };
 
   return (
     <>
@@ -1045,7 +1132,7 @@ const MermaidDiagram = ({ code }) => {
                           가능합니다
                         </Sub3>
                       </TabContent5Item>
-              
+
                       <TabContent5Item required>
                         <div className="title">
                           <Body1 color="gray700">비즈니스 설명</Body1>
@@ -1248,11 +1335,8 @@ const MermaidDiagram = ({ code }) => {
                 </div>
 
                 <div className="content">
-
-                  <CardGroupWrap column >
-                  
+                  <CardGroupWrap column>
                     {customerValueAnalyzerPersona.map((content, index) => {
-                 
                       return (
                         <MoleculeCustomerValueCard
                           key={index}
@@ -1264,11 +1348,12 @@ const MermaidDiagram = ({ code }) => {
                           isSelected={selectedPersonas.includes(index)}
                           onSelect={(id) => handleCheckboxChange(id)}
                           viewType="list"
-                          journeyMapData={customerValueAnalyzerJourneyMap[index]}
+                          journeyMapData={
+                            customerValueAnalyzerJourneyMap[index]
+                          }
                         />
                       );
                     })}
-
                   </CardGroupWrap>
                   <BottomBar W100>
                     <Body2
@@ -1285,10 +1370,14 @@ const MermaidDiagram = ({ code }) => {
                       Round
                       Fill
                       disabled={
-                        selectedPersonas.length === 0 || toolStep >= 3 || Object.values(cardStatuses).some(status => status === 'loading' || status === 'waiting')
+                        selectedPersonas.length === 0 ||
+                        toolStep >= 3 ||
+                        Object.values(cardStatuses).some(
+                          (status) =>
+                            status === "loading" || status === "waiting"
+                        )
                       }
-                      onClick={() =>  handleSubmitPersonas()}
-
+                      onClick={() => handleSubmitPersonas()}
                     >
                       다음
                       <images.ChevronRight
@@ -1313,30 +1402,31 @@ const MermaidDiagram = ({ code }) => {
                 </div>
 
                 <div className="content">
-
                   <CardGroupWrap column>
-                    {customerValueAnalyzerSelectedPersona.map((persona, index) => (
-                      <MoleculeCustomerValueCard
-                        key={index}
-                        id={index}
-                        title={persona.target}
-                        content={persona.content}
-                        status={cardStatuses[index]}
-                        factor={customerValueAnalyzerFactor[index]}
-                        business={customerValueAnalyzerInfo.business}
-                        journeyMapData={persona.journeyMap}
-                        showOnlySelected={true}
-                        hideCheckCircle={true}
-                        activeTab={3}
-                        viewType="list"
-                      />
-                    ))}
-
+                    {customerValueAnalyzerSelectedPersona.map(
+                      (persona, index) => (
+                        <MoleculeCustomerValueCard
+                          key={index}
+                          id={index}
+                          title={persona.target}
+                          content={persona.content}
+                          status={cardStatuses[index]}
+                          factor={customerValueAnalyzerFactor[index]}
+                          business={customerValueAnalyzerInfo.business}
+                          journeyMapData={persona.journeyMap}
+                          showOnlySelected={true}
+                          hideCheckCircle={true}
+                          activeTab={3}
+                          viewType="list"
+                        />
+                      )
+                    )}
                   </CardGroupWrap>
 
                   <BottomBar W100>
                     <Body2 color="gray800">
-                      {selectedPersonas.length}명의 페르소나에 대한 잠재고객 가능성을 분석해드릴게요
+                      {selectedPersonas.length}명의 페르소나에 대한 잠재고객
+                      가능성을 분석해드릴게요
                     </Body2>
                     <Button
                       Large
@@ -1345,7 +1435,7 @@ const MermaidDiagram = ({ code }) => {
                       Fill
                       disabled={
                         !Array.isArray(customerValueAnalyzerFactor) ||
-                        !customerValueAnalyzerFactor.every(factor => factor)
+                        !customerValueAnalyzerFactor.every((factor) => factor)
                       }
                       onClick={handleReport}
                     >
@@ -1363,7 +1453,6 @@ const MermaidDiagram = ({ code }) => {
 
             {activeTab === 4 && completedSteps.includes(3) && (
               <TabContent5 Small>
-
                 {isLoading ? (
                   <div
                     style={{
@@ -1375,48 +1464,67 @@ const MermaidDiagram = ({ code }) => {
                     }}
                   >
                     <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
-
                   </div>
                 ) : (
                   <>
                     <BgBoxItem primaryLightest>
-                      <H3 color="gray800">타겟디스커버리 인사이트 분석</H3>
-                      <Body3 color="gray800">잠재 고객과 시나리오 분석을 통해 새로운 전략적 방향을 탐색해보세요</Body3>
+                      <H3 color="gray800">고객 핵심 가치 인사이트 분석</H3>
+                      <Body3 color="gray800">
+                        고객의 구매 과정에서 고객의 결정 요인을 발견하고,
+                        경쟁력을 향상시키세요
+                      </Body3>
                     </BgBoxItem>
 
                     <InsightAnalysis>
-                      <div className="title">
+                      {/* <div className="title">
                         <div>
                           <TabWrapType4>
                             <TabButtonType4>종합 분석 결과</TabButtonType4>
-                            <TabButtonType4>클러스터링 항목 상세 보기</TabButtonType4>
+                            <TabButtonType4>
+                              클러스터링 항목 상세 보기
+                            </TabButtonType4>
                           </TabWrapType4>
                         </div>
-                        <Button Primary onClick={() => setShowPopupSave(true)}>리포트 저장하기</Button>
-                      </div>
-
+                        <Button Primary onClick={() => setShowPopupSave(true)}>
+                          리포트 저장하기
+                        </Button>
+                      </div> */}
 
                       <div className="content">
                         <H4 color="gray800">
                           {`페르소나별 고객 여정 분석 결과, ${customerValueAnalyzerInfo.business}의 핵심 구매 요소는`}
-                    
-                          {customerValueAnalyzerFinalReport.title.join(", ")}으로 분석됩니다.
+                          {customerValueAnalyzerFinalReport.title.join(", ")}
+                          으로 분석됩니다.
                         </H4>
 
-                        <Body3 color="gray700">{customerValueAnalyzerFinalReport.content_1}</Body3>
+                        <Body3 color="gray700">
+                          {customerValueAnalyzerFinalReport.content_1}
+                        </Body3>
 
-                        <Body3 color="gray700">{customerValueAnalyzerFinalReport.content_2}</Body3>
-
+                        <Body3 color="gray700">
+                          {customerValueAnalyzerFinalReport.content_2}
+                        </Body3>
                       </div>
                     </InsightAnalysis>
 
                     <ValueMapWrap>
                       <div>
-
-                        <H4 color="gray800" align="left" style={{marginBottom: "12px"}}>고객 경험 & 핵심 가치 맵</H4>
+                        <H4
+                          color="gray800"
+                          align="left"
+                          style={{ marginBottom: "12px" }}
+                        >
+                          고객 경험 & 핵심 가치 맵
+                        </H4>
                         <BoxWrap Column>
-                          <Body3 color="gray700">가로축 (X축) - 영향력 : 많은 사람들이 중요하게 여기는 구매 결정 요인의 영향 정도</Body3>
-                          <Body3 color="gray700">세로축 (Y축) - 불만족도 : 사람들이 해당 구매 요인에 대해 불만족을 느끼는 정도 </Body3>
+                          <Body3 color="gray700">
+                            가로축 (X축) - 영향력 : 많은 사람들이 중요하게
+                            여기는 구매 결정 요인의 영향 정도
+                          </Body3>
+                          <Body3 color="gray700">
+                            세로축 (Y축) - 불만족도 : 사람들이 해당 구매 요인에
+                            대해 불만족을 느끼는 정도{" "}
+                          </Body3>
                         </BoxWrap>
                       </div>
 
@@ -1424,42 +1532,55 @@ const MermaidDiagram = ({ code }) => {
                         <div className="title">
                           <div>
                             <span className="must-fix" />
-                            <Caption2 color="gray700">Must Fix : 최우선 해결 요소</Caption2>
+                            <Caption2 color="gray700">
+                              Must Fix : 최우선 해결 요소
+                            </Caption2>
                           </div>
                           <div>
                             <span className="niche-pain" />
-                            <Caption2 color="gray700">Niche Pain : 니치 불편 요소</Caption2>
+                            <Caption2 color="gray700">
+                              Niche Pain : 니치 불편 요소
+                            </Caption2>
                           </div>
                           <div>
                             <span className="key-strengths" />
-                            <Caption2 color="gray700">Key Strengths : 차별화 요소</Caption2>
+                            <Caption2 color="gray700">
+                              Key Strengths : 차별화 요소
+                            </Caption2>
                           </div>
                           <div>
                             <span className="low-impact" />
-                            <Caption2 color="gray700">Low Impact : 저관여 요소</Caption2>
+                            <Caption2 color="gray700">
+                              Low Impact : 저관여 요소
+                            </Caption2>
                           </div>
                         </div>
 
                         <div className="content">
                           <div className="mermaid">
-                          {/* <MermaidDiagram code={customerValueAnalyzerPositioning?.mermaid} /> */}
-                          <MermaidDiagram code={cleanMermaidCode} />
-                          {/* <MermaidDiagram code={mermaidCode} /> */}
+                            {/* <MermaidDiagram code={customerValueAnalyzerPositioning?.mermaid} /> */}
+                            <MermaidDiagram code={cleanMermaidCode} />
+                            {/* <MermaidDiagram code={mermaidCode} /> */}
                           </div>
                         </div>
                       </ValueMap>
                     </ValueMapWrap>
 
-                    <Button Small Primary onClick={() => setShowPopupSave(true)}>리포트 저장하기</Button>
+                    <Button
+                      Small
+                      Primary
+                      onClick={() => setShowPopupSave(true)}
+                    >
+                      리포트 저장하기
+                    </Button>
                   </>
                 )}
-
               </TabContent5>
             )}
           </ValueAnalyzerWrap>
         </MainContent>
       </ContentsWrap>
-{/* 
+      {/* 
       {showPopupMore && (
         <PopupWrap
           Wide1000
@@ -1646,12 +1767,11 @@ const ValueMap = styled.div`
   flex-direction: column;
   gap: 20px;
 
-
   .mermaid {
-  width: 100%;
-  height: auto;
-  overflow: visible;
-}
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
 
   .title {
     display: flex;
@@ -1689,8 +1809,6 @@ const ValueMap = styled.div`
     }
   }
 `;
-
-
 
 export const DiagramContainer = styled.div`
   width: 70%;
