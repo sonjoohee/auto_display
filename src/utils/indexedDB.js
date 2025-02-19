@@ -2460,3 +2460,188 @@ export const InterviewXCustomerValueAnalyzerFinalReportRequest = async (
     throw error;
   }
 };
+
+
+// 아이디어 생성기 페르소나
+export const InterviewXIdeaGeneratorPersonaRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+    const PUT_DATA = {
+      type: "ix_idea_generator_persona",
+      ...data,
+    };
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/tool/create_tool_temp",
+      PUT_DATA,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// 아이디어 생성기 아이디어
+export const InterviewXIdeaGeneratorIdeaRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+    const PUT_DATA = {
+      type: "ix_idea_generator_idea",
+      ...data,
+    };
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/tool/create_tool_temp",
+      PUT_DATA,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// 아이디어 생성기 클러스터링
+export const InterviewXIdeaGeneratorClusteringRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+    const PUT_DATA = {
+      type: "ix_idea_generator_clustering",
+      ...data,
+    };
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/tool/create_tool_temp",
+      PUT_DATA,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// 아이디어 생성기 최종 보고서
+export const InterviewXIdeaGeneratorFinalReportRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+    const PUT_DATA = {
+      type: "ix_idea_generator_final_report",
+      ...data,
+    };
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/tool/create_tool_temp",
+      PUT_DATA,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
