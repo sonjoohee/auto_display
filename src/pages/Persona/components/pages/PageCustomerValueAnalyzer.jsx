@@ -176,7 +176,7 @@ const PageCustomerValueAnalyzer = () => {
   const [selectedBusiness, setSelectedBusiness] = useState("");
 
   const [apiCallCompleted, setApiCallCompleted] = useState(false);
-
+  const [apiCallCompletedFactor, setApiCallCompletedFactor] = useState(false);
   // 스크롤 초기화
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -216,16 +216,16 @@ const PageCustomerValueAnalyzer = () => {
 
           // 선택된 페르소나의 target을 기반으로 selectedPersonas 설정
           const selectedTargets = customerValueAnalyzerSelectedPersona.map(persona => persona.target);
-          const selectedIndices = customerValueAnalyzerPersona.reduce((indices, persona, index) => {
-            if (selectedTargets.includes(persona.target)) {
-              indices.push(index);
-            }
-            return indices;
-          }, []);
+          const selectedIndices = customerValueAnalyzerPersona
+            .map((persona, index) => 
+              selectedTargets.includes(persona.target) ? index : -1
+            )
+            .filter((index) => index !== -1);
+          console.log("11111111111111111111111selectedTargets", selectedTargets);
+  
+          console.log("222222222222222222222222222selectedIndices", selectedIndices);
           setSelectedPersonas(selectedIndices);
         }
-        console.log("customerValueAnalyzerSele아아아아na", selectedPersonas);
-
           // 고객 여정 맵 설정 (Step 3)
         if (Array.isArray(customerValueAnalyzerJourneyMap)) {
           setCustomerValueAnalyzerJourneyMap(customerValueAnalyzerJourneyMap);
@@ -241,39 +241,6 @@ const PageCustomerValueAnalyzer = () => {
             customerValueAnalyzerFinalReport ?? {}
           );
         }
-
-      
-        // if (
-        //   Array.isArray(customerValueAnalyzerJourneyMap) &&
-        //   Array.isArray(customerValueAnalyzerPersona)
-        // ) {
-        //   const matchedScenarioData = (customerValueAnalyzerJourneyMap ?? [])
-        //     .map((journey) => {
-        //       const matchedPersona = (customerValueAnalyzerPersona ?? []).find(
-        //         (persona) => persona?.title === journey?.title
-        //       );
-
-        //       if (!matchedPersona) return null;
-
-        //       return {
-        //         ...(matchedPersona ?? {}),
-        //         title: journey?.title ?? "",
-        //         content: matchedPersona?.content ?? {},
-        //         keywords: matchedPersona?.content?.keywords ?? [],
-        //         journey: journey ?? {},
-        //       };
-        //     })
-        //     .filter((item) => item?.title);
-
-        //   setCustomerValueAnalyzerJourneyMap(matchedScenarioData);
-        // }
-
-        // // 최종 리포트 설정 (Step 4)
-        // if (customerValueAnalyzerFinalReport) {
-        //   setCustomerValueAnalyzerFinalReport(
-        //     customerValueAnalyzerFinalReport ?? {}
-        //   );
-        // }
 
         return;
       }
@@ -567,7 +534,7 @@ const PageCustomerValueAnalyzer = () => {
 
 
   const handleCheckboxChange = (index) => {
-    if (toolStep >= 2) return;
+    if (toolStep >= 3) return;
     setSelectedPersonas(prev => {
       if (prev.includes(index)) {
         return prev.filter(id => id !== index);
@@ -616,6 +583,7 @@ const PageCustomerValueAnalyzer = () => {
   const handleSubmitPersonas = async () => {
     handleNextStep(2);
     setToolStep(3);
+    setApiCallCompletedFactor(false);
     try {
       const selectedPersonaData = selectedPersonas.map(index => ({
         content: customerValueAnalyzerPersona[index],
@@ -632,7 +600,6 @@ const PageCustomerValueAnalyzer = () => {
       setCardStatuses(initialLoadingStates);
 
       const results = [];
-      const factorData = [];
       for (let i = 0; i < selectedPersonaData.length; i++) {
         setCardStatuses(prev => ({
           ...prev,
@@ -647,37 +614,35 @@ const PageCustomerValueAnalyzer = () => {
           customer_value_journey_map: persona.journeyMap
         };
 
-        const response = await InterviewXCustomerValueAnalyzerFactorRequest(requestData, isLoggedIn);
-        console.log("response", response);
-        
-        if (response?.response?.customer_value_factor) {
-          setCustomerValueAnalyzerFactor((prev) => {
-            // prev가 배열인지 확인하고, 배열이 아니면 빈 배열로 초기화
-            const currentFactors = Array.isArray(prev) ? prev : [];
-            return [...currentFactors, response.response.customer_value_factor];
-          });
-          results.push({
-            factor: response.response.customer_value_factor,
-          });
-        } else {
-          console.error("customer_value_factor is undefined or null");
+        try {
+          const response = await InterviewXCustomerValueAnalyzerFactorRequest(requestData, isLoggedIn);
+          if (response?.response?.customer_value_factor) {
+            results.push(response.response.customer_value_factor);
+            setCardStatuses(prev => ({
+              ...prev,
+              [i]: 'completed'
+            }));
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          setCardStatuses(prev => ({
+            ...prev,
+            [i]: 'error'
+          }));
         }
-
-        setCardStatuses(prev => ({
-          ...prev,
-          [i]: 'completed'
-        }));
-
-        await updateToolOnServer(
-          toolId,
-          {
-            completed_step: 3,
-            customer_value_factor: results,
-            selected_customer_value_persona: selectedPersonaData,
-          },
-          isLoggedIn
-        );
       }
+
+      setCustomerValueAnalyzerFactor(results);
+
+      await updateToolOnServer(
+        toolId,
+        {
+          completed_step: 3,
+          customer_value_factor: results,
+          selected_customer_value_persona: selectedPersonaData,
+        },
+        isLoggedIn
+      );
     } catch (error) {
       console.error('Error submitting personas:', error);
       setShowPopupError(true);
