@@ -439,6 +439,23 @@ const PageCustomerValueAnalyzer = () => {
     }
   }, [activeTab, customerValueAnalyzerPersona, apiCallCompleted]);
 
+  // 임시 데이터 설정
+  useEffect(() => {
+    if (!customerValueAnalyzerPositioning?.legend) {
+      setCustomerValueAnalyzerPositioning({
+        ...customerValueAnalyzerPositioning,
+        legend: {
+          A: "Key Buying Factor Name Key Buying Factor Name",
+          B: "Key Buying Factor Name",
+          C: "Key Buying Factor Name",
+          D: "Key Buying Factor Name",
+          E: "Key Buying Factor Name",
+          F: "Key Buying Factor Name"
+        }
+      });
+    }
+  }, []);
+
   const handleSubmitBusinessInfo = async () => {
     try {
       setIsLoading(true);
@@ -1046,7 +1063,7 @@ const PageCustomerValueAnalyzer = () => {
                     </div>
 
                     <div className="content">
-                      <TabContent5Item>
+                      <TabContent5Item borderBottom>
                         <div className="title">
                           <Body1 color="gray700">고객 리스트 불러오기</Body1>
                         </div>
@@ -1529,6 +1546,7 @@ const PageCustomerValueAnalyzer = () => {
                       </div>
 
                       <ValueMap>
+                        {/* 
                         <div className="title">
                           <div>
                             <span className="must-fix" />
@@ -1554,13 +1572,141 @@ const PageCustomerValueAnalyzer = () => {
                               Low Impact : 저관여 요소
                             </Caption2>
                           </div>
-                        </div>
+                        </div> 
+                        */}
 
                         <div className="content">
                           <div className="mermaid">
                             {/* <MermaidDiagram code={customerValueAnalyzerPositioning?.mermaid} /> */}
                             <MermaidDiagram code={cleanMermaidCode} />
                             {/* <MermaidDiagram code={mermaidCode} /> */}
+
+                            <div className="mermaid-legend">
+                              <ul className="legend-item">
+                                <li>
+                                  <TooltipWrapper>
+                                    <Sub3 
+                                      color="gray700" 
+                                      align="left"
+                                      style={{ cursor: 'help' }}
+                                    >
+                                      {customerValueAnalyzerPositioning?.legend?.A?.length > 16 
+                                        ? `A : ${customerValueAnalyzerPositioning?.legend?.A?.substring(0, 16)}...` 
+                                        : `A : ${customerValueAnalyzerPositioning?.legend?.A}`}
+                                    </Sub3>
+                                    <Tooltip className="tooltip">
+                                      {customerValueAnalyzerPositioning?.legend?.A}
+                                    </Tooltip>
+                                  </TooltipWrapper>
+                                </li>
+                                <li>
+                                  <TooltipWrapper>
+                                    <Sub3 
+                                      color="gray700" 
+                                      align="left"
+                                      style={{ cursor: 'help' }}
+                                    >
+                                      {customerValueAnalyzerPositioning?.legend?.B?.length > 16 
+                                        ? `B : ${customerValueAnalyzerPositioning?.legend?.B?.substring(0, 16)}...` 
+                                        : `B : ${customerValueAnalyzerPositioning?.legend?.B}`}
+                                    </Sub3>
+                                    <Tooltip className="tooltip">
+                                      {customerValueAnalyzerPositioning?.legend?.B}
+                                    </Tooltip>
+                                  </TooltipWrapper>
+                                </li>
+                                <li>
+                                  <TooltipWrapper>
+                                    <Sub3 
+                                      color="gray700" 
+                                      align="left"
+                                      style={{ cursor: 'help' }}
+                                    >
+                                      {customerValueAnalyzerPositioning?.legend?.C?.length > 16 
+                                        ? `C : ${customerValueAnalyzerPositioning?.legend?.C?.substring(0, 16)}...` 
+                                        : `C : ${customerValueAnalyzerPositioning?.legend?.C}`}
+                                    </Sub3>
+                                    <Tooltip className="tooltip">
+                                      {customerValueAnalyzerPositioning?.legend?.C}
+                                    </Tooltip>
+                                  </TooltipWrapper>
+                                </li>
+                                <li>
+                                  <TooltipWrapper>
+                                    <Sub3 
+                                      color="gray700" 
+                                      align="left"
+                                      style={{ cursor: 'help' }}
+                                    >
+                                      {customerValueAnalyzerPositioning?.legend?.D?.length > 16 
+                                        ? `D : ${customerValueAnalyzerPositioning?.legend?.D?.substring(0, 16)}...` 
+                                        : `D : ${customerValueAnalyzerPositioning?.legend?.D}`}
+                                    </Sub3>
+                                    <Tooltip className="tooltip">
+                                      {customerValueAnalyzerPositioning?.legend?.D}
+                                    </Tooltip>
+                                  </TooltipWrapper>
+                                </li>
+                                <li>
+                                  <TooltipWrapper>
+                                    <Sub3 
+                                      color="gray700" 
+                                      align="left"
+                                      style={{ cursor: 'help' }}
+                                    >
+                                      {customerValueAnalyzerPositioning?.legend?.E?.length > 16 
+                                        ? `E : ${customerValueAnalyzerPositioning?.legend?.E?.substring(0, 16)}...` 
+                                        : `E : ${customerValueAnalyzerPositioning?.legend?.E}`}
+                                    </Sub3>
+                                    <Tooltip className="tooltip">
+                                      {customerValueAnalyzerPositioning?.legend?.E}
+                                    </Tooltip>
+                                  </TooltipWrapper>
+                                </li>
+                                <li>
+                                  <TooltipWrapper>
+                                    <Sub3 
+                                      color="gray700" 
+                                      align="left"
+                                      style={{ cursor: 'help' }}
+                                    >
+                                      {customerValueAnalyzerPositioning?.legend?.F?.length > 16 
+                                        ? `F : ${customerValueAnalyzerPositioning?.legend?.F?.substring(0, 16)}...` 
+                                        : `F : ${customerValueAnalyzerPositioning?.legend?.F}`}
+                                    </Sub3>
+                                    <Tooltip className="tooltip">
+                                      {customerValueAnalyzerPositioning?.legend?.F}
+                                    </Tooltip>
+                                  </TooltipWrapper>
+                                </li>
+                              </ul>
+                              <div className="legend-item">
+                                <div>
+                                  <span className="must-fix" />
+                                  <Caption2 color="gray700">
+                                    Must Fix : 최우선 해결 요소
+                                  </Caption2>
+                                </div>
+                                <div>
+                                  <span className="niche-pain" />
+                                  <Caption2 color="gray700">
+                                    Niche Pain : 니치 불편 요소
+                                  </Caption2>
+                                </div>
+                                <div>
+                                  <span className="key-strengths" />
+                                  <Caption2 color="gray700">
+                                    Key Strengths : 차별화 요소
+                                  </Caption2>
+                                </div>
+                                <div>
+                                  <span className="low-impact" />
+                                  <Caption2 color="gray700">
+                                    Low Impact : 저관여 요소
+                                  </Caption2>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </ValueMap>
@@ -1723,7 +1869,7 @@ const PageCustomerValueAnalyzer = () => {
 export default PageCustomerValueAnalyzer;
 
 const ValueAnalyzerWrap = styled.div`
-  display: flex;
+display: flex;
   flex-direction: column;
   gap: 100px;
   margin-top: 60px;
@@ -1768,9 +1914,63 @@ const ValueMap = styled.div`
   gap: 20px;
 
   .mermaid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
     width: 100%;
     height: auto;
-    overflow: visible;
+  }
+
+  .mermaid-legend {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    max-width: 170px;
+    width: 100%;
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+
+      > div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+      }
+    }
+
+    span {
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+
+      &.must-fix {
+        background-color: #d3e2ff;
+      }
+
+      &.niche-pain {
+        background-color: #e0e4eb;
+      }
+
+      &.key-strengths {
+        background-color: #e9f1ff;
+      }
+
+      &.low-impact {
+        background-color: ${palette.gray100};
+      }
+    }
   }
 
   .title {
@@ -1820,3 +2020,32 @@ export const DiagramContainer = styled.div`
   align-items: center;
   overflow: visible;
 `;
+
+  // 툴팁을 위한 스타일 컴포넌트 추가
+  const TooltipWrapper = styled.div`
+    position: relative;
+    display: inline-block;
+
+    &:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+  `;
+
+  const Tooltip = styled.div`
+    visibility: hidden;
+    position: absolute;
+    left: 0;
+    top: -35px;
+    padding: 8px;
+    color: ${palette.gray500};
+    border-radius: 4px;
+    font-size: 0.75rem;
+    line-height: 16px;
+    white-space: nowrap;
+    border: 1px solid ${palette.outlineGray};
+    background: ${palette.white};
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 10;
+  `;
