@@ -187,15 +187,28 @@ import { useSaveConversation } from "../../../Expert_Insight/components/atoms/At
 import OrganismReportPopup from "../../../Expert_Insight/components/organisms/OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismIncNavigation = () => {
-  const [ideaGeneratorInfo, setIdeaGeneratorInfo] = useAtom(IDEA_GENERATOR_INFO);
-  const [ideaGeneratorKnowTarget, setIdeaGeneratorKnowTarget] = useAtom(IDEA_GENERATOR_KNOW_TARGET);
-  const [ideaGeneratorCustomTarget, setIdeaGeneratorCustomTarget] = useAtom(IDEA_GENERATOR_CUSTOM_TARGET);
-  const [ideaGeneratorPersona, setIdeaGeneratorPersona] = useAtom(IDEA_GENERATOR_PERSONA);
-  const [ideaGeneratorIdea, setIdeaGeneratorIdea] = useAtom(IDEA_GENERATOR_IDEA);
-  const [ideaGeneratorClustering, setIdeaGeneratorClustering] = useAtom(IDEA_GENERATOR_CLUSTERING);
-  const [ideaGeneratorFinalReport, setIdeaGeneratorFinalReport] = useAtom(IDEA_GENERATOR_FINAL_REPORT);
-  const [ideaGeneratorSelectedPersona, setIdeaGeneratorSelectedPersona] = useAtom(IDEA_GENERATOR_SELECTED_PERSONA);
-  
+  const [ideaGeneratorInfo, setIdeaGeneratorInfo] =
+    useAtom(IDEA_GENERATOR_INFO);
+  const [ideaGeneratorKnowTarget, setIdeaGeneratorKnowTarget] = useAtom(
+    IDEA_GENERATOR_KNOW_TARGET
+  );
+  const [ideaGeneratorCustomTarget, setIdeaGeneratorCustomTarget] = useAtom(
+    IDEA_GENERATOR_CUSTOM_TARGET
+  );
+  const [ideaGeneratorPersona, setIdeaGeneratorPersona] = useAtom(
+    IDEA_GENERATOR_PERSONA
+  );
+  const [ideaGeneratorIdea, setIdeaGeneratorIdea] =
+    useAtom(IDEA_GENERATOR_IDEA);
+  const [ideaGeneratorClustering, setIdeaGeneratorClustering] = useAtom(
+    IDEA_GENERATOR_CLUSTERING
+  );
+  const [ideaGeneratorFinalReport, setIdeaGeneratorFinalReport] = useAtom(
+    IDEA_GENERATOR_FINAL_REPORT
+  );
+  const [ideaGeneratorSelectedPersona, setIdeaGeneratorSelectedPersona] =
+    useAtom(IDEA_GENERATOR_SELECTED_PERSONA);
+
   // export const TARGET_DISCOVERY_PERSONA = atom([]);
   // export const SELECTED_TARGET_DISCOVERY_PERSONA = atom([]);
   // export const TARGET_DISCOVERY_SCENARIO = atom([]);
@@ -564,18 +577,27 @@ const OrganismIncNavigation = () => {
     useAtom(CUSTOMER_VALUE_ANALYZER_PERSONA);
   const [customerValueAnalyzerJourneyMap, setCustomerValueAnalyzerJourneyMap] =
     useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
-  const [customerValueAnalyzerFactor, setCustomerValueAnalyzerFactor] =
-    useAtom(CUSTOMER_VALUE_ANALYZER_FACTOR);
+  const [customerValueAnalyzerFactor, setCustomerValueAnalyzerFactor] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_FACTOR
+  );
   const [customerValueAnalyzerClustering, setCustomerValueAnalyzerClustering] =
     useAtom(CUSTOMER_VALUE_ANALYZER_CLUSTERING);
-  const [customerValueAnalyzerPositioning, setCustomerValueAnalyzerPositioning] =
-    useAtom(CUSTOMER_VALUE_ANALYZER_POSITIONING);
-  const [customerValueAnalyzerFinalReport, setCustomerValueAnalyzerFinalReport] =
-    useAtom(CUSTOMER_VALUE_ANALYZER_FINAL_REPORT);
-  const [customerValueAnalyzerSelectedFactor, setCustomerValueAnalyzerSelectedFactor] =
-    useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR);
-  const [customerValueAnalyzerSelectedPersona, setCustomerValueAnalyzerSelectedPersona] =
-    useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA);
+  const [
+    customerValueAnalyzerPositioning,
+    setCustomerValueAnalyzerPositioning,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_POSITIONING);
+  const [
+    customerValueAnalyzerFinalReport,
+    setCustomerValueAnalyzerFinalReport,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_FINAL_REPORT);
+  const [
+    customerValueAnalyzerSelectedFactor,
+    setCustomerValueAnalyzerSelectedFactor,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR);
+  const [
+    customerValueAnalyzerSelectedPersona,
+    setCustomerValueAnalyzerSelectedPersona,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA);
   // useEffect(() => {
   //   setIsSection1Open(false);
   //   setIsSection2Open(false);
@@ -953,7 +975,7 @@ const OrganismIncNavigation = () => {
       //   }
       // );
       const response = await getToolOnServer(conversationId, isLoggedIn);
-    
+
       const chatData = response;
 
       // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
@@ -1140,7 +1162,9 @@ const OrganismIncNavigation = () => {
       setCustomerValueAnalyzerJourneyMap(
         chatData.customer_value_journey_map || []
       );
-      setCustomerValueAnalyzerSelectedPersona(chatData.selected_customer_value_persona || []);
+      setCustomerValueAnalyzerSelectedPersona(
+        chatData.selected_customer_value_persona || []
+      );
       setCustomerValueAnalyzerFactor(chatData.customer_value_factor || []);
       setCustomerValueAnalyzerClustering(
         chatData.customer_value_clustering || []
@@ -1151,20 +1175,32 @@ const OrganismIncNavigation = () => {
       setCustomerValueAnalyzerPositioning(
         chatData.customer_value_positioning || []
       );
-      setCustomerValueAnalyzerFinalReport(chatData.customer_value_final_report || {});
+      setCustomerValueAnalyzerFinalReport(
+        chatData.customer_value_final_report || {}
+      );
       setToolLoading(true);
-      
+      setIdeaGeneratorInfo({});
+      setIdeaGeneratorPersona([]);
+      setIdeaGeneratorIdea([]);
+      setIdeaGeneratorClustering([]);
+      setIdeaGeneratorFinalReport({});
+      setIdeaGeneratorSelectedPersona([]);
+      setIdeaGeneratorKnowTarget(false);
+
       setIdeaGeneratorInfo({
         business: chatData.business,
         core_value: chatData.core_value,
       });
+
       setIdeaGeneratorPersona(chatData.idea_generator_persona || []);
       setIdeaGeneratorIdea(chatData.idea_generator_idea || []);
       setIdeaGeneratorClustering(chatData.idea_generator_clustering || []);
       setIdeaGeneratorFinalReport(chatData.idea_generator_final_report || {});
-      setIdeaGeneratorSelectedPersona(chatData.idea_generator_selected_persona || []);
+      setIdeaGeneratorSelectedPersona(
+        chatData.idea_generator_selected_persona || []
+      );
       setIdeaGeneratorKnowTarget(chatData.idea_generator_know_target || false);
-      
+
       if (chatData.isMarketing) {
         const updatedConversation = [...chatData.conversation];
 

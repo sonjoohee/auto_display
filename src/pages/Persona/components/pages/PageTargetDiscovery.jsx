@@ -171,6 +171,7 @@ const PageTargetDiscovery = () => {
       setSelectedInterviewPurpose("product_experience_new");
     }
   };
+
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {

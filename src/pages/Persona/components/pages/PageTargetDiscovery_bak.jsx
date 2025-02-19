@@ -243,8 +243,6 @@ const PageTargetDiscovery = () => {
       );
       setToolId(responseToolId);
 
-      console.log("🚀 ~ handleSubmitBusinessInfo ~ responseToolId:", toolId);
-
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
       setTargetDiscoveryPersona(
         response.response.target_discovery_persona || []
