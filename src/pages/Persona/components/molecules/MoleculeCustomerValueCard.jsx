@@ -549,7 +549,7 @@ const CustomButton = styled(Button)`
 
 const ScrollContainer = styled.div`
   width: 100%;
-  height: 600px;
+  height: 400px;
   overflow-x: auto;
   overflow-y: hidden;
 
