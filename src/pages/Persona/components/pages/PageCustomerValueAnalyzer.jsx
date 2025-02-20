@@ -194,6 +194,8 @@ const PageCustomerValueAnalyzer = () => {
 
   const [apiCallCompleted, setApiCallCompleted] = useState(false);
   const [apiCallCompletedFactor, setApiCallCompletedFactor] = useState(false);
+  const [completedApiCalls, setCompletedApiCalls] = useState([]);
+
   // 스크롤 초기화
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -250,7 +252,7 @@ const PageCustomerValueAnalyzer = () => {
           const selectedTargets = customerValueAnalyzerSelectedPersona.map(
             (persona) => persona.target
           );
-
+       
           // customerValueAnalyzerPersona가 있는지 확인하고 매칭
           if (
             Array.isArray(customerValueAnalyzerPersona) &&
@@ -281,6 +283,15 @@ const PageCustomerValueAnalyzer = () => {
         if (Array.isArray(customerValueAnalyzerFactor)) {
           setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
         }
+
+        console.log("customerValueAnalyzerFactor", customerValueAnalyzerFactor);
+        console.log("completedStepsArray", completedStepsArray);
+        // if (Array.isArray(customerValueAnalyzerFactor) && customerValueAnalyzerFactor.length > 0) {
+        //   setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
+        // } else if (completedStepsArray.length === 2) {
+        //   handleSubmitPersonas(); 
+        // }
+        
 
         // 최종 리포트 설정 (Step 4)
         if (customerValueAnalyzerFinalReport) {
@@ -343,14 +354,18 @@ const PageCustomerValueAnalyzer = () => {
 
   // 고객 여정 맵 API 호출 시작
   useEffect(() => {
+    console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
     if (
       activeTab === 2 &&
       customerValueAnalyzerPersona.length > 0 &&
       toolStep < 2 &&
-      !apiCallCompleted
+      !apiCallCompleted &&
+      Object.keys(customerValueAnalyzerJourneyMap).length === 0
     ) {
+      console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
       // toolStep이 2보다 작을 때만 API 호출
       // 모든 카드의 상태를 waiting으로 초기화
+      console.log("customerValueAnalyzerPersona", customerValueAnalyzerPersona);
       const initialLoadingStates = customerValueAnalyzerPersona.reduce(
         (acc, _, index) => {
           acc[index] = "waiting";
@@ -362,10 +377,11 @@ const PageCustomerValueAnalyzer = () => {
 
       // 순차적으로 API 호출을 처리하는 함수
       const processSequentially = async () => {
+        console.log("customerValueAnalyzerInfo.target_list", customerValueAnalyzerInfo.target_list);
         let journeyMapData = [];
         for (
           let index = 0;
-          index < customerValueAnalyzerPersona.length;
+          index < customerValueAnalyzerInfo.target_list.length;
           index++
         ) {
           try {
@@ -425,12 +441,10 @@ const PageCustomerValueAnalyzer = () => {
             await updateToolOnServer(
               toolId,
               {
-                completed_step: 2,
                 customer_value_journey_map: journeyMapData,
               },
               isLoggedIn
             );
-            setToolStep(2);
           } catch (error) {
             console.error(`Journey Map API 호출 실패 (카드 ${index}):`, error);
           }
@@ -462,8 +476,8 @@ const PageCustomerValueAnalyzer = () => {
           C: "Key Buying Factor Name",
           D: "Key Buying Factor Name",
           E: "Key Buying Factor Name",
-          F: "Key Buying Factor Name"
-        }
+          F: "Key Buying Factor Name",
+        },
       });
     }
   }, []);
@@ -472,12 +486,16 @@ const PageCustomerValueAnalyzer = () => {
     try {
       setIsLoading(true);
 
+      // targetCustomers 배열에서 빈 값을 제거합니다.
+      const filteredTargetCustomers = targetCustomers.filter(customer => customer.trim() !== "");
+
       const businessData = {
-        business: selectedBusiness,
-        target_list: targetCustomers,
+        business: selectedBusiness || businessDescription,
+        target_list: filteredTargetCustomers, // 필터링된 리스트를 사용합니다.
         analysis_scope: selectedPurposes.analysisScope,
         analysis_purpose: businessDescription,
       };
+      console.log("businessData", businessData);
 
       const response = await InterviewXCustomerValueAnalyzerPersonaRequest(
         businessData,
@@ -511,7 +529,6 @@ const PageCustomerValueAnalyzer = () => {
       );
 
       setCustomerValueAnalyzerInfo(businessData);
-      console.log("customerValueAnalyzerInfo", customerValueAnalyzerInfo);
 
       // API 호출 성공시 다음 단계로 이동
       handleNextStep(1);
@@ -597,7 +614,7 @@ const PageCustomerValueAnalyzer = () => {
   };
 
   const handleCheckboxChange = (index) => {
-    if (toolStep >= 3) return;
+    if (toolStep >= 2) return;
     setSelectedPersonas((prev) => {
       if (prev.includes(index)) {
         return prev.filter((id) => id !== index);
@@ -642,9 +659,16 @@ const PageCustomerValueAnalyzer = () => {
   };
 
   const handleSubmitPersonas = async () => {
+    await updateToolOnServer(
+      toolId,
+      {
+        completed_step: 2,
+      },
+      isLoggedIn
+    );
+    setToolStep(2);
     handleNextStep(2);
-    setToolStep(3);
-    setApiCallCompletedFactor(false);
+    // setApiCallCompletedFactor(false);
     try {
       const selectedPersonaData = selectedPersonas.map((index) => ({
         content: customerValueAnalyzerPersona[index],
@@ -652,6 +676,14 @@ const PageCustomerValueAnalyzer = () => {
         journeyMap: customerValueAnalyzerJourneyMap[index],
       }));
       setCustomerValueAnalyzerSelectedPersona(selectedPersonaData);
+
+      await updateToolOnServer(
+        toolId,
+        {
+          selected_customer_value_persona: selectedPersonaData,
+        },
+        isLoggedIn
+      );
 
       // 초기 상태를 'waiting'으로 설정
       const initialLoadingStates = selectedPersonaData.reduce(
@@ -665,6 +697,10 @@ const PageCustomerValueAnalyzer = () => {
 
       const results = [];
       for (let i = 0; i < selectedPersonaData.length; i++) {
+        // if (completedApiCalls.includes(i)) {
+        //   continue; // 이미 완료된 API 호출은 건너뜁니다
+        // }
+
         setCardStatuses((prev) => ({
           ...prev,
           [i]: "loading",
@@ -689,6 +725,7 @@ const PageCustomerValueAnalyzer = () => {
               ...prev,
               [i]: "completed",
             }));
+            // setCompletedApiCalls((prev) => [...prev, i]);
           }
         } catch (error) {
           console.error("Error:", error);
@@ -700,13 +737,12 @@ const PageCustomerValueAnalyzer = () => {
       }
 
       setCustomerValueAnalyzerFactor(results);
+      // setApiCallCompletedFactor(true); // API 호출 완료 상태로 설정
 
       await updateToolOnServer(
         toolId,
         {
-          completed_step: 3,
           customer_value_factor: results,
-          selected_customer_value_persona: selectedPersonaData,
         },
         isLoggedIn
       );
@@ -733,8 +769,22 @@ const PageCustomerValueAnalyzer = () => {
     }
   };
 
+  // useEffect(() => {
+  //   if (apiCallCompletedFactor) {
+  //     handleSubmitPersonas();
+  //   }
+  // }, [apiCallCompletedFactor]);
+
   const handleReport = async () => {
     try {
+      await updateToolOnServer(
+        toolId,
+        {
+          completed_step: 3,
+        },
+        isLoggedIn
+      );
+      setToolStep(3);
       setIsLoading(true);
       handleNextStep(3);
 
@@ -822,6 +872,7 @@ const PageCustomerValueAnalyzer = () => {
         customerValueAnalyzerFinalReport
       );
 
+      setToolStep(4);
       await updateToolOnServer(
         toolId,
         {
@@ -1100,14 +1151,14 @@ const PageCustomerValueAnalyzer = () => {
                               {targetDiscoveryList.length === 0 ? (
                                 <SelectBoxItem
                                   disabled={toolStep >= 1}
-                                  onClick={() =>
-                                    handlePurposeSelect(
-                                      "진행된 프로젝트가 없습니다. 타겟 탐색기를 먼저 진행해주세요",
-                                      "customerList"
-                                    )
-                                  }
+                                  // onClick={() =>
+                                  //   handlePurposeSelect(
+                                  //     "진행된 프로젝트가 없습니다. 타겟 탐색기를 먼저 진행해주세요",
+                                  //     "customerList"
+                                  //   )
+                                  // }
                                 >
-                                  <Body2 color="gray700" align="left">
+                                  <Body2 color="gray300" align="left">
                                     진행된 프로젝트가 없습니다. 타겟
                                     디스커버리를 먼저 진행해주세요
                                   </Body2>
@@ -1348,15 +1399,15 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
                   <CardGroupWrap column>
-                    {customerValueAnalyzerPersona.map((content, index) => {
+                    {customerValueAnalyzerInfo.target_list.map((target, index) => {
                       return (
                         <MoleculeCustomerValueCard
                           key={index}
                           id={index}
-                          title={customerValueAnalyzerInfo.target_list[index]}
-                          content={content}
+                          title={target}
+                          content={customerValueAnalyzerPersona[index]}
                           business={customerValueAnalyzerInfo.business}
-                          status={cardStatuses[index]}
+                          status={customerValueAnalyzerJourneyMap.length === customerValueAnalyzerInfo.target_list.length ? "completed" : cardStatuses[index]}
                           isSelected={selectedPersonas.includes(index)}
                           onSelect={(id) => handleCheckboxChange(id)}
                           viewType="list"
@@ -1383,7 +1434,7 @@ const PageCustomerValueAnalyzer = () => {
                       Fill
                       disabled={
                         selectedPersonas.length === 0 ||
-                        toolStep >= 3 ||
+                        toolStep >= 2 ||
                         Object.values(cardStatuses).some(
                           (status) =>
                             status === "loading" || status === "waiting"
@@ -1422,7 +1473,7 @@ const PageCustomerValueAnalyzer = () => {
                           id={index}
                           title={persona.target}
                           content={persona.content}
-                          status={cardStatuses[index]}
+                          status={customerValueAnalyzerFactor.length === customerValueAnalyzerSelectedPersona.length ? "completed" : cardStatuses[index]}
                           factor={customerValueAnalyzerFactor[index]}
                           business={customerValueAnalyzerInfo.business}
                           journeyMapData={persona.journeyMap}
@@ -1447,7 +1498,10 @@ const PageCustomerValueAnalyzer = () => {
                       Fill
                       disabled={
                         !Array.isArray(customerValueAnalyzerFactor) ||
-                        !customerValueAnalyzerFactor.every((factor) => factor)
+                        !customerValueAnalyzerFactor.every((factor) => factor) ||
+                        customerValueAnalyzerFactor.length === 0
+                        // toolStep >= 4 ||
+                        // !customerValueAnalyzerFactor.every((factor) => factor)
                       }
                       onClick={handleReport}
                     >
@@ -1505,7 +1559,9 @@ const PageCustomerValueAnalyzer = () => {
                       <div className="content">
                         <H4 color="gray800">
                           {`페르소나별 고객 여정 분석 결과, ${customerValueAnalyzerInfo.business}의 핵심 구매 요소는`}
-                          {(customerValueAnalyzerFinalReport.title || []).join(", ")}
+                          {(customerValueAnalyzerFinalReport.title || []).join(
+                            ", "
+                          )}
                           으로 분석됩니다.
                         </H4>
 
@@ -1577,28 +1633,41 @@ const PageCustomerValueAnalyzer = () => {
                             {/* <MermaidDiagram code={mermaidCode} /> */}
 
                             <div className="mermaid-legend">
-                              <ul className="legend-item" style={{ textAlign: 'left' }}>
-                                {customerValueAnalyzerPositioning?.cluster_list?.map((cluster, index) => {
-                                  const label = String.fromCharCode(65 + index); // 인덱스를 알파벳으로 변환 (A, B, C, ...)
-                                  return (
-                                    <li key={index}>
-                                      <TooltipWrapper>
-                                        <Sub3 
-                                          color="gray700" 
-                                          align="left"
-                                          style={{ cursor: 'help', textAlign: 'left' }}
-                                        >
-                                          {cluster.cluster_name.length > 16 
-                                            ? `${label} : ${cluster.cluster_name.substring(0, 16)}...` 
-                                            : `${label} : ${cluster.cluster_name}`}
-                                        </Sub3>
-                                        <Tooltip className="tooltip">
-                                          {cluster.cluster_name}
-                                        </Tooltip>
-                                      </TooltipWrapper>
-                                    </li>
-                                  );
-                                })}
+                              <ul
+                                className="legend-item"
+                                style={{ textAlign: "left" }}
+                              >
+                                {customerValueAnalyzerPositioning?.cluster_list?.map(
+                                  (cluster, index) => {
+                                    const label = String.fromCharCode(
+                                      65 + index
+                                    ); // 인덱스를 알파벳으로 변환 (A, B, C, ...)
+                                    return (
+                                      <li key={index}>
+                                        <TooltipWrapper>
+                                          <Sub3
+                                            color="gray700"
+                                            align="left"
+                                            style={{
+                                              cursor: "help",
+                                              textAlign: "left",
+                                            }}
+                                          >
+                                            {cluster.cluster_name.length > 16
+                                              ? `${label} : ${cluster.cluster_name.substring(
+                                                  0,
+                                                  16
+                                                )}...`
+                                              : `${label} : ${cluster.cluster_name}`}
+                                          </Sub3>
+                                          <Tooltip className="tooltip">
+                                            {cluster.cluster_name}
+                                          </Tooltip>
+                                        </TooltipWrapper>
+                                      </li>
+                                    );
+                                  }
+                                )}
                               </ul>
                               <div className="legend-item">
                                 <div>
@@ -1789,7 +1858,7 @@ const PageCustomerValueAnalyzer = () => {
 export default PageCustomerValueAnalyzer;
 
 const ValueAnalyzerWrap = styled.div`
-display: flex;
+  display: flex;
   flex-direction: column;
   gap: 100px;
   margin-top: 60px;
@@ -1941,31 +2010,31 @@ export const DiagramContainer = styled.div`
   overflow: visible;
 `;
 
-  // 툴팁을 위한 스타일 컴포넌트 추가
-  const TooltipWrapper = styled.div`
-    position: relative;
-    display: inline-block;
+// 툴팁을 위한 스타일 컴포넌트 추가
+const TooltipWrapper = styled.div`
+  position: relative;
+  display: inline-block;
 
-    &:hover .tooltip {
-      visibility: visible;
-      opacity: 1;
-    }
-  `;
+  &:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+`;
 
-  const Tooltip = styled.div`
-    visibility: hidden;
-    position: absolute;
-    left: 0;
-    top: -35px;
-    padding: 8px;
-    color: ${palette.gray500};
-    border-radius: 4px;
-    font-size: 0.75rem;
-    line-height: 16px;
-    white-space: nowrap;
-    border: 1px solid ${palette.outlineGray};
-    background: ${palette.white};
-    opacity: 0;
-    transition: opacity 0.2s;
-    z-index: 10;
-  `;
+const Tooltip = styled.div`
+  visibility: hidden;
+  position: absolute;
+  left: 0;
+  top: -35px;
+  padding: 8px;
+  color: ${palette.gray500};
+  border-radius: 4px;
+  font-size: 0.75rem;
+  line-height: 16px;
+  white-space: nowrap;
+  border: 1px solid ${palette.outlineGray};
+  background: ${palette.white};
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 10;
+`;

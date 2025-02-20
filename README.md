@@ -73,3 +73,6 @@ npm install three
 
 npm install xlsx
 npm install d3
+
+** 드래그 앤 드롭 이미지 업로드
+npm install react-dropzone-uploader

@@ -554,16 +554,15 @@ export const TOOL_LOADING = atom(false);
 
 export const IDEA_GENERATOR_INFO = atom({
   business: "",
-  core_value: []
-}); 
-export const IDEA_GENERATOR_KNOW_TARGET = atom(false);
+  core_value: [],
+});
+export const IDEA_GENERATOR_KNOW_TARGET = atom(null);
 export const IDEA_GENERATOR_CUSTOM_TARGET = atom("");
 export const IDEA_GENERATOR_PERSONA = atom([]);
 export const IDEA_GENERATOR_IDEA = atom([]);
 export const IDEA_GENERATOR_CLUSTERING = atom([]);
 export const IDEA_GENERATOR_FINAL_REPORT = atom({});
 export const IDEA_GENERATOR_SELECTED_PERSONA = atom([]);
-
 
 // setConversation([]);
 // setConversationStage(1);

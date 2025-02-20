@@ -1907,7 +1907,9 @@ const PagePersona2 = () => {
                                 viewType={viewType}
                               />
                             ))}
-                            {isLoadingMore && isLoadingBusiness && (
+                           
+                          </CardGroupWrap>
+                          {isLoadingMore && isLoadingBusiness && (
                               <div
                                 style={{
                                   width: "100%",
@@ -1923,7 +1925,6 @@ const PagePersona2 = () => {
                                 />
                               </div>
                             )}
-                          </CardGroupWrap>
                         </ContentSection>
                       )}
 
