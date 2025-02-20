@@ -2172,6 +2172,25 @@ export const ListBoxItem = styled.div`
   }
 `;
 
+export const PercentBadge = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: ${(props) => (
+    props.primary 
+    ? palette.primary 
+    : palette.gray700
+  )};
+  border-radius: 50%;
+  background: ${(props) => (
+    props.primary 
+    ? 'rgba(34, 111, 255, 0.10)' 
+    : palette.gray100
+  )};
+`;
+
 export const ListBoxWrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -2232,7 +2251,7 @@ export const ListBorderItem = styled(ListBoxItem)`
 export const ListText = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: ${(props) => (props.Small ? "4px" : "8px")};
 `;
 
 export const ListTitle = styled(Body1)`
