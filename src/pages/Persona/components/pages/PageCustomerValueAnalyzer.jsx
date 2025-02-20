@@ -343,14 +343,18 @@ const PageCustomerValueAnalyzer = () => {
 
   // 고객 여정 맵 API 호출 시작
   useEffect(() => {
+    console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
     if (
-      activeTab === 2 &&
-      customerValueAnalyzerPersona.length > 0 &&
-      toolStep < 2 &&
-      !apiCallCompleted
+      // activeTab === 2 &&
+      // customerValueAnalyzerPersona.length > 0 &&
+      // toolStep < 2 &&
+      // !apiCallCompleted &&
+      Object.keys(customerValueAnalyzerJourneyMap).length === 0
     ) {
+      console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
       // toolStep이 2보다 작을 때만 API 호출
       // 모든 카드의 상태를 waiting으로 초기화
+      console.log("customerValueAnalyzerPersona", customerValueAnalyzerPersona);
       const initialLoadingStates = customerValueAnalyzerPersona.reduce(
         (acc, _, index) => {
           acc[index] = "waiting";
@@ -362,10 +366,11 @@ const PageCustomerValueAnalyzer = () => {
 
       // 순차적으로 API 호출을 처리하는 함수
       const processSequentially = async () => {
+        console.log("customerValueAnalyzerInfo.target_list", customerValueAnalyzerInfo.target_list);
         let journeyMapData = [];
         for (
           let index = 0;
-          index < customerValueAnalyzerPersona.length;
+          index < customerValueAnalyzerInfo.target_list.length;
           index++
         ) {
           try {
@@ -425,12 +430,10 @@ const PageCustomerValueAnalyzer = () => {
             await updateToolOnServer(
               toolId,
               {
-                completed_step: 2,
                 customer_value_journey_map: journeyMapData,
               },
               isLoggedIn
             );
-            setToolStep(2);
           } catch (error) {
             console.error(`Journey Map API 호출 실패 (카드 ${index}):`, error);
           }
@@ -511,7 +514,6 @@ const PageCustomerValueAnalyzer = () => {
       );
 
       setCustomerValueAnalyzerInfo(businessData);
-      console.log("customerValueAnalyzerInfo", customerValueAnalyzerInfo);
 
       // API 호출 성공시 다음 단계로 이동
       handleNextStep(1);
@@ -642,8 +644,17 @@ const PageCustomerValueAnalyzer = () => {
   };
 
   const handleSubmitPersonas = async () => {
+
+    await updateToolOnServer(
+      toolId,
+      {
+        completed_step: 2,
+      },
+      isLoggedIn
+    );
+    setToolStep(2);
+
     handleNextStep(2);
-    setToolStep(3);
     setApiCallCompletedFactor(false);
     try {
       const selectedPersonaData = selectedPersonas.map((index) => ({
@@ -704,7 +715,6 @@ const PageCustomerValueAnalyzer = () => {
       await updateToolOnServer(
         toolId,
         {
-          completed_step: 3,
           customer_value_factor: results,
           selected_customer_value_persona: selectedPersonaData,
         },
@@ -735,6 +745,15 @@ const PageCustomerValueAnalyzer = () => {
 
   const handleReport = async () => {
     try {
+      await updateToolOnServer(
+        toolId,
+        {
+          completed_step: 3,
+        },
+        isLoggedIn
+      );
+      setToolStep(3);
+
       setIsLoading(true);
       handleNextStep(3);
 
@@ -822,6 +841,7 @@ const PageCustomerValueAnalyzer = () => {
         customerValueAnalyzerFinalReport
       );
 
+      setToolStep(4);
       await updateToolOnServer(
         toolId,
         {
@@ -1100,12 +1120,12 @@ const PageCustomerValueAnalyzer = () => {
                               {targetDiscoveryList.length === 0 ? (
                                 <SelectBoxItem
                                   disabled={toolStep >= 1}
-                                  onClick={() =>
-                                    handlePurposeSelect(
-                                      "진행된 프로젝트가 없습니다. 타겟 탐색기를 먼저 진행해주세요",
-                                      "customerList"
-                                    )
-                                  }
+                                  // onClick={() =>
+                                  //   handlePurposeSelect(
+                                  //     "진행된 프로젝트가 없습니다. 타겟 탐색기를 먼저 진행해주세요",
+                                  //     "customerList"
+                                  //   )
+                                  // }
                                 >
                                   <Body2 color="gray700" align="left">
                                     진행된 프로젝트가 없습니다. 타겟
@@ -1356,7 +1376,7 @@ const PageCustomerValueAnalyzer = () => {
                           title={target}
                           content={customerValueAnalyzerPersona[index]}
                           business={customerValueAnalyzerInfo.business}
-                          status={cardStatuses[index]}
+                          status={customerValueAnalyzerJourneyMap.length === customerValueAnalyzerInfo.target_list.length ? "completed" : cardStatuses[index]}
                           isSelected={selectedPersonas.includes(index)}
                           onSelect={(id) => handleCheckboxChange(id)}
                           viewType="list"
@@ -1422,7 +1442,7 @@ const PageCustomerValueAnalyzer = () => {
                           id={index}
                           title={persona.target}
                           content={persona.content}
-                          status={cardStatuses[index]}
+                          status={customerValueAnalyzerFactor.length === customerValueAnalyzerSelectedPersona.length ? "completed" : cardStatuses[index]}
                           factor={customerValueAnalyzerFactor[index]}
                           business={customerValueAnalyzerInfo.business}
                           journeyMapData={persona.journeyMap}
@@ -1447,7 +1467,8 @@ const PageCustomerValueAnalyzer = () => {
                       Fill
                       disabled={
                         !Array.isArray(customerValueAnalyzerFactor) ||
-                        !customerValueAnalyzerFactor.every((factor) => factor)
+                        !customerValueAnalyzerFactor.every((factor) => factor) ||
+                        customerValueAnalyzerFactor.length === 0
                       }
                       onClick={handleReport}
                     >
