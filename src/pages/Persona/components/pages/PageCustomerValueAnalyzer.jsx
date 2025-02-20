@@ -1675,13 +1675,13 @@ const PageCustomerValueAnalyzer = () => {
                       </ValueMap>
                     </ValueMapWrap>
 
-                    <Button
+                    {/* <Button
                       Small
                       Primary
                       onClick={() => setShowPopupSave(true)}
                     >
                       리포트 저장하기
-                    </Button>
+                    </Button> */}
                   </>
                 )}
               </TabContent5>
