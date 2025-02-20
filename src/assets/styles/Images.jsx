@@ -301,6 +301,7 @@ import ImgExploreNoData from "../images/img-explore-nodata.png";
 import LightningChargeFill from "../icons/LightningChargeFill";
 import Tag from "../icons/Tag";
 import Report2 from "../icons/Report2";
+import ImagePrimary from "../images/image-primary.svg";
 
 const images = {
   Logo,
@@ -594,6 +595,7 @@ const images = {
   LightningChargeFill,
   Tag,
   Report2,
+  ImagePrimary,
 }
 
 export default images;
