@@ -228,6 +228,18 @@ const PageCustomerValueAnalyzer = () => {
         }
         setCompletedSteps(completedStepsArray);
 
+        // 카드 상태 설정
+        if (toolStep >= 3) {
+          const completedStates = customerValueAnalyzerPersona.reduce(
+            (acc, _, index) => {
+              acc[index] = "completed";
+              return acc;
+            },
+            {}
+          );
+          setCardStatuses(completedStates);
+        }
+
         // 페르소나 설정 (Step 2)
         if (Array.isArray(customerValueAnalyzerSelectedPersona)) {
           setCustomerValueAnalyzerSelectedPersona(
@@ -467,12 +479,10 @@ const PageCustomerValueAnalyzer = () => {
         analysis_purpose: businessDescription,
       };
 
-      console.log("businessData", businessData);
       const response = await InterviewXCustomerValueAnalyzerPersonaRequest(
         businessData,
         isLoggedIn
       );
-      console.log("response", response);
 
       if (
         !response?.response.customer_value_persona ||
@@ -848,25 +858,10 @@ const PageCustomerValueAnalyzer = () => {
     }
   };
 
-  //   const mermaidCode = `
-  //   quadrantChart
-  //     title Cost and Results of experiments
-  //     x-axis Low Cost --> High Cost
-  //     y-axis Low Reliability --> High Reliability
-  //     quadrant-1 Consider
-  //     quadrant-2 Preferred
-  //     quadrant-3 Modify
-  //     quadrant-4 Avoid
-  //     Passive Observation: [0.13, 0.3]
-  //     Field experiment: [0.4, 0.7]
-  //     Small scale lab work: [0.4, 0.42]
-  //     Lab work - Frequent repetition: [0.82, 0.85]
-  //     Large scale study: [0.8, 0.15]
-  //     Low impact study: [0.67, 0.56]
-  // `;
-
   const mermaidCode = customerValueAnalyzerPositioning?.mermaid || "";
   const cleanMermaidCode = mermaidCode.replace(/quadrant-\d\s+[^\n]+\n/g, "");
+
+  // const clusterList = customerValueAnalyzerPositioning?.cluster_list || [];
 
   const MermaidDiagram = ({ code }) => {
     const [imageUrl, setImageUrl] = useState("");
@@ -1510,7 +1505,7 @@ const PageCustomerValueAnalyzer = () => {
                       <div className="content">
                         <H4 color="gray800">
                           {`페르소나별 고객 여정 분석 결과, ${customerValueAnalyzerInfo.business}의 핵심 구매 요소는`}
-                          {customerValueAnalyzerFinalReport.title.join(", ")}
+                          {(customerValueAnalyzerFinalReport.title || []).join(", ")}
                           으로 분석됩니다.
                         </H4>
 
@@ -1582,103 +1577,28 @@ const PageCustomerValueAnalyzer = () => {
                             {/* <MermaidDiagram code={mermaidCode} /> */}
 
                             <div className="mermaid-legend">
-                              <ul className="legend-item">
-                                <li>
-                                  <TooltipWrapper>
-                                    <Sub3 
-                                      color="gray700" 
-                                      align="left"
-                                      style={{ cursor: 'help' }}
-                                    >
-                                      {customerValueAnalyzerPositioning?.legend?.A?.length > 16 
-                                        ? `A : ${customerValueAnalyzerPositioning?.legend?.A?.substring(0, 16)}...` 
-                                        : `A : ${customerValueAnalyzerPositioning?.legend?.A}`}
-                                    </Sub3>
-                                    <Tooltip className="tooltip">
-                                      {customerValueAnalyzerPositioning?.legend?.A}
-                                    </Tooltip>
-                                  </TooltipWrapper>
-                                </li>
-                                <li>
-                                  <TooltipWrapper>
-                                    <Sub3 
-                                      color="gray700" 
-                                      align="left"
-                                      style={{ cursor: 'help' }}
-                                    >
-                                      {customerValueAnalyzerPositioning?.legend?.B?.length > 16 
-                                        ? `B : ${customerValueAnalyzerPositioning?.legend?.B?.substring(0, 16)}...` 
-                                        : `B : ${customerValueAnalyzerPositioning?.legend?.B}`}
-                                    </Sub3>
-                                    <Tooltip className="tooltip">
-                                      {customerValueAnalyzerPositioning?.legend?.B}
-                                    </Tooltip>
-                                  </TooltipWrapper>
-                                </li>
-                                <li>
-                                  <TooltipWrapper>
-                                    <Sub3 
-                                      color="gray700" 
-                                      align="left"
-                                      style={{ cursor: 'help' }}
-                                    >
-                                      {customerValueAnalyzerPositioning?.legend?.C?.length > 16 
-                                        ? `C : ${customerValueAnalyzerPositioning?.legend?.C?.substring(0, 16)}...` 
-                                        : `C : ${customerValueAnalyzerPositioning?.legend?.C}`}
-                                    </Sub3>
-                                    <Tooltip className="tooltip">
-                                      {customerValueAnalyzerPositioning?.legend?.C}
-                                    </Tooltip>
-                                  </TooltipWrapper>
-                                </li>
-                                <li>
-                                  <TooltipWrapper>
-                                    <Sub3 
-                                      color="gray700" 
-                                      align="left"
-                                      style={{ cursor: 'help' }}
-                                    >
-                                      {customerValueAnalyzerPositioning?.legend?.D?.length > 16 
-                                        ? `D : ${customerValueAnalyzerPositioning?.legend?.D?.substring(0, 16)}...` 
-                                        : `D : ${customerValueAnalyzerPositioning?.legend?.D}`}
-                                    </Sub3>
-                                    <Tooltip className="tooltip">
-                                      {customerValueAnalyzerPositioning?.legend?.D}
-                                    </Tooltip>
-                                  </TooltipWrapper>
-                                </li>
-                                <li>
-                                  <TooltipWrapper>
-                                    <Sub3 
-                                      color="gray700" 
-                                      align="left"
-                                      style={{ cursor: 'help' }}
-                                    >
-                                      {customerValueAnalyzerPositioning?.legend?.E?.length > 16 
-                                        ? `E : ${customerValueAnalyzerPositioning?.legend?.E?.substring(0, 16)}...` 
-                                        : `E : ${customerValueAnalyzerPositioning?.legend?.E}`}
-                                    </Sub3>
-                                    <Tooltip className="tooltip">
-                                      {customerValueAnalyzerPositioning?.legend?.E}
-                                    </Tooltip>
-                                  </TooltipWrapper>
-                                </li>
-                                <li>
-                                  <TooltipWrapper>
-                                    <Sub3 
-                                      color="gray700" 
-                                      align="left"
-                                      style={{ cursor: 'help' }}
-                                    >
-                                      {customerValueAnalyzerPositioning?.legend?.F?.length > 16 
-                                        ? `F : ${customerValueAnalyzerPositioning?.legend?.F?.substring(0, 16)}...` 
-                                        : `F : ${customerValueAnalyzerPositioning?.legend?.F}`}
-                                    </Sub3>
-                                    <Tooltip className="tooltip">
-                                      {customerValueAnalyzerPositioning?.legend?.F}
-                                    </Tooltip>
-                                  </TooltipWrapper>
-                                </li>
+                              <ul className="legend-item" style={{ textAlign: 'left' }}>
+                                {customerValueAnalyzerPositioning?.cluster_list?.map((cluster, index) => {
+                                  const label = String.fromCharCode(65 + index); // 인덱스를 알파벳으로 변환 (A, B, C, ...)
+                                  return (
+                                    <li key={index}>
+                                      <TooltipWrapper>
+                                        <Sub3 
+                                          color="gray700" 
+                                          align="left"
+                                          style={{ cursor: 'help', textAlign: 'left' }}
+                                        >
+                                          {cluster.cluster_name.length > 16 
+                                            ? `${label} : ${cluster.cluster_name.substring(0, 16)}...` 
+                                            : `${label} : ${cluster.cluster_name}`}
+                                        </Sub3>
+                                        <Tooltip className="tooltip">
+                                          {cluster.cluster_name}
+                                        </Tooltip>
+                                      </TooltipWrapper>
+                                    </li>
+                                  );
+                                })}
                               </ul>
                               <div className="legend-item">
                                 <div>
