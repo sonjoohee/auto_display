@@ -250,17 +250,19 @@ const PageIdeaGenerator = () => {
           setSelectedPersona(selectedIndices[0]); // 첫 번째 매칭되는 인덱스만 사용
         }
 
-        setTableData(
-          ideaGeneratorFinalReport.clusters.map((cluster, index) => ({
-            key: index + 1,
-            title: cluster.cluster_name,
-            marketSize: cluster.market_competitiveness.score,
-            productConcept: cluster.attractiveness.score,
-            implementability: cluster.feasibility.score,
-            uniqueness: cluster.differentiation.score,
-            average: cluster.total_score / 4,
-          }))
-        );
+        if (ideaGeneratorFinalReport?.clusters?.length > 0) {
+          setTableData(
+            ideaGeneratorFinalReport.clusters.map((cluster, index) => ({
+              key: index + 1,
+              title: cluster.cluster_name,
+              marketSize: cluster.market_competitiveness.score,
+              productConcept: cluster.attractiveness.score,
+              implementability: cluster.feasibility.score,
+              uniqueness: cluster.differentiation.score,
+              average: cluster.total_score / 4,
+              }))
+          );
+        }
         // 페르소나 설정 (Step 2)
         // if (
         //   Array.isArray(targetDiscoveryPersona) &&
@@ -994,8 +996,8 @@ const PageIdeaGenerator = () => {
                                     "customerList"
                                   );
                                   setTargetCustomers(
-                                    item.customer_value_persona.map(
-                                      (factor) => factor
+                                    item.customer_value_clustering.map(
+                                      (subItem) => subItem.cluster_name
                                     )
                                   );
                                 }}
@@ -1179,7 +1181,7 @@ const PageIdeaGenerator = () => {
                             status="valid"
                             disabled={toolStep >= 2}
                             value={
-                              ideaGeneratorSelectedPersona?.[0]?.name || ""
+                              ideaGeneratorSelectedPersona?.[0]?.name || selectedCustomPersona?.[0]?.name || ""
                             }
                             onChange={(e) => {
                               const value = e.target.value;
@@ -1275,7 +1277,7 @@ const PageIdeaGenerator = () => {
                         id={index}
                         coreValue={coreValue}
                         status={
-                          ideaGeneratorIdea.length
+                          ideaGeneratorIdea.length === ideaGeneratorInfo.core_value.length
                             ? "completed"
                             : cardStatuses[index]
                         }
