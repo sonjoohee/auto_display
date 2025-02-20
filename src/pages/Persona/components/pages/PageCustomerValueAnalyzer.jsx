@@ -1447,6 +1447,7 @@ const PageCustomerValueAnalyzer = () => {
                       Fill
                       disabled={
                         !Array.isArray(customerValueAnalyzerFactor) ||
+                        toolStep >= 4 ||
                         !customerValueAnalyzerFactor.every((factor) => factor)
                       }
                       onClick={handleReport}
