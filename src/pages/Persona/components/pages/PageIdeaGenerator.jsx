@@ -1541,7 +1541,7 @@ const PageIdeaGenerator = () => {
           <div>
             <div className="title">
               <div>
-                <Body1 color="gray800">{selectedDetailPersona.name}</Body1>
+                <Body1 color="gray800" align="left">{selectedDetailPersona.name}</Body1>
                 <div className="keyword">
                   {selectedDetailPersona.keywords.map((keyword, index) => (
                     <Badge Keyword key={index}>
@@ -1550,7 +1550,8 @@ const PageIdeaGenerator = () => {
                   ))}
                 </div>
               </div>
-              <Caption1 color="primary">상</Caption1>
+              {/* <Caption1 color="primary">상</Caption1> */}
+              <div className="close-button" onClick={() => setShowPopup(false)} />
             </div>
 
             <div className="content">
@@ -1887,6 +1888,33 @@ const ReadMorePopup = styled.div`
       display: flex;
       flex-direction: column;
       gap: 8px;
+    }
+
+    .close-button {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+
+      &:before,
+      &:after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 2px;
+        border-radius: 10px;
+        background-color: ${palette.gray500};
+        content: "";
+      }
+
+      &:before {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      &:after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
     }
 
     ${Caption1} {
