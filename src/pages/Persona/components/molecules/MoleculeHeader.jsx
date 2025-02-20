@@ -49,8 +49,11 @@ const MoleculeHeader = () => {
   const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
     TARGET_DISCOVERY_INFO
   );
-  const [ideaGeneratorInfo, setIdeaGeneratorInfo] = useAtom(IDEA_GENERATOR_INFO);
-  const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(CUSTOMER_VALUE_ANALYZER_INFO);
+  const [ideaGeneratorInfo, setIdeaGeneratorInfo] =
+    useAtom(IDEA_GENERATOR_INFO);
+  const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_INFO
+  );
 
   const navigate = useNavigate();
 
@@ -76,7 +79,8 @@ const MoleculeHeader = () => {
   const isTargetDiscoveryPage = location.pathname === "/TargetDiscovery";
 
   // CustomerValueAnalyzer 경로 체크 추가
-  const isCustomerValueAnalyzerPage = location.pathname === "/CustomerValueAnalyzer";
+  const isCustomerValueAnalyzerPage =
+    location.pathname === "/CustomerValueAnalyzer";
 
   // IdeaGenerator 경로 체크 추가
   const isIdeaGeneratorPage = location.pathname === "/IdeaGenerator";
@@ -246,16 +250,18 @@ const MoleculeHeader = () => {
                 : isPersona4PageSingle && businessAnalysis.title
                 ? businessAnalysis.title
                 : isTargetDiscoveryPage && targetDiscoveryInfo.business
-                ? targetDiscoveryInfo.business
+                ? `타겟 탐색기 - ${targetDiscoveryInfo.business}`
                 : isTargetDiscoveryPage && !targetDiscoveryInfo.business
                 ? "타겟 탐색기"
                 : isIdeaGeneratorPage && ideaGeneratorInfo.business
-                ? ideaGeneratorInfo.business
+                ? `아이디어 생성기 - ${ideaGeneratorInfo.business}`
                 : isIdeaGeneratorPage && !ideaGeneratorInfo.business
                 ? "아이디어 생성기"
-                : isCustomerValueAnalyzerPage && customerValueAnalyzerInfo.business
-                ? customerValueAnalyzerInfo.business
-                : isCustomerValueAnalyzerPage && !customerValueAnalyzerInfo.business
+                : isCustomerValueAnalyzerPage &&
+                  customerValueAnalyzerInfo.business
+                ? `고객 핵심 가치 분석기 - ${customerValueAnalyzerInfo.business}`
+                : isCustomerValueAnalyzerPage &&
+                  !customerValueAnalyzerInfo.business
                 ? "고객 핵심 가치 분석기"
                 : "새로운 프로젝트"}
               {(isPersona3Page ||

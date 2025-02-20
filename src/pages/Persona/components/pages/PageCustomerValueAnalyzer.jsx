@@ -462,8 +462,8 @@ const PageCustomerValueAnalyzer = () => {
           C: "Key Buying Factor Name",
           D: "Key Buying Factor Name",
           E: "Key Buying Factor Name",
-          F: "Key Buying Factor Name"
-        }
+          F: "Key Buying Factor Name",
+        },
       });
     }
   }, []);
@@ -1100,14 +1100,14 @@ const PageCustomerValueAnalyzer = () => {
                               {targetDiscoveryList.length === 0 ? (
                                 <SelectBoxItem
                                   disabled={toolStep >= 1}
-                                  onClick={() =>
-                                    handlePurposeSelect(
-                                      "진행된 프로젝트가 없습니다. 타겟 탐색기를 먼저 진행해주세요",
-                                      "customerList"
-                                    )
-                                  }
+                                  // onClick={() =>
+                                  //   handlePurposeSelect(
+                                  //     "진행된 프로젝트가 없습니다. 타겟 탐색기를 먼저 진행해주세요",
+                                  //     "customerList"
+                                  //   )
+                                  // }
                                 >
-                                  <Body2 color="gray700" align="left">
+                                  <Body2 color="gray300" align="left">
                                     진행된 프로젝트가 없습니다. 타겟
                                     디스커버리를 먼저 진행해주세요
                                   </Body2>
@@ -1348,24 +1348,26 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
                   <CardGroupWrap column>
-                    {customerValueAnalyzerInfo.target_list.map((target, index) => {
-                      return (
-                        <MoleculeCustomerValueCard
-                          key={index}
-                          id={index}
-                          title={target}
-                          content={customerValueAnalyzerPersona[index]}
-                          business={customerValueAnalyzerInfo.business}
-                          status={cardStatuses[index]}
-                          isSelected={selectedPersonas.includes(index)}
-                          onSelect={(id) => handleCheckboxChange(id)}
-                          viewType="list"
-                          journeyMapData={
-                            customerValueAnalyzerJourneyMap[index]
-                          }
-                        />
-                      );
-                    })}
+                    {customerValueAnalyzerInfo.target_list.map(
+                      (target, index) => {
+                        return (
+                          <MoleculeCustomerValueCard
+                            key={index}
+                            id={index}
+                            title={target}
+                            content={customerValueAnalyzerPersona[index]}
+                            business={customerValueAnalyzerInfo.business}
+                            status={cardStatuses[index]}
+                            isSelected={selectedPersonas.includes(index)}
+                            onSelect={(id) => handleCheckboxChange(id)}
+                            viewType="list"
+                            journeyMapData={
+                              customerValueAnalyzerJourneyMap[index]
+                            }
+                          />
+                        );
+                      }
+                    )}
                   </CardGroupWrap>
                   <BottomBar W100>
                     <Body2
@@ -1505,7 +1507,9 @@ const PageCustomerValueAnalyzer = () => {
                       <div className="content">
                         <H4 color="gray800">
                           {`페르소나별 고객 여정 분석 결과, ${customerValueAnalyzerInfo.business}의 핵심 구매 요소는`}
-                          {(customerValueAnalyzerFinalReport.title || []).join(", ")}
+                          {(customerValueAnalyzerFinalReport.title || []).join(
+                            ", "
+                          )}
                           으로 분석됩니다.
                         </H4>
 
@@ -1577,28 +1581,41 @@ const PageCustomerValueAnalyzer = () => {
                             {/* <MermaidDiagram code={mermaidCode} /> */}
 
                             <div className="mermaid-legend">
-                              <ul className="legend-item" style={{ textAlign: 'left' }}>
-                                {customerValueAnalyzerPositioning?.cluster_list?.map((cluster, index) => {
-                                  const label = String.fromCharCode(65 + index); // 인덱스를 알파벳으로 변환 (A, B, C, ...)
-                                  return (
-                                    <li key={index}>
-                                      <TooltipWrapper>
-                                        <Sub3 
-                                          color="gray700" 
-                                          align="left"
-                                          style={{ cursor: 'help', textAlign: 'left' }}
-                                        >
-                                          {cluster.cluster_name.length > 16 
-                                            ? `${label} : ${cluster.cluster_name.substring(0, 16)}...` 
-                                            : `${label} : ${cluster.cluster_name}`}
-                                        </Sub3>
-                                        <Tooltip className="tooltip">
-                                          {cluster.cluster_name}
-                                        </Tooltip>
-                                      </TooltipWrapper>
-                                    </li>
-                                  );
-                                })}
+                              <ul
+                                className="legend-item"
+                                style={{ textAlign: "left" }}
+                              >
+                                {customerValueAnalyzerPositioning?.cluster_list?.map(
+                                  (cluster, index) => {
+                                    const label = String.fromCharCode(
+                                      65 + index
+                                    ); // 인덱스를 알파벳으로 변환 (A, B, C, ...)
+                                    return (
+                                      <li key={index}>
+                                        <TooltipWrapper>
+                                          <Sub3
+                                            color="gray700"
+                                            align="left"
+                                            style={{
+                                              cursor: "help",
+                                              textAlign: "left",
+                                            }}
+                                          >
+                                            {cluster.cluster_name.length > 16
+                                              ? `${label} : ${cluster.cluster_name.substring(
+                                                  0,
+                                                  16
+                                                )}...`
+                                              : `${label} : ${cluster.cluster_name}`}
+                                          </Sub3>
+                                          <Tooltip className="tooltip">
+                                            {cluster.cluster_name}
+                                          </Tooltip>
+                                        </TooltipWrapper>
+                                      </li>
+                                    );
+                                  }
+                                )}
                               </ul>
                               <div className="legend-item">
                                 <div>
@@ -1789,7 +1806,7 @@ const PageCustomerValueAnalyzer = () => {
 export default PageCustomerValueAnalyzer;
 
 const ValueAnalyzerWrap = styled.div`
-display: flex;
+  display: flex;
   flex-direction: column;
   gap: 100px;
   margin-top: 60px;
@@ -1941,31 +1958,31 @@ export const DiagramContainer = styled.div`
   overflow: visible;
 `;
 
-  // 툴팁을 위한 스타일 컴포넌트 추가
-  const TooltipWrapper = styled.div`
-    position: relative;
-    display: inline-block;
+// 툴팁을 위한 스타일 컴포넌트 추가
+const TooltipWrapper = styled.div`
+  position: relative;
+  display: inline-block;
 
-    &:hover .tooltip {
-      visibility: visible;
-      opacity: 1;
-    }
-  `;
+  &:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+`;
 
-  const Tooltip = styled.div`
-    visibility: hidden;
-    position: absolute;
-    left: 0;
-    top: -35px;
-    padding: 8px;
-    color: ${palette.gray500};
-    border-radius: 4px;
-    font-size: 0.75rem;
-    line-height: 16px;
-    white-space: nowrap;
-    border: 1px solid ${palette.outlineGray};
-    background: ${palette.white};
-    opacity: 0;
-    transition: opacity 0.2s;
-    z-index: 10;
-  `;
+const Tooltip = styled.div`
+  visibility: hidden;
+  position: absolute;
+  left: 0;
+  top: -35px;
+  padding: 8px;
+  color: ${palette.gray500};
+  border-radius: 4px;
+  font-size: 0.75rem;
+  line-height: 16px;
+  white-space: nowrap;
+  border: 1px solid ${palette.outlineGray};
+  background: ${palette.white};
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 10;
+`;
