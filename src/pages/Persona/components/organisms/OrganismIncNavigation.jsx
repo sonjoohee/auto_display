@@ -1184,7 +1184,7 @@ const OrganismIncNavigation = () => {
       setIdeaGeneratorClustering([]);
       setIdeaGeneratorFinalReport({});
       setIdeaGeneratorSelectedPersona([]);
-      setIdeaGeneratorKnowTarget(false);
+      setIdeaGeneratorKnowTarget(null);
 
       setIdeaGeneratorInfo({
         business: chatData.business,
@@ -1198,7 +1198,7 @@ const OrganismIncNavigation = () => {
       setIdeaGeneratorSelectedPersona(
         chatData.idea_generator_selected_persona || []
       );
-      setIdeaGeneratorKnowTarget(chatData.idea_generator_know_target || false);
+      setIdeaGeneratorKnowTarget(chatData.idea_generator_know_target || null);
 
       if (chatData.isMarketing) {
         const updatedConversation = [...chatData.conversation];

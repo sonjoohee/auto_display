@@ -343,7 +343,6 @@ const PageTargetDiscovery = () => {
       handleNextStep(1);
       setIsLoading(false);
     } catch (error) {
-      console.error("Error submitting business info:", error);
       setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
@@ -405,7 +404,6 @@ const PageTargetDiscovery = () => {
                 ?.potential_customer_info ||
               !response?.response?.target_discovery_scenario?.usage_scenario
             ) {
-              console.log("🚀 ~ handleSubmitPersonas ~ response:", response);
               setShowPopupError(true);
               return;
             }
@@ -444,7 +442,6 @@ const PageTargetDiscovery = () => {
             ...prev,
             [persona.title]: false,
           }));
-          console.error(`Error processing persona ${persona.title}:`, error);
         }
       }
 
@@ -470,7 +467,6 @@ const PageTargetDiscovery = () => {
 
       setToolStep(2);
     } catch (error) {
-      console.error("Error submitting personas:", error);
       // 에러 발생 시 모든 로딩 상태 초기화
       setLoadingPersonas({});
       setShowPopupError(true);
@@ -503,16 +499,11 @@ const PageTargetDiscovery = () => {
         target_discovery_persona: selectedTargetDiscoveryPersona,
         target_discovery_scenario: targetDiscoveryScenario,
       };
-      console.log(
-        "🚀 ~ handleSubmitScenario ~ scenarioData.targetDiscoveryScenario:",
-        targetDiscoveryScenario
-      );
 
       const response = await InterviewXTargetDiscoveryFinalReportRequest(
         scenarioData,
         isLoggedIn
       );
-      console.log("🚀 ~ handleSubmitScenario ~ response:", response);
 
       if (
         !response?.response?.target_discovery_final_report?.potential_rank_1
@@ -553,7 +544,6 @@ const PageTargetDiscovery = () => {
       setIsLoadingScenario(false);
       handleNextStep(3);
     } catch (error) {
-      console.error("Error submitting scenario:", error);
       setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {

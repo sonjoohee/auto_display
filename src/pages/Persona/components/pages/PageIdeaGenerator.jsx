@@ -205,22 +205,6 @@ const PageIdeaGenerator = () => {
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
 
-        // setIdeaGeneratorInfo({
-        //   business: chatData.business,
-        //   core_value: chatData.core_value,
-        // });
-
-        // setIdeaGeneratorPersona(chatData.idea_generator_persona || []);
-        // setIdeaGeneratorIdea(chatData.idea_generator_idea || []);
-        // setIdeaGeneratorClustering(chatData.idea_generator_clustering || []);
-        // setIdeaGeneratorFinalReport(chatData.idea_generator_final_report || {});
-        // setIdeaGeneratorSelectedPersona(
-        //   chatData.idea_generator_selected_persona || []
-        // );
-        // setIdeaGeneratorKnowTarget(
-        //   chatData.idea_generator_know_target || false
-        // );
-
         // 비즈니스 정보 설정 (Step 1)
         if (ideaGeneratorInfo) {
           setBusinessDescription(ideaGeneratorInfo?.business ?? "");
@@ -233,9 +217,11 @@ const PageIdeaGenerator = () => {
           completedStepsArray.push(i);
         }
         setCompletedSteps(completedStepsArray);
-        setSelectedInterviewType(
-          ideaGeneratorKnowTarget ? "yesTarget" : "noTarget"
-        );
+        if (ideaGeneratorKnowTarget) {
+          setSelectedInterviewType(
+            ideaGeneratorKnowTarget ? "yesTarget" : "noTarget"
+          );
+        }
 
         // 페르소나 설정 (Step 2)
         if (ideaGeneratorSelectedPersona) {
@@ -260,62 +246,9 @@ const PageIdeaGenerator = () => {
               implementability: cluster.feasibility.score,
               uniqueness: cluster.differentiation.score,
               average: cluster.total_score / 4,
-              }))
+            }))
           );
         }
-        // 페르소나 설정 (Step 2)
-        // if (
-        //   Array.isArray(targetDiscoveryPersona) &&
-        //   Array.isArray(selectedTargetDiscoveryPersona)
-        // ) {
-        //   // 이미 선택된 페르소나들의 인덱스 찾기
-        //   const selectedIndices = (targetDiscoveryPersona ?? [])
-        //     .map((persona, index) => {
-        //       // targetDiscoveryScenario에 있는 페르소나만 선택
-        //       return (targetDiscoveryScenario ?? []).some(
-        //         (scenario) => scenario?.title === persona?.title
-        //       )
-        //         ? index
-        //         : -1;
-        //     })
-        //     .filter((index) => index !== -1);
-
-        //   // selectedPersonas 상태 업데이트
-        //   setSelectedPersonas(selectedIndices);
-
-        //   // 선택된 페르소나 데이터 설정
-        //   const selectedPersonaData = selectedIndices
-        //     .map((index) => targetDiscoveryPersona?.[index])
-        //     .filter(Boolean);
-
-        //   setSelectedTargetDiscoveryPersona(selectedPersonaData);
-        // }
-
-        // 시나리오 설정 (Step 3)
-        // if (
-        //   Array.isArray(targetDiscoveryScenario) &&
-        //   Array.isArray(targetDiscoveryPersona)
-        // ) {
-        //   const matchedScenarioData = (targetDiscoveryScenario ?? [])
-        //     .map((scenario) => {
-        //       const matchedPersona = (targetDiscoveryPersona ?? []).find(
-        //         (persona) => persona?.title === scenario?.title
-        //       );
-
-        //       if (!matchedPersona) return null;
-
-        //       return {
-        //         ...(matchedPersona ?? {}),
-        //         title: scenario?.title ?? "",
-        //         content: matchedPersona?.content ?? {},
-        //         keywords: matchedPersona?.content?.keywords ?? [],
-        //         scenario: scenario ?? {},
-        //       };
-        //     })
-        //     .filter((item) => item?.title);
-
-        //   setSelectedTargetDiscoveryScenario(matchedScenarioData);
-        // }
 
         return;
       }
@@ -717,7 +650,7 @@ const PageIdeaGenerator = () => {
         toolId,
         {
           completed_step: 2,
-          idea_generator_Know_Target:
+          idea_generator_know_target:
             selectedInterviewType === "yesTarget" ? true : false,
         },
         isLoggedIn
@@ -973,16 +906,16 @@ const PageIdeaGenerator = () => {
                           {customerValueList.length === 0 ? (
                             <SelectBoxItem
                               disabled={toolStep >= 1}
-                              onClick={() =>
-                                handlePurposeSelect(
-                                  "진행된 프로젝트가 없습니다. 타겟 탐색기를 먼저 진행해주세요",
-                                  "customerList"
-                                )
-                              }
+                              // onClick={() =>
+                              //   handlePurposeSelect(
+                              //     "진행된 프로젝트가 없습니다. 고객 핵심 가치 분석을 먼저 진행해주세요",
+                              //     "customerList"
+                              //   )
+                              // }
                             >
-                              <Body2 color="gray700" align="left">
-                                진행된 프로젝트가 없습니다. 타겟 탐색기를 먼저
-                                진행해주세요
+                              <Body2 color="gray300" align="left">
+                                진행된 프로젝트가 없습니다. 고객 핵심 가치
+                                분석을 먼저 진행해주세요
                               </Body2>
                             </SelectBoxItem>
                           ) : (
@@ -1181,7 +1114,9 @@ const PageIdeaGenerator = () => {
                             status="valid"
                             disabled={toolStep >= 2}
                             value={
-                              ideaGeneratorSelectedPersona?.[0]?.name || selectedCustomPersona?.[0]?.name || ""
+                              ideaGeneratorSelectedPersona?.[0]?.name ||
+                              selectedCustomPersona?.[0]?.name ||
+                              ""
                             }
                             onChange={(e) => {
                               const value = e.target.value;
@@ -1277,7 +1212,8 @@ const PageIdeaGenerator = () => {
                         id={index}
                         coreValue={coreValue}
                         status={
-                          ideaGeneratorIdea.length === ideaGeneratorInfo.core_value.length
+                          ideaGeneratorIdea.length ===
+                          ideaGeneratorInfo.core_value.length
                             ? "completed"
                             : cardStatuses[index]
                         }
@@ -1360,8 +1296,7 @@ const PageIdeaGenerator = () => {
 
                       <div className="content">
                         <H4 color="gray800">
-                          {ideaGeneratorInfo.business}의 타겟분석결과
-                          <br />
+                          {ideaGeneratorInfo.business}의 타겟분석결과{" "}
                           {(() => {
                             // 우선순위가 높은 요인 3개 추출
                             const firstNames = Array.isArray(
@@ -1543,7 +1478,9 @@ const PageIdeaGenerator = () => {
           <div>
             <div className="title">
               <div>
-                <Body1 color="gray800" align="left">{selectedDetailPersona.name}</Body1>
+                <Body1 color="gray800" align="left">
+                  {selectedDetailPersona.name}
+                </Body1>
                 <div className="keyword">
                   {selectedDetailPersona.keywords.map((keyword, index) => (
                     <Badge Keyword key={index}>
@@ -1553,7 +1490,10 @@ const PageIdeaGenerator = () => {
                 </div>
               </div>
               {/* <Caption1 color="primary">상</Caption1> */}
-              <div className="close-button" onClick={() => setShowPopup(false)} />
+              <div
+                className="close-button"
+                onClick={() => setShowPopup(false)}
+              />
             </div>
 
             <div className="content">
