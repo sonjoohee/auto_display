@@ -812,7 +812,6 @@ const OrganismIncNavigation = () => {
         //   }
         // // );
         const response = await getToolListOnServer(1000, 1, isLoggedIn);
-        console.log("🚀 ~ fetchChatList ~ response:", response);
         // const sortedChatList = response.data
         //   .filter(
         //     (chat) => chat.business_info !== null && chat.business_info !== ""

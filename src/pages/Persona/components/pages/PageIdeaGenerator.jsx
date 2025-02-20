@@ -234,8 +234,21 @@ const PageIdeaGenerator = () => {
         }
         setCompletedSteps(completedStepsArray);
         setSelectedInterviewType(
-          ideaGeneratorKnowTarget ? "noTarget" : "yesTarget"
+          ideaGeneratorKnowTarget ? "yesTarget" : "noTarget"
         );
+
+        // 페르소나 설정 (Step 2)
+        if (ideaGeneratorSelectedPersona) {
+          // ideaGeneratorSelectedPersona가 있는 경우에만 처리
+          const selectedIndices = (ideaGeneratorPersona ?? [])
+            .map((persona, index) =>
+              persona?.title === ideaGeneratorSelectedPersona.title ? index : -1
+            )
+            .filter((index) => index !== -1);
+
+          // selectedPersonas 상태 업데이트
+          setSelectedPersona(selectedIndices[0]); // 첫 번째 매칭되는 인덱스만 사용
+        }
 
         setTableData(
           ideaGeneratorFinalReport.clusters.map((cluster, index) => ({
@@ -1438,21 +1451,35 @@ const PageIdeaGenerator = () => {
                                   </Body1>
                                 </th>
                                 <th>
-                                  <Body1 color="gray800">구현 가능성</Body1>
+                                  <Body1 color="gray800">
+                                    구현 가능성
+                                    <br />
+                                    <p> </p>
+                                  </Body1>
                                 </th>
                                 <th>
-                                  <Body1 color="gray800">차별성</Body1>
+                                  <Body1 color="gray800">
+                                    차별성
+                                    <br />
+                                    <p> </p>
+                                  </Body1>
                                 </th>
-                                {/* <th>
-                                  <Body1 color="gray800">평균</Body1>
-                                </th> */}
+                                <th>
+                                  <Body1 color="gray800">
+                                    평균
+                                    <br />
+                                    <p> </p>
+                                  </Body1>
+                                </th>
                               </tr>
                             </TableHeader>
                             <TableBody>
                               {tableData.map((val, key) => (
                                 <tr key={key}>
                                   <th>
-                                    <Body3 color="gray700" align="left">{val.title}</Body3>
+                                    <Body3 color="gray700" align="left">
+                                      {val.title}
+                                    </Body3>
                                   </th>
                                   <td>
                                     <Body3 color="gray700">
@@ -1474,9 +1501,9 @@ const PageIdeaGenerator = () => {
                                       {val.uniqueness}
                                     </Body3>
                                   </td>
-                                  {/* <td>
+                                  <td>
                                     <Body3 color="gray700">{val.average}</Body3>
-                                  </td> */}
+                                  </td>
                                 </tr>
                               ))}
                             </TableBody>
@@ -1542,9 +1569,7 @@ const PageIdeaGenerator = () => {
             <>
               <H4 color="gray800" align="left">
                 {ideaGeneratorInfo.core_value[seletedIdeaIndex]}의{" "}
-                {ideaGeneratorInfo.business}
-                <br />
-                아이디어 도출하기
+                {ideaGeneratorInfo.business} - 아이디어 도출하기
               </H4>
             </>
           }

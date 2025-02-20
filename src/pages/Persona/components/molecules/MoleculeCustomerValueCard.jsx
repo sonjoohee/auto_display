@@ -338,9 +338,7 @@ const MoleculeCustomerValueCard = ({
           title={
             <>
               <H4 color="gray800" align="left">
-                {title}의 {business}
-                <br />
-                구매 핵심 요인 분석
+                {title}의 {business} - 구매 핵심 요인 분석
               </H4>
             </>
           }
@@ -385,9 +383,7 @@ const MoleculeCustomerValueCard = ({
           title={
             <>
               <H4 color="gray800" align="left">
-                {title}의 {business}
-                <br />
-                고객 여정 분석
+                {title}의 {business} - 고객 여정 분석
               </H4>
             </>
           }
@@ -438,9 +434,10 @@ const MoleculeCustomerValueCard = ({
                       <div key={index}>
                         <span className="number">{index + 1}</span>
                         <div>
-
                           <Sub1 color="gray800">{step.title}</Sub1>
-                          <Body2 color="gray700" align="left">{step.detail}</Body2>
+                          <Body2 color="gray700" align="left">
+                            {step.detail}
+                          </Body2>
 
                           <div className="tag">
                             {step.emotion &&
@@ -482,7 +479,9 @@ const MoleculeCustomerValueCard = ({
               <Body1 color={isSelected ? "primary" : "gray800"}>{title}</Body1>
             </ListTitle>
 
-            <Sub2 color="gray500" align="left">{content}</Sub2>
+            <Sub2 color="gray500" align="left">
+              {content}
+            </Sub2>
           </ListText>
           <ListButton>{renderButton()}</ListButton>
         </ListBoxItem>
@@ -499,10 +498,8 @@ const CustomButton = styled(Button)`
   min-width: 92px;
   opacity: ${(props) => (props.disabled ? 0.5 : 1)};
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  border: ${(props) => (props.children === "호출중" 
-    ? `1px solid ${palette.outlineGray}` 
-    : `0`
-  )};
+  border: ${(props) =>
+    props.children === "호출중" ? `1px solid ${palette.outlineGray}` : `0`};
 
   ${(props) =>
     props.$loading &&

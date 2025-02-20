@@ -22,8 +22,6 @@ import {
 } from "../../../../pages/AtomStates";
 
 const MoleculeIdeaGeneratorCard2 = ({ coreValue, status, onShowDetail }) => {
-  console.log("🚀 ~ coreValue:", coreValue);
-  console.log("🚀 ~ MoleculeIdeaGeneratorCard2 ~ onShowDetail:", onShowDetail);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(
     CUSTOMER_VALUE_ANALYZER_INFO
