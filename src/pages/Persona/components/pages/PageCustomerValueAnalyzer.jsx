@@ -473,7 +473,7 @@ const PageCustomerValueAnalyzer = () => {
       setIsLoading(true);
 
       const businessData = {
-        business: selectedBusiness,
+        business: selectedBusiness || businessDescription,
         target_list: targetCustomers,
         analysis_scope: selectedPurposes.analysisScope,
         analysis_purpose: businessDescription,
