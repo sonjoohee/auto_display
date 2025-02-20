@@ -475,12 +475,16 @@ const PageCustomerValueAnalyzer = () => {
     try {
       setIsLoading(true);
 
+      // targetCustomers 배열에서 빈 값을 제거합니다.
+      const filteredTargetCustomers = targetCustomers.filter(customer => customer.trim() !== "");
+
       const businessData = {
         business: selectedBusiness || businessDescription,
-        target_list: targetCustomers,
+        target_list: filteredTargetCustomers, // 필터링된 리스트를 사용합니다.
         analysis_scope: selectedPurposes.analysisScope,
         analysis_purpose: businessDescription,
       };
+      console.log("businessData", businessData);
 
       const response = await InterviewXCustomerValueAnalyzerPersonaRequest(
         businessData,
