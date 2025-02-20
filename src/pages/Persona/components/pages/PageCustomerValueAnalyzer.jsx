@@ -1435,10 +1435,11 @@ const PageCustomerValueAnalyzer = () => {
                       disabled={
                         selectedPersonas.length === 0 ||
                         toolStep >= 2 ||
-                        Object.values(cardStatuses).some(
-                          (status) =>
-                            status === "loading" || status === "waiting"
-                        )
+                        // Object.values(cardStatuses).some(
+                        //   (status) =>
+                        //     status === "loading" || status === "waiting"
+                        // )
+                        customerValueAnalyzerJourneyMap.length !== customerValueAnalyzerInfo.target_list.length
                       }
                       onClick={() => handleSubmitPersonas()}
                     >
@@ -1701,13 +1702,13 @@ const PageCustomerValueAnalyzer = () => {
                       </ValueMap>
                     </ValueMapWrap>
 
-                    <Button
+                    {/* <Button
                       Small
                       Primary
                       onClick={() => setShowPopupSave(true)}
                     >
                       리포트 저장하기
-                    </Button>
+                    </Button> */}
                   </>
                 )}
               </TabContent5>
