@@ -202,24 +202,9 @@ const PageIdeaGenerator = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       if (toolLoading) {
+        console.log("🚀 ~ interviewLoading ~ toolStep:", toolStep);
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
-
-        // setIdeaGeneratorInfo({
-        //   business: chatData.business,
-        //   core_value: chatData.core_value,
-        // });
-
-        // setIdeaGeneratorPersona(chatData.idea_generator_persona || []);
-        // setIdeaGeneratorIdea(chatData.idea_generator_idea || []);
-        // setIdeaGeneratorClustering(chatData.idea_generator_clustering || []);
-        // setIdeaGeneratorFinalReport(chatData.idea_generator_final_report || {});
-        // setIdeaGeneratorSelectedPersona(
-        //   chatData.idea_generator_selected_persona || []
-        // );
-        // setIdeaGeneratorKnowTarget(
-        //   chatData.idea_generator_know_target || false
-        // );
 
         // 비즈니스 정보 설정 (Step 1)
         if (ideaGeneratorInfo) {
@@ -233,21 +218,25 @@ const PageIdeaGenerator = () => {
           completedStepsArray.push(i);
         }
         setCompletedSteps(completedStepsArray);
-        setSelectedInterviewType(
-          ideaGeneratorKnowTarget ? "yesTarget" : "noTarget"
-        );
+
+        if (ideaGeneratorKnowTarget !== null) {
+          setSelectedInterviewType(
+            ideaGeneratorKnowTarget ? "yesTarget" : "noTarget"
+          );
+        }
 
         // 페르소나 설정 (Step 2)
         if (ideaGeneratorSelectedPersona) {
           // ideaGeneratorSelectedPersona가 있는 경우에만 처리
-          const selectedIndices = (ideaGeneratorPersona ?? [])
-            .map((persona, index) =>
-              persona?.title === ideaGeneratorSelectedPersona.title ? index : -1
-            )
-            .filter((index) => index !== -1);
+          const selectedIndex = (ideaGeneratorPersona ?? []).findIndex(
+            (persona) => persona?.name === ideaGeneratorSelectedPersona.name
+          );
 
-          // selectedPersonas 상태 업데이트
-          setSelectedPersona(selectedIndices[0]); // 첫 번째 매칭되는 인덱스만 사용
+          console.log("🚀 ~ interviewLoading ~ selectedIndex:", selectedIndex);
+          // selectedPersona 상태 업데이트 (일치하는 항목이 없으면 -1)
+          if (selectedIndex !== -1) {
+            setSelectedPersona(selectedIndex);
+          }
         }
 
         if (ideaGeneratorFinalReport?.clusters?.length > 0) {
@@ -260,62 +249,9 @@ const PageIdeaGenerator = () => {
               implementability: cluster.feasibility.score,
               uniqueness: cluster.differentiation.score,
               average: cluster.total_score / 4,
-              }))
+            }))
           );
         }
-        // 페르소나 설정 (Step 2)
-        // if (
-        //   Array.isArray(targetDiscoveryPersona) &&
-        //   Array.isArray(selectedTargetDiscoveryPersona)
-        // ) {
-        //   // 이미 선택된 페르소나들의 인덱스 찾기
-        //   const selectedIndices = (targetDiscoveryPersona ?? [])
-        //     .map((persona, index) => {
-        //       // targetDiscoveryScenario에 있는 페르소나만 선택
-        //       return (targetDiscoveryScenario ?? []).some(
-        //         (scenario) => scenario?.title === persona?.title
-        //       )
-        //         ? index
-        //         : -1;
-        //     })
-        //     .filter((index) => index !== -1);
-
-        //   // selectedPersonas 상태 업데이트
-        //   setSelectedPersonas(selectedIndices);
-
-        //   // 선택된 페르소나 데이터 설정
-        //   const selectedPersonaData = selectedIndices
-        //     .map((index) => targetDiscoveryPersona?.[index])
-        //     .filter(Boolean);
-
-        //   setSelectedTargetDiscoveryPersona(selectedPersonaData);
-        // }
-
-        // 시나리오 설정 (Step 3)
-        // if (
-        //   Array.isArray(targetDiscoveryScenario) &&
-        //   Array.isArray(targetDiscoveryPersona)
-        // ) {
-        //   const matchedScenarioData = (targetDiscoveryScenario ?? [])
-        //     .map((scenario) => {
-        //       const matchedPersona = (targetDiscoveryPersona ?? []).find(
-        //         (persona) => persona?.title === scenario?.title
-        //       );
-
-        //       if (!matchedPersona) return null;
-
-        //       return {
-        //         ...(matchedPersona ?? {}),
-        //         title: scenario?.title ?? "",
-        //         content: matchedPersona?.content ?? {},
-        //         keywords: matchedPersona?.content?.keywords ?? [],
-        //         scenario: scenario ?? {},
-        //       };
-        //     })
-        //     .filter((item) => item?.title);
-
-        //   setSelectedTargetDiscoveryScenario(matchedScenarioData);
-        // }
 
         return;
       }
@@ -399,6 +335,7 @@ const PageIdeaGenerator = () => {
         toolId,
         {
           idea_generator_persona: response.response.idea_generator_persona,
+          idea_generator_know_target: ideaGeneratorKnowTarget,
         },
         isLoggedIn
       );
@@ -717,7 +654,7 @@ const PageIdeaGenerator = () => {
         toolId,
         {
           completed_step: 2,
-          idea_generator_Know_Target:
+          idea_generator_know_target:
             selectedInterviewType === "yesTarget" ? true : false,
         },
         isLoggedIn
@@ -779,12 +716,6 @@ const PageIdeaGenerator = () => {
   };
 
   const handleShowDetailMore = (index) => {
-    console.log("🚀 ~ handleShowDetailMore ~ index:", index);
-
-    console.log(
-      "🚀 ~ handleShowDetailMore ~ ideaGeneratorIdea:",
-      ideaGeneratorIdea[index]
-    );
     setChartData({
       name: ideaGeneratorInfo.core_value[index],
       children: [
@@ -973,16 +904,16 @@ const PageIdeaGenerator = () => {
                           {customerValueList.length === 0 ? (
                             <SelectBoxItem
                               disabled={toolStep >= 1}
-                              onClick={() =>
-                                handlePurposeSelect(
-                                  "진행된 프로젝트가 없습니다. 타겟 탐색기를 먼저 진행해주세요",
-                                  "customerList"
-                                )
-                              }
+                              // onClick={() =>
+                              //   handlePurposeSelect(
+                              //     "진행된 프로젝트가 없습니다. 고객 핵심 가치 분석을 먼저 진행해주세요",
+                              //     "customerList"
+                              //   )
+                              // }
                             >
-                              <Body2 color="gray700" align="left">
-                                진행된 프로젝트가 없습니다. 타겟 탐색기를 먼저
-                                진행해주세요
+                              <Body2 color="gray300" align="left">
+                                진행된 프로젝트가 없습니다. 고객 핵심 가치
+                                분석을 먼저 진행해주세요
                               </Body2>
                             </SelectBoxItem>
                           ) : (
@@ -1181,7 +1112,9 @@ const PageIdeaGenerator = () => {
                             status="valid"
                             disabled={toolStep >= 2}
                             value={
-                              ideaGeneratorSelectedPersona?.[0]?.name || selectedCustomPersona?.[0]?.name || ""
+                              ideaGeneratorSelectedPersona?.[0]?.name ||
+                              selectedCustomPersona?.[0]?.name ||
+                              ""
                             }
                             onChange={(e) => {
                               const value = e.target.value;
@@ -1277,7 +1210,8 @@ const PageIdeaGenerator = () => {
                         id={index}
                         coreValue={coreValue}
                         status={
-                          ideaGeneratorIdea.length === ideaGeneratorInfo.core_value.length
+                          ideaGeneratorIdea.length ===
+                          ideaGeneratorInfo.core_value.length
                             ? "completed"
                             : cardStatuses[index]
                         }
@@ -1360,40 +1294,33 @@ const PageIdeaGenerator = () => {
 
                       <div className="content">
                         <H4 color="gray800">
-                          {ideaGeneratorInfo.business}의 타겟분석결과
-                          <br />
+                          {ideaGeneratorInfo?.business || ""}의 타겟분석결과{" "}
                           {(() => {
+                            if (!ideaGeneratorFinalReport?.top_3_clusters) {
+                              return "";
+                            }
+
+                            const { first, second, third } =
+                              ideaGeneratorFinalReport.top_3_clusters;
+
                             // 우선순위가 높은 요인 3개 추출
-                            const firstNames = Array.isArray(
-                              ideaGeneratorFinalReport.top_3_clusters.first.name
-                            )
-                              ? ideaGeneratorFinalReport.top_3_clusters.first
-                                  .name
-                              : [
-                                  ideaGeneratorFinalReport.top_3_clusters.first
-                                    .name,
-                                ];
+                            const firstNames = Array.isArray(first?.name)
+                              ? first.name
+                              : first?.name
+                              ? [first.name]
+                              : [];
 
-                            const secondNames = Array.isArray(
-                              ideaGeneratorFinalReport.top_3_clusters.second
-                                .name
-                            )
-                              ? ideaGeneratorFinalReport.top_3_clusters.second
-                                  .name
-                              : [
-                                  ideaGeneratorFinalReport.top_3_clusters.second
-                                    .name,
-                                ];
+                            const secondNames = Array.isArray(second?.name)
+                              ? second.name
+                              : second?.name
+                              ? [second.name]
+                              : [];
 
-                            const thirdNames = Array.isArray(
-                              ideaGeneratorFinalReport.top_3_clusters.third.name
-                            )
-                              ? ideaGeneratorFinalReport.top_3_clusters.third
-                                  .name
-                              : [
-                                  ideaGeneratorFinalReport.top_3_clusters.third
-                                    .name,
-                                ];
+                            const thirdNames = Array.isArray(third?.name)
+                              ? third.name
+                              : third?.name
+                              ? [third.name]
+                              : [];
 
                             let result = [...firstNames];
 
@@ -1411,13 +1338,17 @@ const PageIdeaGenerator = () => {
                               ];
                             }
 
-                            return result.slice(0, 3).join(", ");
+                            return result.length > 0
+                              ? result.slice(0, 3).join(", ")
+                              : "";
                           })()}
-                          의 요인의 우선순위가 높았습니다.
+                          {ideaGeneratorFinalReport?.top_3_clusters
+                            ? "의 요인의 우선순위가 높았습니다."
+                            : ""}
                         </H4>
 
                         <Body3 color="gray700">
-                          {ideaGeneratorFinalReport.conclusion}
+                          {ideaGeneratorFinalReport?.conclusion || ""}
                         </Body3>
                       </div>
                     </InsightAnalysis>
@@ -1519,10 +1450,6 @@ const PageIdeaGenerator = () => {
                         </Body1>
                       </TabContent5Item>
                     )}
-
-                    {/* <Button Small Primary onClick={() => setShowPopupSave(true)}>
-                  리포트 저장하기
-                </Button> */}
                   </>
                 )}
               </TabContent5>
@@ -1543,7 +1470,9 @@ const PageIdeaGenerator = () => {
           <div>
             <div className="title">
               <div>
-                <Body1 color="gray800" align="left">{selectedDetailPersona.name}</Body1>
+                <Body1 color="gray800" align="left">
+                  {selectedDetailPersona.name}
+                </Body1>
                 <div className="keyword">
                   {selectedDetailPersona.keywords.map((keyword, index) => (
                     <Badge Keyword key={index}>
@@ -1553,7 +1482,10 @@ const PageIdeaGenerator = () => {
                 </div>
               </div>
               {/* <Caption1 color="primary">상</Caption1> */}
-              <div className="close-button" onClick={() => setShowPopup(false)} />
+              <div
+                className="close-button"
+                onClick={() => setShowPopup(false)}
+              />
             </div>
 
             <div className="content">
