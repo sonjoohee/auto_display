@@ -194,6 +194,8 @@ const PageCustomerValueAnalyzer = () => {
 
   const [apiCallCompleted, setApiCallCompleted] = useState(false);
   const [apiCallCompletedFactor, setApiCallCompletedFactor] = useState(false);
+  const [completedApiCalls, setCompletedApiCalls] = useState([]);
+
   // 스크롤 초기화
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -250,7 +252,7 @@ const PageCustomerValueAnalyzer = () => {
           const selectedTargets = customerValueAnalyzerSelectedPersona.map(
             (persona) => persona.target
           );
-
+       
           // customerValueAnalyzerPersona가 있는지 확인하고 매칭
           if (
             Array.isArray(customerValueAnalyzerPersona) &&
@@ -281,6 +283,15 @@ const PageCustomerValueAnalyzer = () => {
         if (Array.isArray(customerValueAnalyzerFactor)) {
           setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
         }
+
+        console.log("customerValueAnalyzerFactor", customerValueAnalyzerFactor);
+        console.log("completedStepsArray", completedStepsArray);
+        // if (Array.isArray(customerValueAnalyzerFactor) && customerValueAnalyzerFactor.length > 0) {
+        //   setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
+        // } else if (completedStepsArray.length === 2) {
+        //   handleSubmitPersonas(); 
+        // }
+        
 
         // 최종 리포트 설정 (Step 4)
         if (customerValueAnalyzerFinalReport) {
@@ -345,10 +356,10 @@ const PageCustomerValueAnalyzer = () => {
   useEffect(() => {
     console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
     if (
-      // activeTab === 2 &&
-      // customerValueAnalyzerPersona.length > 0 &&
-      // toolStep < 2 &&
-      // !apiCallCompleted &&
+      activeTab === 2 &&
+      customerValueAnalyzerPersona.length > 0 &&
+      toolStep < 2 &&
+      !apiCallCompleted &&
       Object.keys(customerValueAnalyzerJourneyMap).length === 0
     ) {
       console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
@@ -603,7 +614,7 @@ const PageCustomerValueAnalyzer = () => {
   };
 
   const handleCheckboxChange = (index) => {
-    if (toolStep >= 3) return;
+    if (toolStep >= 2) return;
     setSelectedPersonas((prev) => {
       if (prev.includes(index)) {
         return prev.filter((id) => id !== index);
@@ -648,7 +659,6 @@ const PageCustomerValueAnalyzer = () => {
   };
 
   const handleSubmitPersonas = async () => {
-
     await updateToolOnServer(
       toolId,
       {
@@ -657,9 +667,8 @@ const PageCustomerValueAnalyzer = () => {
       isLoggedIn
     );
     setToolStep(2);
-
     handleNextStep(2);
-    setApiCallCompletedFactor(false);
+    // setApiCallCompletedFactor(false);
     try {
       const selectedPersonaData = selectedPersonas.map((index) => ({
         content: customerValueAnalyzerPersona[index],
@@ -667,6 +676,14 @@ const PageCustomerValueAnalyzer = () => {
         journeyMap: customerValueAnalyzerJourneyMap[index],
       }));
       setCustomerValueAnalyzerSelectedPersona(selectedPersonaData);
+
+      await updateToolOnServer(
+        toolId,
+        {
+          selected_customer_value_persona: selectedPersonaData,
+        },
+        isLoggedIn
+      );
 
       // 초기 상태를 'waiting'으로 설정
       const initialLoadingStates = selectedPersonaData.reduce(
@@ -680,6 +697,10 @@ const PageCustomerValueAnalyzer = () => {
 
       const results = [];
       for (let i = 0; i < selectedPersonaData.length; i++) {
+        // if (completedApiCalls.includes(i)) {
+        //   continue; // 이미 완료된 API 호출은 건너뜁니다
+        // }
+
         setCardStatuses((prev) => ({
           ...prev,
           [i]: "loading",
@@ -704,6 +725,7 @@ const PageCustomerValueAnalyzer = () => {
               ...prev,
               [i]: "completed",
             }));
+            // setCompletedApiCalls((prev) => [...prev, i]);
           }
         } catch (error) {
           console.error("Error:", error);
@@ -715,12 +737,12 @@ const PageCustomerValueAnalyzer = () => {
       }
 
       setCustomerValueAnalyzerFactor(results);
+      // setApiCallCompletedFactor(true); // API 호출 완료 상태로 설정
 
       await updateToolOnServer(
         toolId,
         {
           customer_value_factor: results,
-          selected_customer_value_persona: selectedPersonaData,
         },
         isLoggedIn
       );
@@ -747,6 +769,12 @@ const PageCustomerValueAnalyzer = () => {
     }
   };
 
+  // useEffect(() => {
+  //   if (apiCallCompletedFactor) {
+  //     handleSubmitPersonas();
+  //   }
+  // }, [apiCallCompletedFactor]);
+
   const handleReport = async () => {
     try {
       await updateToolOnServer(
@@ -757,7 +785,6 @@ const PageCustomerValueAnalyzer = () => {
         isLoggedIn
       );
       setToolStep(3);
-
       setIsLoading(true);
       handleNextStep(3);
 
@@ -1407,7 +1434,7 @@ const PageCustomerValueAnalyzer = () => {
                       Fill
                       disabled={
                         selectedPersonas.length === 0 ||
-                        toolStep >= 3 ||
+                        toolStep >= 2 ||
                         Object.values(cardStatuses).some(
                           (status) =>
                             status === "loading" || status === "waiting"
