@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css, createGlobalStyle } from "styled-components";
 import { palette } from "./Palette";
 import { Body1, Body2, Body3 } from "./Typography";
 import images from "./Images";
@@ -2531,6 +2531,7 @@ export const RangeSlider = styled.input`
     width: 100%;
     height: 1px;
     background: ${palette.outlineGray};
+  }
 
     // 중앙 구분선
     &::before {
@@ -3802,5 +3803,193 @@ export const TableHeader = styled.thead`
 export const TableBody = styled.tbody`
   tr {
     border-top: 1px solid ${palette.outlineGray};
+  }
+`;
+
+export const StyledDropzone = {
+  dropzone: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+    width: '100%',
+    border: 'none',
+    // borderWidth: 2,
+    // borderColor: palette.outlineGray,
+    // borderStyle: 'dashed',
+    // borderRadius: 4,
+    // padding: '20px',
+    // textAlign: 'center'
+  },
+  inputLabel: {
+    position: 'relative',
+    fontFamily: 'Pretendard, Poppins',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '12px',
+    width: '100%',
+    padding: '100px 0',
+    borderRadius: '10px',
+    border: `2px dashed ${palette.outlineGray}`,
+  },
+  inputLabelWithFiles: {
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '12px',
+    width: '100%',
+    fontFamily: 'Pretendard, Poppins',
+    margin: '0 auto',
+    padding: '100px 0',
+    borderRadius: '10px',
+    border: `2px dashed ${palette.outlineGray}`,
+    background: 'none',
+    order: 1,
+  },
+  previewContainer: {
+    position: 'relative',
+    width: '100%',
+    marginBottom: '16px',
+    order: 2,
+  },
+  preview: {
+    position: 'relative',
+    padding: '12px',
+    marginBottom: '0',
+    borderRadius: '10px',
+    border: `1px solid ${palette.outlineGray}`,
+    background: 'none',
+    overflow: 'hidden',
+    order: 2,
+  },
+  submitButtonContainer: {
+    width: '100%',
+    margin: '0 auto',
+    order: 3,
+  },
+  submitButton: {
+    backgroundColor: palette.primary,
+    fontFamily: 'Pretendard, Poppins',
+    color: `${palette.white}`,
+    padding: '10px 20px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  removeButton: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    color: 'white',
+    borderRadius: '50%',
+    padding: '4px',
+    width: '20px',
+    height: '20px'
+  }
+};
+
+export const DropzoneStyles = createGlobalStyle`
+  // 드래그 앤 드롭 활성화 스타일 제거
+  .dzu-dropzone {
+    &.dzu-dropzoneActive {
+      background-color: transparent !important;
+      border-color: ${palette.outlineGray} !important;
+    }
+  }
+
+  .dzu-previewContainer {
+    position: relative;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px !important;
+    margin-bottom: 8px;
+    
+    // 기존 이미지 숨기기
+    .dzu-previewImage {
+      display: none;
+    }
+    
+    // 파일 정보 스타일링
+    &:before {
+      content: attr(data-filename) " (" attr(data-size) ")";
+      display: block;
+      font-family: Pretendard, Poppins;
+      font-size: 14px;
+      color: ${palette.gray700};
+      margin-right: auto;
+    }
+
+    // 상태 컨테이너 스타일링
+    .dzu-previewStatusContainer {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    // 버튼 공통 스타일
+    .dzu-previewButton {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      padding: 4px;
+      margin: 0 auto;
+      border: none;
+      border-radius: 50%;
+      background-color: #FFE8EB;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+
+      // SVG 아이콘 스타일링
+      svg {
+        width: 16px;
+        height: 16px;
+        
+        * {
+          stroke: ${palette.red} !important;
+          fill: ${palette.red} !important;
+        }
+      }
+
+      // 추가적인 SVG 스타일 덮어쓰기
+      svg path,
+      svg line,
+      svg polyline {
+        stroke: ${palette.red} !important;
+        fill: ${palette.red} !important;
+      }
+    }
+  }
+
+  // 프로그레스 바 스타일
+  progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: ${palette.outlineGray};
+    appearance: none;
+    -webkit-appearance: none;
+    opacity: 0.1;
+    z-index: -1;
+
+    &::-webkit-progress-bar {
+      background-color: ${palette.outlineGray};
+    }
+
+    &::-webkit-progress-value {
+      background-color: ${palette.primary};
+      transition: width 0.3s ease;
+    }
+
+    &::-moz-progress-bar {
+      background-color: ${palette.primary};
+      transition: width 0.3s ease;
+    }
   }
 `;
