@@ -1198,7 +1198,7 @@ const OrganismIncNavigation = () => {
       setIdeaGeneratorSelectedPersona(
         chatData.idea_generator_selected_persona || []
       );
-      setIdeaGeneratorKnowTarget(chatData.idea_generator_know_target || null);
+      setIdeaGeneratorKnowTarget(chatData.idea_generator_know_target);
 
       if (chatData.isMarketing) {
         const updatedConversation = [...chatData.conversation];
@@ -1790,6 +1790,13 @@ const OrganismIncNavigation = () => {
                             <p
                               onClick={() => handleConversationClick(chat._id)}
                             >
+                              {chat.type === "ix_target_discovery_persona"
+                                ? "타겟 탐색기 - "
+                                : chat.type === "ix_idea_generator_persona"
+                                ? "아이디어 생성기 - "
+                                : chat.type === "ix_customer_value_persona"
+                                ? "고객 핵심 가치 분석기 - "
+                                : ""}
                               {chat.view_name || chat.business}
                             </p>
                             <span
@@ -2432,7 +2439,7 @@ const SubNavigation = styled.div`
   position: fixed;
   top: 0;
   left: 64px;
-  max-width: 250px;
+  max-width: 400px;
   width: 100%;
   height: 100dvh;
   display: flex;

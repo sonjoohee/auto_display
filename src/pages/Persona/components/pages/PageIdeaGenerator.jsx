@@ -202,6 +202,7 @@ const PageIdeaGenerator = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       if (toolLoading) {
+        console.log("🚀 ~ interviewLoading ~ toolStep:", toolStep);
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
 
@@ -217,7 +218,8 @@ const PageIdeaGenerator = () => {
           completedStepsArray.push(i);
         }
         setCompletedSteps(completedStepsArray);
-        if (ideaGeneratorKnowTarget) {
+
+        if (ideaGeneratorKnowTarget !== null) {
           setSelectedInterviewType(
             ideaGeneratorKnowTarget ? "yesTarget" : "noTarget"
           );
@@ -226,14 +228,15 @@ const PageIdeaGenerator = () => {
         // 페르소나 설정 (Step 2)
         if (ideaGeneratorSelectedPersona) {
           // ideaGeneratorSelectedPersona가 있는 경우에만 처리
-          const selectedIndices = (ideaGeneratorPersona ?? [])
-            .map((persona, index) =>
-              persona?.title === ideaGeneratorSelectedPersona.title ? index : -1
-            )
-            .filter((index) => index !== -1);
+          const selectedIndex = (ideaGeneratorPersona ?? []).findIndex(
+            (persona) => persona?.name === ideaGeneratorSelectedPersona.name
+          );
 
-          // selectedPersonas 상태 업데이트
-          setSelectedPersona(selectedIndices[0]); // 첫 번째 매칭되는 인덱스만 사용
+          console.log("🚀 ~ interviewLoading ~ selectedIndex:", selectedIndex);
+          // selectedPersona 상태 업데이트 (일치하는 항목이 없으면 -1)
+          if (selectedIndex !== -1) {
+            setSelectedPersona(selectedIndex);
+          }
         }
 
         if (ideaGeneratorFinalReport?.clusters?.length > 0) {
@@ -332,6 +335,7 @@ const PageIdeaGenerator = () => {
         toolId,
         {
           idea_generator_persona: response.response.idea_generator_persona,
+          idea_generator_know_target: ideaGeneratorKnowTarget,
         },
         isLoggedIn
       );
@@ -712,12 +716,6 @@ const PageIdeaGenerator = () => {
   };
 
   const handleShowDetailMore = (index) => {
-    console.log("🚀 ~ handleShowDetailMore ~ index:", index);
-
-    console.log(
-      "🚀 ~ handleShowDetailMore ~ ideaGeneratorIdea:",
-      ideaGeneratorIdea[index]
-    );
     setChartData({
       name: ideaGeneratorInfo.core_value[index],
       children: [
@@ -1296,39 +1294,33 @@ const PageIdeaGenerator = () => {
 
                       <div className="content">
                         <H4 color="gray800">
-                          {ideaGeneratorInfo.business}의 타겟분석결과{" "}
+                          {ideaGeneratorInfo?.business || ""}의 타겟분석결과{" "}
                           {(() => {
+                            if (!ideaGeneratorFinalReport?.top_3_clusters) {
+                              return "";
+                            }
+
+                            const { first, second, third } =
+                              ideaGeneratorFinalReport.top_3_clusters;
+
                             // 우선순위가 높은 요인 3개 추출
-                            const firstNames = Array.isArray(
-                              ideaGeneratorFinalReport.top_3_clusters.first.name
-                            )
-                              ? ideaGeneratorFinalReport.top_3_clusters.first
-                                  .name
-                              : [
-                                  ideaGeneratorFinalReport.top_3_clusters.first
-                                    .name,
-                                ];
+                            const firstNames = Array.isArray(first?.name)
+                              ? first.name
+                              : first?.name
+                              ? [first.name]
+                              : [];
 
-                            const secondNames = Array.isArray(
-                              ideaGeneratorFinalReport.top_3_clusters.second
-                                .name
-                            )
-                              ? ideaGeneratorFinalReport.top_3_clusters.second
-                                  .name
-                              : [
-                                  ideaGeneratorFinalReport.top_3_clusters.second
-                                    .name,
-                                ];
+                            const secondNames = Array.isArray(second?.name)
+                              ? second.name
+                              : second?.name
+                              ? [second.name]
+                              : [];
 
-                            const thirdNames = Array.isArray(
-                              ideaGeneratorFinalReport.top_3_clusters.third.name
-                            )
-                              ? ideaGeneratorFinalReport.top_3_clusters.third
-                                  .name
-                              : [
-                                  ideaGeneratorFinalReport.top_3_clusters.third
-                                    .name,
-                                ];
+                            const thirdNames = Array.isArray(third?.name)
+                              ? third.name
+                              : third?.name
+                              ? [third.name]
+                              : [];
 
                             let result = [...firstNames];
 
@@ -1346,13 +1338,17 @@ const PageIdeaGenerator = () => {
                               ];
                             }
 
-                            return result.slice(0, 3).join(", ");
+                            return result.length > 0
+                              ? result.slice(0, 3).join(", ")
+                              : "";
                           })()}
-                          의 요인의 우선순위가 높았습니다.
+                          {ideaGeneratorFinalReport?.top_3_clusters
+                            ? "의 요인의 우선순위가 높았습니다."
+                            : ""}
                         </H4>
 
                         <Body3 color="gray700">
-                          {ideaGeneratorFinalReport.conclusion}
+                          {ideaGeneratorFinalReport?.conclusion || ""}
                         </Body3>
                       </div>
                     </InsightAnalysis>
@@ -1454,10 +1450,6 @@ const PageIdeaGenerator = () => {
                         </Body1>
                       </TabContent5Item>
                     )}
-
-                    {/* <Button Small Primary onClick={() => setShowPopupSave(true)}>
-                  리포트 저장하기
-                </Button> */}
                   </>
                 )}
               </TabContent5>
