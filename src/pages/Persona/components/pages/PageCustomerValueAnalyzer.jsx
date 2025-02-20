@@ -1408,10 +1408,11 @@ const PageCustomerValueAnalyzer = () => {
                       disabled={
                         selectedPersonas.length === 0 ||
                         toolStep >= 3 ||
-                        Object.values(cardStatuses).some(
-                          (status) =>
-                            status === "loading" || status === "waiting"
-                        )
+                        // Object.values(cardStatuses).some(
+                        //   (status) =>
+                        //     status === "loading" || status === "waiting"
+                        // )
+                        customerValueAnalyzerJourneyMap.length !== customerValueAnalyzerInfo.target_list.length
                       }
                       onClick={() => handleSubmitPersonas()}
                     >
