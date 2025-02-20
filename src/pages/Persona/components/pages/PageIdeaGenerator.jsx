@@ -1899,7 +1899,7 @@ const InsightAnalysis = styled.div`
 
 const IdeaRankingTable = styled.div`
   width: 100%;
-  padding: 24px 20px;
+  padding: 6px 20px;
   border-radius: 10px;
   border: 1px solid ${palette.outlineGray};
 `;
