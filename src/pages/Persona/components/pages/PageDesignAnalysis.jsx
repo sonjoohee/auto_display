@@ -758,7 +758,7 @@ const PageDesignAnalysis = () => {
               </TabButtonType5>
             </TabWrapType5>
 
-            {activeTab === 3 && (
+            {activeTab === 1 && (
               <TabContent5>
                 {isLoading ? (
                   <div
@@ -979,8 +979,7 @@ const PageDesignAnalysis = () => {
               </TabContent5>
             )}
 
-            {/* {activeTab === 3 && completedSteps.includes(2) && ( */}
-            {activeTab === 1 && (
+            {activeTab === 3 && completedSteps.includes(2) && (
               <TabContent5 Small>
                 {isLoadingScenario ? (
                   <div
