@@ -1503,8 +1503,7 @@ const PageIdeaGenerator = () => {
           title={
             <>
               <H4 color="gray800" align="left">
-                {ideaGeneratorInfo.core_value[seletedIdeaIndex]}의{" "}
-                {ideaGeneratorInfo.business} - 아이디어 도출하기
+                "{ideaGeneratorInfo.core_value[seletedIdeaIndex]}" 가치 중심 - 아이디어 도출하기
               </H4>
             </>
           }
