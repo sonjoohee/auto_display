@@ -1348,13 +1348,13 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
                   <CardGroupWrap column>
-                    {customerValueAnalyzerPersona.map((content, index) => {
+                    {customerValueAnalyzerInfo.target_list.map((target, index) => {
                       return (
                         <MoleculeCustomerValueCard
                           key={index}
                           id={index}
-                          title={customerValueAnalyzerInfo.target_list[index]}
-                          content={content}
+                          title={target}
+                          content={customerValueAnalyzerPersona[index]}
                           business={customerValueAnalyzerInfo.business}
                           status={cardStatuses[index]}
                           isSelected={selectedPersonas.includes(index)}
