@@ -6,7 +6,7 @@ import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import axios from "axios";
 import { SubtractiveBlending } from "three/src/constants.js";
 import panelimages from "../../../../assets/styles/PanelImages";
@@ -173,6 +173,12 @@ import {
   IDEA_GENERATOR_FINAL_REPORT,
   IDEA_GENERATOR_SELECTED_PERSONA,
   CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA,
+  DESIGN_ANALYSIS_EMOTION_ANALYSIS,
+  DESIGN_ANALYSIS_BUSINESS_INFO,
+  DESIGN_ANALYSIS_UPLOADED_FILES,
+  DESIGN_ANALYSIS_SELECTED_PERSONA,
+  DESIGN_ANALYSIS_EMOTION_TARGET,
+  DESIGN_ANALYSIS_EMOTION_SCALE,
 } from "../../../AtomStates";
 import {
   getAllConversationsFromIndexedDB,
@@ -602,6 +608,16 @@ const OrganismIncNavigation = () => {
   //   setIsSection1Open(false);
   //   setIsSection2Open(false);
   // }, [isLoggedIn]);
+
+
+
+  const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] = useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS);
+  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(DESIGN_ANALYSIS_BUSINESS_INFO);
+  const [designAnalysisUploadedFiles, setDesignAnalysisUploadedFiles] = useAtom(DESIGN_ANALYSIS_UPLOADED_FILES);
+  const [designAnalysisSelectedPersona, setDesignAnalysisSelectedPersona] = useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
+  const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(DESIGN_ANALYSIS_EMOTION_TARGET);
+  const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(DESIGN_ANALYSIS_EMOTION_SCALE);
+
 
   const [isPopupLogin, setIsPopupLogin] = useState(false);
 
@@ -1200,6 +1216,25 @@ const OrganismIncNavigation = () => {
       );
       setIdeaGeneratorKnowTarget(chatData.idea_generator_know_target);
 
+
+      setDesignAnalysisEmotionAnalysis([]);
+      setDesignAnalysisBusinessInfo({});
+      setDesignAnalysisUploadedFiles([]);
+      setDesignAnalysisSelectedPersona([]);
+      setDesignAnalysisEmotionTarget({});
+      setDesignAnalysisEmotionScale([]);
+      setToolLoading(false);
+      setToolStep(chatData.completed_step);
+      setToolId(chatData.id);
+      setDesignAnalysisEmotionAnalysis(chatData.design_emotion_analysis || []);
+      setDesignAnalysisBusinessInfo(chatData.design_business_info || {});
+      setDesignAnalysisUploadedFiles(chatData.design_uploaded_files || []);
+      setDesignAnalysisSelectedPersona(chatData.design_selected_persona || []);
+      setDesignAnalysisEmotionTarget(chatData.design_emotion_target || {});
+      setDesignAnalysisEmotionScale(chatData.design_emotion_scale || []);
+      setToolLoading(true);
+
+
       if (chatData.isMarketing) {
         const updatedConversation = [...chatData.conversation];
 
@@ -1264,9 +1299,11 @@ const OrganismIncNavigation = () => {
         navigate(`/CustomerValueAnalyzer`);
       } else if (chatData.type === "ix_idea_generator_persona") {
         navigate(`/IdeaGenerator`);
-      } else {
+      } else if (chatData.type === "ix_target_discovery_persona") {
         navigate(`/TargetDiscovery`);
-      }
+      } else if (chatData.type === "ix_design_analysis_persona") {
+        navigate(`/DesignAnalysis`);
+      } 
     } catch (error) {
       console.error("대화 내용 가져오기 오류:", error);
     }

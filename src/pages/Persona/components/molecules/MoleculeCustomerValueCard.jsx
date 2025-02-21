@@ -124,6 +124,7 @@ const MoleculeCustomerValueCard = ({
   factor, // 새로운 prop 추가
   viewType, // 새로운 prop 추가
   business, // 새로운 prop 추가
+  hideButton, // 새로운 prop 추가
 }) => {
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(
@@ -483,7 +484,7 @@ const MoleculeCustomerValueCard = ({
               {content}
             </Sub2>
           </ListText>
-          <ListButton>{renderButton()}</ListButton>
+          {!hideButton && <ListButton>{renderButton()}</ListButton>}
         </ListBoxItem>
       )}
 

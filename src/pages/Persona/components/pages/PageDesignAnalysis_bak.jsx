@@ -48,18 +48,12 @@ import {
   TOOL_STEP,
   SELECTED_TARGET_DISCOVERY_SCENARIO,
   TOOL_LOADING,
-  DESIGN_ANALYSIS_BUSINESS_INFO,
-  DESIGN_ANALYSIS_UPLOADED_FILES,
-  DESIGN_ANALYSIS_EMOTION_ANALYSIS,
-  DESIGN_ANALYSIS_SELECTED_PERSONA,
-  DESIGN_ANALYSIS_EMOTION_TARGET,
-  DESIGN_ANALYSIS_EMOTION_SCALE,
-} from "../../../../pages/AtomStates";
-import {
-  InterviewXDesignEmotionAnalysisRequest,
-  InterviewXDesignEmotionTargetRequest,
-  InterviewXDesignEmotionScaleRequest,
-} from "../../../../utils/indexedDB" ;
+  DESIGN_BUSINESS_INFO,
+  DESIGN_UPLOADED_FILES,
+  DESIGN_EMOTION_ANALYSIS,
+  DESIGN_SELECTED_PERSONA,
+  DESIGN_EMOTION_TARGET,
+} from "../../../AtomStates";
 import images from "../../../../assets/styles/Images";
 import {
   H4,
@@ -74,7 +68,7 @@ import {
   Body3,
   Caption1,
 } from "../../../../assets/styles/Typography";
-import MoleculeCustomerValueCard from "../molecules/MoleculeCustomerValueCard";
+import MoleculeToolPersonaCard from "../molecules/MoleculeToolPersonaCard";
 import {
   InterviewXTargetDiscoveryPersonaRequest,
   InterviewXTargetDiscoveryScenarioRequest,
@@ -84,7 +78,6 @@ import {
 } from "../../../../utils/indexedDB";
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
-import AnalysisItem from '../molecules/MoleculeAnalysisItem'; // Import the new component
 
 const PageDesignAnalysis = () => {
   const [toolId, setToolId] = useAtom(TOOL_ID);
@@ -108,12 +101,11 @@ const PageDesignAnalysis = () => {
   const [selectedTargetDiscoveryScenario, setSelectedTargetDiscoveryScenario] =
     useAtom(SELECTED_TARGET_DISCOVERY_SCENARIO);
 
-  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(DESIGN_ANALYSIS_BUSINESS_INFO);
-  const [designAnalysisUploadedFiles, setDesignAnalysisUploadedFiles] = useAtom(DESIGN_ANALYSIS_UPLOADED_FILES);
-  const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] = useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS); 
-  const [selectedDesignAnalysisEmotionAnalysis, setSelectedDesignAnalysisEmotionAnalysis] = useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
-  const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(DESIGN_ANALYSIS_EMOTION_TARGET);
-  const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(DESIGN_ANALYSIS_EMOTION_SCALE);
+  const [designBusinessInfo, setDesignBusinessInfo] = useAtom(DESIGN_BUSINESS_INFO);
+  const [designUploadedFiles, setDesignUploadedFiles] = useAtom(DESIGN_UPLOADED_FILES);
+  const [designEmotionAnalysis, setDesignEmotionAnalysis] = useAtom(DESIGN_EMOTION_ANALYSIS); 
+  const [selectedDesignEmotionAnalysis, setSelectedDesignEmotionAnalysis] = useAtom(DESIGN_SELECTED_PERSONA);
+  const [designEmotionTarget, setDesignEmotionTarget] = useAtom(DESIGN_EMOTION_TARGET);
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupMore, setShowPopupMore] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -146,7 +138,6 @@ const PageDesignAnalysis = () => {
   const [loadingPersonas, setLoadingPersonas] = useState({});
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [activeDesignTab, setActiveDesignTab] = useState('emotion'); // 'emotion' 또는 'scale'
   
   const handleToggle = (key) => {
     setState((prevState) => ({ ...prevState, [key]: !prevState[key] }));
@@ -216,12 +207,14 @@ const PageDesignAnalysis = () => {
     const interviewLoading = async () => {
       if (toolLoading) {
         // 활성 탭 설정 (기본값 1)
-        setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
+        setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
 
         // 비즈니스 정보 설정 (Step 1)
-        if (designAnalysisBusinessInfo) {
-          setBusinessDescription(designAnalysisBusinessInfo?.business ?? "");
-          setUploadedFiles(designAnalysisUploadedFiles ?? []);
+        if (targetDiscoveryInfo) {
+          setBusinessDescription(targetDiscoveryInfo?.business ?? "");
+          setTargetCustomer(targetDiscoveryInfo?.target ?? "");
+          setSpecificSituation(targetDiscoveryInfo?.specific_situation ?? "");
+          setSelectedPurpose(targetDiscoveryInfo?.country ?? "");
         }
 
         // 완료된 단계 설정
@@ -233,15 +226,15 @@ const PageDesignAnalysis = () => {
 
         // 페르소나 설정 (Step 2)
         if (
-          Array.isArray(designAnalysisEmotionAnalysis) &&
-          Array.isArray(selectedDesignAnalysisEmotionAnalysis)
+          Array.isArray(targetDiscoveryPersona) &&
+          Array.isArray(selectedTargetDiscoveryPersona)
         ) {
           // 이미 선택된 페르소나들의 인덱스 찾기
-          const selectedIndices = (designAnalysisEmotionAnalysis ?? [])
+          const selectedIndices = (targetDiscoveryPersona ?? [])
             .map((persona, index) => {
               // targetDiscoveryScenario에 있는 페르소나만 선택
-              return (designAnalysisEmotionTarget ?? []).some(
-                (target) => target?.name === persona?.name
+              return (targetDiscoveryScenario ?? []).some(
+                (scenario) => scenario?.title === persona?.title
               )
                 ? index
                 : -1;
@@ -253,19 +246,41 @@ const PageDesignAnalysis = () => {
 
           // 선택된 페르소나 데이터 설정
           const selectedPersonaData = selectedIndices
-            .map((index) => designAnalysisEmotionAnalysis?.[index])
+            .map((index) => targetDiscoveryPersona?.[index])
             .filter(Boolean);
 
-          setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
+          setSelectedTargetDiscoveryPersona(selectedPersonaData);
         }
 
-       if (designAnalysisEmotionScale) {
-        setDesignAnalysisEmotionScale(designAnalysisEmotionScale ?? {});
-       }
+        // 시나리오 설정 (Step 3)
+        if (
+          Array.isArray(targetDiscoveryScenario) &&
+          Array.isArray(targetDiscoveryPersona)
+        ) {
+          const matchedScenarioData = (targetDiscoveryScenario ?? [])
+            .map((scenario) => {
+              const matchedPersona = (targetDiscoveryPersona ?? []).find(
+                (persona) => persona?.title === scenario?.title
+              );
+
+              if (!matchedPersona) return null;
+
+              return {
+                ...(matchedPersona ?? {}),
+                title: scenario?.title ?? "",
+                content: matchedPersona?.content ?? {},
+                keywords: matchedPersona?.content?.keywords ?? [],
+                scenario: scenario ?? {},
+              };
+            })
+            .filter((item) => item?.title);
+
+          setSelectedTargetDiscoveryScenario(matchedScenarioData);
+        }
 
         // 최종 리포트 설정 (Step 4)
-        if (designAnalysisEmotionTarget) {
-          setDesignAnalysisEmotionTarget(designAnalysisEmotionTarget ?? {});
+        if (targetDiscoveryFinalReport) {
+          setTargetDiscoveryFinalReport(targetDiscoveryFinalReport ?? {});
         }
 
         return;
@@ -290,7 +305,6 @@ const PageDesignAnalysis = () => {
 
   
   // const handleCheckboxChange = (index) => {
-    // if (toolStep >= 2) return;
   //   // 이미 선택된 항목을 다시 클릭하면 선택 해제
   //   if (selectedPersona === index) {
   //     setSelectedPersona(null);
@@ -336,7 +350,7 @@ const PageDesignAnalysis = () => {
 
       const responseToolId = await createToolOnServer(
         {
-          type: "",
+          type: "ix_target_discovery_persona",
         },
         isLoggedIn
       );
@@ -368,7 +382,7 @@ const PageDesignAnalysis = () => {
         business: businessData
       });
 
-      // const response = await InterviewXDesignEmotionAnalysisRequest(
+      // const response = await api(
       //   data,
       //   isLoggedIn
       // );
@@ -389,14 +403,14 @@ const PageDesignAnalysis = () => {
       // );
 
       // Atom에 저장 (이미지 파일은 FormData에 담았으므로, 여기서는 비즈니스 데이터만 저장)
-      setDesignAnalysisBusinessInfo(businessData);
-      setDesignAnalysisUploadedFiles(uploadedFiles); 
+      setDesignBusinessInfo(businessData);
+      setDesignUploadedFiles(uploadedFiles); 
 
       await updateToolOnServer(
         toolId,
         {
           completed_step: 1,
-          // design_emotion_analysis: response.response.design_emotion_analysis ,
+          target_discovery_persona: designEmotionAnalysis,
           business: businessData,
           image: uploadedFiles.length > 0 ? uploadedFiles[0] : null,
   
@@ -441,54 +455,43 @@ const PageDesignAnalysis = () => {
     );
     setToolStep(2);
     try {
-      const selectedPersonaData = designAnalysisEmotionAnalysis.filter(
+      const selectedPersonaData = designEmotionAnalysis.filter(
         (persona, index) => selectedPersonas.includes(index)
       );
-      setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
+      setSelectedDesignEmotionAnalysis(selectedPersonaData);
 
+      let allScenarios = []; // 모든 시나리오를 저장할 배열
       // 선택된 페르소나가 하나일 경우에만 시나리오 요청
       if (selectedPersonaData) {
         const persona = selectedPersonaData; // 선택된 페르소나 가져오기
         try {
           const apiRequestData = {
-            business: designAnalysisBusinessInfo.business,
+            business: designBusinessInfo.business,
             design_emotion_selected_field: persona.name,
             design_emotion_analysis: persona,
           };
 
-          const response = await InterviewXDesignEmotionTargetRequest(
+          const response = await InterviewXTargetDiscoveryScenarioRequest(
             apiRequestData,
             isLoggedIn
           );
 
           if (
             !response?.response?.design_emotion_target
+              ?.potential_customer_info ||
+            !response?.response?.design_emotion_target?.usage_scenario
           ) {
             console.log("🚀 ~ handleSubmitPersonas ~ response:", response);
             setShowPopupError(true);
             return;
           }
 
-          setDesignAnalysisEmotionTarget(response.response.design_emotion_target);
-      
-          const oceanData = {
-            tool_id: toolId,
-            business: designAnalysisBusinessInfo.business,
-            design_emotion_selected_field: persona.name,
-            design_emotion_target: response?.response?.design_emotion_target
-          };
-
-          
-          const oceanResponse = await InterviewXDesignEmotionScaleRequest(
-            oceanData,
-            isLoggedIn
-          );
-          console.log("🚀 ~ oceanResponse:", oceanResponse);
-          setDesignAnalysisEmotionScale(oceanResponse.response.design_emotion_scale);
-
+          setDesignEmotionTarget(response.response.design_emotion_target);
 
         } catch (error) {
-          console.error(`Error processing persona ${persona.name}:`, error);
+  
+     
+          console.error(`Error processing persona ${persona.title}:`, error);
         }
       }
 
@@ -496,8 +499,7 @@ const PageDesignAnalysis = () => {
         toolId,
         {
           completed_step: 3,
-          design_emotion_target: designAnalysisEmotionTarget,
-          design_emotion_scale: designAnalysisEmotionScale,
+          design_emotion_target: designEmotionTarget,
         },
         isLoggedIn
       );
@@ -606,7 +608,30 @@ const PageDesignAnalysis = () => {
     });
   };
 
+  // OCEAN 값들을 서버에 저장하는 함수
+  const saveOceanValues = async () => {
+    try {
+      // API 호출 로직
+      const response = await fetch('/api/save-ocean', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(oceanValues),
+      });
+      
+      if (!response.ok) {
+        throw new Error('OCEAN 값 저장에 실패했습니다');
+      }
 
+      // 성공 처리
+      console.log('OCEAN 값이 성공적으로 저장되었습니다');
+    } catch (error) {
+      console.error('OCEAN 값 저장 중 오류 발생:', error);
+    }
+  };
+
+  const [activeDesignTab, setActiveDesignTab] = useState('emotion'); // 'emotion' 또는 'scale'
 
   return (
     <>
@@ -794,26 +819,40 @@ const PageDesignAnalysis = () => {
 
                     <div className="content">
                       <CardGroupWrap column style={{ marginBottom: "140px" }}>
+                      
 {/* 
-              <CardGroupWrap column>
-                    {designAnalysisEmotionAnalysis.map((persona, index) => {
-                      return (
-                        <MoleculeCustomerValueCard
-                          key={index}
-                          id={index}
-                          title={persona.name}
-                          content={persona.reason}
-                          business={designAnalysisBusinessInfo.business}
-                          isSelected={selectedPersonas.includes(index)}
-                          onSelect={(id) => handleCheckboxChange(id)}
-                          hideButton={true}
-                        />
-                      );
-                    })}
-                  </CardGroupWrap>
+                        <CardGroupWrap column style={{ marginBottom: "140px" }}>
+                          {designEmotionAnalysis.map((persona, index) => (
+                            <MoleculeToolPersonaCard
+                              key={`persona-${index}`}
+                              title={persona.title}
+                              checked={selectedPersonas.includes(index)}
+                              onSelect={() => handleCheckboxChange(index)}
+                              currentSelection={selectedPersonas.length}
+                              personaData={persona}
+                              viewType="list"
+                              selectedIndex={index}
+                              hideButton={true}
+                            />
+                          ))}
+                        </CardGroupWrap> */}
 
-
-  */}
+{/* 
+                          <CardGroupWrap column style={{ marginBottom: "140px" }}>
+                              {designEmotionAnalysis.map((item, index) => (
+                                <ListBoxItem FlexStart key={index}>
+                                  <CheckCircle />
+                                  <ListText>
+                                    <ListTitle>
+                                      <Body1 color="gray800" align="left">{item.name}</Body1>
+                                    </ListTitle>
+                                    <ListSubtitle>
+                                      <Sub2 color="gray500" align="left">{item.reason}</Sub2>
+                                    </ListSubtitle>
+                                  </ListText>
+                                </ListBoxItem>
+                              ))}
+                            </CardGroupWrap> */}
 
 
 
@@ -942,36 +981,28 @@ const PageDesignAnalysis = () => {
                     <InsightAnalysis>
                       <div className="title">
                         <H4 color="gray800" align="left">
-                          {activeDesignTab === 'emotion' 
-                            ? "(Business)의 (목표감성)을 기반으로 이미지의 감성 스케일 맵핑을 진행했을때..." 
-                          //  " ({DesignBusinessInfo.business})가 ({ selectedDesignEmotionAnalysis.name})에서 궁극적으로 달성하고자하는 주요 목표 감성은<br />
-                          // {designEmotionTarget.target_emotion}"
-                            : "(Business)의 (목표감성)을 기반으로 이미지의 감성 스케일 맵핑을 진행했을때..."}
-                        {/* "{{designAnalysisEmotionScale.conclusion}}" */}
+                          (Business)의 (목표감성)을 기반으로 이미지의 감성 스케일 맵핑을 진행했을때...<br />
+                          어떤 보완점이 발견되었습니다. 
                         </H4>
                       </div>
-{/* 
-                     designAnalysisEmotionScale.evaluation_analysis.strengthsweaknesse/ */}
+                      {/* <div className="title">
+                        <H4 color="gray800" align="left">
+                          (DesignBusinessInfo.business)의 (selectedDesignEmotionAnalysis.name)을 기반으로 이미지의 감성 스케일 맵핑을 진행했을때...<br />
+                          어떤 보완점이 발견되었습니다. 
+                        </H4>
+                      </div> */}
 
                       <div className="content">
-                        {activeDesignTab === 'emotion' ? (
-                            <Body3 color="gray700">
-                            {designAnalysisEmotionTarget.designer_guidelines}
-                            스케일 분석 결과: 디자인이 전달하고자 하는 감정의 강도와 그에 따른 사용자 반응을 분석한 결과, 특정 감정이 더 강조되어야 할 필요가 있습니다. 
-                          </Body3>
-                        ) : (
-                          <>
-                          <Body3 color="gray700">
-                            강점 : {designAnalysisEmotionScale.evaluation_analysis.strength}
-                            강점: '편리한(6점)', '명확한(6점)', '간편한(6점)'으로 높은 점수를 받은 것은 디자인이 고객에게 전달하고자 하는 핵심 가치를 잘 표현하고 있음을 의미합니다. 텍스트와 이미지를 통해 서비스의 핵심적인 특징을 효과적으로 전달하고, 사용자들이 쉽게 이해하고 이용할 수 있도록 시각적인 정보를 명확하게 제공하고 있습니다. 스마트폰 UI 이미지를 통해 모바일 주문의 편리함을 강조하는 것은 긍정적인 부분입니다.
-                          </Body3>
-                          <Body3 color="gray700">
-                            약점 및 개선 방향: {designAnalysisEmotionScale.evaluation_analysis.weaknesses}
-                            약점 및 개선 방향: '신속한(4점)', '즐거운(3점)', '생동감 있는(3점)', '세련된(3점)' 감성에 낮은 점수를 받은 것은 디자인이 신속하고 즐거운 경험을 충분히 전달하지 못하고 있다는 것을 의미합니다. 전반적으로 레이아웃이 다소 정적이고 획일적이며, 샌드위치 이미지 외에 시선을 사로잡는 요소가 부족하여 생동감과 즐거움을 느끼기 어렵습니다. 특히, 배경 이미지와 스마트폰 UI 이미지의 부조화, 브랜드 로고의 과도한 사용은 세련된 느낌을 저해합니다.
-                          </Body3>
-                        </>
-                        
-                        )}
+                      {/* <Body3 color="gray700">
+                        {designEmotionTarget.designer_guidelines}
+                      </Body3> */}
+                        <Body3 color="gray700">
+                          강점: '편리한(6점)', '명확한(6점)', '간편한(6점)'으로 높은 점수를 받은 것은 디자인이 고객에게 전달하고자 하는 핵심 가치를 잘 표현하고 있음을 의미합니다. 텍스트와 이미지를 통해 서비스의 핵심적인 특징을 효과적으로 전달하고, 사용자들이 쉽게 이해하고 이용할 수 있도록 시각적인 정보를 명확하게 제공하고 있습니다. 스마트폰 UI 이미지를 통해 모바일 주문의 편리함을 강조하는 것은 긍정적인 부분입니다.
+                        </Body3>
+
+                        <Body3 color="gray700">
+                          약점 및 개선 방향: '신속한(4점)', '즐거운(3점)', '생동감 있는(3점)', '세련된(3점)' 감성에 낮은 점수를 받은 것은 디자인이 신속하고 즐거운 경험을 충분히 전달하지 못하고 있다는 것을 의미합니다. 전반적으로 레이아웃이 다소 정적이고 획일적이며, 샌드위치 이미지 외에 시선을 사로잡는 요소가 부족하여 생동감과 즐거움을 느끼기 어렵습니다. 특히, 배경 이미지와 스마트폰 UI 이미지의 부조화, 브랜드 로고의 과도한 사용은 세련된 느낌을 저해합니다.
+                        </Body3>
                       </div>
                     </InsightAnalysis>
 
@@ -979,94 +1010,133 @@ const PageDesignAnalysis = () => {
                       <InsightAnalysis>
                         <Sub3 color="gray700" align="left">💡 %는 해당 비즈니스에서 차지하는 중요도를 의미합니다.</Sub3>
 
-{/* 
-                        <CardGroupWrap column $isExpanded={state.isExpanded}>
-                        {designAnalysisEmotionTarget?.design_perspectives?.map((perspective, index) => (
-                          <AnalysisItem 
-                            business={designAnalysisBusinessInfo.business}
-                            key={index} // 각 아이템에 고유한 키를 부여
-                            percentage={perspective.weight + "%"} // weight를 percentage로 사용
-                            title={perspective.name} // name을 title로 사용
-                            subtitle={perspective.features.map(feature => feature.title).join(", ")}
-                            //details={perspective}
-                            details={[
-                              {
-                              title: perspective.design_direction,
-                              }
-                              {
-                                heading: "기능 및 성능 제안 방향",
-                                items: perspective.features.map(feature => feature.title + " : " + feature.description) // features에서 title과 description을 조합
-                              },
-                              {
-                                heading: "디자인 및 구조 제안 방향",
-                                items: perspective.form_factors.map(formFactor => formFactor.title + " : " + formFactor.description) // form_factors에서 title과 description을 조합
-                              }
-                            ]}
-                          />
-                        ))}
-                      </CardGroupWrap> */}
-
                       <CardGroupWrap column $isExpanded={state.isExpanded}>
-                        <AnalysisItem 
-                          percentage="30%" 
-                          title="기능성 (Functional Perspective)" 
-                          subtitle="제품의 효율적인 기능 수행, 다목적 사용성, 사용 목적에 부합하는 기능 제공"
-                          details={[
-                            {
-                              heading: "기능 및 성능 제안 방향",
-                              items: [
-                                "사용 목적에 적합한 기능 제공 : 저당 아이스크림, 다양한 맛 선택, 장기 보관 기능",
-                                "제품의 성능 보장 : 아이스크림이 쉽게 녹지 않도록 온도 유지, 스틱이 쉽게 부러지지 않는 견고한 구조",
-                                "다양한 사용 환경에서의 적합성 : 실내, 야외 어디서나 편리하게 즐길 수 있음"
-                              ]
-                            },
-                            {
-                              heading: "디자인 및 구조 제안 방향",
-                              items: [
-                                "포장의 밀폐력 및 보존 기능 : 외부 공기 차단, 보온, 보냉 기능, 습기에 강한 방수 성능",
-                                "스틱의 재질과 디자인 : 손에 잘 잡히는 인체공학적 형태, 견고한 소재 사용",
-                                "제품의 크기와 무게 : 휴대성이 좋고 한 손으로 쉽게 들고 먹을 수 있는 크기"
-                              ]
-                            }
-                          ]}
-                        />
+                        <ListBoxItem FlexStart>
+                          <PercentBadge primary>
+                            <Caption1>30%</Caption1>
+                          </PercentBadge>
 
-                        <AnalysisItem 
-                          percentage="3%" 
-                          title="윤리성 (Ethical Perspective)" 
-                          subtitle="친환경 소재 사용, 지속 가능한 생산 방식, 사회적 책임 실천"
-                        />
+                          <ListText Small>
+                            <ListTitle>
+                              <Sub1 color="gray800" align="left">기능성 (Functional Perspective)</Sub1>
+                            </ListTitle>
+                            <ListSubtitle>
+                              <Sub3 color="gray500" align="left">제품의 효율적인 기능 수행, 다목적 사용성, 사용 목적에 부합하는 기능 제공</Sub3>
+                            </ListSubtitle>
+                          </ListText>
+
+                          <ToggleButton
+                            className="toggleButton"
+                            $isExpanded={state.isExpanded}
+                            onClick={() => handleToggle("isExpanded")}
+                          />
+
+                          {state.isExpanded && (
+                            <ToggleContent $isExpanded={state.isExpanded}>
+                              <Body3 color="gray700" align="left">
+                                제품이 사용 목적을 얼마나 효율적으로, 효과적으로 수행하는지를 나타냅니다. 아래 목표 감성 달성 설계 방향에 따라 (Business)를 평가 및 개선하세요. 줄글로 작성 
+                              </Body3>
+
+                              <div className="bgContent">
+                                <div>
+                                  <Body2_1 color="gray800" align="left">기능 및 성능 제안 방향</Body2_1>
+                                  <ul>
+                                    <li>
+                                      <Body3 color="gray800" align="left">사용 목적에 적합한 기능 제공 : 저당 아이스크림, 다양한 맛 선택, 장기 보관 기능</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">제품의 성능 보장 : 아이스크림이 쉽게 녹지 않도록 온도 유지, 스틱이 쉽게 부러지지 않는 견고한 구조</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">다양한 사용 환경에서의 적합성 : 실내, 야외 어디서나 편리하게 즐길 수 있음</Body3>
+                                    </li>
+                                  </ul>
+                                </div>
+
+                                <div>
+                                  <Body2_1 color="gray800" align="left">디자인 및 구조 제안 방향</Body2_1>
+                                  <ul>
+                                    <li>
+                                      <Body3 color="gray800" align="left">포장의 밀폐력 및 보존 기능 : 외부 공기 차단, 보온, 보냉 기능, 습기에 강한 방수 성능</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">스틱의 재질과 디자인 : 손에 잘 잡히는 인체공학적 형태, 견고한 소재 사용</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">제품의 크기와 무게 : 휴대성이 좋고 한 손으로 쉽게 들고 먹을 수 있는 크기</Body3>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </ToggleContent>
+                          )}
+                        </ListBoxItem>
+
+                        <ListBoxItem FlexStart>
+                          <PercentBadge>
+                            <Caption1>3%</Caption1>
+                          </PercentBadge>
+
+                          <ListText Small>
+                            <ListTitle>
+                              <Sub1 color="gray800" align="left">윤리성 (Ethical Perspective)</Sub1>
+                            </ListTitle>
+                            <ListSubtitle>
+                              <Sub3 color="gray500" align="left">친환경 소재 사용, 지속 가능한 생산 방식, 사회적 책임 실천</Sub3>
+                            </ListSubtitle>
+                          </ListText>
+
+                          <ToggleButton
+                            className="toggleButton"
+                            $isExpanded={state.isExpanded}
+                            onClick={() => handleToggle("isExpanded")}
+                          />
+
+                          {state.isExpanded && (
+                            <ToggleContent $isExpanded={state.isExpanded}>
+                              <Body3 color="gray700" align="left">
+                                제품이 사용 목적을 얼마나 효율적으로, 효과적으로 수행하는지를 나타냅니다. 아래 목표 감성 달성 설계 방향에 따라 (Business)를 평가 및 개선하세요. 줄글로 작성 
+                              </Body3>
+
+                              <div className="bgContent">
+                                <div>
+                                  <Body2_1 color="gray800" align="left">기능 및 성능 제안 방향</Body2_1>
+                                  <ul>
+                                    <li>
+                                      <Body3 color="gray800" align="left">사용 목적에 적합한 기능 제공 : 저당 아이스크림, 다양한 맛 선택, 장기 보관 기능</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">제품의 성능 보장 : 아이스크림이 쉽게 녹지 않도록 온도 유지, 스틱이 쉽게 부러지지 않는 견고한 구조</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">다양한 사용 환경에서의 적합성 : 실내, 야외 어디서나 편리하게 즐길 수 있음</Body3>
+                                    </li>
+                                  </ul>
+                                </div>
+
+                                <div>
+                                  <Body2_1 color="gray800" align="left">디자인 및 구조 제안 방향</Body2_1>
+                                  <ul>
+                                    <li>
+                                      <Body3 color="gray800" align="left">포장의 밀폐력 및 보존 기능 : 외부 공기 차단, 보온, 보냉 기능, 습기에 강한 방수 성능</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">스틱의 재질과 디자인 : 손에 잘 잡히는 인체공학적 형태, 견고한 소재 사용</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">제품의 크기와 무게 : 휴대성이 좋고 한 손으로 쉽게 들고 먹을 수 있는 크기</Body3>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </ToggleContent>
+                          )}
+                        </ListBoxItem>
                       </CardGroupWrap>
                     </InsightAnalysis>
                     )}
 
-
-                    
-
                     {activeDesignTab === 'scale' && (
-
-// <InsightAnalysis>
-// <OCEANRangeWrap>
-//   {/* OCEAN 값 슬라이더 */}
-//   {designAnalysisEmotionScale.sd_scale_analysis.map((item, index) => (
-//     <div key={index}>
-//       <Body3 color="gray800" align="left">{item.target_emotion}</Body3>
-//       <RangeSlider
-//         type="range"
-//         min="0"
-//         max="6"
-//         step="1"
-//         value={item.score}
-//         disabled={true} // 변경을 허용하지 않으려면 비활성화
-//         style={{ flex: "2" }}
-//       />
-//       <Body3 color="gray800" align="right">{item.opposite_emotion}</Body3>
-//     </div>
-//   ))}
-// </OCEANRangeWrap>
-// </InsightAnalysis>
-// )}
-                  
                     <InsightAnalysis>
                       <OCEANRangeWrap>
                         <div>
