@@ -564,6 +564,13 @@ export const IDEA_GENERATOR_CLUSTERING = atom([]);
 export const IDEA_GENERATOR_FINAL_REPORT = atom({});
 export const IDEA_GENERATOR_SELECTED_PERSONA = atom([]);
 
+export const DESIGN_ANALYSIS_EMOTION_ANALYSIS = atom([]);
+export const DESIGN_ANALYSIS_BUSINESS_INFO = atom({});
+export const DESIGN_ANALYSIS_UPLOADED_FILES = atom([]);
+export const DESIGN_ANALYSIS_SELECTED_PERSONA = atom([]);
+export const DESIGN_ANALYSIS_EMOTION_TARGET = atom({});
+export const DESIGN_ANALYSIS_EMOTION_SCALE = atom([]);
+
 // setConversation([]);
 // setConversationStage(1);
 // setInputBusinessInfo("");

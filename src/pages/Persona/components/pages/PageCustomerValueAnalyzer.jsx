@@ -241,7 +241,6 @@ const PageCustomerValueAnalyzer = () => {
           );
           setCardStatuses(completedStates);
         }
-
         // 페르소나 설정 (Step 2)
         if (Array.isArray(customerValueAnalyzerSelectedPersona)) {
           setCustomerValueAnalyzerSelectedPersona(
@@ -527,6 +526,7 @@ const PageCustomerValueAnalyzer = () => {
       setCustomerValueAnalyzerPersona(
         response.response.customer_value_persona || []
       );
+      console.log("customerValueAnalyzerPersona", customerValueAnalyzerPersona);
 
       setCustomerValueAnalyzerInfo(businessData);
 
@@ -668,7 +668,7 @@ const PageCustomerValueAnalyzer = () => {
     );
     setToolStep(2);
     handleNextStep(2);
-    // setApiCallCompletedFactor(false);
+    setApiCallCompletedFactor(false);
     try {
       const selectedPersonaData = selectedPersonas.map((index) => ({
         content: customerValueAnalyzerPersona[index],
@@ -697,10 +697,7 @@ const PageCustomerValueAnalyzer = () => {
 
       const results = [];
       for (let i = 0; i < selectedPersonaData.length; i++) {
-        // if (completedApiCalls.includes(i)) {
-        //   continue; // 이미 완료된 API 호출은 건너뜁니다
-        // }
-
+        // API 호출 시작 시 카드 상태를 'loading'으로 설정
         setCardStatuses((prev) => ({
           ...prev,
           [i]: "loading",
@@ -719,26 +716,26 @@ const PageCustomerValueAnalyzer = () => {
             requestData,
             isLoggedIn
           );
+
+          // API 호출 성공 시 카드 상태를 'completed'로 설정
           if (response?.response?.customer_value_factor) {
             results.push(response.response.customer_value_factor);
             setCardStatuses((prev) => ({
               ...prev,
               [i]: "completed",
             }));
-            // setCompletedApiCalls((prev) => [...prev, i]);
           }
         } catch (error) {
           console.error("Error:", error);
           setCardStatuses((prev) => ({
             ...prev,
-            [i]: "error",
+            [i]: "error", // 에러 발생 시 상태를 'error'로 설정
           }));
         }
       }
 
       setCustomerValueAnalyzerFactor(results);
-      // setApiCallCompletedFactor(true); // API 호출 완료 상태로 설정
-
+     
       await updateToolOnServer(
         toolId,
         {
@@ -746,6 +743,9 @@ const PageCustomerValueAnalyzer = () => {
         },
         isLoggedIn
       );
+
+      // 모든 API 호출이 완료된 후 상태 업데이트
+      setApiCallCompletedFactor(true); // API 호출 완료 상태로 설정
     } catch (error) {
       console.error("Error submitting personas:", error);
       setShowPopupError(true);
@@ -768,12 +768,28 @@ const PageCustomerValueAnalyzer = () => {
       setIsLoading(false);
     }
   };
-
+  
   // useEffect(() => {
-  //   if (apiCallCompletedFactor) {
-  //     handleSubmitPersonas();
+  //   if (activeTab === 3) {
+  //     // 탭 3으로 돌아올 때 카드 상태를 확인하고 'completed'로 설정
+  //     const allCompleted = customerValueAnalyzerFactor.length === customerValueAnalyzerSelectedPersona.length;
+  //     console.log("customerValueAnalyzerSelectedPersona", customerValueAnalyzerSelectedPersona);
+
+  //     const updatedCardStatuses = customerValueAnalyzerSelectedPersona.reduce((acc, _, index) => {
+  //       // 대기 중 상태 추가
+  //       if (cardStatuses[index] === "loading") {
+  //         acc[index] = "loading"; // 로딩 중인 경우
+  //       } else if (allCompleted) {
+  //         acc[index] = "completed"; // 모든 API 호출이 완료된 경우
+  //       } else {
+  //         acc[index] = "waiting"; // 대기 중인 경우
+  //       }
+  //       return acc;
+  //     }, {});
+
+  //     setCardStatuses(updatedCardStatuses);
   //   }
-  // }, [apiCallCompletedFactor]);
+  // }, [activeTab, customerValueAnalyzerFactor, customerValueAnalyzerSelectedPersona]);
 
   const handleReport = async () => {
     try {
@@ -1019,6 +1035,8 @@ const PageCustomerValueAnalyzer = () => {
       </DiagramContainer>
     );
   };
+
+
 
   return (
     <>
