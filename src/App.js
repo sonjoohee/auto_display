@@ -56,6 +56,7 @@ import PageTargetDiscovery from "./pages/Persona/components/pages/PageTargetDisc
 import PageCustomerValueAnalyzer from "./pages/Persona/components/pages/PageCustomerValueAnalyzer";
 import PageIdeaGenerator from "./pages/Persona/components/pages/PageIdeaGenerator";
 import PageDesignAnalysis from "./pages/Persona/components/pages/PageDesignAnalysis";
+import PageDesignSuitability from "./pages/Persona/components/pages/PageDesignSuitability";
 
 import PageMyProfile from "./pages/Persona/components/pages/PageMyProfile";
 
@@ -435,6 +436,15 @@ function App() {
             element={
               <RequireToken>
                 <PageDesignAnalysis />
+              </RequireToken>
+            }
+          ></Route>
+
+          <Route
+            path="/DesignSuitability"
+            element={
+              <RequireToken>
+                <PageDesignSuitability />
               </RequireToken>
             }
           ></Route>

@@ -1,4 +1,4 @@
-//디자인 감성 분석기기
+//디자인 적합성성 분석기기
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
@@ -36,6 +36,7 @@ import {
   ListTitle,
   ListSubtitle,
   PercentBadge,
+  UlList,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import {
   IS_LOGGED_IN,
@@ -73,8 +74,9 @@ import {
 } from "../../../../utils/indexedDB";
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
+import RadarChart from '../../../../components/Charts/RadarChart';
 
-const PageDesignAnalysis = () => {
+const PageDesignSuitability = () => {
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -704,6 +706,15 @@ const PageDesignAnalysis = () => {
 
   const [activeDesignTab, setActiveDesignTab] = useState('emotion'); // 'emotion' 또는 'scale'
 
+  // 레이더 차트 데이터
+  const chartData = {
+    strength: Math.round(oceanValues.Trustworthy * 16.67),    // 6점 -> 100점 변환 (100/6)
+    luck: Math.round(oceanValues.Anticipated * 16.67),        // 6점 -> 100점 변환
+    intelligence: Math.round(oceanValues.Attractive * 16.67), // 6점 -> 100점 변환
+    charisma: Math.round(oceanValues.Beautiful * 16.67),      // 6점 -> 100점 변환
+    dexterity: Math.round(oceanValues.Efficient * 16.67)      // 6점 -> 100점 변환
+  };
+
   return (
     <>
       <DropzoneStyles />
@@ -734,10 +745,10 @@ const PageDesignAnalysis = () => {
                 <span>02</span>
                 <div className="text">
                   <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
-                    디자인 분야 분석
+                    이미지 평가 
                   </Body1>
                   <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
-                    Design Sector
+                    Image Evaluation
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -749,10 +760,10 @@ const PageDesignAnalysis = () => {
                 <span>03</span>
                 <div className="text">
                   <Body1 color={activeTab >= 3 ? "gray800" : "gray300"}>
-                    디자인 감성 분석
+                    페르소나 최적화
                   </Body1>
                   <Body1 color={activeTab >= 3 ? "gray800" : "gray300"}>
-                    Sentiment Analysis
+                    Persona Optimization
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -777,7 +788,7 @@ const PageDesignAnalysis = () => {
                     <div className="title">
                       <H3 color="gray800">Image Upload</H3>
                       <Body3 color="gray800">
-                        감성 분석을 원하시는 비즈니스 설명과 디자인 이미지를 업로드해주세요
+                        적합성 분석을 원하시는 비즈니스 설명과 디자인 이미지를 업로드해주세요
                       </Body3>
                     </div>
 
@@ -882,68 +893,54 @@ const PageDesignAnalysis = () => {
                 ) : (
                   <>
                     <div className="title">
-                      <H3 color="gray800">Design Sector Analysis</H3>
+                      <H3 color="gray800">Image Evaluation</H3>
                       <Body3 color="gray800">
-                        업로드된 이미지를 기반으로 가장 적합한 디자인 분야를 분류했습니다
+                        업로드된 이미지의 시각적 요소를 종합적으로 분석하여 효과성을 평가했습니다.
                       </Body3>
                     </div>
 
                     <div className="content">
-                      <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                        {/* {targetDiscoveryPersona.map((persona, index) => (
-                          <MoleculeToolPersonaCard
-                            key={`persona-${index}`}
-                            title={persona.title}
-                            keywords={persona.content.keywords}
-                            checked={selectedPersonas.includes(index)}
-                            onSelect={() => handleCheckboxChange(index)}
-                            currentSelection={selectedPersonas.length}
-                            personaData={persona}
-                            viewType="list"
-                            popupType="basic"
-                            onDetailClick={() => setShowPopup(true)}
-                            selectedIndex={index}
-                          />
-                        ))} */}
-                        <ListBoxItem FlexStart>
-                          <CheckCircle />
+                      <ChartWrap>
+                        <RadarChart data={chartData} width={480} height={450} />
 
-                          <ListText>
-                            <ListTitle>
-                              <Body1 color="gray800" align="left">제품 디자인</Body1>
-                            </ListTitle>
-                            <ListSubtitle>
-                              <Sub2 color="gray500" align="left">왜 제품 디자인에 해당 되는 근거</Sub2>
-                            </ListSubtitle>
-                          </ListText>
-                        </ListBoxItem>
+                        <CardGroupWrap column $isExpanded={state.isExpanded} style={{marginBottom: "140px"}}>
+                          <ListBoxItem FlexStart>
+                            <PercentBadge primary>
+                              <Caption1>5점</Caption1>
+                            </PercentBadge>
 
-                        <ListBoxItem FlexStart>
-                          <CheckCircle />
+                            <ListText Small> 
+                              <ListTitle>
+                                <Sub1 color="gray800" align="left">브랜드 일관성</Sub1>
+                              </ListTitle>
+                              <ListSubtitle>
+                                <Sub3 color="gray500" align="left">브랜드 로고의 위치와 크기를 조정하고, 핵심 가치를 나타내는 이미지를 추가하여 브랜드 일관성을 강화할 수 있습니다</Sub3>
+                              </ListSubtitle>
+                            </ListText>
 
-                          <ListText>
-                            <ListTitle>
-                              <Body1 color="gray800" align="left">제품 디자인</Body1>
-                            </ListTitle>
-                            <ListSubtitle>
-                              <Sub2 color="gray500" align="left">왜 제품 디자인에 해당 되는 근거</Sub2>
-                            </ListSubtitle>
-                          </ListText>
-                        </ListBoxItem>
+                            <ToggleButton
+                              className="toggleButton"
+                              $isExpanded={state.isExpanded}
+                              onClick={() => handleToggle("isExpanded")}
+                            />
 
-                        <ListBoxItem FlexStart>
-                          <CheckCircle />
-
-                          <ListText>
-                            <ListTitle>
-                              <Body1 color="gray800" align="left">제품 디자인</Body1>
-                            </ListTitle>
-                            <ListSubtitle>
-                              <Sub2 color="gray500" align="left">왜 제품 디자인에 해당 되는 근거</Sub2>
-                            </ListSubtitle>
-                          </ListText>
-                        </ListBoxItem>
-                      </CardGroupWrap>
+                            {state.isExpanded && (
+                              <ToggleContent $isExpanded={state.isExpanded}>
+                                <div>
+                                  <ul>
+                                    <li>
+                                      <Body3 color="gray800" align="left">긍정적 측면 : 이미지의 색상, 폰트, 레이아웃이 전반적으로 깔끔하고 정돈된 느낌을 주어 전문적인 이미지를 연출합니다. "MAN AESTHETIC" 텍스트는 브랜드의 성격을 명확히 드러냅니다. 모델의 깨끗한 피부는 남성 피부 관리에 대한 전문성을 시각적으로 강조합니다.</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">개선점 : 브랜드 로고가 작고, 브랜드명을 명확히 인식하기 어렵습니다. 브랜드의 핵심 가치를 시각적으로 더 구체화할 수 있는 요소 (예: 특정 시술 장면, 신뢰감을 주는 이미지 등)가 부족합니다.</Body3>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </ToggleContent>
+                            )}
+                          </ListBoxItem>
+                        </CardGroupWrap>
+                      </ChartWrap>
 
                       <BottomBar W100>
                         <Body2
@@ -996,71 +993,61 @@ const PageDesignAnalysis = () => {
                 ) : (
                   <>
                     <BgBoxItem primaryLightest>
-                      <H3 color="gray800">디자인 감성 분석</H3>
+                      <H3 color="gray800">페르소나별 디자인 최적화</H3>
                       <Body3 color="gray800">
-                        디자인이 사용자에게 전달하는 감정을 분석하고, 시각적 커뮤니케이션 효과를 극대화하세요
+                        페르소나에 최적화된 디자인 전략으로 더욱 직관적인 결과물을 만들어 보세요
                       </Body3>
                     </BgBoxItem>
 
                     <InsightAnalysis>
                       <div className="title">
-                        <div>
-                          <TabWrapType4>
-                            <TabButtonType4 
-                              active={activeDesignTab === 'emotion'}
-                              onClick={() => setActiveDesignTab('emotion')}
-                            >
-                              디자인 목표 감성
-                            </TabButtonType4>
-                            <TabButtonType4 
-                              active={activeDesignTab === 'scale'}
-                              onClick={() => setActiveDesignTab('scale')}
-                            >
-                              감정 스케일 매핑
-                            </TabButtonType4>
-                          </TabWrapType4>
-                        </div>
-                        <Button Primary onClick={() => setShowPopupSave(true)}>
-                          리포트 저장하기
-                        </Button>
-                      </div>
-                    </InsightAnalysis>
-
-                    <InsightAnalysis>
-                      <div className="title">
                         <H4 color="gray800" align="left">
-                          (Business)의 (목표감성)을 기반으로 이미지의 감성 스케일 맵핑을 진행했을때...<br />
-                          어떤 보완점이 발견되었습니다. 
+                          현재 이미지는 20대 후반 ~ 40대 남성을 타겟으로 하는 데 가장 적합합니다.<br />
+                          하지만 각 타겟 그룹의 특징을 고려하여 이미지, 카피, CTA, 가격 전략 등을 다르게 구성해야 합니다.
                         </H4>
                       </div>
 
                       <div className="content">
-                        <Body3 color="gray700">
-                          강점: '편리한(6점)', '명확한(6점)', '간편한(6점)'으로 높은 점수를 받은 것은 디자인이 고객에게 전달하고자 하는 핵심 가치를 잘 표현하고 있음을 의미합니다. 텍스트와 이미지를 통해 서비스의 핵심적인 특징을 효과적으로 전달하고, 사용자들이 쉽게 이해하고 이용할 수 있도록 시각적인 정보를 명확하게 제공하고 있습니다. 스마트폰 UI 이미지를 통해 모바일 주문의 편리함을 강조하는 것은 긍정적인 부분입니다.
-                        </Body3>
+                        <ReportContent>
+                          <div>
+                            <Body1 color="gray700" align="left">주요 개선 방향</Body1>
+                            <UlList Disc>
+                              <li>타겟 맞춤형 이미지 : 각 그룹의 관심사를 반영하여 모델, 배경, 톤, 스타일 등을 변경</li>
+                              <li>구체적인 정보 제공 : 제품/서비스 내용, 가격, 혜택, 시술 후기, 비포/애프터 사진 등</li>
+                              <li>강력한 CTA : 각 그룹에 맞는 행동 유도 (상담 신청, 예약, 구매 등)</li>
+                              <li>다양한 채널 활용 : 각 그룹이 주로 사용하는 채널 (SNS, 웹사이트, 오프라인 등)에 맞는 광고 제작</li>
+                              <li>A/B 테스트 : 다양한 버전의 광고를 제작하여 효과를 비교 분석하고, 지속적으로 개선</li>
+                            </UlList>
+                          </div>
 
-                        <Body3 color="gray700">
-                          약점 및 개선 방향: '신속한(4점)', '즐거운(3점)', '생동감 있는(3점)', '세련된(3점)' 감성에 낮은 점수를 받은 것은 디자인이 신속하고 즐거운 경험을 충분히 전달하지 못하고 있다는 것을 의미합니다. 전반적으로 레이아웃이 다소 정적이고 획일적이며, 샌드위치 이미지 외에 시선을 사로잡는 요소가 부족하여 생동감과 즐거움을 느끼기 어렵습니다. 특히, 배경 이미지와 스마트폰 UI 이미지의 부조화, 브랜드 로고의 과도한 사용은 세련된 느낌을 저해합니다.
-                        </Body3>
+                          <div>
+                            <Body1 color="gray700" align="left">주요 이미지 개선 가이드 </Body1>
+                            <UlList Disc>
+                              <li>모델 : 깨끗하고, 건강한 피부를 가진 남성 모델 (연령대 고려 필요)</li>
+                              <li>배경 : 깔끔하고, 전문적인 느낌의 배경 (색상, 레이아웃)</li>
+                              <li>텍스트 : 간결하고 명확한 메시지 전달 (폰트, 크기, 색상 등 고려 필요)</li>
+                              <li>시각 요소 : 시선 유도, 시술 관련 이미지, 긍정적인 결과 암시</li>
+                              <li>브랜드 로고 : 명확하게 노출</li>
+                              <li>CTA : 명확하고 눈에 띄는 버튼 또는 문구 추가 필요</li>
+                            </UlList>
+                          </div>
+                        </ReportContent>
                       </div>
                     </InsightAnalysis>
 
-                    {activeDesignTab === 'emotion' && (
-                      <InsightAnalysis>
-                        <Sub3 color="gray700" align="left">💡 %는 해당 비즈니스에서 차지하는 중요도를 의미합니다.</Sub3>
-
+                    <InsightAnalysis>
                       <CardGroupWrap column $isExpanded={state.isExpanded}>
                         <ListBoxItem FlexStart>
                           <PercentBadge primary>
-                            <Caption1>30%</Caption1>
+                            <Caption1>적합</Caption1>
                           </PercentBadge>
 
                           <ListText Small>
                             <ListTitle>
-                              <Sub1 color="gray800" align="left">기능성 (Functional Perspective)</Sub1>
+                              <Sub1 color="gray800" align="left">20대 남성 (피부 고민 시작)</Sub1>
                             </ListTitle>
                             <ListSubtitle>
-                              <Sub3 color="gray500" align="left">제품의 효율적인 기능 수행, 다목적 사용성, 사용 목적에 부합하는 기능 제공</Sub3>
+                              <Sub3 color="gray500" align="left">외모 관리, 패션, 자기 계발, 소셜 미디어 >> 관심사의 내용을 줄글로 입력</Sub3>
                             </ListSubtitle>
                           </ListText>
 
@@ -1073,36 +1060,73 @@ const PageDesignAnalysis = () => {
                           {state.isExpanded && (
                             <ToggleContent $isExpanded={state.isExpanded}>
                               <Body3 color="gray700" align="left">
-                                제품이 사용 목적을 얼마나 효율적으로, 효과적으로 수행하는지를 나타냅니다. 아래 목표 감성 달성 설계 방향에 따라 (Business)를 평가 및 개선하세요. 줄글로 작성 
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
                               </Body3>
 
                               <div className="bgContent">
                                 <div>
-                                  <Body2_1 color="gray800" align="left">기능 및 성능 제안 방향</Body2_1>
+                                  <Body2_1 color="gray800" align="left">디자인 개선 방향</Body2_1>
                                   <ul>
                                     <li>
-                                      <Body3 color="gray800" align="left">사용 목적에 적합한 기능 제공 : 저당 아이스크림, 다양한 맛 선택, 장기 보관 기능</Body3>
+                                      <Body3 color="gray800" align="left">좀 더 트렌디하고, 밝고 활기찬 느낌으로 변경 필요</Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">제품의 성능 보장 : 아이스크림이 쉽게 녹지 않도록 온도 유지, 스틱이 쉽게 부러지지 않는 견고한 구조</Body3>
+                                      <Body3 color="gray800" align="left">시술 후 긍정적 변화를 강조하는 이미지 추가 필요 (예: 톤 개선, 피부결 개선)</Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">다양한 사용 환경에서의 적합성 : 실내, 야외 어디서나 편리하게 즐길 수 있음</Body3>
+                                      <Body3 color="gray800" align="left">소셜 미디어 친화적인 디자인 (세로형, 릴스/스토리 형식) 추가</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">합리적인 가격 강조</Body3>
                                     </li>
                                   </ul>
                                 </div>
+                              </div>
+                            </ToggleContent>
+                          )}
+                        </ListBoxItem>
 
+                        <ListBoxItem FlexStart>
+                          <PercentBadge green>
+                            <Caption1>적합</Caption1>
+                          </PercentBadge>
+
+                          <ListText Small>
+                            <ListTitle>
+                              <Sub1 color="gray800" align="left">10대 후반 남성 (외모 관심 증가)</Sub1>
+                            </ListTitle>
+                            <ListSubtitle>
+                              <Sub3 color="gray500" align="left">외모 관리, 패션, 자기 계발, 소셜 미디어 >> 관심사의 내용을 줄글로 입력</Sub3>
+                            </ListSubtitle>
+                          </ListText>
+
+                          <ToggleButton
+                            className="toggleButton"
+                            $isExpanded={state.isExpanded}
+                            onClick={() => handleToggle("isExpanded")}
+                          />
+
+                          {state.isExpanded && (
+                            <ToggleContent $isExpanded={state.isExpanded}>
+                              <Body3 color="gray700" align="left">
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                              </Body3>
+
+                              <div className="bgContent">
                                 <div>
-                                  <Body2_1 color="gray800" align="left">디자인 및 구조 제안 방향</Body2_1>
+                                  <Body2_1 color="gray800" align="left">디자인 개선 방향</Body2_1>
                                   <ul>
                                     <li>
-                                      <Body3 color="gray800" align="left">포장의 밀폐력 및 보존 기능 : 외부 공기 차단, 보온, 보냉 기능, 습기에 강한 방수 성능</Body3>
+                                      <Body3 color="gray800" align="left">좀 더 트렌디하고, 밝고 활기찬 느낌으로 변경 필요</Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">스틱의 재질과 디자인 : 손에 잘 잡히는 인체공학적 형태, 견고한 소재 사용</Body3>
+                                      <Body3 color="gray800" align="left">시술 후 긍정적 변화를 강조하는 이미지 추가 필요 (예: 톤 개선, 피부결 개선)</Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">제품의 크기와 무게 : 휴대성이 좋고 한 손으로 쉽게 들고 먹을 수 있는 크기</Body3>
+                                      <Body3 color="gray800" align="left">소셜 미디어 친화적인 디자인 (세로형, 릴스/스토리 형식) 추가</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">합리적인 가격 강조</Body3>
                                     </li>
                                   </ul>
                                 </div>
@@ -1113,15 +1137,15 @@ const PageDesignAnalysis = () => {
 
                         <ListBoxItem FlexStart>
                           <PercentBadge>
-                            <Caption1>3%</Caption1>
+                            <Caption1>부적합</Caption1>
                           </PercentBadge>
 
                           <ListText Small>
                             <ListTitle>
-                              <Sub1 color="gray800" align="left">윤리성 (Ethical Perspective)</Sub1>
+                              <Sub1 color="gray800" align="left">여성 (남편/남자친구 선물)</Sub1>
                             </ListTitle>
                             <ListSubtitle>
-                              <Sub3 color="gray500" align="left">친환경 소재 사용, 지속 가능한 생산 방식, 사회적 책임 실천</Sub3>
+                              <Sub3 color="gray500" align="left">외모 관리, 패션, 자기 계발, 소셜 미디어 >> 관심사의 내용을 줄글로 입력</Sub3>
                             </ListSubtitle>
                           </ListText>
 
@@ -1134,36 +1158,24 @@ const PageDesignAnalysis = () => {
                           {state.isExpanded && (
                             <ToggleContent $isExpanded={state.isExpanded}>
                               <Body3 color="gray700" align="left">
-                                제품이 사용 목적을 얼마나 효율적으로, 효과적으로 수행하는지를 나타냅니다. 아래 목표 감성 달성 설계 방향에 따라 (Business)를 평가 및 개선하세요. 줄글로 작성 
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
                               </Body3>
 
                               <div className="bgContent">
                                 <div>
-                                  <Body2_1 color="gray800" align="left">기능 및 성능 제안 방향</Body2_1>
+                                  <Body2_1 color="gray800" align="left">디자인 개선 방향</Body2_1>
                                   <ul>
                                     <li>
-                                      <Body3 color="gray800" align="left">사용 목적에 적합한 기능 제공 : 저당 아이스크림, 다양한 맛 선택, 장기 보관 기능</Body3>
+                                      <Body3 color="gray800" align="left">좀 더 트렌디하고, 밝고 활기찬 느낌으로 변경 필요</Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">제품의 성능 보장 : 아이스크림이 쉽게 녹지 않도록 온도 유지, 스틱이 쉽게 부러지지 않는 견고한 구조</Body3>
+                                      <Body3 color="gray800" align="left">시술 후 긍정적 변화를 강조하는 이미지 추가 필요 (예: 톤 개선, 피부결 개선)</Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">다양한 사용 환경에서의 적합성 : 실내, 야외 어디서나 편리하게 즐길 수 있음</Body3>
-                                    </li>
-                                  </ul>
-                                </div>
-
-                                <div>
-                                  <Body2_1 color="gray800" align="left">디자인 및 구조 제안 방향</Body2_1>
-                                  <ul>
-                                    <li>
-                                      <Body3 color="gray800" align="left">포장의 밀폐력 및 보존 기능 : 외부 공기 차단, 보온, 보냉 기능, 습기에 강한 방수 성능</Body3>
+                                      <Body3 color="gray800" align="left">소셜 미디어 친화적인 디자인 (세로형, 릴스/스토리 형식) 추가</Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">스틱의 재질과 디자인 : 손에 잘 잡히는 인체공학적 형태, 견고한 소재 사용</Body3>
-                                    </li>
-                                    <li>
-                                      <Body3 color="gray800" align="left">제품의 크기와 무게 : 휴대성이 좋고 한 손으로 쉽게 들고 먹을 수 있는 크기</Body3>
+                                      <Body3 color="gray800" align="left">합리적인 가격 강조</Body3>
                                     </li>
                                   </ul>
                                 </div>
@@ -1173,168 +1185,6 @@ const PageDesignAnalysis = () => {
                         </ListBoxItem>
                       </CardGroupWrap>
                     </InsightAnalysis>
-                    )}
-
-                    {activeDesignTab === 'scale' && (
-                    <InsightAnalysis>
-                      <OCEANRangeWrap>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>편안한 (Comfortable)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Comfortable}
-                            onChange={(e) => handleOceanChange("Comfortable", e.target.value)}
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>불편한 (Uncomfortable)</Body3>
-                        </div>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>만족스러운 (Satisfying)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Satisfying}
-                            onChange={(e) =>
-                              handleOceanChange(
-                                "Satisfying",
-                                e.target.value
-                              )
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>불만족스러운 (Dissatisfying)</Body3>
-                        </div>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>신뢰가는 (Trustworthy)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Trustworthy}
-                            onChange={(e) =>
-                              handleOceanChange("Trustworthy", e.target.value)
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>불신하는 (Untrustworthy)</Body3>
-                        </div>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>기대되는 (Anticipated)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Anticipated}
-                            onChange={(e) =>
-                              handleOceanChange("Anticipated", e.target.value)
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>실망스러운 (Disappointing)</Body3>
-                        </div>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>매력적인 (Attractive)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Attractive}
-                            onChange={(e) =>
-                              handleOceanChange("Attractive", e.target.value)
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>비매력적인 (Unacttractive)</Body3>
-                        </div> 
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>실용적인 (Practical)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Practical}
-                            onChange={(e) =>
-                              handleOceanChange("Practical", e.target.value)
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>비실용적인 (Impratical)</Body3>
-                        </div>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>아름다운 (Beautiful)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Beautiful}
-                            onChange={(e) =>
-                              handleOceanChange("Beautiful", e.target.value)
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>추한 (Ugly)</Body3>
-                        </div>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>효율적인 (Efficient)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Efficient}
-                            onChange={(e) =>
-                              handleOceanChange("Efficient", e.target.value)
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>비효율적인 (Inefficient)</Body3>
-                        </div>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>사용하기 쉬운 (Easy to use)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Easy}
-                            onChange={(e) =>
-                              handleOceanChange("Easy", e.target.value)
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>불편한 (Uncomfortable)</Body3>
-                        </div> 
-                      </OCEANRangeWrap>
-                    </InsightAnalysis>
-                    )}
 
                     <Button
                       Small
@@ -1381,7 +1231,7 @@ const PageDesignAnalysis = () => {
   );
 };
 
-export default PageDesignAnalysis;
+export default PageDesignSuitability;
 
 const DesignAnalysisWrap = styled.div`
   display: flex;
@@ -1390,24 +1240,12 @@ const DesignAnalysisWrap = styled.div`
   margin-top: 60px;
 `;
 
-const CheckCircle = styled.div`
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  cursor: pointer;
-  background-image: ${(props) =>
-    props.$isChecked
-      ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
-      : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11.5' stroke='%23E0E4EB'/%3E%3C/svg%3E")`};
-  transition: background-image 0.3s ease-in-out;
-  cursor: pointer;
-`;
-
-const TitleSection = styled.div`
-  width: 100%;
+const ChartWrap = styled.div`
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 80px;
 `;
 
 const ToggleButton = styled.button`
@@ -1440,15 +1278,6 @@ const ToggleButton = styled.button`
     border-left: 1px solid ${palette.gray500};
     transition: all 0.5s;
   }
-`;
-
-const ContentWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 4px;
 `;
 
 const ToggleContent = styled.div`
@@ -1498,41 +1327,6 @@ const ToggleContent = styled.div`
   }
 `;
 
-const CardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 16px;
-  width: 100%;
-  padding: 24px 20px;
-  border-radius: 10px;
-  border: 1px solid
-    ${(props) => (props.$isSelected ? palette.primary : palette.outlineGray)};
-  background: ${(props) => {
-    if (props.NoBackground) {
-      return props.$isSelected ? "rgba(34, 111, 255, 0.10)" : palette.white;
-    }
-    return props.$isSelected && !props.$isExpanded
-      ? "rgba(34, 111, 255, 0.10)"
-      : palette.white;
-  }};
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-
-  ${(props) =>
-    props.TitleFlex &&
-    css`
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: space-between;
-    `}
-`;
-
-const CustomButton = styled(Button)`
-  min-width: 92px;
-`;
-
 const InsightAnalysis = styled.div`
   display: flex;
   flex-direction: column;
@@ -1554,471 +1348,17 @@ const InsightAnalysis = styled.div`
   }
 `;
 
-const MyDashboardHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-`;
-
-const MyDashboardTitle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-`;
-
-const MyDashboardContent = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-`;
-
-const MyProjectWrap = styled.div`
-  width: 100%;
-  height: 100%;
+const ReportContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 80px;
-  margin: 50px auto;
-`;
-
-const MyProjectList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
-
-const Title = styled(H5)`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  color: ${palette.gray800};
-  padding-bottom: 20px;
-  border-bottom: 1px solid ${palette.outlineGray};
-`;
-
-const ProjectList = styled.div`
+  gap: 20px;
   width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const ProjectHeader = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-
-  > p {
-    flex-grow: 1;
-    text-align: left;
-  }
-
-  > p:nth-child(1) {
-    max-width: 440px;
-    width: 100%;
-  }
-
-  > p:nth-child(2) {
-    max-width: 220px;
-    width: 100%;
-  }
-
-  > p:nth-child(3) {
-    max-width: 165px;
-    width: 100%;
-  }
-`;
-
-const ProjectContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const ProjectItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  // gap: 12px;
-  gap: ${(props) => (props.Nodata ? "16px" : "12px")};
-  // padding: 12px 24px;
-  padding: ${(props) => (props.Nodata ? "52px 24px 40px" : "12px 24px")};
-  border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
-  background-color: ${palette.white};
-  z-index: 1;
-  transition: box-shadow 0.3s ease-in-out;
-
-  ${({ $isOpen }) =>
-    $isOpen &&
-    `
-    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
-  `}
-
-  ${(props) =>
-    props.Nodata &&
-    css`
-      div {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-
-        p {
-          color: ${palette.gray500};
-          line-height: 1.5;
-        }
-      }
-    `}
-`;
-
-const ProjectInfo = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-`;
-
-const Name = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 4px;
-  max-width: 440px;
-  width: 100%;
-  font-weight: 400;
-  line-height: 1.5;
-  color: ${palette.gray800};
-
-  span {
-    font-size: 0.75rem;
-    font-weight: 300;
-    color: ${palette.gray500};
-  }
-`;
-
-const Persona = styled.div`
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  max-width: 230px;
-  width: 100%;
-  padding: 8px;
-
-  > div {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 5px 24px;
-    flex: 1;
-    text-align: left;
-
-    + div:before {
-      position: absolute;
-      top: 50%;
-      left: -12px;
-      transform: translateY(-50%);
-      width: 1px;
-      height: 19px;
-      background-color: ${palette.outlineGray};
-      content: "";
-    }
-
-    span {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 4px;
-      font-size: 0.75rem;
-      color: ${palette.gray300};
-    }
-
-    p {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 4px;
-      font-size: 0.875rem;
-      color: ${palette.gray700};
-    }
-  }
-`;
-
-const Recruit = styled.div`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 4px;
-  max-width: 155px;
-  width: 100%;
-
-  span {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    font-size: 0.75rem;
-    color: ${palette.gray300};
-  }
-
-  p {
-    font-size: 0.875rem;
-    color: ${palette.gray700};
-
-    &.ing {
-      color: ${palette.primary};
-    }
-
-    &.complete {
-      color: ${palette.green};
-    }
-  }
-`;
-
-const Report = styled.div`
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-
-  span {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    font-size: 0.75rem;
-    color: ${palette.gray300};
-  }
-
-  p {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    font-size: 0.875rem;
-    color: ${palette.gray700};
-  }
-
-  button {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    font-family: "Pretendard", poppins;
-    font-size: 0.75rem;
-    font-weight: 400;
-    color: ${palette.gray500};
-    padding: 6px 10px;
-    border-radius: 4px;
-    border: 1px solid ${palette.outlineGray};
-    background-color: ${palette.chatGray};
-  }
-`;
-
-const ProjectButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding-top: 12px;
-  border-top: 1px solid ${palette.outlineGray};
-
-  p {
-    font-size: 0.875rem;
-    color: ${palette.gray800};
-  }
-
-  button {
-    font-family: "Pretendard", poppins;
-    font-size: 0.75rem;
-    color: ${palette.white};
-    padding: 6px 10px;
-    border-radius: 4px;
-    border: none;
-    background-color: ${palette.primary};
-  }
-`;
-
-const ProjectView = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 16px;
-  width: 100%;
-  padding: 28px 20px 20px;
-  margin-top: -20px;
-  border-radius: 0 0 10px 10px;
-  border: 1px solid ${palette.outlineGray};
-  background-color: ${palette.chatGray};
-  animation: slideDown 0.3s ease-in-out;
-  transform-origin: top;
-  opacity: 1;
-
-  &.closing {
-    animation: slideUp 0.3s ease-in-out;
-  }
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes slideUp {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-  }
-`;
-
-const ViewInfo = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: $space-between;
-  gap: 4px;
-  width: 100%;
-  font-size: 0.875rem;
-  color: ${palette.gray800};
-
-  + div {
-    padding-top: 16px;
-    border-top: 1px solid ${palette.outlineGray};
-  }
-
-  .title {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
-    gap: 8px;
-    font-size: 0.875rem;
-    color: ${palette.black};
-
-    span {
-      font-size: 0.75rem;
-      font-weight: 300;
-      color: ${palette.gray500};
-    }
-  }
-
-  .info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
-
-    div {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 7px;
-      font-size: 0.875rem;
-      font-weight: 300;
-      color: ${palette.gray500};
-      line-height: 1.5;
-
-      + div:before {
-        position: absolute;
-        top: 50%;
-        left: -16px;
-        transform: translateY(-50%);
-        width: 1px;
-        height: 12px;
-        background-color: ${palette.outlineGray};
-        content: "";
-      }
-    }
-  }
-
-  .button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-
-    button {
-      font-family: "Pretendard", poppins;
-      font-size: 0.75rem;
-      font-weight: 300;
-      padding: 6px 10px;
-      border-radius: 6px;
-
-      &.view {
-        color: ${palette.black};
-        border: 1px solid ${palette.outlineGray};
-        background: ${palette.chatGray};
-      }
-
-      &.analysis {
-        color: ${palette.primary};
-        border: 1px solid ${palette.primary};
-        background: #e9f1ff;
-      }
-    }
-  }
-`;
-
-const ViewInfoNodata = styled(ViewInfo)`
-  justify-content: center;
-  padding: 24px 0 16px;
+  text-align: left;
+  margin-top: 40px;
 
   > div {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-
-    > div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      line-height: 1.5;
-      color: ${palette.gray500};
-
-      span {
-        font-size: 0.875rem;
-        font-weight: 300;
-        line-height: 1.5;
-        color: ${palette.primary};
-        padding: 6px 10px;
-        border-radius: 6px;
-        border: 1px solid ${palette.primary};
-        background-color: #e9f1ff;
-        cursor: pointer;
-      }
-    }
+    gap: 12px;
   }
-`;
-
-const PageWrap = styled.div`
-  width: 100%;
 `;
