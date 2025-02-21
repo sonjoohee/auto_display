@@ -2060,6 +2060,33 @@ export const ListBox = styled.div`
   }
 `;
 
+
+export const UlList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: ${(props) => (props.Spacing ? "20px" : "0")};
+
+  li {
+    position: relative;
+    font-weight: 300;
+    line-height: 1.5;
+    color: ${palette.gray700};
+    padding-left: 10px;
+
+    &:before {
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: ${palette.gray700};
+      content: "";
+    }
+  }
+`;
+
+
 export const ListGroup = styled.div`
   display: flex;
   flex-direction: row !important;
@@ -2181,12 +2208,16 @@ export const PercentBadge = styled.div`
   color: ${(props) => (
     props.primary 
     ? palette.primary 
+    : props.green
+    ? palette.green
     : palette.gray700
   )};
   border-radius: 50%;
   background: ${(props) => (
     props.primary 
     ? 'rgba(34, 111, 255, 0.10)' 
+    : props.green
+    ? 'rgba(52, 199, 89, 0.10)'
     : palette.gray100
   )};
 `;

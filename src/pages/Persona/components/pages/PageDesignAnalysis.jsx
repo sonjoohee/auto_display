@@ -1370,19 +1370,21 @@ const ToggleContent = styled.div`
         border-top: 1px solid ${palette.outlineGray};
       }
     }
+  }
 
-    li {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
 
-      &:before {
-        width: 3px;
-        height: 3px;
-        border-radius: 50%;
-        background: ${palette.gray800};
-        content: "";
-      }
+    &:before {
+      flex-shrink: 0;
+      width: 3px;
+      height: 3px;
+      margin-top: 10px;
+      border-radius: 50%;
+      background: ${palette.gray800};
+      content: "";
     }
   }
 `;
