@@ -31,6 +31,11 @@ import {
   DropzoneStyles,
   OCEANRangeWrap,
   RangeSlider,
+  ListBoxItem,
+  ListText,
+  ListTitle,
+  ListSubtitle,
+  PercentBadge,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import {
   IS_LOGGED_IN,
@@ -49,10 +54,14 @@ import {
   H4,
   H3,
   H5,
+  Sub1,
+  Sub2,
   Sub3,
   Body1,
   Body2,
+  Body2_1,
   Body3,
+  Caption1,
 } from "../../../../assets/styles/Typography";
 import MoleculeToolPersonaCard from "../molecules/MoleculeToolPersonaCard";
 import {
@@ -118,6 +127,17 @@ const PageDesignAnalysis = () => {
   const [specificSituation, setSpecificSituation] = useState("");
   const [loadingPersonas, setLoadingPersonas] = useState({});
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  const handleToggle = (key) => {
+    setState((prevState) => ({ ...prevState, [key]: !prevState[key] }));
+  };
+
+  const [state, setState] = useState({
+    isExpanded: false,
+    showQuestions: false,
+  });
+
 
   // OCEAN 값들을 관리하기 위한 상태
   const [oceanValues, setOceanValues] = useState({
@@ -682,6 +702,8 @@ const PageDesignAnalysis = () => {
     }
   };
 
+  const [activeDesignTab, setActiveDesignTab] = useState('emotion'); // 'emotion' 또는 'scale'
+
   return (
     <>
       <DropzoneStyles />
@@ -691,7 +713,7 @@ const PageDesignAnalysis = () => {
         <MoleculeHeader />
 
         <MainContent Wide1030>
-          <TargetDiscoveryWrap>
+          <DesignAnalysisWrap>
             <TabWrapType5>
               <TabButtonType5
                 isActive={activeTab >= 1}
@@ -868,7 +890,7 @@ const PageDesignAnalysis = () => {
 
                     <div className="content">
                       <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                        {targetDiscoveryPersona.map((persona, index) => (
+                        {/* {targetDiscoveryPersona.map((persona, index) => (
                           <MoleculeToolPersonaCard
                             key={`persona-${index}`}
                             title={persona.title}
@@ -882,7 +904,45 @@ const PageDesignAnalysis = () => {
                             onDetailClick={() => setShowPopup(true)}
                             selectedIndex={index}
                           />
-                        ))}
+                        ))} */}
+                        <ListBoxItem FlexStart>
+                          <CheckCircle />
+
+                          <ListText>
+                            <ListTitle>
+                              <Body1 color="gray800" align="left">제품 디자인</Body1>
+                            </ListTitle>
+                            <ListSubtitle>
+                              <Sub2 color="gray500" align="left">왜 제품 디자인에 해당 되는 근거</Sub2>
+                            </ListSubtitle>
+                          </ListText>
+                        </ListBoxItem>
+
+                        <ListBoxItem FlexStart>
+                          <CheckCircle />
+
+                          <ListText>
+                            <ListTitle>
+                              <Body1 color="gray800" align="left">제품 디자인</Body1>
+                            </ListTitle>
+                            <ListSubtitle>
+                              <Sub2 color="gray500" align="left">왜 제품 디자인에 해당 되는 근거</Sub2>
+                            </ListSubtitle>
+                          </ListText>
+                        </ListBoxItem>
+
+                        <ListBoxItem FlexStart>
+                          <CheckCircle />
+
+                          <ListText>
+                            <ListTitle>
+                              <Body1 color="gray800" align="left">제품 디자인</Body1>
+                            </ListTitle>
+                            <ListSubtitle>
+                              <Sub2 color="gray500" align="left">왜 제품 디자인에 해당 되는 근거</Sub2>
+                            </ListSubtitle>
+                          </ListText>
+                        </ListBoxItem>
                       </CardGroupWrap>
 
                       <BottomBar W100>
@@ -946,9 +1006,17 @@ const PageDesignAnalysis = () => {
                       <div className="title">
                         <div>
                           <TabWrapType4>
-                            <TabButtonType4>종합 분석 결과</TabButtonType4>
-                            <TabButtonType4>
-                              클러스터링 항목 상세 보기
+                            <TabButtonType4 
+                              active={activeDesignTab === 'emotion'}
+                              onClick={() => setActiveDesignTab('emotion')}
+                            >
+                              디자인 목표 감성
+                            </TabButtonType4>
+                            <TabButtonType4 
+                              active={activeDesignTab === 'scale'}
+                              onClick={() => setActiveDesignTab('scale')}
+                            >
+                              감정 스케일 매핑
                             </TabButtonType4>
                           </TabWrapType4>
                         </div>
@@ -977,6 +1045,137 @@ const PageDesignAnalysis = () => {
                       </div>
                     </InsightAnalysis>
 
+                    {activeDesignTab === 'emotion' && (
+                      <InsightAnalysis>
+                        <Sub3 color="gray700" align="left">💡 %는 해당 비즈니스에서 차지하는 중요도를 의미합니다.</Sub3>
+
+                      <CardGroupWrap column $isExpanded={state.isExpanded}>
+                        <ListBoxItem FlexStart>
+                          <PercentBadge primary>
+                            <Caption1>30%</Caption1>
+                          </PercentBadge>
+
+                          <ListText Small>
+                            <ListTitle>
+                              <Sub1 color="gray800" align="left">기능성 (Functional Perspective)</Sub1>
+                            </ListTitle>
+                            <ListSubtitle>
+                              <Sub3 color="gray500" align="left">제품의 효율적인 기능 수행, 다목적 사용성, 사용 목적에 부합하는 기능 제공</Sub3>
+                            </ListSubtitle>
+                          </ListText>
+
+                          <ToggleButton
+                            className="toggleButton"
+                            $isExpanded={state.isExpanded}
+                            onClick={() => handleToggle("isExpanded")}
+                          />
+
+                          {state.isExpanded && (
+                            <ToggleContent $isExpanded={state.isExpanded}>
+                              <Body3 color="gray700" align="left">
+                                제품이 사용 목적을 얼마나 효율적으로, 효과적으로 수행하는지를 나타냅니다. 아래 목표 감성 달성 설계 방향에 따라 (Business)를 평가 및 개선하세요. 줄글로 작성 
+                              </Body3>
+
+                              <div className="bgContent">
+                                <div>
+                                  <Body2_1 color="gray800" align="left">기능 및 성능 제안 방향</Body2_1>
+                                  <ul>
+                                    <li>
+                                      <Body3 color="gray800" align="left">사용 목적에 적합한 기능 제공 : 저당 아이스크림, 다양한 맛 선택, 장기 보관 기능</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">제품의 성능 보장 : 아이스크림이 쉽게 녹지 않도록 온도 유지, 스틱이 쉽게 부러지지 않는 견고한 구조</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">다양한 사용 환경에서의 적합성 : 실내, 야외 어디서나 편리하게 즐길 수 있음</Body3>
+                                    </li>
+                                  </ul>
+                                </div>
+
+                                <div>
+                                  <Body2_1 color="gray800" align="left">디자인 및 구조 제안 방향</Body2_1>
+                                  <ul>
+                                    <li>
+                                      <Body3 color="gray800" align="left">포장의 밀폐력 및 보존 기능 : 외부 공기 차단, 보온, 보냉 기능, 습기에 강한 방수 성능</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">스틱의 재질과 디자인 : 손에 잘 잡히는 인체공학적 형태, 견고한 소재 사용</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">제품의 크기와 무게 : 휴대성이 좋고 한 손으로 쉽게 들고 먹을 수 있는 크기</Body3>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </ToggleContent>
+                          )}
+                        </ListBoxItem>
+
+                        <ListBoxItem FlexStart>
+                          <PercentBadge>
+                            <Caption1>3%</Caption1>
+                          </PercentBadge>
+
+                          <ListText Small>
+                            <ListTitle>
+                              <Sub1 color="gray800" align="left">윤리성 (Ethical Perspective)</Sub1>
+                            </ListTitle>
+                            <ListSubtitle>
+                              <Sub3 color="gray500" align="left">친환경 소재 사용, 지속 가능한 생산 방식, 사회적 책임 실천</Sub3>
+                            </ListSubtitle>
+                          </ListText>
+
+                          <ToggleButton
+                            className="toggleButton"
+                            $isExpanded={state.isExpanded}
+                            onClick={() => handleToggle("isExpanded")}
+                          />
+
+                          {state.isExpanded && (
+                            <ToggleContent $isExpanded={state.isExpanded}>
+                              <Body3 color="gray700" align="left">
+                                제품이 사용 목적을 얼마나 효율적으로, 효과적으로 수행하는지를 나타냅니다. 아래 목표 감성 달성 설계 방향에 따라 (Business)를 평가 및 개선하세요. 줄글로 작성 
+                              </Body3>
+
+                              <div className="bgContent">
+                                <div>
+                                  <Body2_1 color="gray800" align="left">기능 및 성능 제안 방향</Body2_1>
+                                  <ul>
+                                    <li>
+                                      <Body3 color="gray800" align="left">사용 목적에 적합한 기능 제공 : 저당 아이스크림, 다양한 맛 선택, 장기 보관 기능</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">제품의 성능 보장 : 아이스크림이 쉽게 녹지 않도록 온도 유지, 스틱이 쉽게 부러지지 않는 견고한 구조</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">다양한 사용 환경에서의 적합성 : 실내, 야외 어디서나 편리하게 즐길 수 있음</Body3>
+                                    </li>
+                                  </ul>
+                                </div>
+
+                                <div>
+                                  <Body2_1 color="gray800" align="left">디자인 및 구조 제안 방향</Body2_1>
+                                  <ul>
+                                    <li>
+                                      <Body3 color="gray800" align="left">포장의 밀폐력 및 보존 기능 : 외부 공기 차단, 보온, 보냉 기능, 습기에 강한 방수 성능</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">스틱의 재질과 디자인 : 손에 잘 잡히는 인체공학적 형태, 견고한 소재 사용</Body3>
+                                    </li>
+                                    <li>
+                                      <Body3 color="gray800" align="left">제품의 크기와 무게 : 휴대성이 좋고 한 손으로 쉽게 들고 먹을 수 있는 크기</Body3>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </ToggleContent>
+                          )}
+                        </ListBoxItem>
+                      </CardGroupWrap>
+                    </InsightAnalysis>
+                    )}
+
+                    {activeDesignTab === 'scale' && (
                     <InsightAnalysis>
                       <OCEANRangeWrap>
                         <div>
@@ -1135,6 +1334,7 @@ const PageDesignAnalysis = () => {
                         </div> 
                       </OCEANRangeWrap>
                     </InsightAnalysis>
+                    )}
 
                     <Button
                       Small
@@ -1148,7 +1348,7 @@ const PageDesignAnalysis = () => {
                 )}
               </TabContent5>
             )}
-          </TargetDiscoveryWrap>
+          </DesignAnalysisWrap>
         </MainContent>
       </ContentsWrap>
 
@@ -1183,11 +1383,148 @@ const PageDesignAnalysis = () => {
 
 export default PageDesignAnalysis;
 
-const TargetDiscoveryWrap = styled.div`
+const DesignAnalysisWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 100px;
   margin-top: 60px;
+`;
+
+const CheckCircle = styled.div`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  background-image: ${(props) =>
+    props.$isChecked
+      ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
+      : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11.5' stroke='%23E0E4EB'/%3E%3C/svg%3E")`};
+  transition: background-image 0.3s ease-in-out;
+  cursor: pointer;
+`;
+
+const TitleSection = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const ToggleButton = styled.button`
+  position: relative;
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-bottom: 6px;
+  border: none;
+  background: none;
+  cursor: pointer;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    transform: ${(props) =>
+      props.$isExpanded
+        ? "translate(-50%, -50%) rotate(45deg)"
+        : "translate(-50%, -50%) rotate(-135deg)"};
+    margin-top: 2px;
+    border-top: 1px solid ${palette.gray500};
+    border-left: 1px solid ${palette.gray500};
+    transition: all 0.5s;
+  }
+`;
+
+const ContentWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 4px;
+`;
+
+const ToggleContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  padding-top: 16px;
+  border-top: 1px solid ${palette.outlineGray};
+
+  .bgContent {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 10px;
+    background: ${palette.chatGray};
+
+    > div {
+      display: flex;
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+
+      + div {
+        padding-top: 8px;
+        border-top: 1px solid ${palette.outlineGray};
+      }
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      &:before {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: ${palette.gray800};
+        content: "";
+      }
+    }
+  }
+`;
+
+const CardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+  padding: 24px 20px;
+  border-radius: 10px;
+  border: 1px solid
+    ${(props) => (props.$isSelected ? palette.primary : palette.outlineGray)};
+  background: ${(props) => {
+    if (props.NoBackground) {
+      return props.$isSelected ? "rgba(34, 111, 255, 0.10)" : palette.white;
+    }
+    return props.$isSelected && !props.$isExpanded
+      ? "rgba(34, 111, 255, 0.10)"
+      : palette.white;
+  }};
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  ${(props) =>
+    props.TitleFlex &&
+    css`
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+    `}
 `;
 
 const CustomButton = styled(Button)`
