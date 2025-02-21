@@ -1684,7 +1684,7 @@ const PagePersona2 = () => {
                                     justifyContent: "center",
                                   }}
                                 >
-                                  <AtomPersonaLoader message="일상 페르소나를 추천하기 위해 분석하고 있어요" />
+                                  <AtomPersonaLoader message="라이브 페르소나를 추천하기 위해 분석하고 있어요" />
                                 </div>
                               )}
                             </CardGroupWrap>

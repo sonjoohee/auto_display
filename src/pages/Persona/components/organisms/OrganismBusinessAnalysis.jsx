@@ -451,7 +451,7 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
             //   axiosConfig
             // );
             // 비즈니스 카테고리 분석 수정 예정
-            let response = await BusinessCategoryAnalysis(data, isLoggedIn);
+            response = await BusinessCategoryAnalysis(data, isLoggedIn);
           }
 
           businessData = response.response.business_analysis;
