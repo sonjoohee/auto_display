@@ -702,14 +702,16 @@ const PageDesignAnalysis = () => {
                           inputContent={
                             <>
                               <img src={images.ImagePrimary} alt="" />
-                              <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '4px',
-                              }}>
+                              {fileNames.length === 0 && (
+                                <div style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                }}>
                                 <Body2 color="gray700">이미지 첨부 또는</Body2>
                                 <Body2 color="primary">이미지 가져오기</Body2>
                               </div>
+                              )}
                               {fileNames.length > 0 && (
                                 <div>
                                   {fileNames.map((name, index) => (
