@@ -69,9 +69,8 @@ import {
   ButtonGroup,
   IconButton,
 } from "../../../../assets/styles/ButtonStyle";
-import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
-import MoleculeHeader from "../molecules/MoleculeHeader";
-import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
+import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
+import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
 import MoleculeInterviewCard from "../molecules/MoleculeInterviewCard";
 import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";

@@ -165,8 +165,8 @@ import {
 import { CustomTextarea } from "../../../../assets/styles/InputStyle";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
-import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
-import MoleculeHeader from "../molecules/MoleculeHeader";
+import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
+import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import { CreditInfo, createChatOnServer } from "../../../../utils/indexedDB";

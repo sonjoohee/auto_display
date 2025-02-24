@@ -29,11 +29,11 @@ import {
   AnalysisWrap,
   MainSection,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
-import Header from "../molecules/MoleculeHeader";
+import Header from "../../Global/molecules/MoleculeHeader";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 // import Sidebar from "../../../Design_Page/IncSidebar";
-import IncNavigation from "../organisms/OrganismIncNavigation";
+import IncNavigation from "../../Global/organisms/OrganismIncNavigation";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { updateProjectReportOnServer } from "../../../../utils/indexedDB";

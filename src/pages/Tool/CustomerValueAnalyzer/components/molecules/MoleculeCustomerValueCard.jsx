@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
-import { palette } from "../../../../assets/styles/Palette";
-import { Button } from "../../../../assets/styles/ButtonStyle";
+import { palette } from "../../../../../assets/styles/Palette";
+import { Button } from "../../../../../assets/styles/ButtonStyle";
 import {
   ListBoxItem,
   ListText,
@@ -20,7 +20,7 @@ import {
   ListBox,
   TextWrap,
   ListGroup,
-} from "../../../../assets/styles/BusinessAnalysisStyle";
+} from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
   FormBox,
   CustomTextarea,
@@ -31,8 +31,8 @@ import {
   SelectBoxList,
   CheckBoxButton,
   GenderRadioButton,
-} from "../../../../assets/styles/InputStyle";
-import PopupWrap from "../../../../assets/styles/Popup";
+} from "../../../../../assets/styles/InputStyle";
+import PopupWrap from "../../../../../assets/styles/Popup";
 import {
   H4,
   Body1,
@@ -41,7 +41,7 @@ import {
   Sub1,
   Sub2,
   Sub3,
-} from "../../../../assets/styles/Typography";
+} from "../../../../../assets/styles/Typography";
 
 import { useAtom } from "jotai";
 import {
@@ -53,7 +53,7 @@ import {
   CUSTOMER_VALUE_ANALYZER_POSITIONING,
   CUSTOMER_VALUE_ANALYZER_FINAL_REPORT,
   TOOL_ID,
-} from "../../../../pages/AtomStates";
+} from "../../../../../pages/AtomStates";
 
 import {
   createToolOnServer,
@@ -66,7 +66,7 @@ import {
   InterviewXCustomerValueAnalyzerClusteringRequest,
   InterviewXCustomerValueAnalyzerPositioningRequest,
   InterviewXCustomerValueAnalyzerFinalReportRequest,
-} from "../../../../utils/indexedDB";
+} from "../../../../../utils/indexedDB";
 
 // const MermaidDiagram = ({ code }) => {
 //   const elementId = useRef(`mermaid-diagram-${Date.now()}`);

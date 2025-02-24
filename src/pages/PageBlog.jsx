@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { ContentsWrap } from "../assets/styles/BusinessAnalysisStyle";
-import OrganismIncNavigation from "../pages/Persona/components/organisms/OrganismIncNavigation";
-import MoleculeHeader from "../pages/Persona/components/molecules/MoleculeHeader";
+import OrganismIncNavigation from "../pages/Global/organisms/OrganismIncNavigation";
+import MoleculeHeader from "../pages/Global/molecules/MoleculeHeader";
 
 const PageBlog = () => {
   return (

@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
 import { palette } from "../../../../assets/styles/Palette";
-import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
+import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
 // import Header from "../../../Design_Page/IncHeader";
-import MoleculeHeader from "../molecules/MoleculeHeader";
+import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
 import axios from "axios";
 import PopupWrap from "../../../../assets/styles/Popup";
 import {

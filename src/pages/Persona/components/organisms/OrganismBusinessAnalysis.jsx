@@ -28,7 +28,7 @@ import {
   IS_LOADING_BUSINESS_ANALYSIS,
 } from "../../../AtomStates";
 import PopupWrap from "../../../../assets/styles/Popup";
-import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
+import AtomPersonaLoader from "../../../Global/atoms/AtomPersonaLoader";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../molecules/MoleculeRecreate";
 import { Body2, Body3, H5 } from "../../../../assets/styles/Typography";

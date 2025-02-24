@@ -34,7 +34,7 @@ import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
-import MoleculeHeader from "../molecules/MoleculeHeader";
+import MoleculeHeader from "../../molecules/MoleculeHeader";
 import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
 import MoleculeInterviewCard from "../molecules/MoleculeInterviewCard";
 import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
