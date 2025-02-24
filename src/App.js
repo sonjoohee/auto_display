@@ -55,7 +55,7 @@ import PagePayment from "./pages/Persona/components/pages/PagePayment";
 import PageTargetDiscovery from "./pages/Tool/TargetDiscovery/components/pages/PageTargetDiscovery";
 import PageCustomerValueAnalyzer from "./pages/Tool/CustomerValueAnalyzer/components/pages/PageCustomerValueAnalyzer";
 import PageIdeaGenerator from "./pages/Tool/IdeaGenerator/components/pages/PageIdeaGenerator";
-import PageDesignAnalysis from "./pages/Persona/components/pages/PageDesignAnalysis";
+import PageDesignAnalysis from "./pages/Tool/DesignEmotionAnalyzer/components/pages/PageDesignAnalysis";
 import PageDesignSuitability from "./pages/Persona/components/pages/PageDesignSuitability";
 
 import PageMyProfile from "./pages/Persona/components/pages/PageMyProfile";
