@@ -2760,7 +2760,7 @@ export const InterviewXDesignEmotionScaleRequest = async (
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
     const PUT_DATA = {
-      type: "ix_design_emotion_target",
+      type: "ix_design_emotion_scale",
       ...data,
     };
     const response = await axios.post(
