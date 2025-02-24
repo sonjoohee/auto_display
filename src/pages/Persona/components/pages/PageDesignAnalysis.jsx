@@ -55,11 +55,6 @@ import {
   DESIGN_ANALYSIS_EMOTION_TARGET,
   DESIGN_ANALYSIS_EMOTION_SCALE,
 } from "../../../../pages/AtomStates";
-import {
-  InterviewXDesignEmotionAnalysisRequest,
-  InterviewXDesignEmotionTargetRequest,
-  InterviewXDesignEmotionScaleRequest,
-} from "../../../../utils/indexedDB" ;
 import images from "../../../../assets/styles/Images";
 import {
   H4,
@@ -76,9 +71,9 @@ import {
 } from "../../../../assets/styles/Typography";
 import MoleculeCustomerValueCard from "../molecules/MoleculeCustomerValueCard";
 import {
-  InterviewXTargetDiscoveryPersonaRequest,
-  InterviewXTargetDiscoveryScenarioRequest,
-  InterviewXTargetDiscoveryFinalReportRequest,
+  InterviewXDesignEmotionAnalysisRequest,
+  InterviewXDesignEmotionTargetRequest,
+  InterviewXDesignEmotionScaleRequest,
   createToolOnServer,
   updateToolOnServer,
 } from "../../../../utils/indexedDB";
@@ -91,22 +86,6 @@ const PageDesignAnalysis = () => {
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
-    TARGET_DISCOVERY_INFO
-  );
-  const [targetDiscoveryPersona, setTargetDiscoveryPersona] = useAtom(
-    TARGET_DISCOVERY_PERSONA
-  );
-  const [selectedTargetDiscoveryPersona, setSelectedTargetDiscoveryPersona] =
-    useAtom(SELECTED_TARGET_DISCOVERY_PERSONA);
-  const [targetDiscoveryScenario, setTargetDiscoveryScenario] = useAtom(
-    TARGET_DISCOVERY_SCENARIO
-  );
-  const [targetDiscoveryFinalReport, setTargetDiscoveryFinalReport] = useAtom(
-    TARGET_DISCOVERY_FINAL_REPORT
-  );
-  const [selectedTargetDiscoveryScenario, setSelectedTargetDiscoveryScenario] =
-    useAtom(SELECTED_TARGET_DISCOVERY_SCENARIO);
 
   const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(DESIGN_ANALYSIS_BUSINESS_INFO);
   const [designAnalysisUploadedFiles, setDesignAnalysisUploadedFiles] = useAtom(DESIGN_ANALYSIS_UPLOADED_FILES);
@@ -141,12 +120,11 @@ const PageDesignAnalysis = () => {
     personaScenario: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingScenario, setIsLoadingScenario] = useState(false); // 시나리오 단계용 로딩 상태 추가
-  const [specificSituation, setSpecificSituation] = useState("");
   const [loadingPersonas, setLoadingPersonas] = useState({});
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeDesignTab, setActiveDesignTab] = useState('emotion'); // 'emotion' 또는 'scale'
+  const [isLoadingReport, setIsLoadingReport] = useState(false); 
   
   const handleToggle = (key) => {
     setState((prevState) => ({ ...prevState, [key]: !prevState[key] }));
@@ -275,34 +253,32 @@ const PageDesignAnalysis = () => {
     setToolLoading(false);
   }, [toolLoading]);
 
-  const handleCheckboxChange = (personaId) => {
-    if (toolStep >= 2) return;
-    setSelectedPersonas((prev) => {
-      if (prev.includes(personaId)) {
-        return prev.filter((id) => id !== personaId);
-      } else {
-        // 최대 5개까지만 선택 가능
-        if (prev.length >= 5) return prev;
-        return [...prev, personaId];
-      }
-    });
-  };
-
-  
-  // const handleCheckboxChange = (index) => {
-    // if (toolStep >= 2) return;
-  //   // 이미 선택된 항목을 다시 클릭하면 선택 해제
-  //   if (selectedPersona === index) {
-  //     setSelectedPersona(null);
-  //   } else {
-  //     // 다른 항목을 선택하면 해당 항목으로 변경
-  //     setSelectedPersona(index);
-  //   }
+  // const handleCheckboxChange = (personaId) => {
+  //   if (toolStep >= 2) return;
+  //   setSelectedPersonas((prev) => {
+  //     if (prev.includes(personaId)) {
+  //       return prev.filter((id) => id !== personaId);
+  //     } else {
+  //       // 최대 5개까지만 선택 가능
+  //       if (prev.length >= 5) return prev;
+  //       return [...prev, personaId];
+  //     }
+  //   });
   // };
 
-
-
   
+  const handleCheckboxChange = (index) => {
+    if (toolStep >= 2) return;
+    // 이미 선택된 항목을 다시 클릭하면 선택 해제
+    if (selectedPersonas === index) {
+      setSelectedPersonas(null);
+    } else {
+      // 다른 항목을 선택하면 해당 항목으로 변경
+      setSelectedPersonas(index);
+    }
+  };
+
+
 
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -332,18 +308,17 @@ const PageDesignAnalysis = () => {
   };
 
   const handleSubmitBusinessInfo = async () => {
+    setIsLoading(true);
     try {
 
       const responseToolId = await createToolOnServer(
         {
-          type: "",
+          type: "ix_design_emotion_analysis",
         },
         isLoggedIn
       );
       setToolId(responseToolId);
       console.log('responseToolId:', responseToolId);
-
-      setIsLoading(true);
 
       const data = new FormData();
 
@@ -365,7 +340,7 @@ const PageDesignAnalysis = () => {
 
       console.log('전송할 데이터:', {
         image: uploadedFiles.length > 0 ? uploadedFiles[0] : null,
-        business: businessData
+        business: businessData,
       });
 
       // const response = await InterviewXDesignEmotionAnalysisRequest(
@@ -387,8 +362,6 @@ const PageDesignAnalysis = () => {
       // setDesignEmotionAnalysis(
       //   response.response.design_emotion_analysis || []
       // );
-
-      // Atom에 저장 (이미지 파일은 FormData에 담았으므로, 여기서는 비즈니스 데이터만 저장)
       setDesignAnalysisBusinessInfo(businessData);
       setDesignAnalysisUploadedFiles(uploadedFiles); 
 
@@ -404,9 +377,8 @@ const PageDesignAnalysis = () => {
         isLoggedIn
       );
      
-      // API 호출 성공시 다음 단계로 이동
       handleNextStep(1);
-      setIsLoading(false);
+    
     } catch (error) {
       console.error("Error submitting business info:", error);
       setShowPopupError(true);
@@ -431,6 +403,7 @@ const PageDesignAnalysis = () => {
   };
 
   const handleSubmitPersonas = async () => {
+    setIsLoadingReport(true);
     handleNextStep(2);
     await updateToolOnServer(
       toolId,
@@ -521,6 +494,8 @@ const PageDesignAnalysis = () => {
       } else {
         setShowPopupError(true);
       }
+    } finally {
+      setIsLoadingReport(false);
     }
   };
 
@@ -805,6 +780,7 @@ const PageDesignAnalysis = () => {
                           content={persona.reason}
                           business={designAnalysisBusinessInfo.business}
                           isSelected={selectedPersonas.includes(index)}
+                          //disabled={toolStep >= 2 ? true : false}
                           onSelect={(id) => handleCheckboxChange(id)}
                           hideButton={true}
                         />
@@ -894,7 +870,7 @@ const PageDesignAnalysis = () => {
 
             {activeTab === 3 && completedSteps.includes(2) && (
               <TabContent5 Small>
-                {isLoadingScenario ? (
+                {isLoadingReport ? (
                   <div
                     style={{
                       width: "100%",
@@ -944,19 +920,27 @@ const PageDesignAnalysis = () => {
                         <H4 color="gray800" align="left">
                           {activeDesignTab === 'emotion' 
                             ? "(Business)의 (목표감성)을 기반으로 이미지의 감성 스케일 맵핑을 진행했을때..." 
-                          //  " ({DesignBusinessInfo.business})가 ({ selectedDesignEmotionAnalysis.name})에서 궁극적으로 달성하고자하는 주요 목표 감성은<br />
-                          // {designEmotionTarget.target_emotion}"
                             : "(Business)의 (목표감성)을 기반으로 이미지의 감성 스케일 맵핑을 진행했을때..."}
-                        {/* "{{designAnalysisEmotionScale.conclusion}}" */}
+              
                         </H4>
                       </div>
-{/* 
-                     designAnalysisEmotionScale.evaluation_analysis.strengthsweaknesse/ */}
+
+                      {/* <div className="title">
+                      <H4 color="gray800" align="left">
+                          {activeDesignTab === 'emotion' 
+                            ? 
+                           `${designAnalysisBusinessInfo.business}가(${selectedDesignAnalysisEmotionAnalysis.name})에서 궁극적으로 달성하고자하는 주요 목표 감성은<br />
+                          ${designAnalysisEmotionTarget.target_emotion}`
+                            :
+                         `${designAnalysisEmotionScale.conclusion}` }
+                        </H4>
+                      </div> */}
+
 
                       <div className="content">
                         {activeDesignTab === 'emotion' ? (
                             <Body3 color="gray700">
-                            {designAnalysisEmotionTarget.designer_guidelines}
+                         {designAnalysisEmotionTarget.designer_guidelines}
                             스케일 분석 결과: 디자인이 전달하고자 하는 감정의 강도와 그에 따른 사용자 반응을 분석한 결과, 특정 감정이 더 강조되어야 할 필요가 있습니다. 
                           </Body3>
                         ) : (
@@ -973,6 +957,25 @@ const PageDesignAnalysis = () => {
                         
                         )}
                       </div>
+
+                      
+                      {/* <div className="content">
+                        {activeDesignTab === 'emotion' ? (
+                            <Body3 color="gray700">
+                         {designAnalysisEmotionTarget.designer_guidelines}
+                          </Body3>
+                        ) : (
+                          <>
+                          <Body3 color="gray700">
+                            강점 : {designAnalysisEmotionScale.evaluation_analysis.strength}
+                          </Body3>
+                          <Body3 color="gray700">
+                            약점 및 개선 방향: {designAnalysisEmotionScale.evaluation_analysis.weaknesses}
+                          </Body3>
+                        </>
+                        
+                        )}
+                      </div> */}
                     </InsightAnalysis>
 
                     {activeDesignTab === 'emotion' && (
