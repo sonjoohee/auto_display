@@ -321,38 +321,31 @@ const PageDesignAnalysis = () => {
       setToolId(responseToolId);
       console.log('responseToolId:', responseToolId);
 
-      const data = new FormData();
+      // const data = new FormData();
 
-      // 파일이 선택된 경우에만 'image' 필드 추가
-      if (uploadedFiles.length > 0) {
-          data.append('image', uploadedFiles[0]); 
-      } else {
-          console.warn("파일이 선택되지 않았습니다."); 
-      }
+      // // 파일이 선택된 경우에만 'image' 필드 추가
+      // if (uploadedFiles.length > 0) {
+      //     data.append('image', uploadedFiles[0]); 
+      // } else {
+      //     console.warn("파일이 선택되지 않았습니다."); 
+      // }
 
       // 비즈니스 데이터 추가
-      const businessData = {
+      const Data = {
           business: businessDescription,
-          responseToolId: responseToolId,
+          tool_id: responseToolId,
+          image: uploadedFiles[0],
       };
 
       // FormData에 비즈니스 데이터의 각 속성을 개별적으로 추가
       // data.append('business', businessData.business);
       // data.append('responseToolId', businessData.responseToolId);
         // FormData에 비즈니스 데이터 추가
-        data.append('business', JSON.stringify(businessData));
-
-      // 전송할 데이터 확인
-      console.log('전송할 데이터:', {
-          image: uploadedFiles.length > 0 ? uploadedFiles[0] : null,
-          business: businessData,  
-      });
+        // data.append('business', JSON.stringify(businessData));
       
-      // API 요청 전에 FormData의 내용을 확인
-      console.log('data:', [...data.entries()]);
 
       // API 요청
-      const response = await InterviewXDesignEmotionAnalysisRequest(data, isLoggedIn);
+      const response = await InterviewXDesignEmotionAnalysisRequest(Data, isLoggedIn);
       
       if (
         !response?.response.design_emotion_analysis  ||
@@ -368,8 +361,8 @@ const PageDesignAnalysis = () => {
       setDesignAnalysisEmotionAnalysis(
         response.response.design_emotion_analysis || []
       );
-      setDesignAnalysisBusinessInfo(businessData);
-      setDesignAnalysisUploadedFiles(uploadedFiles);
+      setDesignAnalysisBusinessInfo(businessDescription);
+      // setDesignAnalysisUploadedFiles(uploadedFiles);
       setFileNames(uploadedFiles.map(file => file.name));
 
       await updateToolOnServer(
@@ -377,8 +370,8 @@ const PageDesignAnalysis = () => {
         {
           completed_step: 1,
           // design_emotion_analysis: response.response.design_emotion_analysis ,
-          business: businessData,
-          image: uploadedFiles.length > 0 ? uploadedFiles[0] : null,
+          business: businessDescription,
+          // image: uploadedFiles.length > 0 ? uploadedFiles[0] : null,
   
         },
         isLoggedIn

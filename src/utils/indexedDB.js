@@ -2660,21 +2660,24 @@ export const InterviewXDesignEmotionAnalysisRequest = async (
   }
 
   try {
+    const formData = new FormData();
+    formData.append('image', data.image); // File 객체 추가
+    formData.append('business', data.business); // 다른 데이터 추가
+    formData.append('tool_id', data.tool_id); // 다른 데이터 추가
+    formData.append('type', 'ix_design_emotion_analysis'); // 다른 데이터 추가
+
     const token = sessionStorage.getItem("accessToken");
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "ix_design_emotion_analysis",
-      ...data,
-    };
+
     const response = await axios.post(
       "https://wishresearch.kr/panels/tool/create_tool_temp_file",
-      PUT_DATA,
+      formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
       }
