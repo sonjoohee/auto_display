@@ -179,6 +179,7 @@ import {
   DESIGN_ANALYSIS_SELECTED_PERSONA,
   DESIGN_ANALYSIS_EMOTION_TARGET,
   DESIGN_ANALYSIS_EMOTION_SCALE,
+  DESIGN_ANALYSIS_FILE_NAMES,
 } from "../../../pages/AtomStates";
 import {
   getAllConversationsFromIndexedDB,
@@ -615,6 +616,7 @@ const OrganismIncNavigation = () => {
   const [designAnalysisSelectedPersona, setDesignAnalysisSelectedPersona] = useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
   const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(DESIGN_ANALYSIS_EMOTION_TARGET);
   const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(DESIGN_ANALYSIS_EMOTION_SCALE);
+  const [designAnalysisFileNames, setDesignAnalysisFileNames] = useAtom(DESIGN_ANALYSIS_FILE_NAMES);
 
 
   const [isPopupLogin, setIsPopupLogin] = useState(false);
@@ -1221,6 +1223,7 @@ const OrganismIncNavigation = () => {
       setDesignAnalysisSelectedPersona([]);
       setDesignAnalysisEmotionTarget({});
       setDesignAnalysisEmotionScale([]);
+      setDesignAnalysisFileNames([]);
       setToolLoading(false);
       setToolStep(chatData.completed_step);
       setToolId(chatData.id);
@@ -1229,6 +1232,7 @@ const OrganismIncNavigation = () => {
       setDesignAnalysisSelectedPersona(chatData.design_selected_persona || []);
       setDesignAnalysisEmotionTarget(chatData.design_emotion_target || {});
       setDesignAnalysisEmotionScale(chatData.design_emotion_scale || []);
+      setDesignAnalysisFileNames(chatData.image_name || []);
       setToolLoading(true);
 
 
