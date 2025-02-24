@@ -6,6 +6,7 @@ import { palette } from "../../../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
+import MoleculeCustomerValueCard from "../../../../Tool/CustomerValueAnalyzer/components/molecules/MoleculeCustomerValueCard";
 
 import {
   Button,
@@ -39,11 +40,6 @@ import {
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
   IS_LOGGED_IN,
-  TARGET_DISCOVERY_INFO,
-  TARGET_DISCOVERY_PERSONA,
-  SELECTED_TARGET_DISCOVERY_PERSONA,
-  TARGET_DISCOVERY_SCENARIO,
-  TARGET_DISCOVERY_FINAL_REPORT,
   TOOL_ID,
   TOOL_STEP,
   SELECTED_TARGET_DISCOVERY_SCENARIO,
@@ -79,6 +75,7 @@ import {
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
 import AnalysisItem from '../molecules/MoleculeAnalysisItem'; // Import the new component
+import MoleculeDesignItem from '../molecules/MoleculeDesignItem';
 
 const PageDesignAnalysis = () => {
   const [toolId, setToolId] = useAtom(TOOL_ID);
@@ -198,8 +195,7 @@ const PageDesignAnalysis = () => {
 
         // 비즈니스 정보 설정 (Step 1)
         if (designAnalysisBusinessInfo) {
-          setBusinessDescription(designAnalysisBusinessInfo?.business ?? "");
-          setUploadedFiles(designAnalysisUploadedFiles ?? []);
+          setBusinessDescription(designAnalysisBusinessInfo ?? "");
           setFileNames(designAnalysisUploadedFiles?.map(file => file.name) ?? []);
         }
 
@@ -218,8 +214,7 @@ const PageDesignAnalysis = () => {
           // 이미 선택된 페르소나들의 인덱스 찾기
           const selectedIndices = (designAnalysisEmotionAnalysis ?? [])
             .map((persona, index) => {
-              // targetDiscoveryScenario에 있는 페르소나만 선택
-              return (designAnalysisEmotionTarget ?? []).some(
+              return (selectedDesignAnalysisEmotionAnalysis ?? []).some(
                 (target) => target?.name === persona?.name
               )
                 ? index
@@ -238,13 +233,12 @@ const PageDesignAnalysis = () => {
           setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
         }
 
-       if (designAnalysisEmotionScale) {
-        setDesignAnalysisEmotionScale(designAnalysisEmotionScale ?? {});
-       }
-
-        // 최종 리포트 설정 (Step 4)
         if (designAnalysisEmotionTarget) {
           setDesignAnalysisEmotionTarget(designAnalysisEmotionTarget ?? {});
+        }
+
+        if (designAnalysisEmotionScale) {
+          setDesignAnalysisEmotionScale(designAnalysisEmotionScale ?? {});
         }
 
         return;
@@ -254,31 +248,18 @@ const PageDesignAnalysis = () => {
     setToolLoading(false);
   }, [toolLoading]);
 
-  // const handleCheckboxChange = (personaId) => {
-  //   if (toolStep >= 2) return;
-  //   setSelectedPersonas((prev) => {
-  //     if (prev.includes(personaId)) {
-  //       return prev.filter((id) => id !== personaId);
-  //     } else {
-  //       // 최대 5개까지만 선택 가능
-  //       if (prev.length >= 5) return prev;
-  //       return [...prev, personaId];
-  //     }
-  //   });
-  // };
 
-  
-  const handleCheckboxChange = (index) => {
+  const handleCheckboxChange = (personaId) => {
     if (toolStep >= 2) return;
-    // 이미 선택된 항목을 다시 클릭하면 선택 해제
-    if (selectedPersonas === index) {
-      setSelectedPersonas(null);
-    } else {
-      // 다른 항목을 선택하면 해당 항목으로 변경
-      setSelectedPersonas(index);
-    }
+    setSelectedPersonas((prev) => {
+      // 하나만 선택되도록 변경, 다른 항목 선택 시 해당 항목으로 변경
+      if (prev.includes(personaId)) {
+        return []; // 이미 선택된 항목을 다시 클릭하면 선택 해제
+      } else {
+        return [personaId]; // 새 항목 선택
+      }
+    });
   };
-
 
 
   // 다음 단계로 이동하는 함수
@@ -290,8 +271,7 @@ const PageDesignAnalysis = () => {
 
   // 필수 필드가 모두 입력되었는지 확인하는 함수
   const isRequiredFieldsFilled = () => {
-    console.log('Business Description:', businessDescription.trim());
-    console.log('Uploaded Files:', uploadedFiles);
+
     return businessDescription.trim().length > 0 && uploadedFiles.length > 0;
   };
 
@@ -319,16 +299,6 @@ const PageDesignAnalysis = () => {
         isLoggedIn
       );
       setToolId(responseToolId);
-      console.log('responseToolId:', responseToolId);
-
-      // const data = new FormData();
-
-      // // 파일이 선택된 경우에만 'image' 필드 추가
-      // if (uploadedFiles.length > 0) {
-      //     data.append('image', uploadedFiles[0]); 
-      // } else {
-      //     console.warn("파일이 선택되지 않았습니다."); 
-      // }
 
       // 비즈니스 데이터 추가
       const Data = {
@@ -336,17 +306,8 @@ const PageDesignAnalysis = () => {
           tool_id: responseToolId,
           image: uploadedFiles[0],
       };
-
-      // FormData에 비즈니스 데이터의 각 속성을 개별적으로 추가
-      // data.append('business', businessData.business);
-      // data.append('responseToolId', businessData.responseToolId);
-        // FormData에 비즈니스 데이터 추가
-        // data.append('business', JSON.stringify(businessData));
-      
-
       // API 요청
       const response = await InterviewXDesignEmotionAnalysisRequest(Data, isLoggedIn);
-      
       if (
         !response?.response.design_emotion_analysis  ||
         !Array.isArray(response.response.design_emotion_analysis) ||
@@ -359,20 +320,19 @@ const PageDesignAnalysis = () => {
       setToolStep(1);
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
       setDesignAnalysisEmotionAnalysis(
-        response.response.design_emotion_analysis || []
+        response.response.design_emotion_analysis
       );
       setDesignAnalysisBusinessInfo(businessDescription);
       // setDesignAnalysisUploadedFiles(uploadedFiles);
       setFileNames(uploadedFiles.map(file => file.name));
 
       await updateToolOnServer(
-        toolId,
+        responseToolId,
         {
           completed_step: 1,
-          // design_emotion_analysis: response.response.design_emotion_analysis ,
+          design_emotion_analysis: response.response.design_emotion_analysis ,
           business: businessDescription,
           // image: uploadedFiles.length > 0 ? uploadedFiles[0] : null,
-  
         },
         isLoggedIn
       );
@@ -403,30 +363,34 @@ const PageDesignAnalysis = () => {
   };
 
   const handleSubmitPersonas = async () => {
-    // setIsLoadingReport(true);
     handleNextStep(2);
-    await updateToolOnServer(
-      toolId,
-      {
-        completed_step: 2,
-      },
-      isLoggedIn
-    );
     setToolStep(2);
     try {
       const selectedPersonaData = designAnalysisEmotionAnalysis.filter(
         (persona, index) => selectedPersonas.includes(index)
       );
       setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
+      console.log('selectedPersonaData:', selectedPersonaData);
+      await updateToolOnServer(
+        toolId,
+        {
+          completed_step: 2,
+          design_selected_persona: selectedPersonaData,
+        },
+        isLoggedIn
+      );
+      setIsLoadingReport(true);
 
       // 선택된 페르소나가 하나일 경우에만 시나리오 요청
-      if (selectedPersonaData) {
-        const persona = selectedPersonaData; 
+      if (selectedPersonaData.length > 0) {
+        const persona = selectedPersonaData[0]; // 첫 번째 페르소나 선택
         try {
           const apiRequestData = {
-            business: designAnalysisBusinessInfo.business,
+
+            business: designAnalysisBusinessInfo,
             design_emotion_selected_field: persona.name,
-            design_emotion_analysis: persona,
+            design_emotion_analysis: 
+             persona
           };
 
           const response = await InterviewXDesignEmotionTargetRequest(
@@ -437,16 +401,16 @@ const PageDesignAnalysis = () => {
           if (
             !response?.response?.design_emotion_target
           ) {
-            console.log("🚀 ~ handleSubmitPersonas ~ response:", response);
             setShowPopupError(true);
             return;
           }
+          console.log("🚀 ~ response:", response);
 
           setDesignAnalysisEmotionTarget(response.response.design_emotion_target);
       
           const oceanData = {
             tool_id: toolId,
-            business: designAnalysisBusinessInfo.business,
+            business: designAnalysisBusinessInfo,
             design_emotion_selected_field: persona.name,
             design_emotion_target: response?.response?.design_emotion_target
           };
@@ -459,21 +423,21 @@ const PageDesignAnalysis = () => {
           console.log("🚀 ~ oceanResponse:", oceanResponse);
           setDesignAnalysisEmotionScale(oceanResponse.response.design_emotion_scale);
 
-
+          await updateToolOnServer(
+            toolId,
+            {
+              completed_step: 3,
+              design_emotion_target:response.response.design_emotion_target,
+              design_emotion_scale: oceanResponse.response.design_emotion_scale,
+              design_selected_persona: selectedPersonaData,
+            },
+            isLoggedIn
+          );
+    
         } catch (error) {
           console.error(`Error processing persona ${persona.name}:`, error);
         }
       }
-
-      await updateToolOnServer(
-        toolId,
-        {
-          completed_step: 3,
-          design_emotion_target: designAnalysisEmotionTarget,
-          design_emotion_scale: designAnalysisEmotionScale,
-        },
-        isLoggedIn
-      );
 
       // setToolStep(3);
     } catch (error) {
@@ -582,133 +546,6 @@ const PageDesignAnalysis = () => {
       neuroticism: 0.5
     });
   };
-
-  const perspectives = [
-    {
-      name: "심미적 관점",
-      weight: 25,
-      features: [
-        {
-          title: "감성적인 색감 연출",
-          description: "파스텔톤의 부드러운 색감을 사용하여 따뜻하고 편안한 분위기 조성"
-        },
-        {
-          title: "자연스러운 조명 활용",
-          description: "자연광을 활용하여 동물의 생기 넘치는 모습과 자연 친화적인 분위기 연출"
-        },
-        {
-          title: "아름다운 배경 선택",
-          description: "쾌적하고 안전한 환경을 연상시키는 배경(잔디밭, 햇살 좋은 공간)을 선택"
-        }
-      ],
-      form_factors: [
-        {
-          title: "고화질 이미지 사용",
-          description: "고화질 이미지를 사용하여 동물의 섬세한 표정과 질감을 생생하게 표현"
-        },
-        {
-          title: "적절한 구도 설정",
-          description: "동물의 자연스러운 모습을 포착하는 구도를 통해 편안하고 자유로운 분위기 연출"
-        },
-        {
-          title: "시선 처리",
-          description: "동물의 시선이 카메라를 향하도록 하여 친근함과 교감을 증진시킴"
-        }
-      ],
-      design_direction: "고품질의 시각적 요소를 활용하여 감성적인 분위기를 조성하고, 서비스의 신뢰도를 높임. 파스텔톤, 자연광, 아름다운 배경은 안정감과 편안함을 전달하여 서비스에 대한 긍정적 인식 형성"
-    },
-    {
-      name: "조형적 관점",
-      weight: 35,
-      features: [
-        {
-          title: "균형 잡힌 구성",
-          description: "동물과 배경의 조화로운 구성을 통해 시각적 균형과 안정감을 유지"
-        },
-        {
-          title: "시각적 계층 구조",
-          description: "중요 요소를 강조하고, 시각적 흐름을 유도하는 계층 구조를 통해 정보 전달 효율 증대"
-        },
-        {
-          title: "색상 대비 활용",
-          description: "동물과 배경의 색상 대비를 활용하여 시각적 명확성과 흥미를 유발"
-        }
-      ],
-      form_factors: [
-        {
-          title: "구도 및 비율",
-          description: "황금비율 등을 활용하여 시각적 조화를 이루고, 안정감 있는 구성을 제공"
-        },
-        {
-          title: "선과 면의 조화",
-          description: "선과 면의 조화로운 사용을 통해 역동적이면서도 안정적인 시각적 효과 연출"
-        },
-        {
-          title: "공간 활용",
-          description: "여백을 효과적으로 활용하여 동물과 배경을 더욱 돋보이게 함"
-        }
-      ],
-      design_direction: "시각적 요소들의 균형과 조화를 통해 편안하고 안정적인 시각적 경험 제공. 계층 구조와 색상 대비를 통해 메시지 전달력을 높이고, 시각적 흥미 유발"
-    },
-    {
-      name: "목적성 관점",
-      weight: 20,
-      features: [
-        {
-          title: "서비스 가치 제시",
-          description: "반려동물의 행복과 복지를 중시하는 서비스의 가치를 명확하게 전달"
-        },
-        {
-          title: "신뢰감 형성",
-          description: "전문성과 안전성을 강조하여 서비스에 대한 신뢰와 안정감을 높임"
-        },
-        {
-          title: "감정적 연결",
-          description: "반려동물과의 행복한 순간을 공유하여 고객과 감정적인 연결을 형성"
-        }
-      ],
-      form_factors: [
-        {
-          title: "이미지 선택",
-          description: "행복하고 건강한 반려동물의 모습을 보여주는 이미지 선택"
-        },
-        {
-          title: "텍스트 구성",
-          description: "서비스의 특징과 장점을 간결하고 명확하게 전달하는 텍스트 구성"
-        },
-        {
-          title: "전체 분위기",
-          description: "전문적이고 신뢰감 있는 분위기를 조성"
-        }
-      ],
-      design_direction: "서비스의 목적과 가치를 명확히 전달하고, 고객과의 감정적 연결을 강화. 신뢰감 있는 분위기 조성을 통해 서비스 이용을 유도"
-    },
-    {
-      name: "독창성 관점",
-      weight: 10,
-      features: [
-        {
-          title: "새로운 시각적 접근",
-          description: "기존의 반려동물 관련 이미지와 차별화되는 독창적인 시각적 요소 도입"
-        },
-        {
-          title: "이야기 전달",
-          description: "이미지를 통해 반려동물과의 특별한 순간을 담아낸 스토리텔링 기법 활용"
-        },
-        {
-          title: "차별화된 스타일",
-          description: "경쟁 서비스와 차별화되는 독특한 스타일을 구축"
-        }
-      ],
-      form_factors: [
-        {
-          title: "독특한 구도",
-          description: "일반적인 구도에서 벗어난 독창적인 구도를 통해 시선을 사로잡음"
-        }
-      ],
-      design_direction: "독창적인 시각적 요소를 통해 서비스의 차별성을 강조하고, 고객의 관심을 끌어내는 효과를 기대"
-    }
-  ];
 
 
 
@@ -912,69 +749,28 @@ const PageDesignAnalysis = () => {
                     </div>
 
                     <div className="content">
-                      <CardGroupWrap column style={{ marginBottom: "140px" }}>
+              
 
-
-                        {/* 
-              <CardGroupWrap column>
-                    {designAnalysisEmotionAnalysis.map((persona, index) => {
-                      return (
-                        <MoleculeCustomerValueCard
-                          key={index}
-                          id={index}
-                          title={persona.name}
-                          content={persona.reason}
-                          business={designAnalysisBusinessInfo.business}
-                          isSelected={selectedPersonas.includes(index)}
-                          //disabled={toolStep >= 2 ? true : false}
-                          onSelect={(id) => handleCheckboxChange(id)}
-                          hideButton={true}
-                        />
-                      );
-                    })}
+                  <CardGroupWrap column style={{ marginBottom: "140px" }}>
+                    {designAnalysisEmotionAnalysis.length > 0 ? (
+                      designAnalysisEmotionAnalysis.map((persona, index) => {
+                        return (
+                          <MoleculeDesignItem
+                            key={index}
+                            id={index}
+                            title={persona.name} 
+                            subtitle={persona.reason} 
+                            isSelected={selectedPersonas.includes(index)} 
+                            onSelect={() => handleCheckboxChange(index)}
+                            disabled={toolStep >= 2 ? true : false}
+                          />
+                        );
+                      })
+                    ) : (
+                      <Body3 color="gray700">데이터가 없습니다.</Body3>
+                    )}
                   </CardGroupWrap>
 
-
-  */}
-                        <ListBoxItem FlexStart>
-                          <CheckCircle />
-
-                          <ListText>
-                            <ListTitle>
-                              <Body1 color="gray800" align="left">제품 디자인</Body1>
-                            </ListTitle>
-                            <ListSubtitle>
-                              <Sub2 color="gray500" align="left">왜 제품 디자인에 해당 되는 근거</Sub2>
-                            </ListSubtitle>
-                          </ListText>
-                        </ListBoxItem>
-
-                        <ListBoxItem FlexStart>
-                          <CheckCircle />
-
-                          <ListText>
-                            <ListTitle>
-                              <Body1 color="gray800" align="left">제품 디자인</Body1>
-                            </ListTitle>
-                            <ListSubtitle>
-                              <Sub2 color="gray500" align="left">왜 제품 디자인에 해당 되는 근거</Sub2>
-                            </ListSubtitle>
-                          </ListText>
-                        </ListBoxItem>
-
-                        <ListBoxItem FlexStart>
-                          <CheckCircle />
-
-                          <ListText>
-                            <ListTitle>
-                              <Body1 color="gray800" align="left">제품 디자인</Body1>
-                            </ListTitle>
-                            <ListSubtitle>
-                              <Sub2 color="gray500" align="left">왜 제품 디자인에 해당 되는 근거</Sub2>
-                            </ListSubtitle>
-                          </ListText>
-                        </ListBoxItem>
-                      </CardGroupWrap>
 
                       <BottomBar W100>
                         <Body2
@@ -992,11 +788,8 @@ const PageDesignAnalysis = () => {
                           Round
                           Fill
                           disabled={
-                            toolStep >= 2 
+                            toolStep >= 2 || selectedPersonas.length === 0
                           }
-                          // disabled={
-                          //   toolStep >= 2 || selectedPersonas.length === 0
-                          // }
                           onClick={handleSubmitPersonas}
                         >
                           다음
@@ -1061,51 +854,19 @@ const PageDesignAnalysis = () => {
                     </InsightAnalysis>
 
                     <InsightAnalysis>
+          
                       <div className="title">
                         <H4 color="gray800" align="left">
-                          {activeDesignTab === 'emotion' 
-                            ? "(Business)의 (목표감성)을 기반으로 이미지의 감성 스케일 맵핑을 진행했을때..." 
-                            : "(Business)의 (목표감성)을 기반으로 이미지의 감성 스케일 맵핑을 진행했을때..."}
-              
-                        </H4>
-                      </div>
-
-                      
-                            {/* <div className="title">
-                      <H4 color="gray800" align="left">
-                          {activeDesignTab === 'emotion' 
-                            ? 
-                           `${designAnalysisBusinessInfo.business}가(${selectedDesignAnalysisEmotionAnalysis.name})에서 궁극적으로 달성하고자하는 주요 목표 감성은<br />
-                          ${designAnalysisEmotionTarget.target_emotion}`
-                            :
-                         `${designAnalysisEmotionScale.conclusion}` }
-                        </H4>
-                      </div> */}
-
-
-                      <div className="content">
-                        {activeDesignTab === 'emotion' ? (
-                            <Body3 color="gray700">
-                     
-                            스케일 분석 결과: 디자인이 전달하고자 하는 감정의 강도와 그에 따른 사용자 반응을 분석한 결과, 특정 감정이 더 강조되어야 할 필요가 있습니다. 
-                          </Body3>
-                        ) : (
-                          <>
-                          <Body3 color="gray700">
-                     
-                            강점: '편리한(6점)', '명확한(6점)', '간편한(6점)'으로 높은 점수를 받은 것은 디자인이 고객에게 전달하고자 하는 핵심 가치를 잘 표현하고 있음을 의미합니다. 텍스트와 이미지를 통해 서비스의 핵심적인 특징을 효과적으로 전달하고, 사용자들이 쉽게 이해하고 이용할 수 있도록 시각적인 정보를 명확하게 제공하고 있습니다. 스마트폰 UI 이미지를 통해 모바일 주문의 편리함을 강조하는 것은 긍정적인 부분입니다.
-                          </Body3>
-                          <Body3 color="gray700">
-                       
-                            약점 및 개선 방향: '신속한(4점)', '즐거운(3점)', '생동감 있는(3점)', '세련된(3점)' 감성에 낮은 점수를 받은 것은 디자인이 신속하고 즐거운 경험을 충분히 전달하지 못하고 있다는 것을 의미합니다. 전반적으로 레이아웃이 다소 정적이고 획일적이며, 샌드위치 이미지 외에 시선을 사로잡는 요소가 부족하여 생동감과 즐거움을 느끼기 어렵습니다. 특히, 배경 이미지와 스마트폰 UI 이미지의 부조화, 브랜드 로고의 과도한 사용은 세련된 느낌을 저해합니다.
-                          </Body3>
-                        </>
-                        
-                        )}
-                      </div>
-
+                            {activeDesignTab === 'emotion' 
+                              ? 
+                            <div dangerouslySetInnerHTML={{ __html: `${designAnalysisBusinessInfo}가(${selectedDesignAnalysisEmotionAnalysis[0].name})
+                            에서 궁극적으로 달성하고자하는 주요 목표 감성은 ${designAnalysisEmotionTarget.target_emotion} ` }} />
+                              :
+                          `${designAnalysisEmotionScale.conclusion}` }
+                          </H4>
+                        </div> 
                           
-                      {/* <div className="content">
+                       <div className="content">
                         {activeDesignTab === 'emotion' ? (
                             <Body3 color="gray700">
                          {designAnalysisEmotionTarget.designer_guidelines}
@@ -1113,7 +874,7 @@ const PageDesignAnalysis = () => {
                         ) : (
                           <>
                           <Body3 color="gray700">
-                            강점 : {designAnalysisEmotionScale.evaluation_analysis.strength}
+                            강점 : {designAnalysisEmotionScale.evaluation_analysis.strengths}
                           </Body3>
                           <Body3 color="gray700">
                             약점 및 개선 방향: {designAnalysisEmotionScale.evaluation_analysis.weaknesses}
@@ -1121,39 +882,23 @@ const PageDesignAnalysis = () => {
                         </>
                         
                         )}
-                      </div> */}
+                      </div> 
                     </InsightAnalysis>
 
                     {activeDesignTab === 'emotion' && (
                       <InsightAnalysis>
                         <Sub3 color="gray700" align="left">💡 %는 해당 비즈니스에서 차지하는 중요도를 의미합니다.</Sub3>
-
-                        {/* 
-                        <CardGroupWrap column $isExpanded={state.isExpanded}>
-                        {designAnalysisEmotionTarget?.design_perspectives?.map((perspective, index) => (
-                          <AnalysisItem 
-                            business={designAnalysisBusinessInfo.business}
-                            key={index} 
-                            percentage={perspective.weight + "%"} 
-                            title={perspective.name} 
-                            subtitle={perspective.features.map(feature => feature.title).join(", ")}
-                            details={perspective}
-                     
-                      </CardGroupWrap> */}
-
-                        <CardGroupWrap column $isExpanded={state.isExpanded}>
-                          
-                           {perspectives.map((perspective, index) => (
-                              <AnalysisItem 
-                                key={index} // 각 항목에 고유한 키 부여
-                                percentage={perspective.weight + "%"} // weight를 백분율로 사용
-                                title={perspective.name} // name을 title로 사용
-                                subtitle={perspective.features.map(feature => feature.title).join(", ")} // feature 제목을 조인하여 subtitle로 사용
-                                details={perspective} // 전체 perspective 객체를 details로 전달
-                              />
-                            ))}
-
-
+                          <CardGroupWrap column $isExpanded={state.isExpanded}>
+                          {designAnalysisEmotionTarget?.design_perspectives?.map((perspective, index) => (
+                            <AnalysisItem 
+                              business={designAnalysisBusinessInfo}
+                              key={index} 
+                              percentage={perspective.weight + "%"} 
+                              title={perspective.name} 
+                              subtitle={perspective.features.map(feature => feature.title).join(", ")}
+                              details={perspective}
+                            />
+                          ))}
                         </CardGroupWrap>
                       </InsightAnalysis>
                     )}
@@ -1161,253 +906,29 @@ const PageDesignAnalysis = () => {
                     {activeDesignTab === 'scale' && (
 
 
-// <InsightAnalysis>
-// <OCEANRangeWrap>
-//   {/* OCEAN 값 슬라이더 */}
-//   {designAnalysisEmotionScale.sd_scale_analysis.map((item, index) => (
-//     <div key={index}>
-//       <Body3 color="gray800" align="left">{item.target_emotion}</Body3>
-//       <RangeSlider
-//         type="range"
-//         min="0"
-//         max="6"
-//         step="1"
-//         value={item.score}
-//         disabled={true} // 변경을 허용하지 않으려면 비활성화
-//         style={{ flex: "2" }}
-//       />
-//       <Body3 color="gray800" align="right">{item.opposite_emotion}</Body3>
-//     </div>
-//   ))}
-// </OCEANRangeWrap>
-// </InsightAnalysis>
-// )}
+                      <InsightAnalysis>
+                      <OCEANRangeWrap>
+                        {/* OCEAN 값 슬라이더 */}
+                        {designAnalysisEmotionScale.sd_scale_analysis.map((item, index) => (
+                          <div key={index}>
+                            <Body3 color="gray800" align="left">{item.target_emotion}</Body3>
+                            <RangeSlider
+                              type="range"
+                              min="0"
+                              max="6"
+                              step="1"
+                              value={item.score}
+                              disabled={true} 
+                              style={{ flex: "2" }}
+                            />
+                            <Body3 color="gray800" align="right">{item.opposite_emotion}</Body3>
+                          </div>
+                        ))}
+                      </OCEANRangeWrap>
+                      </InsightAnalysis>
+                      )}
 
-<InsightAnalysis>
-  <OCEANRangeWrap>
-    {/* 하드코딩된 데이터로 대체 */}
-    {[
-      {
-        target_emotion: "편안한 (Comfortable)",
-        opposite_emotion: "불편한 (Uncomfortable)",
-        score: 5
-      },
-      {
-        target_emotion: "안정적인 (Stable)",
-        opposite_emotion: "불안정한 (Unstable)",
-        score: 4
-      },
-      {
-        target_emotion: "친근한 (Friendly)",
-        opposite_emotion: "낯선 (Strange)",
-        score: 5
-      },
-      {
-        target_emotion: "신뢰할 수 있는 (Trustworthy)",
-        opposite_emotion: "불신하는 (Untrustworthy)",
-        score: 6
-      },
-      {
-        target_emotion: "행복한 (Happy)",
-        opposite_emotion: "슬픈 (Sad)",
-        score: 5
-      },
-      {
-        target_emotion: "따뜻한 (Warm)",
-        opposite_emotion: "차가운 (Cold)",
-        score: 5
-      },
-      {
-        target_emotion: "독창적인 (Original)",
-        opposite_emotion: "평범한 (Ordinary)",
-        score: 3
-      },
-      {
-        target_emotion: "세련된 (Sophisticated)",
-        opposite_emotion: "촌스러운 (Cheesy)",
-        score: 4
-      },
-      {
-        target_emotion: "매력적인 (Attractive)",
-        opposite_emotion: "매력없는 (Unattractive)",
-        score: 4
-      }
-    ].map((item, index) => (
-      <div key={index}>
-        <Body3 color="gray800" align="left">{item.target_emotion}</Body3>
-        <RangeSlider
-          type="range"
-          min="0"
-          max="6"
-          step="1"
-          value={item.score}
-          disabled={true} // 변경을 허용하지 않으려면 비활성화
-          style={{ flex: "2" }}
-        />
-        <Body3 color="gray800" align="right">{item.opposite_emotion}</Body3>
-      </div>
-    ))}
-  </OCEANRangeWrap>
-</InsightAnalysis>
-                      // <InsightAnalysis>
-                      //   <OCEANRangeWrap>
-                      //     <div>
-                      //       <Body3 color="gray800" align="left" style={{flex: "1"}}>편안한 (Comfortable)</Body3>
-                      //       <RangeSlider
-                      //         type="range"
-                      //         min="0"
-                      //         max="6"
-                      //         step="1"
-                      //         value={oceanValues.Comfortable}
-                      //         onChange={(e) => handleOceanChange("Comfortable", e.target.value)}
-                      //         disabled={ignoreOcean}
-                      //         $ignored={ignoreOcean}
-                      //         style={{flex: "2"}}
-                      //       />
-                      //       <Body3 color="gray800" align="right" style={{flex: "1"}}>불편한 (Uncomfortable)</Body3>
-                      //     </div>
-                      //     <div>
-                      //       <Body3 color="gray800" align="left" style={{flex: "1"}}>만족스러운 (Satisfying)</Body3>
-                      //       <RangeSlider
-                      //         type="range"
-                      //         min="0"
-                      //         max="6"
-                      //         step="1"
-                      //         value={oceanValues.Satisfying}
-                      //         onChange={(e) =>
-                      //           handleOceanChange(
-                      //             "Satisfying",
-                      //             e.target.value
-                      //           )
-                      //         }
-                      //         disabled={ignoreOcean}
-                      //         $ignored={ignoreOcean}
-                      //         style={{flex: "2"}}
-                      //       />
-                      //       <Body3 color="gray800" align="right" style={{flex: "1"}}>불만족스러운 (Dissatisfying)</Body3>
-                      //     </div>
-                      //     <div>
-                      //       <Body3 color="gray800" align="left" style={{flex: "1"}}>신뢰가는 (Trustworthy)</Body3>
-                      //       <RangeSlider
-                      //         type="range"
-                      //         min="0"
-                      //         max="6"
-                      //         step="1"
-                      //         value={oceanValues.Trustworthy}
-                      //         onChange={(e) =>
-                      //           handleOceanChange("Trustworthy", e.target.value)
-                      //         }
-                      //         disabled={ignoreOcean}
-                      //         $ignored={ignoreOcean}
-                      //         style={{flex: "2"}}
-                      //       />
-                      //       <Body3 color="gray800" align="right" style={{flex: "1"}}>불신하는 (Untrustworthy)</Body3>
-                      //     </div>
-                      //     <div>
-                      //       <Body3 color="gray800" align="left" style={{flex: "1"}}>기대되는 (Anticipated)</Body3>
-                      //       <RangeSlider
-                      //         type="range"
-                      //         min="0"
-                      //         max="6"
-                      //         step="1"
-                      //         value={oceanValues.Anticipated}
-                      //         onChange={(e) =>
-                      //           handleOceanChange("Anticipated", e.target.value)
-                      //         }
-                      //         disabled={ignoreOcean}
-                      //         $ignored={ignoreOcean}
-                      //         style={{flex: "2"}}
-                      //       />
-                      //       <Body3 color="gray800" align="right" style={{flex: "1"}}>실망스러운 (Disappointing)</Body3>
-                      //     </div>
-                      //     <div>
-                      //       <Body3 color="gray800" align="left" style={{flex: "1"}}>매력적인 (Attractive)</Body3>
-                      //       <RangeSlider
-                      //         type="range"
-                      //         min="0"
-                      //         max="6"
-                      //         step="1"
-                      //         value={oceanValues.Attractive}
-                      //         onChange={(e) =>
-                      //           handleOceanChange("Attractive", e.target.value)
-                      //         }
-                      //         disabled={ignoreOcean}
-                      //         $ignored={ignoreOcean}
-                      //         style={{flex: "2"}}
-                      //       />
-                      //       <Body3 color="gray800" align="right" style={{flex: "1"}}>비매력적인 (Unacttractive)</Body3>
-                      //     </div> 
-                      //     <div>
-                      //       <Body3 color="gray800" align="left" style={{flex: "1"}}>실용적인 (Practical)</Body3>
-                      //       <RangeSlider
-                      //         type="range"
-                      //         min="0"
-                      //         max="6"
-                      //         step="1"
-                      //         value={oceanValues.Practical}
-                      //         onChange={(e) =>
-                      //           handleOceanChange("Practical", e.target.value)
-                      //         }
-                      //         disabled={ignoreOcean}
-                      //         $ignored={ignoreOcean}
-                      //         style={{flex: "2"}}
-                      //       />
-                      //       <Body3 color="gray800" align="right" style={{flex: "1"}}>비실용적인 (Impratical)</Body3>
-                      //     </div>
-                      //     <div>
-                      //       <Body3 color="gray800" align="left" style={{flex: "1"}}>아름다운 (Beautiful)</Body3>
-                      //       <RangeSlider
-                      //         type="range"
-                      //         min="0"
-                      //         max="6"
-                      //         step="1"
-                      //         value={oceanValues.Beautiful}
-                      //         onChange={(e) =>
-                      //           handleOceanChange("Beautiful", e.target.value)
-                      //         }
-                      //         disabled={ignoreOcean}
-                      //         $ignored={ignoreOcean}
-                      //         style={{flex: "2"}}
-                      //       />
-                      //       <Body3 color="gray800" align="right" style={{flex: "1"}}>추한 (Ugly)</Body3>
-                      //     </div>
-                      //     <div>
-                      //       <Body3 color="gray800" align="left" style={{flex: "1"}}>효율적인 (Efficient)</Body3>
-                      //       <RangeSlider
-                      //         type="range"
-                      //         min="0"
-                      //         max="6"
-                      //         step="1"
-                      //         value={oceanValues.Efficient}
-                      //         onChange={(e) =>
-                      //           handleOceanChange("Efficient", e.target.value)
-                      //         }
-                      //         disabled={ignoreOcean}
-                      //         $ignored={ignoreOcean}
-                      //         style={{flex: "2"}}
-                      //       />
-                      //       <Body3 color="gray800" align="right" style={{flex: "1"}}>비효율적인 (Inefficient)</Body3>
-                      //     </div>
-                      //     <div>
-                      //       <Body3 color="gray800" align="left" style={{flex: "1"}}>사용하기 쉬운 (Easy to use)</Body3>
-                      //       <RangeSlider
-                      //         type="range"
-                      //         min="0"
-                      //         max="6"
-                      //         step="1"
-                      //         value={oceanValues.Easy}
-                      //         onChange={(e) =>
-                      //           handleOceanChange("Easy", e.target.value)
-                      //         }
-                      //         disabled={ignoreOcean}
-                      //         $ignored={ignoreOcean}
-                      //         style={{flex: "2"}}
-                      //       />
-                      //       <Body3 color="gray800" align="right" style={{flex: "1"}}>불편한 (Uncomfortable)</Body3>
-                      //     </div> 
-                      //   </OCEANRangeWrap>
-                      // </InsightAnalysis>
-                    )}
+
 
                     <Button
                       Small

@@ -1225,8 +1225,7 @@ const OrganismIncNavigation = () => {
       setToolStep(chatData.completed_step);
       setToolId(chatData.id);
       setDesignAnalysisEmotionAnalysis(chatData.design_emotion_analysis || []);
-      setDesignAnalysisBusinessInfo(chatData.design_business_info || {});
-      setDesignAnalysisUploadedFiles(chatData.design_uploaded_files || []);
+      setDesignAnalysisBusinessInfo(chatData.business || {});
       setDesignAnalysisSelectedPersona(chatData.design_selected_persona || []);
       setDesignAnalysisEmotionTarget(chatData.design_emotion_target || {});
       setDesignAnalysisEmotionScale(chatData.design_emotion_scale || []);
@@ -1299,7 +1298,7 @@ const OrganismIncNavigation = () => {
         navigate(`/IdeaGenerator`);
       } else if (chatData.type === "ix_target_discovery_persona") {
         navigate(`/TargetDiscovery`);
-      } else if (chatData.type === "ix_design_analysis_persona") {
+      } else if (chatData.type === "ix_design_emotion_analysis") {
         navigate(`/DesignAnalysis`);
       } 
     } catch (error) {
@@ -1831,6 +1830,8 @@ const OrganismIncNavigation = () => {
                                 ? "아이디어 생성기 - "
                                 : chat.type === "ix_customer_value_persona"
                                 ? "고객 핵심 가치 분석기 - "
+                                : chat.type === "ix_design_emotion_analysis"
+                                ? "디자인 감정 분석기 - "
                                 : ""}
                               {chat.view_name || chat.business}
                             </p>

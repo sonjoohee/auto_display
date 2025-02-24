@@ -819,44 +819,6 @@ const PageDesignAnalysis = () => {
 
                     <div className="content">
                       <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                      
-{/* 
-                        <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                          {designEmotionAnalysis.map((persona, index) => (
-                            <MoleculeToolPersonaCard
-                              key={`persona-${index}`}
-                              title={persona.title}
-                              checked={selectedPersonas.includes(index)}
-                              onSelect={() => handleCheckboxChange(index)}
-                              currentSelection={selectedPersonas.length}
-                              personaData={persona}
-                              viewType="list"
-                              selectedIndex={index}
-                              hideButton={true}
-                            />
-                          ))}
-                        </CardGroupWrap> */}
-
-{/* 
-                          <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                              {designEmotionAnalysis.map((item, index) => (
-                                <ListBoxItem FlexStart key={index}>
-                                  <CheckCircle />
-                                  <ListText>
-                                    <ListTitle>
-                                      <Body1 color="gray800" align="left">{item.name}</Body1>
-                                    </ListTitle>
-                                    <ListSubtitle>
-                                      <Sub2 color="gray500" align="left">{item.reason}</Sub2>
-                                    </ListSubtitle>
-                                  </ListText>
-                                </ListBoxItem>
-                              ))}
-                            </CardGroupWrap> */}
-
-
-
-
                         <ListBoxItem FlexStart>
                           <CheckCircle />
 
