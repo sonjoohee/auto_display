@@ -16,7 +16,7 @@ import {
         Caption1,
       } from "../../../../assets/styles/Typography";
 
-const MoleculeAnalysisItem = ({ percentage, title, subtitle, details, business }) => {
+const MoleculeAnalysisItem = ({ percentage, title, subtitle, details = {}, business }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleToggle = () => {
@@ -47,7 +47,6 @@ const MoleculeAnalysisItem = ({ percentage, title, subtitle, details, business }
     {isExpanded && (
                 <ToggleContent $isExpanded={isExpanded}>
                     <Body3 color="gray700" align="left">
-                        {/* {details.design_direction} */}
                         제품이 사용 목적을 얼마나 효율적으로, 효과적으로 수행하는지를 나타냅니다. 아래 목표 감성 달성 설계 방향에 따라 ({business})를 평가 및 개선하세요. 줄글로 작성 
                     </Body3>
 
@@ -56,7 +55,7 @@ const MoleculeAnalysisItem = ({ percentage, title, subtitle, details, business }
                         <div>
                             <Body2_1 color="gray800" align="left">기능 및 성능 제안 방향</Body2_1>
                             <ul>
-                                {details.features.map((item, idx) => (
+                                {details.features && details.features.map((item, idx) => (
                                     <li key={idx}>
                                         <Body3 color="gray800" align="left">{item.title + " : " + item.description}</Body3>
                                     </li>
@@ -67,7 +66,7 @@ const MoleculeAnalysisItem = ({ percentage, title, subtitle, details, business }
                         <div>
                             <Body2_1 color="gray800" align="left">디자인 및 구조 제안 방향</Body2_1>
                             <ul>
-                                {details.form_factors.map((item, idx) => (
+                                {details.form_factors && details.form_factors.map((item, idx) => (
                                     <li key={idx}>
                                         <Body3 color="gray800" align="left">{item.title + " : " + item.description}</Body3>
                                     </li>
@@ -78,7 +77,7 @@ const MoleculeAnalysisItem = ({ percentage, title, subtitle, details, business }
 {/* 
 <Body3 color="gray700" align="left">
     {details.design_direction} // design_direction을 사용
-    제품이 사용 목적을 얼마나 효율적으로, 효과적으로 수행하는지를 나타냅니다. 아래 목표 감성 달성 설계 방향에 따라 (Business)를 평가 및 개선하세요. 줄글로 작성 
+ 
 </Body3>
 
 <div className="bgContent">
