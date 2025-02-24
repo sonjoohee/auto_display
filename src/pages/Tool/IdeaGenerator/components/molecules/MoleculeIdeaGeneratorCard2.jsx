@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
-import { palette } from "../../../../assets/styles/Palette";
-import { Button } from "../../../../assets/styles/ButtonStyle";
+import { palette } from "../../../../../assets/styles/Palette";
+import { Button } from "../../../../../assets/styles/ButtonStyle";
 import {
   ListBoxItem,
   ListText,
   ListButton,
-} from "../../../../assets/styles/BusinessAnalysisStyle";
-import { Body1 } from "../../../../assets/styles/Typography";
+} from "../../../../../assets/styles/BusinessAnalysisStyle";
+import { Body1 } from "../../../../../assets/styles/Typography";
 
 import { useAtom } from "jotai";
 import {
@@ -19,7 +19,7 @@ import {
   CUSTOMER_VALUE_ANALYZER_POSITIONING,
   CUSTOMER_VALUE_ANALYZER_FINAL_REPORT,
   TOOL_ID,
-} from "../../../../pages/AtomStates";
+} from "../../../../AtomStates";
 
 const MoleculeIdeaGeneratorCard2 = ({ coreValue, status, onShowDetail }) => {
   const [toolId, setToolId] = useAtom(TOOL_ID);

@@ -3,16 +3,16 @@
 //로그인/로그아웃 관리, 대화 히스토리 관리, 프로젝트 관리. 사용자 계정 설정
 import React, { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
-import { palette } from "../../../../assets/styles/Palette";
-import images from "../../../../assets/styles/Images";
+import { palette } from "../../../assets/styles/Palette";
+import images from "../../../assets/styles/Images";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import axios from "axios";
 import { SubtractiveBlending } from "three/src/constants.js";
-import panelimages from "../../../../assets/styles/PanelImages";
-import PopupWrap from "../../../../assets/styles/Popup";
-import { Sub3, Caption2 } from "../../../../assets/styles/Typography";
-import { NoData } from "../../../../assets/styles/BusinessAnalysisStyle";
+import panelimages from "../../../assets/styles/PanelImages";
+import PopupWrap from "../../../assets/styles/Popup";
+import { Sub3, Caption2 } from "../../../assets/styles/Typography";
+import { NoData } from "../../../assets/styles/BusinessAnalysisStyle";
 
 import {
   PASSWORD,
@@ -148,98 +148,20 @@ import {
   IS_SHOW_TOAST,
   PROJECT_REFRESH_TRIGGER,
   CUSTOM_PERSONA_LIST,
-  TARGET_DISCOVERY_INFO,
-  TARGET_DISCOVERY_PERSONA,
-  TARGET_DISCOVERY_SCENARIO,
-  SELECTED_TARGET_DISCOVERY_SCENARIO,
-  TARGET_DISCOVERY_FINAL_REPORT,
-  TOOL_ID,
-  TOOL_STEP,
-  TOOL_LOADING,
-  CUSTOMER_VALUE_ANALYZER_INFO,
-  CUSTOMER_VALUE_ANALYZER_PERSONA,
-  CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP,
-  CUSTOMER_VALUE_ANALYZER_FACTOR,
-  CUSTOMER_VALUE_ANALYZER_CLUSTERING,
-  CUSTOMER_VALUE_ANALYZER_POSITIONING,
-  CUSTOMER_VALUE_ANALYZER_FINAL_REPORT,
-  CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR,
-  IDEA_GENERATOR_INFO,
-  IDEA_GENERATOR_KNOW_TARGET,
-  IDEA_GENERATOR_CUSTOM_TARGET,
-  IDEA_GENERATOR_PERSONA,
-  IDEA_GENERATOR_IDEA,
-  IDEA_GENERATOR_CLUSTERING,
-  IDEA_GENERATOR_FINAL_REPORT,
-  IDEA_GENERATOR_SELECTED_PERSONA,
-  CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA,
-  DESIGN_ANALYSIS_EMOTION_ANALYSIS,
-  DESIGN_ANALYSIS_BUSINESS_INFO,
-  DESIGN_ANALYSIS_UPLOADED_FILES,
-  DESIGN_ANALYSIS_SELECTED_PERSONA,
-  DESIGN_ANALYSIS_EMOTION_TARGET,
-  DESIGN_ANALYSIS_EMOTION_SCALE,
-} from "../../../AtomStates";
+} from "../../AtomStates";
 import {
   getAllConversationsFromIndexedDB,
   getToolListOnServer,
   getToolOnServer,
-} from "../../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
-import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
-import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup"; // 계정설정 팝업 컴포넌트 임포트
-import MoleculeSignPopup from "../../../Login_Sign/components/molecules/MoleculeSignPopup"; // 회원가입 팝업 컴포넌트 임포트
-import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
+} from "../../../utils/indexedDB"; // IndexedDB에서 대화 내역 가져오기
+import MoleculeLoginPopup from "../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
+import MoleculeAccountPopup from "../../Login_Sign/components/molecules/MoleculeAccountPopup"; // 계정설정 팝업 컴포넌트 임포트
+import MoleculeSignPopup from "../../Login_Sign/components/molecules/MoleculeSignPopup"; // 회원가입 팝업 컴포넌트 임포트
+import { useSaveConversation } from "../../Expert_Insight/components/atoms/AtomSaveConversation";
 
-import OrganismReportPopup from "../../../Expert_Insight/components/organisms/OrganismReportPopup"; // 팝업 컴포넌트 임포트
+import OrganismReportPopup from "../../Expert_Insight/components/organisms/OrganismReportPopup"; // 팝업 컴포넌트 임포트
 
 const OrganismIncNavigation = () => {
-  const [ideaGeneratorInfo, setIdeaGeneratorInfo] =
-    useAtom(IDEA_GENERATOR_INFO);
-  const [ideaGeneratorKnowTarget, setIdeaGeneratorKnowTarget] = useAtom(
-    IDEA_GENERATOR_KNOW_TARGET
-  );
-  const [ideaGeneratorCustomTarget, setIdeaGeneratorCustomTarget] = useAtom(
-    IDEA_GENERATOR_CUSTOM_TARGET
-  );
-  const [ideaGeneratorPersona, setIdeaGeneratorPersona] = useAtom(
-    IDEA_GENERATOR_PERSONA
-  );
-  const [ideaGeneratorIdea, setIdeaGeneratorIdea] =
-    useAtom(IDEA_GENERATOR_IDEA);
-  const [ideaGeneratorClustering, setIdeaGeneratorClustering] = useAtom(
-    IDEA_GENERATOR_CLUSTERING
-  );
-  const [ideaGeneratorFinalReport, setIdeaGeneratorFinalReport] = useAtom(
-    IDEA_GENERATOR_FINAL_REPORT
-  );
-  const [ideaGeneratorSelectedPersona, setIdeaGeneratorSelectedPersona] =
-    useAtom(IDEA_GENERATOR_SELECTED_PERSONA);
-
-  // export const TARGET_DISCOVERY_PERSONA = atom([]);
-  // export const SELECTED_TARGET_DISCOVERY_PERSONA = atom([]);
-  // export const TARGET_DISCOVERY_SCENARIO = atom([]);
-  // export const SELECTED_TARGET_DISCOVERY_SCENARIO = atom([]);
-  // export const TARGET_DISCOVERY_FINAL_REPORT = atom({});
-
-  // export const TOOL_ID = atom("");
-  // export const TOOL_STEP = atom(0);
-  const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
-  const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
-    TARGET_DISCOVERY_INFO
-  );
-  const [targetDiscoveryPersona, setTargetDiscoveryPersona] = useAtom(
-    TARGET_DISCOVERY_PERSONA
-  );
-  const [targetDiscoveryScenario, setTargetDiscoveryScenario] = useAtom(
-    TARGET_DISCOVERY_SCENARIO
-  );
-  const [selectedTargetDiscoveryScenario, setSelectedTargetDiscoveryScenario] =
-    useAtom(SELECTED_TARGET_DISCOVERY_SCENARIO);
-  const [targetDiscoveryFinalReport, setTargetDiscoveryFinalReport] = useAtom(
-    TARGET_DISCOVERY_FINAL_REPORT
-  );
-  const [toolId, setToolId] = useAtom(TOOL_ID);
-  const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const location = useLocation();
   const [customPersonaList, setCustomPersonaList] =
     useAtom(CUSTOM_PERSONA_LIST);
@@ -576,48 +498,10 @@ const OrganismIncNavigation = () => {
     setMarketingRecommendedItemButtonState,
   ] = useAtom(MARKETING_RECOMMENDED_ITEM_BUTTON_STATE);
 
-  const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(
-    CUSTOMER_VALUE_ANALYZER_INFO
-  );
-  const [customerValueAnalyzerPersona, setCustomerValueAnalyzerPersona] =
-    useAtom(CUSTOMER_VALUE_ANALYZER_PERSONA);
-  const [customerValueAnalyzerJourneyMap, setCustomerValueAnalyzerJourneyMap] =
-    useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
-  const [customerValueAnalyzerFactor, setCustomerValueAnalyzerFactor] = useAtom(
-    CUSTOMER_VALUE_ANALYZER_FACTOR
-  );
-  const [customerValueAnalyzerClustering, setCustomerValueAnalyzerClustering] =
-    useAtom(CUSTOMER_VALUE_ANALYZER_CLUSTERING);
-  const [
-    customerValueAnalyzerPositioning,
-    setCustomerValueAnalyzerPositioning,
-  ] = useAtom(CUSTOMER_VALUE_ANALYZER_POSITIONING);
-  const [
-    customerValueAnalyzerFinalReport,
-    setCustomerValueAnalyzerFinalReport,
-  ] = useAtom(CUSTOMER_VALUE_ANALYZER_FINAL_REPORT);
-  const [
-    customerValueAnalyzerSelectedFactor,
-    setCustomerValueAnalyzerSelectedFactor,
-  ] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR);
-  const [
-    customerValueAnalyzerSelectedPersona,
-    setCustomerValueAnalyzerSelectedPersona,
-  ] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA);
   // useEffect(() => {
   //   setIsSection1Open(false);
   //   setIsSection2Open(false);
   // }, [isLoggedIn]);
-
-
-
-  const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] = useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS);
-  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(DESIGN_ANALYSIS_BUSINESS_INFO);
-  const [designAnalysisUploadedFiles, setDesignAnalysisUploadedFiles] = useAtom(DESIGN_ANALYSIS_UPLOADED_FILES);
-  const [designAnalysisSelectedPersona, setDesignAnalysisSelectedPersona] = useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
-  const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(DESIGN_ANALYSIS_EMOTION_TARGET);
-  const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(DESIGN_ANALYSIS_EMOTION_SCALE);
-
 
   const [isPopupLogin, setIsPopupLogin] = useState(false);
 
@@ -933,13 +817,10 @@ const OrganismIncNavigation = () => {
         //     (chat) => chat.business_info !== null && chat.business_info !== ""
         //   ) // business_info가 비었으면(기초보고서 생성 전) 히스토리에 남기지 않음
         //   .sort((a, b) => b.timestamp - a.timestamp); // 최근 날짜 순으로 정렬
-        const sortedChatList = response.data.sort((a, b) => {
-          const dateA = b.updateDate || b.createDate;
-          const dateB = a.updateDate || a.createDate;
-          return dateA - dateB;
-        }); // 최근 날짜 순으로 정렬
+        const sortedChatList = response.data
+          // .filter((chat) => chat.business !== null && chat.business !== "") // business_info가 비었으면(기초보고서 생성 전) 히스토리에 남기지 않음
+          .sort((a, b) => b.createDate - a.createDate); // 최근 날짜 순으로 정렬
 
-        // console.log("🚀 ~ fetchChatList ~ sortedChatList:", sortedChatList);
         setChatList(sortedChatList);
       } catch (error) {
         console.error("대화 목록 가져오기 오류:", error);
@@ -990,250 +871,116 @@ const OrganismIncNavigation = () => {
       //   }
       // );
       const response = await getToolOnServer(conversationId, isLoggedIn);
-
-      const chatData = response;
-
+      const chatData = response.data.chat_data;
       // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
-      // setSavedTimestamp(chatData.createDate); // 대화 날짜 설정
-      // setSelectedExpertIndex(
-      //   chatData.expert_index !== undefined ? chatData.expert_index : "0"
-      // );
-      // setConversationId(chatData.id); // 대화 ID 설정
-      // setConversation(chatData.conversation); // 이전 대화 내역 설정
-      // setConversationStage(chatData.conversationStage); // 대화 단계 설정
-      // setInputBusinessInfo(chatData.inputBusinessInfo); // 비즈니스 정보 설정
-      // setTitleOfBusinessInfo(chatData.analysisReportData.title); // 분석 데이터 설정
-      // setMainFeaturesOfBusinessInformation(
-      //   chatData.analysisReportData.mainFeatures
-      // ); // 주요 특징 설정
-      // setMainCharacteristicOfBusinessInformation(
-      //   chatData.analysisReportData.mainCharacter
-      // ); // 주요 특징 설정
-      // setBusinessInformationTargetCustomer(
-      //   chatData.analysisReportData.mainCustomer
-      // ); // 목표 고객 설정
-
-      // // 전문가 보고서 데이터 복구
-      // setStrategyReportData(chatData.strategyReportData || {});
-
-      // // 필요하다면 추가 상태 업데이트
-      // setSelectedAdditionalKeyword(chatData.selectedAdditionalKeyword || []);
-      // setAdditionalReportData(chatData.additionalReportData || []);
-      // setCustomerAdditionalReportData(
-      //   chatData.customerAdditionalReportData || []
-      // );
-      // setSelectedCustomerAdditionalKeyword(
-      //   chatData.selectedCustomerAdditionalKeyword || []
-      // );
-
-      // setSelectedPocOptions(chatData.selectedPocOptions || []);
-      // setSelectedPocTarget(chatData.selectedPocTarget || {});
-      // setRecommendedTargetData(chatData.recommendedTargetData || {});
-      // setPocPersonaList(chatData.pocPersonaList || []);
-      // setPocDetailReportData(chatData.pocDetailReportData || {});
-
-      // setIdeaFeatureData(chatData.ideaFeatureData || []);
-      // setIdeaRequirementData(chatData.ideaRequirementData || []);
-      // setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
-      // setIdeaRequirementDataTemp(chatData.ideaRequirementData || []);
-
-      // setIdeaList(chatData.ideaList || []);
-      // setIdeaGroup(chatData.ideaGroup || {});
-      // setIdeaPriority(chatData.ideaPriority || []);
-      // setIdeaMiroState(chatData.ideaMiroState || 0);
-
-      // setButtonState(chatData.buttonState || {});
-
-      // setGrowthHackerRecommendedSolution(
-      //   chatData.growthHackerRecommendedSolution || []
-      // );
-      // setGrowthHackerReportData(chatData.growthHackerReportData || []);
-      // setGrowthHackerDetailReportData(
-      //   chatData.growthHackerDetailReportData || []
-      // );
-      // setGrowthHackerSelectedSolution(
-      //   chatData.growthHackerSelectedSolution || []
-      // );
-      // setKpiQuestionList(chatData.KpiQuestionList || []);
-
-      // setPriceReportData(chatData.priceReportData || {});
-      // setPriceScrapData(chatData.priceScrapData || {});
-      // setPriceProduct(chatData.priceProduct || []);
-      // setPriceSelectedProductSegmentation(
-      //   chatData.priceSelectedProductSegmentation || []
-      // );
-      // setPriceProductSegmentation(chatData.priceProductSegmentation || []);
-
-      // setCaseReportData(chatData.caseReportData || []);
-      // setCaseHashTag(chatData.caseHashTag || []);
-
-      // setSurveyGuidelineDetailReportData(
-      //   chatData.surveyGuidelineDetailReportData || {}
-      // );
-      // setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
-      // setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
-      // setSurveyGoalFixed(chatData.surveyGoalFixed || []);
-      // setSurveyQuestionList(chatData.surveyQuestionList || []);
-
-      // setBmModelSuggestionReportData(
-      //   chatData.bmModelSuggestionReportData || []
-      // );
-      // setBmQuestionList(chatData.bmQuestionList || []);
-      // setBmSelectedProblemOptions(chatData.bmSelectedProblemOptions || {});
-      // setBmOrLean(chatData.bmOrLean || "");
-      // setBmBmAutoReportData(chatData.bmBmAutoReportData || []);
-      // setBmLeanAutoReportData(chatData.bmLeanAutoReportData || []);
-      // setBmBmAdsReportData(chatData.bmBmAdsReportData || []);
-      // setBmLeanAdsReportData(chatData.bmLeanAdsReportData || []);
-      // setBmBmCustomReportData(chatData.bmBmCustomReportData || []);
-      // setBmLeanCustomReportData(chatData.bmLeanCustomReportData || []);
-
-      // setIsMarketing(chatData.isMarketing || false);
-      // setMarketingMbtiResult(chatData.marketingMbtiResult || {});
-      // setMarketingResearchReportData(
-      //   chatData.marketingResearchReportData || []
-      // );
-      // setMarketingBmReportData(chatData.marketingBmReportData || []);
-      // setMarketingCustomerData(chatData.marketingCustomerData || []);
-      // setMarketingSelectedCustomer(chatData.marketingSelectedCustomer || []);
-      // setMarketingFinalCustomer(chatData.marketingFinalCustomer || {});
-      // setMarketingFinalReportData(chatData.marketingFinalReportData || []);
-
-      // setStrategyConsultantReportData(
-      //   chatData.strategyConsultantReportData || []
-      // );
-
-      // export const TARGET_DISCOVERY_INFO = atom({
-      //   type: "",
-      //   business: "",
-      //   target: "",
-      //   specific_situation: "",
-      //   country: "",
-      // });
-
-      // export const TARGET_DISCOVERY_PERSONA = atom([]);
-      // export const SELECTED_TARGET_DISCOVERY_PERSONA = atom([]);
-      // export const TARGET_DISCOVERY_SCENARIO = atom([]);
-      // export const SELECTED_TARGET_DISCOVERY_SCENARIO = atom([]);
-      // export const TARGET_DISCOVERY_FINAL_REPORT = atom({});
-
-      // export const TOOL_ID = atom("");
-      // export const TOOL_STEP = atom(0);
-      setToolStep(1);
-      setToolId("");
-      setTargetDiscoveryInfo({
-        type: "",
-        business: "",
-        target: "",
-        specific_situation: "",
-        country: "",
-      });
-      setTargetDiscoveryPersona([]);
-      setTargetDiscoveryScenario([]);
-      setTargetDiscoveryFinalReport({});
-      setToolLoading(false);
-      // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
-      setToolStep(chatData.completed_step);
-      setToolId(chatData.id);
-      setTargetDiscoveryInfo({
-        type: chatData.type,
-        business: chatData.business,
-        target: chatData.target,
-        specific_situation: chatData.specific_situation,
-        country: chatData.country,
-      });
-      setTargetDiscoveryPersona(chatData.target_discovery_persona);
-      setTargetDiscoveryScenario(chatData.target_discovery_scenario);
-      setTargetDiscoveryFinalReport(chatData.target_discovery_final_report);
-      setToolLoading(true);
-
-      // customer value persona 타입일 경우
-
-      setToolStep(1);
-      setToolId("");
-      setCustomerValueAnalyzerInfo({
-        business: "",
-        target_list: [],
-        analysis_scope: "",
-        analysis_purpose: "",
-      });
-      setCustomerValueAnalyzerPersona([]);
-      setCustomerValueAnalyzerJourneyMap([]);
-      setCustomerValueAnalyzerFactor([]);
-      setCustomerValueAnalyzerClustering([]);
-      setCustomerValueAnalyzerPositioning([]);
-      setCustomerValueAnalyzerFinalReport({});
-      setCustomerValueAnalyzerSelectedPersona([]);
-      setToolLoading(false);
-      setToolStep(chatData.completed_step);
-      setToolId(chatData.id);
-      setCustomerValueAnalyzerInfo({
-        business: chatData.business,
-        target_list: chatData.target_list,
-        analysis_scope: chatData.analysis_scope,
-        analysis_purpose: chatData.analysis_purpose,
-      });
-      setCustomerValueAnalyzerPersona(chatData.customer_value_persona || []);
-      setCustomerValueAnalyzerJourneyMap(
-        chatData.customer_value_journey_map || []
+      setSavedTimestamp(chatData.timestamp); // 대화 날짜 설정
+      setSelectedExpertIndex(
+        chatData.expert_index !== undefined ? chatData.expert_index : "0"
       );
-      setCustomerValueAnalyzerSelectedPersona(
-        chatData.selected_customer_value_persona || []
-      );
-      setCustomerValueAnalyzerFactor(chatData.customer_value_factor || []);
-      setCustomerValueAnalyzerClustering(
-        chatData.customer_value_clustering || []
-      );
-      // setCustomerValueAnalyzerSelectedFactor(
-      //   chatData.customer_value_selected_factor || []
-      // );
-      setCustomerValueAnalyzerPositioning(
-        chatData.customer_value_positioning || []
-      );
-      setCustomerValueAnalyzerFinalReport(
-        chatData.customer_value_final_report || {}
-      );
-      setToolLoading(true);
-      setIdeaGeneratorInfo({});
-      setIdeaGeneratorPersona([]);
-      setIdeaGeneratorIdea([]);
-      setIdeaGeneratorClustering([]);
-      setIdeaGeneratorFinalReport({});
-      setIdeaGeneratorSelectedPersona([]);
-      setIdeaGeneratorKnowTarget(null);
+      setConversationId(chatData.id); // 대화 ID 설정
+      setConversation(chatData.conversation); // 이전 대화 내역 설정
+      setConversationStage(chatData.conversationStage); // 대화 단계 설정
+      setInputBusinessInfo(chatData.inputBusinessInfo); // 비즈니스 정보 설정
+      setTitleOfBusinessInfo(chatData.analysisReportData.title); // 분석 데이터 설정
+      setMainFeaturesOfBusinessInformation(
+        chatData.analysisReportData.mainFeatures
+      ); // 주요 특징 설정
+      setMainCharacteristicOfBusinessInformation(
+        chatData.analysisReportData.mainCharacter
+      ); // 주요 특징 설정
+      setBusinessInformationTargetCustomer(
+        chatData.analysisReportData.mainCustomer
+      ); // 목표 고객 설정
 
-      setIdeaGeneratorInfo({
-        business: chatData.business,
-        core_value: chatData.core_value,
-      });
+      // 전문가 보고서 데이터 복구
+      setStrategyReportData(chatData.strategyReportData || {});
 
-      setIdeaGeneratorPersona(chatData.idea_generator_persona || []);
-      setIdeaGeneratorIdea(chatData.idea_generator_idea || []);
-      setIdeaGeneratorClustering(chatData.idea_generator_clustering || []);
-      setIdeaGeneratorFinalReport(chatData.idea_generator_final_report || {});
-      setIdeaGeneratorSelectedPersona(
-        chatData.idea_generator_selected_persona || []
+      // 필요하다면 추가 상태 업데이트
+      setSelectedAdditionalKeyword(chatData.selectedAdditionalKeyword || []);
+      setAdditionalReportData(chatData.additionalReportData || []);
+      setCustomerAdditionalReportData(
+        chatData.customerAdditionalReportData || []
       );
-      setIdeaGeneratorKnowTarget(chatData.idea_generator_know_target);
+      setSelectedCustomerAdditionalKeyword(
+        chatData.selectedCustomerAdditionalKeyword || []
+      );
 
+      setSelectedPocOptions(chatData.selectedPocOptions || []);
+      setSelectedPocTarget(chatData.selectedPocTarget || {});
+      setRecommendedTargetData(chatData.recommendedTargetData || {});
+      setPocPersonaList(chatData.pocPersonaList || []);
+      setPocDetailReportData(chatData.pocDetailReportData || {});
 
-      setDesignAnalysisEmotionAnalysis([]);
-      setDesignAnalysisBusinessInfo({});
-      setDesignAnalysisUploadedFiles([]);
-      setDesignAnalysisSelectedPersona([]);
-      setDesignAnalysisEmotionTarget({});
-      setDesignAnalysisEmotionScale([]);
-      setToolLoading(false);
-      setToolStep(chatData.completed_step);
-      setToolId(chatData.id);
-      setDesignAnalysisEmotionAnalysis(chatData.design_emotion_analysis || []);
-      setDesignAnalysisBusinessInfo(chatData.design_business_info || {});
-      setDesignAnalysisUploadedFiles(chatData.design_uploaded_files || []);
-      setDesignAnalysisSelectedPersona(chatData.design_selected_persona || []);
-      setDesignAnalysisEmotionTarget(chatData.design_emotion_target || {});
-      setDesignAnalysisEmotionScale(chatData.design_emotion_scale || []);
-      setToolLoading(true);
+      setIdeaFeatureData(chatData.ideaFeatureData || []);
+      setIdeaRequirementData(chatData.ideaRequirementData || []);
+      setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
+      setIdeaRequirementDataTemp(chatData.ideaRequirementData || []);
 
+      setIdeaList(chatData.ideaList || []);
+      setIdeaGroup(chatData.ideaGroup || {});
+      setIdeaPriority(chatData.ideaPriority || []);
+      setIdeaMiroState(chatData.ideaMiroState || 0);
+
+      setButtonState(chatData.buttonState || {});
+
+      setGrowthHackerRecommendedSolution(
+        chatData.growthHackerRecommendedSolution || []
+      );
+      setGrowthHackerReportData(chatData.growthHackerReportData || []);
+      setGrowthHackerDetailReportData(
+        chatData.growthHackerDetailReportData || []
+      );
+      setGrowthHackerSelectedSolution(
+        chatData.growthHackerSelectedSolution || []
+      );
+      setKpiQuestionList(chatData.KpiQuestionList || []);
+
+      setPriceReportData(chatData.priceReportData || {});
+      setPriceScrapData(chatData.priceScrapData || {});
+      setPriceProduct(chatData.priceProduct || []);
+      setPriceSelectedProductSegmentation(
+        chatData.priceSelectedProductSegmentation || []
+      );
+      setPriceProductSegmentation(chatData.priceProductSegmentation || []);
+
+      setCaseReportData(chatData.caseReportData || []);
+      setCaseHashTag(chatData.caseHashTag || []);
+
+      setSurveyGuidelineDetailReportData(
+        chatData.surveyGuidelineDetailReportData || {}
+      );
+      setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
+      setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
+      setSurveyGoalFixed(chatData.surveyGoalFixed || []);
+      setSurveyQuestionList(chatData.surveyQuestionList || []);
+
+      setBmModelSuggestionReportData(
+        chatData.bmModelSuggestionReportData || []
+      );
+      setBmQuestionList(chatData.bmQuestionList || []);
+      setBmSelectedProblemOptions(chatData.bmSelectedProblemOptions || {});
+      setBmOrLean(chatData.bmOrLean || "");
+      setBmBmAutoReportData(chatData.bmBmAutoReportData || []);
+      setBmLeanAutoReportData(chatData.bmLeanAutoReportData || []);
+      setBmBmAdsReportData(chatData.bmBmAdsReportData || []);
+      setBmLeanAdsReportData(chatData.bmLeanAdsReportData || []);
+      setBmBmCustomReportData(chatData.bmBmCustomReportData || []);
+      setBmLeanCustomReportData(chatData.bmLeanCustomReportData || []);
+
+      setIsMarketing(chatData.isMarketing || false);
+      setMarketingMbtiResult(chatData.marketingMbtiResult || {});
+      setMarketingResearchReportData(
+        chatData.marketingResearchReportData || []
+      );
+      setMarketingBmReportData(chatData.marketingBmReportData || []);
+      setMarketingCustomerData(chatData.marketingCustomerData || []);
+      setMarketingSelectedCustomer(chatData.marketingSelectedCustomer || []);
+      setMarketingFinalCustomer(chatData.marketingFinalCustomer || {});
+      setMarketingFinalReportData(chatData.marketingFinalReportData || []);
+
+      setStrategyConsultantReportData(
+        chatData.strategyConsultantReportData || []
+      );
 
       if (chatData.isMarketing) {
         const updatedConversation = [...chatData.conversation];
@@ -1293,17 +1040,7 @@ const OrganismIncNavigation = () => {
       setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
 
       // 페이지를 대화가 이어지는 형태로 전환
-      // navigate(`/TargetDiscovery`);
-
-      if (chatData.type === "ix_customer_value_persona") {
-        navigate(`/CustomerValueAnalyzer`);
-      } else if (chatData.type === "ix_idea_generator_persona") {
-        navigate(`/IdeaGenerator`);
-      } else if (chatData.type === "ix_target_discovery_persona") {
-        navigate(`/TargetDiscovery`);
-      } else if (chatData.type === "ix_design_analysis_persona") {
-        navigate(`/DesignAnalysis`);
-      } 
+      navigate(`/conversation/${conversationId}`);
     } catch (error) {
       console.error("대화 내용 가져오기 오류:", error);
     }
@@ -1806,7 +1543,7 @@ const OrganismIncNavigation = () => {
           {chatList && chatList.length > 0 ? (
             <>
               <HistoryList>
-                {/* <strong>최근 사용 내역</strong> */}
+                <strong>최근 사용 내역</strong>
                 {true ? (
                   // chatList.some(
                   //   (chat) => Date.now() - chat.timestamp <= 604800000
@@ -1817,104 +1554,106 @@ const OrganismIncNavigation = () => {
                         // .filter(
                         //   (chat) => Date.now() - chat.timestamp <= 604800000
                         // )
-                        .map((chat) => (
-                          <li
-                            key={chat.id}
-                            className={`toggle ${
-                              editToggleIndex === chat._id ? "active" : ""
-                            }`}
-                          >
-                            <p
-                              onClick={() => handleConversationClick(chat._id)}
-                            >
-                              {chat.type === "ix_target_discovery_persona"
-                                ? "타겟 탐색기 - "
-                                : chat.type === "ix_idea_generator_persona"
-                                ? "아이디어 생성기 - "
-                                : chat.type === "ix_customer_value_persona"
-                                ? "고객 핵심 가치 분석기 - "
-                                : ""}
-                              {chat.view_name || chat.business}
-                            </p>
-                            <span
-                              id={`insight-toggle-${chat._id}`}
-                              style={{
-                                display: "inline-block",
-                                cursor: "pointer",
-                              }}
-                              onClick={(event) =>
-                                editBoxToggle(chat._id, event, "recent")
-                              }
-                              className="toggle"
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="14"
-                                height="3"
-                                viewBox="0 0 14 3"
-                                fill="none"
+                        .map(
+                          (chat) => (
+                            console.log("🚀 ~ chatList ~ chat:", chat),
+                            (
+                              <li
+                                key={chat.id}
+                                className={`toggle ${
+                                  editToggleIndex === chat.id ? "active" : ""
+                                }`}
                               >
-                                <circle
-                                  cx="2.0067"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 2.0067 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                                <circle
-                                  cx="7.00084"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 7.00084 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                                <circle
-                                  cx="11.993"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 11.993 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                              </svg>
-                            </span>
-
-                            {editToggleIndex === chat.id && (
-                              <div
-                                id={`insight-edit-box-${chat.id}`}
-                                className="insight-toggle"
-                                ref={historyEditBoxRef}
-                              >
-                                <EditBox
-                                  id={`insight-edit-box-${chat.id}`}
-                                  isEditToggle={editToggleIndex === chat.id}
-                                  style={{
-                                    top: `${editBoxPosition.top}px`,
-                                    left: `${editBoxPosition.left}px`,
-                                  }}
+                                <p
+                                  onClick={() =>
+                                    handleConversationClick(chat.id)
+                                  }
                                 >
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      handleChatDeleteButtonClick(chat.id)
-                                    }
+                                  {chat.view_name || chat.business}
+                                </p>
+                                <span
+                                  id={`insight-toggle-${chat.id}`}
+                                  style={{
+                                    display: "inline-block",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={(event) =>
+                                    editBoxToggle(chat.id, event, "recent")
+                                  }
+                                  className="toggle"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="14"
+                                    height="3"
+                                    viewBox="0 0 14 3"
+                                    fill="none"
                                   >
-                                    <img src={images.IconDelete2} alt="" />
-                                    삭제
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      handleChangeChatNameButtonClick(chat.id)
-                                    }
+                                    <circle
+                                      cx="2.0067"
+                                      cy="1.51283"
+                                      r="1.49694"
+                                      transform="rotate(-90 2.0067 1.51283)"
+                                      fill="#A0A0A0"
+                                    />
+                                    <circle
+                                      cx="7.00084"
+                                      cy="1.51283"
+                                      r="1.49694"
+                                      transform="rotate(-90 7.00084 1.51283)"
+                                      fill="#A0A0A0"
+                                    />
+                                    <circle
+                                      cx="11.993"
+                                      cy="1.51283"
+                                      r="1.49694"
+                                      transform="rotate(-90 11.993 1.51283)"
+                                      fill="#A0A0A0"
+                                    />
+                                  </svg>
+                                </span>
+
+                                {editToggleIndex === chat.id && (
+                                  <div
+                                    id={`insight-edit-box-${chat.id}`}
+                                    className="insight-toggle"
+                                    ref={historyEditBoxRef}
                                   >
-                                    <img src={images.IconEdit2} alt="" />
-                                    이름 변경
-                                  </button>
-                                </EditBox>
-                              </div>
-                            )}
-                          </li>
-                        ))}
+                                    <EditBox
+                                      id={`insight-edit-box-${chat.id}`}
+                                      isEditToggle={editToggleIndex === chat.id}
+                                      style={{
+                                        top: `${editBoxPosition.top}px`,
+                                        left: `${editBoxPosition.left}px`,
+                                      }}
+                                    >
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleChatDeleteButtonClick(chat.id)
+                                        }
+                                      >
+                                        <img src={images.IconDelete2} alt="" />
+                                        삭제
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleChangeChatNameButtonClick(
+                                            chat.id
+                                          )
+                                        }
+                                      >
+                                        <img src={images.IconEdit2} alt="" />
+                                        이름 변경
+                                      </button>
+                                    </EditBox>
+                                  </div>
+                                )}
+                              </li>
+                            )
+                          )
+                        )}
                     </ul>
                   </>
                 ) : (
@@ -1924,7 +1663,7 @@ const OrganismIncNavigation = () => {
                 )}
               </HistoryList>
 
-              {/* <HistoryList>
+              <HistoryList>
                 <strong>지난 7일 사용 내역</strong>
                 {chatList.some(
                   (chat) =>
@@ -2146,7 +1885,7 @@ const OrganismIncNavigation = () => {
                     <Sub3 color="gray300">사용 내역 없음</Sub3>
                   </NoData>
                 )}
-              </HistoryList> */}
+              </HistoryList>
             </>
           ) : (
             <ul>
@@ -2476,7 +2215,7 @@ const SubNavigation = styled.div`
   position: fixed;
   top: 0;
   left: 64px;
-  max-width: 400px;
+  max-width: 250px;
   width: 100%;
   height: 100dvh;
   display: flex;

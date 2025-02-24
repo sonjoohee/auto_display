@@ -49,7 +49,7 @@ import {
 } from "../../assets/styles/BusinessAnalysisStyle";
 import PopupWrap from "../../assets/styles/Popup";
 import { SkeletonH1, SkeletonTitle, SkeletonLine } from "../../assets/styles/Skeleton";
-import AtomPersonaLoader from "../Persona/components/atoms/AtomPersonaLoader";
+import AtomPersonaLoader from "../Global/atoms/AtomPersonaLoader";
 import images from "../../assets/styles/Images";
 import personaImages from "../../assets/styles/PersonaImages";
 import BarChart from '../../components/Charts/BarChart';

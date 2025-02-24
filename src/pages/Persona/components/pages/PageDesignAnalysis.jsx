@@ -3,9 +3,9 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
 import { palette } from "../../../../assets/styles/Palette";
-import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
-import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
-import MoleculeHeader from "../molecules/MoleculeHeader";
+import AtomPersonaLoader from "../../../Global/atoms/AtomPersonaLoader";
+import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
+import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
 
 import {
   Button,
@@ -69,7 +69,6 @@ import {
   Body3,
   Caption1,
 } from "../../../../assets/styles/Typography";
-import MoleculeCustomerValueCard from "../molecules/MoleculeCustomerValueCard";
 import {
   InterviewXDesignEmotionAnalysisRequest,
   InterviewXDesignEmotionTargetRequest,

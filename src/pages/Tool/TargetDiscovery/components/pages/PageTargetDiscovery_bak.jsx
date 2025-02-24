@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
 import { palette } from "../../../../assets/styles/Palette";
-import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
+import AtomPersonaLoader from "../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
 import MoleculeHeader from "../molecules/MoleculeHeader";
 

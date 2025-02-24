@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../assets/styles/Palette";
 
-import OrganismIncNavigation from "../../src/pages/Persona/components/organisms/OrganismIncNavigation";
+import OrganismIncNavigation from "../pages/Global/organisms/OrganismIncNavigation";
 // import Header from "../../../Design_Page/IncHeader";
-import MoleculeHeader from "../../src/pages/Persona/components/molecules/MoleculeHeader";
+import MoleculeHeader from "../pages/Global/organisms/OrganismIncNavigation";
 import {
   ContentsWrap,
   MainContent,

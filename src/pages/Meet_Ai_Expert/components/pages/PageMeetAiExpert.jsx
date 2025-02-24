@@ -114,7 +114,7 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 
 // import OrganismLeftSideBar from "../../../Expert_Insight/components/organisms/OrganismLeftSideBar";
-import OrganismLeftSideBar from "../../../../pages/Persona/components/organisms/OrganismIncNavigation";
+import OrganismLeftSideBar from "../../../Global/organisms/OrganismIncNavigation";
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
 import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup"; // 계정설정 팝업 컴포넌트 임포트
 

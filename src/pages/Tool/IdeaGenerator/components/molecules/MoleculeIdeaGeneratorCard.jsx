@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
-import { palette } from "../../../../assets/styles/Palette";
-import { Button } from "../../../../assets/styles/ButtonStyle";
+import { palette } from "../../../../../assets/styles/Palette";
+import { Button } from "../../../../../assets/styles/ButtonStyle";
 import {
     ListBoxItem,
     ListText,
@@ -9,13 +9,13 @@ import {
     ListSubtitle,
     ListButton,
     Badge,
-} from "../../../../assets/styles/BusinessAnalysisStyle";
+} from "../../../../../assets/styles/BusinessAnalysisStyle";
 import { 
     CheckBoxButton,
-  } from "../../../../assets/styles/InputStyle";
+  } from "../../../../../assets/styles/InputStyle";
 import {
   Body1,
-} from "../../../../assets/styles/Typography";
+} from "../../../../../assets/styles/Typography";
 
 import { useAtom } from "jotai";
 import {
@@ -27,7 +27,7 @@ import {
     CUSTOMER_VALUE_ANALYZER_POSITIONING,
     CUSTOMER_VALUE_ANALYZER_FINAL_REPORT,
     TOOL_ID,
-} from "../../../../pages/AtomStates";
+} from "../../../../../pages/AtomStates";
 
 import {
     createToolOnServer,
@@ -40,7 +40,7 @@ import {
     InterviewXCustomerValueAnalyzerClusteringRequest,
     InterviewXCustomerValueAnalyzerPositioningRequest,
     InterviewXCustomerValueAnalyzerFinalReportRequest,
-  } from "../../../../utils/indexedDB";
+  } from "../../../../../utils/indexedDB";
 
 const MoleculeIdeaGeneratorCard = ({
   persona,

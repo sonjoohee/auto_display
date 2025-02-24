@@ -62,7 +62,7 @@ import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 // import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
-import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
+import AtomPersonaLoader from "../../../Global/atoms/AtomPersonaLoader";
 import PopupWrap from "../../../../assets/styles/Popup";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import MoleculeRequestPersonaCard from "../molecules/MoleculeRequestPersonaCard";

@@ -83,8 +83,8 @@ import { createChatOnServer } from "../../../../utils/indexedDB"; // 서버와 �
 import MoleculeStrategyButton from "../molecules/MoleculeStrategyButton";
 import OrganismStrategyConsultantReport from "../organisms/OrganismStrategyConsultantReport";
 // import OrganismLeftSideBar from "../organisms/OrganismLeftSideBar";
-import OrganismLeftSideBar from "../../../../pages/Persona/components/organisms/OrganismIncNavigation";
-import Header from "../../../../pages/Persona/components/molecules/MoleculeHeader";
+import OrganismLeftSideBar from "../../../Global/organisms/OrganismIncNavigation";
+import Header from "../../../Global/molecules/MoleculeHeader";
 
 import OrganismRightSideBar from "../organisms/OrganismRightSideBar";
 import OrganismBizAnalysisSection from "../organisms/OrganismBizAnalysisSection";

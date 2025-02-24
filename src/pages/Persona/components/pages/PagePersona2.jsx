@@ -87,9 +87,8 @@ import {
   GenderRadioButton,
 } from "../../../../assets/styles/InputStyle";
 import { CheckBox } from "../../../../assets/styles/Input";
-import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
-import MoleculeHeader from "../molecules/MoleculeHeader";
-import MoleculeStepIndicator from "../molecules/MoleculeStepIndicator";
+import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
+import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
 import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import {
@@ -98,7 +97,7 @@ import {
 } from "../../../../utils/indexedDB";
 // import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
-import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
+import AtomPersonaLoader from "../../../Global/atoms/AtomPersonaLoader";
 import PopupWrap, { Contents } from "../../../../assets/styles/Popup";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import MoleculeRequestPersonaCard from "../molecules/MoleculeRequestPersonaCard";

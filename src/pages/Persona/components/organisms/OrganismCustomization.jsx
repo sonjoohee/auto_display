@@ -16,7 +16,7 @@ import {
   UserCreditInfo,
 } from "../../../../utils/indexedDB";
 import { useAtom } from "jotai";
-import AtomPersonaLoader from "../atoms/AtomPersonaLoader";
+import AtomPersonaLoader from "../../../Global/atoms/AtomPersonaLoader";
 import PopupWrap from "../../../../assets/styles/Popup";
 import {
   PROJECT_ID,

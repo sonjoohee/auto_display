@@ -6,8 +6,8 @@ import axios from "axios";
 import { useAtom } from "jotai";
 
 import AnalysisInfo from "./PageAnalysisInfo";
-import OrganismIncNavigation from "../Persona/components/organisms/OrganismIncNavigation";
-import MoleculeHeader from "../Persona/components/molecules/MoleculeHeader";
+import OrganismIncNavigation from "../Global/organisms/OrganismIncNavigation";
+import MoleculeHeader from "../Global/molecules/MoleculeHeader";
 import PopupWrap from "../../assets/styles/Popup";
 
 import { Button, ButtonGroup, IconButton } from "../../assets/styles/ButtonStyle";

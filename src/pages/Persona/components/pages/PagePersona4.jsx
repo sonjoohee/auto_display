@@ -47,13 +47,13 @@ import {
   Caption1,
   Caption2,
 } from "../../../../assets/styles/Typography";
-import MoleculeHeader from "../molecules/MoleculeHeader";
+import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import personaImages from "../../../../assets/styles/PersonaImages";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 // import Sidebar from "../../../Design_Page/IncSidebar";
-import OrganismIncNavigation from "../organisms/OrganismIncNavigation";
+import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
 import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { updateProjectReportOnServer } from "../../../../utils/indexedDB";

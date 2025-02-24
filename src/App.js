@@ -46,15 +46,15 @@ import PageBusinessAnalysis from "./pages/Design_Page/PageBusinessAnalysis";
 import PageCustomizePersona from "./pages/Design_Page/PageCustomizePersona";
 import PageWayInterview from "./pages/Design_Page/PageWayInterview";
 import PageInterviewResult from "./pages/Design_Page/PageInterviewResult";
-import PagePersonaLoader from "./pages/Persona/components/atoms/AtomPersonaLoader";
 import PageRecreate from "./assets/styles/PageRecreate";
 
 import PageInterviewWay from "./pages/Design_Page/PageInterviewWay";
 import PagePersonaSelect from "./pages/Design_Page/PagePersonaSelect";
 import PagePayment from "./pages/Persona/components/pages/PagePayment";
-import PageTargetDiscovery from "./pages/Persona/components/pages/PageTargetDiscovery";
-import PageCustomerValueAnalyzer from "./pages/Persona/components/pages/PageCustomerValueAnalyzer";
-import PageIdeaGenerator from "./pages/Persona/components/pages/PageIdeaGenerator";
+
+import PageTargetDiscovery from "./pages/Tool/TargetDiscovery/components/pages/PageTargetDiscovery";
+import PageCustomerValueAnalyzer from "./pages/Tool/CustomerValueAnalyzer/components/pages/PageCustomerValueAnalyzer";
+import PageIdeaGenerator from "./pages/Tool/IdeaGenerator/components/pages/PageIdeaGenerator";
 import PageDesignAnalysis from "./pages/Persona/components/pages/PageDesignAnalysis";
 import PageDesignSuitability from "./pages/Persona/components/pages/PageDesignSuitability";
 

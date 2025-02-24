@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { palette } from "../../../../assets/styles/Palette";
+import { palette } from "../../../assets/styles/Palette";
 
 const AtomPersonaLoader = ({ message = "비즈니스를 분석하고 있어요" }) => {
   const [seconds, setSeconds] = useState(0);
