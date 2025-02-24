@@ -50,6 +50,7 @@ import {
   DESIGN_ANALYSIS_SELECTED_PERSONA,
   DESIGN_ANALYSIS_EMOTION_TARGET,
   DESIGN_ANALYSIS_EMOTION_SCALE,
+  DESIGN_ANALYSIS_FILE_NAMES,
 } from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import {
@@ -89,6 +90,7 @@ const PageDesignAnalysis = () => {
   const [selectedDesignAnalysisEmotionAnalysis, setSelectedDesignAnalysisEmotionAnalysis] = useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
   const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(DESIGN_ANALYSIS_EMOTION_TARGET);
   const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(DESIGN_ANALYSIS_EMOTION_SCALE);
+  const [designAnalysisFileNames, setDesignAnalysisFileNames] = useAtom(DESIGN_ANALYSIS_FILE_NAMES);
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupMore, setShowPopupMore] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -198,49 +200,61 @@ const PageDesignAnalysis = () => {
         // 비즈니스 정보 설정 (Step 1)
         if (designAnalysisBusinessInfo) {
           setBusinessDescription(designAnalysisBusinessInfo ?? "");
-          setFileNames(designAnalysisUploadedFiles?.map(file => file.name) ?? []);
-        }
+          setFileNames(designAnalysisFileNames);
+          }
 
-        // 완료된 단계 설정
-        const completedStepsArray = [];
-        for (let i = 1; i <= (toolStep ?? 1); i++) {
-          completedStepsArray.push(i);
-        }
-        setCompletedSteps(completedStepsArray);
+          // 완료된 단계 설정
+          const completedStepsArray = [];
+          for (let i = 1; i <= (toolStep ?? 1); i++) {
+            completedStepsArray.push(i);
+          }
+          setCompletedSteps(completedStepsArray);
 
-        // 페르소나 설정 (Step 2)
-        if (
-          Array.isArray(designAnalysisEmotionAnalysis) &&
-          Array.isArray(selectedDesignAnalysisEmotionAnalysis)
-        ) {
-          // 이미 선택된 페르소나들의 인덱스 찾기
-          const selectedIndices = (designAnalysisEmotionAnalysis ?? [])
-            .map((persona, index) => {
-              return (selectedDesignAnalysisEmotionAnalysis ?? []).some(
-                (target) => target?.name === persona?.name
-              )
-                ? index
-                : -1;
-            })
-            .filter((index) => index !== -1);
+          // 페르소나 설정 (Step 2)
+          if (
+            Array.isArray(designAnalysisEmotionAnalysis) &&
+            Array.isArray(selectedDesignAnalysisEmotionAnalysis)
+          ) {
+            // 이미 선택된 페르소나들의 인덱스 찾기
+            const selectedIndices = (designAnalysisEmotionAnalysis ?? [])
+              .map((persona, index) => {
+                return (selectedDesignAnalysisEmotionAnalysis ?? []).some(
+                  (target) => target?.name === persona?.name
+                )
+                  ? index
+                  : -1;
+              })
+              .filter((index) => index !== -1);
 
-          // selectedPersonas 상태 업데이트
-          setSelectedPersonas(selectedIndices);
+            // selectedPersonas 상태 업데이트
+            setSelectedPersonas(selectedIndices);
 
-          // 선택된 페르소나 데이터 설정
-          const selectedPersonaData = selectedIndices
-            .map((index) => designAnalysisEmotionAnalysis?.[index])
-            .filter(Boolean);
+            // 선택된 페르소나 데이터 설정
+            const selectedPersonaData = selectedIndices
+              .map((index) => designAnalysisEmotionAnalysis?.[index])
+              .filter(Boolean);
 
-          setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
-        }
+            setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
+          }
 
-        if (designAnalysisEmotionTarget) {
-          setDesignAnalysisEmotionTarget(designAnalysisEmotionTarget ?? {});
-        }
 
-        if (designAnalysisEmotionScale) {
-          setDesignAnalysisEmotionScale(designAnalysisEmotionScale ?? {});
+
+          // 추가된 조건 체크
+        if (Object.keys(designAnalysisEmotionTarget).length === 0 && 
+            !designAnalysisEmotionScale.length && 
+            completedStepsArray.length === 2) {
+          // designAnalysisEmotionTarget이 빈 객체이고, designAnalysisEmotionScale이 빈 배열인 경우
+          setActiveTab(2);
+          setToolStep(1);
+          setCompletedSteps(completedStepsArray.slice(0, -1));
+        } else {
+          if (designAnalysisEmotionTarget) {
+            setDesignAnalysisEmotionTarget(designAnalysisEmotionTarget ?? {});
+          }
+
+          if (designAnalysisEmotionScale) {
+            setDesignAnalysisEmotionScale(designAnalysisEmotionScale ?? {});
+          }
         }
 
         return;
@@ -334,7 +348,7 @@ const PageDesignAnalysis = () => {
           completed_step: 1,
           design_emotion_analysis: response.response.design_emotion_analysis ,
           business: businessDescription,
-          // image: uploadedFiles.length > 0 ? uploadedFiles[0] : null,
+          image_name: uploadedFiles.map(file => file.name),
         },
         isLoggedIn
       );
