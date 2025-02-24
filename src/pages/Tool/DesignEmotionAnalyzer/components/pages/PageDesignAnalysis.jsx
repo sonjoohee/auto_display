@@ -133,60 +133,64 @@ const PageDesignAnalysis = () => {
   });
 
 
-  // OCEAN 값들을 관리하기 위한 상태
-  const [oceanValues, setOceanValues] = useState({
-    Comfortable: 3,        // 편안한
-    Satisfying: 3,        // 만족스러운
-    Trustworthy: 3,       // 신뢰가는
-    Anticipated: 3,       // 기대되는
-    Attractive: 3,        // 매력적인
-    Practical: 3,         // 실용적인
-    Beautiful: 3,         // 아름다운
-    Efficient: 3,         // 효율적인
-    Easy: 3,             // 사용하기 쉬운
-  });
+  // // OCEAN 값들을 관리하기 위한 상태
+  // const [oceanValues, setOceanValues] = useState({
+  //   Comfortable: 3,        // 편안한
+  //   Satisfying: 3,        // 만족스러운
+  //   Trustworthy: 3,       // 신뢰가는
+  //   Anticipated: 3,       // 기대되는
+  //   Attractive: 3,        // 매력적인
+  //   Practical: 3,         // 실용적인
+  //   Beautiful: 3,         // 아름다운
+  //   Efficient: 3,         // 효율적인
+  //   Easy: 3,             // 사용하기 쉬운
+  // });
 
-  // OCEAN 무시 여부를 관리하는 상태
-  const [ignoreOcean, setIgnoreOcean] = useState(false);
+  // // OCEAN 무시 여부를 관리하는 상태
+  // const [ignoreOcean, setIgnoreOcean] = useState(false);
 
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
 
-  const calculateDropDirection = () => {
-    if (selectBoxRef.current) {
-      const rect = selectBoxRef.current.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - rect.bottom;
-      const spaceAbove = rect.top;
-      const dropDownHeight = 200; // 예상되는 드롭다운 높이
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-      setDropUp(spaceBelow < dropDownHeight && spaceAbove > spaceBelow);
-    }
-  };
+  // const calculateDropDirection = () => {
+  //   if (selectBoxRef.current) {
+  //     const rect = selectBoxRef.current.getBoundingClientRect();
+  //     const spaceBelow = window.innerHeight - rect.bottom;
+  //     const spaceAbove = rect.top;
+  //     const dropDownHeight = 200; // 예상되는 드롭다운 높이
 
-  const handleSelectBoxClick = () => {
-    if (toolStep >= 1) return;
-    calculateDropDirection();
-    setIsSelectBoxOpen(!isSelectBoxOpen);
-  };
+  //     setDropUp(spaceBelow < dropDownHeight && spaceAbove > spaceBelow);
+  //   }
+  // };
 
-  const handlePurposeSelect = (purpose) => {
-    setSelectedPurpose(purpose);
-    handleContactInputChange("purpose", purpose);
-    setIsSelectBoxOpen(false);
-  };
+  // const handleSelectBoxClick = () => {
+  //   if (toolStep >= 1) return;
+  //   calculateDropDirection();
+  //   setIsSelectBoxOpen(!isSelectBoxOpen);
+  // };
 
-  const handleContactInputChange = (field, value) => {
-    setContactForm((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+  // const handlePurposeSelect = (purpose) => {
+  //   setSelectedPurpose(purpose);
+  //   handleContactInputChange("purpose", purpose);
+  //   setIsSelectBoxOpen(false);
+  // };
 
-  const handleSelectPersona = () => {
-    if (selectedPersonas.length > 0) {
-      setSelectedInterviewType("multiple");
-      setSelectedInterviewPurpose("product_experience_new");
-    }
-  };
+  // const handleContactInputChange = (field, value) => {
+  //   setContactForm((prev) => ({
+  //     ...prev,
+  //     [field]: value,
+  //   }));
+  // };
+
+  // const handleSelectPersona = () => {
+  //   if (selectedPersonas.length > 0) {
+  //     setSelectedInterviewType("multiple");
+  //     setSelectedInterviewPurpose("product_experience_new");
+  //   }
+  // };
 
   //저장되었던 인터뷰 로드
   useEffect(() => {
@@ -283,11 +287,6 @@ const PageDesignAnalysis = () => {
     if (input.length <= 150) {
       setBusinessDescription(input);
     }
-  };
-
-  // 타겟 고객 입력 핸들러
-  const handleTargetCustomerChange = (e) => {
-    setTargetCustomer(e.target.value);
   };
 
   const handleSubmitBusinessInfo = async () => {
@@ -465,17 +464,6 @@ const PageDesignAnalysis = () => {
     }
   };
 
-  const getButtonText = (persona, hasScenarioData, isLoading) => {
-    if (isLoading) {
-      return "호출중";
-    } else if (hasScenarioData) {
-      return "자세히";
-    }
-    return "대기중";
-  };
-
-  
-
   // 파일 업로드 핸들러
   const handleChangeStatus = ({ meta, file, remove }, status) => {
     // console.log(status, meta, file);
@@ -527,35 +515,35 @@ const PageDesignAnalysis = () => {
   // }
 
   // 파일 제출 핸들러
-  const handleSubmit = (files) => {
-    const validFiles = files.filter(f => f.meta.status === 'done' && f.file.size <= 20 * 1024 * 1024);
-    setUploadedFiles(validFiles.map(f => f.file));
-  }
+  // const handleSubmit = (files) => {
+  //   const validFiles = files.filter(f => f.meta.status === 'done' && f.file.size <= 20 * 1024 * 1024);
+  //   setUploadedFiles(validFiles.map(f => f.file));
+  // }
 
-  // OCEAN 값 변경을 처리하는 핸들러
-  const handleOceanChange = (trait, value) => {
-    if (!ignoreOcean) {
-      const numValue = parseFloat(value);
-      // 값이 3에 가까울 때 자동으로 3으로 스냅
-      const snapValue = Math.abs(numValue - 3) < 0.2 ? 3 : numValue;
+  // // OCEAN 값 변경을 처리하는 핸들러
+  // const handleOceanChange = (trait, value) => {
+  //   if (!ignoreOcean) {
+  //     const numValue = parseFloat(value);
+  //     // 값이 3에 가까울 때 자동으로 3으로 스냅
+  //     const snapValue = Math.abs(numValue - 3) < 0.2 ? 3 : numValue;
       
-      setOceanValues(prev => ({
-        ...prev,
-        [trait]: snapValue
-      }));
-    }
-  };
+  //     setOceanValues(prev => ({
+  //       ...prev,
+  //       [trait]: snapValue
+  //     }));
+  //   }
+  // };
 
-  // OCEAN 값들을 초기화하는 함수
-  const resetOceanValues = () => {
-    setOceanValues({
-      openness: 0.5,
-      conscientiousness: 0.5,
-      extraversion: 0.5,
-      agreeableness: 0.5,
-      neuroticism: 0.5
-    });
-  };
+  // // OCEAN 값들을 초기화하는 함수
+  // const resetOceanValues = () => {
+  //   setOceanValues({
+  //     openness: 0.5,
+  //     conscientiousness: 0.5,
+  //     extraversion: 0.5,
+  //     agreeableness: 0.5,
+  //     neuroticism: 0.5
+  //   });
+  // };
 
 
 
@@ -666,7 +654,7 @@ const PageDesignAnalysis = () => {
                         </div>
                         <Dropzone
                           onChangeStatus={handleChangeStatus}
-                          onSubmit={handleSubmit}
+                          // onSubmit={handleSubmit}
                           // getUploadParams={getUploadParams}
                           maxFiles={3}
                           multiple={true}
@@ -678,14 +666,16 @@ const PageDesignAnalysis = () => {
                           inputWithFilesContent={
                             <>
                               <img src={images.ImagePrimary} alt="" />
-                              <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '4px',
-                              }}>
-                                <Body2 color="gray700">이미지 첨부 또는</Body2>
-                                <Body2 color="primary">이미지 가져오기</Body2>
-                              </div>
+                              {fileNames.length === 0 && (
+                                <div style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                }}>
+                                  <Body2 color="gray700">이미지 첨부 또는</Body2>
+                                  <Body2 color="primary">이미지 가져오기</Body2>
+                                </div>
+                              )}
                               {fileNames.length > 0 && (
                                 <div>
                                   {fileNames.map((name, index) => (
@@ -716,7 +706,7 @@ const PageDesignAnalysis = () => {
                             </>
                           }
                           styles={StyledDropzone}
-                          submitButtonContent="업로드"
+                          // submitButtonContent="업로드"
                         />
                       </TabContent5Item>
                     </div>
@@ -729,7 +719,7 @@ const PageDesignAnalysis = () => {
                       onClick={handleSubmitBusinessInfo}
                       disabled={!isRequiredFieldsFilled() || toolStep >= 1}
                     >
-                      다음
+                      Next
                     </Button>
                   </>
                 )}
@@ -858,9 +848,9 @@ const PageDesignAnalysis = () => {
                             </TabButtonType4>
                           </TabWrapType4>
                         </div>
-                        <Button Primary onClick={() => setShowPopupSave(true)}>
+                        {/* <Button Primary onClick={() => setShowPopupSave(true)}>
                           리포트 저장하기
-                        </Button>
+                        </Button> */}
                       </div>
                     </InsightAnalysis>
 
@@ -941,14 +931,14 @@ const PageDesignAnalysis = () => {
 
 
 
-                    <Button
+                    {/* <Button
                       Small
                       Primary
                       onClick={() => setShowPopupSave(true)}
                       style={{ whiteSpace: "nowrap" }}
                     >
                       리포트 저장하기
-                    </Button>
+                    </Button> */}
                   </>
                 )}
               </TabContent5>

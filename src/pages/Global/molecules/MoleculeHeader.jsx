@@ -26,6 +26,7 @@ import {
   TARGET_DISCOVERY_INFO,
   IDEA_GENERATOR_INFO,
   CUSTOMER_VALUE_ANALYZER_INFO,
+  DESIGN_ANALYSIS_BUSINESS_INFO,
 } from "../../../pages/AtomStates";
 import OrganismBusinessAnalysis from "../../../pages/Persona/components/organisms/OrganismBusinessAnalysis";
 import { UserCreditInfo } from "../../../utils/indexedDB";
@@ -54,6 +55,7 @@ const MoleculeHeader = () => {
   const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(
     CUSTOMER_VALUE_ANALYZER_INFO
   );
+  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(DESIGN_ANALYSIS_BUSINESS_INFO);
 
   const navigate = useNavigate();
 
@@ -81,6 +83,8 @@ const MoleculeHeader = () => {
   // CustomerValueAnalyzer 경로 체크 추가
   const isCustomerValueAnalyzerPage =
     location.pathname === "/CustomerValueAnalyzer";
+
+  const isDesignAnalysisPage = location.pathname === "/DesignAnalysis";
 
   // IdeaGenerator 경로 체크 추가
   const isIdeaGeneratorPage = location.pathname === "/IdeaGenerator";
@@ -230,7 +234,8 @@ const MoleculeHeader = () => {
           isPaymentPage ||
           isTargetDiscoveryPage ||
           isIdeaGeneratorPage ||
-          isCustomerValueAnalyzerPage) && (
+          isCustomerValueAnalyzerPage ||
+          isDesignAnalysisPage ) && (
           <>
             <Title>
               {isMyProjectPage
@@ -263,6 +268,10 @@ const MoleculeHeader = () => {
                 : isCustomerValueAnalyzerPage &&
                   !customerValueAnalyzerInfo.business
                 ? "고객 핵심 가치 분석기"
+                : isDesignAnalysisPage && designAnalysisBusinessInfo
+                ? `디자인 감정 분석기 - ${designAnalysisBusinessInfo}`
+                : isDesignAnalysisPage && !designAnalysisBusinessInfo
+                ? "디자인 감정 분석기"
                 : "새로운 프로젝트"}
               {(isPersona3Page ||
                 isPersona3PageSelect ||
