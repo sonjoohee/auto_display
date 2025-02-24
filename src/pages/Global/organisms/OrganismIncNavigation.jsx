@@ -1218,7 +1218,7 @@ const OrganismIncNavigation = () => {
 
 
       setDesignAnalysisEmotionAnalysis([]);
-      setDesignAnalysisBusinessInfo({});
+      setDesignAnalysisBusinessInfo("");
       setDesignAnalysisUploadedFiles([]);
       setDesignAnalysisSelectedPersona([]);
       setDesignAnalysisEmotionTarget({});
@@ -1228,7 +1228,7 @@ const OrganismIncNavigation = () => {
       setToolStep(chatData.completed_step);
       setToolId(chatData.id);
       setDesignAnalysisEmotionAnalysis(chatData.design_emotion_analysis || []);
-      setDesignAnalysisBusinessInfo(chatData.business || {});
+      setDesignAnalysisBusinessInfo(chatData.business || "");
       setDesignAnalysisSelectedPersona(chatData.design_selected_persona || []);
       setDesignAnalysisEmotionTarget(chatData.design_emotion_target || {});
       setDesignAnalysisEmotionScale(chatData.design_emotion_scale || []);
