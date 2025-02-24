@@ -149,6 +149,8 @@ const PageDesignAnalysis = () => {
   // OCEAN 무시 여부를 관리하는 상태
   const [ignoreOcean, setIgnoreOcean] = useState(false);
 
+  const [showPopupFileSize, setShowPopupFileSize] = useState(false);
+
   const calculateDropDirection = () => {
     if (selectBoxRef.current) {
       const rect = selectBoxRef.current.getBoundingClientRect();
@@ -475,9 +477,17 @@ const PageDesignAnalysis = () => {
   
 
   // 파일 업로드 핸들러
-  const handleChangeStatus = ({ meta, file }, status) => {
-    console.log(status, meta, file);
-    
+  const handleChangeStatus = ({ meta, file, remove }, status) => {
+    // console.log(status, meta, file);
+
+    // 20MB 크기 제한 체크
+    const maxSize = 20 * 1024 * 1024; // 20MB in bytes
+    if (file.size > maxSize && status !== 'removed') {
+      setShowPopupFileSize(true);
+      remove();
+      return;
+    }
+
     // 파일 상태 업데이트
     if (status === 'done' || status === 'preparing' || status === 'uploading') {
       setUploadedFiles(prev => {
@@ -518,7 +528,7 @@ const PageDesignAnalysis = () => {
 
   // 파일 제출 핸들러
   const handleSubmit = (files) => {
-    const validFiles = files.filter(f => f.meta.status === 'done');
+    const validFiles = files.filter(f => f.meta.status === 'done' && f.file.size <= 20 * 1024 * 1024);
     setUploadedFiles(validFiles.map(f => f.file));
   }
 
@@ -664,6 +674,7 @@ const PageDesignAnalysis = () => {
                           canRestart={false}
                           disabled={toolStep >= 1} 
                           accept="image/*"
+                          maxSizeBytes={20 * 1024 * 1024}
                           inputWithFilesContent={
                             <>
                               <img src={images.ImagePrimary} alt="" />
@@ -955,6 +966,18 @@ const PageDesignAnalysis = () => {
           confirmText="확인"
           isModal={false}
           onConfirm={() => handleNextStep(1)}
+        />
+      )}
+
+      {showPopupFileSize && (
+        <PopupWrap
+          Warning
+          title="파일 크기 초과"
+          message="파일 크기는 20MB를 초과할 수 없습니다."
+          buttonType="Outline"
+          confirmText="확인"
+          isModal={false}
+          onConfirm={() => setShowPopupFileSize(false)}
         />
       )}
 
