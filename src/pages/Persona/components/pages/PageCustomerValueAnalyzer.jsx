@@ -189,6 +189,7 @@ const PageCustomerValueAnalyzer = () => {
   const [targetDiscoveryList, setTargetDiscoveryList] = useState([]);
 
   const [cardStatuses, setCardStatuses] = useState({});
+  const [cardStatusesFactor, setCardStatusesFactor] = useState({});
 
   const [selectedBusiness, setSelectedBusiness] = useState("");
 
@@ -279,18 +280,22 @@ const PageCustomerValueAnalyzer = () => {
           setCustomerValueAnalyzerJourneyMap(customerValueAnalyzerJourneyMap);
         }
 
-        if (Array.isArray(customerValueAnalyzerFactor)) {
-          setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
+        // if (Array.isArray(customerValueAnalyzerFactor)) {
+        //   setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
+        // }
+
+        // ... existing code ...
+      if (Array.isArray(customerValueAnalyzerFactor) && customerValueAnalyzerFactor.length > 0) {
+        setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
+        } else if (customerValueAnalyzerFactor.length === 0 && completedStepsArray.length === 2) {
+        setActiveTab(2);
+        setToolStep(1);
+        setCompletedSteps(completedStepsArray.slice(0, -1));
         }
 
         console.log("customerValueAnalyzerFactor", customerValueAnalyzerFactor);
         console.log("completedStepsArray", completedStepsArray);
-        // if (Array.isArray(customerValueAnalyzerFactor) && customerValueAnalyzerFactor.length > 0) {
-        //   setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
-        // } else if (completedStepsArray.length === 2) {
-        //   handleSubmitPersonas(); 
-        // }
-        
+
 
         // 최종 리포트 설정 (Step 4)
         if (customerValueAnalyzerFinalReport) {
@@ -693,12 +698,12 @@ const PageCustomerValueAnalyzer = () => {
         },
         {}
       );
-      setCardStatuses(initialLoadingStates);
+      setCardStatusesFactor(initialLoadingStates);
 
       const results = [];
       for (let i = 0; i < selectedPersonaData.length; i++) {
         // API 호출 시작 시 카드 상태를 'loading'으로 설정
-        setCardStatuses((prev) => ({
+        setCardStatusesFactor((prev) => ({
           ...prev,
           [i]: "loading",
         }));
@@ -720,14 +725,14 @@ const PageCustomerValueAnalyzer = () => {
           // API 호출 성공 시 카드 상태를 'completed'로 설정
           if (response?.response?.customer_value_factor) {
             results.push(response.response.customer_value_factor);
-            setCardStatuses((prev) => ({
+            setCardStatusesFactor((prev) => ({
               ...prev,
               [i]: "completed",
             }));
           }
         } catch (error) {
           console.error("Error:", error);
-          setCardStatuses((prev) => ({
+          setCardStatusesFactor((prev) => ({
             ...prev,
             [i]: "error", // 에러 발생 시 상태를 'error'로 설정
           }));
@@ -768,28 +773,6 @@ const PageCustomerValueAnalyzer = () => {
       setIsLoading(false);
     }
   };
-  
-  // useEffect(() => {
-  //   if (activeTab === 3) {
-  //     // 탭 3으로 돌아올 때 카드 상태를 확인하고 'completed'로 설정
-  //     const allCompleted = customerValueAnalyzerFactor.length === customerValueAnalyzerSelectedPersona.length;
-  //     console.log("customerValueAnalyzerSelectedPersona", customerValueAnalyzerSelectedPersona);
-
-  //     const updatedCardStatuses = customerValueAnalyzerSelectedPersona.reduce((acc, _, index) => {
-  //       // 대기 중 상태 추가
-  //       if (cardStatuses[index] === "loading") {
-  //         acc[index] = "loading"; // 로딩 중인 경우
-  //       } else if (allCompleted) {
-  //         acc[index] = "completed"; // 모든 API 호출이 완료된 경우
-  //       } else {
-  //         acc[index] = "waiting"; // 대기 중인 경우
-  //       }
-  //       return acc;
-  //     }, {});
-
-  //     setCardStatuses(updatedCardStatuses);
-  //   }
-  // }, [activeTab, customerValueAnalyzerFactor, customerValueAnalyzerSelectedPersona]);
 
   const handleReport = async () => {
     try {
@@ -1492,7 +1475,7 @@ const PageCustomerValueAnalyzer = () => {
                           id={index}
                           title={persona.target}
                           content={persona.content}
-                          status={customerValueAnalyzerFactor.length === customerValueAnalyzerSelectedPersona.length ? "completed" : cardStatuses[index]}
+                          status={customerValueAnalyzerFactor.length === customerValueAnalyzerSelectedPersona.length ? "completed" : cardStatusesFactor[index]}
                           factor={customerValueAnalyzerFactor[index]}
                           business={customerValueAnalyzerInfo.business}
                           journeyMapData={persona.journeyMap}

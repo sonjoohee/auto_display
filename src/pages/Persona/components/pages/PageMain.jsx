@@ -874,6 +874,9 @@ const PageMain = () => {
         case "3":
           navigate("/IdeaGenerator");
           break;
+        case "4":
+          navigate("/DesignAnalysis");
+          break;
       }
     } else {
       setIsPopupLogin(true);
@@ -1295,7 +1298,12 @@ const PageMain = () => {
                   </div>
                 </ExploreCard>,
 
-                <ExploreCard Research Ready key="research-4">
+
+                <ExploreCard
+                  Research
+                  {...(!accessableExpert && { Ready: true })}
+                  key="research-4"
+                >
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
                     Tool
@@ -1311,7 +1319,7 @@ const PageMain = () => {
                   <div
                     className="overlay"
                     onClick={() => {
-                      setIsComingSoon(true);
+                      hadleToolSelect("4");
                     }}
                   >
                     <span>
