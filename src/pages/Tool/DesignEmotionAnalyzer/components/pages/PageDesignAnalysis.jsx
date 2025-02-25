@@ -439,7 +439,7 @@ const PageDesignAnalysis = () => {
               apiRequestData,
               isLoggedIn
             );
-            
+
             attempt++;
           }
 
@@ -899,25 +899,25 @@ const PageDesignAnalysis = () => {
                         <H4 color="gray800" align="left">
                             {activeDesignTab === 'emotion' 
                               ? 
-                            <div dangerouslySetInnerHTML={{ __html: `${designAnalysisBusinessInfo}가(${selectedDesignAnalysisEmotionAnalysis[0].name})
-                            에서 궁극적으로 달성하고자하는 주요 목표 감성은 ${designAnalysisEmotionTarget.target_emotion} ` }} />
+                            <div dangerouslySetInnerHTML={{ __html: `${designAnalysisBusinessInfo}가(${selectedDesignAnalysisEmotionAnalysis?.[0]?.name})
+                            에서 궁극적으로 달성하고자하는 주요 목표 감성은 ${designAnalysisEmotionTarget?.target_emotion} ` }} />
                               :
-                          `${designAnalysisEmotionScale.conclusion}` }
+                          `${designAnalysisEmotionScale?.conclusion}` }
                           </H4>
                         </div> 
                           
                        <div className="content">
                         {activeDesignTab === 'emotion' ? (
                             <Body3 color="gray700">
-                         {designAnalysisEmotionTarget.designer_guidelines}
+                         {designAnalysisEmotionTarget?.designer_guidelines}
                           </Body3>
                         ) : (
                           <>
                           <Body3 color="gray700">
-                            강점 : {designAnalysisEmotionScale.evaluation_analysis.strengths}
+                            강점 : {designAnalysisEmotionScale?.evaluation_analysis?.strengths}
                           </Body3>
                           <Body3 color="gray700">
-                            약점 및 개선 방향: {designAnalysisEmotionScale.evaluation_analysis.weaknesses}
+                            약점 및 개선 방향: {designAnalysisEmotionScale?.evaluation_analysis?.weaknesses}
                           </Body3>
                         </>
                         
@@ -949,7 +949,7 @@ const PageDesignAnalysis = () => {
                       <InsightAnalysis style={{ marginBottom: "240px" }}>
                       <OCEANRangeWrap report>
                         {/* OCEAN 값 슬라이더 */}
-                        {designAnalysisEmotionScale.sd_scale_analysis.map((item, index) => (
+                        {designAnalysisEmotionScale?.sd_scale_analysis?.map((item, index) => (
                           <div key={index}>
                             <Body3 color="gray800" align="right">{item.opposite_emotion}</Body3>
                             <RangeSlider
@@ -958,7 +958,7 @@ const PageDesignAnalysis = () => {
                               max="7"
                               step="1"
                               value={item.score}
-                              disabled={true} 
+                              // disabled={true} 
                               // style={{ flex: "2" }}
                             />
                             <Body3 color="gray800" align="left">{item.target_emotion}</Body3>
