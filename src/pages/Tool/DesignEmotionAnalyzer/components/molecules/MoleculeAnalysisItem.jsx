@@ -16,7 +16,7 @@ import {
         Caption1,
       } from "../../../../../assets/styles/Typography";
 
-const MoleculeAnalysisItem = ({ percentage, title, subtitle, details = {}, business }) => {
+const MoleculeAnalysisItem = ({ percentage, title, subtitle, FlexStart, details = {}, business }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleToggle = () => {
@@ -24,7 +24,7 @@ const MoleculeAnalysisItem = ({ percentage, title, subtitle, details = {}, busin
   };
 
   return (
-    <ListBoxItem FlexStart>
+    <ListBoxItem FlexStart={FlexStart}>
       <PercentBadge primary>
         <Caption1>{percentage}</Caption1>
       </PercentBadge>

@@ -783,6 +783,7 @@ const PageDesignAnalysis = () => {
                       designAnalysisEmotionAnalysis.map((persona, index) => {
                         return (
                           <MoleculeDesignItem
+                            FlexStart
                             key={index}
                             id={index}
                             title={persona.name} 

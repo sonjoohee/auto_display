@@ -2170,15 +2170,13 @@ export const CardGroupWrap = styled.div`
 export const ListBoxItem = styled.div`
   display: flex;
   align-items: center;
-  // justify-content: space-between;
-  justify-content: ${(props) => (props.FlexStart ? "flex-start !important" : "space-between")};
+  justify-content: ${(props) => (props.FlexStart ? "flex-start" : "space-between")};
+  flex-wrap: wrap;
   gap: 16px;
   width: 100%;
   padding: ${(props) => (props.Small ? "12px 20px" : "24px 20px")};
   border-radius: 10px;
-  // border: 1px solid ${palette.outlineGray};
-  border: 1px solid
-    ${(props) => (props.active ? palette.primary : palette.outlineGray)};
+  border: 1px solid ${(props) => (props.active ? palette.primary : palette.outlineGray)};
   background: ${(props) =>
     props.NoBg
       ? palette.white
@@ -2188,7 +2186,6 @@ export const ListBoxItem = styled.div`
       ? `rgba(34, 111, 255, 0.10)`
       : palette.white};
   transition: background 0.2s ease;
-  flex-wrap: ${(props) => (props.FlexStart ? "nowrap" : "wrap")};
   opacity: 0;
   animation: fadeIn 0.3s ease forwards;
 
@@ -2197,6 +2194,11 @@ export const ListBoxItem = styled.div`
       opacity: 1;
     }
   }
+
+  ${props => props.FlexStart && `
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+  `}
 `;
 
 export const PercentBadge = styled.div`

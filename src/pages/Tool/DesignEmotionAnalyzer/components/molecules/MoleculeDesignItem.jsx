@@ -18,9 +18,9 @@ import {
 import { CheckBoxButton } from '../../../../../assets/styles/InputStyle';
 
 
-const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disabled }) => {
+const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disabled, FlexStart }) => {
   return (
-    <ListBoxItem NoBg selected={isSelected} active={isSelected} FlexStart >
+    <ListBoxItem NoBg selected={isSelected} active={isSelected} FlexStart={FlexStart}>
       <div>
       <CheckBoxButton
         id={id}
