@@ -680,7 +680,7 @@ const PageDesignAnalysis = () => {
                           onChangeStatus={handleChangeStatus}
                           // onSubmit={handleSubmit}
                           // getUploadParams={getUploadParams}
-                          maxFiles={3}
+                          maxFiles={1}
                           multiple={true}
                           canRemove={true}
                           canRestart={false}
