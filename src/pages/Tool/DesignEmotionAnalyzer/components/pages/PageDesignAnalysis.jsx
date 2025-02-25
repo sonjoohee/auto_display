@@ -395,7 +395,7 @@ const PageDesignAnalysis = () => {
         (persona, index) => selectedPersonas.includes(index)
       );
       setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
-      console.log('selectedPersonaData:', selectedPersonaData);
+      // console.log('selectedPersonaData:', selectedPersonaData);
       await updateToolOnServer(
         toolId,
         {
@@ -429,7 +429,7 @@ const PageDesignAnalysis = () => {
             setShowPopupError(true);
             return;
           }
-          console.log("🚀 ~ response:", response);
+          // console.log("🚀 ~ response:", response);
 
           setDesignAnalysisEmotionTarget(response.response.design_emotion_target);
       
@@ -445,7 +445,7 @@ const PageDesignAnalysis = () => {
             oceanData,
             isLoggedIn
           );
-          console.log("🚀 ~ oceanResponse:", oceanResponse);
+          // console.log("🚀 ~ oceanResponse:", oceanResponse);
           setDesignAnalysisEmotionScale(oceanResponse.response.design_emotion_scale);
 
           await updateToolOnServer(
