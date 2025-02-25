@@ -2188,7 +2188,7 @@ export const ListBoxItem = styled.div`
       ? `rgba(34, 111, 255, 0.10)`
       : palette.white};
   transition: background 0.2s ease;
-  flex-wrap: wrap;
+  flex-wrap: ${(props) => (props.FlexStart ? "nowrap" : "wrap")};
   opacity: 0;
   animation: fadeIn 0.3s ease forwards;
 
@@ -2564,6 +2564,26 @@ export const OCEANRangeWrap = styled.div`
   p {
     flex-shrink: 0;
   }
+
+  ${(props) =>
+    props.report &&
+    css`
+      p {
+      flex: 1;
+
+        &:nth-child(1) {
+          text-align: left;
+        }
+  
+        &:nth-child(3) {
+          text-align: right;
+        }
+      }
+
+      input {
+        flex: 2;
+      }
+    `}
 `;
 
 export const RangeSlider = styled.input`
@@ -2573,7 +2593,7 @@ export const RangeSlider = styled.input`
   height: 24px;
   background: transparent;
   outline: none;
-  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  // opacity: ${(props) => (props.disabled ? 0.5 : 1)};
   transition: all 0.2s;
 
   // 트랙 스타일링
@@ -2602,11 +2622,16 @@ export const RangeSlider = styled.input`
     position: relative;
     top: 50%;
     transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
+    width: ${(props) => (props.disabled ? "16px" : "24px")};
+    height: ${(props) => (props.disabled ? "16px" : "24px")};
     border-radius: 50%;
     background: ${(props) =>
-      props.$ignored ? palette.gray500 : palette.primary};
+      props.disabled 
+      ? palette.primary  // disabled일 때 gray300으로 변경
+      : props.$ignored 
+        ? palette.gray500 
+        : palette.primary
+    };
     cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
     transition: all 0.2s;
 
@@ -2624,12 +2649,17 @@ export const RangeSlider = styled.input`
   }
 
   &::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
+    width: ${(props) => (props.disabled ? "16px" : "24px")};
+    height: ${(props) => (props.disabled ? "16px" : "24px")};
     border: none;
     border-radius: 50%;
     background: ${(props) =>
-      props.$ignored ? palette.gray500 : palette.primary};
+      props.disabled 
+      ? palette.primary  // disabled일 때 gray300으로 변경
+      : props.$ignored 
+        ? palette.gray500 
+        : palette.primary
+    };
     cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
     transition: all 0.2s;
 

@@ -1577,7 +1577,7 @@ const PageCustomerValueAnalyzer = () => {
                       </div>
                     </InsightAnalysis>
 
-                    <ValueMapWrap>
+                    <ValueMapWrap style={{ marginBottom: "240px" }}>
                       <div>
                         <H4
                           color="gray800"

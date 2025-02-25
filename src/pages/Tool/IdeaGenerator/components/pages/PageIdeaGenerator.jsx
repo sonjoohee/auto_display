@@ -1354,7 +1354,7 @@ const PageIdeaGenerator = () => {
                     </InsightAnalysis>
 
                     {activeAnalysisTab === "summary" ? (
-                      <TabContent5Item>
+                      <TabContent5Item style={{ marginBottom: "240px" }}>
                         <div className="title">
                           <Body1 color="gray800" align="left">
                             🎯 우선순위가 높은 아이디어를 선정해보았어요

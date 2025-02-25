@@ -913,7 +913,7 @@ const PageDesignAnalysis = () => {
                     </InsightAnalysis>
 
                     {activeDesignTab === 'emotion' && (
-                      <InsightAnalysis>
+                      <InsightAnalysis style={{ marginBottom: "240px" }}>
                         <Sub3 color="gray700" align="left">💡 %는 해당 비즈니스에서 차지하는 중요도를 의미합니다.</Sub3>
                           <CardGroupWrap column $isExpanded={state.isExpanded}>
                           {designAnalysisEmotionTarget?.design_perspectives?.map((perspective, index) => (
@@ -933,8 +933,8 @@ const PageDesignAnalysis = () => {
                     {activeDesignTab === 'scale' && (
 
 
-                      <InsightAnalysis>
-                      <OCEANRangeWrap>
+                      <InsightAnalysis style={{ marginBottom: "240px" }}>
+                      <OCEANRangeWrap report>
                         {/* OCEAN 값 슬라이더 */}
                         {designAnalysisEmotionScale.sd_scale_analysis.map((item, index) => (
                           <div key={index}>
@@ -946,7 +946,7 @@ const PageDesignAnalysis = () => {
                               step="1"
                               value={item.score}
                               disabled={true} 
-                              style={{ flex: "2" }}
+                              // style={{ flex: "2" }}
                             />
                             <Body3 color="gray800" align="left">{item.target_emotion}</Body3>
                           </div>
