@@ -1379,7 +1379,8 @@ const PageMain = () => {
 
                 <ExploreCard
                   Expert
-                  Ready
+                  // Ready
+                  // Ready
                   key="expert-1"
                   {...(!accessableExpert && { Ready: true })}
                 >
@@ -1422,7 +1423,8 @@ const PageMain = () => {
 
                 <ExploreCard
                   Expert
-                  Ready
+                  // Ready
+                  // Ready
                   key="expert-2"
                   {...(!accessableExpert && { Ready: true })}
                 >
@@ -1464,7 +1466,8 @@ const PageMain = () => {
 
                 <ExploreCard
                   Expert
-                  Ready
+                  // Ready
+                  // Ready
                   key="expert-3"
                   {...(!accessableExpert && { Ready: true })}
                 >
@@ -1506,7 +1509,8 @@ const PageMain = () => {
 
                 <ExploreCard
                   Expert
-                  Ready
+                  // Ready
+                  // Ready
                   key="expert-4"
                   {...(!accessableExpert && { Ready: true })}
                 >
