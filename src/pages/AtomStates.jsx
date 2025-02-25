@@ -571,6 +571,7 @@ export const DESIGN_ANALYSIS_SELECTED_PERSONA = atom([]);
 export const DESIGN_ANALYSIS_EMOTION_TARGET = atom({});
 export const DESIGN_ANALYSIS_EMOTION_SCALE = atom([]);
 export const DESIGN_ANALYSIS_FILE_NAMES = atom([]);
+export const DESIGN_ANALYSIS_FILE_ID = atom([]);
 
 // setConversation([]);
 // setConversationStage(1);

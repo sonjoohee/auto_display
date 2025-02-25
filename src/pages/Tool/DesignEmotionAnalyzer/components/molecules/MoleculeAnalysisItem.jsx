@@ -47,7 +47,7 @@ const MoleculeAnalysisItem = ({ percentage, title, subtitle, details = {}, busin
     {isExpanded && (
                 <ToggleContent $isExpanded={isExpanded}>
                     <Body3 color="gray700" align="left">
-                        제품이 사용 목적을 얼마나 효율적으로, 효과적으로 수행하는지를 나타냅니다. 아래 목표 감성 달성 설계 방향에 따라 ({business})를 평가 및 개선하세요. 줄글로 작성 
+                      {details.design_direction}
                     </Body3>
 
                     <div className="bgContent">

@@ -51,6 +51,7 @@ import {
   DESIGN_ANALYSIS_EMOTION_TARGET,
   DESIGN_ANALYSIS_EMOTION_SCALE,
   DESIGN_ANALYSIS_FILE_NAMES,
+  DESIGN_ANALYSIS_FILE_ID,
 } from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import {
@@ -91,6 +92,7 @@ const PageDesignAnalysis = () => {
   const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(DESIGN_ANALYSIS_EMOTION_TARGET);
   const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(DESIGN_ANALYSIS_EMOTION_SCALE);
   const [designAnalysisFileNames, setDesignAnalysisFileNames] = useAtom(DESIGN_ANALYSIS_FILE_NAMES);
+  const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(DESIGN_ANALYSIS_FILE_ID);
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupMore, setShowPopupMore] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -306,21 +308,17 @@ const PageDesignAnalysis = () => {
   const handleSubmitBusinessInfo = async () => {
     setIsLoading(true);
     try {
-
-      const responseToolId = await createToolOnServer(
-        {
-          type: "ix_design_emotion_analysis",
-        },
-        isLoggedIn
-      );
-      setToolId(responseToolId);
+      const timeStamp = new Date().getTime();
 
       // 비즈니스 데이터 추가
       const Data = {
           business: businessDescription,
-          tool_id: responseToolId,
+          tool_id: fileNames[0]+'_'+timeStamp,
           image: uploadedFiles[0],
       };
+      
+      setDesignAnalysisFileId(fileNames[0]+'_'+timeStamp);
+
       // API 요청
       const response = await InterviewXDesignEmotionAnalysisRequest(Data, isLoggedIn);
       if (
@@ -331,8 +329,17 @@ const PageDesignAnalysis = () => {
         setShowPopupError(true);
         return;
       }
-     
+
+      const responseToolId = await createToolOnServer(
+        {
+          type: "ix_design_emotion_analysis",
+        },
+        isLoggedIn
+      );
+
+      setToolId(responseToolId);
       setToolStep(1);
+
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
       setDesignAnalysisEmotionAnalysis(
         response.response.design_emotion_analysis
@@ -345,9 +352,12 @@ const PageDesignAnalysis = () => {
         responseToolId,
         {
           completed_step: 1,
-          design_emotion_analysis: response.response.design_emotion_analysis ,
+          design_emotion_analysis: response.response.design_emotion_analysis,
           business: businessDescription,
-          image_name: uploadedFiles.map(file => file.name),
+          image_name: uploadedFiles.map((file, index) => ({
+            id: fileNames[index]+'_'+timeStamp,
+            name: file.name,
+          })),
         },
         isLoggedIn
       );
@@ -424,7 +434,7 @@ const PageDesignAnalysis = () => {
           setDesignAnalysisEmotionTarget(response.response.design_emotion_target);
       
           const oceanData = {
-            tool_id: toolId,
+            tool_id: designAnalysisFileId[0],
             business: designAnalysisBusinessInfo,
             design_emotion_selected_field: persona.name,
             design_emotion_target: response?.response?.design_emotion_target
@@ -627,7 +637,7 @@ const PageDesignAnalysis = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="잠재 고객을 분석하고 있어요..." />
+                    <AtomPersonaLoader message="이미지를 분석하고 있어요..." />
                   </div>
                 ) : (
                   <>
@@ -735,7 +745,7 @@ const PageDesignAnalysis = () => {
                       onClick={handleSubmitBusinessInfo}
                       disabled={!isRequiredFieldsFilled() || toolStep >= 1}
                     >
-                      Next
+                      다음
                     </Button>
                   </>
                 )}
@@ -928,7 +938,7 @@ const PageDesignAnalysis = () => {
                         {/* OCEAN 값 슬라이더 */}
                         {designAnalysisEmotionScale.sd_scale_analysis.map((item, index) => (
                           <div key={index}>
-                            <Body3 color="gray800" align="left">{item.target_emotion}</Body3>
+                            <Body3 color="gray800" align="right">{item.opposite_emotion}</Body3>
                             <RangeSlider
                               type="range"
                               min="0"
@@ -938,7 +948,7 @@ const PageDesignAnalysis = () => {
                               disabled={true} 
                               style={{ flex: "2" }}
                             />
-                            <Body3 color="gray800" align="right">{item.opposite_emotion}</Body3>
+                            <Body3 color="gray800" align="left">{item.target_emotion}</Body3>
                           </div>
                         ))}
                       </OCEANRangeWrap>

@@ -180,6 +180,7 @@ import {
   DESIGN_ANALYSIS_EMOTION_TARGET,
   DESIGN_ANALYSIS_EMOTION_SCALE,
   DESIGN_ANALYSIS_FILE_NAMES,
+  DESIGN_ANALYSIS_FILE_ID,
 } from "../../../pages/AtomStates";
 import {
   getAllConversationsFromIndexedDB,
@@ -192,6 +193,7 @@ import MoleculeSignPopup from "../../../pages/Login_Sign/components/molecules/Mo
 import { useSaveConversation } from "../../../pages/Expert_Insight/components/atoms/AtomSaveConversation";
 
 const OrganismIncNavigation = () => {
+  const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(DESIGN_ANALYSIS_FILE_ID);
   const [ideaGeneratorInfo, setIdeaGeneratorInfo] =
     useAtom(IDEA_GENERATOR_INFO);
   const [ideaGeneratorKnowTarget, setIdeaGeneratorKnowTarget] = useAtom(
@@ -1220,6 +1222,7 @@ const OrganismIncNavigation = () => {
       setDesignAnalysisEmotionAnalysis([]);
       setDesignAnalysisBusinessInfo("");
       setDesignAnalysisUploadedFiles([]);
+      setDesignAnalysisFileId([]);
       setDesignAnalysisSelectedPersona([]);
       setDesignAnalysisEmotionTarget({});
       setDesignAnalysisEmotionScale([]);
@@ -1232,9 +1235,9 @@ const OrganismIncNavigation = () => {
       setDesignAnalysisSelectedPersona(chatData.design_selected_persona || []);
       setDesignAnalysisEmotionTarget(chatData.design_emotion_target || {});
       setDesignAnalysisEmotionScale(chatData.design_emotion_scale || []);
-      setDesignAnalysisFileNames(chatData.image_name || []);
+      setDesignAnalysisFileNames(chatData.image_name.map(item => item.name) || []);
+      setDesignAnalysisFileId(chatData.image_name.map(item => item.id) || []);
       setToolLoading(true);
-
 
       if (chatData.isMarketing) {
         const updatedConversation = [...chatData.conversation];
