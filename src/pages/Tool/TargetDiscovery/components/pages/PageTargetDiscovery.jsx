@@ -1005,7 +1005,7 @@ const PageTargetDiscovery = () => {
                       </div>
                     </InsightAnalysis>
 
-                    <ListBoxWrap>
+                    <ListBoxWrap style={{ marginBottom: "240px" }}>
                       {targetDiscoveryFinalReport &&
                         Object.keys(targetDiscoveryFinalReport)
                           .filter((key) => key.startsWith("potential_rank_"))
