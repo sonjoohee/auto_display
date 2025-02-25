@@ -208,10 +208,10 @@ const PageTargetDiscovery = () => {
         specific_situation: specificSituation,
         country: selectedPurpose,
       };
-      console.log(
-        "🚀 ~ handleSubmitBusinessInfo ~ businessData:",
-        businessData
-      );
+      // console.log(
+      //   "🚀 ~ handleSubmitBusinessInfo ~ businessData:",
+      //   businessData
+      // );
 
       // // Validation logic
       // if (!businessData.business || !businessData.target) {
@@ -224,13 +224,13 @@ const PageTargetDiscovery = () => {
         isLoggedIn
       );
 
-      console.log("🚀 ~ handleSubmitBusinessInfo ~ response:", response);
+      // console.log("🚀 ~ handleSubmitBusinessInfo ~ response:", response);
       if (
         !response?.response.target_discovery_persona ||
         !Array.isArray(response.response.target_discovery_persona) ||
         response.response.target_discovery_persona.length === 0
       ) {
-        console.log("🚀 ~ handleSubmitBusinessInfo ~ response:", response);
+        // console.log("🚀 ~ handleSubmitBusinessInfo ~ response:", response);
         setShowPopupError(true);
         return;
       }
@@ -284,12 +284,12 @@ const PageTargetDiscovery = () => {
 
       const scenarioResults = []; // 각 페르소나의 시나리오를 저장할 배열
 
-      console.log("selectedPersonas", selectedPersonas);
+      // console.log("selectedPersonas", selectedPersonas);
       const selectedPersonaData = targetDiscoveryPersona.filter(
         (persona, index) => selectedPersonas.includes(index)
       );
       setSelectedTargetDiscoveryPersona(selectedPersonaData);
-      console.log("selectedPersonaData", selectedPersonaData);
+      // console.log("selectedPersonaData", selectedPersonaData);
 
       //  각 페르소나에 대해 순차적으로 API 호출
       for (const persona of selectedPersonaData) {

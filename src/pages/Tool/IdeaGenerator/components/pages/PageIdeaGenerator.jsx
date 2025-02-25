@@ -202,7 +202,7 @@ const PageIdeaGenerator = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       if (toolLoading) {
-        console.log("🚀 ~ interviewLoading ~ toolStep:", toolStep);
+        // console.log("🚀 ~ interviewLoading ~ toolStep:", toolStep);
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
 
@@ -232,7 +232,7 @@ const PageIdeaGenerator = () => {
             (persona) => persona?.name === ideaGeneratorSelectedPersona.name
           );
 
-          console.log("🚀 ~ interviewLoading ~ selectedIndex:", selectedIndex);
+          // console.log("🚀 ~ interviewLoading ~ selectedIndex:", selectedIndex);
           // selectedPersona 상태 업데이트 (일치하는 항목이 없으면 -1)
           if (selectedIndex !== -1) {
             setSelectedPersona(selectedIndex);
@@ -408,7 +408,7 @@ const PageIdeaGenerator = () => {
           isLoggedIn
         );
 
-        console.log("response", response);
+        // console.log("response", response);
 
         if (response?.response?.idea_generator_idea) {
           results.push(response.response.idea_generator_idea);
@@ -1678,22 +1678,22 @@ const PageIdeaGenerator = () => {
                             const socialValueIdeas =
                               ideaGeneratorIdea[seletedIdeaIndex]?.social_value;
 
-                            console.log(
-                              "🚀 ~ PageIdeaGenerator ~ socialValueIdeas1111111111:",
-                              socialValueIdeas
-                            );
+                            // console.log(
+                            //   "🚀 ~ PageIdeaGenerator ~ socialValueIdeas1111111111:",
+                            //   socialValueIdeas
+                            // );
                             if (Array.isArray(socialValueIdeas)) {
-                              console.log(
-                                "🚀 ~ PageIdeaGenerator ~ socialValueIdeas222222222:",
-                                socialValueIdeas[0]
-                              );
+                              // console.log(
+                              //   "🚀 ~ PageIdeaGenerator ~ socialValueIdeas222222222:",
+                              //   socialValueIdeas[0]
+                              // );
                               // 첫 번째 요소가 배열인 경우
                               return socialValueIdeas[0].solution;
                             } else {
-                              console.log(
-                                "🚀 ~ PageIdeaGenerator ~ socialValueIdeas3333333333:",
-                                socialValueIdeas
-                              );
+                              // console.log(
+                              //   "🚀 ~ PageIdeaGenerator ~ socialValueIdeas3333333333:",
+                              //   socialValueIdeas
+                              // );
                               // 직접 배열인 경우
                               return socialValueIdeas.solution;
                             }

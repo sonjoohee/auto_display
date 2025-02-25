@@ -205,13 +205,13 @@ const PageCustomerValueAnalyzer = () => {
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
-      console.log("toolLoading", toolLoading);
+      // console.log("toolLoading", toolLoading);
       if (toolLoading) {
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
 
         // 비즈니스 정보 설정 (Step 1)
-        console.log("customerValueAnalyzerInfo", customerValueAnalyzerInfo);
+        // console.log("customerValueAnalyzerInfo", customerValueAnalyzerInfo);
         if (customerValueAnalyzerInfo) {
           setBusinessDescription(
             customerValueAnalyzerInfo?.analysis_purpose ?? ""
@@ -267,8 +267,8 @@ const PageCustomerValueAnalyzer = () => {
               })
               .filter((index) => index !== -1);
 
-            console.log("Selected Targets:", selectedTargets);
-            console.log("Selected Indices:", selectedIndices);
+            // console.log("Selected Targets:", selectedTargets);
+            // console.log("Selected Indices:", selectedIndices);
 
             if (selectedIndices.length > 0) {
               setSelectedPersonas(selectedIndices);
@@ -293,8 +293,8 @@ const PageCustomerValueAnalyzer = () => {
         setCompletedSteps(completedStepsArray.slice(0, -1));
         }
 
-        console.log("customerValueAnalyzerFactor", customerValueAnalyzerFactor);
-        console.log("completedStepsArray", completedStepsArray);
+        // console.log("customerValueAnalyzerFactor", customerValueAnalyzerFactor);
+        // console.log("completedStepsArray", completedStepsArray);
 
 
         // 최종 리포트 설정 (Step 4)
@@ -358,7 +358,7 @@ const PageCustomerValueAnalyzer = () => {
 
   // 고객 여정 맵 API 호출 시작
   useEffect(() => {
-    console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
+    // console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
     if (
       activeTab === 2 &&
       customerValueAnalyzerPersona.length > 0 &&
@@ -366,10 +366,10 @@ const PageCustomerValueAnalyzer = () => {
       !apiCallCompleted &&
       Object.keys(customerValueAnalyzerJourneyMap).length === 0
     ) {
-      console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
+      // console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
       // toolStep이 2보다 작을 때만 API 호출
       // 모든 카드의 상태를 waiting으로 초기화
-      console.log("customerValueAnalyzerPersona", customerValueAnalyzerPersona);
+      // console.log("customerValueAnalyzerPersona", customerValueAnalyzerPersona);
       const initialLoadingStates = customerValueAnalyzerPersona.reduce(
         (acc, _, index) => {
           acc[index] = "waiting";
@@ -381,7 +381,7 @@ const PageCustomerValueAnalyzer = () => {
 
       // 순차적으로 API 호출을 처리하는 함수
       const processSequentially = async () => {
-        console.log("customerValueAnalyzerInfo.target_list", customerValueAnalyzerInfo.target_list);
+        // console.log("customerValueAnalyzerInfo.target_list", customerValueAnalyzerInfo.target_list);
         let journeyMapData = [];
         for (
           let index = 0;
@@ -401,14 +401,14 @@ const PageCustomerValueAnalyzer = () => {
               analysis_scope: customerValueAnalyzerInfo.analysis_scope,
               analysis_purpose: customerValueAnalyzerPersona[index],
             };
-            console.log("data", data);
+            // console.log("data", data);
 
             const response =
               await InterviewXCustomerValueAnalyzerJourneyMapRequest(
                 data,
                 isLoggedIn
               );
-            console.log("Journey Map 응답:", response);
+            // console.log("Journey Map 응답:", response);
 
             if (response?.response?.customer_value_journey_map) {
               journeyMapData.push({
@@ -499,7 +499,7 @@ const PageCustomerValueAnalyzer = () => {
         analysis_scope: selectedPurposes.analysisScope,
         analysis_purpose: businessDescription,
       };
-      console.log("businessData", businessData);
+      // console.log("businessData", businessData);
 
       const response = await InterviewXCustomerValueAnalyzerPersonaRequest(
         businessData,
@@ -531,7 +531,7 @@ const PageCustomerValueAnalyzer = () => {
       setCustomerValueAnalyzerPersona(
         response.response.customer_value_persona || []
       );
-      console.log("customerValueAnalyzerPersona", customerValueAnalyzerPersona);
+      // console.log("customerValueAnalyzerPersona", customerValueAnalyzerPersona);
 
       setCustomerValueAnalyzerInfo(businessData);
 
@@ -797,7 +797,7 @@ const PageCustomerValueAnalyzer = () => {
           clusteringData,
           isLoggedIn
         );
-      console.log("Clustering response:", clusteringResponse);
+      // console.log("Clustering response:", clusteringResponse);
 
       if (
         !clusteringResponse ||
@@ -823,7 +823,7 @@ const PageCustomerValueAnalyzer = () => {
           positioningData,
           isLoggedIn
         );
-      console.log("Positioning response:", positioningResponse);
+      // console.log("Positioning response:", positioningResponse);
 
       if (
         !positioningResponse ||
@@ -852,7 +852,7 @@ const PageCustomerValueAnalyzer = () => {
           finalReportData,
           isLoggedIn
         );
-      console.log("Final report response:", finalReportResponse);
+      // console.log("Final report response:", finalReportResponse);
 
       if (
         !finalReportResponse ||
@@ -866,10 +866,10 @@ const PageCustomerValueAnalyzer = () => {
       setCustomerValueAnalyzerFinalReport(
         finalReportResponse.response.customer_value_final_report
       );
-      console.log(
-        "customerValueAnalyzerFinalReport",
-        customerValueAnalyzerFinalReport
-      );
+      // console.log(
+      //   "customerValueAnalyzerFinalReport",
+      //   customerValueAnalyzerFinalReport
+      // );
 
       setToolStep(4);
       await updateToolOnServer(
