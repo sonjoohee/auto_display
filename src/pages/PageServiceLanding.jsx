@@ -695,14 +695,14 @@ const PageServiceLanding = () => {
         </div>
       </Footer>
 
-      {isPopupOpen && (
+      {/* {isPopupOpen && (
         <Popup>
           <div>
             <span className="close" onClick={() => setIsPopupOpen(false)} />
             <img src={images.Popup01} alt="" />
           </div>
         </Popup>
-      )}
+      )} */}
     </>
   );
 };

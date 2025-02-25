@@ -300,7 +300,7 @@ const PageDesignAnalysis = () => {
   // 비즈니스 설명 입력 핸들러
   const handleBusinessDescriptionChange = (e) => {
     const input = e.target.value;
-    if (input.length <= 150) {
+    if (input.length <= 500) {
       setBusinessDescription(input);
     }
   };
@@ -662,11 +662,11 @@ const PageDesignAnalysis = () => {
                             placeholder="비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
                             onChange={handleBusinessDescriptionChange}
                             value={businessDescription}
-                            maxLength={150}
+                            maxLength={500}
                             status="valid"
                           />
                           <Body2 color="gray300" align="right">
-                            {businessDescription.length} / 150
+                            {businessDescription.length} / 500
                           </Body2>
                         </FormBox>
                       </TabContent5Item>
@@ -680,7 +680,7 @@ const PageDesignAnalysis = () => {
                           onChangeStatus={handleChangeStatus}
                           // onSubmit={handleSubmit}
                           // getUploadParams={getUploadParams}
-                          maxFiles={3}
+                          maxFiles={1}
                           multiple={true}
                           canRemove={true}
                           canRestart={false}
@@ -942,8 +942,8 @@ const PageDesignAnalysis = () => {
                             <Body3 color="gray800" align="right">{item.opposite_emotion}</Body3>
                             <RangeSlider
                               type="range"
-                              min="0"
-                              max="6"
+                              min="1"
+                              max="7"
                               step="1"
                               value={item.score}
                               disabled={true} 
