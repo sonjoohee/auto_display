@@ -772,7 +772,10 @@ export const getTermkeyResult = async (termkey) => {
       throw new Error("인증 토큰이 없습니다. 로그인이 필요합니다.");
     }
 
+    let attempts = 0;
+
     while (true) {
+      if (attempts > 20) throw new Error("시도 횟수가 초과되었습니다.")
       try {
         const response = await axios.get(
           `https://wishresearch.kr/project/temporary/findTemp/${termkey}`,
@@ -803,6 +806,8 @@ export const getTermkeyResult = async (termkey) => {
         console.error("결과 조회 중 오류 발생:", error);
         throw error;
       }
+
+      attempts++;
     }
   } catch (error) {
     console.error("termkey를 이용한 결과 조회 중 오류:", error);
