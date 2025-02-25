@@ -313,11 +313,11 @@ const PageDesignAnalysis = () => {
       // 비즈니스 데이터 추가
       const Data = {
           business: businessDescription,
-          tool_id: fileNames[0]+'_'+timeStamp,
+          tool_id: 'image_'+timeStamp,
           image: uploadedFiles[0],
       };
       
-      setDesignAnalysisFileId(fileNames[0]+'_'+timeStamp);
+      setDesignAnalysisFileId(['image_'+timeStamp]);
 
       // API 요청
       const response = await InterviewXDesignEmotionAnalysisRequest(Data, isLoggedIn);
@@ -354,8 +354,8 @@ const PageDesignAnalysis = () => {
           completed_step: 1,
           design_emotion_analysis: response.response.design_emotion_analysis,
           business: businessDescription,
-          image_name: uploadedFiles.map((file, index) => ({
-            id: fileNames[index]+'_'+timeStamp,
+          image_name: uploadedFiles.map(file => ({
+            id: 'image_'+timeStamp,
             name: file.name,
           })),
         },
