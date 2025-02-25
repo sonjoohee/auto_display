@@ -22,7 +22,7 @@ import {
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
-import { InterviewXLeanQuestionRequest} from "../../../../utils/indexedDB";
+import {InterviewXBmLeanAdsReportRequest} from "../../../../utils/indexedDB";
 
 import Loader from "../atoms/AtomLoader";
 
@@ -101,7 +101,7 @@ const OrganismBmLeanAdsReport = () => {
           data,
           axiosConfig
         );
-        // let response = await InterviewXLeanQuestionRequest(
+        // let response = await InterviewXBmLeanAdsReportRequest(
         //   data,
         //   isLoggedIn
         // );
@@ -144,7 +144,7 @@ const OrganismBmLeanAdsReport = () => {
       
         // )) {
     
-        //   response = await InterviewXLeanQuestionRequest(
+        //   response = await InterviewXBmLeanAdsReportRequest(
         //     data,
         //     isLoggedIn
         //   );

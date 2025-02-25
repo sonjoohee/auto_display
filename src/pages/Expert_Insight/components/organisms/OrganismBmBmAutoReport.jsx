@@ -25,7 +25,7 @@ import Loader from "../atoms/AtomLoader";
 
 import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
-import {  InterviewXBmCanvasRequest } from "../../../../utils/indexedDB";
+import {  InterviewXBmBmAutoReportRequest} from "../../../../utils/indexedDB";
 const OrganismBmBmAutoReport = () => {
   const { saveConversation } = useSaveConversation();
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
@@ -90,7 +90,7 @@ const OrganismBmBmAutoReport = () => {
           data,
           axiosConfig
         );
-        // let response = await  InterviewXBmCanvasRequest(
+        // let response = await  InterviewXBmBmAutoReportRequest(
         //   data,
         //   isLoggedIn
         // );
@@ -132,7 +132,7 @@ const OrganismBmBmAutoReport = () => {
       
         // )) {
     
-        //   response = await  InterviewXBmCanvasRequestt(
+        //   response = await  InterviewXBmBmAutoReportRequest(
         //     data,
         //     isLoggedIn
         //   );

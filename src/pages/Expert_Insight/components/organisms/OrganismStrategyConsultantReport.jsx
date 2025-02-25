@@ -24,7 +24,7 @@ import Loader from "../atoms/AtomLoader"
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import { MarketingResearchReportRequest } from "../../../../utils/indexedDB";
 import { isLoggedIn } from "../../../../utils/indexedDB";
-import { InterviewXExpertRequest } from "../../../../utils/indexedDB";
+import {  InterviewXExpertReportRequest } from "../../../../utils/indexedDB";
 
 const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
   const { saveConversation } = useSaveConversation();
@@ -100,89 +100,98 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
             axiosConfig
           );
 
-          // let response = await InterviewXExpertRequest(
+          console.log("전략 컨설팅 response", response);
+
+          // let response = await  InterviewXExpertReportRequest(
           //   data,
           //   isLoggedIn
           // );
 
-          let strategyConsultantReport = response.response.tabs[0];
+          if (response && response.data && response.data.tabs) {
+            let strategyConsultantReport = response.data.tabs[0];
             
-          let retryCount = 0;
-          const maxRetries = 10;
+          // if (response && response.response && response.response.tabs) {
+          //   let strategyConsultantReport = response.response.tabs[0];
+            
+            let retryCount = 0;
+            const maxRetries = 10;
 
-          while (retryCount < maxRetries && (
-            !response || 
-            !response.response || 
-            typeof response.response !== "object" ||
-            !response.response.hasOwnProperty("tabs") || 
-            !Array.isArray(response.response.tabs) ||
-            response.response.tabs.length === 0 ||
-            !response.response.tabs[0].hasOwnProperty("title") ||
-            !response.response.tabs[0].hasOwnProperty("sections") ||
-            !Array.isArray(response.response.tabs[0].sections) ||
-            response.response.tabs[0].sections.length === 0
-          )) {
-            // response = await axios.post(
-            //   "https://wishresearch.kr/panels/marketing/research_report",
-            //   data,
-            //   axiosConfig
-            // );
-            response = await MarketingResearchReportRequest(data);
-            retryCount++;
+            // while (retryCount < maxRetries && (
+            //   !response || 
+            //   !response.response || 
+            //   typeof response.response !== "object" ||
+            //   !response.response.hasOwnProperty("tabs") || 
+            //   !Array.isArray(response.response.tabs) ||
+            //   response.response.tabs.length === 0 ||
+            //   !response.response.tabs[0].hasOwnProperty("title") ||
+            //   !response.response.tabs[0].hasOwnProperty("sections") ||
+            //   !Array.isArray(response.response.tabs[0].sections) ||
+            //   response.response.tabs[0].sections.length === 0
+            // )) {
+            //   // response = await axios.post(
+            //   //   "https://wishresearch.kr/panels/marketing/research_report",
+            //   //   data,
+            //   //   axiosConfig
+            //   // );
+            //   response = await MarketingResearchReportRequest(data);
+            //   retryCount++;
 
-            strategyConsultantReport = response.response.tabs[0];
-          }
-          if (retryCount === maxRetries) {
-            throw new Error("Maximum retry attempts reached. Empty response persists.");
-          }
+            //   // strategyConsultantReport = response.response.tabs[0];
+            // }
+            // if (retryCount === maxRetries) {
+            //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+            // }
 
-          setStrategyConsultantReportData([...strategyConsultantReportData, strategyConsultantReport]);
+            setStrategyConsultantReportData([...strategyConsultantReportData, strategyConsultantReport]);
 
-          setIsLoadingStrategyConsultantReport(false);
-          setIsLoading(false);
+            setIsLoadingStrategyConsultantReport(false);
+            setIsLoading(false);
 
-          const updatedConversation = [...conversation];
+            const updatedConversation = [...conversation];
 
-          let system_message1, system_message2;
-        
-          const system_message_1 = `시장 분석이 완료되었습니다. 🚀\n분석된 인사이트와 잠재력을 파악하는데 도움이 될 것입니다.  `;
-          const system_message_1_2 = "이제 다음 단계로 비즈니스 성공을 위해 주요 고객을 파악하는 것이 중요합니다.\n핵심 타겟에 대한 이해를 기반으로, 더 높은 성장 가치를 지닌 아이템으로 발전 시킬 수 있어요. ";
+            let system_message1, system_message2;
           
-          const system_message_2 = "고객 분석과 가치 제안 리포트가 완료되었습니다.";
-          const system_message_2_2 = "이제 우리 비즈니스가 시장에서 어떤 경쟁 우위를 가질 수 있는지 알아볼 시간입니다.\n함께 방법을 확인해 보아요";
-        
-          const system_message_3 = `이렇게 ${titleOfBusinessInfo}의 전략 수립에 필요한 기본 정보를 함께 정리해 보았습니다.\n이제 이를 활용해 비즈니스의 가능성을 더 확장해 보세요. `;
-          const system_message_3_2 = "이외에 궁금한 점은 대화창에 입력해주시거나, 아래 키워드를 활용하여 추가적인 조언을 받아보세요";
-        
-          if (strategyButtonState === 0) {
-            system_message1 = system_message_1;
-            system_message2 = system_message_1_2;
-          } else if (strategyButtonState === 1) {
-            system_message1 = system_message_2;
-            system_message2 = system_message_2_2;
-          } else if (strategyButtonState === 2) {
-            system_message1 = system_message_3;
-            system_message2 = system_message_3_2;
+            const system_message_1 = `시장 분석이 완료되었습니다. 🚀\n분석된 인사이트와 잠재력을 파악하는데 도움이 될 것입니다.  `;
+            const system_message_1_2 = "이제 다음 단계로 비즈니스 성공을 위해 주요 고객을 파악하는 것이 중요합니다.\n핵심 타겟에 대한 이해를 기반으로, 더 높은 성장 가치를 지닌 아이템으로 발전 시킬 수 있어요. ";
+            
+            const system_message_2 = "고객 분석과 가치 제안 리포트가 완료되었습니다.";
+            const system_message_2_2 = "이제 우리 비즈니스가 시장에서 어떤 경쟁 우위를 가질 수 있는지 알아볼 시간입니다.\n함께 방법을 확인해 보아요";
+          
+            const system_message_3 = `이렇게 ${titleOfBusinessInfo}의 전략 수립에 필요한 기본 정보를 함께 정리해 보았습니다.\n이제 이를 활용해 비즈니스의 가능성을 더 확장해 보세요. `;
+            const system_message_3_2 = "이외에 궁금한 점은 대화창에 입력해주시거나, 아래 키워드를 활용하여 추가적인 조언을 받아보세요";
+          
+            if (strategyButtonState === 0) {
+              system_message1 = system_message_1;
+              system_message2 = system_message_1_2;
+            } else if (strategyButtonState === 1) {
+              system_message1 = system_message_2;
+              system_message2 = system_message_2_2;
+            } else if (strategyButtonState === 2) {
+              system_message1 = system_message_3;
+              system_message2 = system_message_3_2;
+            }
+
+            updatedConversation.push(
+              {
+                type: "system",
+                message: system_message1,
+                expertIndex: -1,
+              },
+              {
+                type: "system",
+                message: system_message2,
+                expertIndex: -1,
+              },
+              { type: strategyButtonState === 2 ? `keyword` : `strategyButton` }
+            );
+
+            setConversation(updatedConversation);
+            setStrategyButtonState([...strategyConsultantReportData, strategyConsultantReport].length);
+
+            await saveConversation({ changingConversation: { conversation: updatedConversation, strategyConsultantReportData: [...strategyConsultantReportData, strategyConsultantReport] } });
+          } else {
+            console.error("Invalid response structure:", response);
           }
-
-          updatedConversation.push(
-            {
-              type: "system",
-              message: system_message1,
-              expertIndex: -1,
-            },
-            {
-              type: "system",
-              message: system_message2,
-              expertIndex: -1,
-            },
-            { type: strategyButtonState === 2 ? `keyword` : `strategyButton` }
-          );
-
-          setConversation(updatedConversation);
-          setStrategyButtonState([...strategyConsultantReportData, strategyConsultantReport].length);
-
-          await saveConversation({ changingConversation: { conversation: updatedConversation, strategyConsultantReportData: [...strategyConsultantReportData, strategyConsultantReport] } });
         }
       } catch (error) {
         console.error("Error fetching strategy consultant report:", error);

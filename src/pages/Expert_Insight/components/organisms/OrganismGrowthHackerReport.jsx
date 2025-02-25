@@ -32,7 +32,7 @@ import {
 
 import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
-import {InterviewXGrowthHackerDetailRequest } from "../../../../utils/indexedDB";
+import {InterviewXIdeaGrowthHackerdetail_reportRequest } from "../../../../utils/indexedDB";
 
 const OrganismGrowthHackerReport = ({ growthHackerReportCount }) => {
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
@@ -110,7 +110,7 @@ const OrganismGrowthHackerReport = ({ growthHackerReportCount }) => {
           axiosConfig
         );
 
-        // let response = await InterviewXGrowthHackerDetailRequest(
+        // let response = await InterviewXIdeaGrowthHackerdetail_reportRequest(
         //   data,
         //   isLoggedIn
         // );
@@ -152,7 +152,7 @@ const OrganismGrowthHackerReport = ({ growthHackerReportCount }) => {
       
         // )) {
     
-          // response = await InterviewXGrowthHackerDetailRequest(
+          // response = await InterviewXIdeaGrowthHackerdetail_reportRequest(
           //   data,
           //   isLoggedIn
           // );

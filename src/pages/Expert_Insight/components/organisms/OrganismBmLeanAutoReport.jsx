@@ -22,7 +22,8 @@ import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import Loader from "../atoms/AtomLoader";
 
 import images from "../../../../assets/styles/Images";
-import { InterviewXLeanCanvasRequest } from "../../../../utils/indexedDB";
+import {  InterviewXBmLeanAutoReportRequest } from "../../../../utils/indexedDB";
+
 
 const OrganismBmLeanAutoReport = () => {
   const { saveConversation } = useSaveConversation();
@@ -88,7 +89,7 @@ const OrganismBmLeanAutoReport = () => {
           data,
           axiosConfig
         );
-        // let response = await InterviewXLeanCanvasRequest(
+        // let response = await InterviewXBmLeanAutoReportRequest(
         //   data,
         //   isLoggedIn
         // );
@@ -130,7 +131,7 @@ const OrganismBmLeanAutoReport = () => {
       
         // )) {
     
-        //   response = await InterviewXLeanCanvasRequest (
+        //   response = await  InterviewXBmLeanAutoReportRequest (
         //     data,
         //     isLoggedIn
         //   );

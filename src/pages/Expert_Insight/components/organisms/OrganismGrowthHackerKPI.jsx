@@ -27,7 +27,7 @@ import Loader from "../atoms/AtomLoader";
 import { useAtom } from "jotai";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
-import {InterviewXGrowthHackerRequest } from "../../../../utils/indexedDB";
+import {InterviewXIdeaGrowthHackerReportRequest } from "../../../../utils/indexedDB";
 const OrganismGrowthHackerKPI = () => {
   const { saveConversation } = useSaveConversation();
   const [growthHackerDetailReportData, setGrowthHackerDetailReportData] = useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
@@ -123,7 +123,7 @@ const OrganismGrowthHackerKPI = () => {
           data,
           axiosConfig
         );
-        // let response = await InterviewXGrowthHackerRequest(
+        // let response = await InterviewXIdeaGrowthHackerReportRequest(
         //   data,
         //   isLoggedIn
         // );
@@ -168,7 +168,7 @@ const OrganismGrowthHackerKPI = () => {
       
         // )) {
     
-          // response = await IInterviewXGrowthHackerRequest(
+          // response = await InterviewXIdeaGrowthHackerReportRequest(
           //   data,
           //   isLoggedIn
           // );

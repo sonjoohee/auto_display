@@ -24,6 +24,8 @@ import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 import { palette } from "../../../../assets/styles/Palette";
 
+import { InterviewXBmCheckStageRequest } from "../../../../utils/indexedDB";
+
 const MoleculeBmModelSuggestion = () => {
   const { saveConversation } = useSaveConversation();
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -88,7 +90,7 @@ const MoleculeBmModelSuggestion = () => {
           data,
           axiosConfig
         );
-        // let response = await InterviewXBmCreateRequest(
+        // let response = await InterviewXBmCheckStageRequest(
         //   data,
         //   isLoggedIn
         // );
@@ -128,7 +130,7 @@ const MoleculeBmModelSuggestion = () => {
       
         // )) {
     
-        //   response = await InterviewXBmCreateRequest(
+        //   response = await InterviewXBmCheckStageRequest(
         //     data,
         //     isLoggedIn
         //   );
