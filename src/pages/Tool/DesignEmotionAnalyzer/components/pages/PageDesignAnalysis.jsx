@@ -428,7 +428,10 @@ const PageDesignAnalysis = () => {
 
           while (!response?.response?.design_emotion_target ||
             typeof response.response.design_emotion_target !== 'object' ||
-            Object.keys(response?.response?.design_emotion_target).length === 0
+            Object.keys(response?.response?.design_emotion_target).length === 0 ||
+            !response?.response?.design_emotion_target?.hasOwnProperty('target_emotion') ||
+            !response?.response?.design_emotion_target?.hasOwnProperty('design_perspectives') ||
+            !response?.response?.design_emotion_target?.hasOwnProperty('designer_guidelines')
           ) {
             if (attempt >= maxAttempts) {
               setShowPopupError(true);
@@ -453,10 +456,28 @@ const PageDesignAnalysis = () => {
           };
 
           
-          const oceanResponse = await InterviewXDesignEmotionScaleRequest(
-            oceanData,
-            isLoggedIn
-          );
+          attempt = 0;
+          let oceanResponse = null;
+
+          while (!oceanResponse ||
+            typeof oceanResponse.response.design_emotion_scale !== 'object' ||
+            Object.keys(oceanResponse?.response?.design_emotion_scale).length === 0 ||
+            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty('conclusion') ||
+            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty('evaluation_analysis') ||
+            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty('sd_scale_analysis')
+          ) {
+            if (attempt >= maxAttempts) {
+              setShowPopupError(true);
+              return;
+            }
+
+            oceanResponse = await InterviewXDesignEmotionScaleRequest(
+              oceanData,
+              isLoggedIn
+            );
+
+            attempt++;
+          }
           // console.log("🚀 ~ oceanResponse:", oceanResponse);
           setDesignAnalysisEmotionScale(oceanResponse.response.design_emotion_scale);
 
