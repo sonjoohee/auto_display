@@ -25,7 +25,7 @@ import {
   SkeletonTitle,
   SkeletonLine,
 } from "../../../../assets/styles/Skeleton";
-import { InterviewXExpertRequest } from "../../../../utils/indexedDB";
+import {  InterviewXExpertReportRequest } from "../../../../utils/indexedDB";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import axios from "axios";
@@ -127,7 +127,7 @@ const OrganismPocReportSection = ({ expertIndex }) => {
             data,
             axiosConfig
           );
-          // let response1= await InterviewXExpertRequest(
+          // let response1= await InterviewXExpertReportRequest(
           //   data,
           //   isLoggedIn
           // );
@@ -170,7 +170,7 @@ const OrganismPocReportSection = ({ expertIndex }) => {
           //       !response1.data["tabs"][0].sections[0].hasOwnProperty("title") ||
           //       !response1.data["tabs"][0].sections[0].hasOwnProperty("text") ||
           //       !response1.data["tabs"][0].sections[0].hasOwnProperty("content")) {
-          //     response1 = await InterviewXExpertRequest(
+          //     response1 = await InterviewXExpertReportRequest(
           //       data,
           //       isLoggedIn
           //     );

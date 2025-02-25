@@ -21,6 +21,8 @@ import {
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
+import { InterviewXBmBmAdsReportRequest } from "../../../../utils/indexedDB";
+
 import Loader from "../atoms/AtomLoader";
 
 const OrganismBmBmAdsReport = () => {
@@ -96,7 +98,7 @@ const OrganismBmBmAdsReport = () => {
           data,
           axiosConfig
         );
-        // let response = await InterviewXBmQuestionRequest(
+        // let response = await InterviewXBmBmAdsReportRequest(
         //   data,
         //   isLoggedIn
         // );
@@ -120,7 +122,7 @@ const OrganismBmBmAdsReport = () => {
         //     )
         //   )
         // )) {
-        //   response = await InterviewXBmQuestionRequest(
+        //   response = await InterviewXBmBmAdsReportRequest(
         //     data,
         //     isLoggedIn
         //   );

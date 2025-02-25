@@ -2990,7 +2990,7 @@ export const InterviewXCustomerAddQuestionRequest = async (
 
 
 //시장 기회 탐색
-export const InterviewXExpertRequest = async (
+export const InterviewXExpertReportRequest = async (
   data,
   isLoggedIn
 ) => {
@@ -3037,7 +3037,7 @@ export const InterviewXExpertRequest = async (
 
 
 //시장 가격 분석
-export const InterviewXPriceScrapRequest = async (
+export const InterviewXPriceScrapReportRequest = async (
   data,
   isLoggedIn
 ) => {
@@ -3083,7 +3083,7 @@ export const InterviewXPriceScrapRequest = async (
 };
 
 //시장 가격 분석
-export const InterviewXPriceAnalysisRequest = async (
+export const InterviewXPriceAnalysisReportRequest = async (
   data,
   isLoggedIn
 ) => {
@@ -3130,7 +3130,7 @@ export const InterviewXPriceAnalysisRequest = async (
 
 
 //bm생성
-export const InterviewXBmCreateRequest = async (
+export const InterviewXBmCheckStageRequest = async (
   data,
   isLoggedIn
 ) => {
@@ -3176,7 +3176,7 @@ export const InterviewXBmCreateRequest = async (
 };
 
 //비즈니스 모델 캔버스 생성
-export const InterviewXBmCanvasRequest = async (
+export const InterviewXBmBmAutoReportRequest= async (
   data,
   isLoggedIn
 ) => {
@@ -3222,7 +3222,7 @@ export const InterviewXBmCanvasRequest = async (
 };
 
 //bm 세분화 질문 생성
-export const InterviewXBmQuestionRequest = async (
+export const InterviewXBmBmAdsReportRequest = async (
   data,
   isLoggedIn
 ) => {
@@ -3268,7 +3268,7 @@ export const InterviewXBmQuestionRequest = async (
 };
 
 // bm 세분화
-export const InterviewXBmCustomRequest = async (
+export const InterviewXBmBmCustomReportRequest = async (
   data,
   isLoggedIn
 ) => {
@@ -3314,7 +3314,7 @@ export const InterviewXBmCustomRequest = async (
 };
 
 //린 캔버스 생성
-export const InterviewXLeanCanvasRequest = async (
+export const InterviewXBmLeanAutoReportRequest= async (
   data,
   isLoggedIn
 ) => {
@@ -3360,7 +3360,7 @@ export const InterviewXLeanCanvasRequest = async (
 };
 
 //린 세분화 질문 생성
-export const InterviewXLeanQuestionRequest = async (
+export const InterviewXBmLeanAdsReportRequest= async (
   data,
   isLoggedIn
 ) => {
@@ -3405,7 +3405,7 @@ export const InterviewXLeanQuestionRequest = async (
   }
 };
 //린 세분화
-export const InterviewXLeanCustomRequest = async (
+export const InterviewXBmLeanCustomReportRequest = async (
   data,
   isLoggedIn
 ) => {
@@ -3452,7 +3452,7 @@ export const InterviewXLeanCustomRequest = async (
 
 
 //그로스해커 아이템 진단
-export const InterviewXGrowthHackerRequest = async (
+export const InterviewXIdeaGrowthHackerReportRequest = async (
   data,
   isLoggedIn
 ) => {
@@ -3499,7 +3499,7 @@ export const InterviewXGrowthHackerRequest = async (
 
 
 //방법 제시
-export const InterviewXGrowthHackerDetailRequest = async (
+export const InterviewXIdeaGrowthHackerdetail_reportRequest = async (
   data,
   isLoggedIn
 ) => {

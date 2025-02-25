@@ -27,7 +27,7 @@ import Loader from "../atoms/AtomLoader";
 
 import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
-import { InterviewXBmCustomRequest } from "../../../../utils/indexedDB";
+import {InterviewXBmBmCustomReportRequest } from "../../../../utils/indexedDB";
 const OrganismBmBmCustomReport = () => {
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const { saveConversation } = useSaveConversation();
@@ -239,7 +239,7 @@ const OrganismBmBmCustomReport = () => {
           data,
           axiosConfig
         );
-        // let response = await InterviewXBmCustomRequest(
+        // let response = await InterviewXBmBmCustomReportRequest(
         //   data,
         //   isLoggedIn
         // );
@@ -282,7 +282,7 @@ const OrganismBmBmCustomReport = () => {
       
         // )) {
     
-        //   response = await InterviewXBmCustomRequest(
+        //   response = await InterviewXBmBmCustomReportRequest(
         //     data,
         //     isLoggedIn
         //   );

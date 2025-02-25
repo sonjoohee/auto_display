@@ -27,7 +27,7 @@ import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import Loader from "../atoms/AtomLoader";
 
 import images from "../../../../assets/styles/Images";
-import {InterviewXLeanCustomRequest } from "../../../../utils/indexedDB";
+import {InterviewXBmLeanCustomReportRequest } from "../../../../utils/indexedDB";
 
 const OrganismBmLeanCustomReport = () => {
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
@@ -243,7 +243,7 @@ useEffect(() => {
           axiosConfig
         );
 
-        // let response = await InterviewXLeanCustomRequest(
+        // let response = await InterviewXBmLeanCustomReportRequest(
         //   data,
         //   isLoggedIn
         // );
@@ -286,7 +286,7 @@ useEffect(() => {
       
         // )) {
     
-          // response = await InterviewXLeanCustomRequest(
+          // response = await InterviewXBmLeanCustomReportRequest(
           //   data,
           //   isLoggedIn
           // );

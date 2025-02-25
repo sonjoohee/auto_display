@@ -21,7 +21,7 @@ import {
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
-import { InterviewXPriceScrapRequest, InterviewXPriceAnalysisRequest } from "../../../../utils/indexedDB";
+import { InterviewXPriceScrapReportRequest, InterviewXPriceAnalysisReportRequest } from "../../../../utils/indexedDB";
 import Loader from "../atoms/AtomLoader";
 
 const OrganismPriceReport = () => {
@@ -98,7 +98,7 @@ const OrganismPriceReport = () => {
           axiosConfig
         );
 
-        // let response1 = await InterviewXPriceScrapRequest(
+        // let response1 = await InterviewXPriceScrapReportRequest(
         //   data1,
         //   isLoggedIn
         // );
@@ -140,7 +140,7 @@ const OrganismPriceReport = () => {
       
         // )) {
     
-         // response1 = await InterviewXPriceScrapRequest(
+         // response1 = await InterviewXPriceScrapReportRequest(
           //   data1,
           //   isLoggedIn
           // );
@@ -174,7 +174,7 @@ const OrganismPriceReport = () => {
           axiosConfig
         );
 
-        // let response2 = await InterviewXPriceAnalysisRequest(
+        // let response2 = await InterviewXPriceAnalysisReportRequest(
         //   data2,
         //   isLoggedIn
         // );
@@ -224,7 +224,7 @@ const OrganismPriceReport = () => {
         //   !response || !response.response || typeof response.response !== "object" 
       
         // )) {
-      // response2 = await InterviewXPriceAnalysisRequest(
+      // response2 = await InterviewXPriceAnalysisReportRequest(
           //   data2,
           //   isLoggedIn
           // );
