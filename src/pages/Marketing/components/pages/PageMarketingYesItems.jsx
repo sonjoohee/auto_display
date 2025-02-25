@@ -11,6 +11,7 @@ import {
 } from "../../../../assets/styles/Skeleton";
 import Loader from "../../../Expert_Insight/components/atoms/AtomLoader";
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
+import { InterviewXBusinessAnalysisRequest } from "../../../../utils/indexedDB";
 import axios from "axios";
 import { useAtom } from "jotai";
 import {
@@ -260,6 +261,12 @@ const PageMarketingYesItems = () => {
     );
     businessData = response.data.business_analysis;
 
+    // let response = await InterviewXBusinessAnalysisRequest(
+    //   data,
+    //   isLoggedIn
+    // );
+    // businessData = response.response.business_analysis;
+
     // 필요한 데이터가 없을 경우 재시도, 최대 5번
     while (
       (!businessData.hasOwnProperty("명칭") ||
@@ -281,6 +288,12 @@ const PageMarketingYesItems = () => {
       );
       businessData = response.data.business_analysis;
     }
+
+    // response = await InterviewXBusinessAnalysisRequest(
+    //   data,
+    //   isLoggedIn
+    // );
+    // businessData = response.response.business_analysis;
 
     if (Array.isArray(businessData["주요_목적_및_특징"])) {
       setMainFeaturesOfBusinessInformation(

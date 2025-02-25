@@ -25,7 +25,7 @@ import {
   SkeletonTitle,
   SkeletonLine,
 } from "../../../../assets/styles/Skeleton";
-
+import { InterviewXExpertRequest } from "../../../../utils/indexedDB";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import axios from "axios";
@@ -127,9 +127,13 @@ const OrganismPocReportSection = ({ expertIndex }) => {
             data,
             axiosConfig
           );
-
+          // let response1= await InterviewXExpertRequest(
+          //   data,
+          //   isLoggedIn
+          // );
+ 
           while (true) {
-            if (!response1.data["tabs"][0].hasOwnProperty("title") ||
+            if (!response1["tabs"][0].hasOwnProperty("title") ||
                 !response1.data["tabs"][0].hasOwnProperty("sections") ||
                 !Array.isArray(response1.data["tabs"][0].sections) ||
                 !response1.data["tabs"][0].sections[0].hasOwnProperty("title") ||
@@ -159,6 +163,26 @@ const OrganismPocReportSection = ({ expertIndex }) => {
 
           finalResponse = response1.data;
 
+          // while (true) {
+          //   if (!response1["tabs"][0].hasOwnProperty("title") ||
+          //       !response1.data["tabs"][0].hasOwnProperty("sections") ||
+          //       !Array.isArray(response1.data["tabs"][0].sections) ||
+          //       !response1.data["tabs"][0].sections[0].hasOwnProperty("title") ||
+          //       !response1.data["tabs"][0].sections[0].hasOwnProperty("text") ||
+          //       !response1.data["tabs"][0].sections[0].hasOwnProperty("content")) {
+          //     response1 = await InterviewXExpertRequest(
+          //       data,
+          //       isLoggedIn
+          //     );
+          //   } else {
+          //     break;
+          //   }
+          // }
+          // finalResponse = response1.response;
+
+
+
+          //원래 주석 되어있었음
           // if (finalResponse.total_page_index === 2) {
           //   let response2 = await axios.post(
           //     "https://wishresearch.kr/panels/expert",
@@ -212,6 +236,7 @@ const OrganismPocReportSection = ({ expertIndex }) => {
           //   }
           //   finalResponse = response3.data;
           // }
+
 
           const strategyData = finalResponse;
 

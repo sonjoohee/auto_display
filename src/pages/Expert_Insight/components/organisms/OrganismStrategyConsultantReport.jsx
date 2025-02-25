@@ -24,6 +24,7 @@ import Loader from "../atoms/AtomLoader"
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import { MarketingResearchReportRequest } from "../../../../utils/indexedDB";
 import { isLoggedIn } from "../../../../utils/indexedDB";
+import { InterviewXExpertRequest } from "../../../../utils/indexedDB";
 
 const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
   const { saveConversation } = useSaveConversation();
@@ -98,6 +99,11 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
             data,
             axiosConfig
           );
+
+          // let response = await InterviewXExpertRequest(
+          //   data,
+          //   isLoggedIn
+          // );
 
           let strategyConsultantReport = response.response.tabs[0];
             

@@ -11,7 +11,7 @@ import {
 import MoleculeReportController from "../molecules/MoleculeReportController";
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import axios from "axios";
-
+import { InterviewXExpertRequest } from "../../../../utils/indexedDB";
 import {
   SELECTED_EXPERT_INDEX,
   STRATEGY_REPORT_DATA, // Updated import
@@ -112,6 +112,10 @@ const OrganismStrategyReportSection = ({ expertIndex }) => {
             data,
             axiosConfig
           );
+          // let response1= await InterviewXExpertRequest(
+          //   data,
+          //   isLoggedIn
+          // );
 
           while (true) {
             if (!response1.data["tabs"][0].hasOwnProperty("title")) {
@@ -124,6 +128,18 @@ const OrganismStrategyReportSection = ({ expertIndex }) => {
               break;
             }
           }
+
+          // while (true) {
+          //   if (!response1.response["tabs"][0].hasOwnProperty("title")) {
+          //     response1= await InterviewXExpertRequest(
+          //       data,
+          //       isLoggedIn
+          //     );
+          //   } else {
+          //     break;
+          //   }
+          // }
+          // finalResponse = response1.response;
 
           finalResponse = response1.data;
           // console.log(finalResponse);
@@ -183,6 +199,56 @@ const OrganismStrategyReportSection = ({ expertIndex }) => {
             finalResponse = response3.data;
             // console.log(finalResponse);
           }
+
+          // if (finalResponse.total_page_index === 2) {
+          //   let response2 = await InterviewXExpertRequest(
+          //     finalResponse,
+          //     isLoggedIn // isLoggedIn 변수를 추가해야 할 수 있습니다.
+          //   );
+          //   while (true) {
+          //     if (!response2.response["tabs"][1].hasOwnProperty("title")) {
+          //       response2 = await InterviewXExpertRequest(
+          //         finalResponse,
+          //         isLoggedIn
+          //       );
+          //     } else {
+          //       break;
+          //     }
+          //   }
+          //   finalResponse = response2.response;
+          //   // console.log(finalResponse);
+          // } else if (finalResponse.total_page_index === 3) {
+          //   let response2 = await InterviewXExpertRequest(
+          //     finalResponse,
+          //     isLoggedIn
+          //   );
+          //   while (true) {
+          //     if (!response2.response["tabs"][1].hasOwnProperty("title")) {
+          //       response2 = await InterviewXExpertRequest(
+          //         finalResponse,
+          //         isLoggedIn
+          //       );
+          //     } else {
+          //       break;
+          //     }
+          //   }
+          //   let response3 = await InterviewXExpertRequest(
+          //     response2.response,
+          //     isLoggedIn
+          //   );
+          //   while (true) {
+          //     if (!response3.response["tabs"][2].hasOwnProperty("title")) {
+          //       response3 = await InterviewXExpertRequest(
+          //         response2.response,
+          //         isLoggedIn
+          //       );
+          //     } else {
+          //       break;
+          //     }
+          //   }
+          //   finalResponse = response3.response;
+          //   // console.log(finalResponse);
+          // }
 
           const strategyData = finalResponse;
 

@@ -63,6 +63,7 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 로그인 팝업 컴포넌트 임포트
+import { InterviewXBusinessAnalysisRequest } from "../../../../utils/indexedDB";
 
 const MoleculeReportController = ({
   reportIndex,
@@ -609,6 +610,12 @@ ${mainCharacteristicOfBusinessInformation
       axiosConfig
     );
     businessData = response.data.business_analysis;
+
+    // const response = await InterviewXBusinessAnalysisRequest(
+    //   data,
+    //   isLoggedIn
+    // );
+    // businessData = response.response.business_analysis;
 
     // 데이터를 받아온 직후 아톰에 값을 설정합니다.
     if (Array.isArray(businessData["주요_목적_및_특징"])) {

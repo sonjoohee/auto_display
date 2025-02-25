@@ -22,6 +22,7 @@ import {
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
+import { InterviewXLeanQuestionRequest} from "../../../../utils/indexedDB";
 
 import Loader from "../atoms/AtomLoader";
 
@@ -100,6 +101,10 @@ const OrganismBmLeanAdsReport = () => {
           data,
           axiosConfig
         );
+        // let response = await InterviewXLeanQuestionRequest(
+        //   data,
+        //   isLoggedIn
+        // );
 
         let retryCount = 0;
         const maxRetries = 10;
@@ -133,6 +138,25 @@ const OrganismBmLeanAdsReport = () => {
         }
 
         setBmLeanAdsReportData(response.data.bm_lean_ads_report);
+
+            // while (retryCount < maxRetries && (
+        //   !response || !response.response || typeof response.response !== "object" 
+      
+        // )) {
+    
+        //   response = await InterviewXLeanQuestionRequest(
+        //     data,
+        //     isLoggedIn
+        //   );
+        //   retryCount++;
+        // }
+        // if (retryCount === maxRetries) {
+        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //   // 에러 처리 로직 추가
+        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        // }
+        // setBmLeanAdsReportData(response.response.bm_lean_ads_report);
+
 
         const updatedConversation = [...conversation];
         updatedConversation.push(

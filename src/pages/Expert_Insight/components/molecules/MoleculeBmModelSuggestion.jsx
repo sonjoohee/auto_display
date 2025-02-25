@@ -88,9 +88,14 @@ const MoleculeBmModelSuggestion = () => {
           data,
           axiosConfig
         );
+        // let response = await InterviewXBmCreateRequest(
+        //   data,
+        //   isLoggedIn
+        // );
 
         let retryCount = 0;
         const maxRetries = 10;
+
 
         while (retryCount < maxRetries && (
           !response || !response.data || typeof response.data !== "object" ||
@@ -116,6 +121,25 @@ const MoleculeBmModelSuggestion = () => {
         }
 
         setBmModelSuggestionReportData(response.data.bm_check_stage_report);
+
+
+        // while (retryCount < maxRetries && (
+        //   !response || !response.response || typeof response.response !== "object" 
+      
+        // )) {
+    
+        //   response = await InterviewXBmCreateRequest(
+        //     data,
+        //     isLoggedIn
+        //   );
+        //   retryCount++;
+        // }
+        // if (retryCount === maxRetries) {
+        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //   // 에러 처리 로직 추가
+        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        // }
+        // setBmModelSuggestionReportData(response.response.bm_check_stage_report);
 
         setIsLoading(false);
         setIsLoadingBmModelSuggestionReport(false);

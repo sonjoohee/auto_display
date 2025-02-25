@@ -28,6 +28,7 @@ import MoleculeReportController from "../molecules/MoleculeReportController";
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import axios from "axios";
 import Loader from "../atoms/AtomLoader"
+import { InterviewXCustomerAddQuestionRequest } from "../../../../utils/indexedDB";
 
 const OrganismCustomerAdditionalReport = ({
   customerAdditionalReportCount
@@ -149,6 +150,13 @@ const OrganismCustomerAdditionalReport = ({
           );
           answerData = response.data.additional_question;
 
+          // let response = await InterviewXAddQuestionRequest(
+          //   data,
+          //   isLoggedIn
+          // );
+          // answerData = response.response.additional_question;
+          //response.data찾아볼것
+
           if (answerData.advise) {
             setAdvise(answerData.advise);
           } else {
@@ -163,6 +171,12 @@ const OrganismCustomerAdditionalReport = ({
               answerData = response.data.additional_question;
             }
           }
+
+          // response = await InterviewXCustomerAddQuestionRequest(
+          //   data,
+          //   isLoggedIn
+          // );
+          // answerData = response.response.additional_question;
 
           // 임시로 키워드 설정
           const updatedKeywords = [...selectedCustomerAdditionalKeyword];
