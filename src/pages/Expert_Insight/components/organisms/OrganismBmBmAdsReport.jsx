@@ -96,9 +96,36 @@ const OrganismBmBmAdsReport = () => {
           data,
           axiosConfig
         );
+        // let response = await InterviewXBmQuestionRequest(
+        //   data,
+        //   isLoggedIn
+        // );
 
         let retryCount = 0;
         const maxRetries = 10;
+
+        
+        // while (retryCount < maxRetries && (
+        //   !response.response || !response.response || typeof response.response !== "object" ||
+        //   !response.response.hasOwnProperty("bm_bm_ads_report") ||
+        //   !Array.isArray(response.response.bm_bm_ads_report) ||
+        //   response.response.bm_bm_ads_report.some(keywordSection => 
+        //     !Array.isArray(keywordSection.keywords) || 
+        //     keywordSection.keywords.some(keyword => 
+        //       !keyword.hasOwnProperty("title") || 
+        //       !keyword.hasOwnProperty("description") || 
+        //       !Array.isArray(keyword.examples) || 
+        //       !Array.isArray(keyword.related_blocks) || 
+        //       !keyword.hasOwnProperty("action")
+        //     )
+        //   )
+        // )) {
+        //   response = await InterviewXBmQuestionRequest(
+        //     data,
+        //     isLoggedIn
+        //   );
+        //   retryCount++;
+        // }
 
         while (retryCount < maxRetries && (
           !response || !response.data || typeof response.data !== "object" ||

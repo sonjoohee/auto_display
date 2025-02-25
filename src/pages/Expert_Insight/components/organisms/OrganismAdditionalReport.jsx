@@ -22,6 +22,7 @@ import MoleculeReportController from "../molecules/MoleculeReportController";
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import axios from "axios";
 import Loader from "../atoms/AtomLoader"
+import { InterviewXAddQuestionRequest } from "../../../../utils/indexedDB";
 
 const OrganismAdditionalReport = ({
   additionalReportCount
@@ -116,6 +117,12 @@ const OrganismAdditionalReport = ({
           );
           answerData = response.data.additional_question;
 
+          // let response = await InterviewXAddQuestionRequest(
+          //   data,
+          //   isLoggedIn
+          // );
+          // answerData = response.response.additional_question;
+
           while (
             !answerData.hasOwnProperty("title")
           ) {
@@ -126,6 +133,11 @@ const OrganismAdditionalReport = ({
             );
             answerData = response.data.additional_question;
           }
+          // response = await InterviewXAddQuestionRequest(
+          //   data,
+          //   isLoggedIn
+          // );
+          // answerData = response.response.additional_question;
 
           setAnswerDataState(answerData);
           setTitle(answerData?.title);

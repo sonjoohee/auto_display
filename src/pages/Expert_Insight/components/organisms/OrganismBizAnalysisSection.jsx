@@ -10,6 +10,8 @@ import Loader from "../atoms/AtomLoader";
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import axios from "axios";
+import { InterviewXBusinessAnalysisRequest, InterviewXBusinessAnalysisModifyRequest } from "../../../../utils/indexedDB";
+
 
 import {
   TITLE_OF_BUSINESS_INFORMATION,
@@ -155,6 +157,11 @@ const OrganismBizAnalysisSection = () => {
           axiosConfig
         );
         businessData = response.data.business_analysis;
+        // let response = await InterviewXBusinessAnalysisRequest(
+        //   data,
+        //   isLoggedIn
+        // );
+        // businessData = response.response.business_analysis;
         setChatRefreshTrigger((prev) => !prev);
         // 필요한 데이터가 없을 경우 재시도, 최대 5번
         while (
@@ -177,6 +184,11 @@ const OrganismBizAnalysisSection = () => {
             axiosConfig
           );
           businessData = response.data.business_analysis;
+          // response = await InterviewXBusinessAnalysisRequest(
+          //   data,
+          //   isLoggedIn
+          // );
+          // businessData = response.response.business_analysis;
         }
 
         if (attempts >= maxAttempts) {
@@ -590,7 +602,11 @@ const OrganismBizAnalysisSection = () => {
         data,
         axiosConfig
       );
-
+      // const response = await InterviewXBusinessAnalysisModifyRequest(
+      //   data,
+      //   isLoggedIn
+      // );
+    
       // 응답받은 데이터가 들어가는지 확인
       if (section === "mainFeatures") {
         setMainFeaturesOfBusinessInformation([
@@ -603,6 +619,18 @@ const OrganismBizAnalysisSection = () => {
           response.data.generate_data.추가_주요기능,
         ]);
       }
+
+           // if (section === "mainFeatures") {
+      //   setMainFeaturesOfBusinessInformation([
+      //     ...mainFeaturesOfBusinessInformation,
+      //     response.response.추가_주요_목적_및_특징,
+      //   ]);
+      // } else if (section === "mainCharacteristic") {
+      //   setMainCharacteristicOfBusinessInformation([
+      //     ...mainCharacteristicOfBusinessInformation,
+      //     response.response.추가_주요기능,
+      //   ]);
+      // }
       setNewAddContent("");
       setIsAddingNow({ section: "", isAdding: false });
       setIsLoading(false);

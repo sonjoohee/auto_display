@@ -22,7 +22,7 @@ import {
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import MoleculeReportController from "../molecules/MoleculeReportController";
-
+import { InterviewXBusinessAnalysisModifyRequest } from "../../../../utils/indexedDB";
 import {
   SkeletonTitle,
   SkeletonLine,
@@ -166,6 +166,27 @@ const OrganismIdeaCustomer = () => {
         data,
         axiosConfig
       );
+      // const response = await InterviewXBusinessAnalysisModifyRequest(
+      //   data,
+      //   isLoggedIn
+      // );
+
+      // if(index === null) {
+      //   setIdeaRequirementData([
+      //     ...ideaRequirementData,
+      //     {
+      //       title: response.response.generate_data.추가_주요_목적_및_특징,
+      //       text: response.response.generate_data.추가_주요_목적_및_특징, 
+      //     },
+      //   ]);
+      // } else {
+      //   const updatedFeatures = [...ideaRequirementData];
+
+      //   updatedFeatures[index] = {
+      //     title: response.response.generate_data.추가_주요_목적_및_특징,
+      //     text: response.response.generate_data.추가_주요_목적_및_특징, 
+      //   };
+
 
       // 응답받은 데이터가 들어가는지 확인
       if(index === null) {

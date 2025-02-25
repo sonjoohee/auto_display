@@ -25,7 +25,7 @@ import Loader from "../atoms/AtomLoader";
 
 import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
-
+import {  InterviewXBmCanvasRequest } from "../../../../utils/indexedDB";
 const OrganismBmBmAutoReport = () => {
   const { saveConversation } = useSaveConversation();
   const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
@@ -90,6 +90,10 @@ const OrganismBmBmAutoReport = () => {
           data,
           axiosConfig
         );
+        // let response = await  InterviewXBmCanvasRequest(
+        //   data,
+        //   isLoggedIn
+        // );
 
         let retryCount = 0;
         const maxRetries = 10;
@@ -122,6 +126,24 @@ const OrganismBmBmAutoReport = () => {
         }
 
         setBmBmAutoReportData(response.data.bm_bm_auto_report);
+
+        // while (retryCount < maxRetries && (
+        //   !response || !response.response || typeof response.response !== "object" 
+      
+        // )) {
+    
+        //   response = await  InterviewXBmCanvasRequestt(
+        //     data,
+        //     isLoggedIn
+        //   );
+        //   retryCount++;
+        // }
+        // if (retryCount === maxRetries) {
+        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //   // 에러 처리 로직 추가
+        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        // }
+        // setBmBmAutoReportData(response.response.bm_bm_auto_report);
 
         setIsLoading(false);
         setIsLoadingIdeaPriority(false);

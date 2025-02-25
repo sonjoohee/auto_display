@@ -32,6 +32,7 @@ import {
 
 import images from "../../../../assets/styles/Images";
 import MoleculeReportController from "../molecules/MoleculeReportController";
+import {InterviewXGrowthHackerDetailRequest } from "../../../../utils/indexedDB";
 
 const OrganismGrowthHackerReport = ({ growthHackerReportCount }) => {
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
@@ -109,6 +110,11 @@ const OrganismGrowthHackerReport = ({ growthHackerReportCount }) => {
           axiosConfig
         );
 
+        // let response = await InterviewXGrowthHackerDetailRequest(
+        //   data,
+        //   isLoggedIn
+        // );
+
         let retryCount = 0;
         const maxRetries = 10;
 
@@ -140,6 +146,24 @@ const OrganismGrowthHackerReport = ({ growthHackerReportCount }) => {
         }
 
         setGrowthHackerDetailReportData([...growthHackerDetailReportData, response.data.growth_hacker_detail_report]);
+
+        // while (retryCount < maxRetries && (
+        //   !response || !response.response || typeof response.response !== "object" 
+      
+        // )) {
+    
+          // response = await InterviewXGrowthHackerDetailRequest(
+          //   data,
+          //   isLoggedIn
+          // );
+          // retryCount++;
+        // }
+        // if (retryCount === maxRetries) {
+        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //   // 에러 처리 로직 추가
+        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        // }
+        //setGrowthHackerDetailReportData([...growthHackerDetailReportData, response.response.growth_hacker_detail_report]);
 
         setIsLoading(false);
         setIsLoadingGrowthHacker(false);

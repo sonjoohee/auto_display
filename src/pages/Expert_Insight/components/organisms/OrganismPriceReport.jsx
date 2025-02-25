@@ -21,7 +21,7 @@ import {
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
-
+import { InterviewXPriceScrapRequest, InterviewXPriceAnalysisRequest } from "../../../../utils/indexedDB";
 import Loader from "../atoms/AtomLoader";
 
 const OrganismPriceReport = () => {
@@ -98,6 +98,11 @@ const OrganismPriceReport = () => {
           axiosConfig
         );
 
+        // let response1 = await InterviewXPriceScrapRequest(
+        //   data1,
+        //   isLoggedIn
+        // );
+
         let retryCount = 0;
         const maxRetries = 10;
 
@@ -129,6 +134,26 @@ const OrganismPriceReport = () => {
         }
 
         const priceScrap = response1.data.price_scrap_report;
+
+        // while (retryCount < maxRetries && (
+        //   !response || !response.response || typeof response.response !== "object" 
+      
+        // )) {
+    
+         // response1 = await InterviewXPriceScrapRequest(
+          //   data1,
+          //   isLoggedIn
+          // );
+        //   retryCount++;
+        // }
+        // if (retryCount === maxRetries) {
+        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //   // 에러 처리 로직 추가
+        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        // }
+
+        // const priceScrap = response1.resonse.price_scrap_report;
+
         setPriceScrapData(priceScrap);
 
         const data2 = {
@@ -148,6 +173,11 @@ const OrganismPriceReport = () => {
           data2,
           axiosConfig
         );
+
+        // let response2 = await InterviewXPriceAnalysisRequest(
+        //   data2,
+        //   isLoggedIn
+        // );
 
         retryCount = 0;
 
@@ -173,6 +203,7 @@ const OrganismPriceReport = () => {
             data2,
             axiosConfig
           );
+         
           retryCount++;
         }
         if (retryCount === maxRetries) {
@@ -188,6 +219,25 @@ const OrganismPriceReport = () => {
         const priceReport =
           response2.data.price_analysis_persona_recommand_report;
         setPriceReportData(priceReport);
+
+        // while (retryCount < maxRetries && (
+        //   !response || !response.response || typeof response.response !== "object" 
+      
+        // )) {
+      // response2 = await InterviewXPriceAnalysisRequest(
+          //   data2,
+          //   isLoggedIn
+          // );
+          //   retryCount++;
+          // }
+        // if (retryCount === maxRetries) {
+        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //   // 에러 처리 로직 추가
+        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        // }
+      //   const priceReport =
+      //   response2.response.price_analysis_persona_recommand_report;
+      // setPriceReportData(priceReport);
 
         const prices = priceScrap.price_range_groups.flatMap((group) =>
           group.product_list.map((product) =>
