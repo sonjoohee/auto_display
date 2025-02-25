@@ -418,18 +418,30 @@ const PageDesignAnalysis = () => {
              persona
           };
 
-          const response = await InterviewXDesignEmotionTargetRequest(
+          let response = await InterviewXDesignEmotionTargetRequest(
             apiRequestData,
             isLoggedIn
           );
 
-          if (
-            !response?.response?.design_emotion_target
+          const maxAttempts = 10;
+          let attempt = 0;
+
+          while (!response?.response?.design_emotion_target ||
+            typeof response.response.design_emotion_target !== 'object' ||
+            Object.keys(response?.response?.design_emotion_target).length === 0
           ) {
-            setShowPopupError(true);
-            return;
+            if (attempt >= maxAttempts) {
+              setShowPopupError(true);
+              return;
+            }
+
+            response = await InterviewXDesignEmotionTargetRequest(
+              apiRequestData,
+              isLoggedIn
+            );
+            
+            attempt++;
           }
-          // console.log("🚀 ~ response:", response);
 
           setDesignAnalysisEmotionTarget(response.response.design_emotion_target);
       
@@ -982,7 +994,7 @@ const PageDesignAnalysis = () => {
           buttonType="Outline"
           confirmText="확인"
           isModal={false}
-          onConfirm={() => handleNextStep(1)}
+          onConfirm={() => window.location.reload()}
         />
       )}
 
