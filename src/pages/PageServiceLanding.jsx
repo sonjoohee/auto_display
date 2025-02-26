@@ -4,12 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../assets/styles/ButtonStyle";
 import { palette } from "../assets/styles/Palette";
 import images from "../assets/styles/Images";
-import { media } from '../assets/styles/Breakpoints';
+import { media } from "../assets/styles/Breakpoints";
 
 const PageServiceLanding = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [textColor, setTextColor] = useState('#fff');
+  const [textColor, setTextColor] = useState("#fff");
   const [logoColor, setLogoColor] = useState(palette.white);
   const [buttonColor, setButtonColor] = useState(palette.white);
   const totalSlides = 3;
@@ -35,32 +35,32 @@ const PageServiceLanding = () => {
       const scrollPosition = window.scrollY;
       setScrollPosition(scrollPosition); // 스크롤 위치 업데이트
       const isMobile = window.innerWidth <= 768; // 모바일 기준 너비 설정
-      
+
       if (isMobile) {
         // 모바일일 때의 스크롤 위치 조건
         if (scrollPosition > 720) {
-          setTextColor('#000');
+          setTextColor("#000");
           setLogoColor(palette.black);
         } else if (scrollPosition > 0) {
-          setTextColor('#fff');
+          setTextColor("#fff");
           setLogoColor(palette.white);
         }
-        
+
         if (scrollPosition > 1500) {
-          setTextColor('#fff');
+          setTextColor("#fff");
           setLogoColor(palette.white);
         }
       } else {
         // PC일 때의 스크롤 위치 조건
         if (scrollPosition > 1100) {
-          setTextColor('#000');
+          setTextColor("#000");
           setLogoColor(palette.black);
         } else if (scrollPosition > 0) {
-          setTextColor('#fff');
+          setTextColor("#fff");
           setLogoColor(palette.white);
         }
         if (scrollPosition > 2250) {
-          setTextColor('#fff');
+          setTextColor("#fff");
           setLogoColor(palette.white);
         }
       }
@@ -73,29 +73,39 @@ const PageServiceLanding = () => {
         setButtonColor(palette.white);
       }
 
-      const mainVisual = document.querySelector('#mainVisual');
-      const section01 = document.querySelector('#section01');
-      const section02 = document.querySelector('#section02');
-      const section03 = document.querySelector('#section03');
-      const section04 = document.querySelector('#section04');
-      const section05 = document.querySelector('#section05');
+      const mainVisual = document.querySelector("#mainVisual");
+      const section01 = document.querySelector("#section01");
+      const section02 = document.querySelector("#section02");
+      const section03 = document.querySelector("#section03");
+      const section04 = document.querySelector("#section04");
+      const section05 = document.querySelector("#section05");
 
-      const sections = [mainVisual, section01, section02, section03, section04, section05];
-      
+      const sections = [
+        mainVisual,
+        section01,
+        section02,
+        section03,
+        section04,
+        section05,
+      ];
+
       sections.forEach((section, index) => {
         if (section) {
           const rect = section.getBoundingClientRect();
-          if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+          if (
+            rect.top <= window.innerHeight / 2 &&
+            rect.bottom >= window.innerHeight / 2
+          ) {
             setActiveSection(index + 1);
           }
         }
       });
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
       clearInterval(timer);
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -117,31 +127,31 @@ const PageServiceLanding = () => {
 
   const scrollToSection = (sectionNumber) => {
     let targetSection;
-    switch(sectionNumber) {
+    switch (sectionNumber) {
       case 1:
-        targetSection = document.querySelector('#mainVisual');
+        targetSection = document.querySelector("#mainVisual");
         break;
       case 2:
-        targetSection = document.querySelector('#section01');
+        targetSection = document.querySelector("#section01");
         break;
       case 3:
-        targetSection = document.querySelector('#section02');
+        targetSection = document.querySelector("#section02");
         break;
       case 4:
-        targetSection = document.querySelector('#section03');
+        targetSection = document.querySelector("#section03");
         break;
       case 5:
-        targetSection = document.querySelector('#section04');
+        targetSection = document.querySelector("#section04");
         break;
       case 6:
-        targetSection = document.querySelector('#section05');
+        targetSection = document.querySelector("#section05");
         break;
       default:
         return;
     }
 
     if (targetSection) {
-      targetSection.scrollIntoView({ behavior: 'smooth' });
+      targetSection.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -152,7 +162,7 @@ const PageServiceLanding = () => {
   const handleMouseDown = (e) => {
     setIsDragging(true);
     // 터치 이벤트인 경우와 마우스 이벤트인 경우를 구분
-    const pageX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+    const pageX = e.type.includes("mouse") ? e.pageX : e.touches[0].pageX;
     setStartX(pageX - e.currentTarget.offsetLeft);
     setScrollLeft(currentSlide);
   };
@@ -164,14 +174,17 @@ const PageServiceLanding = () => {
   const handleMouseMove = (e) => {
     if (!isDragging) return;
     e.preventDefault();
-    
+
     // 터치 이벤트인 경우와 마우스 이벤트인 경우를 구분
-    const pageX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+    const pageX = e.type.includes("mouse") ? e.pageX : e.touches[0].pageX;
     const x = pageX - e.currentTarget.offsetLeft;
     const walk = (x - startX) * 2;
     const slideMove = Math.round(walk / e.currentTarget.offsetWidth);
-    const newSlide = Math.max(0, Math.min(scrollLeft - slideMove, totalSlides - 1));
-    
+    const newSlide = Math.max(
+      0,
+      Math.min(scrollLeft - slideMove, totalSlides - 1)
+    );
+
     setCurrentSlide(newSlide);
   };
 
@@ -196,7 +209,9 @@ const PageServiceLanding = () => {
         </h1>
         <div className="gnb">
           <Link to="/blog">Blog</Link>
-          <Button Large Round Primary Fill onClick={() => navigate('/')}>Get Started</Button>
+          <Button Large Round Primary Fill onClick={() => navigate("/")}>
+            Get Started
+          </Button>
         </div>
       </Header>
 
@@ -204,7 +219,7 @@ const PageServiceLanding = () => {
         {[1, 2, 3, 4, 5, 6].map((num) => (
           <span
             key={num}
-            className={activeSection === num ? 'active' : ''}
+            className={activeSection === num ? "active" : ""}
             onClick={() => scrollToSection(num)}
           >
             {num}
@@ -223,8 +238,10 @@ const PageServiceLanding = () => {
           <p>
             PERSONA
             <span className="subtext02">
-              HUMAN CONTEXT AI<br />
-              AI FEEDBACK<br />
+              HUMAN CONTEXT AI
+              <br />
+              AI FEEDBACK
+              <br />
               AI INTERVIEW LAB
             </span>
           </p>
@@ -238,14 +255,22 @@ const PageServiceLanding = () => {
 
         <div className="visual-text mobile">
           <p>
-            EXPERT<br />PERSONA
+            EXPERT
+            <br />
+            PERSONA
             <span className="subtext01">SCALABLE RESEARCH</span>
           </p>
           <p>
-            EXPERIENCE<br />AI-DRIVEN<br />INSIGHT
+            EXPERIENCE
+            <br />
+            AI-DRIVEN
+            <br />
+            INSIGHT
             <span className="subtext02">
-              HUMAN CONTEXT AI<br />
-              AI FEEDBACK<br />
+              HUMAN CONTEXT AI
+              <br />
+              AI FEEDBACK
+              <br />
               AI INTERVIEW LAB
             </span>
           </p>
@@ -263,20 +288,28 @@ const PageServiceLanding = () => {
 
       <Section01 id="section01">
         <p>
-          "X의 가능성: 경험, 맥락, 그리고 확장"<br />
-          eXperience<br />
-          conteXt<br />
+          "X의 가능성: 경험, 맥락, 그리고 확장"
+          <br />
+          eXperience
+          <br />
+          conteXt
+          <br />
           eXpansion
         </p>
 
-        <h2>EXPERIENCE<br />CONTE &nbsp;&nbsp;T</h2>
+        <h2>
+          EXPERIENCE
+          <br />
+          CONTE &nbsp;&nbsp;T
+        </h2>
 
         <strong>
-          X를 통해 페르소나와 대화하고, 통찰을 얻고,<br />
+          X를 통해 페르소나와 대화하고, 통찰을 얻고,
+          <br />
           새로운 가능성을 발견해보세요.
         </strong>
 
-        <button type="button" onClick={() => navigate('/')}>
+        <button type="button" onClick={() => navigate("/")}>
           Start Now
           <span />
         </button>
@@ -302,7 +335,11 @@ const PageServiceLanding = () => {
           <div className="text-wrapper">
             <p>신뢰할 수 있는 AI Persona, 현실감 있는 대화의 시작</p>
 
-            <h3>"신뢰할 수 있는 데이터 연구로 탄생한 AI Persona,<br />대화 속에서 경험을 공유합니다."</h3>
+            <h3>
+              "신뢰할 수 있는 데이터 연구로 탄생한 AI Persona,
+              <br />
+              대화 속에서 경험을 공유합니다."
+            </h3>
 
             <div>
               <ul>
@@ -328,8 +365,10 @@ const PageServiceLanding = () => {
         <div className="title">
           <h3>AI - Powered New Research</h3>
           <p>
-            interviewX.ai로 기존의 설문조사, 인터뷰 조사를 혁신하세요!<br />
-          AI 하이퍼 페르소나 + AI 모더레이터 + AI 리서처로 빠르고 정교한 소비자 의견 조사
+            interviewX.ai로 기존의 설문조사, 인터뷰 조사를 혁신하세요!
+            <br />
+            AI 하이퍼 페르소나 + AI 모더레이터 + AI 리서처로 빠르고 정교한
+            소비자 의견 조사
           </p>
         </div>
 
@@ -337,99 +376,243 @@ const PageServiceLanding = () => {
           <div className="box-content">
             <div className="content-text">
               <h4>
-                <svg xmlns="http://www.w3.org/2000/svg" width="65" height="64" viewBox="0 0 65 64" fill="none">
-                  <path d="M35.2264 25.6667C40.3811 25.6667 44.5597 21.488 44.5597 16.3333C44.5597 11.1787 40.3811 7 35.2264 7C30.0717 7 25.8931 11.1787 25.8931 16.3333C25.8931 21.488 30.0717 25.6667 35.2264 25.6667Z" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M8.55957 56.3333C8.55957 44.5507 19.3049 35 32.5596 35" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M35.2261 56.6665L40.1381 41.9305C40.2614 41.5628 40.4971 41.243 40.812 41.0165C41.1268 40.79 41.5049 40.6681 41.8927 40.6681C42.2806 40.6681 42.6587 40.79 42.9735 41.0165C43.2884 41.243 43.5241 41.5628 43.6474 41.9305L48.5594 56.6665M56.5594 40.6665V56.6665M37.8927 51.3332H45.8927" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="65"
+                  height="64"
+                  viewBox="0 0 65 64"
+                  fill="none"
+                >
+                  <path
+                    d="M35.2264 25.6667C40.3811 25.6667 44.5597 21.488 44.5597 16.3333C44.5597 11.1787 40.3811 7 35.2264 7C30.0717 7 25.8931 11.1787 25.8931 16.3333C25.8931 21.488 30.0717 25.6667 35.2264 25.6667Z"
+                    stroke="white"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M8.55957 56.3333C8.55957 44.5507 19.3049 35 32.5596 35"
+                    stroke="white"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M35.2261 56.6665L40.1381 41.9305C40.2614 41.5628 40.4971 41.243 40.812 41.0165C41.1268 40.79 41.5049 40.6681 41.8927 40.6681C42.2806 40.6681 42.6587 40.79 42.9735 41.0165C43.2884 41.243 43.5241 41.5628 43.6474 41.9305L48.5594 56.6665M56.5594 40.6665V56.6665M37.8927 51.3332H45.8927"
+                    stroke="white"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
                 </svg>
                 AI HYPER PERSONA
               </h4>
-              <p className={openContent === 0 ? 'show' : ''}>실제 소비자처럼 반응하는 맞춤형 AI 페르소나 인터뷰</p>
-              <ul className={openContent === 0 ? 'show' : ''}>
-                <li>한 줄 아이디어만 입력하면 AI가 최적의 타겟 페르소나 자동 생성</li>
-                <li>실제 인구통계 및 라이프스타일 데이터를 반영한 200+ 프로파일을 갖는 페르소나 기반 인터뷰</li>
-                <li>20가지 소비자 유형 + 산업별 상위 10명 페르소나 추천으로 다양한 관점 분석</li>
-                <li>나만의 맞춤형 페르소나 커스터마이징 가능 (Pro 모드 지원)</li>
-                <li>기업 맞춤형 대량 AI 페르소나 생성 및 분석 지원 (엔터프라이즈 문의)</li>
+              <p className={openContent === 0 ? "show" : ""}>
+                실제 소비자처럼 반응하는 맞춤형 AI 페르소나 인터뷰
+              </p>
+              <ul className={openContent === 0 ? "show" : ""}>
+                <li>
+                  한 줄 아이디어만 입력하면 AI가 최적의 타겟 페르소나 자동 생성
+                </li>
+                <li>
+                  실제 인구통계 및 라이프스타일 데이터를 반영한 200+ 프로파일을
+                  갖는 페르소나 기반 인터뷰
+                </li>
+                <li>
+                  20가지 소비자 유형 + 산업별 상위 10명 페르소나 추천으로 다양한
+                  관점 분석
+                </li>
+                <li>
+                  나만의 맞춤형 페르소나 커스터마이징 가능 (Pro 모드 지원)
+                </li>
+                <li>
+                  기업 맞춤형 대량 AI 페르소나 생성 및 분석 지원 (엔터프라이즈
+                  문의)
+                </li>
               </ul>
             </div>
 
-            <p className={openContent === 0 ? 'show' : ''}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-                <path d="M2.55957 20.5V9.5H5.55957V20.5H2.55957Z" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
-                <path d="M5.55957 9.50004C9.1119 6.21504 11.1714 4.33171 11.7381 3.85004C12.5881 3.12704 13.5481 3.43054 13.5481 5.23954C13.5481 7.04854 10.9166 8.12204 10.9166 9.50004C10.9146 9.50871 14.2949 9.50921 21.0576 9.50154C21.2547 9.50128 21.4499 9.53987 21.6321 9.6151C21.8143 9.69033 21.9799 9.80074 22.1193 9.94C22.2588 10.0793 22.3695 10.2446 22.4451 10.4267C22.5206 10.6088 22.5595 10.8039 22.5596 11.001V11.0025C22.5596 11.1998 22.5208 11.3952 22.4454 11.5775C22.3699 11.7598 22.2593 11.9254 22.1198 12.0649C21.9803 12.2045 21.8147 12.3151 21.6325 12.3907C21.4502 12.4662 21.2549 12.505 21.0576 12.505H17.5511C16.9477 16.489 16.6149 18.6555 16.5526 19.0045C16.4586 19.527 15.9596 20.5 14.5256 20.5H5.55957V9.50004Z" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
+            <p className={openContent === 0 ? "show" : ""}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="24"
+                viewBox="0 0 25 24"
+                fill="none"
+              >
+                <path
+                  d="M2.55957 20.5V9.5H5.55957V20.5H2.55957Z"
+                  stroke="white"
+                  stroke-width="1.2"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M5.55957 9.50004C9.1119 6.21504 11.1714 4.33171 11.7381 3.85004C12.5881 3.12704 13.5481 3.43054 13.5481 5.23954C13.5481 7.04854 10.9166 8.12204 10.9166 9.50004C10.9146 9.50871 14.2949 9.50921 21.0576 9.50154C21.2547 9.50128 21.4499 9.53987 21.6321 9.6151C21.8143 9.69033 21.9799 9.80074 22.1193 9.94C22.2588 10.0793 22.3695 10.2446 22.4451 10.4267C22.5206 10.6088 22.5595 10.8039 22.5596 11.001V11.0025C22.5596 11.1998 22.5208 11.3952 22.4454 11.5775C22.3699 11.7598 22.2593 11.9254 22.1198 12.0649C21.9803 12.2045 21.8147 12.3151 21.6325 12.3907C21.4502 12.4662 21.2549 12.505 21.0576 12.505H17.5511C16.9477 16.489 16.6149 18.6555 16.5526 19.0045C16.4586 19.527 15.9596 20.5 14.5256 20.5H5.55957V9.50004Z"
+                  stroke="white"
+                  stroke-width="1.2"
+                  stroke-linejoin="round"
+                />
               </svg>
               기존 리서치보다 빠르고 정밀한 소비자 이해!
             </p>
 
             <div className="more" onClick={() => toggleContent(0)}>
-              <span>{openContent === 0 ? '세부내용 접기' : '세부내용 펼쳐보기'}</span>
-              <i className={openContent === 0 ? 'open' : ''} />
+              <span>
+                {openContent === 0 ? "세부내용 접기" : "세부내용 펼쳐보기"}
+              </span>
+              <i className={openContent === 0 ? "open" : ""} />
             </div>
           </div>
 
           <div className="box-content">
             <div className="content-text">
               <h4>
-                <svg xmlns="http://www.w3.org/2000/svg" width="65" height="64" viewBox="0 0 65 64" fill="none">
-                  <path d="M57.8929 32.0002C57.2609 45.5522 45.5676 56.3548 31.2396 56.3548C29.5045 56.3566 27.7836 56.1984 26.0769 55.8802C24.8529 55.6482 24.2396 55.5335 23.8129 55.6002C23.3862 55.6642 22.7809 55.9868 21.5676 56.6295C18.1163 58.468 14.1448 59.0854 10.2982 58.3815C11.7669 56.5659 12.7628 54.4147 13.1969 52.1202C13.4636 50.7068 12.8049 49.3335 11.8129 48.3282C7.3169 43.7628 4.55957 37.6135 4.55957 30.8455C4.55957 16.7575 16.5062 5.3335 31.2396 5.3335C32.5942 5.3335 33.9231 5.42772 35.2262 5.61616M31.2156 32.0002H31.2369M41.8689 32.0002H41.8929M20.5596 32.0002H20.5836" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M39.2261 21L44.1381 6.264C44.2614 5.89625 44.4971 5.57654 44.812 5.35002C45.1268 5.12351 45.5049 5.00165 45.8927 5.00165C46.2806 5.00165 46.6587 5.12351 46.9735 5.35002C47.2884 5.57654 47.5241 5.89625 47.6474 6.264L52.5594 21M60.5594 5V21M41.8927 15.6667H49.8927" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="65"
+                  height="64"
+                  viewBox="0 0 65 64"
+                  fill="none"
+                >
+                  <path
+                    d="M57.8929 32.0002C57.2609 45.5522 45.5676 56.3548 31.2396 56.3548C29.5045 56.3566 27.7836 56.1984 26.0769 55.8802C24.8529 55.6482 24.2396 55.5335 23.8129 55.6002C23.3862 55.6642 22.7809 55.9868 21.5676 56.6295C18.1163 58.468 14.1448 59.0854 10.2982 58.3815C11.7669 56.5659 12.7628 54.4147 13.1969 52.1202C13.4636 50.7068 12.8049 49.3335 11.8129 48.3282C7.3169 43.7628 4.55957 37.6135 4.55957 30.8455C4.55957 16.7575 16.5062 5.3335 31.2396 5.3335C32.5942 5.3335 33.9231 5.42772 35.2262 5.61616M31.2156 32.0002H31.2369M41.8689 32.0002H41.8929M20.5596 32.0002H20.5836"
+                    stroke="white"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M39.2261 21L44.1381 6.264C44.2614 5.89625 44.4971 5.57654 44.812 5.35002C45.1268 5.12351 45.5049 5.00165 45.8927 5.00165C46.2806 5.00165 46.6587 5.12351 46.9735 5.35002C47.2884 5.57654 47.5241 5.89625 47.6474 6.264L52.5594 21M60.5594 5V21M41.8927 15.6667H49.8927"
+                    stroke="white"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
                 </svg>
                 AI MODERATOR AUTO INTERVIEW
               </h4>
-              <p className={openContent === 1 ? 'show' : ''}>실시간 AI 모더레이터로 1:1, 1:N, 퀵서베이 자동 진행</p>
-              <ul className={openContent === 1 ? 'show' : ''}>
-                <li>1:1 인뎁스 인터뷰 – 최대 3단계 심층 질문 & 추가 질문 가능</li>
+              <p className={openContent === 1 ? "show" : ""}>
+                실시간 AI 모더레이터로 1:1, 1:N, 퀵서베이 자동 진행
+              </p>
+              <ul className={openContent === 1 ? "show" : ""}>
+                <li>
+                  1:1 인뎁스 인터뷰 – 최대 3단계 심층 질문 & 추가 질문 가능
+                </li>
                 <li>1:N 인터뷰 – 최대 5명의 페르소나와 동시 인터뷰 진행</li>
-                <li>퀵서베이 – 50명 이상 대량 응답 분석으로 빠른 시장 조사 가능</li>
-                <li>실시간 미러룸 방식 – AI 인터뷰를 실시간으로 관찰하고 추가 질문 가능</li>
-                <li>자동화된 대량 인터뷰로 연속적인 대규모 인사이트 확보 (엔터프라이즈 지원)</li>
+                <li>
+                  퀵서베이 – 50명 이상 대량 응답 분석으로 빠른 시장 조사 가능
+                </li>
+                <li>
+                  실시간 미러룸 방식 – AI 인터뷰를 실시간으로 관찰하고 추가 질문
+                  가능
+                </li>
+                <li>
+                  자동화된 대량 인터뷰로 연속적인 대규모 인사이트 확보
+                  (엔터프라이즈 지원)
+                </li>
               </ul>
             </div>
 
-            <p className={openContent === 1 ? 'show' : ''}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-                <path d="M2.55957 20.5V9.5H5.55957V20.5H2.55957Z" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
-                <path d="M5.55957 9.50004C9.1119 6.21504 11.1714 4.33171 11.7381 3.85004C12.5881 3.12704 13.5481 3.43054 13.5481 5.23954C13.5481 7.04854 10.9166 8.12204 10.9166 9.50004C10.9146 9.50871 14.2949 9.50921 21.0576 9.50154C21.2547 9.50128 21.4499 9.53987 21.6321 9.6151C21.8143 9.69033 21.9799 9.80074 22.1193 9.94C22.2588 10.0793 22.3695 10.2446 22.4451 10.4267C22.5206 10.6088 22.5595 10.8039 22.5596 11.001V11.0025C22.5596 11.1998 22.5208 11.3952 22.4454 11.5775C22.3699 11.7598 22.2593 11.9254 22.1198 12.0649C21.9803 12.2045 21.8147 12.3151 21.6325 12.3907C21.4502 12.4662 21.2549 12.505 21.0576 12.505H17.5511C16.9477 16.489 16.6149 18.6555 16.5526 19.0045C16.4586 19.527 15.9596 20.5 14.5256 20.5H5.55957V9.50004Z" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
+            <p className={openContent === 1 ? "show" : ""}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="24"
+                viewBox="0 0 25 24"
+                fill="none"
+              >
+                <path
+                  d="M2.55957 20.5V9.5H5.55957V20.5H2.55957Z"
+                  stroke="white"
+                  stroke-width="1.2"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M5.55957 9.50004C9.1119 6.21504 11.1714 4.33171 11.7381 3.85004C12.5881 3.12704 13.5481 3.43054 13.5481 5.23954C13.5481 7.04854 10.9166 8.12204 10.9166 9.50004C10.9146 9.50871 14.2949 9.50921 21.0576 9.50154C21.2547 9.50128 21.4499 9.53987 21.6321 9.6151C21.8143 9.69033 21.9799 9.80074 22.1193 9.94C22.2588 10.0793 22.3695 10.2446 22.4451 10.4267C22.5206 10.6088 22.5595 10.8039 22.5596 11.001V11.0025C22.5596 11.1998 22.5208 11.3952 22.4454 11.5775C22.3699 11.7598 22.2593 11.9254 22.1198 12.0649C21.9803 12.2045 21.8147 12.3151 21.6325 12.3907C21.4502 12.4662 21.2549 12.505 21.0576 12.505H17.5511C16.9477 16.489 16.6149 18.6555 16.5526 19.0045C16.4586 19.527 15.9596 20.5 14.5256 20.5H5.55957V9.50004Z"
+                  stroke="white"
+                  stroke-width="1.2"
+                  stroke-linejoin="round"
+                />
               </svg>
-              일반적 수준의 피드백은 비싼 패널 모집 없이, 즉각적 인터뷰 실행 & 실시간 인사이트 확보!
+              일반적 수준의 피드백은 비싼 패널 모집 없이, 즉각적 인터뷰 실행 &
+              실시간 인사이트 확보!
             </p>
 
             <div className="more" onClick={() => toggleContent(1)}>
-              <span>{openContent === 1 ? '세부내용 접기' : '세부내용 펼쳐보기'}</span>
-              <i className={openContent === 1 ? 'open' : ''} />
+              <span>
+                {openContent === 1 ? "세부내용 접기" : "세부내용 펼쳐보기"}
+              </span>
+              <i className={openContent === 1 ? "open" : ""} />
             </div>
           </div>
 
           <div className="box-content">
             <div className="content-text">
               <h4>
-                <svg xmlns="http://www.w3.org/2000/svg" width="65" height="64" viewBox="0 0 65 64" fill="none">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M3.05957 5C3.05957 4.17157 3.73114 3.5 4.55957 3.5H60.5596C61.388 3.5 62.0596 4.17157 62.0596 5C62.0596 5.82843 61.388 6.5 60.5596 6.5H56.5596V7V40C56.5596 42.2091 54.7687 44 52.5596 44H40.8586L47.8619 56.2558C48.2729 56.9751 48.0231 57.8913 47.3038 58.3024C46.5845 58.7134 45.6682 58.4635 45.2572 57.7442L37.4034 44H27.7158L19.8619 57.7442C19.4509 58.4635 18.5346 58.7134 17.8154 58.3024C17.0961 57.8913 16.8462 56.9751 17.2572 56.2558L24.2605 44H12.5596C10.3504 44 8.55957 42.2091 8.55957 40V7V6.5H4.55957C3.73114 6.5 3.05957 5.82843 3.05957 5ZM11.5596 7H53.5596V40C53.5596 40.5523 53.1119 41 52.5596 41H12.5596C12.0073 41 11.5596 40.5523 11.5596 40V7ZM24.0596 24C24.0596 23.1716 23.388 22.5 22.5596 22.5C21.7311 22.5 21.0596 23.1716 21.0596 24V30C21.0596 30.8284 21.7311 31.5 22.5596 31.5C23.388 31.5 24.0596 30.8284 24.0596 30V24ZM32.5596 18.5C33.388 18.5 34.0596 19.1716 34.0596 20V30C34.0596 30.8284 33.388 31.5 32.5596 31.5C31.7311 31.5 31.0596 30.8284 31.0596 30V20C31.0596 19.1716 31.7311 18.5 32.5596 18.5ZM44.0596 16C44.0596 15.1716 43.388 14.5 42.5596 14.5C41.7311 14.5 41.0596 15.1716 41.0596 16V30C41.0596 30.8284 41.7311 31.5 42.5596 31.5C43.388 31.5 44.0596 30.8284 44.0596 30V16Z" fill="white"/>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="65"
+                  height="64"
+                  viewBox="0 0 65 64"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M3.05957 5C3.05957 4.17157 3.73114 3.5 4.55957 3.5H60.5596C61.388 3.5 62.0596 4.17157 62.0596 5C62.0596 5.82843 61.388 6.5 60.5596 6.5H56.5596V7V40C56.5596 42.2091 54.7687 44 52.5596 44H40.8586L47.8619 56.2558C48.2729 56.9751 48.0231 57.8913 47.3038 58.3024C46.5845 58.7134 45.6682 58.4635 45.2572 57.7442L37.4034 44H27.7158L19.8619 57.7442C19.4509 58.4635 18.5346 58.7134 17.8154 58.3024C17.0961 57.8913 16.8462 56.9751 17.2572 56.2558L24.2605 44H12.5596C10.3504 44 8.55957 42.2091 8.55957 40V7V6.5H4.55957C3.73114 6.5 3.05957 5.82843 3.05957 5ZM11.5596 7H53.5596V40C53.5596 40.5523 53.1119 41 52.5596 41H12.5596C12.0073 41 11.5596 40.5523 11.5596 40V7ZM24.0596 24C24.0596 23.1716 23.388 22.5 22.5596 22.5C21.7311 22.5 21.0596 23.1716 21.0596 24V30C21.0596 30.8284 21.7311 31.5 22.5596 31.5C23.388 31.5 24.0596 30.8284 24.0596 30V24ZM32.5596 18.5C33.388 18.5 34.0596 19.1716 34.0596 20V30C34.0596 30.8284 33.388 31.5 32.5596 31.5C31.7311 31.5 31.0596 30.8284 31.0596 30V20C31.0596 19.1716 31.7311 18.5 32.5596 18.5ZM44.0596 16C44.0596 15.1716 43.388 14.5 42.5596 14.5C41.7311 14.5 41.0596 15.1716 41.0596 16V30C41.0596 30.8284 41.7311 31.5 42.5596 31.5C43.388 31.5 44.0596 30.8284 44.0596 30V16Z"
+                    fill="white"
+                  />
                 </svg>
                 AI RESEARCHER AUTOMATIC ANALYSIS
               </h4>
-              <p className={openContent === 2 ? 'show' : ''}>맞춤형 조사 설계 & 자동 분석으로 빠른 의사결정 지원</p>
-              <ul className={openContent === 2 ? 'show' : ''}>
-                <li>제품 개발 단계별 맞춤형 질문 자동 추천 (아이디어~시장 확장)</li>
+              <p className={openContent === 2 ? "show" : ""}>
+                맞춤형 조사 설계 & 자동 분석으로 빠른 의사결정 지원
+              </p>
+              <ul className={openContent === 2 ? "show" : ""}>
+                <li>
+                  제품 개발 단계별 맞춤형 질문 자동 추천 (아이디어~시장 확장)
+                </li>
                 <li>AI 기반 실시간 데이터 분석 및 주요 인사이트 요약 제공</li>
-                <li>ChatGPT처럼 자연어로 질문하면 AI가 자동 조사 설계 및 문항 추천</li>
-                <li>비즈니스 확장 및 시장 진출 전략 수립을 위한 대량 조사 지원  (엔터프라이즈 맞춤 지원)</li>
+                <li>
+                  ChatGPT처럼 자연어로 질문하면 AI가 자동 조사 설계 및 문항 추천
+                </li>
+                <li>
+                  비즈니스 확장 및 시장 진출 전략 수립을 위한 대량 조사 지원
+                   (엔터프라이즈 맞춤 지원)
+                </li>
                 <li>기업 맞춤형 보고서 자동 생성 (엔터프라이즈 맞춤 지원)</li>
               </ul>
             </div>
 
-            <p className={openContent === 2 ? 'show' : ''}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-                <path d="M2.55957 20.5V9.5H5.55957V20.5H2.55957Z" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
-                <path d="M5.55957 9.50004C9.1119 6.21504 11.1714 4.33171 11.7381 3.85004C12.5881 3.12704 13.5481 3.43054 13.5481 5.23954C13.5481 7.04854 10.9166 8.12204 10.9166 9.50004C10.9146 9.50871 14.2949 9.50921 21.0576 9.50154C21.2547 9.50128 21.4499 9.53987 21.6321 9.6151C21.8143 9.69033 21.9799 9.80074 22.1193 9.94C22.2588 10.0793 22.3695 10.2446 22.4451 10.4267C22.5206 10.6088 22.5595 10.8039 22.5596 11.001V11.0025C22.5596 11.1998 22.5208 11.3952 22.4454 11.5775C22.3699 11.7598 22.2593 11.9254 22.1198 12.0649C21.9803 12.2045 21.8147 12.3151 21.6325 12.3907C21.4502 12.4662 21.2549 12.505 21.0576 12.505H17.5511C16.9477 16.489 16.6149 18.6555 16.5526 19.0045C16.4586 19.527 15.9596 20.5 14.5256 20.5H5.55957V9.50004Z" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
+            <p className={openContent === 2 ? "show" : ""}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="24"
+                viewBox="0 0 25 24"
+                fill="none"
+              >
+                <path
+                  d="M2.55957 20.5V9.5H5.55957V20.5H2.55957Z"
+                  stroke="white"
+                  stroke-width="1.2"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M5.55957 9.50004C9.1119 6.21504 11.1714 4.33171 11.7381 3.85004C12.5881 3.12704 13.5481 3.43054 13.5481 5.23954C13.5481 7.04854 10.9166 8.12204 10.9166 9.50004C10.9146 9.50871 14.2949 9.50921 21.0576 9.50154C21.2547 9.50128 21.4499 9.53987 21.6321 9.6151C21.8143 9.69033 21.9799 9.80074 22.1193 9.94C22.2588 10.0793 22.3695 10.2446 22.4451 10.4267C22.5206 10.6088 22.5595 10.8039 22.5596 11.001V11.0025C22.5596 11.1998 22.5208 11.3952 22.4454 11.5775C22.3699 11.7598 22.2593 11.9254 22.1198 12.0649C21.9803 12.2045 21.8147 12.3151 21.6325 12.3907C21.4502 12.4662 21.2549 12.505 21.0576 12.505H17.5511C16.9477 16.489 16.6149 18.6555 16.5526 19.0045C16.4586 19.527 15.9596 20.5 14.5256 20.5H5.55957V9.50004Z"
+                  stroke="white"
+                  stroke-width="1.2"
+                  stroke-linejoin="round"
+                />
               </svg>
               데이터 기반으로 신속한 인사이트 확보 & 제품 전략 최적화!
             </p>
 
             <div className="more" onClick={() => toggleContent(2)}>
-              <span>{openContent === 2 ? '세부내용 접기' : '세부내용 펼쳐보기'}</span>
-              <i className={openContent === 2 ? 'open' : ''} />
+              <span>
+                {openContent === 2 ? "세부내용 접기" : "세부내용 펼쳐보기"}
+              </span>
+              <i className={openContent === 2 ? "open" : ""} />
             </div>
           </div>
         </div>
@@ -442,10 +625,10 @@ const PageServiceLanding = () => {
         </div>
 
         <div className="carousel">
-          <div 
+          <div
             className="carousel-container"
-            style={{ 
-              cursor: isDragging ? 'grabbing' : 'grab'
+            style={{
+              cursor: isDragging ? "grabbing" : "grab",
             }}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
@@ -471,7 +654,7 @@ const PageServiceLanding = () => {
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={currentSlide === index ? 'active' : ''}
+                className={currentSlide === index ? "active" : ""}
               />
             ))}
           </div>
@@ -480,8 +663,13 @@ const PageServiceLanding = () => {
 
       <Section05 id="section05">
         <div className="title">
-          <h3>We are<br />InterviewX</h3>
-          <button>
+          <h3>
+            We are
+            <br />
+            InterviewX
+          </h3>
+
+          <button type="button" onClick={() => navigate("/")}>
             지금 시작하세요
             <span />
           </button>
@@ -491,103 +679,161 @@ const PageServiceLanding = () => {
           <div>
             <h3>
               FAQ<em>?</em>
-              <span onClick={() => navigate('/blog')}>Blog로 이동<i /></span>
+              <span onClick={() => navigate("/blog")}>
+                Blog로 이동
+                <i />
+              </span>
             </h3>
 
             <FaqList>
               <li>
-                <button onClick={() => toggleFaq(0)} className={`${openFaq === 0 ? 'open' : ''}`}>
+                <button
+                  onClick={() => toggleFaq(0)}
+                  className={`${openFaq === 0 ? "open" : ""}`}
+                >
                   <p>InterviewX.ai는 기존 시장조사 방식과 어떻게 다른가요?</p>
                   <i />
                 </button>
-                <div className={`answer ${openFaq === 0 ? 'open' : ''}`}>
+                <div className={`answer ${openFaq === 0 ? "open" : ""}`}>
                   <p className="gray">
-                    기존 시장 조사는 패널 모집, 설문 설계, 데이터 분석 등에 많은 시간과 비용이 소요됩니다.<br />
-                    InterviewX.ai는 AI 페르소나와 대화형 인터뷰를 통해 즉각적인 인사이트 도출이 가능하며, 기존 조사 방식보다 더 정밀하고 신뢰도 높은 피드백을 자동으로 분석합니다.
+                    기존 시장 조사는 패널 모집, 설문 설계, 데이터 분석 등에 많은
+                    시간과 비용이 소요됩니다.
+                    <br />
+                    InterviewX.ai는 AI 페르소나와 대화형 인터뷰를 통해 즉각적인
+                    인사이트 도출이 가능하며, 기존 조사 방식보다 더 정밀하고
+                    신뢰도 높은 피드백을 자동으로 분석합니다.
                   </p>
                   <p>
-                    ✔ 빠른 실행 – 몇 분 만에 AI 페르소나와 인터뷰 진행<br />
-                    ✔ 심층 분석 – 단순 응답이 아닌, 맥락과 감정을 반영한 피드백 제공<br />
-                    ✔ 자동화된 인사이트 – 인터뷰 후 AI가 주요 인사이트를 요약하여 제공
+                    ✔ 빠른 실행 – 몇 분 만에 AI 페르소나와 인터뷰 진행
+                    <br />
+                    ✔ 심층 분석 – 단순 응답이 아닌, 맥락과 감정을 반영한 피드백
+                    제공
+                    <br />✔ 자동화된 인사이트 – 인터뷰 후 AI가 주요 인사이트를
+                    요약하여 제공
                   </p>
                 </div>
               </li>
               <li>
-                <button onClick={() => toggleFaq(1)} className={`${openFaq === 1 ? 'open' : ''}`}>
+                <button
+                  onClick={() => toggleFaq(1)}
+                  className={`${openFaq === 1 ? "open" : ""}`}
+                >
                   <p>InterviewX.ai는 어떤 사람이 사용하면 좋을까요?</p>
                   <i />
                 </button>
-                <div className={`answer ${openFaq === 1 ? 'open' : ''}`}>
+                <div className={`answer ${openFaq === 1 ? "open" : ""}`}>
                   <p className="gray">
-                    🚀 스타트업 창업자 – 제품 아이디어 검증, 타겟 고객 인터뷰, 시장 반응 분석<br />
-                    📢 마케팅 전문가 – 광고 메시지 테스트, 브랜드 포지셔닝, 캠페인 효과 분석<br />
-                    🔬 UX 및 리서처 – 사용자 경험 조사, 제품 사용성 테스트, 소비자 심리 분석
+                    🚀 스타트업 창업자 – 제품 아이디어 검증, 타겟 고객 인터뷰,
+                    시장 반응 분석
+                    <br />
+                    📢 마케팅 전문가 – 광고 메시지 테스트, 브랜드 포지셔닝,
+                    캠페인 효과 분석
+                    <br />
+                    🔬 UX 및 리서처 – 사용자 경험 조사, 제품 사용성 테스트,
+                    소비자 심리 분석
                   </p>
                   <p>
-                    InterviewX.ai는 소비자의 행동과 반응을 분석하여 맞춤형 피드백을 제공하는 강력한 AI 리서치 도구입니다.
+                    InterviewX.ai는 소비자의 행동과 반응을 분석하여 맞춤형
+                    피드백을 제공하는 강력한 AI 리서치 도구입니다.
                   </p>
                 </div>
               </li>
               <li>
-                <button onClick={() => toggleFaq(2)} className={`${openFaq === 2 ? 'open' : ''}`}>
-                  <p>InterviewX.ai의 AI 페르소나는 어떻게 신뢰성을 확보하나요?</p>
+                <button
+                  onClick={() => toggleFaq(2)}
+                  className={`${openFaq === 2 ? "open" : ""}`}
+                >
+                  <p>
+                    InterviewX.ai의 AI 페르소나는 어떻게 신뢰성을 확보하나요?
+                  </p>
                   <i />
                 </button>
-                <div className={`answer ${openFaq === 2 ? 'open' : ''}`}>
+                <div className={`answer ${openFaq === 2 ? "open" : ""}`}>
                   <p className="gray">
-                    InterviewX.ai의 AI 페르소나는 단순한 챗봇이 아니라, 공공 데이터, 학술 연구, 시장 조사 데이터를 기반으로 학습된 AI 모델입니다.
+                    InterviewX.ai의 AI 페르소나는 단순한 챗봇이 아니라, 공공
+                    데이터, 학술 연구, 시장 조사 데이터를 기반으로 학습된 AI
+                    모델입니다.
                   </p>
                   <p>
-                    ✔ 200개 이상의 실제 프로파일 반영 – 연령, 직업, 관심사, 소비 패턴 등<br />
-                    ✔ 실제 사용자 인터뷰 데이터 학습 – 현실적인 반응을 제공하도록 설계<br />
-                    ✔ 자동 데이터 검증 및 개선 – AI가 지속적으로 학습하며 정확도 향상<br />
-                    따라서, AI 페르소나는 실제 소비자와 유사한 피드백을 제공하며, 신뢰할 수 있는 조사 결과를 생성합니다.
+                    ✔ 200개 이상의 실제 프로파일 반영 – 연령, 직업, 관심사, 소비
+                    패턴 등<br />
+                    ✔ 실제 사용자 인터뷰 데이터 학습 – 현실적인 반응을
+                    제공하도록 설계
+                    <br />
+                    ✔ 자동 데이터 검증 및 개선 – AI가 지속적으로 학습하며 정확도
+                    향상
+                    <br />
+                    따라서, AI 페르소나는 실제 소비자와 유사한 피드백을
+                    제공하며, 신뢰할 수 있는 조사 결과를 생성합니다.
                   </p>
                 </div>
               </li>
               <li>
-                <button onClick={() => toggleFaq(3)} className={`${openFaq === 3 ? 'open' : ''}`}>
+                <button
+                  onClick={() => toggleFaq(3)}
+                  className={`${openFaq === 3 ? "open" : ""}`}
+                >
                   <p>InterviewX.ai를 활용하면 어떤 조사가 가능한가요?</p>
                   <i />
                 </button>
-                <div className={`answer ${openFaq === 3 ? 'open' : ''}`}>
+                <div className={`answer ${openFaq === 3 ? "open" : ""}`}>
                   <p>
-                    InterviewX.ai는 다양한 비즈니스 요구에 맞춰 유연한 인터뷰 방식을 제공합니다.<br />
-                    📍 1:1 심층 인터뷰 – 개별 AI 페르소나와 심층적인 대화 진행<br />
-                    📍 1:N 인터뷰 – 최대 5명의 AI 페르소나와 동시 인터뷰 가능<br />
-                    📍 퀵서베이 – 50명 이상의 AI 페르소나를 대상으로 대량 의견 조사
+                    InterviewX.ai는 다양한 비즈니스 요구에 맞춰 유연한 인터뷰
+                    방식을 제공합니다.
+                    <br />
+                    📍 1:1 심층 인터뷰 – 개별 AI 페르소나와 심층적인 대화 진행
+                    <br />
+                    📍 1:N 인터뷰 – 최대 5명의 AI 페르소나와 동시 인터뷰 가능
+                    <br />
+                    📍 퀵서베이 – 50명 이상의 AI 페르소나를 대상으로 대량 의견
+                    조사
                   </p>
                   <p className="gray">
-                    이를 통해 제품 기획, 마케팅 전략 수립, 소비자 인사이트 분석 등의 다양한 리서치를 효율적으로 수행할 수 있습니다.
+                    이를 통해 제품 기획, 마케팅 전략 수립, 소비자 인사이트 분석
+                    등의 다양한 리서치를 효율적으로 수행할 수 있습니다.
                   </p>
                 </div>
               </li>
               <li>
-                <button onClick={() => toggleFaq(4)} className={`${openFaq === 4 ? 'open' : ''}`}>
+                <button
+                  onClick={() => toggleFaq(4)}
+                  className={`${openFaq === 4 ? "open" : ""}`}
+                >
                   <p>InterviewX.ai는 어떻게 시작하나요?</p>
                   <i />
                 </button>
-                <div className={`answer ${openFaq === 4 ? 'open' : ''}`}>
+                <div className={`answer ${openFaq === 4 ? "open" : ""}`}>
                   <p className="gray">
                     InterviewX.ai는 누구나 쉽게 사용할 수 있도록 설계되었습니다.
                   </p>
                   <p>
-                    아이디어 입력 – 조사할 제품이나 서비스 개요 입력<br />
-                    ️페르소나 자동 생성 – AI가 맞춤형 타겟 페르소나 추천<br />
-                    인터뷰 진행 – 1:1, 1:N, 퀵서베이 중 원하는 방식 선택<br />
-                    결과 분석 – AI가 인터뷰 내용을 분석하여 주요 인사이트 제공<br />
-                    👉 몇 분 만에 실행 가능하며, 누구나 쉽게 시작할 수 있습니다! 🚀
+                    아이디어 입력 – 조사할 제품이나 서비스 개요 입력
+                    <br />
+                    ️페르소나 자동 생성 – AI가 맞춤형 타겟 페르소나 추천
+                    <br />
+                    인터뷰 진행 – 1:1, 1:N, 퀵서베이 중 원하는 방식 선택
+                    <br />
+                    결과 분석 – AI가 인터뷰 내용을 분석하여 주요 인사이트 제공
+                    <br />
+                    👉 몇 분 만에 실행 가능하며, 누구나 쉽게 시작할 수 있습니다!
+                    🚀
                   </p>
                 </div>
               </li>
               <li>
-                <button onClick={() => toggleFaq(5)} className={`${openFaq === 5 ? 'open' : ''}`}>
+                <button
+                  onClick={() => toggleFaq(5)}
+                  className={`${openFaq === 5 ? "open" : ""}`}
+                >
                   <p>추가 문의가 필요한 경우 어떻게 하나요?</p>
                   <i />
                 </button>
-                <div className={`answer ${openFaq === 5 ? 'open' : ''}`}>
+                <div className={`answer ${openFaq === 5 ? "open" : ""}`}>
                   <p>
-                    InterviewX.ai에 대한 더 자세한 정보가 필요하시거나, 맞춤형 사용 방법을 상담받고 싶다면, 아래의 이메일을 통해 문의해 주세요.<br />
+                    InterviewX.ai에 대한 더 자세한 정보가 필요하시거나, 맞춤형
+                    사용 방법을 상담받고 싶다면, 아래의 이메일을 통해 문의해
+                    주세요.
+                    <br />
                     📧 이메일 문의 – info@userconnect.kr
                   </p>
                 </div>
@@ -686,12 +932,15 @@ const PageServiceLanding = () => {
                 <span>메일: info@userconnect.kr</span>
               </p>
               <p>
-                주소: 경기도 안산시 상록구 해양3로 15, 1512호 ~ 1515호 (그랑시티 시그니처타워)
+                주소: 경기도 안산시 상록구 해양3로 15, 1512호 ~ 1515호 (그랑시티
+                시그니처타워)
               </p>
             </div>
           </div>
 
-          <div className="copyright">2025 Userconnect Inc. All rights reserved.</div>
+          <div className="copyright">
+            2025 Userconnect Inc. All rights reserved.
+          </div>
         </div>
       </Footer>
 
@@ -731,13 +980,13 @@ const Header = styled.div`
     width: 100%;
     padding: 20px 20px 40px;
     border-radius: 0;
-    background: ${props => {
+    background: ${(props) => {
       if (props.scrollPosition > 1500) {
-        return 'linear-gradient(180deg, #000 60%, rgba(0, 0, 0, 0.00) 100%)';
+        return "linear-gradient(180deg, #000 60%, rgba(0, 0, 0, 0.00) 100%)";
       } else if (props.scrollPosition > 720) {
-        return 'linear-gradient(180deg, #FFF 60%, rgba(255, 255, 255, 0.00) 100%)';
+        return "linear-gradient(180deg, #FFF 60%, rgba(255, 255, 255, 0.00) 100%)";
       } else {
-        return 'linear-gradient(180deg, #000 60%, rgba(0, 0, 0, 0.00) 100%)';
+        return "linear-gradient(180deg, #000 60%, rgba(0, 0, 0, 0.00) 100%)";
       }
     }};
   }
@@ -758,7 +1007,7 @@ const Header = styled.div`
       position: relative;
       font-size: 1.19rem;
       font-weight: 500;
-      color: ${props => props.textColor};
+      color: ${(props) => props.textColor};
       line-height: 1.3;
       letter-spacing: -0.57px;
       transition: color 0.3s ease;
@@ -789,7 +1038,7 @@ const SectionButtonWrap = styled.div`
     width: 20px;
     height: 3px;
     border-radius: 5px;
-    background: ${props => props.buttonColor};
+    background: ${(props) => props.buttonColor};
     cursor: pointer;
     transition: all 0.3s ease;
     opacity: 0.3;
@@ -808,12 +1057,22 @@ const MainVisual = styled.div`
   position: relative;
   width: 100%;
   height: 120vh;
-  background: radial-gradient(114.49% 114.49% at 50% -14.49%, #000 0%, #000 88.09%, rgba(0, 0, 0, 0.00) 100%);
+  background: radial-gradient(
+    114.49% 114.49% at 50% -14.49%,
+    #000 0%,
+    #000 88.09%,
+    rgba(0, 0, 0, 0) 100%
+  );
   overflow: hidden;
 
   ${media.mobile} {
     height: 100vh;
-    background: radial-gradient(144.72% 66.79% at 50% 33.21%, #000 0%, #000 88.09%, rgba(0, 0, 0, 0.00) 100%);
+    background: radial-gradient(
+      144.72% 66.79% at 50% 33.21%,
+      #000 0%,
+      #000 88.09%,
+      rgba(0, 0, 0, 0) 100%
+    );
   }
 
   i {
@@ -823,7 +1082,12 @@ const MainVisual = styled.div`
     width: 762px;
     height: 762px;
     border-radius: 50%;
-    background: radial-gradient(50% 50% at 50% 50%, rgba(34, 111, 255, 0.45) 24%, rgba(0, 0, 0, 0.45) 90%, rgba(0, 0, 0, 0.45) 100%);
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(34, 111, 255, 0.45) 24%,
+      rgba(0, 0, 0, 0.45) 90%,
+      rgba(0, 0, 0, 0.45) 100%
+    );
 
     ${media.mobile} {
       width: 486px;
@@ -904,7 +1168,7 @@ const MainVisual = styled.div`
       color: ${palette.white};
       letter-spacing: -3.42px;
       line-height: 0.8;
-      text-shadow: 40px 40px 12px rgba(255, 255, 255, 0.10);
+      text-shadow: 40px 40px 12px rgba(255, 255, 255, 0.1);
 
       ${media.mobile} {
         font-size: 3.75rem;
@@ -936,7 +1200,8 @@ const MainVisual = styled.div`
         margin-left: 9px;
       }
 
-      &:nth-child(5), &:nth-child(6) {
+      &:nth-child(5),
+      &:nth-child(6) {
         margin-right: 168px;
       }
     }
@@ -994,7 +1259,7 @@ const MainVisual = styled.div`
     height: 24px;
     border-left: 2px solid ${palette.white};
     border-bottom: 2px solid ${palette.white};
-    transition: opacity .3s;
+    transition: opacity 0.3s;
     animation: sdb05 1.5s infinite;
 
     ${media.mobile} {
@@ -1004,9 +1269,17 @@ const MainVisual = styled.div`
     }
 
     @keyframes sdb05 {
-      0% {transform: rotate(-45deg) translate(0, 0); opacity: 0;}
-      50% {opacity: 1;}
-      100% {transform: rotate(-45deg) translate(-20px, 20px); opacity: 0;}
+      0% {
+        transform: rotate(-45deg) translate(0, 0);
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: rotate(-45deg) translate(-20px, 20px);
+        opacity: 0;
+      }
     }
   }
 `;
@@ -1037,7 +1310,8 @@ const Section01 = styled.div`
     i {
       position: absolute;
       display: block;
-      background: url(${images.ServiceLandingSectionBg}) no-repeat center center / cover;
+      background: url(${images.ServiceLandingSectionBg}) no-repeat center center /
+        cover;
 
       &.icon01 {
         top: 25%;
@@ -1155,7 +1429,8 @@ const Section01 = styled.div`
       right: 65px;
       width: 111px;
       height: 111px;
-      background: url(${images.ServiceLandingSection01}) no-repeat center center / contain;
+      background: url(${images.ServiceLandingSection01}) no-repeat center center /
+        contain;
       content: "";
 
       ${media.mobile} {
@@ -1196,7 +1471,7 @@ const Section01 = styled.div`
     border-radius: 50px;
     border: 2px solid ${palette.gray300};
     background: ${palette.white};
-    transition: all .5s;
+    transition: all 0.5s;
 
     ${media.mobile} {
       font-size: 1.13rem;
@@ -1273,12 +1548,22 @@ const Section02 = styled.div`
   gap: 40px;
   // padding-top: 20vh;
   margin-top: -10vh;
-  background: radial-gradient(114.49% 114.49% at 50% 114.49%, #000 0%, #000 88.09%, rgba(0, 0, 0, 0.00) 100%);
+  background: radial-gradient(
+    114.49% 114.49% at 50% 114.49%,
+    #000 0%,
+    #000 88.09%,
+    rgba(0, 0, 0, 0) 100%
+  );
 
   ${media.mobile} {
     gap: 12px;
     padding: 205px 20px 100px;
-    background: radial-gradient(200.49% 200.49% at 50% 200.49%, #000 0%, #000 96.09%, rgba(0, 0, 0, 0.00) 100%);
+    background: radial-gradient(
+      200.49% 200.49% at 50% 200.49%,
+      #000 0%,
+      #000 96.09%,
+      rgba(0, 0, 0, 0) 100%
+    );
   }
 
   .title {
@@ -1341,7 +1626,7 @@ const Section02 = styled.div`
       flex-direction: column;
       gap: 24px;
     }
-    
+
     &:after {
       position: absolute;
       bottom: -300px;
@@ -1349,7 +1634,11 @@ const Section02 = styled.div`
       width: 890px;
       height: 890px;
       border-radius: 898px;
-      background: radial-gradient(50% 50% at 50% 50%, rgba(34, 111, 255, 0.45) 0%, rgba(0, 0, 0, 0.45) 76%);
+      background: radial-gradient(
+        50% 50% at 50% 50%,
+        rgba(34, 111, 255, 0.45) 0%,
+        rgba(0, 0, 0, 0.45) 76%
+      );
       content: "";
       z-index: 0;
 
@@ -1400,7 +1689,7 @@ const Section02 = styled.div`
       ${media.mobile} {
         font-size: 0.88rem;
         font-weight: 400;
-        color: #BCBCBC;
+        color: #bcbcbc;
       }
     }
 
@@ -1410,7 +1699,7 @@ const Section02 = styled.div`
 
       ${media.mobile} {
         padding-top: 16px;
-        border-top: 1px solid rgba(255, 255, 255, 0.30);
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
       }
 
       > p:nth-child(1) {
@@ -1433,7 +1722,7 @@ const Section02 = styled.div`
     ul {
       display: flex;
       flex-direction: column;
-      border-top: 1px solid rgba(255, 255, 255, 0.30);
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
 
       ${media.mobile} {
         border-top: none;
@@ -1447,7 +1736,7 @@ const Section02 = styled.div`
         line-height: 1.5;
         letter-spacing: -0.6px;
         padding: 12px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.30);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 
         ${media.mobile} {
           font-size: 1rem;
@@ -1500,7 +1789,11 @@ const Section03 = styled.div`
     width: 900px;
     height: 900px;
     border-radius: 50%;
-    background: radial-gradient(50% 50% at 50% 50%, rgba(34, 111, 255, 0.45) 0%, rgba(0, 0, 0, 0.45) 76%);
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(34, 111, 255, 0.45) 0%,
+      rgba(0, 0, 0, 0.45) 76%
+    );
     content: "";
     z-index: 0;
 
@@ -1568,7 +1861,7 @@ const Section03 = styled.div`
     padding: 20px;
     border-radius: 15px;
     border: 1px solid ${palette.white};
-    transition: all .5s;
+    transition: all 0.5s;
 
     ${media.mobile} {
       padding: 20px 16px 12px;
@@ -1576,7 +1869,11 @@ const Section03 = styled.div`
 
     &:hover {
       border: 1px solid transparent;
-      background: linear-gradient(180deg, rgba(34, 111, 255, 0.30) 0%, #020204 100%);
+      background: linear-gradient(
+        180deg,
+        rgba(34, 111, 255, 0.3) 0%,
+        #020204 100%
+      );
     }
 
     > p {
@@ -1610,7 +1907,7 @@ const Section03 = styled.div`
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
-      
+
       ${media.mobile} {
         display: flex;
       }
@@ -1672,7 +1969,7 @@ const Section03 = styled.div`
 
       ${media.mobile} {
         display: none;
-        
+
         &.show {
           display: block;
         }
@@ -1686,7 +1983,7 @@ const Section03 = styled.div`
 
       ${media.mobile} {
         display: none;
-        
+
         &.show {
           display: flex;
         }
@@ -1718,15 +2015,15 @@ const Section03 = styled.div`
 
   .more {
     cursor: pointer;
-    
+
     ${media.mobile} {
       display: flex;
     }
     display: none;
-    
+
     i {
       transition: transform 0.3s ease;
-      
+
       &.open {
         transform: rotate(-135deg);
       }
@@ -1765,7 +2062,11 @@ const Section04 = styled.div`
       width: 890px;
       height: 890px;
       border-radius: 50%;
-      background: radial-gradient(50% 50% at 50% 50%, rgba(34, 111, 255, 0.45) 0%, rgba(0, 0, 0, 0.45) 76%);
+      background: radial-gradient(
+        50% 50% at 50% 50%,
+        rgba(34, 111, 255, 0.45) 0%,
+        rgba(0, 0, 0, 0.45) 76%
+      );
       content: "";
       z-index: 0;
 
@@ -1828,12 +2129,16 @@ const Section04 = styled.div`
       display: flex;
       transition: transform 0.5s ease;
       gap: 20px;
-      transform: translateX(calc(-${props => props.currentSlide * 100}% - ${props => props.currentSlide * 20}px));
+      transform: translateX(
+        calc(
+          -${(props) => props.currentSlide * 100}% - ${(props) => props.currentSlide * 20}px
+        )
+      );
 
       ${media.mobile} {
         gap: 20px;
         width: 100%;
-        transform: translateX(-${props => props.currentSlide * (100 + 6)}%);
+        transform: translateX(-${(props) => props.currentSlide * (100 + 6)}%);
       }
       user-select: none;
       touch-action: pan-y pinch-zoom;
@@ -1856,8 +2161,8 @@ const Section04 = styled.div`
         justify-content: center;
         margin: 0;
       }
-      
-      &:nth-child(${props => props.currentSlide + 1}) {
+
+      &:nth-child(${(props) => props.currentSlide + 1}) {
         transform: scale(1);
         opacity: 1;
 
@@ -1954,7 +2259,11 @@ const Section05 = styled.div`
       width: 900px;
       height: 900px;
       border-radius: 50%;
-      background: radial-gradient(50% 50% at 50% 50%, rgba(34, 111, 255, 0.45) 0%, rgba(0, 0, 0, 0.45) 76%);
+      background: radial-gradient(
+        50% 50% at 50% 50%,
+        rgba(34, 111, 255, 0.45) 0%,
+        rgba(0, 0, 0, 0.45) 76%
+      );
       content: "";
 
       ${media.mobile} {
@@ -1972,7 +2281,7 @@ const Section05 = styled.div`
       line-height: 1.25;
       letter-spacing: -2.76px;
       z-index: 1;
-      
+
       ${media.mobile} {
         font-size: 2.75rem;
       }
@@ -1999,7 +2308,7 @@ const Section05 = styled.div`
         font-size: 1rem;
         padding: 12px 16px;
       }
-  
+
       span {
         position: relative;
         width: 41px;
@@ -2009,7 +2318,7 @@ const Section05 = styled.div`
           width: 20px;
           height: 8px;
         }
-  
+
         &::before {
           position: absolute;
           bottom: 0;
@@ -2020,7 +2329,7 @@ const Section05 = styled.div`
           background: ${palette.white};
           content: "";
         }
-  
+
         &::after {
           position: absolute;
           bottom: 5px;
@@ -2041,7 +2350,7 @@ const Section05 = styled.div`
       }
 
       &:hover {
-        background: rgba(255, 255, 255, 0.10);
+        background: rgba(255, 255, 255, 0.1);
       }
     }
   }
@@ -2092,7 +2401,7 @@ const FaqWrap = styled.div`
     em {
       font-style: normal;
       display: none;
-      
+
       ${media.mobile} {
         display: block;
       }
@@ -2151,7 +2460,7 @@ const FaqList = styled.ul`
 
   li {
     border-bottom: 1px solid #585858;
-    
+
     button {
       width: 100%;
       display: flex;
@@ -2188,7 +2497,7 @@ const FaqList = styled.ul`
 
         &::before,
         &::after {
-          content: '';
+          content: "";
           position: absolute;
           background-color: ${palette.white};
           top: 50%;
@@ -2221,7 +2530,7 @@ const FaqList = styled.ul`
       display: flex;
       flex-direction: column;
       gap: 8px;
-      
+
       &.open {
         max-height: 500px;
         padding-bottom: 16px;
@@ -2268,7 +2577,7 @@ const FaqList = styled.ul`
             height: 3px;
             border-radius: 50%;
             background: ${palette.white};
-            content: '';
+            content: "";
           }
         }
       }
@@ -2353,7 +2662,7 @@ const Footer = styled.div`
 
         ${media.mobile} {
           font-size: 0.75rem;
-          color: #B1B1B1;
+          color: #b1b1b1;
           gap: 10px;
           flex-wrap: wrap;
         }
@@ -2371,7 +2680,7 @@ const Footer = styled.div`
             width: 1px;
             height: 12px;
             background: ${palette.white};
-            content: '';
+            content: "";
           }
         }
       }
@@ -2381,7 +2690,7 @@ const Footer = styled.div`
   .copyright {
     font-size: 1rem;
     font-weight: 400;
-    color: #ECECEC;
+    color: #ececec;
     line-height: 1.2;
     letter-spacing: -0.48px;
     text-align: left;
@@ -2404,7 +2713,7 @@ const Popup = styled.div`
 
   > div {
     position: absolute;
-    top:50%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 438px;
@@ -2416,7 +2725,7 @@ const Popup = styled.div`
     }
   }
 
-  img{
+  img {
     border-radius: 15px;
 
     ${media.mobile} {
@@ -2438,11 +2747,11 @@ const Popup = styled.div`
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width:100%;
+      width: 100%;
       height: 2px;
       border-radius: 4px;
       background: ${palette.gray700};
-      content: '';
+      content: "";
     }
 
     &:before {

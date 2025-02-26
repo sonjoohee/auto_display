@@ -193,7 +193,9 @@ import MoleculeSignPopup from "../../../pages/Login_Sign/components/molecules/Mo
 import { useSaveConversation } from "../../../pages/Expert_Insight/components/atoms/AtomSaveConversation";
 
 const OrganismIncNavigation = () => {
-  const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(DESIGN_ANALYSIS_FILE_ID);
+  const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
+    DESIGN_ANALYSIS_FILE_ID
+  );
   const [ideaGeneratorInfo, setIdeaGeneratorInfo] =
     useAtom(IDEA_GENERATOR_INFO);
   const [ideaGeneratorKnowTarget, setIdeaGeneratorKnowTarget] = useAtom(
@@ -610,16 +612,25 @@ const OrganismIncNavigation = () => {
   //   setIsSection2Open(false);
   // }, [isLoggedIn]);
 
-
-
-  const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] = useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS);
-  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(DESIGN_ANALYSIS_BUSINESS_INFO);
-  const [designAnalysisUploadedFiles, setDesignAnalysisUploadedFiles] = useAtom(DESIGN_ANALYSIS_UPLOADED_FILES);
-  const [designAnalysisSelectedPersona, setDesignAnalysisSelectedPersona] = useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
-  const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(DESIGN_ANALYSIS_EMOTION_TARGET);
-  const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(DESIGN_ANALYSIS_EMOTION_SCALE);
-  const [designAnalysisFileNames, setDesignAnalysisFileNames] = useAtom(DESIGN_ANALYSIS_FILE_NAMES);
-
+  const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] =
+    useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS);
+  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(
+    DESIGN_ANALYSIS_BUSINESS_INFO
+  );
+  const [designAnalysisUploadedFiles, setDesignAnalysisUploadedFiles] = useAtom(
+    DESIGN_ANALYSIS_UPLOADED_FILES
+  );
+  const [designAnalysisSelectedPersona, setDesignAnalysisSelectedPersona] =
+    useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
+  const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(
+    DESIGN_ANALYSIS_EMOTION_TARGET
+  );
+  const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(
+    DESIGN_ANALYSIS_EMOTION_SCALE
+  );
+  const [designAnalysisFileNames, setDesignAnalysisFileNames] = useAtom(
+    DESIGN_ANALYSIS_FILE_NAMES
+  );
 
   const [isPopupLogin, setIsPopupLogin] = useState(false);
 
@@ -921,21 +932,22 @@ const OrganismIncNavigation = () => {
           setChatList([]); // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
           return;
         }
-        // const response = await axios.get(
-        //   "https://wishresearch.kr/panels/chat_list",
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${accessToken}`,
-        //     },
-        //   }
-        // // );
+        const response_chat_list = await axios.get(
+          "https://wishresearch.kr/panels/chat_list",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         const response = await getToolListOnServer(1000, 1, isLoggedIn);
-        // const sortedChatList = response.data
-        //   .filter(
-        //     (chat) => chat.business_info !== null && chat.business_info !== ""
-        //   ) // business_info가 비었으면(기초보고서 생성 전) 히스토리에 남기지 않음
-        //   .sort((a, b) => b.timestamp - a.timestamp); // 최근 날짜 순으로 정렬
-        const sortedChatList = response.data.sort((a, b) => {
+
+        // 두 리스트 병합
+        const mergedList = [...response_chat_list.data, ...response.data];
+        console.log("🚀 ~ fetchChatList ~ mergedList:", mergedList);
+
+        // 날짜 기준으로 정렬
+        const sortedChatList = mergedList.sort((a, b) => {
           const dateA = b.updateDate || b.createDate;
           const dateB = a.updateDate || a.createDate;
           return dateA - dateB;
@@ -1218,7 +1230,6 @@ const OrganismIncNavigation = () => {
       );
       setIdeaGeneratorKnowTarget(chatData.idea_generator_know_target);
 
-
       setDesignAnalysisEmotionAnalysis([]);
       setDesignAnalysisBusinessInfo("");
       setDesignAnalysisUploadedFiles([]);
@@ -1235,8 +1246,10 @@ const OrganismIncNavigation = () => {
       setDesignAnalysisSelectedPersona(chatData.design_selected_persona || []);
       setDesignAnalysisEmotionTarget(chatData.design_emotion_target || {});
       setDesignAnalysisEmotionScale(chatData.design_emotion_scale || []);
-      setDesignAnalysisFileNames(chatData.image_name.map(item => item.name) || []);
-      setDesignAnalysisFileId(chatData.image_name.map(item => item.id) || []);
+      setDesignAnalysisFileNames(
+        chatData.image_name.map((item) => item.name) || []
+      );
+      setDesignAnalysisFileId(chatData.image_name.map((item) => item.id) || []);
       setToolLoading(true);
 
       if (chatData.isMarketing) {
@@ -1307,7 +1320,7 @@ const OrganismIncNavigation = () => {
         navigate(`/TargetDiscovery`);
       } else if (chatData.type === "ix_design_emotion_analysis") {
         navigate(`/DesignAnalysis`);
-      } 
+      }
     } catch (error) {
       console.error("대화 내용 가져오기 오류:", error);
     }
