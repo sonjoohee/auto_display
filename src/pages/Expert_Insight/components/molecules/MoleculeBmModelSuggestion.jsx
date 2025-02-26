@@ -164,7 +164,7 @@ const MoleculeBmModelSuggestion = () => {
         saveConversation(
           { changingConversation: 
             { conversation: updatedConversation, 
-              bmModelSuggestionReportData : response.data.bm_check_stage_report,
+              bmModelSuggestionReportData : response.response.bm_check_stage_report,
               conversationStage: 3,
             }
           }

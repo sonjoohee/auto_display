@@ -174,7 +174,7 @@ const OrganismBmLeanAdsReport = () => {
         setConversation(updatedConversation);
 
         await saveConversation(
-          { changingConversation: { conversation: updatedConversation, conversationStage: 3, bmLeanAdsReportData : response.data.bm_lean_ads_report, } }
+          { changingConversation: { conversation: updatedConversation, conversationStage: 3, bmLeanAdsReportData : response.response.bm_lean_ads_report, } }
         );
         setIsLoading(false);
         setIsLoadingIdeaPriority(false);

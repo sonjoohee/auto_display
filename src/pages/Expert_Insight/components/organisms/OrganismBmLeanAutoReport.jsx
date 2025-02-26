@@ -169,7 +169,7 @@ const OrganismBmLeanAutoReport = () => {
         setConversation(updatedConversation);
 
         await saveConversation(
-          { changingConversation: { conversation: updatedConversation, conversationStage: 3, bmLeanAutoReportData : response.data.bm_lean_auto_report, } }
+          { changingConversation: { conversation: updatedConversation, conversationStage: 3, bmLeanAutoReportData : response.response.bm_lean_auto_report, } }
         );
       }
     };

@@ -176,7 +176,7 @@ const OrganismBmBmAdsReport = () => {
         setConversation(updatedConversation);
 
         await saveConversation(
-          { changingConversation: { conversation: updatedConversation, conversationStage: 3, bmBmAdsReportData : response.data.bm_bm_ads_report, } }
+          { changingConversation: { conversation: updatedConversation, conversationStage: 3, bmBmAdsReportData : response.response.bm_bm_ads_report, } }
         );
 
         setIsLoading(false);
