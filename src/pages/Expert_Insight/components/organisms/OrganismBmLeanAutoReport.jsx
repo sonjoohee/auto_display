@@ -15,6 +15,7 @@ import {
   BM_LEAN_AUTO_REPORT_DATA,
   BM_LEAN_AUTO_REPORT_BUTTON_STATE,
   BM_QUESTION_LIST,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -28,6 +29,7 @@ import {  InterviewXBmLeanAutoReportRequest } from "../../../../utils/indexedDB"
 const OrganismBmLeanAutoReport = () => {
   const { saveConversation } = useSaveConversation();
   const [conversation, setConversation] = useAtom(CONVERSATION);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [
@@ -84,56 +86,37 @@ const OrganismBmLeanAutoReport = () => {
           bm_question_list: bmQuestionList,
         };
 
-        let response = await axios.post(
-          "https://wishresearch.kr/panels/lean_auto_report",
-          data,
-          axiosConfig
-        );
-        // let response = await InterviewXBmLeanAutoReportRequest(
+        // let response = await axios.post(
+        //   "https://wishresearch.kr/panels/lean_auto_report",
         //   data,
-        //   isLoggedIn
+        //   axiosConfig
         // );
+        let response = await InterviewXBmLeanAutoReportRequest(
+          data,
+          isLoggedIn
+        );
 
         let retryCount = 0;
         const maxRetries = 10;
 
-        while (retryCount < maxRetries && (
-          !response || !response.data || typeof response.data !== "object" ||
-          !response.data.hasOwnProperty("bm_lean_auto_report") ||
-          !Array.isArray(response.data.bm_lean_auto_report) ||
-          response.data.bm_lean_auto_report.some(section => 
-            !section.hasOwnProperty("section") || 
-            !Array.isArray(section.content) || 
-            section.content.some(contentItem => 
-              !contentItem.hasOwnProperty("title") || 
-              !contentItem.hasOwnProperty("description") || 
-              !Array.isArray(contentItem.keyword)
-            )
-          )
-        )) {
-          response = await axios.post(
-            "https://wishresearch.kr/panels/lean_auto_report",
-            data,
-            axiosConfig
-          );
-          retryCount++;
-        }
-        if (retryCount === maxRetries) {
-          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-          // 에러 처리 로직 추가
-          throw new Error("Maximum retry attempts reached. Empty response persists.");
-        }
-
-        setBmLeanAutoReportData(response.data.bm_lean_auto_report);
-
         // while (retryCount < maxRetries && (
-        //   !response || !response.response || typeof response.response !== "object" 
-      
+        //   !response || !response.data || typeof response.data !== "object" ||
+        //   !response.data.hasOwnProperty("bm_lean_auto_report") ||
+        //   !Array.isArray(response.data.bm_lean_auto_report) ||
+        //   response.data.bm_lean_auto_report.some(section => 
+        //     !section.hasOwnProperty("section") || 
+        //     !Array.isArray(section.content) || 
+        //     section.content.some(contentItem => 
+        //       !contentItem.hasOwnProperty("title") || 
+        //       !contentItem.hasOwnProperty("description") || 
+        //       !Array.isArray(contentItem.keyword)
+        //     )
+        //   )
         // )) {
-    
-        //   response = await  InterviewXBmLeanAutoReportRequest (
+        //   response = await axios.post(
+        //     "https://wishresearch.kr/panels/lean_auto_report",
         //     data,
-        //     isLoggedIn
+        //     axiosConfig
         //   );
         //   retryCount++;
         // }
@@ -142,7 +125,26 @@ const OrganismBmLeanAutoReport = () => {
         //   // 에러 처리 로직 추가
         //   throw new Error("Maximum retry attempts reached. Empty response persists.");
         // }
-        //  setBmLeanAutoReportData(response.response.bm_lean_auto_report);
+
+        // setBmLeanAutoReportData(response.data.bm_lean_auto_report);
+
+        while (retryCount < maxRetries && (
+          !response || !response.response || typeof response.response !== "object" 
+      
+        )) {
+    
+          response = await  InterviewXBmLeanAutoReportRequest (
+            data,
+            isLoggedIn
+          );
+          retryCount++;
+        }
+        if (retryCount === maxRetries) {
+          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+          // 에러 처리 로직 추가
+          throw new Error("Maximum retry attempts reached. Empty response persists.");
+        }
+         setBmLeanAutoReportData(response.response.bm_lean_auto_report);
 
         setIsLoading(false);
         setIsLoadingIdeaPriority(false);

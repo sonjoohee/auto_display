@@ -604,18 +604,18 @@ ${mainCharacteristicOfBusinessInformation
     setIsLoadingAnalysis(true);
 
     // 버튼 클릭으로 API 호출
-    const response = await axios.post(
-      "https://wishresearch.kr/panels/business",
-      data,
-      axiosConfig
-    );
-    businessData = response.data.business_analysis;
-
-    // const response = await InterviewXBusinessAnalysisRequest(
+    // const response = await axios.post(
+    //   "https://wishresearch.kr/panels/business",
     //   data,
-    //   isLoggedIn
+    //   axiosConfig
     // );
-    // businessData = response.response.business_analysis;
+    // businessData = response.data.business_analysis;
+
+    const response = await InterviewXBusinessAnalysisRequest(
+      data,
+      isLoggedIn
+    );
+    businessData = response.response.business_analysis;
 
     // 데이터를 받아온 직후 아톰에 값을 설정합니다.
     if (Array.isArray(businessData["주요_목적_및_특징"])) {

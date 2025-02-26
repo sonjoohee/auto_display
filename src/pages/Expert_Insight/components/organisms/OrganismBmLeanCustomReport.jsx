@@ -20,6 +20,7 @@ import {
   BM_SELECTED_PROBLEM_OPTIONS,
   BM_LEAN_CUSTOM_REPORT_DATA,
   CONVERSATION_STAGE,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -32,6 +33,7 @@ import {InterviewXBmLeanCustomReportRequest } from "../../../../utils/indexedDB"
 const OrganismBmLeanCustomReport = () => {
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const { saveConversation } = useSaveConversation();
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
@@ -237,39 +239,58 @@ useEffect(() => {
           selected_bm_lean_problem : bmSelectedProblemOptions.problemOptions
         };
 
-        let response = await axios.post(
-          "https://wishresearch.kr/panels/lean_custom_report",
-          data,
-          axiosConfig
-        );
-
-        // let response = await InterviewXBmLeanCustomReportRequest(
+        // let response = await axios.post(
+        //   "https://wishresearch.kr/panels/lean_custom_report",
         //   data,
-        //   isLoggedIn
+        //   axiosConfig
         // );
+
+        let response = await InterviewXBmLeanCustomReportRequest(
+          data,
+          isLoggedIn
+        );
 
         let retryCount = 0;
         const maxRetries = 10;
 
+        // while (retryCount < maxRetries && (
+        //   !response || !response.data || typeof response.data !== "object" ||
+        //   !response.data.hasOwnProperty("bm_lean_custom_report") ||
+        //   !Array.isArray(response.data.bm_lean_custom_report) ||
+        //   response.data.bm_lean_custom_report.some(section => 
+        //     !section.hasOwnProperty("section") || 
+        //     !section.hasOwnProperty("content") || 
+        //     !Array.isArray(section.content) || 
+        //     section.content.some(contentItem => 
+        //       !contentItem.hasOwnProperty("title") || 
+        //       !contentItem.hasOwnProperty("description")
+        //     )
+        //   )
+        // )) 
+        // {
+        //   response = await axios.post(
+        //     "https://wishresearch.kr/panels/lean_custom_report",
+        //     data,
+        //     axiosConfig
+        //   );
+        //   retryCount++;
+        // }
+        // if (retryCount === maxRetries) {
+        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //   // 에러 처리 로직 추가
+        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        // }
+
+        // setBmLeanCustomReportData(response.data.bm_lean_custom_report);
+
         while (retryCount < maxRetries && (
-          !response || !response.data || typeof response.data !== "object" ||
-          !response.data.hasOwnProperty("bm_lean_custom_report") ||
-          !Array.isArray(response.data.bm_lean_custom_report) ||
-          response.data.bm_lean_custom_report.some(section => 
-            !section.hasOwnProperty("section") || 
-            !section.hasOwnProperty("content") || 
-            !Array.isArray(section.content) || 
-            section.content.some(contentItem => 
-              !contentItem.hasOwnProperty("title") || 
-              !contentItem.hasOwnProperty("description")
-            )
-          )
-        )) 
-        {
-          response = await axios.post(
-            "https://wishresearch.kr/panels/lean_custom_report",
+          !response || !response.response || typeof response.response !== "object" 
+      
+        )) {
+    
+          response = await InterviewXBmLeanCustomReportRequest(
             data,
-            axiosConfig
+            isLoggedIn
           );
           retryCount++;
         }
@@ -278,26 +299,7 @@ useEffect(() => {
           // 에러 처리 로직 추가
           throw new Error("Maximum retry attempts reached. Empty response persists.");
         }
-
-        setBmLeanCustomReportData(response.data.bm_lean_custom_report);
-
-        // while (retryCount < maxRetries && (
-        //   !response || !response.response || typeof response.response !== "object" 
-      
-        // )) {
-    
-          // response = await InterviewXBmLeanCustomReportRequest(
-          //   data,
-          //   isLoggedIn
-          // );
-          // retryCount++;
-        // }
-        // if (retryCount === maxRetries) {
-        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-        //   // 에러 처리 로직 추가
-        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
-        // }
-        //setBmLeanCustomReportData(response.response.bm_lean_custom_report);
+        setBmLeanCustomReportData(response.response.bm_lean_custom_report);
 
         setIsLoading(false);
         setIsLoadingIdeaPriority(false);

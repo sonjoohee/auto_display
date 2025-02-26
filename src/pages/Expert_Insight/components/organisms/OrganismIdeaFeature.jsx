@@ -22,6 +22,7 @@ import {
   ADD_CONTENT_IDEA_FEATURE,
   ACTIVE_IDEA_FEATURE_INDEX,
   EDITED_IDEA_FEATURE_TITLE,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -67,7 +68,7 @@ const OrganismIdeaFeature = () => {
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
   const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
   const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
-
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [isEditingIdeaFeature, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
   const [addingIdeaFeature, setAddingIdeaFeature] = useAtom(ADDING_IDEA_FEATURE);
   const [addContentIdeaFeature, setAddContentIdeaFeature] = useAtom(ADD_CONTENT_IDEA_FEATURE);
@@ -170,49 +171,49 @@ const OrganismIdeaFeature = () => {
       };
 
       // 임시로 전문가보고서 api 사용
-      const response = await axios.post(
-        "https://wishresearch.kr/panels/business_analysis_modify",
-        data,
-        axiosConfig
-      );
-
-      // const response = await InterviewXBusinessAnalysisModifyRequest(
+      // const response = await axios.post(
+      //   "https://wishresearch.kr/panels/business_analysis_modify",
       //   data,
-      //   isLoggedIn
+      //   axiosConfig
       // );
-      // if(index === null) {
-      //   setIdeaFeatureData([
-      //     ...ideaFeatureData,
-      //     {
-      //       title: response.response.generate_data.추가_주요_목적_및_특징,
-      //       text: response.response.generate_data.추가_주요_목적_및_특징, 
-      //     },
-      //   ]);
-      // } else {
-      //   const updatedFeatures = [...ideaFeatureData];
 
-      //   updatedFeatures[index] = {
-      //     title: response.response.generate_data.추가_주요_목적_및_특징,
-      //     text: response.response.generate_data.추가_주요_목적_및_특징, 
-      //   };
-
-
-      // 응답받은 데이터가 들어가는지 확인
+      const response = await InterviewXBusinessAnalysisModifyRequest(
+        data,
+        isLoggedIn
+      );
       if(index === null) {
         setIdeaFeatureData([
           ...ideaFeatureData,
           {
-            title: response.data.generate_data.추가_주요_목적_및_특징,
-            text: response.data.generate_data.추가_주요_목적_및_특징, 
+            title: response.response.business_analysis.추가_주요_목적_및_특징,
+            text: response.response.business_analysis.추가_주요_목적_및_특징, 
           },
         ]);
       } else {
         const updatedFeatures = [...ideaFeatureData];
 
         updatedFeatures[index] = {
-          title: response.data.generate_data.추가_주요_목적_및_특징,
-          text: response.data.generate_data.추가_주요_목적_및_특징, 
+          title: response.response.business_analysis.추가_주요_목적_및_특징,
+          text: response.response.business_analysis.추가_주요_목적_및_특징, 
         };
+
+
+      // 응답받은 데이터가 들어가는지 확인
+      // if(index === null) {
+      //   setIdeaFeatureData([
+      //     ...ideaFeatureData,
+      //     {
+      //       title: response.data.generate_data.추가_주요_목적_및_특징,
+      //       text: response.data.generate_data.추가_주요_목적_및_특징, 
+      //     },
+      //   ]);
+      // } else {
+      //   const updatedFeatures = [...ideaFeatureData];
+
+      //   updatedFeatures[index] = {
+      //     title: response.data.generate_data.추가_주요_목적_및_특징,
+      //     text: response.data.generate_data.추가_주요_목적_및_특징, 
+      //   };
 
         setIdeaFeatureData(updatedFeatures);
       }

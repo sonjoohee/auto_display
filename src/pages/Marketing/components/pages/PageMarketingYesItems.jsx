@@ -281,6 +281,12 @@ const PageMarketingYesItems = () => {
     ) {
       attempts += 1;
 
+      // response = await InterviewXBusinessAnalysisRequest(
+      //   data,
+      //   isLoggedIn
+      // );
+      // businessData = response.response.business_analysis;
+
       response = await axios.post(
         "https://wishresearch.kr/panels/business",
         data,
@@ -289,11 +295,6 @@ const PageMarketingYesItems = () => {
       businessData = response.data.business_analysis;
     }
 
-    // response = await InterviewXBusinessAnalysisRequest(
-    //   data,
-    //   isLoggedIn
-    // );
-    // businessData = response.response.business_analysis;
 
     if (Array.isArray(businessData["주요_목적_및_특징"])) {
       setMainFeaturesOfBusinessInformation(

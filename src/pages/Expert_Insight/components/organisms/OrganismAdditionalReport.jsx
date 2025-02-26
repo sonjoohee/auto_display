@@ -16,6 +16,7 @@ import {
   POC_DETAIL_REPORT_DATA,
   CONVERSATION_ID,
   SELECTED_EXPERT_LIST,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import MoleculeReportController from "../molecules/MoleculeReportController";
@@ -34,6 +35,7 @@ const OrganismAdditionalReport = ({
   const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
     SELECTED_ADDITIONAL_KEYWORD
   );
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [isLoadingAdd, setIsLoadingAdd] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
@@ -110,34 +112,36 @@ const OrganismAdditionalReport = ({
             question_info: keyword,
           };
 
-          let response = await axios.post(
-            "https://wishresearch.kr/panels/add_question",
-            data,
-            axiosConfig
-          );
-          answerData = response.data.additional_question;
-
-          // let response = await InterviewXAdditionalQuestionRequest(
+          // let response = await axios.post(
+          //   "https://wishresearch.kr/panels/add_question",
           //   data,
-          //   isLoggedIn
+          //   axiosConfig
           // );
-          // answerData = response.response.additional_question;
+          // answerData = response.data.additional_question;
+
+          let response = await InterviewXAdditionalQuestionRequest(
+            data,
+            isLoggedIn
+          );
+          answerData = response.response.additional_question;
 
           while (
             !answerData.hasOwnProperty("title")
           ) {
-            response = await axios.post(
-              "https://wishresearch.kr/panels/add_question",
-              data,
-              axiosConfig
-            );
-            answerData = response.data.additional_question;
+
+            response = await InterviewXAdditionalQuestionRequest(
+            data,
+            isLoggedIn
+          );
+          answerData = response.response.additional_question;
+            // response = await axios.post(
+            //   "https://wishresearch.kr/panels/add_question",
+            //   data,
+            //   axiosConfig
+            // );
+            // answerData = response.data.additional_question;
           }
-          // response = await InterviewXAdditionalQuestionRequest(
-          //   data,
-          //   isLoggedIn
-          // );
-          // answerData = response.response.additional_question;
+          
 
           setAnswerDataState(answerData);
           setTitle(answerData?.title);

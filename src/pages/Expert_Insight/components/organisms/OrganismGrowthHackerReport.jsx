@@ -19,6 +19,7 @@ import {
   GROWTH_HACKER_RECOMMENDED_SOLUTION,
   GROWTH_HACKER_DETAIL_REPORT_DATA,
   BUTTON_STATE,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 
 import Loader from "../atoms/AtomLoader";
@@ -36,6 +37,7 @@ import {InterviewXIdeaGrowthHackerdetail_reportRequest } from "../../../../utils
 
 const OrganismGrowthHackerReport = ({ growthHackerReportCount }) => {
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const { saveConversation } = useSaveConversation();
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
@@ -104,38 +106,57 @@ const OrganismGrowthHackerReport = ({ growthHackerReportCount }) => {
           recommended_solution: growthHackerSelectedSolution[growthHackerReportCount].title,
         };
 
-        let response = await axios.post(
-          "https://wishresearch.kr/panels/growth_hacker_detail",
-          data,
-          axiosConfig
-        );
-
-        // let response = await InterviewXIdeaGrowthHackerdetail_reportRequest(
+        // let response = await axios.post(
+        //   "https://wishresearch.kr/panels/growth_hacker_detail",
         //   data,
-        //   isLoggedIn
+        //   axiosConfig
         // );
+
+        let response = await InterviewXIdeaGrowthHackerdetail_reportRequest(
+          data,
+          isLoggedIn
+        );
 
         let retryCount = 0;
         const maxRetries = 10;
 
+        // while (retryCount < maxRetries && (
+        //   !response || 
+        //   !response.data || 
+        //   typeof response.data !== "object" ||
+        //   !response.data.hasOwnProperty("growth_hacker_detail_report") || 
+        //   !Array.isArray(response.data.growth_hacker_detail_report) ||
+        //   response.data.growth_hacker_detail_report.length !== 2 ||
+        //   !response.data.growth_hacker_detail_report[0].hasOwnProperty("name") ||
+        //   !response.data.growth_hacker_detail_report[0].hasOwnProperty("reason") ||
+        //   !response.data.growth_hacker_detail_report[0].hasOwnProperty("summary") ||
+        //   !Array.isArray(response.data.growth_hacker_detail_report[1]) ||
+        //   response.data.growth_hacker_detail_report[1].length !== 3
+        // )) 
+        // {
+        //   response = await axios.post(
+        //     "https://wishresearch.kr/panels/growth_hacker_detail",
+        //     data,
+        //     axiosConfig
+        //   );
+        //   retryCount++;
+        // }
+        // if (retryCount === maxRetries) {
+        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //   // 에러 처리 로직 추가
+        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        // }
+
+        // setGrowthHackerDetailReportData([...growthHackerDetailReportData, response.data.growth_hacker_detail_report]);
+
         while (retryCount < maxRetries && (
-          !response || 
-          !response.data || 
-          typeof response.data !== "object" ||
-          !response.data.hasOwnProperty("growth_hacker_detail_report") || 
-          !Array.isArray(response.data.growth_hacker_detail_report) ||
-          response.data.growth_hacker_detail_report.length !== 2 ||
-          !response.data.growth_hacker_detail_report[0].hasOwnProperty("name") ||
-          !response.data.growth_hacker_detail_report[0].hasOwnProperty("reason") ||
-          !response.data.growth_hacker_detail_report[0].hasOwnProperty("summary") ||
-          !Array.isArray(response.data.growth_hacker_detail_report[1]) ||
-          response.data.growth_hacker_detail_report[1].length !== 3
-        )) 
-        {
-          response = await axios.post(
-            "https://wishresearch.kr/panels/growth_hacker_detail",
+          !response || !response.response || typeof response.response !== "object" 
+      
+        )) {
+    
+          response = await InterviewXIdeaGrowthHackerdetail_reportRequest(
             data,
-            axiosConfig
+            isLoggedIn
           );
           retryCount++;
         }
@@ -144,26 +165,7 @@ const OrganismGrowthHackerReport = ({ growthHackerReportCount }) => {
           // 에러 처리 로직 추가
           throw new Error("Maximum retry attempts reached. Empty response persists.");
         }
-
-        setGrowthHackerDetailReportData([...growthHackerDetailReportData, response.data.growth_hacker_detail_report]);
-
-        // while (retryCount < maxRetries && (
-        //   !response || !response.response || typeof response.response !== "object" 
-      
-        // )) {
-    
-          // response = await InterviewXIdeaGrowthHackerdetail_reportRequest(
-          //   data,
-          //   isLoggedIn
-          // );
-          // retryCount++;
-        // }
-        // if (retryCount === maxRetries) {
-        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-        //   // 에러 처리 로직 추가
-        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
-        // }
-        //setGrowthHackerDetailReportData([...growthHackerDetailReportData, response.response.growth_hacker_detail_report]);
+        setGrowthHackerDetailReportData([...growthHackerDetailReportData, response.response.growth_hacker_detail_report]);
 
         setIsLoading(false);
         setIsLoadingGrowthHacker(false);

@@ -17,6 +17,7 @@ import {
   BM_SELECTED_PROBLEM_OPTIONS,
   BM_BM_CUSTOM_REPORT_BUTTON_STATE,
   APPROACH_PATH,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -27,6 +28,7 @@ import Loader from "../atoms/AtomLoader";
 
 const OrganismBmBmAdsReport = () => {
   const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const { saveConversation } = useSaveConversation();
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
@@ -93,47 +95,25 @@ const OrganismBmBmAdsReport = () => {
           bm_question_list: bmQuestionList,
         };
 
-        let response = await axios.post(
-          "https://wishresearch.kr/panels/bm_ads_report",
-          data,
-          axiosConfig
-        );
-        // let response = await InterviewXBmBmAdsReportRequest(
+        // let response = await axios.post(
+        //   "https://wishresearch.kr/panels/bm_ads_report",
         //   data,
-        //   isLoggedIn
+        //   axiosConfig
         // );
+        let response = await InterviewXBmBmAdsReportRequest(
+          data,
+          isLoggedIn
+        );
 
         let retryCount = 0;
         const maxRetries = 10;
 
         
-        // while (retryCount < maxRetries && (
-        //   !response.response || !response.response || typeof response.response !== "object" ||
-        //   !response.response.hasOwnProperty("bm_bm_ads_report") ||
-        //   !Array.isArray(response.response.bm_bm_ads_report) ||
-        //   response.response.bm_bm_ads_report.some(keywordSection => 
-        //     !Array.isArray(keywordSection.keywords) || 
-        //     keywordSection.keywords.some(keyword => 
-        //       !keyword.hasOwnProperty("title") || 
-        //       !keyword.hasOwnProperty("description") || 
-        //       !Array.isArray(keyword.examples) || 
-        //       !Array.isArray(keyword.related_blocks) || 
-        //       !keyword.hasOwnProperty("action")
-        //     )
-        //   )
-        // )) {
-        //   response = await InterviewXBmBmAdsReportRequest(
-        //     data,
-        //     isLoggedIn
-        //   );
-        //   retryCount++;
-        // }
-
         while (retryCount < maxRetries && (
-          !response || !response.data || typeof response.data !== "object" ||
-          !response.data.hasOwnProperty("bm_bm_ads_report") ||
-          !Array.isArray(response.data.bm_bm_ads_report) ||
-          response.data.bm_bm_ads_report.some(keywordSection => 
+          !response.response || !response.response || typeof response.response !== "object" ||
+          !response.response.hasOwnProperty("bm_bm_ads_report") ||
+          !Array.isArray(response.response.bm_bm_ads_report) ||
+          response.response.bm_bm_ads_report.some(keywordSection => 
             !Array.isArray(keywordSection.keywords) || 
             keywordSection.keywords.some(keyword => 
               !keyword.hasOwnProperty("title") || 
@@ -144,20 +124,43 @@ const OrganismBmBmAdsReport = () => {
             )
           )
         )) {
-          response = await axios.post(
-            "https://wishresearch.kr/panels/bm_ads_report",
+          response = await InterviewXBmBmAdsReportRequest(
             data,
-            axiosConfig
+            isLoggedIn
           );
           retryCount++;
         }
-        if (retryCount === maxRetries) {
-          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-          // 에러 처리 로직 추가
-          throw new Error("Maximum retry attempts reached. Empty response persists.");
-        }
+        setBmBmAdsReportData(response.response.bm_bm_ads_report);
 
-        setBmBmAdsReportData(response.data.bm_bm_ads_report);
+        // while (retryCount < maxRetries && (
+        //   !response || !response.data || typeof response.data !== "object" ||
+        //   !response.data.hasOwnProperty("bm_bm_ads_report") ||
+        //   !Array.isArray(response.data.bm_bm_ads_report) ||
+        //   response.data.bm_bm_ads_report.some(keywordSection => 
+        //     !Array.isArray(keywordSection.keywords) || 
+        //     keywordSection.keywords.some(keyword => 
+        //       !keyword.hasOwnProperty("title") || 
+        //       !keyword.hasOwnProperty("description") || 
+        //       !Array.isArray(keyword.examples) || 
+        //       !Array.isArray(keyword.related_blocks) || 
+        //       !keyword.hasOwnProperty("action")
+        //     )
+        //   )
+        // )) {
+        //   response = await axios.post(
+        //     "https://wishresearch.kr/panels/bm_ads_report",
+        //     data,
+        //     axiosConfig
+        //   );
+        //   retryCount++;
+        // }
+        // if (retryCount === maxRetries) {
+        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //   // 에러 처리 로직 추가
+        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        // }
+
+        // setBmBmAdsReportData(response.data.bm_bm_ads_report);
 
         const updatedConversation = [...conversation];
         // updatedConversation.push(

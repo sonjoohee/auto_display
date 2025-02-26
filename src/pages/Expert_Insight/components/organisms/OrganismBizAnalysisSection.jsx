@@ -151,17 +151,17 @@ const OrganismBizAnalysisSection = () => {
         setIsLoading(true);
         setIsLoadingAnalysis(true);
         // 버튼 클릭으로 API 호출
-        let response = await axios.post(
-          "https://wishresearch.kr/panels/business",
-          data,
-          axiosConfig
-        );
-        businessData = response.data.business_analysis;
-        // let response = await InterviewXBusinessAnalysisRequest(
+        // let response = await axios.post(
+        //   "https://wishresearch.kr/panels/business",
         //   data,
-        //   isLoggedIn
+        //   axiosConfig
         // );
-        // businessData = response.response.business_analysis;
+        // businessData = response.data.business_analysis;
+        let response = await InterviewXBusinessAnalysisRequest(
+          data,
+          isLoggedIn
+        );
+        businessData = response.response.business_analysis;
         setChatRefreshTrigger((prev) => !prev);
         // 필요한 데이터가 없을 경우 재시도, 최대 5번
         while (
@@ -178,17 +178,17 @@ const OrganismBizAnalysisSection = () => {
           attempts += 1;
           // console.log(`Attempt ${attempts} to fetch business data`);
 
-          response = await axios.post(
-            "https://wishresearch.kr/panels/business",
-            data,
-            axiosConfig
-          );
-          businessData = response.data.business_analysis;
-          // response = await InterviewXBusinessAnalysisRequest(
+          // response = await axios.post(
+          //   "https://wishresearch.kr/panels/business",
           //   data,
-          //   isLoggedIn
+          //   axiosConfig
           // );
-          // businessData = response.response.business_analysis;
+          // businessData = response.data.business_analysis;
+          response = await InterviewXBusinessAnalysisRequest(
+            data,
+            isLoggedIn
+          );
+          businessData = response.response.business_analysis;
         }
 
         if (attempts >= maxAttempts) {
@@ -597,40 +597,39 @@ const OrganismBizAnalysisSection = () => {
       }
 
       // 임시로 전문가보고서 api 사용
-      const response = await axios.post(
-        "https://wishresearch.kr/panels/business_analysis_modify",
-        data,
-        axiosConfig
-      );
-      // const response = await InterviewXBusinessAnalysisModifyRequest(
+      // const response = await axios.post(
+      //   "https://wishresearch.kr/panels/business_analysis_modify",
       //   data,
-      //   isLoggedIn
+      //   axiosConfig
       // );
+      const response = await InterviewXBusinessAnalysisModifyRequest(
+        data,
+        isLoggedIn
+      );
     
       // 응답받은 데이터가 들어가는지 확인
-      if (section === "mainFeatures") {
-        setMainFeaturesOfBusinessInformation([
-          ...mainFeaturesOfBusinessInformation,
-          response.data.generate_data.추가_주요_목적_및_특징,
-        ]);
-      } else if (section === "mainCharacteristic") {
-        setMainCharacteristicOfBusinessInformation([
-          ...mainCharacteristicOfBusinessInformation,
-          response.data.generate_data.추가_주요기능,
-        ]);
-      }
-
-           // if (section === "mainFeatures") {
+      // if (section === "mainFeatures") {
       //   setMainFeaturesOfBusinessInformation([
       //     ...mainFeaturesOfBusinessInformation,
-      //     response.response.추가_주요_목적_및_특징,
+      //     response.data.generate_data.추가_주요_목적_및_특징,
       //   ]);
       // } else if (section === "mainCharacteristic") {
       //   setMainCharacteristicOfBusinessInformation([
       //     ...mainCharacteristicOfBusinessInformation,
-      //     response.response.추가_주요기능,
+      //     response.data.generate_data.추가_주요기능,
       //   ]);
       // }
+      if (section === "mainFeatures") {
+        setMainFeaturesOfBusinessInformation([
+          ...mainFeaturesOfBusinessInformation,
+          response.response.business_analysis.추가_주요_목적_및_특징, 
+        ]);
+      } else if (section === "mainCharacteristic") {
+        setMainCharacteristicOfBusinessInformation([
+          ...mainCharacteristicOfBusinessInformation,
+          response.response.business_analysis.추가_주요기능, 
+        ]);
+      }
       setNewAddContent("");
       setIsAddingNow({ section: "", isAdding: false });
       setIsLoading(false);

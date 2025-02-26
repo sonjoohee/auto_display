@@ -18,6 +18,7 @@ import {
   STRATEGY_BUTTON_STATE,
   STRATEGY_CONSULTANT_REPORT_DATA,
   APPROACH_PATH,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 
 import Loader from "../atoms/AtomLoader"
@@ -28,6 +29,7 @@ import {  InterviewXExpertReportRequest } from "../../../../utils/indexedDB";
 
 const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
   const { saveConversation } = useSaveConversation();
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
@@ -94,24 +96,24 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
             page_index: 1
           };
 
-          let response = await axios.post(
-            "https://wishresearch.kr/panels/expert",
-            data,
-            axiosConfig
-          );
-
-          console.log("전략 컨설팅 response", response);
-
-          // let response = await  InterviewXExpertReportRequest(
+          // let response = await axios.post(
+          //   "https://wishresearch.kr/panels/expert",
           //   data,
-          //   isLoggedIn
+          //   axiosConfig
           // );
+          // if (response && response.data && response.data.tabs) {
+          //   let strategyConsultantReport = response.data.tabs[0];
 
-          if (response && response.data && response.data.tabs) {
-            let strategyConsultantReport = response.data.tabs[0];
+          let response = await  InterviewXExpertReportRequest(
+            data,
+            isLoggedIn
+          );
+          console.log("전략 컨설팅 response", response);
             
-          // if (response && response.response && response.response.tabs) {
-          //   let strategyConsultantReport = response.response.tabs[0];
+          if (response && response.response && response.response.tabs) {
+            let strategyConsultantReport = response.response.tabs[0];
+
+            
             
             let retryCount = 0;
             const maxRetries = 10;

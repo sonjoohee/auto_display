@@ -21,6 +21,7 @@ import {
   SELECTED_EXPERT_LIST,
   CONVERSATION_ID,
   STRATEGY_REPORT_DATA,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -42,6 +43,7 @@ const OrganismCustomerAdditionalReport = ({
   const [customerAdditionQuestionInput, setCustomerAdditionQuestionInput] = useAtom(
     CUSTOMER_ADDITION_QUESTION_INPUT
   );
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [isLoadingAdd, setIsLoadingAdd] = useState(false);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
@@ -143,18 +145,18 @@ const OrganismCustomerAdditionalReport = ({
             }
           };
 
-          let response = await axios.post(
-            "https://wishresearch.kr/panels/customer_add_question",
-            data,
-            axiosConfig
-          );
-          answerData = response.data.additional_question;
-
-          // let response = await InterviewXAdditionalQuestionRequest(
+          // let response = await axios.post(
+          //   "https://wishresearch.kr/panels/customer_add_question",
           //   data,
-          //   isLoggedIn
+          //   axiosConfig
           // );
-          // answerData = response.response.additional_question;
+          // answerData = response.data.additional_question;
+
+          let response = await InterviewXCustomerAdditionalQuestionRequest(
+            data,
+            isLoggedIn
+          );
+          answerData = response.response.additional_question;
           //response.data찾아볼것
 
           if (answerData.advise) {
@@ -163,20 +165,21 @@ const OrganismCustomerAdditionalReport = ({
             while (
               !answerData.hasOwnProperty("title")
             ) {
-              response = await axios.post(
-                "https://wishresearch.kr/panels/customer_add_question",
-                data,
-                axiosConfig
-              );
-              answerData = response.data.additional_question;
+              response = await InterviewXCustomerAdditionalQuestionRequest(
+            data,
+            isLoggedIn
+          );
+          answerData = response.response.additional_question;
+              // response = await axios.post(
+              //   "https://wishresearch.kr/panels/customer_add_question",
+              //   data,
+              //   axiosConfig
+              // );
+              // answerData = response.data.additional_question;
             }
           }
 
-          // response = await InterviewXCustomerAdditionalQuestionRequest(
-          //   data,
-          //   isLoggedIn
-          // );
-          // answerData = response.response.additional_question;
+          
 
           // 임시로 키워드 설정
           const updatedKeywords = [...selectedCustomerAdditionalKeyword];
@@ -220,7 +223,7 @@ const OrganismCustomerAdditionalReport = ({
                 updatedConversation2.push(
                   {
                     type: "system",
-                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.`,
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.response.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분석 결과에 만족하신다면, 지금 바로 전략 보고서를 준비해드려요.`,
                     expertIndex: selectedExpertIndex,
                   },
                   { type: "reportButton" }
@@ -239,13 +242,13 @@ const OrganismCustomerAdditionalReport = ({
                 if (selectedExpertList.length === 3) {
                   updatedConversation2.push({
                     type: "system",
-                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.response.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
                     expertIndex: 0,
                   });
                 } else {
                   updatedConversation2.push({
                     type: "system",
-                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.response.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
                     expertIndex: 0,
                   });
                 }
@@ -265,7 +268,7 @@ const OrganismCustomerAdditionalReport = ({
               } else {
                 updatedConversation2.push({
                   type: "system",
-                  message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
+                  message: `"${titleOfBusinessInfo}"과 관련된 "${response.response.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
                   expertIndex: 0,
                 });
               }
@@ -282,13 +285,13 @@ const OrganismCustomerAdditionalReport = ({
                 if (selectedExpertList.length === 3) {
                   updatedConversation2.push({
                     type: "system",
-                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.response.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
                     expertIndex: 0,
                   });
                 } else {
                   updatedConversation2.push({
                     type: "system",
-                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.data.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
+                    message: `"${titleOfBusinessInfo}"과 관련된 "${response.response.additional_question.title}" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
                     expertIndex: 0,
                   });
                 }
