@@ -775,7 +775,7 @@ export const getTermkeyResult = async (termkey) => {
     let attempts = 0;
 
     while (true) {
-      if (attempts > 20) throw new Error("시도 횟수가 초과되었습니다.")
+      if (attempts > 20) throw new Error("시도 횟수가 초과되었습니다.");
       try {
         const response = await axios.get(
           `https://wishresearch.kr/project/temporary/findTemp/${termkey}`,
@@ -1935,6 +1935,7 @@ export const createToolOnServer = async (data, isLoggedIn) => {
           minute: "2-digit",
           second: "2-digit",
         }),
+        timestamp: Date.now(),
         ...data,
       };
       const response = await axios.post(
@@ -1987,6 +1988,7 @@ export const updateToolOnServer = async (toolId, updateData, isLoggedIn) => {
           minute: "2-digit",
           second: "2-digit",
         }),
+        timestamp: Date.now(),
       };
       await axios.put(
         `https://wishresearch.kr/panels/tool/update_tool`,
@@ -2466,7 +2468,6 @@ export const InterviewXCustomerValueAnalyzerFinalReportRequest = async (
   }
 };
 
-
 // 아이디어 생성기 페르소나
 export const InterviewXIdeaGeneratorPersonaRequest = async (
   data,
@@ -2514,10 +2515,7 @@ export const InterviewXIdeaGeneratorPersonaRequest = async (
 };
 
 // 아이디어 생성기 아이디어
-export const InterviewXIdeaGeneratorIdeaRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXIdeaGeneratorIdeaRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -2651,9 +2649,6 @@ export const InterviewXIdeaGeneratorFinalReportRequest = async (
   }
 };
 
-
-
-
 //디자인 감성 분석기 : analysis
 export const InterviewXDesignEmotionAnalysisRequest = async (
   data,
@@ -2666,10 +2661,10 @@ export const InterviewXDesignEmotionAnalysisRequest = async (
 
   try {
     const formData = new FormData();
-    formData.append('image', data.image); // File 객체 추가
-    formData.append('business', data.business); // 다른 데이터 추가
-    formData.append('tool_id', data.tool_id); // 다른 데이터 추가
-    formData.append('type', 'ix_design_emotion_analysis'); // 다른 데이터 추가
+    formData.append("image", data.image); // File 객체 추가
+    formData.append("business", data.business); // 다른 데이터 추가
+    formData.append("tool_id", data.tool_id); // 다른 데이터 추가
+    formData.append("type", "ix_design_emotion_analysis"); // 다른 데이터 추가
 
     const token = sessionStorage.getItem("accessToken");
     if (!token) {
@@ -2750,10 +2745,7 @@ export const InterviewXDesignEmotionTargetRequest = async (
 };
 
 //디자인 감성 분석기 : scale
-export const InterviewXDesignEmotionScaleRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXDesignEmotionScaleRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -2795,17 +2787,12 @@ export const InterviewXDesignEmotionScaleRequest = async (
   }
 };
 
-
-
 // !===============================================
 // !전문가 관련 API
 // !===============================================
 
 //비즈니스 분석
-export const InterviewXBusinessAnalysisRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXBusinessAnalysisRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -2842,7 +2829,6 @@ export const InterviewXBusinessAnalysisRequest = async (
     throw error;
   }
 };
-
 
 //새로운 정보 추가
 export const InterviewXBusinessAnalysisModifyRequest = async (
@@ -2887,10 +2873,7 @@ export const InterviewXBusinessAnalysisModifyRequest = async (
 };
 
 //추가 질문 생성
-export const InterviewXAdditionalQuestionRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXAdditionalQuestionRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -2929,7 +2912,6 @@ export const InterviewXAdditionalQuestionRequest = async (
   }
 };
 
-
 //입력 추가 질문
 export const InterviewXCustomerAdditionalQuestionRequest = async (
   data,
@@ -2945,7 +2927,7 @@ export const InterviewXCustomerAdditionalQuestionRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
- 
+
     const response = await axios.post(
       "https://wishresearch.kr/person/temporary/customer_add_question",
       data,
@@ -2973,13 +2955,8 @@ export const InterviewXCustomerAdditionalQuestionRequest = async (
   }
 };
 
-
-
 //시장 기회 탐색
-export const InterviewXExpertReportRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXExpertReportRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -2990,7 +2967,7 @@ export const InterviewXExpertReportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-   
+
     const response = await axios.post(
       "https://wishresearch.kr/panels/experts/expert",
       data,
@@ -3018,12 +2995,8 @@ export const InterviewXExpertReportRequest = async (
   }
 };
 
-
 //시장 가격 분석
-export const InterviewXPriceScrapReportRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXPriceScrapReportRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -3034,7 +3007,7 @@ export const InterviewXPriceScrapReportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-   
+
     const response = await axios.post(
       "https://wishresearch.kr/panels/experts/price_scrap",
       data,
@@ -3077,7 +3050,7 @@ export const InterviewXPriceAnalysisReportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-   
+
     const response = await axios.post(
       "https://wishresearch.kr/panels/experts/price_analysis",
       data,
@@ -3105,12 +3078,8 @@ export const InterviewXPriceAnalysisReportRequest = async (
   }
 };
 
-
 //bm생성
-export const InterviewXBmCheckStageRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXBmCheckStageRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -3121,7 +3090,7 @@ export const InterviewXBmCheckStageRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-   
+
     const response = await axios.post(
       "https://wishresearch.kr/panels/experts/bm_stage_report",
       data,
@@ -3150,10 +3119,7 @@ export const InterviewXBmCheckStageRequest = async (
 };
 
 //비즈니스 모델 캔버스 생성
-export const InterviewXBmBmAutoReportRequest= async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXBmBmAutoReportRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -3164,7 +3130,7 @@ export const InterviewXBmBmAutoReportRequest= async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-   
+
     const response = await axios.post(
       "https://wishresearch.kr/panels/experts/bm_auto_report",
       data,
@@ -3193,10 +3159,7 @@ export const InterviewXBmBmAutoReportRequest= async (
 };
 
 //bm 세분화 질문 생성
-export const InterviewXBmBmAdsReportRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXBmBmAdsReportRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -3207,7 +3170,7 @@ export const InterviewXBmBmAdsReportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-   
+
     const response = await axios.post(
       "https://wishresearch.kr/panels/experts/bm_ads_report",
       data,
@@ -3236,10 +3199,7 @@ export const InterviewXBmBmAdsReportRequest = async (
 };
 
 // bm 세분화
-export const InterviewXBmBmCustomReportRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXBmBmCustomReportRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -3250,7 +3210,7 @@ export const InterviewXBmBmCustomReportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-   
+
     const response = await axios.post(
       "https://wishresearch.kr/panels/experts/bm_custom_report",
       data,
@@ -3279,10 +3239,7 @@ export const InterviewXBmBmCustomReportRequest = async (
 };
 
 //린 캔버스 생성
-export const InterviewXBmLeanAutoReportRequest= async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXBmLeanAutoReportRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -3293,7 +3250,7 @@ export const InterviewXBmLeanAutoReportRequest= async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-   
+
     const response = await axios.post(
       "https://wishresearch.kr/panels/experts/lean_auto_report",
       data,
@@ -3322,10 +3279,7 @@ export const InterviewXBmLeanAutoReportRequest= async (
 };
 
 //린 세분화 질문 생성
-export const InterviewXBmLeanAdsReportRequest= async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXBmLeanAdsReportRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -3336,7 +3290,7 @@ export const InterviewXBmLeanAdsReportRequest= async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-   
+
     const response = await axios.post(
       "https://wishresearch.kr/panels/experts/lean_ads_report",
       data,
@@ -3364,10 +3318,7 @@ export const InterviewXBmLeanAdsReportRequest= async (
   }
 };
 //린 세분화
-export const InterviewXBmLeanCustomReportRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXBmLeanCustomReportRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -3378,7 +3329,7 @@ export const InterviewXBmLeanCustomReportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-   
+
     const response = await axios.post(
       "https://wishresearch.kr/panels/experts/lean_custom_report",
       data,
@@ -3406,7 +3357,6 @@ export const InterviewXBmLeanCustomReportRequest = async (
   }
 };
 
-
 //그로스해커 아이템 진단
 export const InterviewXIdeaGrowthHackerReportRequest = async (
   data,
@@ -3422,7 +3372,7 @@ export const InterviewXIdeaGrowthHackerReportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-   
+
     const response = await axios.post(
       "https://wishresearch.kr/panels/experts/growth_hacker",
       data,
@@ -3450,7 +3400,6 @@ export const InterviewXIdeaGrowthHackerReportRequest = async (
   }
 };
 
-
 //디테일 리포트
 export const InterviewXIdeaGrowthHackerdetail_reportRequest = async (
   data,
@@ -3466,7 +3415,7 @@ export const InterviewXIdeaGrowthHackerdetail_reportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-   
+
     const response = await axios.post(
       "https://wishresearch.kr/panels/experts/growth_hacker_detail",
       data,
