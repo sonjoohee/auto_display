@@ -79,7 +79,10 @@ import Dropzone from 'react-dropzone-uploader'
 import AnalysisItem from '../molecules/MoleculeAnalysisItem'; // Import the new component
 import MoleculeDesignItem from '../molecules/MoleculeDesignItem';
 
+import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
+
 const PageDesignAnalysis = () => {
+
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -126,6 +129,13 @@ const PageDesignAnalysis = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeDesignTab, setActiveDesignTab] = useState('emotion'); // 'emotion' 또는 'scale'
   const [isLoadingReport, setIsLoadingReport] = useState(false); 
+
+  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
+
+  // 스크롤 초기화
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   
   const handleToggle = (key) => {
     setState((prevState) => ({ ...prevState, [key]: !prevState[key] }));

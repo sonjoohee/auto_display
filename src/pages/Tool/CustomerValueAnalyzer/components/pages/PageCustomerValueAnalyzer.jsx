@@ -107,6 +107,8 @@ import {
   InterviewXCustomerValueAnalyzerFinalReportRequest,
 } from "../../../../../utils/indexedDB";
 
+import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
+
 const PageCustomerValueAnalyzer = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [toolId, setToolId] = useAtom(TOOL_ID);
@@ -196,6 +198,8 @@ const PageCustomerValueAnalyzer = () => {
   const [apiCallCompleted, setApiCallCompleted] = useState(false);
   const [apiCallCompletedFactor, setApiCallCompletedFactor] = useState(false);
   const [completedApiCalls, setCompletedApiCalls] = useState([]);
+
+  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   // 스크롤 초기화
   useEffect(() => {
