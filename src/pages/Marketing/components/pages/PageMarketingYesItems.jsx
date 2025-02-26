@@ -185,9 +185,9 @@ const PageMarketingYesItems = () => {
   // 스크롤에 따라 active 클래스 업데이트
   const updateActiveQuestion = () => {
     questionRefs.current.forEach((section, index) => {
-      if (window.scrollY >= section.offsetTop - 100) {
-        setActiveQuestion(index);
-      }
+        if (section && window.scrollY >= section.offsetTop - 100) {
+            setActiveQuestion(index);
+        }
     });
   };
 
@@ -254,18 +254,18 @@ const PageMarketingYesItems = () => {
     setIsLoading(true);
     setIsLoadingAnalysis(true);
     // 버튼 클릭으로 API 호출
-    let response = await axios.post(
-      "https://wishresearch.kr/panels/business",
-      data,
-      axiosConfig
-    );
-    businessData = response.data.business_analysis;
-
-    // let response = await InterviewXBusinessAnalysisRequest(
+    // let response = await axios.post(
+    //   "https://wishresearch.kr/panels/business",
     //   data,
-    //   isLoggedIn
+    //   axiosConfig
     // );
-    // businessData = response.response.business_analysis;
+    // businessData = response.data.business_analysis;
+
+    let response = await InterviewXBusinessAnalysisRequest(
+      data
+
+    );
+    businessData = response.response.business_analysis;
 
     // 필요한 데이터가 없을 경우 재시도, 최대 5번
     while (
@@ -281,18 +281,18 @@ const PageMarketingYesItems = () => {
     ) {
       attempts += 1;
 
-      // response = await InterviewXBusinessAnalysisRequest(
-      //   data,
-      //   isLoggedIn
-      // );
-      // businessData = response.response.business_analysis;
-
-      response = await axios.post(
-        "https://wishresearch.kr/panels/business",
+      response = await InterviewXBusinessAnalysisRequest(
         data,
-        axiosConfig
+        
       );
-      businessData = response.data.business_analysis;
+      businessData = response.response.business_analysis;
+
+      // response = await axios.post(
+      //   "https://wishresearch.kr/panels/business",
+      //   data,
+      //   axiosConfig
+      // );
+      // businessData = response.data.business_analysis;
     }
 
 
