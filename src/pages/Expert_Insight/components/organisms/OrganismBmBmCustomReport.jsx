@@ -341,7 +341,7 @@ const OrganismBmBmCustomReport = () => {
         });
 
         await saveConversation(
-          { changingConversation: { conversation: updatedConversation, conversationStage: 3, buttonState : {...buttonState, bmEnough: 1}, bmBmCustomReportData : response.data.bm_bm_custom_report,  } }
+          { changingConversation: { conversation: updatedConversation, conversationStage: 3, buttonState : {...buttonState, bmEnough: 1}, bmBmCustomReportData : response.response.bm_bm_custom_report,  } }
         );
       }
     };

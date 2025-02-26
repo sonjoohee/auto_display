@@ -200,7 +200,7 @@ const OrganismGrowthHackerKPI = () => {
         setConversation(updatedConversation);
 
         await saveConversation(
-          { changingConversation: { conversation: updatedConversation, conversationStage: 3, growthHackerReportData : response.data.growth_hacker_report, growthHackerRecommendedSolution : response.data.growth_hacker_report[2] } }
+          { changingConversation: { conversation: updatedConversation, conversationStage: 3, growthHackerReportData : response.response.growth_hacker_report, growthHackerRecommendedSolution : response.response.growth_hacker_report[2] } }
         );
       }
     };

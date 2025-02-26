@@ -217,7 +217,7 @@ const OrganismGrowthHackerReport = ({ growthHackerReportCount }) => {
           );
           
           await saveConversation(
-            { changingConversation: { conversation: updatedConversation, conversationStage: 3, growthHackerDetailReportData : [...growthHackerDetailReportData, response.data.growth_hacker_detail_report], } }
+            { changingConversation: { conversation: updatedConversation, conversationStage: 3, growthHackerDetailReportData : [...growthHackerDetailReportData, response.response.growth_hacker_detail_report], } }
           );
         }
         setConversationStage(3);

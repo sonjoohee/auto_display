@@ -345,7 +345,7 @@ useEffect(() => {
         });
 
         await saveConversation(
-          { changingConversation: { conversation: updatedConversation, conversationStage: 3, buttonState : {...buttonState, bmEnough: 1}, bmLeanCustomReportData : response.data.bm_lean_custom_report, } }
+          { changingConversation: { conversation: updatedConversation, conversationStage: 3, buttonState : {...buttonState, bmEnough: 1}, bmLeanCustomReportData : response.response.bm_lean_custom_report, } }
         );
       }
     };
