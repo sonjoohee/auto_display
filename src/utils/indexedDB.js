@@ -2793,10 +2793,6 @@ export const InterviewXDesignEmotionScaleRequest = async (data, isLoggedIn) => {
 
 //비즈니스 분석
 export const InterviewXBusinessAnalysisRequest = async (data, isLoggedIn) => {
-  if (!isLoggedIn) {
-    console.error("로그인이 필요합니다.");
-    return null;
-  }
 
   try {
     const token = sessionStorage.getItem("accessToken");
