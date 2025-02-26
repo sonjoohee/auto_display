@@ -948,8 +948,8 @@ const OrganismIncNavigation = () => {
 
         // 날짜 기준으로 정렬
         const sortedChatList = mergedList.sort((a, b) => {
-          const dateA = b.updateDate || b.createDate;
-          const dateB = a.updateDate || a.createDate;
+          const dateA = b.timestamp;
+          const dateB = a.timestamp;
           return dateA - dateB;
         }); // 최근 날짜 순으로 정렬
 
@@ -989,6 +989,10 @@ const OrganismIncNavigation = () => {
   }, [reportRefreshTrigger, isLoggedIn]);
 
   const handleConversationClick = async (conversationId) => {
+    console.log(
+      "🚀 ~ handleConversationClick ~ conversationId:",
+      conversationId
+    );
     if (isLoading) {
       return;
     }
@@ -1003,7 +1007,9 @@ const OrganismIncNavigation = () => {
       //     },
       //   }
       // );
+
       const response = await getToolOnServer(conversationId, isLoggedIn);
+      console.log("🚀 ~ handleConversationClick ~ response:", response);
 
       const chatData = response;
 
@@ -1147,18 +1153,18 @@ const OrganismIncNavigation = () => {
       setTargetDiscoveryFinalReport({});
       setToolLoading(false);
       // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
-      setToolStep(chatData.completed_step);
-      setToolId(chatData.id);
+      setToolStep(chatData?.completed_step);
+      setToolId(chatData?.id);
       setTargetDiscoveryInfo({
-        type: chatData.type,
-        business: chatData.business,
-        target: chatData.target,
-        specific_situation: chatData.specific_situation,
-        country: chatData.country,
+        type: chatData?.type,
+        business: chatData?.business,
+        target: chatData?.target,
+        specific_situation: chatData?.specific_situation,
+        country: chatData?.country,
       });
-      setTargetDiscoveryPersona(chatData.target_discovery_persona);
-      setTargetDiscoveryScenario(chatData.target_discovery_scenario);
-      setTargetDiscoveryFinalReport(chatData.target_discovery_final_report);
+      setTargetDiscoveryPersona(chatData?.target_discovery_persona);
+      setTargetDiscoveryScenario(chatData?.target_discovery_scenario);
+      setTargetDiscoveryFinalReport(chatData?.target_discovery_final_report);
       setToolLoading(true);
 
       // customer value persona 타입일 경우
@@ -1179,33 +1185,33 @@ const OrganismIncNavigation = () => {
       setCustomerValueAnalyzerFinalReport({});
       setCustomerValueAnalyzerSelectedPersona([]);
       setToolLoading(false);
-      setToolStep(chatData.completed_step);
-      setToolId(chatData.id);
+      setToolStep(chatData?.completed_step);
+      setToolId(chatData?.id);
       setCustomerValueAnalyzerInfo({
-        business: chatData.business,
-        target_list: chatData.target_list,
-        analysis_scope: chatData.analysis_scope,
-        analysis_purpose: chatData.analysis_purpose,
+        business: chatData?.business,
+        target_list: chatData?.target_list,
+        analysis_scope: chatData?.analysis_scope,
+        analysis_purpose: chatData?.analysis_purpose,
       });
-      setCustomerValueAnalyzerPersona(chatData.customer_value_persona || []);
+      setCustomerValueAnalyzerPersona(chatData?.customer_value_persona || []);
       setCustomerValueAnalyzerJourneyMap(
-        chatData.customer_value_journey_map || []
+        chatData?.customer_value_journey_map || []
       );
       setCustomerValueAnalyzerSelectedPersona(
-        chatData.selected_customer_value_persona || []
+        chatData?.selected_customer_value_persona || []
       );
-      setCustomerValueAnalyzerFactor(chatData.customer_value_factor || []);
+      setCustomerValueAnalyzerFactor(chatData?.customer_value_factor || []);
       setCustomerValueAnalyzerClustering(
-        chatData.customer_value_clustering || []
+        chatData?.customer_value_clustering || []
       );
       // setCustomerValueAnalyzerSelectedFactor(
       //   chatData.customer_value_selected_factor || []
       // );
       setCustomerValueAnalyzerPositioning(
-        chatData.customer_value_positioning || []
+        chatData?.customer_value_positioning || []
       );
       setCustomerValueAnalyzerFinalReport(
-        chatData.customer_value_final_report || {}
+        chatData?.customer_value_final_report || {}
       );
       setToolLoading(true);
       setIdeaGeneratorInfo({});
@@ -1217,18 +1223,18 @@ const OrganismIncNavigation = () => {
       setIdeaGeneratorKnowTarget(null);
 
       setIdeaGeneratorInfo({
-        business: chatData.business,
-        core_value: chatData.core_value,
+        business: chatData?.business,
+        core_value: chatData?.core_value,
       });
 
-      setIdeaGeneratorPersona(chatData.idea_generator_persona || []);
-      setIdeaGeneratorIdea(chatData.idea_generator_idea || []);
-      setIdeaGeneratorClustering(chatData.idea_generator_clustering || []);
-      setIdeaGeneratorFinalReport(chatData.idea_generator_final_report || {});
+      setIdeaGeneratorPersona(chatData?.idea_generator_persona || []);
+      setIdeaGeneratorIdea(chatData?.idea_generator_idea || []);
+      setIdeaGeneratorClustering(chatData?.idea_generator_clustering || []);
+      setIdeaGeneratorFinalReport(chatData?.idea_generator_final_report || {});
       setIdeaGeneratorSelectedPersona(
-        chatData.idea_generator_selected_persona || []
+        chatData?.idea_generator_selected_persona || []
       );
-      setIdeaGeneratorKnowTarget(chatData.idea_generator_know_target);
+      setIdeaGeneratorKnowTarget(chatData?.idea_generator_know_target);
 
       setDesignAnalysisEmotionAnalysis([]);
       setDesignAnalysisBusinessInfo("");
@@ -1239,17 +1245,19 @@ const OrganismIncNavigation = () => {
       setDesignAnalysisEmotionScale([]);
       setDesignAnalysisFileNames([]);
       setToolLoading(false);
-      setToolStep(chatData.completed_step);
-      setToolId(chatData.id);
-      setDesignAnalysisEmotionAnalysis(chatData.design_emotion_analysis || []);
-      setDesignAnalysisBusinessInfo(chatData.business || "");
-      setDesignAnalysisSelectedPersona(chatData.design_selected_persona || []);
-      setDesignAnalysisEmotionTarget(chatData.design_emotion_target || {});
-      setDesignAnalysisEmotionScale(chatData.design_emotion_scale || []);
+      setToolStep(chatData?.completed_step);
+      setToolId(chatData?.id);
+      setDesignAnalysisEmotionAnalysis(chatData?.design_emotion_analysis || []);
+      setDesignAnalysisBusinessInfo(chatData?.business || "");
+      setDesignAnalysisSelectedPersona(chatData?.design_selected_persona || []);
+      setDesignAnalysisEmotionTarget(chatData?.design_emotion_target || {});
+      setDesignAnalysisEmotionScale(chatData?.design_emotion_scale || []);
       setDesignAnalysisFileNames(
-        chatData.image_name.map((item) => item.name) || []
+        chatData?.image_name?.map((item) => item.name) || []
       );
-      setDesignAnalysisFileId(chatData.image_name.map((item) => item.id) || []);
+      setDesignAnalysisFileId(
+        chatData?.image_name?.map((item) => item.id) || []
+      );
       setToolLoading(true);
 
       if (chatData.isMarketing) {
@@ -1852,8 +1860,10 @@ const OrganismIncNavigation = () => {
                                 ? "고객 핵심 가치 분석기 - "
                                 : chat.type === "ix_design_emotion_analysis"
                                 ? "디자인 감정 분석기 - "
-                                : ""}
-                              {chat.view_name || chat.business}
+                                : "전문가 챗 - "}
+                              {chat.view_name ||
+                                chat.business ||
+                                chat.business_info}
                             </p>
                             <span
                               id={`insight-toggle-${chat._id}`}
