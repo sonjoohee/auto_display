@@ -28,7 +28,7 @@ import MoleculeReportController from "../molecules/MoleculeReportController";
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import axios from "axios";
 import Loader from "../atoms/AtomLoader"
-import { InterviewXCustomerAddQuestionRequest } from "../../../../utils/indexedDB";
+import {InterviewXCustomerAdditionalQuestionRequest } from "../../../../utils/indexedDB";
 
 const OrganismCustomerAdditionalReport = ({
   customerAdditionalReportCount
@@ -150,7 +150,7 @@ const OrganismCustomerAdditionalReport = ({
           );
           answerData = response.data.additional_question;
 
-          // let response = await InterviewXAddQuestionRequest(
+          // let response = await InterviewXAdditionalQuestionRequest(
           //   data,
           //   isLoggedIn
           // );
@@ -172,7 +172,7 @@ const OrganismCustomerAdditionalReport = ({
             }
           }
 
-          // response = await InterviewXCustomerAddQuestionRequest(
+          // response = await InterviewXCustomerAdditionalQuestionRequest(
           //   data,
           //   isLoggedIn
           // );

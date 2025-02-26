@@ -2816,13 +2816,9 @@ export const InterviewXBusinessAnalysisRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
     const response = await axios.post(
-      "https://wishresearch.kr/panels/business",
-      PUT_DATA,
+      "https://wishresearch.kr/person/temporary/business_category",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -2863,13 +2859,9 @@ export const InterviewXBusinessAnalysisModifyRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
     const response = await axios.post(
-      "https://wishresearch.kr/panels/business_analysis_modify",
-      PUT_DATA,
+      "https://wishresearch.kr/person/temporary/business_category_modify",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -2895,7 +2887,7 @@ export const InterviewXBusinessAnalysisModifyRequest = async (
 };
 
 //추가 질문 생성
-export const InterviewXAddQuestionRequest = async (
+export const InterviewXAdditionalQuestionRequest = async (
   data,
   isLoggedIn
 ) => {
@@ -2909,13 +2901,10 @@ export const InterviewXAddQuestionRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
+
     const response = await axios.post(
-      "https://wishresearch.kr/panels/add_question",
-      PUT_DATA,
+      "https://wishresearch.kr/person/temporary/add_question",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -2942,7 +2931,7 @@ export const InterviewXAddQuestionRequest = async (
 
 
 //입력 추가 질문
-export const InterviewXCustomerAddQuestionRequest = async (
+export const InterviewXCustomerAdditionalQuestionRequest = async (
   data,
   isLoggedIn
 ) => {
@@ -2956,13 +2945,10 @@ export const InterviewXCustomerAddQuestionRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
+ 
     const response = await axios.post(
-      "https://wishresearch.kr/panels/customer_add_question",
-      PUT_DATA,
+      "https://wishresearch.kr/person/temporary/customer_add_question",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -3004,13 +2990,10 @@ export const InterviewXExpertReportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
+   
     const response = await axios.post(
-      "https://wishresearch.kr/panels/expert",
-      PUT_DATA,
+      "https://wishresearch.kr/panels/experts/expert",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -3051,13 +3034,10 @@ export const InterviewXPriceScrapReportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
+   
     const response = await axios.post(
-      "https://wishresearch.kr/panels/price_scrap",
-      PUT_DATA,
+      "https://wishresearch.kr/panels/experts/price_scrap",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -3097,13 +3077,10 @@ export const InterviewXPriceAnalysisReportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
+   
     const response = await axios.post(
-      "https://wishresearch.kr/panels/price_analysis",
-      PUT_DATA,
+      "https://wishresearch.kr/panels/experts/price_analysis",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -3144,13 +3121,10 @@ export const InterviewXBmCheckStageRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
+   
     const response = await axios.post(
-      "https://wishresearch.kr/panels/bm_stage_report",
-      PUT_DATA,
+      "https://wishresearch.kr/panels/experts/bm_stage_report",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -3190,13 +3164,10 @@ export const InterviewXBmBmAutoReportRequest= async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
+   
     const response = await axios.post(
-      "https://wishresearch.kr/panels/bm_auto_report",
-      PUT_DATA,
+      "https://wishresearch.kr/panels/experts/bm_auto_report",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -3236,13 +3207,10 @@ export const InterviewXBmBmAdsReportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
+   
     const response = await axios.post(
-      "https://wishresearch.kr/panels/bm_ads_report",
-      PUT_DATA,
+      "https://wishresearch.kr/panels/experts/bm_ads_report",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -3282,13 +3250,10 @@ export const InterviewXBmBmCustomReportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
+   
     const response = await axios.post(
-      "https://wishresearch.kr/panels/bm_custom_report",
-      PUT_DATA,
+      "https://wishresearch.kr/panels/experts/bm_custom_report",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -3328,13 +3293,10 @@ export const InterviewXBmLeanAutoReportRequest= async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
+   
     const response = await axios.post(
-      "https://wishresearch.kr/panels/lean_auto_report",
-      PUT_DATA,
+      "https://wishresearch.kr/panels/experts/lean_auto_report",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -3374,13 +3336,10 @@ export const InterviewXBmLeanAdsReportRequest= async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
+   
     const response = await axios.post(
-      "https://wishresearch.kr/panels/lean_ads_report",
-      PUT_DATA,
+      "https://wishresearch.kr/panels/experts/lean_ads_report",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -3419,13 +3378,10 @@ export const InterviewXBmLeanCustomReportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
+   
     const response = await axios.post(
-      "https://wishresearch.kr/panels/lean_custom_report",
-      PUT_DATA,
+      "https://wishresearch.kr/panels/experts/lean_custom_report",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -3466,13 +3422,10 @@ export const InterviewXIdeaGrowthHackerReportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
+   
     const response = await axios.post(
-      "https://wishresearch.kr/panels/growth_hacker",
-      PUT_DATA,
+      "https://wishresearch.kr/panels/experts/growth_hacker",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -3498,7 +3451,7 @@ export const InterviewXIdeaGrowthHackerReportRequest = async (
 };
 
 
-//방법 제시
+//디테일 리포트
 export const InterviewXIdeaGrowthHackerdetail_reportRequest = async (
   data,
   isLoggedIn
@@ -3513,13 +3466,10 @@ export const InterviewXIdeaGrowthHackerdetail_reportRequest = async (
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-    const PUT_DATA = {
-      type: "",
-      ...data,
-    };
+   
     const response = await axios.post(
-      "https://wishresearch.kr/panels/growth_hacker_detail",
-      PUT_DATA,
+      "https://wishresearch.kr/panels/experts/growth_hacker_detail",
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`,
