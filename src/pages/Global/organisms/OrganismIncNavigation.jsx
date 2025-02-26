@@ -944,7 +944,6 @@ const OrganismIncNavigation = () => {
 
         // 두 리스트 병합
         const mergedList = [...response_chat_list.data, ...response.data];
-        console.log("🚀 ~ fetchChatList ~ mergedList:", mergedList);
 
         // 날짜 기준으로 정렬
         const sortedChatList = mergedList.sort((a, b) => {
@@ -988,349 +987,400 @@ const OrganismIncNavigation = () => {
     fetchReports();
   }, [reportRefreshTrigger, isLoggedIn]);
 
-  const handleConversationClick = async (conversationId) => {
-    console.log(
-      "🚀 ~ handleConversationClick ~ conversationId:",
-      conversationId
-    );
+  const handleConversationClick = async (conversationId, conversationType) => {
     if (isLoading) {
       return;
     }
+    if (conversationType === "expert") {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const response = await axios.get(
+          `https://wishresearch.kr/panels/chat/${conversationId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        const chatData = response.data.chat_data;
+        setSavedTimestamp(chatData.timestamp); // 대화 날짜 설정
+        setSelectedExpertIndex(
+          chatData.expert_index !== undefined ? chatData.expert_index : "0"
+        );
+        setConversationId(chatData.id); // 대화 ID 설정
+        setConversation(chatData.conversation); // 이전 대화 내역 설정
+        setConversationStage(chatData.conversationStage); // 대화 단계 설정
+        setInputBusinessInfo(chatData.inputBusinessInfo); // 비즈니스 정보 설정
+        setTitleOfBusinessInfo(chatData.analysisReportData.title); // 분석 데이터 설정
+        setMainFeaturesOfBusinessInformation(
+          chatData.analysisReportData.mainFeatures
+        ); // 주요 특징 설정
+        setMainCharacteristicOfBusinessInformation(
+          chatData.analysisReportData.mainCharacter
+        ); // 주요 특징 설정
+        setBusinessInformationTargetCustomer(
+          chatData.analysisReportData.mainCustomer
+        ); // 목표 고객 설정
 
-    try {
-      const accessToken = sessionStorage.getItem("accessToken");
-      // const response = await axios.get(
-      //   `https://wishresearch.kr/panels/chat/${conversationId}`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${accessToken}`,
-      //     },
-      //   }
-      // );
+        // 전문가 보고서 데이터 복구
+        setStrategyReportData(chatData.strategyReportData || {});
 
-      const response = await getToolOnServer(conversationId, isLoggedIn);
-      console.log("🚀 ~ handleConversationClick ~ response:", response);
+        // 필요하다면 추가 상태 업데이트
+        setSelectedAdditionalKeyword(chatData.selectedAdditionalKeyword || []);
+        setAdditionalReportData(chatData.additionalReportData || []);
+        setCustomerAdditionalReportData(
+          chatData.customerAdditionalReportData || []
+        );
+        setSelectedCustomerAdditionalKeyword(
+          chatData.selectedCustomerAdditionalKeyword || []
+        );
 
-      const chatData = response;
+        setSelectedPocOptions(chatData.selectedPocOptions || []);
+        setSelectedPocTarget(chatData.selectedPocTarget || {});
+        setRecommendedTargetData(chatData.recommendedTargetData || {});
+        setPocPersonaList(chatData.pocPersonaList || []);
+        setPocDetailReportData(chatData.pocDetailReportData || {});
 
-      // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
-      // setSavedTimestamp(chatData.createDate); // 대화 날짜 설정
-      // setSelectedExpertIndex(
-      //   chatData.expert_index !== undefined ? chatData.expert_index : "0"
-      // );
-      // setConversationId(chatData.id); // 대화 ID 설정
-      // setConversation(chatData.conversation); // 이전 대화 내역 설정
-      // setConversationStage(chatData.conversationStage); // 대화 단계 설정
-      // setInputBusinessInfo(chatData.inputBusinessInfo); // 비즈니스 정보 설정
-      // setTitleOfBusinessInfo(chatData.analysisReportData.title); // 분석 데이터 설정
-      // setMainFeaturesOfBusinessInformation(
-      //   chatData.analysisReportData.mainFeatures
-      // ); // 주요 특징 설정
-      // setMainCharacteristicOfBusinessInformation(
-      //   chatData.analysisReportData.mainCharacter
-      // ); // 주요 특징 설정
-      // setBusinessInformationTargetCustomer(
-      //   chatData.analysisReportData.mainCustomer
-      // ); // 목표 고객 설정
+        setIdeaFeatureData(chatData.ideaFeatureData || []);
+        setIdeaRequirementData(chatData.ideaRequirementData || []);
+        setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
+        setIdeaRequirementDataTemp(chatData.ideaRequirementData || []);
 
-      // // 전문가 보고서 데이터 복구
-      // setStrategyReportData(chatData.strategyReportData || {});
+        setIdeaList(chatData.ideaList || []);
+        setIdeaGroup(chatData.ideaGroup || {});
+        setIdeaPriority(chatData.ideaPriority || []);
+        setIdeaMiroState(chatData.ideaMiroState || 0);
 
-      // // 필요하다면 추가 상태 업데이트
-      // setSelectedAdditionalKeyword(chatData.selectedAdditionalKeyword || []);
-      // setAdditionalReportData(chatData.additionalReportData || []);
-      // setCustomerAdditionalReportData(
-      //   chatData.customerAdditionalReportData || []
-      // );
-      // setSelectedCustomerAdditionalKeyword(
-      //   chatData.selectedCustomerAdditionalKeyword || []
-      // );
+        setButtonState(chatData.buttonState || {});
 
-      // setSelectedPocOptions(chatData.selectedPocOptions || []);
-      // setSelectedPocTarget(chatData.selectedPocTarget || {});
-      // setRecommendedTargetData(chatData.recommendedTargetData || {});
-      // setPocPersonaList(chatData.pocPersonaList || []);
-      // setPocDetailReportData(chatData.pocDetailReportData || {});
+        setGrowthHackerRecommendedSolution(
+          chatData.growthHackerRecommendedSolution || []
+        );
+        setGrowthHackerReportData(chatData.growthHackerReportData || []);
+        setGrowthHackerDetailReportData(
+          chatData.growthHackerDetailReportData || []
+        );
+        setGrowthHackerSelectedSolution(
+          chatData.growthHackerSelectedSolution || []
+        );
+        setKpiQuestionList(chatData.KpiQuestionList || []);
 
-      // setIdeaFeatureData(chatData.ideaFeatureData || []);
-      // setIdeaRequirementData(chatData.ideaRequirementData || []);
-      // setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
-      // setIdeaRequirementDataTemp(chatData.ideaRequirementData || []);
+        setPriceReportData(chatData.priceReportData || {});
+        setPriceScrapData(chatData.priceScrapData || {});
+        setPriceProduct(chatData.priceProduct || []);
+        setPriceSelectedProductSegmentation(
+          chatData.priceSelectedProductSegmentation || []
+        );
+        setPriceProductSegmentation(chatData.priceProductSegmentation || []);
 
-      // setIdeaList(chatData.ideaList || []);
-      // setIdeaGroup(chatData.ideaGroup || {});
-      // setIdeaPriority(chatData.ideaPriority || []);
-      // setIdeaMiroState(chatData.ideaMiroState || 0);
+        setCaseReportData(chatData.caseReportData || []);
+        setCaseHashTag(chatData.caseHashTag || []);
 
-      // setButtonState(chatData.buttonState || {});
+        setSurveyGuidelineDetailReportData(
+          chatData.surveyGuidelineDetailReportData || {}
+        );
+        setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
+        setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
+        setSurveyGoalFixed(chatData.surveyGoalFixed || []);
+        setSurveyQuestionList(chatData.surveyQuestionList || []);
 
-      // setGrowthHackerRecommendedSolution(
-      //   chatData.growthHackerRecommendedSolution || []
-      // );
-      // setGrowthHackerReportData(chatData.growthHackerReportData || []);
-      // setGrowthHackerDetailReportData(
-      //   chatData.growthHackerDetailReportData || []
-      // );
-      // setGrowthHackerSelectedSolution(
-      //   chatData.growthHackerSelectedSolution || []
-      // );
-      // setKpiQuestionList(chatData.KpiQuestionList || []);
+        setBmModelSuggestionReportData(
+          chatData.bmModelSuggestionReportData || []
+        );
+        setBmQuestionList(chatData.bmQuestionList || []);
+        setBmSelectedProblemOptions(chatData.bmSelectedProblemOptions || {});
+        setBmOrLean(chatData.bmOrLean || "");
+        setBmBmAutoReportData(chatData.bmBmAutoReportData || []);
+        setBmLeanAutoReportData(chatData.bmLeanAutoReportData || []);
+        setBmBmAdsReportData(chatData.bmBmAdsReportData || []);
+        setBmLeanAdsReportData(chatData.bmLeanAdsReportData || []);
+        setBmBmCustomReportData(chatData.bmBmCustomReportData || []);
+        setBmLeanCustomReportData(chatData.bmLeanCustomReportData || []);
 
-      // setPriceReportData(chatData.priceReportData || {});
-      // setPriceScrapData(chatData.priceScrapData || {});
-      // setPriceProduct(chatData.priceProduct || []);
-      // setPriceSelectedProductSegmentation(
-      //   chatData.priceSelectedProductSegmentation || []
-      // );
-      // setPriceProductSegmentation(chatData.priceProductSegmentation || []);
+        setIsMarketing(chatData.isMarketing || false);
+        setMarketingMbtiResult(chatData.marketingMbtiResult || {});
+        setMarketingResearchReportData(
+          chatData.marketingResearchReportData || []
+        );
+        setMarketingBmReportData(chatData.marketingBmReportData || []);
+        setMarketingCustomerData(chatData.marketingCustomerData || []);
+        setMarketingSelectedCustomer(chatData.marketingSelectedCustomer || []);
+        setMarketingFinalCustomer(chatData.marketingFinalCustomer || {});
+        setMarketingFinalReportData(chatData.marketingFinalReportData || []);
 
-      // setCaseReportData(chatData.caseReportData || []);
-      // setCaseHashTag(chatData.caseHashTag || []);
+        setStrategyConsultantReportData(
+          chatData.strategyConsultantReportData || []
+        );
 
-      // setSurveyGuidelineDetailReportData(
-      //   chatData.surveyGuidelineDetailReportData || {}
-      // );
-      // setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
-      // setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
-      // setSurveyGoalFixed(chatData.surveyGoalFixed || []);
-      // setSurveyQuestionList(chatData.surveyQuestionList || []);
+        if (chatData.isMarketing) {
+          const updatedConversation = [...chatData.conversation];
 
-      // setBmModelSuggestionReportData(
-      //   chatData.bmModelSuggestionReportData || []
-      // );
-      // setBmQuestionList(chatData.bmQuestionList || []);
-      // setBmSelectedProblemOptions(chatData.bmSelectedProblemOptions || {});
-      // setBmOrLean(chatData.bmOrLean || "");
-      // setBmBmAutoReportData(chatData.bmBmAutoReportData || []);
-      // setBmLeanAutoReportData(chatData.bmLeanAutoReportData || []);
-      // setBmBmAdsReportData(chatData.bmBmAdsReportData || []);
-      // setBmLeanAdsReportData(chatData.bmLeanAdsReportData || []);
-      // setBmBmCustomReportData(chatData.bmBmCustomReportData || []);
-      // setBmLeanCustomReportData(chatData.bmLeanCustomReportData || []);
+          if (
+            updatedConversation.length > 0 &&
+            updatedConversation[updatedConversation.length - 1].type ===
+              "marketingSignUpButton"
+          ) {
+            updatedConversation.pop();
+            updatedConversation.pop();
+          }
 
-      // setIsMarketing(chatData.isMarketing || false);
-      // setMarketingMbtiResult(chatData.marketingMbtiResult || {});
-      // setMarketingResearchReportData(
-      //   chatData.marketingResearchReportData || []
-      // );
-      // setMarketingBmReportData(chatData.marketingBmReportData || []);
-      // setMarketingCustomerData(chatData.marketingCustomerData || []);
-      // setMarketingSelectedCustomer(chatData.marketingSelectedCustomer || []);
-      // setMarketingFinalCustomer(chatData.marketingFinalCustomer || {});
-      // setMarketingFinalReportData(chatData.marketingFinalReportData || []);
-
-      // setStrategyConsultantReportData(
-      //   chatData.strategyConsultantReportData || []
-      // );
-
-      // export const TARGET_DISCOVERY_INFO = atom({
-      //   type: "",
-      //   business: "",
-      //   target: "",
-      //   specific_situation: "",
-      //   country: "",
-      // });
-
-      // export const TARGET_DISCOVERY_PERSONA = atom([]);
-      // export const SELECTED_TARGET_DISCOVERY_PERSONA = atom([]);
-      // export const TARGET_DISCOVERY_SCENARIO = atom([]);
-      // export const SELECTED_TARGET_DISCOVERY_SCENARIO = atom([]);
-      // export const TARGET_DISCOVERY_FINAL_REPORT = atom({});
-
-      // export const TOOL_ID = atom("");
-      // export const TOOL_STEP = atom(0);
-      setToolStep(1);
-      setToolId("");
-      setTargetDiscoveryInfo({
-        type: "",
-        business: "",
-        target: "",
-        specific_situation: "",
-        country: "",
-      });
-      setTargetDiscoveryPersona([]);
-      setTargetDiscoveryScenario([]);
-      setTargetDiscoveryFinalReport({});
-      setToolLoading(false);
-      // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
-      setToolStep(chatData?.completed_step);
-      setToolId(chatData?.id);
-      setTargetDiscoveryInfo({
-        type: chatData?.type,
-        business: chatData?.business,
-        target: chatData?.target,
-        specific_situation: chatData?.specific_situation,
-        country: chatData?.country,
-      });
-      setTargetDiscoveryPersona(chatData?.target_discovery_persona);
-      setTargetDiscoveryScenario(chatData?.target_discovery_scenario);
-      setTargetDiscoveryFinalReport(chatData?.target_discovery_final_report);
-      setToolLoading(true);
-
-      // customer value persona 타입일 경우
-
-      setToolStep(1);
-      setToolId("");
-      setCustomerValueAnalyzerInfo({
-        business: "",
-        target_list: [],
-        analysis_scope: "",
-        analysis_purpose: "",
-      });
-      setCustomerValueAnalyzerPersona([]);
-      setCustomerValueAnalyzerJourneyMap([]);
-      setCustomerValueAnalyzerFactor([]);
-      setCustomerValueAnalyzerClustering([]);
-      setCustomerValueAnalyzerPositioning([]);
-      setCustomerValueAnalyzerFinalReport({});
-      setCustomerValueAnalyzerSelectedPersona([]);
-      setToolLoading(false);
-      setToolStep(chatData?.completed_step);
-      setToolId(chatData?.id);
-      setCustomerValueAnalyzerInfo({
-        business: chatData?.business,
-        target_list: chatData?.target_list,
-        analysis_scope: chatData?.analysis_scope,
-        analysis_purpose: chatData?.analysis_purpose,
-      });
-      setCustomerValueAnalyzerPersona(chatData?.customer_value_persona || []);
-      setCustomerValueAnalyzerJourneyMap(
-        chatData?.customer_value_journey_map || []
-      );
-      setCustomerValueAnalyzerSelectedPersona(
-        chatData?.selected_customer_value_persona || []
-      );
-      setCustomerValueAnalyzerFactor(chatData?.customer_value_factor || []);
-      setCustomerValueAnalyzerClustering(
-        chatData?.customer_value_clustering || []
-      );
-      // setCustomerValueAnalyzerSelectedFactor(
-      //   chatData.customer_value_selected_factor || []
-      // );
-      setCustomerValueAnalyzerPositioning(
-        chatData?.customer_value_positioning || []
-      );
-      setCustomerValueAnalyzerFinalReport(
-        chatData?.customer_value_final_report || {}
-      );
-      setToolLoading(true);
-      setIdeaGeneratorInfo({});
-      setIdeaGeneratorPersona([]);
-      setIdeaGeneratorIdea([]);
-      setIdeaGeneratorClustering([]);
-      setIdeaGeneratorFinalReport({});
-      setIdeaGeneratorSelectedPersona([]);
-      setIdeaGeneratorKnowTarget(null);
-
-      setIdeaGeneratorInfo({
-        business: chatData?.business,
-        core_value: chatData?.core_value,
-      });
-
-      setIdeaGeneratorPersona(chatData?.idea_generator_persona || []);
-      setIdeaGeneratorIdea(chatData?.idea_generator_idea || []);
-      setIdeaGeneratorClustering(chatData?.idea_generator_clustering || []);
-      setIdeaGeneratorFinalReport(chatData?.idea_generator_final_report || {});
-      setIdeaGeneratorSelectedPersona(
-        chatData?.idea_generator_selected_persona || []
-      );
-      setIdeaGeneratorKnowTarget(chatData?.idea_generator_know_target);
-
-      setDesignAnalysisEmotionAnalysis([]);
-      setDesignAnalysisBusinessInfo("");
-      setDesignAnalysisUploadedFiles([]);
-      setDesignAnalysisFileId([]);
-      setDesignAnalysisSelectedPersona([]);
-      setDesignAnalysisEmotionTarget({});
-      setDesignAnalysisEmotionScale([]);
-      setDesignAnalysisFileNames([]);
-      setToolLoading(false);
-      setToolStep(chatData?.completed_step);
-      setToolId(chatData?.id);
-      setDesignAnalysisEmotionAnalysis(chatData?.design_emotion_analysis || []);
-      setDesignAnalysisBusinessInfo(chatData?.business || "");
-      setDesignAnalysisSelectedPersona(chatData?.design_selected_persona || []);
-      setDesignAnalysisEmotionTarget(chatData?.design_emotion_target || {});
-      setDesignAnalysisEmotionScale(chatData?.design_emotion_scale || []);
-      setDesignAnalysisFileNames(
-        chatData?.image_name?.map((item) => item.name) || []
-      );
-      setDesignAnalysisFileId(
-        chatData?.image_name?.map((item) => item.id) || []
-      );
-      setToolLoading(true);
-
-      if (chatData.isMarketing) {
-        const updatedConversation = [...chatData.conversation];
-
-        if (
-          updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "marketingSignUpButton"
-        ) {
-          updatedConversation.pop();
-          updatedConversation.pop();
+          setConversation(updatedConversation);
+          saveConversation({
+            changingConversation: {
+              conversation: updatedConversation,
+              conversationId: chatData.id,
+              timestamp: chatData.timestamp,
+              isMarketing: chatData.isMarketing,
+              expert_index: chatData.expert_index,
+              inputBusinessInfo: chatData.inputBusinessInfo,
+              analysisReportData: chatData.analysisReportData,
+              conversationStage: chatData.conversationStage,
+              title: chatData.analysisReportData.title,
+              mainFeatures: chatData.analysisReportData.mainFeatures,
+              marketingMbtiResult: chatData.marketingMbtiResult,
+              marketingResearchReportData: chatData.marketingResearchReportData,
+              marketingBmReportData: chatData.marketingBmReportData,
+              marketingCustomerData: chatData.marketingCustomerData,
+              marketingSelectedCustomer: chatData.marketingSelectedCustomer,
+              marketingFinalCustomer: chatData.marketingFinalCustomer,
+              marketingFinalReportData: chatData.marketingFinalReportData,
+            },
+          });
         }
 
-        setConversation(updatedConversation);
-        saveConversation({
-          changingConversation: {
-            conversation: updatedConversation,
-            conversationId: chatData.id,
-            timestamp: chatData.timestamp,
-            isMarketing: chatData.isMarketing,
-            expert_index: chatData.expert_index,
-            inputBusinessInfo: chatData.inputBusinessInfo,
-            analysisReportData: chatData.analysisReportData,
-            conversationStage: chatData.conversationStage,
-            title: chatData.analysisReportData.title,
-            mainFeatures: chatData.analysisReportData.mainFeatures,
-            marketingMbtiResult: chatData.marketingMbtiResult,
-            marketingResearchReportData: chatData.marketingResearchReportData,
-            marketingBmReportData: chatData.marketingBmReportData,
-            marketingCustomerData: chatData.marketingCustomerData,
-            marketingSelectedCustomer: chatData.marketingSelectedCustomer,
-            marketingFinalCustomer: chatData.marketingFinalCustomer,
-            marketingFinalReportData: chatData.marketingFinalReportData,
-          },
+        // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
+        // set어프로치패스(2)
+        setApproachPath(2);
+
+        setIsEditingNow(false);
+        setIsEditingIdeaFeature(false);
+        setIsEditingIdeaCustomer(false);
+        setAddingIdeaFeature(false);
+        setActiveIdeaFeatureIndex(0);
+        setAddContentIdeaFeature("");
+        setEditedIdeaFeatureTitle("");
+        setAddingIdeaCustomer(false);
+        setActiveIdeaCustomerIndex(0);
+        setAddContentIdeaCustomer("");
+        setEditedIdeaCustomerTitle("");
+        setAnalysisButtonState(0);
+        setExpertButtonState(0);
+        setAdditionButtonState(0);
+        setCustomerAdditionButtonState(0);
+        setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
+
+        // 페이지를 대화가 이어지는 형태로 전환
+        navigate(`/conversation/${conversationId}`);
+      } catch (error) {
+        console.error("대화 내용 가져오기 오류:", error);
+      }
+    } else {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+
+        const response = await getToolOnServer(conversationId, isLoggedIn);
+
+        const chatData = response;
+
+        setToolStep(1);
+        setToolId("");
+        setTargetDiscoveryInfo({
+          type: "",
+          business: "",
+          target: "",
+          specific_situation: "",
+          country: "",
         });
+        setTargetDiscoveryPersona([]);
+        setTargetDiscoveryScenario([]);
+        setTargetDiscoveryFinalReport({});
+        setToolLoading(false);
+        // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
+        setToolStep(chatData?.completed_step);
+        setToolId(chatData?.id);
+        setTargetDiscoveryInfo({
+          type: chatData?.type,
+          business: chatData?.business,
+          target: chatData?.target,
+          specific_situation: chatData?.specific_situation,
+          country: chatData?.country,
+        });
+        setTargetDiscoveryPersona(chatData?.target_discovery_persona);
+        setTargetDiscoveryScenario(chatData?.target_discovery_scenario);
+        setTargetDiscoveryFinalReport(chatData?.target_discovery_final_report);
+        setToolLoading(true);
+
+        // customer value persona 타입일 경우
+
+        setToolStep(1);
+        setToolId("");
+        setCustomerValueAnalyzerInfo({
+          business: "",
+          target_list: [],
+          analysis_scope: "",
+          analysis_purpose: "",
+        });
+        setCustomerValueAnalyzerPersona([]);
+        setCustomerValueAnalyzerJourneyMap([]);
+        setCustomerValueAnalyzerFactor([]);
+        setCustomerValueAnalyzerClustering([]);
+        setCustomerValueAnalyzerPositioning([]);
+        setCustomerValueAnalyzerFinalReport({});
+        setCustomerValueAnalyzerSelectedPersona([]);
+        setToolLoading(false);
+        setToolStep(chatData?.completed_step);
+        setToolId(chatData?.id);
+        setCustomerValueAnalyzerInfo({
+          business: chatData?.business,
+          target_list: chatData?.target_list,
+          analysis_scope: chatData?.analysis_scope,
+          analysis_purpose: chatData?.analysis_purpose,
+        });
+        setCustomerValueAnalyzerPersona(chatData?.customer_value_persona || []);
+        setCustomerValueAnalyzerJourneyMap(
+          chatData?.customer_value_journey_map || []
+        );
+        setCustomerValueAnalyzerSelectedPersona(
+          chatData?.selected_customer_value_persona || []
+        );
+        setCustomerValueAnalyzerFactor(chatData?.customer_value_factor || []);
+        setCustomerValueAnalyzerClustering(
+          chatData?.customer_value_clustering || []
+        );
+        // setCustomerValueAnalyzerSelectedFactor(
+        //   chatData.customer_value_selected_factor || []
+        // );
+        setCustomerValueAnalyzerPositioning(
+          chatData?.customer_value_positioning || []
+        );
+        setCustomerValueAnalyzerFinalReport(
+          chatData?.customer_value_final_report || {}
+        );
+        setToolLoading(true);
+        setIdeaGeneratorInfo({});
+        setIdeaGeneratorPersona([]);
+        setIdeaGeneratorIdea([]);
+        setIdeaGeneratorClustering([]);
+        setIdeaGeneratorFinalReport({});
+        setIdeaGeneratorSelectedPersona([]);
+        setIdeaGeneratorKnowTarget(null);
+
+        setIdeaGeneratorInfo({
+          business: chatData?.business,
+          core_value: chatData?.core_value,
+        });
+
+        setIdeaGeneratorPersona(chatData?.idea_generator_persona || []);
+        setIdeaGeneratorIdea(chatData?.idea_generator_idea || []);
+        setIdeaGeneratorClustering(chatData?.idea_generator_clustering || []);
+        setIdeaGeneratorFinalReport(
+          chatData?.idea_generator_final_report || {}
+        );
+        setIdeaGeneratorSelectedPersona(
+          chatData?.idea_generator_selected_persona || []
+        );
+        setIdeaGeneratorKnowTarget(chatData?.idea_generator_know_target);
+
+        setDesignAnalysisEmotionAnalysis([]);
+        setDesignAnalysisBusinessInfo("");
+        setDesignAnalysisUploadedFiles([]);
+        setDesignAnalysisFileId([]);
+        setDesignAnalysisSelectedPersona([]);
+        setDesignAnalysisEmotionTarget({});
+        setDesignAnalysisEmotionScale([]);
+        setDesignAnalysisFileNames([]);
+        setToolLoading(false);
+        setToolStep(chatData?.completed_step);
+        setToolId(chatData?.id);
+        setDesignAnalysisEmotionAnalysis(
+          chatData?.design_emotion_analysis || []
+        );
+        setDesignAnalysisBusinessInfo(chatData?.business || "");
+        setDesignAnalysisSelectedPersona(
+          chatData?.design_selected_persona || []
+        );
+        setDesignAnalysisEmotionTarget(chatData?.design_emotion_target || {});
+        setDesignAnalysisEmotionScale(chatData?.design_emotion_scale || []);
+        setDesignAnalysisFileNames(
+          chatData?.image_name?.map((item) => item.name) || []
+        );
+        setDesignAnalysisFileId(
+          chatData?.image_name?.map((item) => item.id) || []
+        );
+        setToolLoading(true);
+
+        if (chatData.isMarketing) {
+          const updatedConversation = [...chatData.conversation];
+
+          if (
+            updatedConversation.length > 0 &&
+            updatedConversation[updatedConversation.length - 1].type ===
+              "marketingSignUpButton"
+          ) {
+            updatedConversation.pop();
+            updatedConversation.pop();
+          }
+
+          setConversation(updatedConversation);
+          saveConversation({
+            changingConversation: {
+              conversation: updatedConversation,
+              conversationId: chatData.id,
+              timestamp: chatData.timestamp,
+              isMarketing: chatData.isMarketing,
+              expert_index: chatData.expert_index,
+              inputBusinessInfo: chatData.inputBusinessInfo,
+              analysisReportData: chatData.analysisReportData,
+              conversationStage: chatData.conversationStage,
+              title: chatData.analysisReportData.title,
+              mainFeatures: chatData.analysisReportData.mainFeatures,
+              marketingMbtiResult: chatData.marketingMbtiResult,
+              marketingResearchReportData: chatData.marketingResearchReportData,
+              marketingBmReportData: chatData.marketingBmReportData,
+              marketingCustomerData: chatData.marketingCustomerData,
+              marketingSelectedCustomer: chatData.marketingSelectedCustomer,
+              marketingFinalCustomer: chatData.marketingFinalCustomer,
+              marketingFinalReportData: chatData.marketingFinalReportData,
+            },
+          });
+        }
+
+        // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
+        // set어프로치패스(2)
+        setApproachPath(2);
+
+        setIsEditingNow(false);
+        setIsEditingIdeaFeature(false);
+        setIsEditingIdeaCustomer(false);
+        setAddingIdeaFeature(false);
+        setActiveIdeaFeatureIndex(0);
+        setAddContentIdeaFeature("");
+        setEditedIdeaFeatureTitle("");
+        setAddingIdeaCustomer(false);
+        setActiveIdeaCustomerIndex(0);
+        setAddContentIdeaCustomer("");
+        setEditedIdeaCustomerTitle("");
+        setAnalysisButtonState(0);
+        setExpertButtonState(0);
+        setAdditionButtonState(0);
+        setCustomerAdditionButtonState(0);
+        setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
+
+        // 페이지를 대화가 이어지는 형태로 전환
+        // navigate(`/TargetDiscovery`);
+
+        if (chatData.type === "ix_customer_value_persona") {
+          navigate(`/CustomerValueAnalyzer`);
+        } else if (chatData.type === "ix_idea_generator_persona") {
+          navigate(`/IdeaGenerator`);
+        } else if (chatData.type === "ix_target_discovery_persona") {
+          navigate(`/TargetDiscovery`);
+        } else if (chatData.type === "ix_design_emotion_analysis") {
+          navigate(`/DesignAnalysis`);
+        }
+      } catch (error) {
+        console.error("대화 내용 가져오기 오류:", error);
       }
-
-      // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
-      // set어프로치패스(2)
-      setApproachPath(2);
-
-      setIsEditingNow(false);
-      setIsEditingIdeaFeature(false);
-      setIsEditingIdeaCustomer(false);
-      setAddingIdeaFeature(false);
-      setActiveIdeaFeatureIndex(0);
-      setAddContentIdeaFeature("");
-      setEditedIdeaFeatureTitle("");
-      setAddingIdeaCustomer(false);
-      setActiveIdeaCustomerIndex(0);
-      setAddContentIdeaCustomer("");
-      setEditedIdeaCustomerTitle("");
-      setAnalysisButtonState(0);
-      setExpertButtonState(0);
-      setAdditionButtonState(0);
-      setCustomerAdditionButtonState(0);
-      setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
-
-      // 페이지를 대화가 이어지는 형태로 전환
-      // navigate(`/TargetDiscovery`);
-
-      if (chatData.type === "ix_customer_value_persona") {
-        navigate(`/CustomerValueAnalyzer`);
-      } else if (chatData.type === "ix_idea_generator_persona") {
-        navigate(`/IdeaGenerator`);
-      } else if (chatData.type === "ix_target_discovery_persona") {
-        navigate(`/TargetDiscovery`);
-      } else if (chatData.type === "ix_design_emotion_analysis") {
-        navigate(`/DesignAnalysis`);
-      }
-    } catch (error) {
-      console.error("대화 내용 가져오기 오류:", error);
     }
   };
 
@@ -1831,7 +1881,7 @@ const OrganismIncNavigation = () => {
           {chatList && chatList.length > 0 ? (
             <>
               <HistoryList>
-                {/* <strong>최근 사용 내역</strong> */}
+                <strong>최근 사용 내역</strong>
                 {true ? (
                   // chatList.some(
                   //   (chat) => Date.now() - chat.timestamp <= 604800000
@@ -1839,9 +1889,9 @@ const OrganismIncNavigation = () => {
                   <>
                     <ul>
                       {chatList
-                        // .filter(
-                        //   (chat) => Date.now() - chat.timestamp <= 604800000
-                        // )
+                        .filter(
+                          (chat) => Date.now() - chat.timestamp <= 604800000
+                        )
                         .map((chat) => (
                           <li
                             key={chat.id}
@@ -1850,7 +1900,12 @@ const OrganismIncNavigation = () => {
                             }`}
                           >
                             <p
-                              onClick={() => handleConversationClick(chat._id)}
+                              onClick={() =>
+                                handleConversationClick(
+                                  chat._id || chat.id,
+                                  chat.type || "expert"
+                                )
+                              }
                             >
                               {chat.type === "ix_target_discovery_persona"
                                 ? "타겟 탐색기 - "
@@ -1953,7 +2008,7 @@ const OrganismIncNavigation = () => {
                 )}
               </HistoryList>
 
-              {/* <HistoryList>
+              <HistoryList>
                 <strong>지난 7일 사용 내역</strong>
                 {chatList.some(
                   (chat) =>
@@ -2175,7 +2230,7 @@ const OrganismIncNavigation = () => {
                     <Sub3 color="gray300">사용 내역 없음</Sub3>
                   </NoData>
                 )}
-              </HistoryList> */}
+              </HistoryList>
             </>
           ) : (
             <ul>
