@@ -18,6 +18,7 @@ import {
   BM_MODEL_SUGGESTION_BUTTON_STATE,
   BM_QUESTION_LIST,
   BM_MODEL_SUGGESTION_REPORT_DATA,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -43,6 +44,7 @@ const MoleculeBmModelSuggestion = () => {
     businessInformationTargetCustomer,
     setBusinessInformationTargetCustomer,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
 
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
@@ -85,54 +87,34 @@ const MoleculeBmModelSuggestion = () => {
           bm_question_list: bmQuestionList,
         };
 
-        let response = await axios.post(
-          "https://wishresearch.kr/panels/bm_stage_report",
-          data,
-          axiosConfig
-        );
-        // let response = await InterviewXBmCheckStageRequest(
+        // let response = await axios.post(
+        //   "https://wishresearch.kr/panels/bm_stage_report",
         //   data,
-        //   isLoggedIn
+        //   axiosConfig
         // );
-
+        let response = await InterviewXBmCheckStageRequest(
+          data,
+          isLoggedIn
+        );
+        console.log("bm 모델 제안 response", response);
         let retryCount = 0;
         const maxRetries = 10;
 
 
-        while (retryCount < maxRetries && (
-          !response || !response.data || typeof response.data !== "object" ||
-          !Array.isArray(response.data.bm_check_stage_report) ||
-          response.data.bm_check_stage_report.some(item =>
-            !item.hasOwnProperty("title") || 
-            !item.hasOwnProperty("content") ||
-            !item.hasOwnProperty("model") ||
-            !(item.model === "BM" || item.model === "Lean")
-          )
-        )) {
-          response = await axios.post(
-            "https://wishresearch.kr/panels/bm_stage_report",
-            data,
-            axiosConfig
-          );
-          retryCount++;
-        }
-        if (retryCount === maxRetries) {
-          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-          // 에러 처리 로직 추가
-          throw new Error("Maximum retry attempts reached. Empty response persists.");
-        }
-
-        setBmModelSuggestionReportData(response.data.bm_check_stage_report);
-
-
         // while (retryCount < maxRetries && (
-        //   !response || !response.response || typeof response.response !== "object" 
-      
+        //   !response || !response.data || typeof response.data !== "object" ||
+        //   !Array.isArray(response.data.bm_check_stage_report) ||
+        //   response.data.bm_check_stage_report.some(item =>
+        //     !item.hasOwnProperty("title") || 
+        //     !item.hasOwnProperty("content") ||
+        //     !item.hasOwnProperty("model") ||
+        //     !(item.model === "BM" || item.model === "Lean")
+        //   )
         // )) {
-    
-        //   response = await InterviewXBmCheckStageRequest(
+        //   response = await axios.post(
+        //     "https://wishresearch.kr/panels/bm_stage_report",
         //     data,
-        //     isLoggedIn
+        //     axiosConfig
         //   );
         //   retryCount++;
         // }
@@ -141,7 +123,27 @@ const MoleculeBmModelSuggestion = () => {
         //   // 에러 처리 로직 추가
         //   throw new Error("Maximum retry attempts reached. Empty response persists.");
         // }
-        // setBmModelSuggestionReportData(response.response.bm_check_stage_report);
+
+        // setBmModelSuggestionReportData(response.data.bm_check_stage_report);
+
+
+        while (retryCount < maxRetries && (
+          !response || !response.response || typeof response.response !== "object" 
+      
+        )) {
+    
+          response = await InterviewXBmCheckStageRequest(
+            data,
+            isLoggedIn
+          );
+          retryCount++;
+        }
+        if (retryCount === maxRetries) {
+          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+          // 에러 처리 로직 추가
+          throw new Error("Maximum retry attempts reached. Empty response persists.");
+        }
+        setBmModelSuggestionReportData(response.response.bm_check_stage_report);
 
         setIsLoading(false);
         setIsLoadingBmModelSuggestionReport(false);

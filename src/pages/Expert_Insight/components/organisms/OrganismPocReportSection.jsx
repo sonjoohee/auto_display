@@ -18,6 +18,7 @@ import {
   CONVERSATION_STAGE,
   POC_DETAIL_REPORT_DATA,
   CONVERSATION_ID,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -36,6 +37,7 @@ import { Document, Packer, Paragraph, TextRun } from "docx"; // docx 라이브�
 import { saveAs } from "file-saver"; // file-saver를 사용하여 파일 저장
 
 const OrganismPocReportSection = ({ expertIndex }) => {
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const { saveConversation } = useSaveConversation();
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
@@ -122,63 +124,63 @@ const OrganismPocReportSection = ({ expertIndex }) => {
             page_index: 1,
           };
 
-          let response1 = await axios.post(
-            "https://wishresearch.kr/panels/expert",
-            data,
-            axiosConfig
-          );
-          // let response1= await InterviewXExpertReportRequest(
+          // let response1 = await axios.post(
+          //   "https://wishresearch.kr/panels/expert",
           //   data,
-          //   isLoggedIn
+          //   axiosConfig
           // );
+          let response1= await InterviewXExpertReportRequest(
+            data,
+            isLoggedIn
+          );
  
-          while (true) {
-            if (!response1["tabs"][0].hasOwnProperty("title") ||
-                !response1.data["tabs"][0].hasOwnProperty("sections") ||
-                !Array.isArray(response1.data["tabs"][0].sections) ||
-                !response1.data["tabs"][0].sections[0].hasOwnProperty("title") ||
-                !response1.data["tabs"][0].sections[0].hasOwnProperty("text") ||
-                !response1.data["tabs"][0].sections[0].hasOwnProperty("content") ||
-                response1.data["tabs"][0].sections[0].content.some(content => 
-                  !content.hasOwnProperty("title") ||
-                  !content.hasOwnProperty("text") ||
-                  !content.hasOwnProperty("subContent") ||
-                  !Array.isArray(content.subContent) ||
-                  content.subContent.length !== 6 ||
-                  content.subContent.some(subContent => 
-                    !subContent.hasOwnProperty("subTitle") ||
-                    !subContent.hasOwnProperty("text")
-                  )
-                )
-            ) {
-              response1 = await axios.post(
-                "https://wishresearch.kr/panels/expert",
-                data,
-                axiosConfig
-              );
-            } else {
-              break;
-            }
-          }
-
-          finalResponse = response1.data;
-
           // while (true) {
           //   if (!response1["tabs"][0].hasOwnProperty("title") ||
           //       !response1.data["tabs"][0].hasOwnProperty("sections") ||
           //       !Array.isArray(response1.data["tabs"][0].sections) ||
           //       !response1.data["tabs"][0].sections[0].hasOwnProperty("title") ||
           //       !response1.data["tabs"][0].sections[0].hasOwnProperty("text") ||
-          //       !response1.data["tabs"][0].sections[0].hasOwnProperty("content")) {
-          //     response1 = await InterviewXExpertReportRequest(
+          //       !response1.data["tabs"][0].sections[0].hasOwnProperty("content") ||
+          //       response1.data["tabs"][0].sections[0].content.some(content => 
+          //         !content.hasOwnProperty("title") ||
+          //         !content.hasOwnProperty("text") ||
+          //         !content.hasOwnProperty("subContent") ||
+          //         !Array.isArray(content.subContent) ||
+          //         content.subContent.length !== 6 ||
+          //         content.subContent.some(subContent => 
+          //           !subContent.hasOwnProperty("subTitle") ||
+          //           !subContent.hasOwnProperty("text")
+          //         )
+          //       )
+          //   ) {
+          //     response1 = await axios.post(
+          //       "https://wishresearch.kr/panels/expert",
           //       data,
-          //       isLoggedIn
+          //       axiosConfig
           //     );
           //   } else {
           //     break;
           //   }
           // }
-          // finalResponse = response1.response;
+
+          // finalResponse = response1.data;
+
+          while (true) {
+            if (!response1["tabs"][0].hasOwnProperty("title") ||
+                !response1.data["tabs"][0].hasOwnProperty("sections") ||
+                !Array.isArray(response1.data["tabs"][0].sections) ||
+                !response1.data["tabs"][0].sections[0].hasOwnProperty("title") ||
+                !response1.data["tabs"][0].sections[0].hasOwnProperty("text") ||
+                !response1.data["tabs"][0].sections[0].hasOwnProperty("content")) {
+              response1 = await InterviewXExpertReportRequest(
+                data,
+                isLoggedIn
+              );
+            } else {
+              break;
+            }
+          }
+          finalResponse = response1.response;
 
 
 

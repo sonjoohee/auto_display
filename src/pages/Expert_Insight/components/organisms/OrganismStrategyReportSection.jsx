@@ -26,6 +26,7 @@ import {
   IS_EDITING_NOW,
   CONVERSATION_STAGE,
   CONVERSATION_ID,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 
 const OrganismStrategyReportSection = ({ expertIndex }) => {
@@ -63,6 +64,7 @@ const OrganismStrategyReportSection = ({ expertIndex }) => {
   // Use the single strategyReportData atom
   const [strategyReportData, setStrategyReportData] =
     useAtom(STRATEGY_REPORT_DATA);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
 
   const analysisReportData = {
     title: titleOfBusinessInfo,
@@ -107,148 +109,149 @@ const OrganismStrategyReportSection = ({ expertIndex }) => {
             page_index: 1,
           };
 
-          let response1 = await axios.post(
-            "https://wishresearch.kr/panels/expert",
-            data,
-            axiosConfig
-          );
-          // let response1= await InterviewXExpertReportRequest(
+          // let response1 = await axios.post(
+          //   "https://wishresearch.kr/panels/expert",
           //   data,
-          //   isLoggedIn
+          //   axiosConfig
           // );
-
-          while (true) {
-            if (!response1.data["tabs"][0].hasOwnProperty("title")) {
-              response1 = await axios.post(
-                "https://wishresearch.kr/panels/expert",
-                data,
-                axiosConfig
-              );
-            } else {
-              break;
-            }
-          }
+          let response1= await InterviewXExpertReportRequest(
+            data,
+            isLoggedIn
+          );
 
           // while (true) {
-          //   if (!response1.response["tabs"][0].hasOwnProperty("title")) {
-          //     response1= await InterviewXExpertReportRequest(
+          //   if (!response1.data["tabs"][0].hasOwnProperty("title")) {
+          //     response1 = await axios.post(
+          //       "https://wishresearch.kr/panels/expert",
           //       data,
-          //       isLoggedIn
+          //       axiosConfig
           //     );
           //   } else {
           //     break;
           //   }
           // }
-          // finalResponse = response1.response;
+           // finalResponse = response1.data;
 
-          finalResponse = response1.data;
-          // console.log(finalResponse);
-
-          if (finalResponse.total_page_index === 2) {
-            let response2 = await axios.post(
-              "https://wishresearch.kr/panels/expert",
-              finalResponse,
-              axiosConfig
-            );
-            while (true) {
-              if (!response2.data["tabs"][1].hasOwnProperty("title")) {
-                response2 = await axios.post(
-                  "https://wishresearch.kr/panels/expert",
-                  finalResponse,
-                  axiosConfig
-                );
-              } else {
-                break;
-              }
+          while (true) {
+            if (!response1.response["tabs"][0].hasOwnProperty("title")) {
+              response1= await InterviewXExpertReportRequest(
+                data,
+                isLoggedIn
+              );
+            } else {
+              break;
             }
-            finalResponse = response2.data;
-            // console.log(finalResponse);
-          } else if (finalResponse.total_page_index === 3) {
-            let response2 = await axios.post(
-              "https://wishresearch.kr/panels/expert",
-              finalResponse,
-              axiosConfig
-            );
-            while (true) {
-              if (!response2.data["tabs"][1].hasOwnProperty("title")) {
-                response2 = await axios.post(
-                  "https://wishresearch.kr/panels/expert",
-                  finalResponse,
-                  axiosConfig
-                );
-              } else {
-                break;
-              }
-            }
-            let response3 = await axios.post(
-              "https://wishresearch.kr/panels/expert",
-              response2.data,
-              axiosConfig
-            );
-            while (true) {
-              if (!response3.data["tabs"][2].hasOwnProperty("title")) {
-                response3 = await axios.post(
-                  "https://wishresearch.kr/panels/expert",
-                  response2.data,
-                  axiosConfig
-                );
-              } else {
-                break;
-              }
-            }
-            finalResponse = response3.data;
-            // console.log(finalResponse);
           }
+          finalResponse = response1.response;
+
+         
+          // // console.log(finalResponse);
 
           // if (finalResponse.total_page_index === 2) {
-          //   let response2 = await  InterviewXExpertReportRequest(
+          //   let response2 = await axios.post(
+          //     "https://wishresearch.kr/panels/expert",
           //     finalResponse,
-          //     isLoggedIn // isLoggedIn 변수를 추가해야 할 수 있습니다.
+          //     axiosConfig
           //   );
           //   while (true) {
-          //     if (!response2.response["tabs"][1].hasOwnProperty("title")) {
-          //       response2 = await  InterviewXExpertReportRequest(
+          //     if (!response2.data["tabs"][1].hasOwnProperty("title")) {
+          //       response2 = await axios.post(
+          //         "https://wishresearch.kr/panels/expert",
           //         finalResponse,
-          //         isLoggedIn
+          //         axiosConfig
           //       );
           //     } else {
           //       break;
           //     }
           //   }
-          //   finalResponse = response2.response;
+          //   finalResponse = response2.data;
           //   // console.log(finalResponse);
           // } else if (finalResponse.total_page_index === 3) {
-          //   let response2 = await  InterviewXExpertReportRequest(
+          //   let response2 = await axios.post(
+          //     "https://wishresearch.kr/panels/expert",
           //     finalResponse,
-          //     isLoggedIn
+          //     axiosConfig
           //   );
           //   while (true) {
-          //     if (!response2.response["tabs"][1].hasOwnProperty("title")) {
-          //       response2 = await InterviewXExpertReportRequest(
+          //     if (!response2.data["tabs"][1].hasOwnProperty("title")) {
+          //       response2 = await axios.post(
+          //         "https://wishresearch.kr/panels/expert",
           //         finalResponse,
-          //         isLoggedIn
+          //         axiosConfig
           //       );
           //     } else {
           //       break;
           //     }
           //   }
-          //   let response3 = await InterviewXExpertReportRequest(
-          //     response2.response,
-          //     isLoggedIn
+          //   let response3 = await axios.post(
+          //     "https://wishresearch.kr/panels/expert",
+          //     response2.data,
+          //     axiosConfig
           //   );
           //   while (true) {
-          //     if (!response3.response["tabs"][2].hasOwnProperty("title")) {
-          //       response3 = await InterviewXExpertReportRequest(
-          //         response2.response,
-          //         isLoggedIn
+          //     if (!response3.data["tabs"][2].hasOwnProperty("title")) {
+          //       response3 = await axios.post(
+          //         "https://wishresearch.kr/panels/expert",
+          //         response2.data,
+          //         axiosConfig
           //       );
           //     } else {
           //       break;
           //     }
           //   }
-          //   finalResponse = response3.response;
+          //   finalResponse = response3.data;
           //   // console.log(finalResponse);
           // }
+
+          if (finalResponse.total_page_index === 2) {
+            let response2 = await  InterviewXExpertReportRequest(
+              finalResponse,
+              isLoggedIn // isLoggedIn 변수를 추가해야 할 수 있습니다.
+            );
+            while (true) {
+              if (!response2.response["tabs"][1].hasOwnProperty("title")) {
+                response2 = await  InterviewXExpertReportRequest(
+                  finalResponse,
+                  isLoggedIn
+                );
+              } else {
+                break;
+              }
+            }
+            finalResponse = response2.response;
+            // console.log(finalResponse);
+          } else if (finalResponse.total_page_index === 3) {
+            let response2 = await  InterviewXExpertReportRequest(
+              finalResponse,
+              isLoggedIn
+            );
+            while (true) {
+              if (!response2.response["tabs"][1].hasOwnProperty("title")) {
+                response2 = await InterviewXExpertReportRequest(
+                  finalResponse,
+                  isLoggedIn
+                );
+              } else {
+                break;
+              }
+            }
+            let response3 = await InterviewXExpertReportRequest(
+              response2.response,
+              isLoggedIn
+            );
+            while (true) {
+              if (!response3.response["tabs"][2].hasOwnProperty("title")) {
+                response3 = await InterviewXExpertReportRequest(
+                  response2.response,
+                  isLoggedIn
+                );
+              } else {
+                break;
+              }
+            }
+            finalResponse = response3.response;
+            // console.log(finalResponse);
+          }
 
           const strategyData = finalResponse;
 

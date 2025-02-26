@@ -18,6 +18,7 @@ import {
   PRICE_PRODUCT,
   CONVERSATION_STAGE,
   BUTTON_STATE,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -26,6 +27,7 @@ import Loader from "../atoms/AtomLoader";
 
 const OrganismPriceReport = () => {
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
   const { saveConversation } = useSaveConversation();
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -92,67 +94,68 @@ const OrganismPriceReport = () => {
           },
         };
 
-        let response1 = await axios.post(
-          "https://wishresearch.kr/panels/price_scrap",
-          data1,
-          axiosConfig
-        );
-
-        // let response1 = await InterviewXPriceScrapReportRequest(
+        // let response1 = await axios.post(
+        //   "https://wishresearch.kr/panels/price_scrap",
         //   data1,
-        //   isLoggedIn
+        //   axiosConfig
         // );
+
+        let response1 = await InterviewXPriceScrapReportRequest(
+          data1,
+          isLoggedIn
+        );
+        console.log("가격 스크랩 response", response1);
 
         let retryCount = 0;
         const maxRetries = 10;
 
-        while (
-          (retryCount < maxRetries &&
-            (!response1 ||
-              !response1.data ||
-              typeof response1.data !== "object" ||
-              !response1.data.hasOwnProperty("price_scrap_report") ||
-              typeof response1.data.price_scrap_report !== "object")) ||
-          !response1.data.price_scrap_report.price_range_groups ||
-          response1.data.price_scrap_report.price_range_groups.length === 0
-        ) {
-          response1 = await axios.post(
-            "https://wishresearch.kr/panels/price_scrap",
+        // while (
+        //   (retryCount < maxRetries &&
+        //     (!response1 ||
+        //       !response1.data ||
+        //       typeof response1.data !== "object" ||
+        //       !response1.data.hasOwnProperty("price_scrap_report") ||
+        //       typeof response1.data.price_scrap_report !== "object")) ||
+        //   !response1.data.price_scrap_report.price_range_groups ||
+        //   response1.data.price_scrap_report.price_range_groups.length === 0
+        // ) {
+        //   response1 = await axios.post(
+        //     "https://wishresearch.kr/panels/price_scrap",
+        //     data1,
+        //     axiosConfig
+        //   );
+        //   retryCount++;
+        // }
+        // if (retryCount === maxRetries) {
+        //   console.error(
+        //     "최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다."
+        //   );
+        //   // 에러 처리 로직 추가
+        //   throw new Error(
+        //     "Maximum retry attempts reached. Empty response persists."
+        //   );
+        // }
+
+        // const priceScrap = response1.data.price_scrap_report;
+
+        while (retryCount < maxRetries && (
+          !response1 || !response1.response || typeof response1.response !== "object" 
+      
+        )) {
+    
+         response1 = await InterviewXPriceScrapReportRequest(
             data1,
-            axiosConfig
+            isLoggedIn
           );
           retryCount++;
         }
         if (retryCount === maxRetries) {
-          console.error(
-            "최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다."
-          );
+          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
           // 에러 처리 로직 추가
-          throw new Error(
-            "Maximum retry attempts reached. Empty response persists."
-          );
+          throw new Error("Maximum retry attempts reached. Empty response persists.");
         }
 
-        const priceScrap = response1.data.price_scrap_report;
-
-        // while (retryCount < maxRetries && (
-        //   !response || !response.response || typeof response.response !== "object" 
-      
-        // )) {
-    
-         // response1 = await InterviewXPriceScrapReportRequest(
-          //   data1,
-          //   isLoggedIn
-          // );
-        //   retryCount++;
-        // }
-        // if (retryCount === maxRetries) {
-        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-        //   // 에러 처리 로직 추가
-        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
-        // }
-
-        // const priceScrap = response1.resonse.price_scrap_report;
+        const priceScrap = response1.response.price_scrap_report;
 
         setPriceScrapData(priceScrap);
 
@@ -168,76 +171,76 @@ const OrganismPriceReport = () => {
           price_scrap_report: priceScrap,
         };
 
-        let response2 = await axios.post(
-          "https://wishresearch.kr/panels/price_analysis",
-          data2,
-          axiosConfig
-        );
-
-        // let response2 = await InterviewXPriceAnalysisReportRequest(
+        // let response2 = await axios.post(
+        //   "https://wishresearch.kr/panels/price_analysis",
         //   data2,
-        //   isLoggedIn
+        //   axiosConfig
         // );
+
+        let response2 = await InterviewXPriceAnalysisReportRequest(
+          data2,
+          isLoggedIn
+        );
 
         retryCount = 0;
 
-        while (
-          (retryCount < maxRetries &&
-            (!response2 ||
-              !response2.data ||
-              typeof response2.data !== "object" ||
-              !response2.data.hasOwnProperty(
-                "price_analysis_persona_recommand_report"
-              ) ||
-              typeof response2.data.price_analysis_persona_recommand_report !==
-                "object")) ||
-          !response2.data.price_analysis_persona_recommand_report
-            .price_analysis ||
-          Object.keys(
-            response2.data.price_analysis_persona_recommand_report
-              .price_analysis
-          ).length === 0
-        ) {
-          response2 = await axios.post(
-            "https://wishresearch.kr/panels/price_analysis",
-            data2,
-            axiosConfig
-          );
+        // while (
+        //   (retryCount < maxRetries &&
+        //     (!response2 ||
+        //       !response2.data ||
+        //       typeof response2.data !== "object" ||
+        //       !response2.data.hasOwnProperty(
+        //         "price_analysis_persona_recommand_report"
+        //       ) ||
+        //       typeof response2.data.price_analysis_persona_recommand_report !==
+        //         "object")) ||
+        //   !response2.data.price_analysis_persona_recommand_report
+        //     .price_analysis ||
+        //   Object.keys(
+        //     response2.data.price_analysis_persona_recommand_report
+        //       .price_analysis
+        //   ).length === 0
+        // ) {
+        //   response2 = await axios.post(
+        //     "https://wishresearch.kr/panels/price_analysis",
+        //     data2,
+        //     axiosConfig
+        //   );
          
-          retryCount++;
-        }
-        if (retryCount === maxRetries) {
-          console.error(
-            "최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다."
-          );
-          // 에러 처리 로직 추가
-          throw new Error(
-            "Maximum retry attempts reached. Empty response persists."
-          );
-        }
-
-        const priceReport =
-          response2.data.price_analysis_persona_recommand_report;
-        setPriceReportData(priceReport);
-
-        // while (retryCount < maxRetries && (
-        //   !response || !response.response || typeof response.response !== "object" 
-      
-        // )) {
-      // response2 = await InterviewXPriceAnalysisReportRequest(
-          //   data2,
-          //   isLoggedIn
-          // );
-          //   retryCount++;
-          // }
-        // if (retryCount === maxRetries) {
-        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-        //   // 에러 처리 로직 추가
-        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
+        //   retryCount++;
         // }
-      //   const priceReport =
-      //   response2.response.price_analysis_persona_recommand_report;
-      // setPriceReportData(priceReport);
+        // if (retryCount === maxRetries) {
+        //   console.error(
+        //     "최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다."
+        //   );
+        //   // 에러 처리 로직 추가
+        //   throw new Error(
+        //     "Maximum retry attempts reached. Empty response persists."
+        //   );
+        // }
+
+        // const priceReport =
+        //   response2.data.price_analysis_persona_recommand_report;
+        // setPriceReportData(priceReport);
+
+        while (retryCount < maxRetries && (
+          !response2 || !response2.response || typeof response2.response !== "object" 
+      
+        )) {
+      response2 = await InterviewXPriceAnalysisReportRequest(
+            data2,
+            isLoggedIn
+          );
+            retryCount++;
+          }
+        if (retryCount === maxRetries) {
+          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+          // 에러 처리 로직 추가
+          throw new Error("Maximum retry attempts reached. Empty response persists.");
+        }
+        const priceReport =
+        response2.response.price_analysis_persona_recommand_report;
+      setPriceReportData(priceReport);
 
         const prices = priceScrap.price_range_groups.flatMap((group) =>
           group.product_list.map((product) =>

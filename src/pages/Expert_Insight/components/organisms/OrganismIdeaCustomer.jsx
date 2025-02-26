@@ -18,11 +18,13 @@ import {
   ADD_CONTENT_IDEA_CUSTOMER,
   ACTIVE_IDEA_CUSTOMER_INDEX,
   EDITED_IDEA_CUSTOMER_TITLE,
+  IS_LOGGED_IN,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import MoleculeReportController from "../molecules/MoleculeReportController";
 import { InterviewXBusinessAnalysisModifyRequest } from "../../../../utils/indexedDB";
+
 import {
   SkeletonTitle,
   SkeletonLine,
@@ -57,6 +59,7 @@ const OrganismIdeaCustomer = () => {
   const [isLoadingIdeaCustomer, setIsLoadingIdeaCustomer] = useState(false);
   const [ideaCustomerButtonState, setIdeaCustomerButtonState] = useAtom(IDEA_CUSTOMER_BUTTON_STATE);
   const [ideaRequirementData, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
 
   const [isEditingIdeaCustomer, setIsEditingIdeaCustomer] = useAtom(IS_EDITING_IDEA_CUSTOMER);
   const [addingIdeaCustomer, setAddingIdeaCustomer] = useAtom(ADDING_IDEA_CUSTOMER);
@@ -161,49 +164,49 @@ const OrganismIdeaCustomer = () => {
       };
 
       // 임시로 전문가보고서 api 사용
-      const response = await axios.post(
-        "https://wishresearch.kr/panels/business_analysis_modify",
-        data,
-        axiosConfig
-      );
-      // const response = await InterviewXBusinessAnalysisModifyRequest(
+      // const response = await axios.post(
+      //   "https://wishresearch.kr/panels/business_analysis_modify",
       //   data,
-      //   isLoggedIn
+      //   axiosConfig
       // );
+      const response = await InterviewXBusinessAnalysisModifyRequest(
+        data,
+        isLoggedIn
+      );
 
-      // if(index === null) {
-      //   setIdeaRequirementData([
-      //     ...ideaRequirementData,
-      //     {
-      //       title: response.response.generate_data.추가_주요_목적_및_특징,
-      //       text: response.response.generate_data.추가_주요_목적_및_특징, 
-      //     },
-      //   ]);
-      // } else {
-      //   const updatedFeatures = [...ideaRequirementData];
-
-      //   updatedFeatures[index] = {
-      //     title: response.response.generate_data.추가_주요_목적_및_특징,
-      //     text: response.response.generate_data.추가_주요_목적_및_특징, 
-      //   };
-
-
-      // 응답받은 데이터가 들어가는지 확인
       if(index === null) {
         setIdeaRequirementData([
           ...ideaRequirementData,
           {
-            title: response.data.generate_data.추가_주요_목적_및_특징,
-            text: response.data.generate_data.추가_주요_목적_및_특징, 
+            title: response.response.business_analysis.추가_주요_목적_및_특징, // 데이터 구조에 맞게 수정
+            text: response.response.business_analysis.추가_주요_목적_및_특징, 
           },
         ]);
       } else {
         const updatedFeatures = [...ideaRequirementData];
 
         updatedFeatures[index] = {
-          title: response.data.generate_data.추가_주요_목적_및_특징,
-          text: response.data.generate_data.추가_주요_목적_및_특징, 
+          title: response.response.business_analysis.추가_주요_목적_및_특징, // 데이터 구조에 맞게 수정
+          text: response.response.business_analysis.추가_주요_목적_및_특징, 
         };
+
+
+      // 응답받은 데이터가 들어가는지 확인
+      // if(index === null) {
+      //   setIdeaRequirementData([
+      //     ...ideaRequirementData,
+      //     {
+      //       title: response.data.generate_data.추가_주요_목적_및_특징,
+      //       text: response.data.generate_data.추가_주요_목적_및_특징, 
+      //     },
+      //   ]);
+      // } else {
+      //   const updatedFeatures = [...ideaRequirementData];
+
+      //   updatedFeatures[index] = {
+      //     title: response.data.generate_data.추가_주요_목적_및_특징,
+      //     text: response.data.generate_data.추가_주요_목적_및_특징, 
+      //   };
 
         setIdeaRequirementData(updatedFeatures);
       }
