@@ -81,6 +81,8 @@ import {
   updateToolOnServer,
 } from "../../../../../utils/indexedDB";
 
+import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
+
 const PageTargetDiscovery = () => {
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
@@ -133,6 +135,13 @@ const PageTargetDiscovery = () => {
   const [isLoadingScenario, setIsLoadingScenario] = useState(false); // 시나리오 단계용 로딩 상태 추가
   const [specificSituation, setSpecificSituation] = useState("");
   const [loadingPersonas, setLoadingPersonas] = useState({});
+
+  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
+
+  // 스크롤 초기화
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const calculateDropDirection = () => {
     if (selectBoxRef.current) {

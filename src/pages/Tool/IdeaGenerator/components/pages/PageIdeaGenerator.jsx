@@ -90,6 +90,8 @@ import {
   InterviewXIdeaGeneratorFinalReportRequest,
 } from "../../../../../utils/indexedDB";
 
+import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
+
 const PageIdeaGenerator = () => {
   const [tableData, setTableData] = useState([]);
   const [chartData, setChartData] = useState({});
@@ -172,6 +174,8 @@ const PageIdeaGenerator = () => {
   const [selectedCustomPersona, setSelectedCustomPersona] = useState(null); // 제가 원하는 타겟 고객이 있습니다
 
   const [selectedDetailPersona, setSelectedDetailPersona] = useState(null);
+
+  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   // 스크롤 초기화
   useEffect(() => {
