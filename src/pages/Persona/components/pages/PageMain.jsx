@@ -1380,9 +1380,8 @@ const PageMain = () => {
                 <ExploreCard
                   Expert
                   // Ready
-                  // Ready
                   key="expert-1"
-                  {...(!accessableExpert && { Ready: true })}
+                  // {...(!accessableExpert && { Ready: true })}
                 >
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
@@ -1424,9 +1423,8 @@ const PageMain = () => {
                 <ExploreCard
                   Expert
                   // Ready
-                  // Ready
                   key="expert-2"
-                  {...(!accessableExpert && { Ready: true })}
+                  // {...(!accessableExpert && { Ready: true })}
                 >
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
@@ -1467,9 +1465,8 @@ const PageMain = () => {
                 <ExploreCard
                   Expert
                   // Ready
-                  // Ready
                   key="expert-3"
-                  {...(!accessableExpert && { Ready: true })}
+                  // {...(!accessableExpert && { Ready: true })}
                 >
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
@@ -1510,9 +1507,8 @@ const PageMain = () => {
                 <ExploreCard
                   Expert
                   // Ready
-                  // Ready
                   key="expert-4"
-                  {...(!accessableExpert && { Ready: true })}
+                  // {...(!accessableExpert && { Ready: true })}
                 >
                   <span>
                     <images.LightningChargeFill color={palette.gray700} />
