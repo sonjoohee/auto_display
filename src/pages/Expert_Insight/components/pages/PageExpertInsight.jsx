@@ -406,6 +406,13 @@ const PageExpertInsight = () => {
   const [lastRenderedIndex, setLastRenderedIndex] = useState(-1);
 
   useEffect(() => {
+    // 히스토리 모드에서는 renderedItems를 conversation과 동기화
+    if (approachPath === 2) {
+      setRenderedItems(conversation);
+      setLastRenderedIndex(conversation.length - 1);
+      return;
+    }
+    
     let totalDelay = 0;
     const timers = [];
     const newRenderedItems = [...renderedItems];
@@ -456,7 +463,15 @@ const PageExpertInsight = () => {
     return () => {
       timers.forEach((timer) => clearTimeout(timer));
     };
-  }, [conversation]);
+  }, [conversation, approachPath]);
+
+  // 히스토리 모드에서 approachPath가 변경될 때 renderedItems 동기화
+  useEffect(() => {
+    if (approachPath === 2) {
+      setRenderedItems(conversation);
+      setLastRenderedIndex(conversation.length - 1);
+    }
+  }, [approachPath, conversation]);
 
   useEffect(() => {
     // 접근 가능 여부를 확인하여 차단 로직 수행
