@@ -819,7 +819,7 @@ const PageExpertInsight = () => {
                   } else if (item.type === "reportButton") {
                     return <MoleculeCheckReportRightAway />;
                   } else if (item.type === "strategyButton") {
-                    return <MoleculeStrategyButton />;
+                    return <MoleculeStrategyButton strategyConsultantCount={strategyConsultantCount} />;
                   } else if (item.type === "strategyConsultant") {
                     const currentStrategyConsultantCount =
                       strategyConsultantCount++;
