@@ -152,13 +152,7 @@ const OrganismBizAnalysisSection = () => {
       if (analysisButtonState === 1) {
         setIsLoading(true);
         setIsLoadingAnalysis(true);
-        // 버튼 클릭으로 API 호출
-        // let response = await axios.post(
-        //   "https://wishresearch.kr/panels/business",
-        //   data,
-        //   axiosConfig
-        // );
-        // businessData = response.data.business_analysis;
+
         let response = await InterviewXBusinessAnalysisRequest(
           data,
           isLoggedIn
@@ -178,14 +172,7 @@ const OrganismBizAnalysisSection = () => {
           attempts < maxAttempts
         ) {
           attempts += 1;
-          // console.log(`Attempt ${attempts} to fetch business data`);
 
-          // response = await axios.post(
-          //   "https://wishresearch.kr/panels/business",
-          //   data,
-          //   axiosConfig
-          // );
-          // businessData = response.data.business_analysis;
           response = await InterviewXBusinessAnalysisRequest(
             data,
             isLoggedIn
@@ -620,29 +607,11 @@ const OrganismBizAnalysisSection = () => {
         data.business_analysis_data_part = "2";
       }
 
-      // 임시로 전문가보고서 api 사용
-      // const response = await axios.post(
-      //   "https://wishresearch.kr/panels/business_analysis_modify",
-      //   data,
-      //   axiosConfig
-      // );
       const response = await InterviewXBusinessAnalysisModifyRequest(
         data,
         isLoggedIn
       );
     
-      // 응답받은 데이터가 들어가는지 확인
-      // if (section === "mainFeatures") {
-      //   setMainFeaturesOfBusinessInformation([
-      //     ...mainFeaturesOfBusinessInformation,
-      //     response.data.generate_data.추가_주요_목적_및_특징,
-      //   ]);
-      // } else if (section === "mainCharacteristic") {
-      //   setMainCharacteristicOfBusinessInformation([
-      //     ...mainCharacteristicOfBusinessInformation,
-      //     response.data.generate_data.추가_주요기능,
-      //   ]);
-      // }
       if (section === "mainFeatures") {
         setMainFeaturesOfBusinessInformation([
           ...mainFeaturesOfBusinessInformation,
@@ -1560,7 +1529,7 @@ const Progress = styled.div`
   width: ${({ progress }) => progress}%;
   height: 8px;
   background-color: ${palette.gray500};
-  animation: ${fillAnimation} 1.5s ease-in-out forwards;
+  animation: ${fillAnimation} 5s ease-in-out forwards;
   border-radius: 5px;
 `;
 

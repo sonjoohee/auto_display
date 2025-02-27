@@ -96,14 +96,6 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
             page_index: 1
           };
 
-          // let response = await axios.post(
-          //   "https://wishresearch.kr/panels/expert",
-          //   data,
-          //   axiosConfig
-          // );
-          // if (response && response.data && response.data.tabs) {
-          //   let strategyConsultantReport = response.data.tabs[0];
-
           let response = await  InterviewXExpertReportRequest(
             data,
             isLoggedIn
@@ -118,31 +110,25 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
             let retryCount = 0;
             const maxRetries = 10;
 
-            // while (retryCount < maxRetries && (
-            //   !response || 
-            //   !response.response || 
-            //   typeof response.response !== "object" ||
-            //   !response.response.hasOwnProperty("tabs") || 
-            //   !Array.isArray(response.response.tabs) ||
-            //   response.response.tabs.length === 0 ||
-            //   !response.response.tabs[0].hasOwnProperty("title") ||
-            //   !response.response.tabs[0].hasOwnProperty("sections") ||
-            //   !Array.isArray(response.response.tabs[0].sections) ||
-            //   response.response.tabs[0].sections.length === 0
-            // )) {
-            //   // response = await axios.post(
-            //   //   "https://wishresearch.kr/panels/marketing/research_report",
-            //   //   data,
-            //   //   axiosConfig
-            //   // );
-            //   response = await MarketingResearchReportRequest(data);
-            //   retryCount++;
+            while (retryCount < maxRetries && (
+              !response || 
+              !response.response || 
+              typeof response.response !== "object" ||
+              !response.response.hasOwnProperty("tabs") || 
+              !Array.isArray(response.response.tabs) ||
+              response.response.tabs.length === 0 ||
+              !response.response.tabs[0].hasOwnProperty("title") ||
+              !response.response.tabs[0].hasOwnProperty("sections") ||
+              !Array.isArray(response.response.tabs[0].sections) ||
+              response.response.tabs[0].sections.length === 0
+            )) {
+              response = await MarketingResearchReportRequest(data);
+              retryCount++;
 
-            //   // strategyConsultantReport = response.response.tabs[0];
-            // }
-            // if (retryCount === maxRetries) {
-            //   throw new Error("Maximum retry attempts reached. Empty response persists.");
-            // }
+            }
+            if (retryCount === maxRetries) {
+              throw new Error("Maximum retry attempts reached. Empty response persists.");
+            }
 
             setStrategyConsultantReportData([...strategyConsultantReportData, strategyConsultantReport]);
 
