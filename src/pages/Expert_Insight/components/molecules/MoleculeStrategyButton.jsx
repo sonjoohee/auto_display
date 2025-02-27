@@ -17,7 +17,7 @@ import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 import { palette } from "../../../../assets/styles/Palette";
 
-const MoleculeStrategyButton = () => {
+const MoleculeStrategyButton = ({strategyConsultantCount}) => {
   const { saveConversation } = useSaveConversation();
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [conversation, setConversation] = useAtom(CONVERSATION);
@@ -49,15 +49,15 @@ const MoleculeStrategyButton = () => {
     "고객 분석과 가치 제안을 분석하고 있습니다. 잠시만 기다려 주세요...";
   const system_message_1 = `${titleOfBusinessInfo}에 대한 시장 현황과 기회 요소를 확인하고 있습니다.`;
 
-  if (strategyButtonState === 0) {
+  if (strategyConsultantCount === 0) {
     button_message = button_message_1;
     user_message = user_message_1;
     system_message = system_message_1;
-  } else if (strategyButtonState === 1) {
+  } else if (strategyConsultantCount === 1) {
     button_message = button_message_2;
     user_message = user_message_2;
     system_message = system_message_2;
-  } else if (strategyButtonState === 2) {
+  } else if (strategyConsultantCount === 2) {
     button_message = button_message_3;
     user_message = user_message_3;
     system_message = system_message_3;

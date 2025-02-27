@@ -75,7 +75,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
   useEffect(() => {
     const fetchStrategyConsultantReport = async () => {
       try {
-        if (strategyButtonState === strategyConsultantCount && approachPath !== 2) {
+        if (strategyConsultantReportData.length === strategyConsultantCount && approachPath !== 2) {
           setIsLoadingStrategyConsultantReport(true);
           setIsLoading(true);
 
@@ -88,7 +88,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
               주요기능: mainCharacteristicOfBusinessInformation,
               목표고객: businessInformationTargetCustomer,
             },
-            button_state: strategyButtonState,
+            button_state: strategyConsultantReportData.length,
             standpoint: "",
             goal: "",
             target: "",
@@ -162,13 +162,13 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
             const system_message_3 = `이렇게 ${titleOfBusinessInfo}의 전략 수립에 필요한 기본 정보를 함께 정리해 보았습니다.\n이제 이를 활용해 비즈니스의 가능성을 더 확장해 보세요. `;
             const system_message_3_2 = "이외에 궁금한 점은 대화창에 입력해주시거나, 아래 키워드를 활용하여 추가적인 조언을 받아보세요";
           
-            if (strategyButtonState === 0) {
+            if (strategyConsultantReportData.length === 0) {
               system_message1 = system_message_1;
               system_message2 = system_message_1_2;
-            } else if (strategyButtonState === 1) {
+            } else if (strategyConsultantReportData.length === 1) {
               system_message1 = system_message_2;
               system_message2 = system_message_2_2;
-            } else if (strategyButtonState === 2) {
+            } else if (strategyConsultantReportData.length === 2) {
               system_message1 = system_message_3;
               system_message2 = system_message_3_2;
             }
@@ -184,11 +184,13 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
                 message: system_message2,
                 expertIndex: -1,
               },
-              { type: strategyButtonState === 2 ? `keyword` : `strategyButton` }
+              { type: strategyConsultantReportData.length === 2 ? `keyword` : `strategyButton` }
             );
 
             setConversation(updatedConversation);
-            setStrategyButtonState([...strategyConsultantReportData, strategyConsultantReport].length);
+            // console.log("strategyConsultantReportData", [...strategyConsultantReportData, strategyConsultantReport].length);
+            // console.log("strategyConsultantCount", strategyConsultantCount);
+            // setStrategyButtonState([...strategyConsultantReportData, strategyConsultantReport].length);
 
             await saveConversation({ changingConversation: { conversation: updatedConversation, strategyConsultantReportData: [...strategyConsultantReportData, strategyConsultantReport] } });
           } else {
@@ -201,7 +203,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
     };
 
     fetchStrategyConsultantReport();
-  }, [strategyButtonState]);
+  }, [strategyConsultantCount]);
 
   return (
     <>

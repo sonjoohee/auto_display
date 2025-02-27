@@ -44,8 +44,10 @@ export const saveConversationToIndexedDB = async (
   isLoggedIn,
   conversationId,
   expertIndex
+  // saveData,
+  // conversationId,
 ) => {
-  if (isLoggedIn) {
+  // if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
       const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
@@ -70,6 +72,11 @@ export const saveConversationToIndexedDB = async (
         chat_data: conversation,
         expert_index: expertIndex,
       };
+      // const PUT_DATA = {
+      //   id: conversationId,
+      //   ...saveData.data,
+      //   chat_date: Date.now(),
+      // };
       // console.log("🚀 ~ PUT_DATA:", PUT_DATA);
       await axios.put(`https://wishresearch.kr/panels/update_chat`, PUT_DATA, {
         headers: {
@@ -81,18 +88,18 @@ export const saveConversationToIndexedDB = async (
     } catch (error) {
       console.error("Error updating conversation on server:", error);
     }
-  } else {
-    // 비로그인 시 IndexedDB에 저장
-    const db = await openDB();
-    const transaction = db.transaction("conversations", "readwrite");
-    const store = transaction.objectStore("conversations");
-    return new Promise((resolve, reject) => {
-      const request = store.put(conversation);
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () =>
-        reject("Failed to save conversation to IndexedDB");
-    });
-  }
+  // } else {
+  //   // 비로그인 시 IndexedDB에 저장
+  //   const db = await openDB();
+  //   const transaction = db.transaction("conversations", "readwrite");
+  //   const store = transaction.objectStore("conversations");
+  //   return new Promise((resolve, reject) => {
+  //     const request = store.put(saveData);
+  //     request.onsuccess = () => resolve(request.result);
+  //     request.onerror = () =>
+  //       reject("Failed to save conversation to IndexedDB");
+  //   });
+  // }
 };
 
 export const getConversationByIdFromIndexedDB = async (id, isLoggedIn) => {

@@ -39,6 +39,8 @@ import {
   NEW_ADD_CONTENT,
 } from "../../../AtomStates";
 
+import { saveConversationToIndexedDB } from "../../../../utils/indexedDB";
+
 const OrganismBizAnalysisSection = () => {
   const { saveConversation } = useSaveConversation();
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
@@ -218,6 +220,16 @@ const OrganismBizAnalysisSection = () => {
               inputBusinessInfo: "",
             },
           });
+
+          // await saveConversationToIndexedDB(
+          //   {
+          //     id: conversationId,
+          //     data: {
+          //       conversation: updatedConversation,
+          //     },
+          //   },
+          //   conversationId
+          // );
 
           // setReportRefreshTrigger((prev) => !prev);
         } else {
@@ -423,6 +435,18 @@ const OrganismBizAnalysisSection = () => {
               analysisReportData: analysisReportData,
             },
           });
+
+          // await saveConversationToIndexedDB(
+          //   {
+          //     data: {
+          //       inputBusinessInfo: inputBusinessInfo,
+          //       conversation: updatedConversation2,
+          //       analysisReportData: analysisReportData,
+          //       conversationStage: 2,
+          //     },
+          //   },
+          //   conversationId
+          // );
           // setReportRefreshTrigger((prev) => !prev);
         }
       } else {
