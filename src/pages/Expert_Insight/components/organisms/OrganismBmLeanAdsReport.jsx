@@ -98,11 +98,6 @@ const OrganismBmLeanAdsReport = () => {
           bm_question_list: bmQuestionList,
         };
 
-        // let response = await axios.post(
-        //   "https://wishresearch.kr/panels/lean_ads_report",
-        //   data,
-        //   axiosConfig
-        // );
         let response = await InterviewXBmLeanAdsReportRequest(
           data,
           isLoggedIn
@@ -111,39 +106,20 @@ const OrganismBmLeanAdsReport = () => {
         let retryCount = 0;
         const maxRetries = 10;
 
-        // while (retryCount < maxRetries && (
-        //   !response || !response.data || typeof response.data !== "object" ||
-        //   !response.data.hasOwnProperty("bm_lean_ads_report") ||
-        //   !Array.isArray(response.data.bm_lean_ads_report) ||
-        //   response.data.bm_lean_ads_report.some(keywordSection => 
-        //     !Array.isArray(keywordSection.keywords) || 
-        //     keywordSection.keywords.some(keyword => 
-        //       !keyword.hasOwnProperty("title") || 
-        //       !keyword.hasOwnProperty("description") || 
-        //       !Array.isArray(keyword.examples) || 
-        //       !Array.isArray(keyword.related_blocks) || 
-        //       !keyword.hasOwnProperty("action")
-        //     )
-        //   )
-        // )) {
-        //   response = await axios.post(
-        //     "https://wishresearch.kr/panels/lean_ads_report",
-        //     data,
-        //     axiosConfig
-        //   );
-        //   retryCount++;
-        // }
-        // if (retryCount === maxRetries) {
-        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-        //   // 에러 처리 로직 추가
-        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
-        // }
-
-        // setBmLeanAdsReportData(response.data.bm_lean_ads_report);
-
-            while (retryCount < maxRetries && (
-          !response || !response.response || typeof response.response !== "object" 
-      
+        while (retryCount < maxRetries && (
+          !response || !response.response || typeof response.response !== "object" ||
+          !response.response.hasOwnProperty("bm_lean_ads_report") ||
+          !Array.isArray(response.response.bm_lean_ads_report) ||
+          response.response.bm_lean_ads_report.some(keywordSection => 
+            !Array.isArray(keywordSection.keywords) || 
+            keywordSection.keywords.some(keyword => 
+              !keyword.hasOwnProperty("title") || 
+              !keyword.hasOwnProperty("description") || 
+              !Array.isArray(keyword.examples) || 
+              !Array.isArray(keyword.related_blocks) || 
+              !keyword.hasOwnProperty("action")
+            )
+          )
         )) {
     
           response = await InterviewXBmLeanAdsReportRequest(

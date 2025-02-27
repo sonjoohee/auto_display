@@ -87,11 +87,6 @@ const MoleculeBmModelSuggestion = () => {
           bm_question_list: bmQuestionList,
         };
 
-        // let response = await axios.post(
-        //   "https://wishresearch.kr/panels/bm_stage_report",
-        //   data,
-        //   axiosConfig
-        // );
         let response = await InterviewXBmCheckStageRequest(
           data,
           isLoggedIn
@@ -100,36 +95,17 @@ const MoleculeBmModelSuggestion = () => {
         let retryCount = 0;
         const maxRetries = 10;
 
-
-        // while (retryCount < maxRetries && (
-        //   !response || !response.data || typeof response.data !== "object" ||
-        //   !Array.isArray(response.data.bm_check_stage_report) ||
-        //   response.data.bm_check_stage_report.some(item =>
-        //     !item.hasOwnProperty("title") || 
-        //     !item.hasOwnProperty("content") ||
-        //     !item.hasOwnProperty("model") ||
-        //     !(item.model === "BM" || item.model === "Lean")
-        //   )
-        // )) {
-        //   response = await axios.post(
-        //     "https://wishresearch.kr/panels/bm_stage_report",
-        //     data,
-        //     axiosConfig
-        //   );
-        //   retryCount++;
-        // }
-        // if (retryCount === maxRetries) {
-        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-        //   // 에러 처리 로직 추가
-        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
-        // }
-
-        // setBmModelSuggestionReportData(response.data.bm_check_stage_report);
-
-
         while (retryCount < maxRetries && (
-          !response || !response.response || typeof response.response !== "object" 
-      
+          !response || 
+          !response.response || 
+          typeof response.response !== "object" ||
+          !Array.isArray(response.response.bm_check_stage_report) ||
+          response.response.bm_check_stage_report.some(item =>
+            !item.hasOwnProperty("title") || 
+            !item.hasOwnProperty("content") ||
+            !item.hasOwnProperty("model") ||
+            !(item.model === "BM" || item.model === "Lean")
+          )
         )) {
     
           response = await InterviewXBmCheckStageRequest(

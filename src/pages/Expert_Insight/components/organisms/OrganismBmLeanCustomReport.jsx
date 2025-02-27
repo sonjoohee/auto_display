@@ -239,12 +239,6 @@ useEffect(() => {
           selected_bm_lean_problem : bmSelectedProblemOptions.problemOptions
         };
 
-        // let response = await axios.post(
-        //   "https://wishresearch.kr/panels/lean_custom_report",
-        //   data,
-        //   axiosConfig
-        // );
-
         let response = await InterviewXBmLeanCustomReportRequest(
           data,
           isLoggedIn
@@ -253,41 +247,21 @@ useEffect(() => {
         let retryCount = 0;
         const maxRetries = 10;
 
-        // while (retryCount < maxRetries && (
-        //   !response || !response.data || typeof response.data !== "object" ||
-        //   !response.data.hasOwnProperty("bm_lean_custom_report") ||
-        //   !Array.isArray(response.data.bm_lean_custom_report) ||
-        //   response.data.bm_lean_custom_report.some(section => 
-        //     !section.hasOwnProperty("section") || 
-        //     !section.hasOwnProperty("content") || 
-        //     !Array.isArray(section.content) || 
-        //     section.content.some(contentItem => 
-        //       !contentItem.hasOwnProperty("title") || 
-        //       !contentItem.hasOwnProperty("description")
-        //     )
-        //   )
-        // )) 
-        // {
-        //   response = await axios.post(
-        //     "https://wishresearch.kr/panels/lean_custom_report",
-        //     data,
-        //     axiosConfig
-        //   );
-        //   retryCount++;
-        // }
-        // if (retryCount === maxRetries) {
-        //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
-        //   // 에러 처리 로직 추가
-        //   throw new Error("Maximum retry attempts reached. Empty response persists.");
-        // }
-
-        // setBmLeanCustomReportData(response.data.bm_lean_custom_report);
-
         while (retryCount < maxRetries && (
-          !response || !response.response || typeof response.response !== "object" 
-      
-        )) {
-    
+          !response || !response.response || typeof response.response !== "object" ||
+          !response.response.hasOwnProperty("bm_lean_custom_report") ||
+          !Array.isArray(response.response.bm_lean_custom_report) ||
+          response.response.bm_lean_custom_report.some(section => 
+            !section.hasOwnProperty("section") || 
+            !section.hasOwnProperty("content") || 
+            !Array.isArray(section.content) || 
+            section.content.some(contentItem => 
+              !contentItem.hasOwnProperty("title") || 
+              !contentItem.hasOwnProperty("description")
+            )
+          )
+        )) 
+        {
           response = await InterviewXBmLeanCustomReportRequest(
             data,
             isLoggedIn
