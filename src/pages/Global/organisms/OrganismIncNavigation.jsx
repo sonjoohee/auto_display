@@ -943,7 +943,10 @@ const OrganismIncNavigation = () => {
         const response = await getToolListOnServer(1000, 1, isLoggedIn);
 
         // 두 리스트 병합
-        const mergedList = [...response_chat_list.data, ...response.data];
+        const mergedList = [
+          ...response_chat_list.data.filter((item) => item.business_info),
+          ...response.data,
+        ];
 
         // 날짜 기준으로 정렬
         const sortedChatList = mergedList.sort((a, b) => {
