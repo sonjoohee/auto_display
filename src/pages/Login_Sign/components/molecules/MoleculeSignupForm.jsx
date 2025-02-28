@@ -23,9 +23,10 @@ import {
 import MoleculeSignupPopup from './MoleculeSignupPopup'; // 팝업 컴포넌트 임포트
 
 import { IS_LOGIN_POPUP_OPEN, IS_SIGNUP_POPUP_OPEN, IS_MARKETING } from '../../../AtomStates'; // 팝업 상태 atom 임포트
-
+import images from '../../../../assets/styles/Images';
 import { palette } from '../../../../assets/styles/Palette';
-import { Helptext } from '../../../../assets/styles/Typography';
+import { Button } from '../../../../assets/styles/ButtonStyle';
+import { Body3,Helptext } from '../../../../assets/styles/Typography';
 import MoleculeLoginPopup from './MoleculeLoginPopup';
 
 const MoleculeSignupForm = () => {
@@ -165,14 +166,25 @@ const MoleculeSignupForm = () => {
           <ScrollWrap>
             <div>
               <label htmlFor="signUpEmail">이메일<span>*</span></label>
-              <CustomInput
-                Small
-                id="email"
-                type="email"
-                value={signUpEmail}
-                onChange={(e) => setSignUpEmail(e.target.value)}
-                placeholder="이메일 주소를 입력해주세요"
-              />
+              <div class="input-wrap">
+                <div>
+                  <CustomInput
+                    Small
+                    id="email"
+                    type="email"
+                    value={signUpEmail}
+                    onChange={(e) => setSignUpEmail(e.target.value)}
+                    placeholder="이메일 주소를 입력해주세요"
+                  />
+                  <Button ExLarge Outline Fill>중복확인</Button>
+                </div>
+                <Helptext color="gray600" align="left">공용 도메인(기업, 학교, 기관) 이메일만 사용 가능하며, 상용 이메일(gmail, naver, daum 등)은 사용할 수 없습니다.</Helptext>
+              </div>
+
+              <SignInfo>
+                <img src={images.ExclamationCircle} alt="info" />
+                <Body3 color="gray500">사내 메일 인증이 불가능한 경우나 기업 메일이 없는 사업장 및 기관은 1:1 문의를 통해 가입 문의해 주세요.</Body3>
+              </SignInfo>
 
               {/* <StyledAtomInput
                 id="email"
@@ -335,6 +347,43 @@ const SignupFormContainer = styled.div`
     + div {
       margin-top:20px;
     }
+
+    .input-wrap {
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+
+      div {
+        display:flex;
+        flex-direction:row;
+        gap:8px;
+
+        button {
+          flex-shrink:0;
+        }
+      }
+    }
+  }
+`;
+
+const SignInfo = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  background-color: ${palette.chatGray};
+
+  p {
+    font-size: 1rem !important;
+    color: ${palette.gray500} !important;
+  }
+
+  img {
+    width: 20px;
+    height: 20px;
   }
 `;
 
