@@ -323,13 +323,31 @@ const PageIdeaGenerator = () => {
         isLoggedIn
       );
 
-      if (
+      const maxAttempts = 10;
+      let attempts = 0;
+
+      while (
+        !response ||
+        !response?.response ||
         !response?.response.idea_generator_persona ||
         !Array.isArray(response.response.idea_generator_persona) ||
-        response.response.idea_generator_persona.length === 0
+        response.response.idea_generator_persona.length === 0 ||
+        response.response.idea_generator_persona.some(persona => 
+          !persona.name || 
+          !persona.description || 
+          !persona.keywords
+        )
       ) {
-        setShowPopupError(true);
-        return;
+        if (attempts >= maxAttempts) {
+          setShowPopupError(true);
+          return;
+        }
+        attempts++;
+
+        response = await InterviewXIdeaGeneratorPersonaRequest(
+          businessData,
+          isLoggedIn
+        );
       }
 
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
@@ -412,6 +430,35 @@ const PageIdeaGenerator = () => {
           isLoggedIn
         );
 
+        // const maxAttempts = 10;
+        // let attempts = 0;
+
+        // while (
+        //   !response ||
+        //   !response?.response ||
+        //   !response?.response.idea_generator_idea ||
+        //   response.response.idea_generator_idea.some(idea => 
+        //     !idea.economic_value || 
+        //     !idea.functional_value ||
+        //     !idea.social_value ||
+        //     !idea.environmental_value ||
+        //     !idea.emotional_value ||
+        //     !idea.educational_value ||
+        //     !idea.conclusion
+        //   )
+        // ) {
+        //   if (attempts >= maxAttempts) {
+        //     setShowPopupError(true);
+        //     return;
+        //   }
+        //   attempts++;
+
+        //   response = await InterviewXIdeaGeneratorIdeaRequest(
+        //     data,
+        //     isLoggedIn
+        //   );
+        // }
+
         // console.log("response", response);
 
         if (response?.response?.idea_generator_idea) {
@@ -459,13 +506,32 @@ const PageIdeaGenerator = () => {
       );
       const clusteringData = response1.response.idea_generator_clustering;
 
-      if (
-        !clusteringData ||
-        !Array.isArray(clusteringData) ||
-        clusteringData.length === 0
+      const maxAttempts = 10;
+      let attempts = 0;
+
+      while (
+        !response1 ||
+        !response1?.response ||
+        !response1?.response.idea_generator_clustering ||
+        !Array.isArray(response1.response.idea_generator_clustering) ||
+        response1.response.idea_generator_clustering.length === 0 ||
+        response1.response.idea_generator_clustering.some(cluster => 
+          !cluster.name ||
+          !cluster.ideas ||
+          !Array.isArray(cluster.ideas) ||
+          cluster.ideas.length === 0
+        )
       ) {
-        setShowPopupError(true);
-        return;
+        if (attempts >= maxAttempts) {
+          setShowPopupError(true);
+          return;
+        }
+        attempts++;
+
+        response1 = await InterviewXIdeaGeneratorClusteringRequest(
+          data1,
+          isLoggedIn
+        );
       }
 
       setIdeaGeneratorClustering(clusteringData);
@@ -486,13 +552,24 @@ const PageIdeaGenerator = () => {
 
       const finalReportData = response2.response.idea_generator_final_report;
 
-      if (
+      let attempts2 = 0;
+
+      while (
         !finalReportData ||
         !finalReportData instanceof Object ||
         Object.keys(finalReportData).length === 0
       ) {
-        setShowPopupError(true);
-        return;
+        if (attempts2 >= maxAttempts) {
+          setShowPopupError(true);
+          return;
+        }
+        attempts2++;
+
+        response2 = await InterviewXIdeaGeneratorFinalReportRequest(
+          data2,
+          isLoggedIn
+        );
+        finalReportData = response2.response.idea_generator_final_report;
       }
 
       setIdeaGeneratorFinalReport(finalReportData);

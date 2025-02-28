@@ -510,13 +510,27 @@ const PageCustomerValueAnalyzer = () => {
         isLoggedIn
       );
 
-      if (
+
+      const maxAttempts = 10;
+      let attempts = 0;
+
+      while (
+        !response ||
+        !response?.response ||
         !response?.response.customer_value_persona ||
         !Array.isArray(response.response.customer_value_persona) ||
         response.response.customer_value_persona.length === 0
       ) {
-        setShowPopupError(true);
-        return;
+        if (attempts >= maxAttempts) {
+          setShowPopupError(true);
+          return;
+        }
+        attempts++;
+
+        response = await InterviewXCustomerValueAnalyzerPersonaRequest(
+          businessData,
+          isLoggedIn
+        );
       }
 
       const responseToolId = await createToolOnServer(
@@ -726,6 +740,29 @@ const PageCustomerValueAnalyzer = () => {
             isLoggedIn
           );
 
+          const maxAttempts = 10;
+          let attempts = 0;
+
+          // while (
+          //   !response ||
+          //   !response?.response ||
+          //   !response?.response?.customer_value_factor ||
+          //   !Array.isArray(response.response.customer_value_factor) ||
+          //   response.response.customer_value_factor.length === 0 ||
+          //   response?.response?.customer_value_factor.some(factor => !factor.key_buying_factors || !factor.conclusion)
+          // ) {
+          //   if (attempts >= maxAttempts) {
+          //     setShowPopupError(true);
+          //     return;
+          //   }
+          //   attempts++;
+
+          //   response = await InterviewXCustomerValueAnalyzerFactorRequest(
+          //     requestData,
+          //     isLoggedIn
+          //   );
+          // }
+
           // API 호출 성공 시 카드 상태를 'completed'로 설정
           if (response?.response?.customer_value_factor) {
             results.push(response.response.customer_value_factor);
@@ -801,16 +838,29 @@ const PageCustomerValueAnalyzer = () => {
           clusteringData,
           isLoggedIn
         );
-      // console.log("Clustering response:", clusteringResponse);
 
-      if (
+      const maxAttempts = 10;
+      let attempts = 0;
+
+      while (
         !clusteringResponse ||
         !clusteringResponse.response ||
-        !clusteringResponse.response.customer_value_clustering
+        !clusteringResponse.response.customer_value_clustering ||
+        !Array.isArray(clusteringResponse.response.customer_value_clustering) ||
+        clusteringResponse.response.customer_value_clustering.length === 0
       ) {
-        console.error("Invalid clustering response");
-        return;
+        if (attempts >= maxAttempts) {
+          setShowPopupError(true);
+          return;
+        }
+        attempts++;
+
+        clusteringResponse = await InterviewXCustomerValueAnalyzerClusteringRequest(
+          clusteringData,
+          isLoggedIn
+        );
       }
+
       setCustomerValueAnalyzerClustering(
         clusteringResponse.response.customer_value_clustering
       );
@@ -829,13 +879,25 @@ const PageCustomerValueAnalyzer = () => {
         );
       // console.log("Positioning response:", positioningResponse);
 
-      if (
+      let attempts2 = 0;
+
+      while (
         !positioningResponse ||
         !positioningResponse.response ||
-        !positioningResponse.response.customer_value_positioning
+        !positioningResponse.response.customer_value_positioning ||
+        !positioningResponse.response.customer_value_positioning.cluster_list ||
+        !positioningResponse.response.customer_value_positioning.mermaid
       ) {
-        console.error("Invalid positioning response");
-        return;
+        if (attempts2 >= maxAttempts) {
+          setShowPopupError(true);
+          return;
+        }
+        attempts2++;
+
+        positioningResponse = await InterviewXCustomerValueAnalyzerPositioningRequest(
+          positioningData,
+          isLoggedIn
+        );
       }
       setCustomerValueAnalyzerPositioning(
         positioningResponse.response.customer_value_positioning
@@ -858,13 +920,26 @@ const PageCustomerValueAnalyzer = () => {
         );
       // console.log("Final report response:", finalReportResponse);
 
-      if (
+      let attempts3 = 0;
+
+      while (
         !finalReportResponse ||
         !finalReportResponse.response ||
-        !finalReportResponse.response.customer_value_final_report
+        !finalReportResponse.response.customer_value_final_report ||
+        !finalReportResponse.response.customer_value_final_report.title ||
+        !finalReportResponse.response.customer_value_final_report.content_1 ||
+        !finalReportResponse.response.customer_value_final_report.content_2
       ) {
-        console.error("Invalid final report response");
-        return;
+        if (attempts3 >= maxAttempts) {
+          setShowPopupError(true);
+          return;
+        }
+        attempts3++;
+
+        finalReportResponse = await InterviewXCustomerValueAnalyzerFinalReportRequest(
+          finalReportData,
+          isLoggedIn
+        );
       }
 
       setCustomerValueAnalyzerFinalReport(
@@ -1835,12 +1910,17 @@ const PageCustomerValueAnalyzer = () => {
       {showPopupError && (
         <PopupWrap
           Warning
-          title="다시 입력해 주세요."
-          message="현재 입력하신 정보는 목적을 생성할 수 없습니다."
+          title="작업이 중단되었습니다"
+          message="데이터 오류로 인해 페이지가 초기화됩니다."
+          message2="작업 중인 내용은 보관함을 확인하세요."
           buttonType="Outline"
-          confirmText="확인"
-          isModal={false}
-          onConfirm={() => handleNextStep(1)}
+          closeText="확인"
+          onConfirm={() => {
+            window.location.reload();
+          }}
+          onCancel={() => {
+            window.location.reload();
+          }}
         />
       )}
 
