@@ -1,4 +1,4 @@
-//작업관리/ 프로젝트 리스트
+//로그인
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
