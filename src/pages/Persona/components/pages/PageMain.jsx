@@ -502,6 +502,7 @@ const PageMain = () => {
   useEffect(() => {
     const fetchCreditInfo = async () => {
       try {
+        if (isLoggedIn) {
         const response = await CreditInfo(isLoggedIn);
 
         if (response) {
@@ -513,6 +514,7 @@ const PageMain = () => {
           setEventTitle(response.event_title);
           setEventState(response.event_state);
           setTrialState(response.trial_state);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch credit info:", error);
