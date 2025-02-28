@@ -7,6 +7,7 @@ import theme from '../../../../assets/styles/Theme';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import AtomInput from '../atoms/AtomInput';
 import AtomButton from '../atoms/AtomButton';
+import { FormBox, CustomInput } from '../../../../assets/styles/InputStyle';
 import { isValidEmail, isValidPassword } from '../atoms/AtomValidation';
 import axios from 'axios';
 import {
@@ -22,8 +23,10 @@ import {
 import MoleculeSignupPopup from './MoleculeSignupPopup'; // 팝업 컴포넌트 임포트
 
 import { IS_LOGIN_POPUP_OPEN, IS_SIGNUP_POPUP_OPEN, IS_MARKETING } from '../../../AtomStates'; // 팝업 상태 atom 임포트
-
+import images from '../../../../assets/styles/Images';
 import { palette } from '../../../../assets/styles/Palette';
+import { Button } from '../../../../assets/styles/ButtonStyle';
+import { Body3,Helptext } from '../../../../assets/styles/Typography';
 import MoleculeLoginPopup from './MoleculeLoginPopup';
 
 const MoleculeSignupForm = () => {
@@ -41,6 +44,7 @@ const MoleculeSignupForm = () => {
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
+  const [phoneNumber, setPhoneNumber] = useState('');
   const navigate = useNavigate();
 
   // 팝업 상태 atom의 setter 가져오기
@@ -142,6 +146,14 @@ const MoleculeSignupForm = () => {
     navigate('/');
   };
 
+  const handlePhoneNumberChange = (e) => {
+    const value = e.target.value;
+    // 숫자만 허용
+    if (value === '' || /^\d+$/.test(value)) {
+      setPhoneNumber(value);
+    }
+  };
+
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -153,54 +165,115 @@ const MoleculeSignupForm = () => {
         <SignupFormContainer>
           <ScrollWrap>
             <div>
+              <label htmlFor="signUpEmail">이메일<span>*</span></label>
+              <div class="input-wrap">
+                <div>
+                  <CustomInput
+                    Small
+                    id="email"
+                    type="email"
+                    value={signUpEmail}
+                    onChange={(e) => setSignUpEmail(e.target.value)}
+                    placeholder="이메일 주소를 입력해주세요"
+                  />
+                  <Button ExLarge Outline Fill>중복확인</Button>
+                </div>
+                <Helptext color="gray600" align="left">공용 도메인(기업, 학교, 기관) 이메일만 사용 가능하며, 상용 이메일(gmail, naver, daum 등)은 사용할 수 없습니다.</Helptext>
+              </div>
+
+              <SignInfo>
+                <img src={images.ExclamationCircle} alt="info" />
+                <Body3 color="gray500">사내 메일 인증이 불가능한 경우나 기업 메일이 없는 사업장 및 기관은 1:1 문의를 통해 가입 문의해 주세요.</Body3>
+              </SignInfo>
+
+              {/* <StyledAtomInput
+                id="email"
+                type="email"
+                value={signUpEmail}
+                onChange={(e) => setSignUpEmail(e.target.value)}
+                placeholder="이메일 주소를 입력해주세요"
+              /> */}
+            </div>
+
+            <div>
+              <label htmlFor="signUpPassword">비밀번호<span>*</span></label>
+              <InputWrap>
+                <CustomInput
+                  Small
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={signUpPassword}
+                  onChange={(e) => setSignUpPassword(e.target.value)}
+                  placeholder="비밀번호를 입력해주세요"
+                />
+
+
+                {/* <StyledAtomInput
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={signUpPassword}
+                  onChange={(e) => setSignUpPassword(e.target.value)}
+                  placeholder="비밀번호를 입력해주세요"
+                /> */}
+                <TogglePasswordButton onClick={togglePasswordVisibility}>
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
+                </TogglePasswordButton>
+              </InputWrap>
+              <InputWrap>
+                <CustomInput
+                  Small
+                  id="password"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="비밀번호를 다시 입력해 주세요"
+                />
+
+                {/* <StyledAtomInput
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="비밀번호 다시 입력해주세요"
+                /> */}
+                <TogglePasswordButton onClick={toggleConfirmPasswordVisibility}>
+                  {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+                </TogglePasswordButton>
+              </InputWrap>
+              <Helptext color="gray600" align="left">영문/숫자/특수문자 2가지 이상 혼합. 8~16자</Helptext>
+            </div>
+
+            <div>
               <label htmlFor="signUpName">이름<span>*</span></label>
-              <StyledAtomInput
+              <CustomInput
+                Small
                 id="signUpName"
                 type="text"
                 value={signUpName}
                 onChange={(e) => setSignUpName(e.target.value)}
                 placeholder="이름을 입력해주세요"
               />
+
+              {/* <StyledAtomInput
+                id="signUpName"
+                type="text"
+                value={signUpName}
+                onChange={(e) => setSignUpName(e.target.value)}
+                placeholder="이름을 입력해주세요"
+              /> */}
             </div>
 
             <div>
-              <label htmlFor="signUpEmail">이메일<span>*</span></label>
-              <StyledAtomInput
-                id="email"
-                type="email"
-                value={signUpEmail}
-                onChange={(e) => setSignUpEmail(e.target.value)}
-                placeholder="이메일 주소를 입력해주세요"
+              <label htmlFor="phoneNumber">연락처<span>*</span></label>
+              <CustomInput
+                Small
+                id="phoneNumber"
+                type="text"
+                value={phoneNumber}
+                onChange={handlePhoneNumberChange}
+                placeholder="숫자만 입력해 주세요"
+                maxLength={11}
               />
-            </div>
-
-            <div>
-              <label htmlFor="signUpPassword">비밀번호<span>*</span></label>
-              <InputWrap>
-                <StyledAtomInput
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  value={signUpPassword}
-                  onChange={(e) => setSignUpPassword(e.target.value)}
-                  placeholder="비밀번호를 입력해주세요"
-                />
-                <TogglePasswordButton onClick={togglePasswordVisibility}>
-                  {showPassword ? <FaEye /> : <FaEyeSlash />}
-                </TogglePasswordButton>
-              </InputWrap>
-              <InputWrap>
-                <StyledAtomInput
-                  type={showConfirmPassword ? "text" : "password"}
-                  id="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="비밀번호 다시 입력해주세요"
-                />
-                <TogglePasswordButton onClick={toggleConfirmPasswordVisibility}>
-                  {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
-                </TogglePasswordButton>
-              </InputWrap>
-              <p>영문/숫자/특수문자 2가지 이상 혼합. 8~16자</p>
             </div>
           </ScrollWrap>
 
@@ -216,16 +289,17 @@ const MoleculeSignupForm = () => {
             <label htmlFor="terms">서비스 <a href="/Terms" target="_blank">이용약관</a>과 <a href="/Policy" target="_blank">개인정보처리방침</a>에 동의합니다.</label>
           </TermsAndConditions>
 
-          <StyledAtomButton onClick={handleSignup} disabled={isLoading || !signUpName || !signUpEmail || !signUpPassword || !confirmPassword || !termsAccepted}>
+          <StyledAtomButton onClick={handleSignup} disabled={isLoading || !signUpName || !signUpEmail || !signUpPassword || !confirmPassword || !phoneNumber || !termsAccepted}>
             {isLoading ? "메일을 전송 중입니다..." : "회원가입"}
           </StyledAtomButton>
 
           <JoinWrap>
               <p>이미 가입하셨나요?</p>
-            <Link to="#" onClick={() => {
+            {/* <Link to="#" onClick={() => {
               setIsSignupPopupOpen(false);
               setIsLoginPopupOpen(true);
-            }}>
+            }}> */}
+            <Link to="/login">
               로그인하기
             </Link>
           </JoinWrap>
@@ -273,11 +347,48 @@ const SignupFormContainer = styled.div`
     + div {
       margin-top:20px;
     }
+
+    .input-wrap {
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+
+      div {
+        display:flex;
+        flex-direction:row;
+        gap:8px;
+
+        button {
+          flex-shrink:0;
+        }
+      }
+    }
+  }
+`;
+
+const SignInfo = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  background-color: ${palette.chatGray};
+
+  p {
+    font-size: 1rem !important;
+    color: ${palette.gray500} !important;
+  }
+
+  img {
+    width: 20px;
+    height: 20px;
   }
 `;
 
 const ScrollWrap = styled.div`
-  gap:20px;
+  gap:32px;
 
   > div {
     display:flex;
@@ -293,7 +404,7 @@ const InputWrap = styled.div`
 const StyledAtomInput = styled.input`
   width: 100%;
   font-family: 'Pretendard', 'Poppins';
-  font-size: 0.75rem; /* 12px로 변경 */
+  font-size: 0.75rem;
   padding: 12px 16px;
   border-radius:8px;
   border: 1px solid ${palette.lineGray};
