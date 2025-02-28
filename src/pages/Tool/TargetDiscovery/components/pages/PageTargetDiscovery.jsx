@@ -109,6 +109,7 @@ const PageTargetDiscovery = () => {
   const [showPopupMore, setShowPopupMore] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
+  const [showPopupRetry, setShowPopupRetry] = useState(false);
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [selectedPurpose, setSelectedPurpose] = useState("");
@@ -317,18 +318,31 @@ const PageTargetDiscovery = () => {
         country: selectedPurpose,
       };
 
-      const response = await InterviewXTargetDiscoveryPersonaRequest(
+      let response = await InterviewXTargetDiscoveryPersonaRequest(
         businessData,
         isLoggedIn
       );
 
-      if (
-        !response?.response.target_discovery_persona ||
+      const maxAttempts = 10;
+      let attempts = 0;
+      while (
+        !response || 
+        !response.response || 
+        !response.response.target_discovery_persona ||
         !Array.isArray(response.response.target_discovery_persona) ||
-        response.response.target_discovery_persona.length === 0
+        response.response.target_discovery_persona.length === 0 ||
+        response.response.target_discovery_persona.some(persona => !persona.title || !persona.content)
       ) {
-        setShowPopupError(true);
-        return;
+        if (attempts >= maxAttempts) {
+          setShowPopupRetry(true);
+          return;
+        }
+        attempts++;
+
+        response = await InterviewXTargetDiscoveryPersonaRequest(
+          businessData,
+          isLoggedIn
+        );
       }
       const responseToolId = await createToolOnServer(
         {
@@ -401,19 +415,38 @@ const PageTargetDiscovery = () => {
               specific_situation: targetDiscoveryInfo.specific_situation,
               country: targetDiscoveryInfo.country,
             };
-
+            
             const response = await InterviewXTargetDiscoveryScenarioRequest(
               apiRequestData,
               isLoggedIn
             );
+            
+            const maxAttempts = 10;
+            let attempts = 0;
 
-            if (
-              !response?.response?.target_discovery_scenario
-                ?.potential_customer_info ||
-              !response?.response?.target_discovery_scenario?.usage_scenario
+            while (
+              !response ||
+              !response?.response ||
+              !response?.response?.target_discovery_scenario ||
+              !response?.response?.target_discovery_scenario?.potential_customer_info ||
+              !response?.response?.target_discovery_scenario?.potential_customer_info?.gender ||
+              !response?.response?.target_discovery_scenario?.potential_customer_info?.age ||
+              !response?.response?.target_discovery_scenario?.potential_customer_info?.main_use_purpose ||
+              !response?.response?.target_discovery_scenario?.potential_customer_info?.pain_points ||
+              !response?.response?.target_discovery_scenario?.usage_scenario ||
+              !response?.response?.target_discovery_scenario?.usage_scenario?.description ||
+              !response?.response?.target_discovery_scenario?.usage_scenario?.key_sentence
             ) {
-              setShowPopupError(true);
-              return;
+              if (attempts >= maxAttempts) {
+                setShowPopupError(true);
+                return;
+              }
+              attempts++;
+
+              response = await InterviewXTargetDiscoveryScenarioRequest(
+                apiRequestData,
+                isLoggedIn
+              );
             }
 
             // 개별 시나리오 데이터 업데이트
@@ -513,17 +546,29 @@ const PageTargetDiscovery = () => {
         isLoggedIn
       );
 
-      if (
-        !response?.response?.target_discovery_final_report?.potential_rank_1
-          ?.title ||
-        !response?.response?.target_discovery_final_report?.potential_rank_1
-          ?.discovery_criteria ||
-        !response?.response?.target_discovery_final_report?.potential_rank_1
-          ?.selection_criteria
+      const maxAttempts = 10;
+      let attempts = 0;
+
+      while (
+        !response ||
+        !response?.response?.target_discovery_final_report?.potential_rank_1?.title ||
+        !response?.response?.target_discovery_final_report?.potential_rank_1?.discovery_criteria ||
+        !response?.response?.target_discovery_final_report?.potential_rank_1?.selection_criteria ||
+        !response?.response?.target_discovery_final_report?.potential_rank_1?.rank_reason ||
+        !response?.response?.target_discovery_final_report?.potential_rank_1?.keywords
       ) {
-        setIsLoadingScenario(false);
-        return;
+        if (attempts >= maxAttempts) {
+          setShowPopupError(true);
+          return;
+        }
+        attempts++;
+
+        response = await InterviewXTargetDiscoveryFinalReportRequest(
+          scenarioData,
+          isLoggedIn
+        );
       }
+
       setTargetDiscoveryFinalReport(
         response.response.target_discovery_final_report
       );
@@ -1072,7 +1117,7 @@ const PageTargetDiscovery = () => {
         </MainContent>
       </ContentsWrap>
 
-      {showPopupError && (
+      {showPopupRetry && (
         <PopupWrap
           Warning
           title="다시 입력해 주세요."
@@ -1080,7 +1125,24 @@ const PageTargetDiscovery = () => {
           buttonType="Outline"
           confirmText="확인"
           isModal={false}
-          onConfirm={() => handleNextStep(1)}
+          onConfirm={() => window.location.reload()}
+        />
+      )}
+
+      {showPopupError && (
+        <PopupWrap
+          Warning
+          title="작업이 중단되었습니다"
+          message="데이터 오류로 인해 페이지가 초기화됩니다."
+          message2="작업 중인 내용은 보관함을 확인하세요."
+          buttonType="Outline"
+          closeText="확인"
+          onConfirm={() => {
+            window.location.reload();
+          }}
+          onCancel={() => {
+            window.location.reload();
+          }}
         />
       )}
 
