@@ -304,8 +304,8 @@ const PageDesignSuitability = () => {
 
   // 필수 필드가 모두 입력되었는지 확인하는 함수
   const isRequiredFieldsFilled = () => {
-    console.log('Business Description:', businessDescription.trim());
-    console.log('Uploaded Files:', uploadedFiles);
+    // console.log('Business Description:', businessDescription.trim());
+    // console.log('Uploaded Files:', uploadedFiles);
     return businessDescription.trim().length > 0 && uploadedFiles.length > 0;
   };
 
@@ -429,7 +429,7 @@ const PageDesignSuitability = () => {
                 ?.potential_customer_info ||
               !response?.response?.target_discovery_scenario?.usage_scenario
             ) {
-              console.log("🚀 ~ handleSubmitPersonas ~ response:", response);
+              // console.log("🚀 ~ handleSubmitPersonas ~ response:", response);
               setShowPopupError(true);
               return;
             }
@@ -527,16 +527,16 @@ const PageDesignSuitability = () => {
         target_discovery_persona: selectedTargetDiscoveryPersona,
         target_discovery_scenario: targetDiscoveryScenario,
       };
-      console.log(
-        "🚀 ~ handleSubmitScenario ~ scenarioData.targetDiscoveryScenario:",
-        targetDiscoveryScenario
-      );
+      // console.log(
+      //   "🚀 ~ handleSubmitScenario ~ scenarioData.targetDiscoveryScenario:",
+      //   targetDiscoveryScenario
+      // );
 
       const response = await InterviewXTargetDiscoveryFinalReportRequest(
         scenarioData,
         isLoggedIn
       );
-      console.log("🚀 ~ handleSubmitScenario ~ response:", response);
+      // console.log("🚀 ~ handleSubmitScenario ~ response:", response);
 
       if (
         !response?.response?.target_discovery_final_report?.potential_rank_1
@@ -612,7 +612,7 @@ const PageDesignSuitability = () => {
 
   // 파일 업로드 핸들러
   const handleChangeStatus = ({ meta, file }, status) => {
-    console.log(status, meta, file);
+    // console.log(status, meta, file);
     
     // 파일 상태 업데이트
     if (status === 'done' || status === 'preparing' || status === 'uploading') {
@@ -698,7 +698,7 @@ const PageDesignSuitability = () => {
       }
 
       // 성공 처리
-      console.log('OCEAN 값이 성공적으로 저장되었습니다');
+      // console.log('OCEAN 값이 성공적으로 저장되었습니다');
     } catch (error) {
       console.error('OCEAN 값 저장 중 오류 발생:', error);
     }
@@ -1047,7 +1047,7 @@ const PageDesignSuitability = () => {
                               <Sub1 color="gray800" align="left">20대 남성 (피부 고민 시작)</Sub1>
                             </ListTitle>
                             <ListSubtitle>
-                              <Sub3 color="gray500" align="left">외모 관리, 패션, 자기 계발, 소셜 미디어 >> 관심사의 내용을 줄글로 입력</Sub3>
+                              <Sub3 color="gray500" align="left">외모 관리, 패션, 자기 계발, 소셜 미디어 관심사의 내용을 줄글로 입력</Sub3>
                             </ListSubtitle>
                           </ListText>
 
@@ -1096,7 +1096,7 @@ const PageDesignSuitability = () => {
                               <Sub1 color="gray800" align="left">10대 후반 남성 (외모 관심 증가)</Sub1>
                             </ListTitle>
                             <ListSubtitle>
-                              <Sub3 color="gray500" align="left">외모 관리, 패션, 자기 계발, 소셜 미디어 >> 관심사의 내용을 줄글로 입력</Sub3>
+                              <Sub3 color="gray500" align="left">외모 관리, 패션, 자기 계발, 소셜 미디어 관심사의 내용을 줄글로 입력</Sub3>
                             </ListSubtitle>
                           </ListText>
 
@@ -1145,7 +1145,7 @@ const PageDesignSuitability = () => {
                               <Sub1 color="gray800" align="left">여성 (남편/남자친구 선물)</Sub1>
                             </ListTitle>
                             <ListSubtitle>
-                              <Sub3 color="gray500" align="left">외모 관리, 패션, 자기 계발, 소셜 미디어 >> 관심사의 내용을 줄글로 입력</Sub3>
+                              <Sub3 color="gray500" align="left">외모 관리, 패션, 자기 계발, 소셜 미디어 관심사의 내용을 줄글로 입력</Sub3>
                             </ListSubtitle>
                           </ListText>
 

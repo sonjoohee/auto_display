@@ -151,17 +151,19 @@ const MoleculeHeader = () => {
   useEffect(() => {
     const fetchUserCredits = async () => {
       try {
-        const credits = await UserCreditInfo(true);
-        if (credits) {
-          setUserCredits(credits);
-          setIsLoggedInState(true);
-        } else {
-          setUserCredits({
-            additional_credit: 0,
-            regular_credit: 0,
-            event_credit: 0,
-          });
-          setIsLoggedInState(false);
+        if (isLoggedIn) {
+          const credits = await UserCreditInfo(true);
+          if (credits) {
+            setUserCredits(credits);
+            setIsLoggedInState(true);
+          } else {
+            setUserCredits({
+              additional_credit: 0,
+              regular_credit: 0,
+              event_credit: 0,
+            });
+            setIsLoggedInState(false);
+          }
         }
       } catch (error) {
         // console.error("유저 크레딧 정보 조회 오류 발생:", error);
