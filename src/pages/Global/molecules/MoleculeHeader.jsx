@@ -296,149 +296,155 @@ const MoleculeHeader = () => {
           </>
         )}
 
-        <div className="gnb">
-          {isRootPage && (
-            <Sub2
-              style={{ cursor: "pointer" }}
-              onClick={() => navigate("/ServiceLanding")}
-            >
-              서비스 소개
-            </Sub2>
-          )}
+        {!isLoggedIn && (
+          <images.Logo2 color={palette.black} width="170px" height="26px" />
+        )}
 
-          <TotalCreditToggle>
-            <CreditTotal
-              onClick={handleCreditToggle}
-              style={{ cursor: "pointer" }}
-            >
-              <div>
-                <span>
-                  <images.CoinSmall
-                    width="12px"
-                    height="8px"
-                    color={palette.white}
-                  />
-                </span>
-                <Sub2 color="gray800">
-                  {isLoggedIn
-                    ? (
-                        (userCredits.regular_credit || 0) +
-                        (userCredits.additional_credit || 0) +
-                        (userCredits.event_credit || 0)
-                      ).toLocaleString()
-                    : 0}
-                </Sub2>
-              </div>
-              <images.ChevronDown
-                width="20px"
-                height="20px"
-                color={palette.gray300}
-                style={{
-                  transform: showCreditToggle
-                    ? "rotate(180deg)"
-                    : "rotate(0deg)",
-                  transition: "transform 0.3s ease",
-                }}
-              />
-            </CreditTotal>
-
-            {showCreditToggle && (
-              <CreditToggle className={isClosingCreditToggle ? "closing" : ""}>
-                <div className="title">
-                  <Sub1 color="gray700">크레딧 내역</Sub1>
-                  {isLoggedInState &&
-                    (sessionStorage.getItem("userEmail") ===
-                      "pg_card@userconnect.kr" ||
-                      sessionStorage.getItem("userEmail") ===
-                        "sungeun_lee@userconnect.kr" ||
-                      sessionStorage.getItem("userEmail") ===
-                        "pixelweb@naver.com") && (
-                      <button onClick={() => navigate("/Payment")}>
-                        <Caption2 color="primary">충전하기</Caption2>
-                      </button>
-                    )}
-                </div>
-
-                {isLoggedIn ? (
-                  <ul>
-                    <li>
-                      <CreditDashBoardItem NoLine>
-                        <div className="icon yellow">
-                          <images.CoinFill
-                            width="9.6"
-                            height="6.1"
-                            color="#FFD54A"
-                          />
-                        </div>
-                        <Sub3 color="gray500" align="left">
-                          일반 크레딧
-                        </Sub3>
-                      </CreditDashBoardItem>
-                      <Sub3 color="gray500" align="right">
-                        {userCredits.additional_credit.toLocaleString()}
-                      </Sub3>
-                    </li>
-                    <li>
-                      <CreditDashBoardItem NoLine>
-                        <div className="icon green">
-                          <images.CoinFill
-                            width="9.6"
-                            height="6.1"
-                            color="#34C759"
-                          />
-                        </div>
-                        <Sub3 color="gray500" align="left">
-                          구독 크레딧
-                        </Sub3>
-                      </CreditDashBoardItem>
-                      <Sub3 color="gray500" align="right">
-                        {userCredits.regular_credit.toLocaleString()}
-                      </Sub3>
-                    </li>
-                    <li>
-                      <CreditDashBoardItem NoLine>
-                        <div className="icon red">
-                          <images.CoinFill
-                            width="9.6"
-                            height="6.1"
-                            color="#FF5322"
-                          />
-                        </div>
-                        <Sub3 color="gray500" align="left">
-                          이벤트 크레딧
-                        </Sub3>
-                      </CreditDashBoardItem>
-                      <Sub3 color="gray500" align="right">
-                        {userCredits.event_credit.toLocaleString()}
-                      </Sub3>
-                    </li>
-                  </ul>
-                ) : (
-                  <CreditNoData>
-                    <Sub3 color="gray500">
-                      크레딧 내역은 로그인 후,
-                      <br />
-                      확인 가능합니다.
-                    </Sub3>
-                  </CreditNoData>
-                )}
-              </CreditToggle>
+        {isLoggedIn && (
+          <div className="gnb">
+            {isRootPage && (
+              <Sub2
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate("/ServiceLanding")}
+              >
+                서비스 소개
+              </Sub2>
             )}
-          </TotalCreditToggle>
 
-          {/*   
-          <Notify Alarm  onClick={handleAlertToggle}>
-            <img src={images.IconBell} alt="" />
-          </Notify> */}
+            <TotalCreditToggle>
+              <CreditTotal
+                onClick={handleCreditToggle}
+                style={{ cursor: "pointer" }}
+              >
+                <div>
+                  <span>
+                    <images.CoinSmall
+                      width="12px"
+                      height="8px"
+                      color={palette.white}
+                    />
+                  </span>
+                  <Sub2 color="gray800">
+                    {isLoggedIn
+                      ? (
+                          (userCredits.regular_credit || 0) +
+                          (userCredits.additional_credit || 0) +
+                          (userCredits.event_credit || 0)
+                        ).toLocaleString()
+                      : 0}
+                  </Sub2>
+                </div>
+                <images.ChevronDown
+                  width="20px"
+                  height="20px"
+                  color={palette.gray300}
+                  style={{
+                    transform: showCreditToggle
+                      ? "rotate(180deg)"
+                      : "rotate(0deg)",
+                    transition: "transform 0.3s ease",
+                  }}
+                />
+              </CreditTotal>
 
-          <Notify Alarm={showRedDot} onClick={handleAlertToggle}>
-            <img src={images.IconBell} alt="" />
-          </Notify>
+              {showCreditToggle && (
+                <CreditToggle className={isClosingCreditToggle ? "closing" : ""}>
+                  <div className="title">
+                    <Sub1 color="gray700">크레딧 내역</Sub1>
+                    {isLoggedInState &&
+                      (sessionStorage.getItem("userEmail") ===
+                        "pg_card@userconnect.kr" ||
+                        sessionStorage.getItem("userEmail") ===
+                          "sungeun_lee@userconnect.kr" ||
+                        sessionStorage.getItem("userEmail") ===
+                          "pixelweb@naver.com") && (
+                        <button onClick={() => navigate("/Payment")}>
+                          <Caption2 color="primary">충전하기</Caption2>
+                        </button>
+                      )}
+                  </div>
 
-          {/* <div className="userInfo">
-          유저프로필
-        </div> */}
-        </div>
+                  {isLoggedIn ? (
+                    <ul>
+                      <li>
+                        <CreditDashBoardItem NoLine>
+                          <div className="icon yellow">
+                            <images.CoinFill
+                              width="9.6"
+                              height="6.1"
+                              color="#FFD54A"
+                            />
+                          </div>
+                          <Sub3 color="gray500" align="left">
+                            일반 크레딧
+                          </Sub3>
+                        </CreditDashBoardItem>
+                        <Sub3 color="gray500" align="right">
+                          {userCredits.additional_credit.toLocaleString()}
+                        </Sub3>
+                      </li>
+                      <li>
+                        <CreditDashBoardItem NoLine>
+                          <div className="icon green">
+                            <images.CoinFill
+                              width="9.6"
+                              height="6.1"
+                              color="#34C759"
+                            />
+                          </div>
+                          <Sub3 color="gray500" align="left">
+                            구독 크레딧
+                          </Sub3>
+                        </CreditDashBoardItem>
+                        <Sub3 color="gray500" align="right">
+                          {userCredits.regular_credit.toLocaleString()}
+                        </Sub3>
+                      </li>
+                      <li>
+                        <CreditDashBoardItem NoLine>
+                          <div className="icon red">
+                            <images.CoinFill
+                              width="9.6"
+                              height="6.1"
+                              color="#FF5322"
+                            />
+                          </div>
+                          <Sub3 color="gray500" align="left">
+                            이벤트 크레딧
+                          </Sub3>
+                        </CreditDashBoardItem>
+                        <Sub3 color="gray500" align="right">
+                          {userCredits.event_credit.toLocaleString()}
+                        </Sub3>
+                      </li>
+                    </ul>
+                  ) : (
+                    <CreditNoData>
+                      <Sub3 color="gray500">
+                        크레딧 내역은 로그인 후,
+                        <br />
+                        확인 가능합니다.
+                      </Sub3>
+                    </CreditNoData>
+                  )}
+                </CreditToggle>
+              )}
+            </TotalCreditToggle>
+
+            {/*   
+            <Notify Alarm  onClick={handleAlertToggle}>
+              <img src={images.IconBell} alt="" />
+            </Notify> */}
+
+            <Notify Alarm={showRedDot} onClick={handleAlertToggle}>
+              <img src={images.IconBell} alt="" />
+            </Notify>
+
+            {/* <div className="userInfo">
+            유저프로필
+          </div> */}
+          </div>
+        )}
       </HeaderWrap>
 
       {showAlert && (

@@ -77,6 +77,12 @@ import PagePersona4 from "./pages/Persona/components/pages/PagePersona4";
 import PagePersona4Single from "./pages/Persona/components/pages/PagePersona4Single";
 import PageMyProject from "./pages/Persona/components/pages/PageMyProject";
 import PagePersona3Select from "./pages/Persona/components/pages/PagePersona3Select";
+
+// 로그인, 회원가입
+import OrganismLogin from "./pages/Global/organisms/OrganismLogin";
+import OrganismSignin from "./pages/Global/organisms/OrganismSignin";
+
+
 // 테스트 라우트 추가
 import PageMarketingNoItemsShare from "./pages/Marketing/components/pages/PageMarketingNoItemsShare";
 
@@ -457,6 +463,22 @@ function App() {
               </RequireToken>
             }
           />
+
+          <Route
+            path="/Login"
+            element={
+              <OrganismLogin />
+            }
+          />
+
+          <Route
+            path="/Signin"
+            element={
+              <OrganismSignin />
+            }
+          />
+
+
           {/* <Route
             path="/CuratorStoryboard"
             element={<CuratorStoryboard />}

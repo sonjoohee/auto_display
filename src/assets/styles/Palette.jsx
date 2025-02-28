@@ -19,6 +19,7 @@ export const palette = {
   gray200: "#ddd",
   gray300: "#ccc",
   gray500: "#8c8c8c",
+  gray600: "#6C757D",
   gray700: "#666",
   gray800: "#323232",
   gray900: "#212121",

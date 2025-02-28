@@ -141,7 +141,13 @@ export const CustomInput = styled.input`
   font-size: 1rem;
   line-height: 1.2;
   color: ${props => props.status === "error" ? palette.error : palette.gray900};
-  padding: 16px 20px;
+  padding: ${(props) => 
+    props.Small 
+    ? "13px 16px" 
+    : props.Medium 
+    ? "13px 20px" 
+    : "16px 20px"
+  };
   border-radius: ${(props) => props.Round ? "50px" : "5px"};
   border: 1px solid ${getStatusColor};
   outline: none;

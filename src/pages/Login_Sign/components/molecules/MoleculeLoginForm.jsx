@@ -10,6 +10,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import AtomButton from "../atoms/AtomButton";
 import { isValidEmail } from "../atoms/AtomValidation";
 import { UserCreditInfo } from "../../../../utils/indexedDB";
+import { FormBox, CustomInput } from '../../../../assets/styles/InputStyle';
 
 import images from "../../../../assets/styles/Images";
 import {
@@ -298,29 +299,48 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           <LoginFormContainer>
             <div>
               <label htmlFor="email">
-                아이디<span>*</span>
+                이메일<span>*</span>
               </label>
-              <StyledAtomInput
+              <CustomInput
+                Small
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="이메일을을 입력해주세요"
+              />
+              
+              {/* <StyledAtomInput
                 type="email"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="이메일 주소를 입력해주세요"
-              />
+              /> */}
             </div>
 
             <div>
               <label htmlFor="password">
                 비밀번호<span>*</span>
               </label>
-              <StyledAtomInput
+              <CustomInput
+                Small
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={handleKeyPress}
+                placeholder="비밀번호를 입력해주세요"
+              />
+
+              {/* <StyledAtomInput
                 type={showPassword ? "text" : "password"}
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="비밀번호를 입력해주세요"
                 onKeyDown={handleKeyPress}
-              />
+              /> */}
               <TogglePasswordButton onClick={togglePasswordVisibility}>
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </TogglePasswordButton>
@@ -340,9 +360,12 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
             {errorStatus && <ErrorMessage>{errorStatus}</ErrorMessage>}
 
             <JoinWrap>
-              <p>InterviewX가 처음이에요</p>
-              <Link to="#" onClick={handleSignClick}>
-                가입하기
+              {/* <p>InterviewX가 처음이에요</p> */}
+              <p>아직 회원이 아니신가요?</p>
+              {/* <Link to="#" onClick={handleSignClick}> */}
+              <Link to="/Signin">
+                {/* 가입하기 */}
+                회원가입하기
               </Link>
             </JoinWrap>
           </LoginFormContainer>
@@ -451,7 +474,7 @@ const ErrorMessage = styled.p`
 `;
 
 const PasswordResetLink = styled.div`
-  margin: 20px auto 30px;
+  margin: 20px auto 40px;
   text-align: right;
   cursor: pointer;
 
@@ -469,7 +492,7 @@ const StyledLoginButton = styled.button`
   width: 100%;
   font-family: "Pretendard", "Poppins";
   color: ${palette.white};
-  padding: 15px;
+  padding: 17px;
   border-radius: 8px;
   border: none;
   background-color: ${palette.primary};
@@ -490,7 +513,7 @@ const JoinWrap = styled.div`
   gap: 12px;
   font-size: 1rem;
   color: ${palette.gray};
-  margin-top: 50px;
+  margin-top: 40px;
 
   a {
     color: ${palette.blue};
