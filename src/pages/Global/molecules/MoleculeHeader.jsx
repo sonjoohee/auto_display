@@ -99,6 +99,8 @@ const MoleculeHeader = () => {
 
   const isPersona4Page = location.pathname === "/Persona/4";
 
+  const isProjectCreatePage = location.pathname === "/ProjectCreate";
+
   const handleAlertToggle = () => {
     if (showAlert) {
       if (isLoggedIn) {
@@ -237,7 +239,8 @@ const MoleculeHeader = () => {
           isTargetDiscoveryPage ||
           isIdeaGeneratorPage ||
           isCustomerValueAnalyzerPage ||
-          isDesignAnalysisPage ) && (
+          isDesignAnalysisPage ||
+          isProjectCreatePage) && (
           <>
             <Title>
               {isMyProjectPage
@@ -274,6 +277,8 @@ const MoleculeHeader = () => {
                 ? `디자인 감정 분석기 - ${designAnalysisBusinessInfo}`
                 : isDesignAnalysisPage && !designAnalysisBusinessInfo
                 ? "디자인 감정 분석기"
+                : isProjectCreatePage
+                ? "새 프로젝트 생성"
                 : "새로운 프로젝트"}
               {(isPersona3Page ||
                 isPersona3PageSelect ||
@@ -298,7 +303,7 @@ const MoleculeHeader = () => {
           </>
         )}
 
-        {!isLoggedIn && (
+        {isProjectCreatePage && (
           <images.Logo2 color={palette.black} width="170px" height="26px" />
         )}
 

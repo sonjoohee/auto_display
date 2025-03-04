@@ -129,7 +129,7 @@ export const Button = styled.button`
     // }
   `}
 
-  ${props => props.Primary && props.Fill && props.Large && css`
+  ${props => props.Primary && props.Fill && (props.Large || props.DbExLarge) && css`
     color: ${palette.white};
     background: ${palette.primary};
 

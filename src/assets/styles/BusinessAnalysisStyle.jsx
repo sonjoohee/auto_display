@@ -34,7 +34,14 @@ export const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   max-width: ${(props) =>
-    props.Wide ? "1024px" : props.Wide1030 ? "1030px" : "816px"};
+    props.Wide 
+    ? "1024px" 
+    : props.Wide1030 
+    ? "1030px" 
+    : props.Wide1240
+    ? "1240px"
+    : "820px"
+  };
   // max-width: 1024px;
   // min-height: 100vh;
   width: 100%;
@@ -2108,7 +2115,7 @@ export const ListGroup = styled.div`
 export const ListBoxGroup = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: ${(props) => (props.Small ? "12px" : "20px")};
   width: 100%;
   padding: 20px;
   border-radius: 10px;
@@ -3967,7 +3974,7 @@ export const StyledDropzone = {
     padding: '4px',
     width: '20px',
     height: '20px'
-  }
+  },
 };
 
 export const DropzoneStyles = createGlobalStyle`
@@ -4073,5 +4080,18 @@ export const DropzoneStyles = createGlobalStyle`
       background-color: ${palette.primary};
       transition: width 0.3s ease;
     }
+  }
+
+  .browse-button {
+    padding: 6px 12px;
+    font-family: 'Pretendard', 'Poppins';
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: ${palette.gray700};
+    border: 1px solid ${palette.outlineGray};
+    border-radius: 4px;
+    background-color: ${palette.chatGray};
+    cursor: pointer;
+    transition: background-color 0.3s ease;
   }
 `;

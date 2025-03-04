@@ -66,6 +66,9 @@ import PagePolicy from "./pages/PagePolicy";
 import PageServiceLanding from "./pages/PageServiceLanding";
 import PageBlog from "./pages/PageBlog";
 
+import PageProject from "./pages/Design_Page/PageProject";
+import PageProjectCreate from "./pages/Design_Page/PageProjectCreate";
+
 import PageStyleGuide from "./pages/Design_Page/PageStyleGuide";
 
 // 페르소나
@@ -486,6 +489,23 @@ function App() {
             }
           />
 
+          <Route
+            path="/Project"
+            element={
+              <RequireToken>
+                <PageProject />
+              </RequireToken>
+            }
+          />
+
+          <Route
+            path="/ProjectCreate"
+            element={
+              <RequireToken>
+                <PageProjectCreate />
+              </RequireToken>
+            }
+          />
 
           {/* <Route
             path="/CuratorStoryboard"

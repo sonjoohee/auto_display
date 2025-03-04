@@ -303,6 +303,9 @@ import Tag from "../icons/Tag";
 import Report2 from "../icons/Report2";
 import ImagePrimary from "../images/image-primary.svg";
 
+import ProjectThumbnail01 from "../images/project-thumbnail01.jpg";
+import ProjectThumbnail02 from "../images/project-thumbnail02.jpg";
+
 const images = {
   Logo,
   SymbolLogo,
@@ -596,6 +599,9 @@ const images = {
   Tag,
   Report2,
   ImagePrimary,
+
+  ProjectThumbnail01,
+  ProjectThumbnail02,
 }
 
 export default images;
