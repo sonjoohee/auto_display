@@ -3445,3 +3445,445 @@ export const InterviewXIdeaGrowthHackerdetail_reportRequest = async (
     throw error;
   }
 };
+
+
+// !===============================================
+// !interviewX SaaS   
+// !===============================================
+
+//프로젝트 정보 생성
+export const  InterviewXProjectAnalysisMultimodalRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("project_name", data.project_name); // File 객체 추가
+    formData.append("product_description", data.product_description); // 다른 데이터 추가
+    formData.append("business_model", data.business_model); // 다른 데이터 추가
+    formData.append("industry_type", data.industry_type); // 다른 데이터 추가
+    formData.append("target_country", data.target_country); // 다른 데이터 추가
+    formData.append("tool_id", data.tool_id); // 다른 데이터 추가
+    formData.append("files", data.files); // 다른 데이터 추가
+  
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/project/temporary/projectAnalysisMultimodal",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+
+// 파일 업로드 X, 건너뛰기
+export const  InterviewXProjectAnalysisRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/project/temporary/projectAnalysis",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+
+
+
+// !===============================================
+// !페르소나 관련 
+// !===============================================
+
+
+//페르소나 DB 생성 api
+export const createPersonaOnServer = async (data, isLoggedIn) => {
+  if (isLoggedIn) {
+    try {
+      const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
+
+      if (!token) {
+        throw new Error("액세스 토큰이 존재하지 않습니다.");
+      }
+
+      const PUT_DATA = {
+        createDate: new Date().toLocaleString("ko-KR", {
+          timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+        updateDate: new Date().toLocaleString("ko-KR", {
+          timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+        timestamp: Date.now(),
+        ...data,
+      };
+      const response = await axios.post(
+        "https://wishresearch.kr/project/persona/create",
+        PUT_DATA, // POST 요청에 보낼 데이터가 없는 경우 빈 객체 전달
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // 쿠키와 자격 증명 포함 (필요 시)
+        }
+      );
+
+      // console.log(response.data.inserted_id);
+      return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
+    } catch (error) {
+      console.error("Error creating chat on server:", error);
+      throw error;
+    }
+  }
+};
+
+// 페르소나 업데이트 api
+export const updatePersonaOnServer = async ( updateData, isLoggedIn) => {
+  if (isLoggedIn) {
+    // 사용자 로그인 시 서버에 저장
+    try {
+      const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
+      // console.log("token", token);
+
+   
+      const PUT_DATA = {
+        // id: personaId,
+        ...updateData,
+        updateDate: new Date().toLocaleString("ko-KR", {
+          timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+        timestamp: Date.now(),
+      };
+      await axios.put(
+        `https://wishresearch.kr/project/persona/update`,
+        PUT_DATA,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // 쿠키와 함께 자격 증명을 전달 (optional)
+        }
+      );
+    } catch (error) {
+      console.error("Error updating persona on server:", error);
+    }
+  }
+};
+
+//페르소나 단건조회 == 상세값.
+export const getPersonaOnServer = async (personaId, isLoggedIn) => {
+  if (isLoggedIn) {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      const response = await axios.get(
+        `https://wishresearch.kr/project/persona/find/${personaId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching persona from server:", error);
+      throw error;
+    }
+  }
+};
+
+// 페르소나 리스트 
+export const getPersonaListOnServer = async (projectId, isLoggedIn) => {
+  if (isLoggedIn) {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      const response = await axios.get(
+        `https://wishresearch.kr/project/persona/list/${projectId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching persona list from server:", error);
+      throw error;
+    }
+  }
+};
+
+// 페르소나 삭제
+export const deletePersonaOnServer = async (personaId, isLoggedIn) => {
+  if (isLoggedIn) {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      const response = await axios.get(
+        `https://wishresearch.kr/project/persona/delete/${personaId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting persona from server:", error);
+      throw error;
+    }
+  }
+};
+
+//페르소나 기초정보 생성- Macro Segment
+export const InterviewXPersonaMacroSegmentRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/project/temporary/personaMacroSegment",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+//페르소나 기초정보 생성- Unique User
+export const InterviewXPersonaUniqueUserRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/project/temporary/personaUniqueUser",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// 페르소나 기초정보 생성- Key Stakeholder
+export const InterviewXPersonaKeyStakeholderRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/project/temporary/personaKeyStakeholder",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+
+//페르소나 프로필정보 생성
+export const InterviewXPersonaProfileRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/project/temporary/personaProfile",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
