@@ -48,46 +48,46 @@ export const saveConversationToIndexedDB = async (
   // conversationId,
 ) => {
   // if (isLoggedIn) {
-    // 사용자 로그인 시 서버에 저장
-    try {
-      const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
-      // console.log("token", token);
+  // 사용자 로그인 시 서버에 저장
+  try {
+    const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
+    // console.log("token", token);
 
-      if (!token) {
-        throw new Error("액세스 토큰이 존재하지 않습니다.");
-      }
-
-      if (!conversationId) {
-        throw new Error("대화 ID가 필요합니다.");
-      }
-      // console.log("saveConversationToIndexedDB");
-      // console.log(conversation);
-      // 서버에 업데이트 요청을 보냄 (PUT 메서드 사용)
-      const PUT_DATA = {
-        id: conversationId,
-        chat_input: conversation.inputBusinessInfo,
-        business_info: conversation.inputBusinessInfo,
-        // chat_title: conversation.analysisReportData.title,
-        chat_date: conversation.timestamp,
-        chat_data: conversation,
-        expert_index: expertIndex,
-      };
-      // const PUT_DATA = {
-      //   id: conversationId,
-      //   ...saveData.data,
-      //   chat_date: Date.now(),
-      // };
-      // console.log("🚀 ~ PUT_DATA:", PUT_DATA);
-      await axios.put(`https://wishresearch.kr/panels/update_chat`, PUT_DATA, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
-          "Content-Type": "application/json",
-        },
-        withCredentials: true, // 쿠키와 함께 자격 증명을 전달 (optional)
-      });
-    } catch (error) {
-      console.error("Error updating conversation on server:", error);
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
+
+    if (!conversationId) {
+      throw new Error("대화 ID가 필요합니다.");
+    }
+    // console.log("saveConversationToIndexedDB");
+    // console.log(conversation);
+    // 서버에 업데이트 요청을 보냄 (PUT 메서드 사용)
+    const PUT_DATA = {
+      id: conversationId,
+      chat_input: conversation.inputBusinessInfo,
+      business_info: conversation.inputBusinessInfo,
+      // chat_title: conversation.analysisReportData.title,
+      chat_date: conversation.timestamp,
+      chat_data: conversation,
+      expert_index: expertIndex,
+    };
+    // const PUT_DATA = {
+    //   id: conversationId,
+    //   ...saveData.data,
+    //   chat_date: Date.now(),
+    // };
+    // console.log("🚀 ~ PUT_DATA:", PUT_DATA);
+    await axios.put(`https://wishresearch.kr/panels/update_chat`, PUT_DATA, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
+        "Content-Type": "application/json",
+      },
+      withCredentials: true, // 쿠키와 함께 자격 증명을 전달 (optional)
+    });
+  } catch (error) {
+    console.error("Error updating conversation on server:", error);
+  }
   // } else {
   //   // 비로그인 시 IndexedDB에 저장
   //   const db = await openDB();
@@ -348,6 +348,7 @@ export const getProjectListByIdFromIndexedDB = async (isLoggedIn) => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
+      console.log("🚀 ~ getProjectListByIdFromIndexedDB ~ response:", response);
       return response.data;
     } catch (error) {
       console.error("Error fetching project list from server:", error);
@@ -2800,7 +2801,6 @@ export const InterviewXDesignEmotionScaleRequest = async (data, isLoggedIn) => {
 
 //비즈니스 분석
 export const InterviewXBusinessAnalysisRequest = async (data, isLoggedIn) => {
-
   try {
     const token = sessionStorage.getItem("accessToken");
     if (!token) {
@@ -3446,13 +3446,13 @@ export const InterviewXIdeaGrowthHackerdetail_reportRequest = async (
   }
 };
 
-
 // !===============================================
-// !interviewX SaaS   
+// !interviewX SaaS
 // !===============================================
 
 //프로젝트 생성 api saas
-export const createProjectOnServerSaas = async (data,isLoggedIn) => {
+export const createProjectOnServerSaas = async (data, isLoggedIn) => {
+  console.log("🚀 ~ createProjectOnServerSaas ~ data:", data);
   if (isLoggedIn) {
     try {
       const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
@@ -3470,8 +3470,10 @@ export const createProjectOnServerSaas = async (data,isLoggedIn) => {
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
-          ...data,
         }),
+        ...data,
+        projectType: "saas",
+        timestamp: Date.now(),
       };
       const response = await axios.post(
         "https://wishresearch.kr/project/create",
@@ -3495,7 +3497,7 @@ export const createProjectOnServerSaas = async (data,isLoggedIn) => {
 };
 
 //프로젝트 정보 생성
-export const  InterviewXProjectAnalysisMultimodalRequest = async (
+export const InterviewXProjectAnalysisMultimodalRequest = async (
   data,
   isLoggedIn
 ) => {
@@ -3512,10 +3514,10 @@ export const  InterviewXProjectAnalysisMultimodalRequest = async (
     formData.append("industry_type", data.industry_type); // 다른 데이터 추가
     formData.append("target_country", data.target_country); // 다른 데이터 추가
     formData.append("tool_id", data.tool_id); // 다른 데이터 추가
-    data.files.forEach((file) => { 
-        formData.append('files', file); 
+    data.files.forEach((file) => {
+      formData.append("files", file);
     });
-  
+
     const token = sessionStorage.getItem("accessToken");
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
@@ -3548,12 +3550,9 @@ export const  InterviewXProjectAnalysisMultimodalRequest = async (
   }
 };
 
-
 // 파일 업로드 X, 건너뛰기
-export const  InterviewXProjectAnalysisRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXProjectAnalysisRequest = async (data, isLoggedIn) => {
+  console.log("🚀 ~ InterviewXProjectAnalysisRequest ~ data:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -3592,13 +3591,9 @@ export const  InterviewXProjectAnalysisRequest = async (
   }
 };
 
-
-
-
 // !===============================================
-// !페르소나 관련 
+// !페르소나 관련
 // !===============================================
-
 
 //페르소나 DB 생성 api
 export const createPersonaOnServer = async (data, isLoggedIn) => {
@@ -3654,14 +3649,13 @@ export const createPersonaOnServer = async (data, isLoggedIn) => {
 };
 
 // 페르소나 업데이트 api
-export const updatePersonaOnServer = async ( updateData, isLoggedIn) => {
+export const updatePersonaOnServer = async (updateData, isLoggedIn) => {
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
       const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
       // console.log("token", token);
 
-   
       const PUT_DATA = {
         // id: personaId,
         ...updateData,
@@ -3715,7 +3709,7 @@ export const getPersonaOnServer = async (personaId, isLoggedIn) => {
   }
 };
 
-// 페르소나 리스트 
+// 페르소나 리스트
 export const getPersonaListOnServer = async (projectId, isLoggedIn) => {
   if (isLoggedIn) {
     try {
@@ -3803,10 +3797,7 @@ export const InterviewXPersonaMacroSegmentRequest = async (
 };
 
 //페르소나 기초정보 생성- Unique User
-export const InterviewXPersonaUniqueUserRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXPersonaUniqueUserRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -3888,12 +3879,8 @@ export const InterviewXPersonaKeyStakeholderRequest = async (
   }
 };
 
-
 //페르소나 프로필정보 생성
-export const InterviewXPersonaProfileRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXPersonaProfileRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -3931,4 +3918,3 @@ export const InterviewXPersonaProfileRequest = async (
     throw error;
   }
 };
-

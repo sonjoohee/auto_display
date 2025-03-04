@@ -6,10 +6,7 @@ import { palette } from "../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../Global/molecules/MoleculeHeader";
-import {
-  Button,
-  IconButton,
-} from "../../../assets/styles/ButtonStyle";
+import { Button, IconButton } from "../../../assets/styles/ButtonStyle";
 import {
   FormBox,
   CustomTextarea,
@@ -34,11 +31,12 @@ import {
   ListBoxGroup,
   Title,
 } from "../../../assets/styles/BusinessAnalysisStyle";
-import { IS_LOGGED_IN, 
-         PROJECT_ID,
-         PROJECT_CREATE_INFO,
-
- } from "../../AtomStates"
+import {
+  IS_LOGGED_IN,
+  PROJECT_ID,
+  PROJECT_CREATE_INFO,
+  PROJECT_TOTAL_INFO,
+} from "../../AtomStates";
 import images from "../../../assets/styles/Images";
 import {
   H2,
@@ -50,19 +48,22 @@ import {
   Body2,
   Body3,
 } from "../../../assets/styles/Typography";
-import 'react-dropzone-uploader/dist/styles.css'
-import Dropzone from 'react-dropzone-uploader'
+import "react-dropzone-uploader/dist/styles.css";
+import Dropzone from "react-dropzone-uploader";
 
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 import { useNavigate } from "react-router-dom";
-import { createProjectOnServerSaas,
-         InterviewXProjectAnalysisMultimodalRequest, 
-         InterviewXProjectAnalysisRequest} 
-         from "../../../utils/indexedDB"
+import {
+  createProjectOnServerSaas,
+  InterviewXProjectAnalysisMultimodalRequest,
+  InterviewXProjectAnalysisRequest,
+} from "../../../utils/indexedDB";
 
 // 초기 텍스트 상수로 정의
-const INITIAL_PROJECT_OVERVIEW = "50세 이상을 위한 국내 최초 전용 소셜 플랫폼으로, 소통 부재 및 사회적 고립 해소를 목표합니다. 핵심 가치는 시니어들이 관심사 기반 커뮤니티에서 자유롭게 소통하고, 새로운 관계를 형성하며, 건강하고 활기찬 노년 생활을 지원하는 데 있습니다. 주요 기능은 온라인 소통, 멤버 교류, 정보 제공이며, 경쟁 우위는 시니어 특화 플랫폼이라는 점입니다. 다만, 디지털 격차, 사용자 확보, 기존 커뮤니티와의 경쟁은 잠재적 위험 요소입니다. 성공적인 안착을 위해 사용자 친화적인 인터페이스와 차별화된 콘텐츠 전략이 필요합니다.";
-const INITIAL_TARGET_AUDIENCE = "1차 타겟은 50세 이상 대한민국 거주 성인입니다. 액티브 시니어, 소셜 니즈 시니어, 건강 및 활동 관심 시니어로 세분화됩니다. 액티브 시니어는 온라인 활동에 익숙하며 새로운 관계 및 정보 습득에 적극적입니다. 소셜 니즈 시니어는 사회적 관계 단절을 경험하고 온라인 소통을 갈망합니다. 건강 및 활동 관심 시니어는 건강 관리, 취미 활동, 여행 등 활기찬 노년 생활에 높은 관심을 보입니다. 2차 타겟은 은퇴 후 사회 참여 및 자기 계발을 희망하는 50+ 세대입니다. 페르소나 기반 마케팅 전략으로 접근성을 높여야 합니다.";
+const INITIAL_PROJECT_OVERVIEW =
+  "50세 이상을 위한 국내 최초 전용 소셜 플랫폼으로, 소통 부재 및 사회적 고립 해소를 목표합니다. 핵심 가치는 시니어들이 관심사 기반 커뮤니티에서 자유롭게 소통하고, 새로운 관계를 형성하며, 건강하고 활기찬 노년 생활을 지원하는 데 있습니다. 주요 기능은 온라인 소통, 멤버 교류, 정보 제공이며, 경쟁 우위는 시니어 특화 플랫폼이라는 점입니다. 다만, 디지털 격차, 사용자 확보, 기존 커뮤니티와의 경쟁은 잠재적 위험 요소입니다. 성공적인 안착을 위해 사용자 친화적인 인터페이스와 차별화된 콘텐츠 전략이 필요합니다.";
+const INITIAL_TARGET_AUDIENCE =
+  "1차 타겟은 50세 이상 대한민국 거주 성인입니다. 액티브 시니어, 소셜 니즈 시니어, 건강 및 활동 관심 시니어로 세분화됩니다. 액티브 시니어는 온라인 활동에 익숙하며 새로운 관계 및 정보 습득에 적극적입니다. 소셜 니즈 시니어는 사회적 관계 단절을 경험하고 온라인 소통을 갈망합니다. 건강 및 활동 관심 시니어는 건강 관리, 취미 활동, 여행 등 활기찬 노년 생활에 높은 관심을 보입니다. 2차 타겟은 은퇴 후 사회 참여 및 자기 계발을 희망하는 50+ 세대입니다. 페르소나 기반 마케팅 전략으로 접근성을 높여야 합니다.";
 
 const PageProjectCreate = () => {
   const navigate = useNavigate();
@@ -82,24 +83,27 @@ const PageProjectCreate = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingText, setEditingText] = useState(INITIAL_PROJECT_OVERVIEW);
   const [isEditingTarget, setIsEditingTarget] = useState(false);
-  const [editingTargetText, setEditingTargetText] = useState(INITIAL_TARGET_AUDIENCE);
+  const [editingTargetText, setEditingTargetText] = useState(
+    INITIAL_TARGET_AUDIENCE
+  );
   const targetTextareaRef = useRef(null);
-
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId, setprojectId] = useAtom(PROJECT_ID);
-  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+  const [projectCreateInfo, setProjectCreateInfo] =
+    useAtom(PROJECT_CREATE_INFO);
   // 각 셀렉트박스의 열림/닫힘 상태를 개별적으로 관리
   const [selectBoxStates, setSelectBoxStates] = useState({
-    business: false,  // 사업 목적
-    industry: false,  // 업종
-    country: false    // 타겟 국가
+    business: false, // 사업 목적
+    industry: false, // 업종
+    country: false, // 타겟 국가
   });
 
   // 각 셀렉트박스의 방향 상태 추가
   const [dropUpStates, setDropUpStates] = useState({
     business: false,
     industry: false,
-    country: false
+    country: false,
   });
 
   // 각 셀렉트박스 ref 생성
@@ -111,15 +115,15 @@ const PageProjectCreate = () => {
   const [selectedValues, setSelectedValues] = useState({
     business: "",
     industry: "",
-    country: ""
+    country: "",
   });
 
   // 각 필드의 값을 관리하는 state 추가
-  const [projectName, setProjectName] = useState('');
-  const [projectDescription, setProjectDescription] = useState('');
-  const [business, setBusiness] = useState('');
-  const [industry, setIndustry] = useState('');
-  const [country, setCountry] = useState('');
+  const [projectName, setProjectName] = useState("");
+  const [projectDescription, setProjectDescription] = useState("");
+  const [business, setBusiness] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [country, setCountry] = useState("");
 
   // isLoadingScenario를 state로 변경
   const [isLoadingScenario, setIsLoadingScenario] = useState(false);
@@ -132,8 +136,9 @@ const PageProjectCreate = () => {
   // textarea 높이 자동 조절 함수
   const adjustTextareaHeight = () => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height =
+        textareaRef.current.scrollHeight + "px";
     }
   };
 
@@ -150,15 +155,15 @@ const PageProjectCreate = () => {
   // handleInputChange 함수 수정
   const handleInputChange = (field, value) => {
     // formData 대신 개별 상태 업데이트
-    if (field === 'projectName') {
+    if (field === "projectName") {
       setProjectName(value);
-    } else if (field === 'projectDescription') {
+    } else if (field === "projectDescription") {
       setProjectDescription(value);
-    } else if (field === 'business') {
+    } else if (field === "business") {
       setBusiness(value);
-    } else if (field === 'industry') {
+    } else if (field === "industry") {
       setIndustry(value);
-    } else if (field === 'country') {
+    } else if (field === "country") {
       setCountry(value);
     }
   };
@@ -172,14 +177,14 @@ const PageProjectCreate = () => {
     const spaceNeeded = 250; // 셀렉트박스 드롭다운의 대략적인 높이
 
     // 아래 공간이 부족하면 위로 표시
-    setDropUpStates(prev => ({
+    setDropUpStates((prev) => ({
       ...prev,
-      [boxName]: spaceBelow < spaceNeeded
+      [boxName]: spaceBelow < spaceNeeded,
     }));
 
-    setSelectBoxStates(prev => ({
+    setSelectBoxStates((prev) => ({
       ...prev,
-      [boxName]: !prev[boxName]
+      [boxName]: !prev[boxName],
     }));
   };
 
@@ -187,18 +192,18 @@ const PageProjectCreate = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (businessRef.current && !businessRef.current.contains(event.target)) {
-        setSelectBoxStates(prev => ({ ...prev, business: false }));
+        setSelectBoxStates((prev) => ({ ...prev, business: false }));
       }
       if (industryRef.current && !industryRef.current.contains(event.target)) {
-        setSelectBoxStates(prev => ({ ...prev, industry: false }));
+        setSelectBoxStates((prev) => ({ ...prev, industry: false }));
       }
       if (countryRef.current && !countryRef.current.contains(event.target)) {
-        setSelectBoxStates(prev => ({ ...prev, country: false }));
+        setSelectBoxStates((prev) => ({ ...prev, country: false }));
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleSelectBoxClick = () => {
@@ -208,64 +213,72 @@ const PageProjectCreate = () => {
 
   // handleSubmitBusinessInfo 함수 수정
   const handleSubmitBusinessInfo = async () => {
-      if (activeTab === 1) {
-        setCompletedSteps(prev => [...prev, 1]);
-        setActiveTab(2);
-      } else if (activeTab === 2) {
-        setCompletedSteps(prev => [...prev, 2]);
-        setActiveTab(3);
-        setIsLoadingScenario(true);
+    if (activeTab === 1) {
+      setCompletedSteps((prev) => [...prev, 1]);
+      setActiveTab(2);
+    } else if (activeTab === 2) {
+      setCompletedSteps((prev) => [...prev, 2]);
+      setActiveTab(3);
+      setIsLoadingScenario(true);
 
-        // API 전송 및 이미지 업로드 처리
-        try {
-          const data = {
-            project_name: projectName,
-            product_description: projectDescription,
-            business_model: business,
-            industry_type: industry,
-            target_country: country,
-            tool_id: Date.now(),
-            files: uploadedFiles,
-          };
+      // API 전송 및 이미지 업로드 처리
+      try {
+        const data = {
+          project_name: projectName,
+          product_description: projectDescription,
+          business_model: business,
+          industry_type: industry,
+          target_country: country,
+          tool_id: Date.now(),
+          files: uploadedFiles,
+        };
 
-          console.log(data);
+        console.log(data);
 
-          const response = await InterviewXProjectAnalysisMultimodalRequest(data, isLoggedIn);
+        const response = await InterviewXProjectAnalysisMultimodalRequest(
+          data,
+          isLoggedIn
+        );
 
-           // 응답 유효성 검사 추가
-           if (!response || !response.response || !response.response.project_analysis_multimodal) {
-            console.error("유효하지 않은 응답입니다.");
-            return; 
-          }
-
-          console.log(response);
-         setProjectCreateInfo(response.response.project_analysis_multimodal);
-      
-
-        } catch (error) {
-          console.error("데이터 업로드 중 오류 발생:", error);
-        } finally {
-          setIsLoadingScenario(false);
+        // 응답 유효성 검사 추가
+        if (
+          !response ||
+          !response.response ||
+          !response.response.project_analysis_multimodal
+        ) {
+          console.error("유효하지 않은 응답입니다.");
+          return;
         }
+
+        console.log(response);
+        setProjectCreateInfo(response.response.project_analysis_multimodal);
+      } catch (error) {
+        console.error("데이터 업로드 중 오류 발생:", error);
+      } finally {
+        setIsLoadingScenario(false);
       }
+    }
   };
 
   // 파일 업로드 상태를 체크하는 함수 추가
   const isFileUploaded = () => {
-    files_info = uploadedFiles.map(file => ({ name: file.name, size: file.size })); // files_info에 파일 정보 저장
+    files_info = uploadedFiles.map((file) => ({
+      name: file.name,
+      size: file.size,
+    })); // files_info에 파일 정보 저장
     return uploadedFiles.length > 0;
   };
 
   // handlePurposeSelect 함수 수정
   const handlePurposeSelect = (value, field) => {
-    setSelectedValues(prev => ({
+    setSelectedValues((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
     handleInputChange(field, value);
-    setSelectBoxStates(prev => ({
+    setSelectBoxStates((prev) => ({
       ...prev,
-      [field]: false
+      [field]: false,
     }));
   };
 
@@ -274,11 +287,11 @@ const PageProjectCreate = () => {
     if (activeTab === 1) {
       // 탭 1의 모든 필수 필드가 채워져 있는지 확인
       return (
-        projectName.trim() !== '' &&
-        projectDescription.trim() !== '' &&
-        business !== '' &&
-      industry !== '' &&
-        country !== ''
+        projectName.trim() !== "" &&
+        projectDescription.trim() !== "" &&
+        business !== "" &&
+        industry !== "" &&
+        country !== ""
       );
     }
     // 탭 2의 경우 파일 업로드 여부 확인
@@ -303,40 +316,41 @@ const PageProjectCreate = () => {
       setIsLoading(false);
     }, 3000);
   };
-  
+
   // 파일 업로드 핸들러
   const handleChangeStatus = ({ meta, file, remove }, status) => {
     const maxSize = 20 * 1024 * 1024; // 20MB
-    if (file.size > maxSize && status !== 'removed') {
+    if (file.size > maxSize && status !== "removed") {
       setShowPopupFileSize(true);
       remove();
       return;
     }
 
     // 파일 상태 업데이트
-    if (status === 'done' || status === 'preparing' || status === 'uploading') {
-      setUploadedFiles(prev => {
-        if (!prev.find(f => f.name === file.name)) {
-          setFileNames(prev => [...prev, file.name]);
+    if (status === "done" || status === "preparing" || status === "uploading") {
+      setUploadedFiles((prev) => {
+        if (!prev.find((f) => f.name === file.name)) {
+          setFileNames((prev) => [...prev, file.name]);
           return [...prev, file];
         }
         return prev;
       });
-    } else if (status === 'removed') {
-      setUploadedFiles(prev => prev.filter(f => f.name !== file.name));
-      setFileNames(prev => prev.filter(name => name !== file.name));
+    } else if (status === "removed") {
+      setUploadedFiles((prev) => prev.filter((f) => f.name !== file.name));
+      setFileNames((prev) => prev.filter((name) => name !== file.name));
     }
 
     // 파일 크기를 KB 또는 MB 단위로 변환
     const size = file.size;
-    const sizeStr = size > 1024 * 1024 
-      ? `${(size / (1024 * 1024)).toFixed(1)}MB`
-      : `${(size / 1024).toFixed(1)}KB`;
+    const sizeStr =
+      size > 1024 * 1024
+        ? `${(size / (1024 * 1024)).toFixed(1)}MB`
+        : `${(size / 1024).toFixed(1)}KB`;
 
     // setTimeout을 사용하여 DOM이 업데이트된 후 실행
     setTimeout(() => {
-      const containers = document.querySelectorAll('.dzu-previewContainer');
-      containers.forEach(container => {
+      const containers = document.querySelectorAll(".dzu-previewContainer");
+      containers.forEach((container) => {
         if (!container.dataset.filename) {
           container.dataset.filename = file.name;
           container.dataset.size = sizeStr;
@@ -344,8 +358,6 @@ const PageProjectCreate = () => {
       });
     }, 0);
   };
-
-
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -364,7 +376,7 @@ const PageProjectCreate = () => {
   // handleSkip 함수 수정
   const handleSkip = async () => {
     if (activeTab === 2) {
-      setCompletedSteps(prev => [...prev, 2]);
+      setCompletedSteps((prev) => [...prev, 2]);
       setActiveTab(3);
       setIsLoadingScenario(true);
 
@@ -380,21 +392,35 @@ const PageProjectCreate = () => {
 
         console.log(datas);
 
-        const response = await InterviewXProjectAnalysisRequest(datas, isLoggedIn);
+        const response = await InterviewXProjectAnalysisRequest(
+          datas,
+          isLoggedIn
+        );
 
-        if (!response || !response.response || !response.response.project_analysis || 
-            !response.response.project_analysis.business_analysis || 
-            !response.response.project_analysis.target_customer) {
+        if (
+          !response ||
+          !response.response ||
+          !response.response.project_analysis ||
+          !response.response.project_analysis.business_analysis ||
+          !response.response.project_analysis.target_customer
+        ) {
           console.error("유효하지 않은 응답입니다.");
-          return; 
+          return;
         }
 
         console.log(response);
-  
+
         setProjectCreateInfo(response.response.project_analysis);
 
-       
-
+        const projectTotalData = {
+          projectTitle: response.project_name,
+          projectDescription: response.product_description,
+          businessModel: response.business_model,
+          industryType: response.industry_type,
+          targetCountry: response.target_country,
+          projectAnalysis: response.response.project_analysis,
+        };
+        setProjectTotalInfo(projectTotalData);
       } catch (error) {
         console.error("데이터 업로드 중 오류 발생:", error);
       } finally {
@@ -417,18 +443,21 @@ const PageProjectCreate = () => {
   useEffect(() => {
     if (isEditingTarget && targetTextareaRef.current) {
       setTimeout(() => {
-        targetTextareaRef.current.style.height = 'auto';
-        targetTextareaRef.current.style.height = targetTextareaRef.current.scrollHeight + 'px';
+        targetTextareaRef.current.style.height = "auto";
+        targetTextareaRef.current.style.height =
+          targetTextareaRef.current.scrollHeight + "px";
       }, 0);
     }
   }, [editingTargetText, isEditingTarget]);
 
   const handleCreateProject = async () => {
-    const newProjectId = await createProjectOnServerSaas(isLoggedIn);
+    const newProjectId = await createProjectOnServerSaas(
+      projectTotalInfo,
+      isLoggedIn
+    );
     setprojectId(newProjectId);
     navigate(`/Project`, { replace: true });
   };
-
 
   return (
     <>
@@ -501,16 +530,22 @@ const PageProjectCreate = () => {
                 ) : (
                   <>
                     <div className="content">
-                      <H2 color="gray800" align="left">새 프로젝트 정보를 입력하세요</H2>
+                      <H2 color="gray800" align="left">
+                        새 프로젝트 정보를 입력하세요
+                      </H2>
                       <TabContent5Item required>
                         <div className="title">
-                          <Body1 color="gray700">프로젝트 이름을 입력하세요</Body1>
+                          <Body1 color="gray700">
+                            프로젝트 이름을 입력하세요
+                          </Body1>
                         </div>
                         <CustomInput
                           type="text"
                           placeholder="프로젝트 이름"
                           value={projectName}
-                          onChange={(e) => handleInputChange('projectName', e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("projectName", e.target.value)
+                          }
                           disabled={completedSteps.length >= 2}
                         />
                       </TabContent5Item>
@@ -528,7 +563,10 @@ const PageProjectCreate = () => {
                             status="valid"
                             value={projectDescription}
                             onChange={(e) => {
-                              handleInputChange('projectDescription', e.target.value);
+                              handleInputChange(
+                                "projectDescription",
+                                e.target.value
+                              );
                               setDescriptionLength(e.target.value.length);
                             }}
                             disabled={completedSteps.length >= 2}
@@ -545,8 +583,14 @@ const PageProjectCreate = () => {
                         </div>
 
                         <SelectBox ref={businessRef}>
-                          <SelectBoxTitle onClick={(e) => toggleSelectBox('business', e)}>
-                            <Body2 color={selectedValues.business ? "gray800" : "gray300"}>
+                          <SelectBoxTitle
+                            onClick={(e) => toggleSelectBox("business", e)}
+                          >
+                            <Body2
+                              color={
+                                selectedValues.business ? "gray800" : "gray300"
+                              }
+                            >
                               {selectedValues.business || "선택해주세요"}
                             </Body2>
                             <images.ChevronDown
@@ -554,7 +598,9 @@ const PageProjectCreate = () => {
                               height="24px"
                               color={palette.gray500}
                               style={{
-                                transform: selectBoxStates.business ? "rotate(180deg)" : "rotate(0deg)",
+                                transform: selectBoxStates.business
+                                  ? "rotate(180deg)"
+                                  : "rotate(0deg)",
                                 transition: "transform 0.3s ease",
                               }}
                             />
@@ -562,20 +608,50 @@ const PageProjectCreate = () => {
 
                           {selectBoxStates.business && (
                             <SelectBoxList dropUp={dropUpStates.business}>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("B2C", "business")}>
-                                <Body2 color="gray700" align="left">B2C</Body2>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect("B2C", "business")
+                                }
+                              >
+                                <Body2 color="gray700" align="left">
+                                  B2C
+                                </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("B2B", "business")}>
-                                <Body2 color="gray700" align="left">B2B</Body2>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect("B2B", "business")
+                                }
+                              >
+                                <Body2 color="gray700" align="left">
+                                  B2B
+                                </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("B2G", "business")}>
-                                <Body2 color="gray700" align="left">B2G</Body2>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect("B2G", "business")
+                                }
+                              >
+                                <Body2 color="gray700" align="left">
+                                  B2G
+                                </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("B2B2C", "business")}>
-                                <Body2 color="gray700" align="left">B2B2C</Body2>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect("B2B2C", "business")
+                                }
+                              >
+                                <Body2 color="gray700" align="left">
+                                  B2B2C
+                                </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("B2B2B", "business")}>
-                                <Body2 color="gray700" align="left">B2B2B</Body2>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect("B2B2B", "business")
+                                }
+                              >
+                                <Body2 color="gray700" align="left">
+                                  B2B2B
+                                </Body2>
                               </SelectBoxItem>
                             </SelectBoxList>
                           )}
@@ -588,8 +664,14 @@ const PageProjectCreate = () => {
                         </div>
 
                         <SelectBox ref={industryRef}>
-                          <SelectBoxTitle onClick={(e) => toggleSelectBox('industry', e)}>
-                            <Body2 color={selectedValues.industry ? "gray800" : "gray300"}>
+                          <SelectBoxTitle
+                            onClick={(e) => toggleSelectBox("industry", e)}
+                          >
+                            <Body2
+                              color={
+                                selectedValues.industry ? "gray800" : "gray300"
+                              }
+                            >
                               {selectedValues.industry || "선택해주세요"}
                             </Body2>
                             <images.ChevronDown
@@ -597,7 +679,9 @@ const PageProjectCreate = () => {
                               height="24px"
                               color={palette.gray500}
                               style={{
-                                transform: selectBoxStates.industry ? "rotate(180deg)" : "rotate(0deg)",
+                                transform: selectBoxStates.industry
+                                  ? "rotate(180deg)"
+                                  : "rotate(0deg)",
                                 transition: "transform 0.3s ease",
                               }}
                             />
@@ -605,42 +689,99 @@ const PageProjectCreate = () => {
 
                           {selectBoxStates.industry && (
                             <SelectBoxList dropUp={dropUpStates.industry}>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("정보통신 및 기술 (IT, 소프트웨어, 커뮤니티, 광고, 마케팅 등)", "industry")}>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect(
+                                    "정보통신 및 기술 (IT, 소프트웨어, 커뮤니티, 광고, 마케팅 등)",
+                                    "industry"
+                                  )
+                                }
+                              >
                                 <Body2 color="gray700" align="left">
-                                  정보통신 및 기술 (IT, 소프트웨어, 커뮤니티, 광고, 마케팅 등)
+                                  정보통신 및 기술 (IT, 소프트웨어, 커뮤니티,
+                                  광고, 마케팅 등)
                                 </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("금융 및 법률 (핀테크, 인사, 법률 등)", "industry")}>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect(
+                                    "금융 및 법률 (핀테크, 인사, 법률 등)",
+                                    "industry"
+                                  )
+                                }
+                              >
                                 <Body2 color="gray700" align="left">
                                   금융 및 법률 (핀테크, 인사, 법률 등)
                                 </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("제조 및 생산 (의류, 뷰티, 식음료, 환경/에너지 등)", "industry")}>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect(
+                                    "제조 및 생산 (의류, 뷰티, 식음료, 환경/에너지 등)",
+                                    "industry"
+                                  )
+                                }
+                              >
                                 <Body2 color="gray700" align="left">
-                                  제조 및 생산 (의류, 뷰티, 식음료, 환경/에너지 등) 
+                                  제조 및 생산 (의류, 뷰티, 식음료, 환경/에너지
+                                  등)
                                 </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("건설 및 인프라 (부동산, 모빌리티, 물류 등)", "industry")}>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect(
+                                    "건설 및 인프라 (부동산, 모빌리티, 물류 등)",
+                                    "industry"
+                                  )
+                                }
+                              >
                                 <Body2 color="gray700" align="left">
-                                  건설 및 인프라 (부동산, 모빌리티, 물류 등) 
+                                  건설 및 인프라 (부동산, 모빌리티, 물류 등)
                                 </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("의료 및 헬스케어 (헬스케어, 바이오 등)", "industry")}>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect(
+                                    "의료 및 헬스케어 (헬스케어, 바이오 등)",
+                                    "industry"
+                                  )
+                                }
+                              >
                                 <Body2 color="gray700" align="left">
-                                  의료 및 헬스케어 (헬스케어, 바이오 등) 
+                                  의료 및 헬스케어 (헬스케어, 바이오 등)
                                 </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("교육 및 공공 서비스 (교육, 정부 및 공공기관 등)", "industry")}>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect(
+                                    "교육 및 공공 서비스 (교육, 정부 및 공공기관 등)",
+                                    "industry"
+                                  )
+                                }
+                              >
                                 <Body2 color="gray700" align="left">
-                                  교육 및 공공 서비스 (교육, 정부 및 공공기관 등)
+                                  교육 및 공공 서비스 (교육, 정부 및 공공기관
+                                  등)
                                 </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("소비재 및 라이프스타일 (커머서, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)", "industry")}>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect(
+                                    "소비재 및 라이프스타일 (커머서, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)",
+                                    "industry"
+                                  )
+                                }
+                              >
                                 <Body2 color="gray700" align="left">
-                                  소비재 및 라이프스타일 (커머서, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)
+                                  소비재 및 라이프스타일 (커머서, 리빙, 유아,
+                                  펫, 여행, 콘텐츠, 게임 등)
                                 </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("기타", "industry")}>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect("기타", "industry")
+                                }
+                              >
                                 <Body2 color="gray700" align="left">
                                   기타
                                 </Body2>
@@ -656,8 +797,14 @@ const PageProjectCreate = () => {
                         </div>
 
                         <SelectBox ref={countryRef}>
-                          <SelectBoxTitle onClick={(e) => toggleSelectBox('country', e)}>
-                            <Body2 color={selectedValues.country ? "gray800" : "gray300"}>
+                          <SelectBoxTitle
+                            onClick={(e) => toggleSelectBox("country", e)}
+                          >
+                            <Body2
+                              color={
+                                selectedValues.country ? "gray800" : "gray300"
+                              }
+                            >
                               {selectedValues.country || "선택해주세요"}
                             </Body2>
                             <images.ChevronDown
@@ -665,7 +812,9 @@ const PageProjectCreate = () => {
                               height="24px"
                               color={palette.gray500}
                               style={{
-                                transform: selectBoxStates.country ? "rotate(180deg)" : "rotate(0deg)",
+                                transform: selectBoxStates.country
+                                  ? "rotate(180deg)"
+                                  : "rotate(0deg)",
                                 transition: "transform 0.3s ease",
                               }}
                             />
@@ -673,20 +822,50 @@ const PageProjectCreate = () => {
 
                           {selectBoxStates.country && (
                             <SelectBoxList dropUp={dropUpStates.country}>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("대한민국", "country")}>
-                                <Body2 color="gray700" align="left">대한민국</Body2>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect("대한민국", "country")
+                                }
+                              >
+                                <Body2 color="gray700" align="left">
+                                  대한민국
+                                </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("미국", "country")}>
-                                <Body2 color="gray700" align="left">미국</Body2>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect("미국", "country")
+                                }
+                              >
+                                <Body2 color="gray700" align="left">
+                                  미국
+                                </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("중국", "country")}>
-                                <Body2 color="gray700" align="left">중국</Body2>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect("중국", "country")
+                                }
+                              >
+                                <Body2 color="gray700" align="left">
+                                  중국
+                                </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("일본", "country")}>
-                                <Body2 color="gray700" align="left">일본</Body2>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect("일본", "country")
+                                }
+                              >
+                                <Body2 color="gray700" align="left">
+                                  일본
+                                </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem onClick={() => handlePurposeSelect("베트남", "country")}>
-                                <Body2 color="gray700" align="left">베트남</Body2>
+                              <SelectBoxItem
+                                onClick={() =>
+                                  handlePurposeSelect("베트남", "country")
+                                }
+                              >
+                                <Body2 color="gray700" align="left">
+                                  베트남
+                                </Body2>
                               </SelectBoxItem>
                             </SelectBoxList>
                           )}
@@ -700,7 +879,9 @@ const PageProjectCreate = () => {
                       Fill
                       style={{ minWidth: "190px" }}
                       onClick={handleSubmitBusinessInfo}
-                      disabled={!isRequiredFieldsFilled() || completedSteps.length >= 2}
+                      disabled={
+                        !isRequiredFieldsFilled() || completedSteps.length >= 2
+                      }
                     >
                       다음
                     </Button>
@@ -726,7 +907,10 @@ const PageProjectCreate = () => {
                 ) : (
                   <>
                     <div className="content">
-                      <H2 color="gray800" align="left">정확한 프로젝트 분석을 위해 관련 문서, 데이터, 보고서 등을 업로드해주세요.</H2>
+                      <H2 color="gray800" align="left">
+                        정확한 프로젝트 분석을 위해 관련 문서, 데이터, 보고서
+                        등을 업로드해주세요.
+                      </H2>
 
                       <TabContent5Item required>
                         <div className="title">
@@ -738,22 +922,29 @@ const PageProjectCreate = () => {
                           multiple={true}
                           canRemove={true}
                           canRestart={false}
-                          disabled={toolStep >= 1} 
+                          disabled={toolStep >= 1}
                           accept="image/*"
                           maxSizeBytes={20 * 1024 * 1024}
                           inputWithFilesContent={
                             <>
                               <img src={images.ImagePrimary} alt="" />
                               {fileNames.length === 0 && (
-                                <div style={{
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  alignItems: 'center',
-                                  gap: '12px',
-                                }}>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    gap: "12px",
+                                  }}
+                                >
                                   <div>
-                                    <Body2 color="gray800">업로드하려는 파일을 드래그하여 놓아주세요</Body2>
-                                    <Sub3 color="gray500">jpg, png, doc, PDF 파일만 업로드가 가능합니다 (20MB 아하)</Sub3>
+                                    <Body2 color="gray800">
+                                      업로드하려는 파일을 드래그하여 놓아주세요
+                                    </Body2>
+                                    <Sub3 color="gray500">
+                                      jpg, png, doc, PDF 파일만 업로드가
+                                      가능합니다 (20MB 아하)
+                                    </Sub3>
                                   </div>
                                   <div className="browse-button">
                                     파일 찾아보기
@@ -763,7 +954,9 @@ const PageProjectCreate = () => {
                               {fileNames.length > 0 && (
                                 <div>
                                   {fileNames.map((name, index) => (
-                                    <Body2 key={index} color="gray700">{name}</Body2>
+                                    <Body2 key={index} color="gray700">
+                                      {name}
+                                    </Body2>
                                   ))}
                                 </div>
                               )}
@@ -773,15 +966,22 @@ const PageProjectCreate = () => {
                             <>
                               <img src={images.ImagePrimary} alt="" />
                               {fileNames.length === 0 && (
-                                <div style={{
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  alignItems: 'center',
-                                  gap: '12px',
-                                }}>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    gap: "12px",
+                                  }}
+                                >
                                   <div>
-                                    <Body2 color="gray800">업로드하려는 파일을 드래그하여 놓아주세요</Body2>
-                                    <Sub3 color="gray500">jpg, png, doc, PDF 파일만 업로드가 가능합니다 (20MB 아하)</Sub3>
+                                    <Body2 color="gray800">
+                                      업로드하려는 파일을 드래그하여 놓아주세요
+                                    </Body2>
+                                    <Sub3 color="gray500">
+                                      jpg, png, doc, PDF 파일만 업로드가
+                                      가능합니다 (20MB 아하)
+                                    </Sub3>
                                   </div>
                                   <div className="browse-button">
                                     파일 찾아보기
@@ -791,7 +991,9 @@ const PageProjectCreate = () => {
                               {fileNames.length > 0 && (
                                 <div>
                                   {fileNames.map((name, index) => (
-                                    <Body2 key={index} color="gray700">{name}</Body2>
+                                    <Body2 key={index} color="gray700">
+                                      {name}
+                                    </Body2>
                                   ))}
                                 </div>
                               )}
@@ -803,8 +1005,8 @@ const PageProjectCreate = () => {
                     </div>
 
                     <ButtonWrap>
-                      <Body1 
-                        color="gray500" 
+                      <Body1
+                        color="gray500"
                         onClick={completedSteps.length < 2 ? handleSkip : null}
                         // disabled={completedSteps.length >= 2}
                       >
@@ -817,7 +1019,10 @@ const PageProjectCreate = () => {
                         Fill
                         style={{ minWidth: "190px" }}
                         onClick={handleSubmitBusinessInfo}
-                        disabled={!isRequiredFieldsFilled() || completedSteps.length >= 2}
+                        disabled={
+                          !isRequiredFieldsFilled() ||
+                          completedSteps.length >= 2
+                        }
                       >
                         다음
                       </Button>
@@ -844,27 +1049,40 @@ const PageProjectCreate = () => {
                 ) : (
                   <>
                     <div className="content">
-                      <H2 color="gray800" align="left">입력하신 정보를 분석하여 프로젝트 주요 내용을 정리했습니다.</H2>
+                      <H2 color="gray800" align="left">
+                        입력하신 정보를 분석하여 프로젝트 주요 내용을
+                        정리했습니다.
+                      </H2>
 
                       <SummaryWrap>
-                        <Body1 color="gray700" align="left">프로젝트 개요</Body1>
+                        <Body1 color="gray700" align="left">
+                          프로젝트 개요
+                        </Body1>
                         <ListBoxGroup Small>
                           <li>
                             <Body2 color="gray500">사업모델</Body2>
-                            <Body2 color="gray800">{selectedValues.business || "-"}</Body2>
+                            <Body2 color="gray800">
+                              {selectedValues.business || "-"}
+                            </Body2>
                           </li>
                           <li>
                             <Body2 color="gray500">업종</Body2>
-                            <Body2 color="gray800">{selectedValues.industry || "-"}</Body2>
+                            <Body2 color="gray800">
+                              {selectedValues.industry || "-"}
+                            </Body2>
                           </li>
                           <li>
                             <Body2 color="gray500">타겟 국가</Body2>
-                            <Body2 color="gray800">{selectedValues.country || "-"}</Body2>
+                            <Body2 color="gray800">
+                              {selectedValues.country || "-"}
+                            </Body2>
                           </li>
                           <li>
                             <Body2 color="gray500">업로드 파일</Body2>
                             <Body2 color="gray800">
-                              {uploadedFiles.length > 0 ? uploadedFiles[0].name : "-"}
+                              {uploadedFiles.length > 0
+                                ? uploadedFiles[0].name
+                                : "-"}
                             </Body2>
                           </li>
                         </ListBoxGroup>
@@ -872,7 +1090,9 @@ const PageProjectCreate = () => {
 
                       <SummaryWrap>
                         <Title>
-                          <Body1 color="gray700" align="left">프로젝트 개요</Body1>
+                          <Body1 color="gray700" align="left">
+                            프로젝트 개요
+                          </Body1>
                           <IconButton onClick={handleEditClick}>
                             <img src={images.PencilSquare} alt="" />
                             <span>수정하기</span>
@@ -880,16 +1100,22 @@ const PageProjectCreate = () => {
                         </Title>
                         {!isEditing && (
                           <ListBoxGroup>
-                            <Body2 color="gray800" align="left">{projectCreateInfo.business_analysis}</Body2>
+                            <Body2 color="gray800" align="left">
+                              {projectCreateInfo.business_analysis}
+                            </Body2>
                           </ListBoxGroup>
                         )}
 
                         {isEditing && (
                           <FormBox>
-                            <CustomTextarea 
-                              Edit 
+                            <CustomTextarea
+                              Edit
                               ref={textareaRef}
-                              style={{ height: 'auto', overflow: 'hidden', resize: 'none' }}
+                              style={{
+                                height: "auto",
+                                overflow: "hidden",
+                                resize: "none",
+                              }}
                               value={editingText}
                               onChange={(e) => {
                                 setEditingText(e.target.value);
@@ -898,7 +1124,10 @@ const PageProjectCreate = () => {
                             />
                             <EditButtonGroup>
                               <IconButton>
-                                <img src={images.ClockCounterclockwise} alt="" />
+                                <img
+                                  src={images.ClockCounterclockwise}
+                                  alt=""
+                                />
                                 <span>이전으로 되돌리기</span>
                               </IconButton>
                               <IconButton>
@@ -912,7 +1141,9 @@ const PageProjectCreate = () => {
 
                       <SummaryWrap>
                         <Title>
-                          <Body1 color="gray700" align="left">주요 타겟 고객군</Body1>
+                          <Body1 color="gray700" align="left">
+                            주요 타겟 고객군
+                          </Body1>
                           <IconButton onClick={handleEditTargetClick}>
                             <img src={images.PencilSquare} alt="" />
                             <span>수정하기</span>
@@ -920,16 +1151,22 @@ const PageProjectCreate = () => {
                         </Title>
                         {!isEditingTarget && (
                           <ListBoxGroup>
-                            <Body2 color="gray800" align="left">{projectCreateInfo.target_customer}</Body2>
+                            <Body2 color="gray800" align="left">
+                              {projectCreateInfo.target_customer}
+                            </Body2>
                           </ListBoxGroup>
                         )}
 
                         {isEditingTarget && (
                           <FormBox>
-                            <CustomTextarea 
-                              Edit 
+                            <CustomTextarea
+                              Edit
                               ref={targetTextareaRef}
-                              style={{ height: 'auto', overflow: 'hidden', resize: 'none' }}
+                              style={{
+                                height: "auto",
+                                overflow: "hidden",
+                                resize: "none",
+                              }}
                               value={editingTargetText}
                               onChange={(e) => {
                                 setEditingTargetText(e.target.value);
@@ -937,7 +1174,10 @@ const PageProjectCreate = () => {
                             />
                             <EditButtonGroup>
                               <IconButton>
-                                <img src={images.ClockCounterclockwise} alt="" />
+                                <img
+                                  src={images.ClockCounterclockwise}
+                                  alt=""
+                                />
                                 <span>이전으로 되돌리기</span>
                               </IconButton>
                               <IconButton>
@@ -963,7 +1203,6 @@ const PageProjectCreate = () => {
                 )}
               </TabContent5>
             )}
-            
           </ProjectCreateWrap>
         </MainContent>
       </ContentsWrap>
