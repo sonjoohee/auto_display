@@ -3512,7 +3512,9 @@ export const  InterviewXProjectAnalysisMultimodalRequest = async (
     formData.append("industry_type", data.industry_type); // 다른 데이터 추가
     formData.append("target_country", data.target_country); // 다른 데이터 추가
     formData.append("tool_id", data.tool_id); // 다른 데이터 추가
-    formData.append("files", data.files); // 다른 데이터 추가
+    data.files.forEach((file) => { 
+        formData.append('files', file); 
+    });
   
     const token = sessionStorage.getItem("accessToken");
     if (!token) {

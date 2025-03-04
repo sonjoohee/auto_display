@@ -225,7 +225,7 @@ const PageProjectCreate = () => {
             industry_type: industry,
             target_country: country,
             tool_id: Date.now(),
-            files: uploadedFiles[0],
+            files: uploadedFiles,
           };
 
           console.log(data);
