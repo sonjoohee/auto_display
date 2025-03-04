@@ -80,6 +80,10 @@ import PagePersona3Select from "./pages/Persona/components/pages/PagePersona3Sel
 // 테스트 라우트 추가
 import PageMarketingNoItemsShare from "./pages/Marketing/components/pages/PageMarketingNoItemsShare";
 
+//테스트 페이지
+import DesignLens from "./pages/Persona/components/pages/DesignLens";
+import AIDesignEvaluationSystem from "./pages/Persona/components/pages/AIDesignEvaluationSystem";
+
 function App() {
   const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태를 위한 아톰
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
@@ -104,33 +108,34 @@ function App() {
 
   useEffect(() => {
     const userEmail = sessionStorage.getItem("userEmail");
-    if (userEmail === "yspark@userconnect.kr" 
-      || userEmail === "jsjun0319@hanyang.ac.kr"
-      || userEmail === "sjjjang00@gmail.com"
-      || userEmail === "sungeun_lee@userconnect.kr"
-      || userEmail === "okhyund@userconnect.kr"
-      || userEmail === "hsb4557@naver.com"
-      || userEmail === "choi9110@nate.com"
-      || userEmail === "gusrms2346@naver.com"
-      || userEmail === "08doyun@naver.com"
-      || userEmail === "ehdbs08@hanyang.ac.kr"
-      || userEmail === "suauncle@gmail.com"
-      || userEmail === "pleasure4ur@gmail.com"
-      || userEmail === "r_pleasure4u@naver.com"
-      || userEmail === "lhm1186@naver.com"
-      || userEmail === "pixelweb@naver.com"
-      || userEmail === "hyeeun@userconnect.kr"
-      || userEmail === "pasrk0821@naver.com"
-      || userEmail === "okhyund@gmail.com"
-      || userEmail === "sunbin12325@gmail.com"
-      || userEmail === "yspark.uc@gmail.com"
-      || userEmail === "uvaluator@naver.com"
-      || userEmail === "jungmin_lee@userconnect.kr"
-      || userEmail === "syyoon@userconnect.kr"
-      || userEmail === "star7613son@gmail.com"
+    if (
+      userEmail === "yspark@userconnect.kr" ||
+      userEmail === "jsjun0319@hanyang.ac.kr" ||
+      userEmail === "sjjjang00@gmail.com" ||
+      userEmail === "sungeun_lee@userconnect.kr" ||
+      userEmail === "okhyund@userconnect.kr" ||
+      userEmail === "hsb4557@naver.com" ||
+      userEmail === "choi9110@nate.com" ||
+      userEmail === "gusrms2346@naver.com" ||
+      userEmail === "08doyun@naver.com" ||
+      userEmail === "ehdbs08@hanyang.ac.kr" ||
+      userEmail === "suauncle@gmail.com" ||
+      userEmail === "pleasure4ur@gmail.com" ||
+      userEmail === "r_pleasure4u@naver.com" ||
+      userEmail === "lhm1186@naver.com" ||
+      userEmail === "pixelweb@naver.com" ||
+      userEmail === "hyeeun@userconnect.kr" ||
+      userEmail === "pasrk0821@naver.com" ||
+      userEmail === "okhyund@gmail.com" ||
+      userEmail === "sunbin12325@gmail.com" ||
+      userEmail === "yspark.uc@gmail.com" ||
+      userEmail === "uvaluator@naver.com" ||
+      userEmail === "jungmin_lee@userconnect.kr" ||
+      userEmail === "syyoon@userconnect.kr" ||
+      userEmail === "star7613son@gmail.com"
     ) {
-    setAccessableExpert(true);
-  }
+      setAccessableExpert(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -188,7 +193,7 @@ function App() {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-            timeout: 3000 // 3초 타임아웃 설정
+            timeout: 3000, // 3초 타임아웃 설정
           }
         );
 
@@ -244,7 +249,7 @@ function App() {
             <button
               type="button"
               className="closePopup"
-              onClick={() => window.location.href = "/"}
+              onClick={() => (window.location.href = "/")}
             >
               닫기
             </button>
@@ -257,7 +262,10 @@ function App() {
               잠시 후 다시 시도해 주세요
             </p>
             <div className="btnWrap">
-              <button type="button" onClick={() => window.location.href = "/"}>
+              <button
+                type="button"
+                onClick={() => (window.location.href = "/")}
+              >
                 확인
               </button>
             </div>
@@ -274,7 +282,7 @@ function App() {
             path="/ExpertInsight"
             element={
               // <RequireToken>
-                <PageExpertInsight />
+              <PageExpertInsight />
               // </RequireToken>
             }
           ></Route>
@@ -282,7 +290,7 @@ function App() {
             path="/MarketingExpertInsight"
             element={
               // <RequireToken>
-                <PageMarketingExpertInsight />
+              <PageMarketingExpertInsight />
               // </RequireToken>
             }
           ></Route>
@@ -291,7 +299,7 @@ function App() {
               path="/conversation/:conversationId"
               element={
                 // <RequireToken>
-                  <PageMarketingExpertInsight />
+                <PageMarketingExpertInsight />
                 // </RequireToken>
               }
             />
@@ -300,7 +308,7 @@ function App() {
               path="/conversation/:conversationId"
               element={
                 // <RequireToken>
-                  <PageExpertInsight />
+                <PageExpertInsight />
                 // </RequireToken>
               }
             />
@@ -520,6 +528,12 @@ function App() {
                 <PageStyleGuide />
               </RequireToken>
             }
+          />
+          <Route path="/DesignLens" element={<DesignLens />} />
+          <Route path="/Payment" element={<PagePayment />} />
+          <Route
+            path="/AIDesignEvaluationSystem"
+            element={<AIDesignEvaluationSystem />}
           />
         </Routes>
       </BrowserRouter>

@@ -255,10 +255,44 @@ const PageMyProfile = () => {
               </H2>
 
               <ButtonGroup>
+                {sessionStorage.getItem("userEmail") ===
+                  "pg_card@userconnect.kr" ||
+                sessionStorage.getItem("userEmail") ===
+                  "sungeun_lee@userconnect.kr" ||
+                sessionStorage.getItem("userEmail") ===
+                  "yspark@userconnect.kr" ||
+                sessionStorage.getItem("userEmail") === "yspark.uc@gmail.com" ||
+                sessionStorage.getItem("userEmail") === "pixelweb@naver.com" ? (
+                  <>
+                    <Button
+                      Primary
+                      onClick={() => navigate("/AIDesignEvaluationSystem")}
+                    >
+                      <images.CoinSmall
+                        width="12px"
+                        height="8px"
+                        color={palette.primary}
+                      />
+                      <Sub3 color="primary">AI 디자인 평가 시스템</Sub3>
+                    </Button>
+                    <Button Primary onClick={() => navigate("/DesignLens")}>
+                      <images.CoinSmall
+                        width="12px"
+                        height="8px"
+                        color={palette.primary}
+                      />
+                      <Sub3 color="primary">디자인 렌즈</Sub3>
+                    </Button>
+                  </>
+                ) : null}
                 {(sessionStorage.getItem("userEmail") ===
                   "pg_card@userconnect.kr" ||
                   sessionStorage.getItem("userEmail") ===
                     "sungeun_lee@userconnect.kr" ||
+                  sessionStorage.getItem("userEmail") ===
+                    "yspark@userconnect.kr" ||
+                  sessionStorage.getItem("userEmail") ===
+                    "yspark.uc@gmail.com" ||
                   sessionStorage.getItem("userEmail") ===
                     "pixelweb@naver.com") && (
                   <Button Primary onClick={() => navigate("/Payment")}>
