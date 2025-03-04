@@ -3451,6 +3451,49 @@ export const InterviewXIdeaGrowthHackerdetail_reportRequest = async (
 // !interviewX SaaS   
 // !===============================================
 
+//프로젝트 생성 api saas
+export const createProjectOnServerSaas = async (data,isLoggedIn) => {
+  if (isLoggedIn) {
+    try {
+      const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
+
+      if (!token) {
+        throw new Error("액세스 토큰이 존재하지 않습니다.");
+      }
+
+      const PUT_DATA = {
+        createDate: new Date().toLocaleString("ko-KR", {
+          timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          ...data,
+        }),
+      };
+      const response = await axios.post(
+        "https://wishresearch.kr/project/create",
+        PUT_DATA, // POST 요청에 보낼 데이터가 없는 경우 빈 객체 전달
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // 쿠키와 자격 증명 포함 (필요 시)
+        }
+      );
+
+      // console.log(response.data.inserted_id);
+      return response.data.inserted_id; // 서버로부터 가져온 conversationId 반환
+    } catch (error) {
+      console.error("Error creating chat on server:", error);
+      throw error;
+    }
+  }
+};
+
 //프로젝트 정보 생성
 export const  InterviewXProjectAnalysisMultimodalRequest = async (
   data,
