@@ -9,9 +9,7 @@ import OrganismIncNavigation from "../../Global/organisms/OrganismIncNavigation"
 import MoleculeHeader from "../../Global/molecules/MoleculeHeader";
 import MoleculeAccountPopup from "../../Login_Sign/components/molecules/MoleculeAccountPopup";
 import PopupWrap from "../../../assets/styles/Popup";
-import {
-  Button,
-} from "../../../assets/styles/ButtonStyle";
+import { Button } from "../../../assets/styles/ButtonStyle";
 import {
   ContentsWrap,
   MainContent,
@@ -28,10 +26,12 @@ import {
   Caption1,
 } from "../../../assets/styles/Typography";
 import { getProjectListByIdFromIndexedDB } from "../../../utils/indexedDB";
-
+import OrganismProjectItem from "../components/organisms/OrganismProjectItem";
+import { PROJECT_LIST } from "../../AtomStates";
 const PageProject = () => {
   const navigate = useNavigate();
 
+  const [projectList, setProjectList] = useAtom(PROJECT_LIST);
   const [isWarningPopupOpen, setIsWarningPopupOpen] = useState(false);
 
   const handleWarningClose = () => {
@@ -39,70 +39,55 @@ const PageProject = () => {
   };
   const handleWarningContinue = () => {
     setIsWarningPopupOpen(false);
+    navigate("/ProjectCreate");
   };
 
+  useEffect(() => {
+    const loadProjectList = async () => {
+      try {
+        const savedProjectListInfo = await getProjectListByIdFromIndexedDB(
+          true
+        );
 
-  // useEffect(() => {
-  //   const loadProjectList = async () => {
-  //     try {
-  //       setProjectLoading({
-  //         isLoading: true,
-  //         lastLoadTime: new Date(),
-  //         error: null,
-  //       });
+        if (savedProjectListInfo) {
+          // saas 타입 프로젝트만 필터링
+          const filteredSaasProjects = savedProjectListInfo.filter(
+            (project) => {
+              return project.projectType === "saas";
+            }
+          );
+          console.log(
+            "🚀 ~ loadProjectList ~ filteredSaasProjects:",
+            filteredSaasProjects
+          );
 
-  //       const savedProjectListInfo = await getProjectListByIdFromIndexedDB(
-  //         true
-  //       );
-  //       if (savedProjectListInfo) {
-  //         const parseKoreanDate = (dateStr) => {
-  //           const [date, time] = dateStr.split("오");
-  //           const [year, month, day] = date.split(".").map((s) => s.trim());
-  //           const [hour, minute, second] = time.includes("전")
-  //             ? time.trim().replace("전", "").split(":")
-  //             : time.trim().replace("후", "").split(":");
+          const sortedList = [...filteredSaasProjects]
+            .map((project) => ({
+              ...project,
+              reportList:
+                project.reportList?.sort((a, b) => {
+                  const dateA = a.createDate;
+                  const dateB = b.createDate;
+                  return dateB - dateA; // 최신 날짜가 위로
+                }) || [],
+            }))
+            .sort((a, b) => {
+              const dateA = a.updateDate;
+              const dateB = b.updateDate;
+              return dateB - dateA; // 최신 날짜가 위로
+            });
 
-  //           const adjustedHour = time.includes("오후")
-  //             ? Number(hour) + 12
-  //             : Number(hour);
+          setProjectList(sortedList);
+        }
+      } catch (error) {
+        console.error("프로젝트 목록을 불러오는데 실패했습니다:", error);
+      }
+    };
+    loadProjectList();
+  }, []); // refreshTrigger가 변경될 때마다 데이터 다시 로드
 
-  //           return new Date(year, month - 1, day, adjustedHour, minute, second);
-  //         };
-
-  //         const sortedList = [...savedProjectListInfo]
-  //           .map((project) => ({
-  //             ...project,
-  //             reportList:
-  //               project.reportList?.sort((a, b) => {
-  //                 const dateA = parseKoreanDate(a.createDate);
-  //                 const dateB = parseKoreanDate(b.createDate);
-  //                 return dateB - dateA; // 최신 날짜가 위로
-  //               }) || [],
-  //           }))
-  //           .sort((a, b) => {
-  //             const dateA = parseKoreanDate(a.updateDate);
-  //             const dateB = parseKoreanDate(b.updateDate);
-  //             return dateB - dateA; // 최신 날짜가 위로
-  //           });
-  //         setProjectList(sortedList);
-  //       }
-
-  //       setProjectLoading({
-  //         isLoading: false,
-  //         lastLoadTime: new Date(),
-  //         error: null,
-  //       });
-  //     } catch (error) {
-  //       setProjectLoading({
-  //         isLoading: false,
-  //         lastLoadTime: new Date(),
-  //         error: error.message,
-  //       });
-  //       console.error("프로젝트 목록을 불러오는데 실패했습니다:", error);
-  //     }
-  //   };
-  //   loadProjectList();
-  // }, [refreshTrigger]); // refreshTrigger가 변경될 때마다 데이터 다시 로드
+  // 샘플 프로젝트 데이터
+  const sampleProjects = projectList;
 
   return (
     <>
@@ -115,17 +100,27 @@ const PageProject = () => {
           <ProjectWrap>
             <HeaderWrap>
               <div>
-                <H1 color="gray800" align="left">Project</H1>
-                <Body3 color="gray700" align="left">AI를 활용한 효율적인 프로젝트 인사이트를 관리하세요</Body3>
+                <H1 color="gray800" align="left">
+                  Project
+                </H1>
+                <div style={{ height: "10px" }}></div>
+                <Body3 color="gray700" align="left">
+                  AI를 활용한 효율적인 프로젝트 인사이트를 관리하세요
+                </Body3>
               </div>
 
-              <Button ExLarge Primary Fill onClick={() => setIsWarningPopupOpen(true)}>
+              <Button
+                ExLarge
+                Primary
+                Fill
+                onClick={() => setIsWarningPopupOpen(true)}
+              >
                 <Sub1 color="white">새 프로젝트</Sub1>
               </Button>
             </HeaderWrap>
 
             <ProjectListWrap>
-              <TabWrapType4>
+              {/* <TabWrapType4>
                 <TabButtonType4>
                   <Caption1 color="gray700">All</Caption1>
                 </TabButtonType4>
@@ -138,53 +133,14 @@ const PageProject = () => {
                 <TabButtonType4>
                   <Caption1 color="gray700">Business Expert</Caption1>
                 </TabButtonType4>
-              </TabWrapType4>
+              </TabWrapType4> */}
 
               <ProjectList>
-                <ProjectItem onClick={() => navigate("#")}>
-                  <div className="thumbnail">
-                    <img src={images.ProjectThumbnail01} alt="" />
-                  </div>
-                  <div className="content">
-                    <div className="info">
-                      <Body1 color="gray800" align="left">전기차 충전소 안내 서비스</Body1>
-                      <Body3 color="gray700" align="left">프로젝트에 대한 개요적인 부분을 설명하는 문장을 넣는 공간입니다.</Body3>
-                    </div>
-                    <div className="date">
-                      <Body3 color="gray700" align="left">마지막 업데이트 : 2025년 2월 20일</Body3>
-                    </div>
-                  </div>
-                  <div className="noData">
-                    <img src={images.PlusSquareWhite} alt="새 작업" />
-                    <Body2 color="primary">새 프로젝트를 시작하세요</Body2>
-                  </div>
-                </ProjectItem> 
+                {sampleProjects.map((project) => (
+                  <OrganismProjectItem key={project.id} project={project} />
+                ))}
 
-                <ProjectItem onClick={() => navigate("#")}>
-                  <div className="thumbnail">
-                    <img src={images.ProjectThumbnail02} alt="" />
-                  </div>
-                  <div className="content">
-                    <div className="info">
-                      <Body1 color="gray800" align="left">전기차 충전소 안내 서비스</Body1>
-                      <Body3 color="gray700" align="left">프로젝트에 대한 개요적인 부분을 설명하는 문장을 넣는 공간입니다.</Body3>
-                    </div>
-                    <div className="date">
-                      <Body3 color="gray700" align="left">마지막 업데이트 : 2025년 2월 20일</Body3>
-                    </div>
-                  </div>
-                  <div className="noData">
-                    <img src={images.PlusSquareWhite} alt="새 작업" />
-                    <Body2 color="primary">새 프로젝트를 시작하세요</Body2>
-                  </div>
-                </ProjectItem>
-
-                <ProjectItem NoData onClick={() => navigate("/ProjectCreate")}>
-                  <div className="noData">
-                    <img src={images.PlusSquareWhite} alt="새 작업" />
-                    <Body2 color="primary">새 프로젝트를 시작하세요</Body2>
-                  </div>
-                </ProjectItem> 
+                <OrganismProjectItem isNoData={true} />
               </ProjectList>
             </ProjectListWrap>
           </ProjectWrap>
@@ -234,61 +190,6 @@ const ProjectListWrap = styled.div`
 const ProjectList = styled.div`
   display: flex;
   gap: 20px;
-`;
-
-const ProjectItem = styled.div`
-  max-width: 33.33%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  overflow: hidden;
-  border-radius: 20px;
-  background: ${palette.chatGray};
-  cursor: pointer;
-
-  .thumbnail {
-    width: 100%;
-    max-height: 200px;
-    height: 100%;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  .content {
-    width: 100%;
-    padding: 20px 24px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-
-    .info {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .date {
-      padding-top: 16px;
-      border-top: 1px solid ${palette.outlineGray};
-    }
-  }
-
-  .noData {
-    width: 100%;
-    height: 100%;
-    display: ${(props) => (props.NoData ? "flex" : "none")};
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-  }
 `;
 
 export const BgBoxItem = styled.div`
