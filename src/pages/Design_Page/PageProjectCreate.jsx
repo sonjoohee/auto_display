@@ -1,4 +1,4 @@
-//타겟 탐색기리
+//프로젝트 생성
 import React, { useEffect, useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
@@ -355,7 +355,7 @@ const PageProjectCreate = () => {
       <DropzoneStyles />
 
       <ContentsWrap>
-        <OrganismIncNavigation />
+        {/* <OrganismIncNavigation /> */}
 
         <MoleculeHeader />
 
