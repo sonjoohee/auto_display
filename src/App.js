@@ -66,8 +66,8 @@ import PagePolicy from "./pages/PagePolicy";
 import PageServiceLanding from "./pages/PageServiceLanding";
 import PageBlog from "./pages/PageBlog";
 
-import PageProject from "./pages/Design_Page/PageProject";
-import PageProjectCreate from "./pages/Design_Page/PageProjectCreate";
+import PageProject from "./pages/Saas_Project/pages/PageProject";
+import PageProjectCreate from "./pages/Saas_Project/pages/PageProjectCreate";
 
 import PageStyleGuide from "./pages/Design_Page/PageStyleGuide";
 

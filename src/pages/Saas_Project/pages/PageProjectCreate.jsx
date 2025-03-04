@@ -2,14 +2,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
-import { palette } from "../../assets/styles/Palette";
-import AtomPersonaLoader from "../Global/atoms/AtomPersonaLoader";
-import OrganismIncNavigation from "../Global/organisms/OrganismIncNavigation";
-import MoleculeHeader from "../Global/molecules/MoleculeHeader";
+import { palette } from "../../../assets/styles/Palette";
+import AtomPersonaLoader from "../../Global/atoms/AtomPersonaLoader";
+import OrganismIncNavigation from "../../Global/organisms/OrganismIncNavigation";
+import MoleculeHeader from "../../Global/molecules/MoleculeHeader";
 import {
   Button,
   IconButton,
-} from "../../assets/styles/ButtonStyle";
+} from "../../../assets/styles/ButtonStyle";
 import {
   FormBox,
   CustomTextarea,
@@ -18,8 +18,8 @@ import {
   SelectBoxItem,
   SelectBoxTitle,
   SelectBoxList,
-} from "../../assets/styles/InputStyle";
-import PopupWrap from "../../assets/styles/Popup";
+} from "../../../assets/styles/InputStyle";
+import PopupWrap from "../../../assets/styles/Popup";
 import {
   ContentsWrap,
   MainContent,
@@ -33,8 +33,13 @@ import {
   DropzoneStyles,
   ListBoxGroup,
   Title,
-} from "../../assets/styles/BusinessAnalysisStyle";
-import images from "../../assets/styles/Images";
+} from "../../../assets/styles/BusinessAnalysisStyle";
+import { IS_LOGGED_IN, 
+         PROJECT_ID,
+         PROJECT_CREATE_INFO,
+
+ } from "../../AtomStates"
+import images from "../../../assets/styles/Images";
 import {
   H2,
   H4,
@@ -44,12 +49,16 @@ import {
   Body1,
   Body2,
   Body3,
-} from "../../assets/styles/Typography";
+} from "../../../assets/styles/Typography";
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
 
-import { useDynamicViewport } from "../../assets/DynamicViewport";
+import { useDynamicViewport } from "../../../assets/DynamicViewport";
 import { useNavigate } from "react-router-dom";
+import { createProjectOnServerSaas,
+         InterviewXProjectAnalysisMultimodalRequest, 
+         InterviewXProjectAnalysisRequest} 
+         from "../../../utils/indexedDB"
 
 // 초기 텍스트 상수로 정의
 const INITIAL_PROJECT_OVERVIEW = "50세 이상을 위한 국내 최초 전용 소셜 플랫폼으로, 소통 부재 및 사회적 고립 해소를 목표합니다. 핵심 가치는 시니어들이 관심사 기반 커뮤니티에서 자유롭게 소통하고, 새로운 관계를 형성하며, 건강하고 활기찬 노년 생활을 지원하는 데 있습니다. 주요 기능은 온라인 소통, 멤버 교류, 정보 제공이며, 경쟁 우위는 시니어 특화 플랫폼이라는 점입니다. 다만, 디지털 격차, 사용자 확보, 기존 커뮤니티와의 경쟁은 잠재적 위험 요소입니다. 성공적인 안착을 위해 사용자 친화적인 인터페이스와 차별화된 콘텐츠 전략이 필요합니다.";
@@ -75,8 +84,10 @@ const PageProjectCreate = () => {
   const [isEditingTarget, setIsEditingTarget] = useState(false);
   const [editingTargetText, setEditingTargetText] = useState(INITIAL_TARGET_AUDIENCE);
   const targetTextareaRef = useRef(null);
-  
 
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [projectId, setprojectId] = useAtom(PROJECT_ID);
+  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
   // 각 셀렉트박스의 열림/닫힘 상태를 개별적으로 관리
   const [selectBoxStates, setSelectBoxStates] = useState({
     business: false,  // 사업 목적
@@ -104,19 +115,19 @@ const PageProjectCreate = () => {
   });
 
   // 각 필드의 값을 관리하는 state 추가
-  const [formData, setFormData] = useState({
-    projectName: '',
-    projectDescription: '',
-    business: '',
-    industry: '',
-    country: ''
-  });
+  const [projectName, setProjectName] = useState('');
+  const [projectDescription, setProjectDescription] = useState('');
+  const [business, setBusiness] = useState('');
+  const [industry, setIndustry] = useState('');
+  const [country, setCountry] = useState('');
 
   // isLoadingScenario를 state로 변경
   const [isLoadingScenario, setIsLoadingScenario] = useState(false);
 
   // textarea ref 추가
   const textareaRef = useRef(null);
+
+  let files_info = []; // files_info 변수를 초기화
 
   // textarea 높이 자동 조절 함수
   const adjustTextareaHeight = () => {
@@ -136,16 +147,25 @@ const PageProjectCreate = () => {
     }
   }, [editingText, isEditing]);
 
-  // handleInputChange 함수 추가
+  // handleInputChange 함수 수정
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    // formData 대신 개별 상태 업데이트
+    if (field === 'projectName') {
+      setProjectName(value);
+    } else if (field === 'projectDescription') {
+      setProjectDescription(value);
+    } else if (field === 'business') {
+      setBusiness(value);
+    } else if (field === 'industry') {
+      setIndustry(value);
+    } else if (field === 'country') {
+      setCountry(value);
+    }
   };
 
   // 셀렉트박스 토글 함수 수정
   const toggleSelectBox = (boxName, event) => {
+    if (completedSteps.length >= 2) return;
     const selectBox = event.currentTarget;
     const rect = selectBox.getBoundingClientRect();
     const spaceBelow = window.innerHeight - rect.bottom;
@@ -186,29 +206,53 @@ const PageProjectCreate = () => {
     setDropUp(!dropUp);
   };
 
-  // handleSubmitBusinessInfo 함수도 수정
-  const handleSubmitBusinessInfo = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+  // handleSubmitBusinessInfo 함수 수정
+  const handleSubmitBusinessInfo = async () => {
       if (activeTab === 1) {
         setCompletedSteps(prev => [...prev, 1]);
         setActiveTab(2);
-      }
-      else if (activeTab === 2) {
+      } else if (activeTab === 2) {
         setCompletedSteps(prev => [...prev, 2]);
         setActiveTab(3);
-        // 탭 3으로 이동할 때 로딩 시작
         setIsLoadingScenario(true);
-        setTimeout(() => {
+
+        // API 전송 및 이미지 업로드 처리
+        try {
+          const data = {
+            project_name: projectName,
+            product_description: projectDescription,
+            business_model: business,
+            industry_type: industry,
+            target_country: country,
+            tool_id: Date.now(),
+            files: uploadedFiles[0],
+          };
+
+          console.log(data);
+
+          const response = await InterviewXProjectAnalysisMultimodalRequest(data, isLoggedIn);
+
+           // 응답 유효성 검사 추가
+           if (!response || !response.response || !response.response.project_analysis_multimodal) {
+            console.error("유효하지 않은 응답입니다.");
+            return; 
+          }
+
+          console.log(response);
+         setProjectCreateInfo(response.response.project_analysis_multimodal);
+      
+
+        } catch (error) {
+          console.error("데이터 업로드 중 오류 발생:", error);
+        } finally {
           setIsLoadingScenario(false);
-        }, 3000);
+        }
       }
-    }, 3000);
   };
 
   // 파일 업로드 상태를 체크하는 함수 추가
   const isFileUploaded = () => {
+    files_info = uploadedFiles.map(file => ({ name: file.name, size: file.size })); // files_info에 파일 정보 저장
     return uploadedFiles.length > 0;
   };
 
@@ -230,11 +274,11 @@ const PageProjectCreate = () => {
     if (activeTab === 1) {
       // 탭 1의 모든 필수 필드가 채워져 있는지 확인
       return (
-        formData.projectName.trim() !== '' &&
-        formData.projectDescription.trim() !== '' &&
-        formData.business !== '' &&
-        formData.industry !== '' &&
-        formData.country !== ''
+        projectName.trim() !== '' &&
+        projectDescription.trim() !== '' &&
+        business !== '' &&
+      industry !== '' &&
+        country !== ''
       );
     }
     // 탭 2의 경우 파일 업로드 여부 확인
@@ -318,15 +362,44 @@ const PageProjectCreate = () => {
   };
 
   // handleSkip 함수 수정
-  const handleSkip = () => {
+  const handleSkip = async () => {
     if (activeTab === 2) {
       setCompletedSteps(prev => [...prev, 2]);
       setActiveTab(3);
-      // 탭 3으로 이동할 때 로딩 시작
       setIsLoadingScenario(true);
-      setTimeout(() => {
+
+      // API 전송 및 이미지 업로드 처리
+      try {
+        const datas = {
+          project_name: projectName,
+          product_description: projectDescription,
+          business_model: business,
+          industry_type: industry,
+          target_country: country,
+        };
+
+        console.log(datas);
+
+        const response = await InterviewXProjectAnalysisRequest(datas, isLoggedIn);
+
+        if (!response || !response.response || !response.response.project_analysis || 
+            !response.response.project_analysis.business_analysis || 
+            !response.response.project_analysis.target_customer) {
+          console.error("유효하지 않은 응답입니다.");
+          return; 
+        }
+
+        console.log(response);
+  
+        setProjectCreateInfo(response.response.project_analysis);
+
+       
+
+      } catch (error) {
+        console.error("데이터 업로드 중 오류 발생:", error);
+      } finally {
         setIsLoadingScenario(false);
-      }, 3000);
+      }
     }
   };
 
@@ -349,6 +422,13 @@ const PageProjectCreate = () => {
       }, 0);
     }
   }, [editingTargetText, isEditingTarget]);
+
+  const handleCreateProject = async () => {
+    const newProjectId = await createProjectOnServerSaas(isLoggedIn);
+    setprojectId(newProjectId);
+    navigate(`/Project`, { replace: true });
+  };
+
 
   return (
     <>
@@ -429,8 +509,9 @@ const PageProjectCreate = () => {
                         <CustomInput
                           type="text"
                           placeholder="프로젝트 이름"
-                          value={formData.projectName}
+                          value={projectName}
                           onChange={(e) => handleInputChange('projectName', e.target.value)}
+                          disabled={completedSteps.length >= 2}
                         />
                       </TabContent5Item>
 
@@ -445,11 +526,12 @@ const PageProjectCreate = () => {
                             placeholder="제품 / 서비스의 주요 설명을 입력하세요"
                             maxLength={150}
                             status="valid"
-                            value={formData.projectDescription}
+                            value={projectDescription}
                             onChange={(e) => {
                               handleInputChange('projectDescription', e.target.value);
                               setDescriptionLength(e.target.value.length);
                             }}
+                            disabled={completedSteps.length >= 2}
                           />
                           <Body2 color="gray300" align="right">
                             {descriptionLength} / 150
@@ -618,7 +700,7 @@ const PageProjectCreate = () => {
                       Fill
                       style={{ minWidth: "190px" }}
                       onClick={handleSubmitBusinessInfo}
-                      disabled={!isRequiredFieldsFilled()}
+                      disabled={!isRequiredFieldsFilled() || completedSteps.length >= 2}
                     >
                       다음
                     </Button>
@@ -723,7 +805,8 @@ const PageProjectCreate = () => {
                     <ButtonWrap>
                       <Body1 
                         color="gray500" 
-                        onClick={handleSkip}
+                        onClick={completedSteps.length < 2 ? handleSkip : null}
+                        // disabled={completedSteps.length >= 2}
                       >
                         건너뛰기
                       </Body1>
@@ -734,7 +817,7 @@ const PageProjectCreate = () => {
                         Fill
                         style={{ minWidth: "190px" }}
                         onClick={handleSubmitBusinessInfo}
-                        disabled={!isRequiredFieldsFilled()}
+                        disabled={!isRequiredFieldsFilled() || completedSteps.length >= 2}
                       >
                         다음
                       </Button>
@@ -797,7 +880,7 @@ const PageProjectCreate = () => {
                         </Title>
                         {!isEditing && (
                           <ListBoxGroup>
-                            <Body2 color="gray800" align="left">{editingText}</Body2>
+                            <Body2 color="gray800" align="left">{projectCreateInfo.business_analysis}</Body2>
                           </ListBoxGroup>
                         )}
 
@@ -837,7 +920,7 @@ const PageProjectCreate = () => {
                         </Title>
                         {!isEditingTarget && (
                           <ListBoxGroup>
-                            <Body2 color="gray800" align="left">{editingTargetText}</Body2>
+                            <Body2 color="gray800" align="left">{projectCreateInfo.target_customer}</Body2>
                           </ListBoxGroup>
                         )}
 
@@ -872,6 +955,7 @@ const PageProjectCreate = () => {
                       Primary
                       Fill
                       style={{ minWidth: "190px" }}
+                      onClick={handleCreateProject}
                     >
                       프로젝트 생성하기
                     </Button>
