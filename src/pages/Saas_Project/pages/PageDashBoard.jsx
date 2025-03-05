@@ -307,7 +307,12 @@ const PageDashBoard = () => {
                   <Body2 color="gray500">
                     당신의 프로젝트에 딱 맞는 AI Persona를 지금 확인해보세요
                   </Body2>
-                  <Button Medium Outline Fill>
+                  <Button
+                    Medium
+                    Outline
+                    Fill
+                    onClick={() => navigate("/AiPersona")}
+                  >
                     <Caption1 color="gray700">AI Persona 확인하기</Caption1>
                   </Button>
                 </div>
