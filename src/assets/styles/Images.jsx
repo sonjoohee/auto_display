@@ -194,6 +194,8 @@ import StatusBadgeCustom from "../images/status-badge-custom.svg"
 import StatusBadgePersona from "../images/status-badge-persona.svg"
 import GenderMen from "../images/gender-men.svg"
 import GenderWomen from "../images/gender-women.svg"
+import GenderMenPrimary from "../images/gender-men-primary.svg"
+import GenderWomenPrimary from "../images/gender-women-primary.svg"
 import FileSearch from "../images/file-search.svg"
 import PlusSquareWhite from "../images/plus-square-white.svg"
 import Plus from "../images/plus.svg"
@@ -509,6 +511,8 @@ const images = {
   StatusBadgePersona,
   GenderMen,
   GenderWomen,
+  GenderMenPrimary,
+  GenderWomenPrimary,
   FileSearch,
   PlusSquareWhite,
   Plus,

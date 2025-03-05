@@ -70,6 +70,10 @@ export const SelectBox = styled.div`
 `;
 
 export const SelectBoxItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
   cursor: pointer;
   transition: all 0.5s;
 

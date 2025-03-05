@@ -63,6 +63,7 @@ const PageAiPersona = () => {
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
   const [isCustomizePopupOpen, setIsCustomizePopupOpen] = useState(false);
+  const [isRequestPopupOpen, setIsRequestPopupOpen] = useState(false);
 
   const [isStarred, setIsStarred] = useState(false);
   const [activeTab2, setActiveTab2] = useState("lifestyle");
@@ -101,9 +102,16 @@ const PageAiPersona = () => {
   const handleCustomizePopupConfirm = () => {
     if (activeTabIndex === 0) {
       setActiveTabIndex(1);
+    } else if (activeTabIndex === 1) {
+      setActiveTabIndex(2);
     } else {
       setIsCustomizePopupOpen(false);
+      setIsRequestPopupOpen(true);
     }
+  };
+
+  const handleRequestPopupClose = () => {
+    setIsRequestPopupOpen(false);
   };
 
   const handleTabChange = (index) => {
@@ -150,6 +158,33 @@ const PageAiPersona = () => {
     keyStakeholder: ''
   });
 
+  const [customPersonaForm, setCustomPersonaForm] = useState({
+    description: "", // 페르소나 특징과 역할
+    purpose: "", // 사용 목적
+    quantity: 1, // 모집 인원
+
+    gender: "", // 성별 ('' | 'male' | 'female')
+    ageGroups: [], // 연령대 선택 ['10s', '20s', ...]
+    additionalInfo: "", // 추가 필요 정보
+  });
+
+  const handleFormChange = (field, value) => {
+    setCustomPersonaForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const isFormValid = () => {
+    if (activeTabIndex === 0) {
+      return customPersonaForm.gender !== "" && 
+             customPersonaForm.ageGroups.length > 0 &&
+             customPersonaForm.purpose.trim() !== "" &&
+             customPersonaForm.additionalInfo.trim() !== "";
+    }
+    return true; // 다른 탭에서는 항상 true 반환
+  };
+  
   const toggleSelectBox = (type) => {
     setSelectBoxStates(prev => ({
       ...prev,
@@ -167,6 +202,31 @@ const PageAiPersona = () => {
       [type]: false
     }));
   };
+
+  const handleCustomizePopupOpen = () => {
+    setActiveTabIndex(0);
+    setCustomPersonaForm({
+      description: "",
+      purpose: "",
+      quantity: 1,
+      gender: "",
+      ageGroups: [],
+      additionalInfo: ""
+    });
+    setIsCustomizePopupOpen(true);
+  };
+
+  useEffect(() => {
+    if (isCustomizePopupOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isCustomizePopupOpen]);
 
   return (
     <>
@@ -189,10 +249,7 @@ const PageAiPersona = () => {
                 exLarge 
                 PrimaryLightest 
                 Fill
-                onClick={() => {
-                  setActiveTabIndex(0);
-                  setIsCustomizePopupOpen(true);
-                }}
+                onClick={handleCustomizePopupOpen}
               >
                 <img src={images.PlusPrimary} width="14" height="14" />
                 <Sub1 color="primary">나만의 AI Persona 요청</Sub1>
@@ -763,23 +820,53 @@ const PageAiPersona = () => {
         />
       )}
 
+      {isRequestPopupOpen && (
+        <PopupWrap
+          Check
+          title={
+            <>
+              나만의 AI Person 요청이 완료되었습니다.<br />
+              완료된 AI Person은 “My Persona”에서 확인하세요
+            </>
+          }
+          buttonType="Outline"
+          confirmText="확인"
+          isModal={false}
+          onConfirm={handleRequestPopupClose}
+        />
+      )}
 
       {isCustomizePopupOpen && (
         <PopupWrap
           TitleFlex
           title="📝 나만의 AI Person 요청하기"
           buttonType="Fill"
-          confirmText={activeTabIndex === 0 ? "다음" : "맞춤 페르소나 모집하기"}
+          confirmText={activeTabIndex === 2 ? "맞춤 페르소나 모집하기" : "다음"}
+          prevText={activeTabIndex === 2 ? "이전" : ""}
+          onPrev={() => setActiveTabIndex(1)}
+          showPrevButton={activeTabIndex === 2}
           isModal={true}
+          isFormValid={isFormValid()}
           onCancel={handleCustomizePopupClose}
           onConfirm={handleCustomizePopupConfirm}
-          // showTabs={true}
-          tabs={["필수정보", "OCEAN 정보"]}
-          onTabChange={handleTabChange}
+          showTabs={true}
+          tabs={["필수정보", "OCEAN 정보", "요청사항확인"]}
+          onTabChange={(index) => {
+            if (index === 1) {
+              const isGenderSelected = customPersonaForm.gender !== "";
+              const isAgeGroupSelected = customPersonaForm.ageGroups.length > 0;
+              if (!isGenderSelected || !isAgeGroupSelected) {
+                return;
+              }
+            }
+            setActiveTabIndex(index);
+          }}
           activeTab={activeTabIndex}
+          eventState={false}
+          creditRequestCustomPersona={100}
           body={
             <div>
-              {activeTabIndex === 1 && (
+              {activeTabIndex === 0 && (
                 <>
                   <div className="flex">
                     <div>
@@ -789,9 +876,20 @@ const PageAiPersona = () => {
 
                       <SelectBox>
                         <SelectBoxTitle onClick={() => toggleSelectBox('gender')}>
-                          <Body2 color={selectedValues.gender ? "gray800" : "gray300"}>
-                            {selectedValues.gender || "선택해주세요"}
-                          </Body2>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            {customPersonaForm.gender && (
+                              <img 
+                                src={customPersonaForm.gender === 'male' ? images.GenderMenPrimary : images.GenderWomenPrimary} 
+                                alt="성별" 
+                                style={{ width: '25px', height: '25px' }} 
+                              />
+                            )}
+                            <Body2 color={customPersonaForm.gender ? "primary" : "gray300"}>
+                              {customPersonaForm.gender === 'male' ? '남성' : 
+                               customPersonaForm.gender === 'female' ? '여성' : 
+                               "선택해주세요"}
+                            </Body2>
+                          </div>
                           <images.ChevronDown
                             width="24px"
                             height="24px"
@@ -805,12 +903,16 @@ const PageAiPersona = () => {
 
                         {selectBoxStates.gender && (
                           <SelectBoxList>
-                            <SelectBoxItem onClick={() => handlePurposeSelect("남성", "gender")}>
-                              <img src={images.GenderMen} alt="남성" />
+                            <SelectBoxItem onClick={() => {
+                              handleFormChange('gender', 'male');
+                              handlePurposeSelect("남성", "gender");
+                            }}>
                               <Body2 color="gray700" align="left">남성</Body2>
                             </SelectBoxItem>
-                            <SelectBoxItem onClick={() => handlePurposeSelect("여성", "gender")}>
-                              <img src={images.GenderWomen} alt="여성" />
+                            <SelectBoxItem onClick={() => {
+                              handleFormChange('gender', 'female');
+                              handlePurposeSelect("여성", "gender");
+                            }}>
                               <Body2 color="gray700" align="left">여성</Body2>
                             </SelectBoxItem>
                           </SelectBoxList>
@@ -825,8 +927,10 @@ const PageAiPersona = () => {
 
                       <SelectBox>
                         <SelectBoxTitle onClick={() => toggleSelectBox('age')}>
-                          <Body2 color={selectedValues.age ? "gray800" : "gray300"}>
-                            {selectedValues.age || "선택해주세요"}
+                          <Body2 color={customPersonaForm.ageGroups.length > 0 ? "primary" : "gray300"}>
+                            {customPersonaForm.ageGroups.length > 0 ? 
+                              customPersonaForm.ageGroups.join(', ') : 
+                              "선택해주세요"}
                           </Body2>
                           <images.ChevronDown
                             width="24px"
@@ -841,11 +945,31 @@ const PageAiPersona = () => {
 
                         {selectBoxStates.age && (
                           <SelectBoxList>
-                            <SelectBoxItem onClick={() => handlePurposeSelect("20대", "age")}>
-                              <Body2 color="gray700" align="left">20대</Body2>
+                            <SelectBoxItem onClick={() => {
+                              const newAgeGroups = [...customPersonaForm.ageGroups];
+                              const index = newAgeGroups.indexOf('10대');
+                              if (index === -1) {
+                                newAgeGroups.push('10대');
+                              } else {
+                                newAgeGroups.splice(index, 1);
+                              }
+                              handleFormChange('ageGroups', newAgeGroups);
+                              handlePurposeSelect(newAgeGroups.join(', '), "age");
+                            }}>
+                              <Body2 color="gray700" align="left">10대</Body2>
                             </SelectBoxItem>
-                            <SelectBoxItem onClick={() => handlePurposeSelect("30대", "age")}>
-                              <Body2 color="gray700" align="left">30대</Body2>
+                            <SelectBoxItem onClick={() => {
+                              const newAgeGroups = [...customPersonaForm.ageGroups];
+                              const index = newAgeGroups.indexOf('20대');
+                              if (index === -1) {
+                                newAgeGroups.push('20대');
+                              } else {
+                                newAgeGroups.splice(index, 1);
+                              }
+                              handleFormChange('ageGroups', newAgeGroups);
+                              handlePurposeSelect(newAgeGroups.join(', '), "age");
+                            }}>
+                              <Body2 color="gray700" align="left">20대</Body2>
                             </SelectBoxItem>
                           </SelectBoxList>
                         )}
@@ -862,6 +986,8 @@ const PageAiPersona = () => {
                         width="100%"
                         rows={5}
                         placeholder="이유와 목적을 알려주시면 상황에 걸맞은 최적의 페르소나를 생성해 드려요!"
+                        value={customPersonaForm.purpose}
+                        onChange={(e) => handleFormChange('purpose', e.target.value)}
                       />
                     </PopupContent>
                   </div>
@@ -875,13 +1001,15 @@ const PageAiPersona = () => {
                         width="100%"
                         rows={5}
                         placeholder="필수로 고려해야할 정보가 있다면 작성해주세요."
+                        value={customPersonaForm.additionalInfo}
+                        onChange={(e) => handleFormChange('additionalInfo', e.target.value)}
                       />
                     </PopupContent>
                   </div>
                 </>
               )}
 
-              {activeTabIndex === 2 && (
+              {activeTabIndex === 1 && (
                 <>
                   <BgBoxItem NoOutline style={{ marginBottom: "10px" }}>
                     <Sub3 color="gray500" align="left">
@@ -993,7 +1121,7 @@ const PageAiPersona = () => {
                 </>
               )}
 
-              {activeTabIndex === 0 && (
+              {activeTabIndex === 2 && (
                 <>
                   <BgBoxItem NoOutline style={{ marginBottom: "10px", alignItems: "flex-start" }}>
                     <Sub3 color="gray500" align="left">
@@ -1008,7 +1136,14 @@ const PageAiPersona = () => {
                   <div className="flex">
                     <div>
                       <Body3 color="gray500" align="left">성별</Body3>
-                      <Body2 color="gray800" align="left">남자</Body2>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <img src={customPersonaForm.gender === 'male' ? images.GenderMen : customPersonaForm.gender === 'female' ? images.GenderWomen : images.GenderMen} alt="성별" style={{ width: '24px', height: '24px' }} />
+                        <Body2 color="gray800" align="left">
+                          {customPersonaForm.gender === 'male' ? '남성' : 
+                           customPersonaForm.gender === 'female' ? '여성' : 
+                           '선택 안함'}
+                        </Body2>
+                      </div>
                     </div>
 
                     <div>
