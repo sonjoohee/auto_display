@@ -17,20 +17,17 @@ import {
   H1,
 } from "../../../assets/styles/Typography";
 
-import OrganismLoginForm from "../../Login_Sign/components/molecules/MoleculeLoginForm";
+import MoleculeLoginForm from "../../Login_Sign/components/molecules/MoleculeLoginForm";
 
 const OrganismIncLogin = () => {
 
   return (
     <>
       <ContentsWrap>
-
-        <MoleculeHeader />
-
         <MainContent Wide>
           <LoginWrap>
             <H1>Log in</H1>
-            <OrganismLoginForm />
+            <MoleculeLoginForm />
           </LoginWrap>
         </MainContent>
       </ContentsWrap>
