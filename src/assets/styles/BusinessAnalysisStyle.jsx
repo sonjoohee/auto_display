@@ -2547,7 +2547,7 @@ export const BoxWrap = styled.div`
   display: flex;
   align-items: flex-start !important;
   gap: 20px !important;
-  padding: 20px 24px;
+  padding: ${(props) => (props.Small ? "16px 20px" : "20px 24px")};
   border-radius: 15px;
   border: 1px solid ${palette.outlineGray};
 
