@@ -826,7 +826,7 @@ const PageAiPersona = () => {
           title={
             <>
               나만의 AI Person 요청이 완료되었습니다.<br />
-              완료된 AI Person은 “My Persona”에서 확인하세요
+              완료된 AI Person은 "My Persona"에서 확인하세요
             </>
           }
           buttonType="Outline"

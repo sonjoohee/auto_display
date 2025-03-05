@@ -92,9 +92,9 @@ export const SelectBoxTitle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
+  padding: ${(props) => (props.None ? "0" : "16px 20px")};
   border-radius: 5px;
-  border: 1px solid ${palette.outlineGray};
+  border: ${(props) => (props.None ? "0" : `1px solid ${palette.outlineGray}`)};
   cursor: pointer;
   z-index: 1;
   background-color: ${palette.white};
@@ -235,6 +235,12 @@ export const CustomInput = styled.input`
   }
 
   &::placeholder {
+    font-size: ${(props) => 
+      props.Small 
+      ? "0.875rem" 
+      : props.Medium 
+      ? "1rem" 
+      : "1rem"};
     color: ${palette.gray300};
   }
 `;
@@ -245,9 +251,9 @@ export const CustomTextarea = styled.textarea`
   font-size: 1rem;
   line-height: 1.5;
   color: ${props => props.status === "error" ? palette.error : palette.gray800};
-  padding: 8px 16px;
+  padding: ${(props) => props.None ? "0" : "8px 16px"};
   border-radius: 10px;
-  border: 1px solid ${getStatusColor};
+  border: ${(props) => props.None ? "0" : `1px solid ${getStatusColor(props)}`};
   outline: none;
   resize: none;
   overflow: auto;

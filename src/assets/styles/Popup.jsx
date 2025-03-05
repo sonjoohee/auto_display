@@ -44,6 +44,8 @@ const PopupWrap = ({
   prevText,
   onPrev,
   showPrevButton,
+  prevTextSmall,
+  bottomText,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -80,7 +82,8 @@ const PopupWrap = ({
     confirmText,
     prevText,
     onPrev,
-    showPrevButton
+    showPrevButton,
+    prevTextSmall
   ) => {
     if (buttonType === "Outline") {
       return (
@@ -121,9 +124,7 @@ const PopupWrap = ({
               className="Fill" 
               Close 
               onClick={onPrev}
-              style={{
-                minWidth: '140px'
-              }}
+              prevTextSmall={prevTextSmall}
             >
               {prevText}
             </Button>
@@ -215,6 +216,12 @@ const PopupWrap = ({
 
           <Body>{body}</Body>
 
+          {bottomText && (
+            <BottomText>
+              <Sub3 color="gray500">{bottomText}</Sub3>
+            </BottomText>
+          )}
+
           {renderButtons(
             buttonType,
             handleClose,
@@ -224,7 +231,8 @@ const PopupWrap = ({
             confirmText,
             prevText,
             onPrev,
-            showPrevButton
+            showPrevButton,
+            prevTextSmall
           )}
         </ModalPopup>
       ) : (
@@ -266,7 +274,8 @@ const PopupWrap = ({
             confirmText,
             prevText,
             onPrev,
-            showPrevButton
+            showPrevButton,
+            prevTextSmall
           )}
         </AlertPopup>
       )}
@@ -711,7 +720,13 @@ export const Button = styled.div`
     }
 
     flex: ${props => props.Close ? '0 0 auto' : '1 1 auto'};
-    min-width: ${props => props.Close ? '80px' : 'auto'};
+    min-width: ${props => 
+      props.prevTextSmall && props.Close ? '80px' : // prevTextSmall이 있고 Close 버튼일 때
+      props.Close ? '80px' : 'auto'}; // 일반 Close 버튼일 때
+    padding: ${props =>
+      props.prevTextSmall && props.Close ? '12px 16px' : '12px 20px'}; // prevTextSmall이 있을 때 패딩도 줄임
+    font-size: ${props =>
+      props.prevTextSmall && props.Close ? '0.875rem' : '0.875rem'}; // prevTextSmall이 있을 때 폰트 사이즈도 줄임
   }
 
   &.disabled {
@@ -720,4 +735,8 @@ export const Button = styled.div`
     background: ${palette.gray300};
     cursor: not-allowed;
   }
+`;
+
+export const BottomText = styled.div`
+  margin-bottom: -25px;
 `;
