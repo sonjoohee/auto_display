@@ -339,8 +339,15 @@ const PageMyProject = () => {
 
             return new Date(year, month - 1, day, adjustedHour, minute, second);
           };
+          const filteredSaasProjects = savedProjectListInfo.filter(
+            (project) => {
+              return project && project.projectType === undefined;
+            }
+          );
 
-          const sortedList = [...savedProjectListInfo]
+          console.log("필터링된 프로젝트:", filteredSaasProjects);
+
+          const sortedList = [...(filteredSaasProjects || [])]
             .map((project) => ({
               ...project,
               reportList:
@@ -355,6 +362,8 @@ const PageMyProject = () => {
               const dateB = parseKoreanDate(b.updateDate);
               return dateB - dateA; // 최신 날짜가 위로
             });
+
+          console.log("정렬된 프로젝트 리스트:", sortedList);
           setProjectList(sortedList);
         }
 

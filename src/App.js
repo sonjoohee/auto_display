@@ -66,8 +66,8 @@ import PagePolicy from "./pages/PagePolicy";
 import PageServiceLanding from "./pages/PageServiceLanding";
 import PageBlog from "./pages/PageBlog";
 
-import PageProject from "./pages/Design_Page/PageProject";
-import PageProjectCreate from "./pages/Design_Page/PageProjectCreate";
+import PageProject from "./pages/Saas_Project/pages/PageProject";
+import PageProjectCreate from "./pages/Saas_Project/pages/PageProjectCreate";
 import PageDashBoard from "./pages/Design_Page/PageDashBoard";
 import PageAiPersona from "./pages/Design_Page/PageAiPersona";
 
@@ -86,7 +86,6 @@ import PagePersona3Select from "./pages/Persona/components/pages/PagePersona3Sel
 // 로그인, 회원가입
 import OrganismLogin from "./pages/Global/organisms/OrganismLogin";
 import OrganismSignin from "./pages/Global/organisms/OrganismSignin";
-
 
 // 테스트 라우트 추가
 import PageMarketingNoItemsShare from "./pages/Marketing/components/pages/PageMarketingNoItemsShare";
@@ -477,19 +476,9 @@ function App() {
             }
           />
 
-          <Route
-            path="/Login"
-            element={
-              <OrganismLogin />
-            }
-          />
+          <Route path="/Login" element={<OrganismLogin />} />
 
-          <Route
-            path="/Signin"
-            element={
-              <OrganismSignin />
-            }
-          />
+          <Route path="/Signin" element={<OrganismSignin />} />
 
           <Route
             path="/Project"

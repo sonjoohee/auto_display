@@ -256,14 +256,30 @@ const PageMyProfile = () => {
 
               <ButtonGroup>
                 {sessionStorage.getItem("userEmail") ===
-                  "pg_card@userconnect.kr" ||
-                sessionStorage.getItem("userEmail") ===
                   "sungeun_lee@userconnect.kr" ||
+                sessionStorage.getItem("userEmail") ===
+                  "jsjun0319@hanyang.ac.kr" ||
+                sessionStorage.getItem("userEmail") ===
+                  "okhyund@userconnect.kr" ||
+                sessionStorage.getItem("userEmail") === "choi9110@nate.com" ||
+                sessionStorage.getItem("userEmail") === "lhm1186@naver.com" ||
+                sessionStorage.getItem("userEmail") ===
+                  "star7613son@gmail.com" ||
+                sessionStorage.getItem("userEmail") ===
+                  "sunbin12325@gmail.com" ||
                 sessionStorage.getItem("userEmail") ===
                   "yspark@userconnect.kr" ||
                 sessionStorage.getItem("userEmail") === "yspark.uc@gmail.com" ||
                 sessionStorage.getItem("userEmail") === "pixelweb@naver.com" ? (
                   <>
+                    <Button Primary onClick={() => navigate("/Project")}>
+                      <images.CoinSmall
+                        width="12px"
+                        height="8px"
+                        color={palette.primary}
+                      />
+                      <Sub3 color="primary">SaaS 프로젝트</Sub3>
+                    </Button>
                     <Button
                       Primary
                       onClick={() => navigate("/AIDesignEvaluationSystem")}
@@ -293,6 +309,8 @@ const PageMyProfile = () => {
                     "yspark@userconnect.kr" ||
                   sessionStorage.getItem("userEmail") ===
                     "yspark.uc@gmail.com" ||
+                  sessionStorage.getItem("userEmail") === "choi9110@nate.com" ||
+                  sessionStorage.getItem("userEmail") === "lhm1186@naver.com" ||
                   sessionStorage.getItem("userEmail") ===
                     "pixelweb@naver.com") && (
                   <Button Primary onClick={() => navigate("/Payment")}>
