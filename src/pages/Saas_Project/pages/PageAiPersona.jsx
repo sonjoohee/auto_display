@@ -16,6 +16,8 @@ import {
   SelectBoxTitle,
   SelectBoxList,
   SelectBoxItem,
+  FormBox,
+  CustomInput
 } from "../../../assets/styles/InputStyle";
 import {
   ContentsWrap,
@@ -36,6 +38,7 @@ import {
   BgBoxItem,
   OCEANRangeWrap,
   RangeSlider,
+  BoxWrap,
 } from "../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../assets/styles/Images";
 import {
@@ -83,12 +86,15 @@ const PageAiPersona = () => {
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
   const [isCustomizePopupOpen, setIsCustomizePopupOpen] = useState(false);
+  const [isPersonaConfirmPopupOpen, setIsPersonaConfirmPopupOpen] = useState(false);
 
   const [isStarred, setIsStarred] = useState(false);
   const [activeTab2, setActiveTab2] = useState("lifestyle");
   const [showPopup, setShowPopup] = useState(false);
+  const [isPersonaEditPopupOpen, setIsPersonaEditPopupOpen] = useState(false);
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const [activeTabIndex1, setActiveTabIndex1] = useState(0);
 
   const [genderRef, setGenderRef] = useState(null);
   const [ageGroupRef, setAgeGroupRef] = useState(null);
@@ -97,6 +103,30 @@ const PageAiPersona = () => {
   const [keyStakeholderRef, setKeyStakeholderRef] = useState(null);
   const [purpose, setPurpose] = useState(null);
 
+  // customPersonaForm 상태 추가
+  const [customPersonaForm, setCustomPersonaForm] = useState({
+    gender: "",
+    ageGroups: [],
+    purpose: "",
+    additionalInfo: "",
+  });
+
+  // 기본정보 탭의 입력 필드들을 위한 상태 추가
+  const [basicInfo, setBasicInfo] = useState({
+    gender: '',
+    age: '',
+    mainFeature: '',
+    relatedInfo: ''
+  });
+
+  // 새로운 상태 추가
+  const [tabInputs, setTabInputs] = useState({
+    lifestyle: '',
+    interests: '',
+    consumption: '',
+    productExperience: ''
+  });
+
   const handleEditClose = () => {
     setIsEditPopupOpen(false);
   };
@@ -104,9 +134,10 @@ const PageAiPersona = () => {
     setIsEditPopupOpen(false);
     setShowPopup(false);
     setActiveTabIndex(0);
-
+    
     setTimeout(() => {
-      setIsCustomizePopupOpen(true);
+      setIsPersonaEditPopupOpen(true);
+      setActiveTabIndex1(0);
     }, 100);
   };
 
@@ -116,18 +147,37 @@ const PageAiPersona = () => {
 
   const handleCustomizePopupClose = () => {
     setIsCustomizePopupOpen(false);
+    setActiveTabIndex(0);
   };
 
   const handleCustomizePopupConfirm = () => {
     if (activeTabIndex === 0) {
-      setActiveTabIndex(1);
+      if (isCustomizeFormValid()) {
+        setActiveTabIndex(1);
+      }
+    } else if (activeTabIndex === 1) {  // OCEAN 정보 탭
+      setActiveTabIndex(2);  // 요청사항확인 탭으로 이동
     } else {
       setIsCustomizePopupOpen(false);
     }
   };
 
+  const handlePersonaEditClose = () => {
+    setIsPersonaEditPopupOpen(false);
+    setActiveTabIndex1(0);
+  };
+
+  const handlePersonaEditContinue = () => {
+    if (activeTabIndex1 < 4) { // 마지막 탭이 아닐 경우
+      setActiveTabIndex1(activeTabIndex1 + 1); // 다음 탭으로 이동
+    } else { // 마지막 탭일 경우
+      setIsPersonaEditPopupOpen(false); // 편집 팝업 닫기
+      setIsPersonaConfirmPopupOpen(true); // 확인 팝업 열기
+    }
+  };
+
   const handleTabChange = (index) => {
-    setActiveTabIndex(index);
+    setActiveTabIndex1(index);
   };
 
   const [oceanValues, setOceanValues] = useState({
@@ -162,6 +212,12 @@ const PageAiPersona = () => {
     keyStakeholder: false,
   });
 
+  const [selectBoxStates1, setSelectBoxStates1] = useState({
+    experience: false,
+    interests: false,
+    consumption: false,
+  });
+
   const [selectedValues, setSelectedValues] = useState({
     gender: "",
     ageGroup: "",
@@ -169,6 +225,22 @@ const PageAiPersona = () => {
     uniqueUser: "",
     keyStakeholder: "",
   });
+
+  // 입력 필드 onChange 핸들러
+  const handleBasicInfoChange = (field, value) => {
+    setBasicInfo(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // 입력 핸들러 추가
+  const handleTabInputChange = (field, value) => {
+    setTabInputs(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
 
   useEffect(() => {
     const loadPersonaList = async () => {
@@ -204,14 +276,74 @@ const PageAiPersona = () => {
   const handlePurposeSelect = (value, type) => {
     setSelectedValues((prev) => ({
       ...prev,
-      [type]: value,
+      [type]: value
     }));
     setSelectBoxStates((prev) => ({
       ...prev,
-      [type]: false,
+      [type]: false
+    }));
+
+    // customPersonaForm도 함께 업데이트
+    if (type === 'gender') {
+      handleFormChange('gender', value === '남성' ? 'male' : 'female');
+    } else if (type === 'age') {
+      handleFormChange('ageGroups', value.split(', '));
+    }
+  };
+
+  // handleFormChange 함수 수정
+  const handleFormChange = (field, value) => {
+    setCustomPersonaForm(prev => ({
+      ...prev,
+      [field]: value
     }));
   };
 
+  // isCustomizeFormValid 함수 추가 (AI 페르소나 요청 팝업용)
+  const isCustomizeFormValid = () => {
+    if (activeTabIndex === 0) {
+      return (
+        customPersonaForm.gender !== "" && 
+        customPersonaForm.ageGroups.length > 0 &&
+        customPersonaForm.purpose.trim() !== "" &&
+        customPersonaForm.additionalInfo.trim() !== ""
+      );
+    } else if (activeTabIndex === 1) {
+      return true; // OCEAN 정보는 선택사항
+    }
+    return true;
+  };
+
+  // isPersonaEditFormValid 함수 추가 (페르소나 편집 팝업용)
+  const isPersonaEditFormValid = () => {
+    if (activeTabIndex1 === 0) {
+      return (
+        basicInfo.gender.trim() !== '' &&
+        basicInfo.age.trim() !== '' &&
+        basicInfo.mainFeature.trim() !== '' &&
+        basicInfo.relatedInfo.trim() !== ''
+      );
+    } else if (activeTabIndex1 === 1) {
+      return tabInputs.lifestyle.trim() !== '';
+    } else if (activeTabIndex1 === 2) {
+      return tabInputs.interests.trim() !== '';
+    } else if (activeTabIndex1 === 3) {
+      return tabInputs.consumption.trim() !== '';
+    } else if (activeTabIndex1 === 4) {
+      return (
+        selectedValues.experience && 
+        selectedValues.usage && 
+        tabInputs.productExperience?.trim() !== ''
+      );
+    }
+    return true;
+  };
+
+  // handlePrevTab 함수 수정
+  const handlePrevTab = () => {
+    setActiveTabIndex1(activeTabIndex1 - 1); // activeTabIndex1을 감소시켜 이전 탭으로 이동
+  };
+  
   return (
     <>
       <ContentsWrap>
@@ -437,7 +569,13 @@ const PageAiPersona = () => {
           confirmText="페르소나 편집"
           isModal={false}
           onCancel={handleEditClose}
-          onConfirm={handleEditContinue}
+          onConfirm={() => {
+            setIsEditPopupOpen(false);
+            setShowPopup(false);
+            setIsCreatePopupOpen(false);
+            setIsCustomizePopupOpen(false);
+            setIsPersonaEditPopupOpen(true);
+          }}
         />
       )}
 
@@ -458,17 +596,29 @@ const PageAiPersona = () => {
           TitleFlex
           title="📝 나만의 AI Person 요청하기"
           buttonType="Fill"
-          confirmText={activeTabIndex === 0 ? "다음" : "맞춤 페르소나 모집하기"}
+          confirmText={
+            activeTabIndex === 0 
+              ? "다음" 
+              : activeTabIndex === 1 
+                ? "다음" 
+                : "맞춤 페르소나 모집하기"
+          }
+          showPrevButton={activeTabIndex === 2} // 마지막 탭에서만 이전 버튼 표시
+          prevText="이전"
+          onPrev={handlePrevTab}
           isModal={true}
           onCancel={handleCustomizePopupClose}
           onConfirm={handleCustomizePopupConfirm}
-          // showTabs={true}
-          tabs={["필수정보", "OCEAN 정보"]}
+          showTabs={true}
+          tabs={["필수정보", "OCEAN 정보", "요청사항확인"]}
           onTabChange={handleTabChange}
           activeTab={activeTabIndex}
+          eventState={false}
+          creditRequestCustomPersona={100}
+          isFormValid={isCustomizeFormValid()}
           body={
             <div>
-              {activeTabIndex === 1 && (
+              {activeTabIndex === 0 && (
                 <>
                   <div className="flex">
                     <div>
@@ -480,21 +630,26 @@ const PageAiPersona = () => {
                         <SelectBoxTitle
                           onClick={() => toggleSelectBox("gender")}
                         >
-                          <Body2
-                            color={
-                              selectedValues.gender ? "gray800" : "gray300"
-                            }
-                          >
-                            {selectedValues.gender || "선택해주세요"}
-                          </Body2>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            {customPersonaForm.gender && (
+                              <img 
+                                src={customPersonaForm.gender === 'male' ? images.GenderMenPrimary : images.GenderWomenPrimary} 
+                                alt="성별" 
+                                style={{ width: '25px', height: '25px' }} 
+                              />
+                            )}
+                            <Body2 color={customPersonaForm.gender ? "primary" : "gray300"}>
+                              {customPersonaForm.gender === 'male' ? '남성' : 
+                               customPersonaForm.gender === 'female' ? '여성' : 
+                               "선택해주세요"}
+                            </Body2>
+                          </div>
                           <images.ChevronDown
                             width="24px"
                             height="24px"
                             color={palette.gray500}
                             style={{
-                              transform: selectBoxStates.gender
-                                ? "rotate(180deg)"
-                                : "rotate(0deg)",
+                              transform: selectBoxStates.gender ? "rotate(180deg)" : "rotate(0deg)",
                               transition: "transform 0.3s ease",
                             }}
                           />
@@ -502,22 +657,19 @@ const PageAiPersona = () => {
 
                         {selectBoxStates.gender && (
                           <SelectBoxList>
-                            <SelectBoxItem
-                              onClick={() =>
-                                handlePurposeSelect("남성", "gender")
-                              }
+                            <SelectBoxItem onClick={() => {
+                                handleFormChange('gender', 'male');
+                                handlePurposeSelect("남성", "gender");
+                              }}
                             >
-                              <img src={images.GenderMen} alt="남성" />
                               <Body2 color="gray700" align="left">
                                 남성
                               </Body2>
                             </SelectBoxItem>
-                            <SelectBoxItem
-                              onClick={() =>
-                                handlePurposeSelect("여성", "gender")
-                              }
-                            >
-                              <img src={images.GenderWomen} alt="여성" />
+                            <SelectBoxItem onClick={() => {
+                              handleFormChange('gender', 'female');
+                              handlePurposeSelect("여성", "gender");
+                            }}>
                               <Body2 color="gray700" align="left">
                                 여성
                               </Body2>
@@ -533,7 +685,7 @@ const PageAiPersona = () => {
                       </Body2>
 
                       <SelectBox>
-                        <SelectBoxTitle onClick={() => toggleSelectBox("age")}>
+                        <SelectBoxTitle onClick={() => toggleSelectBox('age')}>
                           <Body2
                             color={selectedValues.age ? "gray800" : "gray300"}
                           >
@@ -544,9 +696,7 @@ const PageAiPersona = () => {
                             height="24px"
                             color={palette.gray500}
                             style={{
-                              transform: selectBoxStates.age
-                                ? "rotate(180deg)"
-                                : "rotate(0deg)",
+                              transform: selectBoxStates.age ? "rotate(180deg)" : "rotate(0deg)",
                               transition: "transform 0.3s ease",
                             }}
                           />
@@ -554,19 +704,31 @@ const PageAiPersona = () => {
 
                         {selectBoxStates.age && (
                           <SelectBoxList>
-                            <SelectBoxItem
-                              onClick={() => handlePurposeSelect("20대", "age")}
-                            >
-                              <Body2 color="gray700" align="left">
-                                20대
-                              </Body2>
+                            <SelectBoxItem onClick={() => {
+                              const newAgeGroups = [...customPersonaForm.ageGroups];
+                              const index = newAgeGroups.indexOf('20대');
+                              if (index === -1) {
+                                newAgeGroups.push('20대');
+                              } else {
+                                newAgeGroups.splice(index, 1);
+                              }
+                              handleFormChange('ageGroups', newAgeGroups);
+                              handlePurposeSelect(newAgeGroups.join(', '), "age");
+                            }}>
+                              <Body2 color="gray700" align="left">20대</Body2>
                             </SelectBoxItem>
-                            <SelectBoxItem
-                              onClick={() => handlePurposeSelect("30대", "age")}
-                            >
-                              <Body2 color="gray700" align="left">
-                                30대
-                              </Body2>
+                            <SelectBoxItem onClick={() => {
+                              const newAgeGroups = [...customPersonaForm.ageGroups];
+                              const index = newAgeGroups.indexOf('30대');
+                              if (index === -1) {
+                                newAgeGroups.push('30대');
+                              } else {
+                                newAgeGroups.splice(index, 1);
+                              }
+                              handleFormChange('ageGroups', newAgeGroups);
+                              handlePurposeSelect(newAgeGroups.join(', '), "age");
+                            }}>
+                              <Body2 color="gray700" align="left">30대</Body2>
                             </SelectBoxItem>
                           </SelectBoxList>
                         )}
@@ -584,6 +746,8 @@ const PageAiPersona = () => {
                         width="100%"
                         rows={5}
                         placeholder="이유와 목적을 알려주시면 상황에 걸맞은 최적의 페르소나를 생성해 드려요!"
+                        value={customPersonaForm.purpose}
+                        onChange={(e) => handleFormChange("purpose", e.target.value)}
                       />
                     </PopupContent>
                   </div>
@@ -598,13 +762,15 @@ const PageAiPersona = () => {
                         width="100%"
                         rows={5}
                         placeholder="필수로 고려해야할 정보가 있다면 작성해주세요."
+                        value={customPersonaForm.additionalInfo}
+                        onChange={(e) => handleFormChange('additionalInfo', e.target.value)}
                       />
                     </PopupContent>
                   </div>
                 </>
               )}
 
-              {activeTabIndex === 2 && (
+              {activeTabIndex === 1 && (
                 <>
                   <BgBoxItem NoOutline style={{ marginBottom: "10px" }}>
                     <Sub3 color="gray500" align="left">
@@ -716,7 +882,7 @@ const PageAiPersona = () => {
                 </>
               )}
 
-              {activeTabIndex === 0 && (
+              {activeTabIndex === 2 && (
                 <>
                   <BgBoxItem
                     NoOutline
@@ -811,6 +977,347 @@ const PageAiPersona = () => {
           }
         />
       )}
+
+      {isPersonaEditPopupOpen && (
+        <PopupWrap
+          TitleFlex
+          title="시간이 부족한 바쁜 프리랜서"
+          buttonType="Fill"
+          confirmText={
+            activeTabIndex1 === 4  // 마지막 탭(4)일 때만 "변경사항 저장하기"
+              ? "변경사항 저장하기" 
+              : "다음"  // 나머지 탭(0~3)에서는 "다음"
+          }
+          showPrevButton={activeTabIndex1 !== 0}
+          prevText={activeTabIndex1 !== 0 ? "뒤로" : ""}
+          prevTextSmall
+          onPrev={handlePrevTab}
+          isModal={true}
+          onCancel={handlePersonaEditClose}
+          onConfirm={handlePersonaEditContinue}
+          showTabs={true}
+          tabs={["기본정보", "라이프스타일", "관심사", "소비성향", "제품경험"]}
+          onTabChange={handleTabChange}
+          activeTab={activeTabIndex1}
+          eventState={false}
+          creditRequestCustomPersona={100}
+          isFormValid={isPersonaEditFormValid()}
+          bottomText={
+            activeTabIndex1 === 4 
+              ? "AI Person의 제품 경험은 경험여부와 사용수준에 따라 달라질 수 있습니다" 
+              : null
+          }
+          body={
+            <div>
+              {activeTabIndex1 === 0 && (
+                <>
+                  <div>
+                    <Body1 color="gray700" align="left">성별</Body1>
+                    <PopupContent>
+                      <FormBox>
+                        <CustomInput 
+                          Edit 
+                          type="text" 
+                          placeholder="성별" 
+                          value={basicInfo.gender}
+                          onChange={(e) => handleBasicInfoChange('gender', e.target.value)} 
+                          status="valid" 
+                        />
+                      </FormBox>
+                    </PopupContent>
+                  </div>
+
+                  <div>
+                    <Body1 color="gray700" align="left">나이</Body1>
+                    <PopupContent>
+                      <FormBox>
+                        <CustomInput 
+                          Edit 
+                          type="text" 
+                          placeholder="나이" 
+                          value={basicInfo.age}
+                          onChange={(e) => handleBasicInfoChange('age', e.target.value)}
+                          status="valid" 
+                        />
+                      </FormBox>
+                    </PopupContent>
+                  </div>
+
+                  <div>
+                    <Body1 color="gray700" align="left">주요 특징</Body1>
+                    <PopupContent>
+                      <FormBox>
+                        <CustomInput 
+                          Edit 
+                          type="text" 
+                          placeholder="주요 특징" 
+                          value={basicInfo.mainFeature}
+                          onChange={(e) => handleBasicInfoChange('mainFeature', e.target.value)}
+                          status="valid" 
+                        />
+                      </FormBox>
+                    </PopupContent>
+                  </div>
+
+                  <div>
+                    <Body1 color="gray700" align="left">관련 정보</Body1>
+                    <PopupContent>
+                      <FormBox>
+                        <CustomTextarea 
+                          Edit 
+                          placeholder="관련 정보" 
+                          value={basicInfo.relatedInfo}
+                          onChange={(e) => handleBasicInfoChange('relatedInfo', e.target.value)}
+                          status="valid" 
+                        />
+                      </FormBox>
+                    </PopupContent>
+                  </div>
+                </>
+              )}
+
+              {activeTabIndex1 === 1 && (
+                <>
+                  <div>
+                    <PopupContent>
+                      <FormBox>
+                        <CustomTextarea 
+                          Edit 
+                          rows={16} 
+                          placeholder="라이프스타일" 
+                          value={tabInputs.lifestyle}
+                          onChange={(e) => handleTabInputChange('lifestyle', e.target.value)}
+                          status="valid" 
+                        />
+                      </FormBox>
+                    </PopupContent>
+                  </div>
+                </>
+              )}
+
+              {activeTabIndex1 === 2 && (
+                <>
+                  <div>
+                    <PopupContent>
+                      <FormBox>
+                        <CustomTextarea 
+                          Edit 
+                          rows={16} 
+                          placeholder="관심사" 
+                          value={tabInputs.interests}
+                          onChange={(e) => handleTabInputChange('interests', e.target.value)}
+                          status="valid" 
+                        />
+                      </FormBox>
+                    </PopupContent>
+                  </div>
+                </>
+              )}
+
+              {activeTabIndex1 === 3 && (
+                <>
+                  <div>
+                    <PopupContent>
+                      <FormBox>
+                        <CustomTextarea 
+                          Edit 
+                          rows={16} 
+                          placeholder="소비성향" 
+                          value={tabInputs.consumption}
+                          onChange={(e) => handleTabInputChange('consumption', e.target.value)}
+                          status="valid" 
+                        />
+                      </FormBox>
+                    </PopupContent>
+                  </div>
+                </>
+              )}
+
+              {activeTabIndex1 === 4 && (
+                <>
+                  <BoxWrap Column Small>
+                    <SelectBox>
+                      <SelectBoxTitle None onClick={() => {
+                        setSelectBoxStates1(prev => ({
+                          ...prev,
+                          experience: !prev.experience
+                        }));
+                      }}>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <Body2 color="gray300">경험유무</Body2>
+                          <Body2 color={selectedValues.experience ? "gray700" : "gray300"}>
+                            {selectedValues.experience || "선택해주세요"}
+                          </Body2>
+                        </div>
+                        <images.ChevronDown
+                          width="24px"
+                          height="24px"
+                          color={palette.gray500}
+                          style={{
+                            transform: selectBoxStates1.experience ? "rotate(180deg)" : "rotate(0deg)",
+                            transition: "transform 0.3s ease",
+                          }}
+                        />
+                      </SelectBoxTitle>
+
+                      {selectBoxStates1.experience && (
+                        <SelectBoxList>
+                          <SelectBoxItem onClick={() => {
+                              handleFormChange('experience', 'experience1');
+                              handlePurposeSelect("해당 제품/서비스를 들어본 적도 없음 ", "experience");
+                              setSelectBoxStates1(prev => ({...prev, experience: false}));
+                            }}>
+                            <Body2 color="gray700" align="left">
+                              해당 제품/서비스를 들어본 적도 없음 
+                            </Body2>
+                          </SelectBoxItem>
+                          <SelectBoxItem onClick={() => {
+                            handleFormChange('experience', 'experience2');
+                            handlePurposeSelect("들어본 적은 있지만, 사용해본 적은 없음 ", "experience");
+                            setSelectBoxStates1(prev => ({...prev, experience: false}));
+                          }}>
+                            <Body2 color="gray700" align="left">
+                              들어본 적은 있지만, 사용해본 적은 없음 
+                            </Body2>
+                          </SelectBoxItem>
+
+                          <SelectBoxItem onClick={() => {
+                            handleFormChange('experience', 'experience3');
+                            handlePurposeSelect("사용해본 적은 있지만, 한두 번 경험한 수준 ", "experience");
+                            setSelectBoxStates1(prev => ({...prev, experience: false}));
+                          }}>
+                            <Body2 color="gray700" align="left">
+                              사용해본 적은 있지만, 한두 번 경험한 수준  
+                            </Body2>
+                          </SelectBoxItem>
+                          <SelectBoxItem onClick={() => {
+                            handleFormChange('experience', 'experience4');
+                            handlePurposeSelect("몇 번 사용해봤고, 기능을 어느 정도 이해하고 있음 ", "experience");
+                            setSelectBoxStates1(prev => ({...prev, experience: false}));
+                          }}>
+                            <Body2 color="gray700" align="left">
+                              몇 번 사용해봤고, 기능을 어느 정도 이해하고 있음 
+                            </Body2>
+                          </SelectBoxItem>
+                          <SelectBoxItem onClick={() => {
+                            handleFormChange('experience', 'experience5');
+                            handlePurposeSelect("정기적으로 사용하고 있고, 익숙한 사용자 ", "experience");
+                            setSelectBoxStates1(prev => ({...prev, experience: false}));
+                          }}>
+                            <Body2 color="gray700" align="left">
+                              정기적으로 사용하고 있고, 익숙한 사용자 
+                            </Body2>
+                          </SelectBoxItem>
+
+
+
+                        </SelectBoxList>
+                      )}
+                    </SelectBox>
+
+                    <SelectBox>
+                      <SelectBoxTitle None onClick={() => {
+                        setSelectBoxStates1(prev => ({
+                          ...prev,
+                          usage: !prev.usage
+                        }));
+                      }}>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <Body2 color="gray300">사용수준</Body2>
+                          <Body2 color={selectedValues.usage ? "gray700" : "gray300"}>
+                            {selectedValues.usage || "선택해주세요"}
+                          </Body2>
+                        </div>
+                        <images.ChevronDown
+                          width="24px"
+                          height="24px"
+                          color={palette.gray500}
+                          style={{
+                            transform: selectBoxStates1.usage ? "rotate(180deg)" : "rotate(0deg)",
+                            transition: "transform 0.3s ease",
+                          }}
+                        />
+                      </SelectBoxTitle>
+
+                      {selectBoxStates1.usage && (
+                        <SelectBoxList>
+                          <SelectBoxItem onClick={() => {
+                              handleFormChange('usage', 'usage1');
+                              handlePurposeSelect("기본적인 기능도 잘 모름 ", "usage");
+                              setSelectBoxStates1(prev => ({...prev, usage: false}));
+                            }}>
+                            <Body2 color="gray700" align="left">
+                            기본적인 기능도 잘 모름 
+                            </Body2>
+                          </SelectBoxItem>
+                          <SelectBoxItem onClick={() => {
+                            handleFormChange('usage', 'usage2');
+                            handlePurposeSelect("몇 가지 주요 기능만 사용", "usage");
+                            setSelectBoxStates1(prev => ({...prev, usage: false}));
+                          }}>
+                            <Body2 color="gray700" align="left">
+                            몇 가지 주요 기능만 사용
+                            </Body2>
+                          </SelectBoxItem>
+
+                          <SelectBoxItem onClick={() => {
+                            handleFormChange('usage', 'usage3');
+                            handlePurposeSelect("대부분의 기능을 사용해 봤지만, 특정 기능은 모름  ", "usage");
+                            setSelectBoxStates1(prev => ({...prev, usage: false}));
+                          }}>
+                            <Body2 color="gray700" align="left">
+                            대부분의 기능을 사용해 봤지만, 특정 기능은 모름  
+                            </Body2>
+                          </SelectBoxItem>
+                          <SelectBoxItem onClick={() => {
+                            handleFormChange('usage', 'usage4');
+                            handlePurposeSelect("거의 모든 기능을 능숙하게 사용 ", "usage");
+                            setSelectBoxStates1(prev => ({...prev, usage: false}));
+                          }}>
+                            <Body2 color="gray700" align="left">
+                            거의 모든 기능을 능숙하게 사용  
+                            </Body2>
+                          </SelectBoxItem>
+                        </SelectBoxList>
+                      )}
+                    </SelectBox>
+                  </BoxWrap>
+
+                  <CustomTextarea 
+                    None 
+                    rows={12} 
+                    placeholder="제품경험" 
+                    value={tabInputs.productExperience}
+                    onChange={(e) => handleTabInputChange('productExperience', e.target.value)}
+                    status="valid"
+                  />
+                </>
+              )}
+            </div>
+          }
+        />
+      )}
+
+      {isPersonaConfirmPopupOpen && (
+        <PopupWrap
+          Check
+          title={
+            <>
+              페르소나 프로필이<br />변경되었습니다.
+            </>
+          }
+          buttonType="Outline"
+          confirmText="확인"
+          isModal={false}
+          onConfirm={() => {
+            setIsPersonaConfirmPopupOpen(false);
+          }}
+        />
+      )}
+
+
+
+      
     </>
   );
 };
