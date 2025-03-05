@@ -52,7 +52,7 @@ import {
   Caption2,
   InputText,
 } from "../../../assets/styles/Typography";
-
+import OrganismEmptyPersona from "../components/organisms/OrganismEmptyPersona";
 const PageAiPersona = () => {
   const navigate = useNavigate();
 
@@ -222,6 +222,7 @@ const PageAiPersona = () => {
               </AiPersonaInfo>
 
               <AiPersonaCardGroupWrap>
+                <OrganismEmptyPersona />
                 <AiPersonaCardListItem>
                   <div className="header">
                     <UniqueTag color="Haker" />
@@ -274,7 +275,6 @@ const PageAiPersona = () => {
                     </div>
                   </AiPersonaCardButtonWrap>
                 </AiPersonaCardListItem>
-
                 <AiPersonaCardListItem>
                   <div className="header">
                     <UniqueTag color="Haker" />
@@ -327,7 +327,6 @@ const PageAiPersona = () => {
                     </div>
                   </AiPersonaCardButtonWrap>
                 </AiPersonaCardListItem>
-
                 <AiPersonaCardListItem>
                   <div className="header">
                     <UniqueTag color="Haker" />
@@ -380,7 +379,6 @@ const PageAiPersona = () => {
                     </div>
                   </AiPersonaCardButtonWrap>
                 </AiPersonaCardListItem>
-
                 <AiPersonaCardListItem>
                   <div className="header">
                     <UniqueTag color="Haker" />
@@ -433,7 +431,6 @@ const PageAiPersona = () => {
                     </div>
                   </AiPersonaCardButtonWrap>
                 </AiPersonaCardListItem>
-
                 <AiPersonaCardListItem>
                   <div className="header">
                     <UniqueTag color="Haker" />
@@ -486,7 +483,6 @@ const PageAiPersona = () => {
                     </div>
                   </AiPersonaCardButtonWrap>
                 </AiPersonaCardListItem>
-
                 <AiPersonaCardListItem>
                   <div className="header">
                     <UniqueTag color="Haker" />
@@ -539,7 +535,6 @@ const PageAiPersona = () => {
                     </div>
                   </AiPersonaCardButtonWrap>
                 </AiPersonaCardListItem>
-
                 <AiPersonaCardListItem>
                   <div className="header">
                     <UniqueTag color="Haker" />
@@ -592,7 +587,6 @@ const PageAiPersona = () => {
                     </div>
                   </AiPersonaCardButtonWrap>
                 </AiPersonaCardListItem>
-
                 <AiPersonaCardListItem>
                   <div className="header">
                     <UniqueTag color="Haker" />
@@ -645,7 +639,6 @@ const PageAiPersona = () => {
                     </div>
                   </AiPersonaCardButtonWrap>
                 </AiPersonaCardListItem>
-
                 <AiPersonaCardListItem>
                   <div className="header">
                     <UniqueTag color="Haker" />
