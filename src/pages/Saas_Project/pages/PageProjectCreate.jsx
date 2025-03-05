@@ -251,8 +251,8 @@ const PageProjectCreate = () => {
         }
 
         setFileNames(
-          uploadedFiles.map((file) => ({
-            id: "file_" + timeStamp,
+          uploadedFiles.map((file, index) => ({
+            id: "file_" + timeStamp + "_" + (index + 1),
             name: file.name,
           }))
         );
@@ -267,8 +267,8 @@ const PageProjectCreate = () => {
           industryType: industry,
           targetCountry: country,
           projectAnalysis: response.response.project_analysis_multimodal,
-          files: uploadedFiles.map((file) => ({
-            id: "file_" + timeStamp,
+          files: uploadedFiles.map((file, index) => ({
+            id: "file_" + timeStamp + "_" + (index + 1),
             name: file.name,
           })),
         };
@@ -939,12 +939,12 @@ const PageProjectCreate = () => {
                         </div>
                         <Dropzone
                           onChangeStatus={handleChangeStatus}
-                          maxFiles={1}
+                          maxFiles={5}
                           multiple={true}
                           canRemove={true}
                           canRestart={false}
                           disabled={toolStep >= 1}
-                          accept="image/*"
+                          accept="image/*, application/pdf"
                           maxSizeBytes={20 * 1024 * 1024}
                           inputWithFilesContent={
                             <>
@@ -963,8 +963,8 @@ const PageProjectCreate = () => {
                                       업로드하려는 파일을 드래그하여 놓아주세요
                                     </Body2>
                                     <Sub3 color="gray500">
-                                      jpg, png, doc, PDF 파일만 업로드가
-                                      가능합니다 (20MB 아하)
+                                      jpg, png, PDF 파일만 업로드가 가능합니다
+                                      (20MB 이하)
                                     </Sub3>
                                   </div>
                                   <div className="browse-button">
@@ -1000,8 +1000,8 @@ const PageProjectCreate = () => {
                                       업로드하려는 파일을 드래그하여 놓아주세요
                                     </Body2>
                                     <Sub3 color="gray500">
-                                      jpg, png, doc, PDF 파일만 업로드가
-                                      가능합니다 (20MB 아하)
+                                      jpg, png, PDF 파일만 업로드가 가능합니다
+                                      (20MB 이하)
                                     </Sub3>
                                   </div>
                                   <div className="browse-button">
