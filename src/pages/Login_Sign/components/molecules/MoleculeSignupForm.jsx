@@ -45,11 +45,16 @@ const MoleculeSignupForm = () => {
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+ 
   const navigate = useNavigate();
 
   // 팝업 상태 atom의 setter 가져오기
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
   const [isSignupPopupOpen, setIsSignupPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN);
+
+  const [isEmailValid, setIsEmailValid] = useState(false); // 이메일 유효성 상태 추가
+  const [EmailError, setEmailError] = useState('');
 
   useEffect(() => {
     setErrorStatus('');
@@ -148,10 +153,41 @@ const MoleculeSignupForm = () => {
 
   const handlePhoneNumberChange = (e) => {
     const value = e.target.value;
-    // 숫자만 허용
+    // 숫자만 허용 및 첫 세 자리가 010인지 확인
     if (value === '' || /^\d+$/.test(value)) {
-      setPhoneNumber(value);
+      if (value.length <= 11 && (value.length < 3 || value.slice(0, 3) === '010')) {
+        setPhoneNumber(value);
+        setPhoneError(''); 
+      } else {
+        setPhoneError('연락처는 010으로 시작해야 하며, 최대 11자리입니다.'); 
+      }
+    } else {
+      setPhoneError('숫자만 입력 가능합니다.'); 
     }
+  };
+
+  const validateEmail = (email) => {
+    if (!isValidEmail(email)) {
+      setErrorStatus('유효한 이메일 주소를 입력해주세요.');
+      setIsEmailValid(false); 
+      return;
+    }
+    
+    // 상용 이메일 체크 로직 추가
+    const commonEmailDomains = ['gmail.com', 'naver.com', 'daum.net', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com']; // 상용 이메일 도메인 예시
+    const emailDomain = email.split('@')[1];
+    if (commonEmailDomains.includes(emailDomain)) {
+      setErrorStatus('상용 이메일은 사용할 수 없습니다.');
+      setIsEmailValid(false); 
+      return;
+    }
+    
+    setIsEmailValid(true); 
+    setErrorStatus(''); 
+  };
+
+  const handleEmailCheck = () => {
+    validateEmail(signUpEmail);
   };
 
   return (
@@ -173,12 +209,17 @@ const MoleculeSignupForm = () => {
                     id="email"
                     type="email"
                     value={signUpEmail}
-                    onChange={(e) => setSignUpEmail(e.target.value)}
+                    onChange={(e) => {
+                      setSignUpEmail(e.target.value);
+                      validateEmail(e.target.value); // 실시간 이메일 검증 호출
+                    }}
                     placeholder="이메일 주소를 입력해주세요"
                   />
-                  <Button ExLarge Outline Fill>중복확인</Button>
+                  <Button ExLarge Outline Fill onClick={handleEmailCheck} disabled={!isEmailValid}>중복확인</Button>
+              
                 </div>
                 <Helptext color="gray600" align="left">공용 도메인(기업, 학교, 기관) 이메일만 사용 가능하며, 상용 이메일(gmail, naver, daum 등)은 사용할 수 없습니다.</Helptext>
+                {errorStatus && <ErrorMessage style={{ color: 'red' }}>{errorStatus}</ErrorMessage>}
               </div>
 
               <SignInfo>
@@ -203,9 +244,17 @@ const MoleculeSignupForm = () => {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   value={signUpPassword}
-                  onChange={(e) => setSignUpPassword(e.target.value)}
+                  onChange={(e) => {
+                    setSignUpPassword(e.target.value);
+                    if (!isValidPassword(e.target.value)) {
+                      setEmailError('비밀번호는 8-16자 길이여야 하며, 문자, 숫자, 특수문자 중 최소 두 가지를 포함해야 합니다.'); // Use EmailError for password validation
+                    } else {
+                      setEmailError(''); // Clear error if valid
+                    }
+                  }}
                   placeholder="비밀번호를 입력해주세요"
                 />
+   
 
 
                 {/* <StyledAtomInput
@@ -225,7 +274,15 @@ const MoleculeSignupForm = () => {
                   id="password"
                   type={showConfirmPassword ? "text" : "password"}
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    // 비밀번호 일치 여부 확인
+                    if (e.target.value !== signUpPassword) {
+                      setEmailError('비밀번호가 일치하지 않습니다.'); // 에러 메시지 설정
+                    } else {
+                      setEmailError(''); // 에러 메시지 초기화
+                    }
+                  }}
                   placeholder="비밀번호를 다시 입력해 주세요"
                 />
 
@@ -241,6 +298,7 @@ const MoleculeSignupForm = () => {
                 </TogglePasswordButton>
               </InputWrap>
               <Helptext color="gray600" align="left">영문/숫자/특수문자 2가지 이상 혼합. 8~16자</Helptext>
+              {EmailError && <ErrorMessage style={{ color: 'red' }}>{EmailError}</ErrorMessage>} {/* Display EmailError */}
             </div>
 
             <div>
@@ -274,10 +332,11 @@ const MoleculeSignupForm = () => {
                 placeholder="숫자만 입력해 주세요"
                 maxLength={11}
               />
+              {phoneError && <ErrorMessage style={{ color: 'red' }}>{phoneError}</ErrorMessage>}
             </div>
           </ScrollWrap>
 
-          {errorStatus && <ErrorMessage>{errorStatus}</ErrorMessage>}
+          {/* {errorStatus && <ErrorMessage style={{ color: 'red' }}>{errorStatus}</ErrorMessage>} */}
 
           <TermsAndConditions>
             <input
@@ -319,8 +378,7 @@ const MoleculeSignupForm = () => {
 export default MoleculeSignupForm;
 
 // CSS-in-JS 스타일링
-const SignupFormContainer = styled.div`
-  > div {
+const SignupFormContainer = styled.div`  > div {
     position:relative;
     display:flex;
     flex-direction:column;
