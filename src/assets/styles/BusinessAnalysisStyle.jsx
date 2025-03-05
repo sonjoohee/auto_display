@@ -4026,6 +4026,8 @@ export const SunburstChart = styled.div`
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
+  border-radius: ${(props) => props.Round ? "10px" : "0"};
+  overflow: hidden;
 
   th,
   td {

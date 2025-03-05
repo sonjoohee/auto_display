@@ -67,6 +67,7 @@ import PageServiceLanding from "./pages/PageServiceLanding";
 import PageBlog from "./pages/PageBlog";
 
 import PageToolList from "./pages/Persona/components/pages/PageToolList";
+import PageStorageBox from "./pages/Design_Page/PageStorageBox";
 
 //! SAAS 프로젝트
 import PageProject from "./pages/Saas_Project/pages/PageProject";
@@ -553,6 +554,15 @@ function App() {
             element={
               <RequireToken>
                 <PageToolList />
+              </RequireToken>
+            }
+          />
+
+          <Route
+            path="/StorageBox"
+            element={
+              <RequireToken>
+                <PageStorageBox />
               </RequireToken>
             }
           />
