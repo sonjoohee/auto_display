@@ -28,16 +28,16 @@ const OrganismProjectItem = ({ project, onClick, isNoData }) => {
           <div className="content">
             <div className="info">
               <Body1 color="gray800" align="left">
-                {project?.title || "전기차 충전소 안내 서비스"}
+                {project?.projectTitle || "전기차 충전소 안내 서비스"}
               </Body1>
               <Body3 color="gray700" align="left">
-                {project?.description ||
+                {project?.projectDescription ||
                   "프로젝트에 대한 개요적인 부분을 설명하는 문장을 넣는 공간입니다."}
               </Body3>
             </div>
             <div className="date">
               <Body3 color="gray700" align="left">
-                마지막 업데이트 : {project?.updateDate || "2025년 2월 20일"}
+                마지막 업데이트 : {project?.updateDate || project?.createDate}
               </Body3>
             </div>
           </div>
