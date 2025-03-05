@@ -9,9 +9,7 @@ import OrganismIncNavigation from "../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../Global/molecules/MoleculeHeader";
 import MoleculeAccountPopup from "../Login_Sign/components/molecules/MoleculeAccountPopup";
 import PopupWrap from "../../assets/styles/Popup";
-import {
-  Button,
-} from "../../assets/styles/ButtonStyle";
+import { Button } from "../../assets/styles/ButtonStyle";
 import {
   ContentsWrap,
   MainContent,
@@ -34,7 +32,7 @@ import {
   Caption1,
   InputText,
 } from "../../assets/styles/Typography";
-import * as d3 from 'd3';
+import * as d3 from "d3";
 
 const PageDashBoard = () => {
   const navigate = useNavigate();
@@ -54,31 +52,29 @@ const PageDashBoard = () => {
       const height = 88;
       const radius = Math.min(width, height) / 2;
 
-      const svg = d3.select(ref.current)
+      const svg = d3
+        .select(ref.current)
         .append("svg")
         .attr("width", width)
         .attr("height", height)
         .append("g")
         .attr("transform", `translate(${width / 2}, ${height / 2})`);
 
-      const pie = d3.pie()
-        .value(d => d.value)
+      const pie = d3
+        .pie()
+        .value((d) => d.value)
         .sort(null)
         .startAngle(-0.5 * Math.PI)
         .endAngle(1.5 * Math.PI);
 
-      const arc = d3.arc()
-        .innerRadius(0)
-        .outerRadius(radius);
+      const arc = d3.arc().innerRadius(0).outerRadius(radius);
 
-      const arcs = svg.selectAll("arc")
-        .data(pie(data))
-        .enter()
-        .append("g");
+      const arcs = svg.selectAll("arc").data(pie(data)).enter().append("g");
 
-      arcs.append("path")
+      arcs
+        .append("path")
         .attr("d", arc)
-        .attr("fill", d => d.data.color)
+        .attr("fill", (d) => d.data.color)
         .attr("stroke", "none");
     }
   };
@@ -88,21 +84,21 @@ const PageDashBoard = () => {
     const macroData = [
       { label: "비활성 페르소나", value: 10, color: palette.outlineGray },
       { label: "생성 중", value: 3, color: "#32ADE6" },
-      { label: "활성 페르소나", value: 2, color: palette.primary }
+      { label: "활성 페르소나", value: 2, color: palette.primary },
     ];
 
     // Unique User 데이터 (총 10명)
     const uniqueData = [
       { label: "비활성 페르소나", value: 5, color: palette.outlineGray },
       { label: "생성 중", value: 3, color: "#32ADE6" },
-      { label: "활성 페르소나", value: 2, color: palette.primary }
+      { label: "활성 페르소나", value: 2, color: palette.primary },
     ];
 
     // Key Stakeholder 데이터 (총 14명)
     const stakeholderData = [
       { label: "비활성 페르소나", value: 1, color: palette.outlineGray },
       { label: "생성 중", value: 10, color: "#32ADE6" },
-      { label: "활성 페르소나", value: 3, color: palette.primary }
+      { label: "활성 페르소나", value: 3, color: palette.primary },
     ];
 
     // 각각의 차트 생성
@@ -122,7 +118,9 @@ const PageDashBoard = () => {
           <DashBoardWrap>
             <DashBoardItem>
               <div className="title">
-                <H1 color="gray800" align="left">Dash Board</H1>
+                <H1 color="gray800" align="left">
+                  Dash Board
+                </H1>
 
                 <Button ExLarge Primary Fill>
                   <Sub1 color="white">팀원 초대</Sub1>
@@ -132,7 +130,9 @@ const PageDashBoard = () => {
               <Card>
                 <CardTitle>
                   <div>
-                    <H4 color="gray800">쉽고 빠르게 송금 및 이체 할 수 있는 어플리케이션</H4>
+                    <H4 color="gray800">
+                      쉽고 빠르게 송금 및 이체 할 수 있는 어플리케이션
+                    </H4>
                     <TagWrap>
                       <Tag color="Amethyst" />
                       <Tag color="Amethyst" />
@@ -142,23 +142,38 @@ const PageDashBoard = () => {
 
                   <Button ExLarge PrimaryLightest Fill>
                     자세히보기
-                    <images.ChevronRight width="14px" height="14px" color={palette.primary} />
+                    <images.ChevronRight
+                      width="14px"
+                      height="14px"
+                      color={palette.primary}
+                    />
                   </Button>
                 </CardTitle>
                 <CardContent>
-                  <Body3 color="gray800">이 애플리케이션은 사용자가 쉽고 빠르게 송금 및 이체를 할 수 있도록 돕는 것을 목표로 합니다. 이를 통해 복잡한 금융 절차를 간소화하고 사용자에게 편리함을 제공합니다. 주요 특징으로는 사용 편의성을 극대화한 직관적인 UI/UX, 빠른 송금 속도, 저렴한 수수료, 그리고 사용자 맞춤형 알림 서비스 등이 있습니다. 이러한 특징들은 사용자에게 최상의 경험을 제공하며 경쟁사 대비 차별화된 가치를 제안합니다. 주요 특징으로는 사용 편의성을 극대화한 직관적인 UI/UX, 빠른 송금 속도, 저렴한 수수료, 그리고 사용자 맞춤형 알림 서비스 등이 있습니다. 이러한 특징들은 사용자에게 최상의 경험을 제공하며 경쟁사 대비 차별화된 가치를 제안합니다.</Body3>
+                  <Body3 color="gray800">
+                    이 애플리케이션은 사용자가 쉽고 빠르게 송금 및 이체를 할 수
+                    있도록 돕는 것을 목표로 합니다. 이를 통해 복잡한 금융 절차를
+                    간소화하고 사용자에게 편리함을 제공합니다. 주요 특징으로는
+                    사용 편의성을 극대화한 직관적인 UI/UX, 빠른 송금 속도,
+                    저렴한 수수료, 그리고 사용자 맞춤형 알림 서비스 등이
+                    있습니다. 이러한 특징들은 사용자에게 최상의 경험을 제공하며
+                    경쟁사 대비 차별화된 가치를 제안합니다. 주요 특징으로는 사용
+                    편의성을 극대화한 직관적인 UI/UX, 빠른 송금 속도, 저렴한
+                    수수료, 그리고 사용자 맞춤형 알림 서비스 등이 있습니다.
+                    이러한 특징들은 사용자에게 최상의 경험을 제공하며 경쟁사
+                    대비 차별화된 가치를 제안합니다.
+                  </Body3>
                 </CardContent>
               </Card>
-
             </DashBoardItem>
 
             <DashBoardItem>
               <div className="title">
-                <H2 color="gray800" align="left">Persona Status</H2>
+                <H2 color="gray800" align="left">
+                  Persona Status
+                </H2>
 
-                <TooltipButton
-                  onClick={() => setShowTooltip(!showTooltip)}
-                >
+                <TooltipButton onClick={() => setShowTooltip(!showTooltip)}>
                   <Sub3 color="gray500">페르소나 유형 알아보기</Sub3>
                   {showTooltip && (
                     <TooltipContent>
@@ -172,21 +187,30 @@ const PageDashBoard = () => {
                           <div className="title start">
                             <Sub3 color="gray500">비활성 페르소나</Sub3>
                           </div>
-                          <Sub3 color="gray700" align="left">프로젝트에 따라 추천된 페르소나지만, 아직 자신의 경험이나 의견을 표현할 수 없는 상태</Sub3>
+                          <Sub3 color="gray700" align="left">
+                            프로젝트에 따라 추천된 페르소나지만, 아직 자신의
+                            경험이나 의견을 표현할 수 없는 상태
+                          </Sub3>
                         </div>
 
                         <div>
                           <div className="title ing">
                             <Sub3 color="gray500">생성 중</Sub3>
                           </div>
-                          <Sub3 color="gray700" align="left">페르소나 생성 요청이 접수되어, 의견을 표현할 수 있도록 생성 중인 상태</Sub3>
+                          <Sub3 color="gray700" align="left">
+                            페르소나 생성 요청이 접수되어, 의견을 표현할 수
+                            있도록 생성 중인 상태
+                          </Sub3>
                         </div>
 
                         <div>
                           <div className="title complete">
                             <Sub3 color="gray500">활성 페르소나</Sub3>
                           </div>
-                          <Sub3 color="gray700" align="left">생성이 완료되어 자신의 경험과 의견을 자유롭게 표현할 수 있는 상태</Sub3>
+                          <Sub3 color="gray700" align="left">
+                            생성이 완료되어 자신의 경험과 의견을 자유롭게 표현할
+                            수 있는 상태
+                          </Sub3>
                         </div>
                       </TooltipBody>
                     </TooltipContent>
@@ -197,8 +221,14 @@ const PageDashBoard = () => {
               <PersonaStatusWrap>
                 <div>
                   <div className="title">
-                    <Body1 color="gray700" align="left">Macro Segment<br />추천 페르소나</Body1>
-                    <Body1 color="gray700" align="right">총 15명</Body1>
+                    <Body1 color="gray700" align="left">
+                      Macro Segment
+                      <br />
+                      추천 페르소나
+                    </Body1>
+                    <Body1 color="gray700" align="right">
+                      총 15명
+                    </Body1>
                   </div>
                   <div className="content">
                     <div ref={macroChartRef}></div>
@@ -221,8 +251,14 @@ const PageDashBoard = () => {
 
                 <div>
                   <div className="title">
-                    <Body1 color="gray700" align="left">Unique User<br />추천 페르소나</Body1>
-                    <Body1 color="gray700" align="right">총 10명</Body1>
+                    <Body1 color="gray700" align="left">
+                      Unique User
+                      <br />
+                      추천 페르소나
+                    </Body1>
+                    <Body1 color="gray700" align="right">
+                      총 10명
+                    </Body1>
                   </div>
                   <div className="content">
                     <div ref={uniqueChartRef}></div>
@@ -245,8 +281,14 @@ const PageDashBoard = () => {
 
                 <div>
                   <div className="title">
-                    <Body1 color="gray700" align="left">Key Stakeholder<br />추천 페르소나</Body1>
-                    <Body1 color="gray700" align="right">총 14명</Body1>
+                    <Body1 color="gray700" align="left">
+                      Key Stakeholder
+                      <br />
+                      추천 페르소나
+                    </Body1>
+                    <Body1 color="gray700" align="right">
+                      총 14명
+                    </Body1>
                   </div>
                   <div className="content">
                     <div ref={stakeholderChartRef}></div>
@@ -271,7 +313,9 @@ const PageDashBoard = () => {
               <PersonaStatusWrap NoData>
                 <div>
                   <img src={images.PeopleFillPrimary2} alt="" />
-                  <Body2 color="gray500">당신의 프로젝트에 딱 맞는 AI Persona를 지금 확인해보세요</Body2>
+                  <Body2 color="gray500">
+                    당신의 프로젝트에 딱 맞는 AI Persona를 지금 확인해보세요
+                  </Body2>
                   <Button Medium Outline Fill>
                     <Caption1 color="gray700">AI Persona 확인하기</Caption1>
                   </Button>
@@ -281,10 +325,18 @@ const PageDashBoard = () => {
 
             <DashBoardItem>
               <div className="title">
-                <H2 color="gray800" align="left">Recent Tool Activities</H2>
-                <Body3 color="gray700" align="right" style={{ marginLeft: "auto" }}>최근 작업한 항목 중 5개를 보여드립니다.</Body3>
+                <H2 color="gray800" align="left">
+                  Recent Tool Activities
+                </H2>
+                <Body3
+                  color="gray700"
+                  align="right"
+                  style={{ marginLeft: "auto" }}
+                >
+                  최근 작업한 항목 중 5개를 보여드립니다.
+                </Body3>
               </div>
-              
+
               <RecentToolWrap>
                 <Table>
                   <colgroup>
@@ -297,46 +349,55 @@ const PageDashBoard = () => {
 
                   <TableHeader Type1>
                     <tr>
-                      <th><Body1 color="gray700" align="left">리서치 툴 명</Body1></th>
-                      <th><Body1 color="gray700" align="left">상세 내용</Body1></th>
-                      <th><Body1 color="gray700" align="left">현황</Body1></th>
-                      <th><Body1 color="gray700" align="left">진행 일시</Body1></th>
-                      <th><Body1 color="gray700" align="left">상세보기</Body1></th>
+                      <th>
+                        <Body1 color="gray700" align="left">
+                          리서치 툴 명
+                        </Body1>
+                      </th>
+                      <th>
+                        <Body1 color="gray700" align="left">
+                          상세 내용
+                        </Body1>
+                      </th>
+                      <th>
+                        <Body1 color="gray700" align="left">
+                          현황
+                        </Body1>
+                      </th>
+                      <th>
+                        <Body1 color="gray700" align="left">
+                          진행 일시
+                        </Body1>
+                      </th>
+                      <th>
+                        <Body1 color="gray700" align="left">
+                          상세보기
+                        </Body1>
+                      </th>
                     </tr>
                   </TableHeader>
 
                   <TableBody Type1>
                     <tr>
                       <td>
-                        <Body2 color="gray700" align="left">고객 탐색기</Body2>
+                        <Body2 color="gray700" align="left">
+                          고객 탐색기
+                        </Body2>
                       </td>
                       <td>
-                        <Body2 color="gray700" align="left">총 8명의 페르소나 시나리오 분석 </Body2>
+                        <Body2 color="gray700" align="left">
+                          총 8명의 페르소나 시나리오 분석{" "}
+                        </Body2>
                       </td>
                       <td>
-                        <Body2 color="gray700" align="left">완료</Body2>
+                        <Body2 color="gray700" align="left">
+                          완료
+                        </Body2>
                       </td>
                       <td>
-                        <Body2 color="gray700" align="left">25.02.19</Body2>
-                      </td>
-                      <td>
-                        <Button Medium Outline Fill>
-                          <InputText color="gray700">자세히 보기</InputText>
-                        </Button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <Body2 color="gray700" align="left">인터뷰</Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">1명의 페르소나와 “소비자 가치 분석” 인터뷰 </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">완료</Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">25.02.19</Body2>
+                        <Body2 color="gray700" align="left">
+                          25.02.19
+                        </Body2>
                       </td>
                       <td>
                         <Button Medium Outline Fill>
@@ -346,35 +407,24 @@ const PageDashBoard = () => {
                     </tr>
                     <tr>
                       <td>
-                        <Body2 color="gray700" align="left">인터뷰</Body2>
+                        <Body2 color="gray700" align="left">
+                          인터뷰
+                        </Body2>
                       </td>
                       <td>
-                        <Body2 color="gray700" align="left">1명의 페르소나와 “소비자 가치 분석” 인터뷰 </Body2>
+                        <Body2 color="gray700" align="left">
+                          1명의 페르소나와 “소비자 가치 분석” 인터뷰{" "}
+                        </Body2>
                       </td>
                       <td>
-                        <Body2 color="gray700" align="left">완료</Body2>
+                        <Body2 color="gray700" align="left">
+                          완료
+                        </Body2>
                       </td>
                       <td>
-                        <Body2 color="gray700" align="left">25.02.19</Body2>
-                      </td>
-                      <td>
-                        <Button Medium Outline Fill>
-                          <InputText color="gray700">자세히 보기</InputText>
-                        </Button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <Body2 color="gray700" align="left">고객 탐색기</Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">총 8명의 페르소나 시나리오 분석 </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">완료</Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">25.02.19</Body2>
+                        <Body2 color="gray700" align="left">
+                          25.02.19
+                        </Body2>
                       </td>
                       <td>
                         <Button Medium Outline Fill>
@@ -384,16 +434,78 @@ const PageDashBoard = () => {
                     </tr>
                     <tr>
                       <td>
-                        <Body2 color="gray700" align="left">고객 탐색기</Body2>
+                        <Body2 color="gray700" align="left">
+                          인터뷰
+                        </Body2>
                       </td>
                       <td>
-                        <Body2 color="gray700" align="left">총 8명의 페르소나 시나리오 분석 </Body2>
+                        <Body2 color="gray700" align="left">
+                          1명의 페르소나와 “소비자 가치 분석” 인터뷰{" "}
+                        </Body2>
                       </td>
                       <td>
-                        <Body2 color="gray700" align="left">완료</Body2>
+                        <Body2 color="gray700" align="left">
+                          완료
+                        </Body2>
                       </td>
                       <td>
-                        <Body2 color="gray700" align="left">25.02.19</Body2>
+                        <Body2 color="gray700" align="left">
+                          25.02.19
+                        </Body2>
+                      </td>
+                      <td>
+                        <Button Medium Outline Fill>
+                          <InputText color="gray700">자세히 보기</InputText>
+                        </Button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <Body2 color="gray700" align="left">
+                          고객 탐색기
+                        </Body2>
+                      </td>
+                      <td>
+                        <Body2 color="gray700" align="left">
+                          총 8명의 페르소나 시나리오 분석{" "}
+                        </Body2>
+                      </td>
+                      <td>
+                        <Body2 color="gray700" align="left">
+                          완료
+                        </Body2>
+                      </td>
+                      <td>
+                        <Body2 color="gray700" align="left">
+                          25.02.19
+                        </Body2>
+                      </td>
+                      <td>
+                        <Button Medium Outline Fill>
+                          <InputText color="gray700">자세히 보기</InputText>
+                        </Button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <Body2 color="gray700" align="left">
+                          고객 탐색기
+                        </Body2>
+                      </td>
+                      <td>
+                        <Body2 color="gray700" align="left">
+                          총 8명의 페르소나 시나리오 분석{" "}
+                        </Body2>
+                      </td>
+                      <td>
+                        <Body2 color="gray700" align="left">
+                          완료
+                        </Body2>
+                      </td>
+                      <td>
+                        <Body2 color="gray700" align="left">
+                          25.02.19
+                        </Body2>
                       </td>
                       <td>
                         <Button Medium Outline Fill>
@@ -405,12 +517,13 @@ const PageDashBoard = () => {
                 </Table>
               </RecentToolWrap>
 
-
               <RecentToolWrap NoData>
                 <div>
                   <img src={images.Tools} alt="" />
                   <Body2 color="gray500">
-                    AI 기반 리서치, 어디까지 해보셨나요? 다양한 리서치 툴을 지금 사용해보세요<br />
+                    AI 기반 리서치, 어디까지 해보셨나요? 다양한 리서치 툴을 지금
+                    사용해보세요
+                    <br />
                     (AI Persona 확인 후 리서치 툴을 사용하면 더 효과적입니다)
                   </Body2>
                   <Button Medium Outline Fill>
@@ -625,7 +738,7 @@ const TooltipBody = styled.div`
       width: 5px;
       height: 18px;
       border-radius: 1px;
-      content: '';
+      content: "";
     }
 
     &.start:before {
@@ -633,7 +746,7 @@ const TooltipBody = styled.div`
     }
 
     &.ing:before {
-      background: #32ADE6;
+      background: #32ade6;
     }
 
     &.complete:before {
@@ -678,7 +791,9 @@ const PersonaStatusWrap = styled.div`
     gap: 20px;
   }
 
-  ${props => props.NoData && `
+  ${(props) =>
+    props.NoData &&
+    `
     > div {
       align-items: center;
       gap: 8px;
@@ -692,7 +807,9 @@ const PersonaStatusWrap = styled.div`
 `;
 
 const RecentToolWrap = styled(PersonaStatusWrap)`
-  ${props => props.NoData && `
+  ${(props) =>
+    props.NoData &&
+    `
     > div {
       padding: 130px 0 175px;
     }
@@ -723,7 +840,7 @@ const UlInfo = styled.ul`
       width: 5px;
       height: 18px;
       border-radius: 1px;
-      content: '';
+      content: "";
     }
 
     &.start:before {
@@ -731,7 +848,7 @@ const UlInfo = styled.ul`
     }
 
     &.ing:before {
-      background: #32ADE6;
+      background: #32ade6;
     }
 
     &.complete:before {
