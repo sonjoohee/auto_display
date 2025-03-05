@@ -3473,6 +3473,7 @@ export const createProjectOnServerSaas = async (data, isLoggedIn) => {
         }),
         ...data,
         projectType: "saas",
+        personaList: 0,
         timestamp: Date.now(),
       };
       const response = await axios.post(
