@@ -53,8 +53,25 @@ import {
   InputText,
 } from "../../../assets/styles/Typography";
 import OrganismEmptyPersona from "../components/organisms/OrganismEmptyPersona";
+import { 
+  createPersonaOnServer,
+  updatePersonaOnServer,
+  getPersonaOnServer,
+  getPersonaListOnServer,
+  deletePersonaOnServer,
+  InterviewXPersonaMacroSegmentRequest,
+  InterviewXPersonaUniqueUserRequest,
+  InterviewXPersonaKeyStakeholderRequest,
+  InterviewXPersonaProfileRequest,
+ } from "../../../utils/indexedDB";
+ import { PROJECT_PERSONA_LIST } from "../../../pages/AtomStates";
+
 const PageAiPersona = () => {
+  const location = useLocation();
+  const project = location.state?.project;
   const navigate = useNavigate();
+
+  const [projectPersonaList, setProjectPersonaList] = useAtom(PROJECT_PERSONA_LIST);
 
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
@@ -221,8 +238,9 @@ const PageAiPersona = () => {
                 </div>
               </AiPersonaInfo>
 
-              <AiPersonaCardGroupWrap>
-                <OrganismEmptyPersona />
+              {projectPersonaList.length === 0 && <OrganismEmptyPersona project={project}/>}
+
+              <AiPersonaCardGroupWrap>  
                 <AiPersonaCardListItem>
                   <div className="header">
                     <UniqueTag color="Haker" />

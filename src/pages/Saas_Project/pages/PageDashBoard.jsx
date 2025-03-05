@@ -311,7 +311,7 @@ const PageDashBoard = () => {
                     Medium
                     Outline
                     Fill
-                    onClick={() => navigate("/AiPersona")}
+                    onClick={() => navigate("/AiPersona", { state: { project: project } })}
                   >
                     <Caption1 color="gray700">AI Persona 확인하기</Caption1>
                   </Button>
