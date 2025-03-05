@@ -348,7 +348,6 @@ export const getProjectListByIdFromIndexedDB = async (isLoggedIn) => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log("🚀 ~ getProjectListByIdFromIndexedDB ~ response:", response);
       return response.data;
     } catch (error) {
       console.error("Error fetching project list from server:", error);
@@ -3452,7 +3451,6 @@ export const InterviewXIdeaGrowthHackerdetail_reportRequest = async (
 
 //프로젝트 생성 api saas
 export const createProjectOnServerSaas = async (data, isLoggedIn) => {
-  console.log("🚀 ~ createProjectOnServerSaas ~ data:", data);
   if (isLoggedIn) {
     try {
       const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
@@ -3473,7 +3471,6 @@ export const createProjectOnServerSaas = async (data, isLoggedIn) => {
         }),
         ...data,
         projectType: "saas",
-        personaList: 0,
         timestamp: Date.now(),
       };
       const response = await axios.post(
@@ -3514,7 +3511,7 @@ export const InterviewXProjectAnalysisMultimodalRequest = async (
     formData.append("business_model", data.business_model); // 다른 데이터 추가
     formData.append("industry_type", data.industry_type); // 다른 데이터 추가
     formData.append("target_country", data.target_country); // 다른 데이터 추가
-    formData.append("tool_id", data.tool_id); // 다른 데이터 추가
+    formData.append("tool_id", data.tool_id); // 다른 데이터 추가 - 파일 이름값 timestamp
     data.files.forEach((file) => {
       formData.append("files", file);
     });
@@ -3553,7 +3550,6 @@ export const InterviewXProjectAnalysisMultimodalRequest = async (
 
 // 파일 업로드 X, 건너뛰기
 export const InterviewXProjectAnalysisRequest = async (data, isLoggedIn) => {
-  console.log("🚀 ~ InterviewXProjectAnalysisRequest ~ data:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -3589,6 +3585,28 @@ export const InterviewXProjectAnalysisRequest = async (data, isLoggedIn) => {
   } catch (error) {
     console.error(error);
     throw error;
+  }
+};
+
+//프로젝트 리스트 조회 api
+export const getProjectListSaasByIdFromIndexedDB = async (isLoggedIn) => {
+  if (isLoggedIn) {
+    // 사용자 로그인 시 서버에서 데이터 가져오기
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+      const response = await axios.get(
+        `https://wishresearch.kr/project/listSaas`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching project list from server:", error);
+      return null;
+    }
   }
 };
 

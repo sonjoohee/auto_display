@@ -25,7 +25,7 @@ import {
   Sub1,
   Caption1,
 } from "../../../assets/styles/Typography";
-import { getProjectListByIdFromIndexedDB } from "../../../utils/indexedDB";
+import { getProjectListSaasByIdFromIndexedDB } from "../../../utils/indexedDB";
 import OrganismProjectItem from "../components/organisms/OrganismProjectItem";
 import { PROJECT_LIST } from "../../AtomStates";
 const PageProject = () => {
@@ -45,7 +45,7 @@ const PageProject = () => {
   useEffect(() => {
     const loadProjectList = async () => {
       try {
-        const savedProjectListInfo = await getProjectListByIdFromIndexedDB(
+        const savedProjectListInfo = await getProjectListSaasByIdFromIndexedDB(
           true
         );
 
@@ -189,6 +189,7 @@ const ProjectListWrap = styled.div`
 
 const ProjectList = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
 `;
 

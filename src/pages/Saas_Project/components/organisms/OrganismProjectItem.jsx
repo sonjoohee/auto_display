@@ -19,7 +19,11 @@ const OrganismProjectItem = ({ project, onClick, isNoData }) => {
   };
 
   return (
-    <ProjectItem NoData={isNoData} onClick={handleClick}>
+    <ProjectItem
+      NoData={isNoData}
+      onClick={handleClick}
+      className="project-item"
+    >
       {!isNoData ? (
         <>
           <div className="thumbnail">
@@ -55,12 +59,13 @@ const OrganismProjectItem = ({ project, onClick, isNoData }) => {
 export default OrganismProjectItem;
 
 const ProjectItem = styled.div`
-  max-width: 33.33%;
+  max-width: 32.2%;
+  max-height: 350px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: space-around;
   overflow: hidden;
   border-radius: 20px;
   background: ${palette.chatGray};
