@@ -34,7 +34,7 @@ const OrganismProjectItem = ({ project, onClick, isNoData }) => {
               <Body1 color="gray800" align="left">
                 {project?.projectTitle || "전기차 충전소 안내 서비스"}
               </Body1>
-              <Body3 color="gray700" align="left">
+              <Body3 color="gray700" align="left" className="description">
                 {project?.projectDescription ||
                   "프로젝트에 대한 개요적인 부분을 설명하는 문장을 넣는 공간입니다."}
               </Body3>
@@ -97,6 +97,12 @@ const ProjectItem = styled.div`
       display: flex;
       flex-direction: column;
       gap: 8px;
+
+      .description {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
 
     .date {
