@@ -3929,6 +3929,16 @@ export const ExploreCard = styled.div`
   }
 
   ${(props) =>
+    props.AiPersona &&
+    css`
+      .overlay {
+        > span {
+          background: #AF52DE;
+        }
+      }
+    `}
+
+  ${(props) =>
     props.Research &&
     css`
       .overlay {
