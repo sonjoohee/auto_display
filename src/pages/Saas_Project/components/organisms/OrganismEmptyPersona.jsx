@@ -6,12 +6,137 @@ import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import { Body2 } from "../../../../assets/styles/Typography";
+import { useAtom } from "jotai";
 
-const OrganismEmptyPersona = () => {
+import { 
+  createPersonaOnServer,
+  updatePersonaOnServer,
+  getPersonaOnServer,
+  getPersonaListOnServer,
+  deletePersonaOnServer,
+  InterviewXPersonaMacroSegmentRequest,
+  InterviewXPersonaUniqueUserRequest,
+  InterviewXPersonaKeyStakeholderRequest,
+  InterviewXPersonaProfileRequest,
+ } from "../../../../utils/indexedDB";
+
+ import { 
+  PROJECT_PERSONA_LIST,
+  IS_LOGGED_IN
+ } from "../../../../pages/AtomStates";
+
+const OrganismEmptyPersona = ({project}) => {
   const navigate = useNavigate();
 
-  const handleCreatePersona = () => {
-    navigate("/AiPersona"); // 새 프로젝트 페이지로 이동
+  const [projectPersonaList, setProjectPersonaList] = useAtom(PROJECT_PERSONA_LIST);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+
+  const handleCreatePersona = async () => {
+
+    const data = {
+      business_description: project.projectAnalysis.business_analysis + (project.projectAnalysis.file_analysis ? project.projectAnalysis.file_analysis : ""),
+      target_customer: project.projectAnalysis.target_customer,
+      business_model: project.businessModel,
+      industry_type: project.industryType,
+      target_country: project.targetCountry,
+    };
+
+    try {
+      // Macro Segment 페르소나 생성
+      let response1 = await InterviewXPersonaMacroSegmentRequest(data, isLoggedIn);
+      
+      const max_attempt1 = 10;
+      let attempt1 = 0;
+
+      while (
+        !response1 ||
+        !response1.response ||
+        !response1.response.persona_macro_segment ||
+        response1.response.persona_macro_segment.length === 0
+      ) {
+
+        response1 = await InterviewXPersonaMacroSegmentRequest(data, isLoggedIn);
+        attempt1++;
+
+        if (attempt1 >= max_attempt1) {
+          throw new Error("Macro Segment 페르소나 생성에 실패했습니다.");
+          // 에러 팝업 추가
+        }
+      }
+
+      const personasWithType1 = response1.response.persona_macro_segment.map(persona => ({
+        ...persona,
+        persona_type: 'macro_segment',
+        project_id: project._id
+      }));
+      
+      // Unique User 페르소나 생성
+      let response2 = await InterviewXPersonaUniqueUserRequest(data, isLoggedIn);
+      
+      const max_attempt2 = 10;
+      let attempt2 = 0;
+
+      while (
+        !response2 ||
+        !response2.response ||
+        !response2.response.persona_unique_user ||
+        response2.response.persona_unique_user.length === 0
+      ) {
+
+        response2 = await InterviewXPersonaUniqueUserRequest(data, isLoggedIn);
+        attempt2++;
+
+        if (attempt2 >= max_attempt2) {
+          throw new Error("Unique User 페르소나 생성에 실패했습니다.");
+          // 에러 팝업 추가
+        }
+      }
+
+      const personasWithType2 = response2.response.persona_unique_user.map(persona => ({
+        ...persona,
+        persona_type: 'unique_user',
+        project_id: project._id
+      }));
+      
+      // Key Stakeholder 페르소나 생성
+      let response3 = await InterviewXPersonaKeyStakeholderRequest(data, isLoggedIn);
+      
+      const max_attempt3 = 10;
+      let attempt3 = 0;
+
+      while (
+        !response3 ||
+        !response3.response ||
+        !response3.response.persona_key_stakeholder ||
+        response3.response.persona_key_stakeholder.length === 0
+      ) {
+
+        response3 = await InterviewXPersonaKeyStakeholderRequest(data, isLoggedIn);
+        attempt3++;
+
+        if (attempt3 >= max_attempt3) {
+          throw new Error("Key Stakeholder 페르소나 생성에 실패했습니다.");
+          // 에러 팝업 추가
+        }
+      }
+
+      const personasWithType3 = response3.response.persona_key_stakeholder.map(persona => ({
+        ...persona,
+        persona_type: 'key_stakeholder',
+        project_id: project._id
+      }));
+      setProjectPersonaList([...projectPersonaList, ...personasWithType1, ...personasWithType2, ...personasWithType3]);
+      
+      // 페르소나 DB 생성
+      for (let i = 0; i < projectPersonaList.length; i++) {
+        const persona = projectPersonaList[i];
+        console.log(persona);
+        // let response = await createPersonaOnServer(persona, isLoggedIn);
+      }
+      
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

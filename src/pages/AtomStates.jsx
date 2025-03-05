@@ -577,7 +577,11 @@ export const DESIGN_ANALYSIS_FILE_ID = atom([]);
 export const PROJECT_CREATE_INFO = atom({});
 export const PROJECT_TOTAL_INFO = atom({});
 
+
+export const PROJECT_PERSONA_LIST = atom([]);
+
 export const PERSONA_LIST_SAAS = atom([]);
+
 
 // setConversation([]);
 // setConversationStage(1);

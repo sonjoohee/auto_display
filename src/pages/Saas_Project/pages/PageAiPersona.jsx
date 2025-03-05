@@ -53,14 +53,33 @@ import {
   InputText,
 } from "../../../assets/styles/Typography";
 import OrganismEmptyPersona from "../components/organisms/OrganismEmptyPersona";
+
+import { 
+  createPersonaOnServer,
+  updatePersonaOnServer,
+  getPersonaOnServer,
+  getPersonaListOnServer,
+  deletePersonaOnServer,
+  InterviewXPersonaMacroSegmentRequest,
+  InterviewXPersonaUniqueUserRequest,
+  InterviewXPersonaKeyStakeholderRequest,
+  InterviewXPersonaProfileRequest,
+ } from "../../../utils/indexedDB";
+
 import OrganismPersonaCardList from "../components/organisms/OrganismPersonaCardList";
-import { getPersonaListOnServer } from "../../../utils/indexedDB";
-import { PROJECT_ID, PERSONA_LIST_SAAS } from "../../../pages/AtomStates";
+import {PROJECT_PERSONA_LIST, PROJECT_ID, PERSONA_LIST_SAAS } from "../../../pages/AtomStates";
+
 
 const PageAiPersona = () => {
+  const location = useLocation();
+  const project = location.state?.project;
   const navigate = useNavigate();
+
+  const [projectPersonaList, setProjectPersonaList] = useAtom(PROJECT_PERSONA_LIST);
+
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
+
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
   const [isCustomizePopupOpen, setIsCustomizePopupOpen] = useState(false);
@@ -248,11 +267,13 @@ const PageAiPersona = () => {
                 </div>
               </AiPersonaInfo>
 
+
               <OrganismPersonaCardList
                 isStarred={isStarred}
                 setIsStarred={setIsStarred}
                 setShowPopup={setShowPopup}
               />
+
             </AiPersonaContent>
           </AiPersonaWrap>
         </MainContent>
