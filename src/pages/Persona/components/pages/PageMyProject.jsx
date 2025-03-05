@@ -352,14 +352,14 @@ const PageMyProject = () => {
               ...project,
               reportList:
                 project.reportList?.sort((a, b) => {
-                  const dateA = parseKoreanDate(a.createDate);
-                  const dateB = parseKoreanDate(b.createDate);
+                  const dateA = parseKoreanDate(a.createDate || a.createDate);
+                  const dateB = parseKoreanDate(b.createDate || b.createDate);
                   return dateB - dateA; // 최신 날짜가 위로
                 }) || [],
             }))
             .sort((a, b) => {
-              const dateA = parseKoreanDate(a.updateDate);
-              const dateB = parseKoreanDate(b.updateDate);
+              const dateA = parseKoreanDate(a.updateDate || a.updateDate);
+              const dateB = parseKoreanDate(b.updateDate || b.updateDate);
               return dateB - dateA; // 최신 날짜가 위로
             });
 

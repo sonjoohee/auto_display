@@ -573,16 +573,16 @@ export const DESIGN_ANALYSIS_EMOTION_SCALE = atom([]);
 export const DESIGN_ANALYSIS_FILE_NAMES = atom([]);
 export const DESIGN_ANALYSIS_FILE_ID = atom([]);
 
+//!saas
 // 프로젝트 생성 페이지
 export const PROJECT_CREATE_INFO = atom({});
 export const PROJECT_TOTAL_INFO = atom({});
 
-
 export const PROJECT_PERSONA_LIST = atom([]);
 
 export const PERSONA_LIST_SAAS = atom([]);
-
-
+export const PROJECT_SAAS = atom({});
+export const ACCESS_DASHBOARD = atom(false);
 // setConversation([]);
 // setConversationStage(1);
 // setInputBusinessInfo("");

@@ -181,6 +181,7 @@ import {
   DESIGN_ANALYSIS_EMOTION_SCALE,
   DESIGN_ANALYSIS_FILE_NAMES,
   DESIGN_ANALYSIS_FILE_ID,
+  ACCESS_DASHBOARD,
 } from "../../../pages/AtomStates";
 import {
   getAllConversationsFromIndexedDB,
@@ -193,6 +194,7 @@ import MoleculeSignPopup from "../../../pages/Login_Sign/components/molecules/Mo
 import { useSaveConversation } from "../../../pages/Expert_Insight/components/atoms/AtomSaveConversation";
 
 const OrganismIncNavigation = () => {
+  const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
   const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
     DESIGN_ANALYSIS_FILE_ID
   );
@@ -990,403 +992,6 @@ const OrganismIncNavigation = () => {
     fetchReports();
   }, [reportRefreshTrigger, isLoggedIn]);
 
-  const handleConversationClick = async (conversationId, conversationType) => {
-    if (isLoading) {
-      return;
-    }
-    if (conversationType === "expert") {
-      try {
-        const accessToken = sessionStorage.getItem("accessToken");
-        const response = await axios.get(
-          `https://wishresearch.kr/panels/chat/${conversationId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        const chatData = response.data.chat_data;
-        setSavedTimestamp(chatData.timestamp); // 대화 날짜 설정
-        setSelectedExpertIndex(
-          chatData.expert_index !== undefined ? chatData.expert_index : "0"
-        );
-        setConversationId(chatData.id); // 대화 ID 설정
-        setConversation(chatData.conversation); // 이전 대화 내역 설정
-        setConversationStage(chatData.conversationStage); // 대화 단계 설정
-        setInputBusinessInfo(chatData.inputBusinessInfo); // 비즈니스 정보 설정
-        setTitleOfBusinessInfo(chatData.analysisReportData.title); // 분석 데이터 설정
-        setMainFeaturesOfBusinessInformation(
-          chatData.analysisReportData.mainFeatures
-        ); // 주요 특징 설정
-        setMainCharacteristicOfBusinessInformation(
-          chatData.analysisReportData.mainCharacter
-        ); // 주요 특징 설정
-        setBusinessInformationTargetCustomer(
-          chatData.analysisReportData.mainCustomer
-        ); // 목표 고객 설정
-
-        // 전문가 보고서 데이터 복구
-        setStrategyReportData(chatData.strategyReportData || {});
-
-        // 필요하다면 추가 상태 업데이트
-        setSelectedAdditionalKeyword(chatData.selectedAdditionalKeyword || []);
-        setAdditionalReportData(chatData.additionalReportData || []);
-        setCustomerAdditionalReportData(
-          chatData.customerAdditionalReportData || []
-        );
-        setSelectedCustomerAdditionalKeyword(
-          chatData.selectedCustomerAdditionalKeyword || []
-        );
-
-        setSelectedPocOptions(chatData.selectedPocOptions || []);
-        setSelectedPocTarget(chatData.selectedPocTarget || {});
-        setRecommendedTargetData(chatData.recommendedTargetData || {});
-        setPocPersonaList(chatData.pocPersonaList || []);
-        setPocDetailReportData(chatData.pocDetailReportData || {});
-
-        setIdeaFeatureData(chatData.ideaFeatureData || []);
-        setIdeaRequirementData(chatData.ideaRequirementData || []);
-        setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
-        setIdeaRequirementDataTemp(chatData.ideaRequirementData || []);
-
-        setIdeaList(chatData.ideaList || []);
-        setIdeaGroup(chatData.ideaGroup || {});
-        setIdeaPriority(chatData.ideaPriority || []);
-        setIdeaMiroState(chatData.ideaMiroState || 0);
-
-        setButtonState(chatData.buttonState || {});
-
-        setGrowthHackerRecommendedSolution(
-          chatData.growthHackerRecommendedSolution || []
-        );
-        setGrowthHackerReportData(chatData.growthHackerReportData || []);
-        setGrowthHackerDetailReportData(
-          chatData.growthHackerDetailReportData || []
-        );
-        setGrowthHackerSelectedSolution(
-          chatData.growthHackerSelectedSolution || []
-        );
-        setKpiQuestionList(chatData.KpiQuestionList || []);
-
-        setPriceReportData(chatData.priceReportData || {});
-        setPriceScrapData(chatData.priceScrapData || {});
-        setPriceProduct(chatData.priceProduct || []);
-        setPriceSelectedProductSegmentation(
-          chatData.priceSelectedProductSegmentation || []
-        );
-        setPriceProductSegmentation(chatData.priceProductSegmentation || []);
-
-        setCaseReportData(chatData.caseReportData || []);
-        setCaseHashTag(chatData.caseHashTag || []);
-
-        setSurveyGuidelineDetailReportData(
-          chatData.surveyGuidelineDetailReportData || {}
-        );
-        setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
-        setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
-        setSurveyGoalFixed(chatData.surveyGoalFixed || []);
-        setSurveyQuestionList(chatData.surveyQuestionList || []);
-
-        setBmModelSuggestionReportData(
-          chatData.bmModelSuggestionReportData || []
-        );
-        setBmQuestionList(chatData.bmQuestionList || []);
-        setBmSelectedProblemOptions(chatData.bmSelectedProblemOptions || {});
-        setBmOrLean(chatData.bmOrLean || "");
-        setBmBmAutoReportData(chatData.bmBmAutoReportData || []);
-        setBmLeanAutoReportData(chatData.bmLeanAutoReportData || []);
-        setBmBmAdsReportData(chatData.bmBmAdsReportData || []);
-        setBmLeanAdsReportData(chatData.bmLeanAdsReportData || []);
-        setBmBmCustomReportData(chatData.bmBmCustomReportData || []);
-        setBmLeanCustomReportData(chatData.bmLeanCustomReportData || []);
-
-        setIsMarketing(chatData.isMarketing || false);
-        setMarketingMbtiResult(chatData.marketingMbtiResult || {});
-        setMarketingResearchReportData(
-          chatData.marketingResearchReportData || []
-        );
-        setMarketingBmReportData(chatData.marketingBmReportData || []);
-        setMarketingCustomerData(chatData.marketingCustomerData || []);
-        setMarketingSelectedCustomer(chatData.marketingSelectedCustomer || []);
-        setMarketingFinalCustomer(chatData.marketingFinalCustomer || {});
-        setMarketingFinalReportData(chatData.marketingFinalReportData || []);
-
-        setStrategyConsultantReportData(
-          chatData.strategyConsultantReportData || []
-        );
-
-        if (chatData.isMarketing) {
-          const updatedConversation = [...chatData.conversation];
-
-          if (
-            updatedConversation.length > 0 &&
-            updatedConversation[updatedConversation.length - 1].type ===
-              "marketingSignUpButton"
-          ) {
-            updatedConversation.pop();
-            updatedConversation.pop();
-          }
-
-          setConversation(updatedConversation);
-          saveConversation({
-            changingConversation: {
-              conversation: updatedConversation,
-              conversationId: chatData.id,
-              timestamp: chatData.timestamp,
-              isMarketing: chatData.isMarketing,
-              expert_index: chatData.expert_index,
-              inputBusinessInfo: chatData.inputBusinessInfo,
-              analysisReportData: chatData.analysisReportData,
-              conversationStage: chatData.conversationStage,
-              title: chatData.analysisReportData.title,
-              mainFeatures: chatData.analysisReportData.mainFeatures,
-              marketingMbtiResult: chatData.marketingMbtiResult,
-              marketingResearchReportData: chatData.marketingResearchReportData,
-              marketingBmReportData: chatData.marketingBmReportData,
-              marketingCustomerData: chatData.marketingCustomerData,
-              marketingSelectedCustomer: chatData.marketingSelectedCustomer,
-              marketingFinalCustomer: chatData.marketingFinalCustomer,
-              marketingFinalReportData: chatData.marketingFinalReportData,
-            },
-          });
-        }
-
-        // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
-        // set어프로치패스(2)
-        setApproachPath(2);
-
-        setIsEditingNow(false);
-        setIsEditingIdeaFeature(false);
-        setIsEditingIdeaCustomer(false);
-        setAddingIdeaFeature(false);
-        setActiveIdeaFeatureIndex(0);
-        setAddContentIdeaFeature("");
-        setEditedIdeaFeatureTitle("");
-        setAddingIdeaCustomer(false);
-        setActiveIdeaCustomerIndex(0);
-        setAddContentIdeaCustomer("");
-        setEditedIdeaCustomerTitle("");
-        setAnalysisButtonState(0);
-        setExpertButtonState(0);
-        setAdditionButtonState(0);
-        setCustomerAdditionButtonState(0);
-        setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
-
-        // 페이지를 대화가 이어지는 형태로 전환
-        navigate(`/conversation/${conversationId}`);
-      } catch (error) {
-        console.error("대화 내용 가져오기 오류:", error);
-      }
-    } else {
-      try {
-        const accessToken = sessionStorage.getItem("accessToken");
-
-        const response = await getToolOnServer(conversationId, isLoggedIn);
-
-        const chatData = response;
-
-        setToolStep(1);
-        setToolId("");
-        setTargetDiscoveryInfo({
-          type: "",
-          business: "",
-          target: "",
-          specific_situation: "",
-          country: "",
-        });
-        setTargetDiscoveryPersona([]);
-        setTargetDiscoveryScenario([]);
-        setTargetDiscoveryFinalReport({});
-        setToolLoading(false);
-        // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
-        setToolStep(chatData?.completed_step);
-        setToolId(chatData?.id);
-        setTargetDiscoveryInfo({
-          type: chatData?.type,
-          business: chatData?.business,
-          target: chatData?.target,
-          specific_situation: chatData?.specific_situation,
-          country: chatData?.country,
-        });
-        setTargetDiscoveryPersona(chatData?.target_discovery_persona);
-        setTargetDiscoveryScenario(chatData?.target_discovery_scenario);
-        setTargetDiscoveryFinalReport(chatData?.target_discovery_final_report);
-        setToolLoading(true);
-
-        // customer value persona 타입일 경우
-
-        setToolStep(1);
-        setToolId("");
-        setCustomerValueAnalyzerInfo({
-          business: "",
-          target_list: [],
-          analysis_scope: "",
-          analysis_purpose: "",
-        });
-        setCustomerValueAnalyzerPersona([]);
-        setCustomerValueAnalyzerJourneyMap([]);
-        setCustomerValueAnalyzerFactor([]);
-        setCustomerValueAnalyzerClustering([]);
-        setCustomerValueAnalyzerPositioning([]);
-        setCustomerValueAnalyzerFinalReport({});
-        setCustomerValueAnalyzerSelectedPersona([]);
-        setToolLoading(false);
-        setToolStep(chatData?.completed_step);
-        setToolId(chatData?.id);
-        setCustomerValueAnalyzerInfo({
-          business: chatData?.business,
-          target_list: chatData?.target_list,
-          analysis_scope: chatData?.analysis_scope,
-          analysis_purpose: chatData?.analysis_purpose,
-        });
-        setCustomerValueAnalyzerPersona(chatData?.customer_value_persona || []);
-        setCustomerValueAnalyzerJourneyMap(
-          chatData?.customer_value_journey_map || []
-        );
-        setCustomerValueAnalyzerSelectedPersona(
-          chatData?.selected_customer_value_persona || []
-        );
-        setCustomerValueAnalyzerFactor(chatData?.customer_value_factor || []);
-        setCustomerValueAnalyzerClustering(
-          chatData?.customer_value_clustering || []
-        );
-        // setCustomerValueAnalyzerSelectedFactor(
-        //   chatData.customer_value_selected_factor || []
-        // );
-        setCustomerValueAnalyzerPositioning(
-          chatData?.customer_value_positioning || []
-        );
-        setCustomerValueAnalyzerFinalReport(
-          chatData?.customer_value_final_report || {}
-        );
-        setToolLoading(true);
-        setIdeaGeneratorInfo({});
-        setIdeaGeneratorPersona([]);
-        setIdeaGeneratorIdea([]);
-        setIdeaGeneratorClustering([]);
-        setIdeaGeneratorFinalReport({});
-        setIdeaGeneratorSelectedPersona([]);
-        setIdeaGeneratorKnowTarget(null);
-
-        setIdeaGeneratorInfo({
-          business: chatData?.business,
-          core_value: chatData?.core_value,
-        });
-
-        setIdeaGeneratorPersona(chatData?.idea_generator_persona || []);
-        setIdeaGeneratorIdea(chatData?.idea_generator_idea || []);
-        setIdeaGeneratorClustering(chatData?.idea_generator_clustering || []);
-        setIdeaGeneratorFinalReport(
-          chatData?.idea_generator_final_report || {}
-        );
-        setIdeaGeneratorSelectedPersona(
-          chatData?.idea_generator_selected_persona || []
-        );
-        setIdeaGeneratorKnowTarget(chatData?.idea_generator_know_target);
-
-        setDesignAnalysisEmotionAnalysis([]);
-        setDesignAnalysisBusinessInfo("");
-        setDesignAnalysisUploadedFiles([]);
-        setDesignAnalysisFileId([]);
-        setDesignAnalysisSelectedPersona([]);
-        setDesignAnalysisEmotionTarget({});
-        setDesignAnalysisEmotionScale([]);
-        setDesignAnalysisFileNames([]);
-        setToolLoading(false);
-        setToolStep(chatData?.completed_step);
-        setToolId(chatData?.id);
-        setDesignAnalysisEmotionAnalysis(
-          chatData?.design_emotion_analysis || []
-        );
-        setDesignAnalysisBusinessInfo(chatData?.business || "");
-        setDesignAnalysisSelectedPersona(
-          chatData?.design_selected_persona || []
-        );
-        setDesignAnalysisEmotionTarget(chatData?.design_emotion_target || {});
-        setDesignAnalysisEmotionScale(chatData?.design_emotion_scale || []);
-        setDesignAnalysisFileNames(
-          chatData?.image_name?.map((item) => item.name) || []
-        );
-        setDesignAnalysisFileId(
-          chatData?.image_name?.map((item) => item.id) || []
-        );
-        setToolLoading(true);
-
-        if (chatData.isMarketing) {
-          const updatedConversation = [...chatData.conversation];
-
-          if (
-            updatedConversation.length > 0 &&
-            updatedConversation[updatedConversation.length - 1].type ===
-              "marketingSignUpButton"
-          ) {
-            updatedConversation.pop();
-            updatedConversation.pop();
-          }
-
-          setConversation(updatedConversation);
-          saveConversation({
-            changingConversation: {
-              conversation: updatedConversation,
-              conversationId: chatData.id,
-              timestamp: chatData.timestamp,
-              isMarketing: chatData.isMarketing,
-              expert_index: chatData.expert_index,
-              inputBusinessInfo: chatData.inputBusinessInfo,
-              analysisReportData: chatData.analysisReportData,
-              conversationStage: chatData.conversationStage,
-              title: chatData.analysisReportData.title,
-              mainFeatures: chatData.analysisReportData.mainFeatures,
-              marketingMbtiResult: chatData.marketingMbtiResult,
-              marketingResearchReportData: chatData.marketingResearchReportData,
-              marketingBmReportData: chatData.marketingBmReportData,
-              marketingCustomerData: chatData.marketingCustomerData,
-              marketingSelectedCustomer: chatData.marketingSelectedCustomer,
-              marketingFinalCustomer: chatData.marketingFinalCustomer,
-              marketingFinalReportData: chatData.marketingFinalReportData,
-            },
-          });
-        }
-
-        // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
-        // set어프로치패스(2)
-        setApproachPath(2);
-
-        setIsEditingNow(false);
-        setIsEditingIdeaFeature(false);
-        setIsEditingIdeaCustomer(false);
-        setAddingIdeaFeature(false);
-        setActiveIdeaFeatureIndex(0);
-        setAddContentIdeaFeature("");
-        setEditedIdeaFeatureTitle("");
-        setAddingIdeaCustomer(false);
-        setActiveIdeaCustomerIndex(0);
-        setAddContentIdeaCustomer("");
-        setEditedIdeaCustomerTitle("");
-        setAnalysisButtonState(0);
-        setExpertButtonState(0);
-        setAdditionButtonState(0);
-        setCustomerAdditionButtonState(0);
-        setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
-
-        // 페이지를 대화가 이어지는 형태로 전환
-        // navigate(`/TargetDiscovery`);
-
-        if (chatData.type === "ix_customer_value_persona") {
-          navigate(`/CustomerValueAnalyzer`);
-        } else if (chatData.type === "ix_idea_generator_persona") {
-          navigate(`/IdeaGenerator`);
-        } else if (chatData.type === "ix_target_discovery_persona") {
-          navigate(`/TargetDiscovery`);
-        } else if (chatData.type === "ix_design_emotion_analysis") {
-          navigate(`/DesignAnalysis`);
-        }
-      } catch (error) {
-        console.error("대화 내용 가져오기 오류:", error);
-      }
-    }
-  };
-
   const handleLoginClick = () => {
     setIsLoginPopupOpen(true); // 로그인 팝업 열기
   };
@@ -1655,125 +1260,153 @@ const OrganismIncNavigation = () => {
 
         <MenuList>
           <li onClick={handleNewProjectClick} className="home">
-            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18" fill="none">
-              <path d="M10.4703 1.67781C9.94131 1.13051 9.05869 1.13051 8.52968 1.67781L1.876 8.56168C1.05756 9.40844 1.66315 10.8143 2.84632 10.8143H3.35025V15.7309C3.35025 16.5795 4.04437 17.2673 4.90061 17.2673H8.00132V13.119C8.00132 12.2987 8.6723 11.6338 9.5 11.6338C10.3277 11.6338 10.9987 12.2987 10.9987 13.119V17.2673H14.2027C15.059 17.2673 15.7531 16.5795 15.7531 15.7309V10.8143H16.1537C17.3369 10.8143 17.9424 9.40843 17.124 8.56168L10.4703 1.67781Z" stroke="#666666" stroke-width="1.33333"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="18"
+              viewBox="0 0 19 18"
+              fill="none"
+            >
+              <path
+                d="M10.4703 1.67781C9.94131 1.13051 9.05869 1.13051 8.52968 1.67781L1.876 8.56168C1.05756 9.40844 1.66315 10.8143 2.84632 10.8143H3.35025V15.7309C3.35025 16.5795 4.04437 17.2673 4.90061 17.2673H8.00132V13.119C8.00132 12.2987 8.6723 11.6338 9.5 11.6338C10.3277 11.6338 10.9987 12.2987 10.9987 13.119V17.2673H14.2027C15.059 17.2673 15.7531 16.5795 15.7531 15.7309V10.8143H16.1537C17.3369 10.8143 17.9424 9.40843 17.124 8.56168L10.4703 1.67781Z"
+                stroke="#666666"
+                stroke-width="1.33333"
+              />
             </svg>
 
             <span>HOME</span>
           </li>
 
-          <li onClick={() => navigate("/DashBoard")} className="dashboard">
-            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
-              <rect x="3.5" y="3.26733" width="5.96754" height="5.96754" rx="0.661257" stroke="#666666"/>
-              <rect x="11.6289" y="3.26733" width="5.96754" height="5.96754" rx="0.661257" stroke="#666666"/>
-              <rect x="11.6289" y="11.3962" width="5.96754" height="5.96754" rx="0.661257" stroke="#666666"/>
-              <rect x="3.5" y="11.3962" width="5.96754" height="5.96754" rx="0.661257" stroke="#666666"/>
-            </svg>
+          {accessDashboard && (
+            <>
+              <li onClick={() => navigate("/DashBoard")} className="dashboard">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="21"
+                  height="21"
+                  viewBox="0 0 21 21"
+                  fill="none"
+                >
+                  <rect
+                    x="3.5"
+                    y="3.26733"
+                    width="5.96754"
+                    height="5.96754"
+                    rx="0.661257"
+                    stroke="#666666"
+                  />
+                  <rect
+                    x="11.6289"
+                    y="3.26733"
+                    width="5.96754"
+                    height="5.96754"
+                    rx="0.661257"
+                    stroke="#666666"
+                  />
+                  <rect
+                    x="11.6289"
+                    y="11.3962"
+                    width="5.96754"
+                    height="5.96754"
+                    rx="0.661257"
+                    stroke="#666666"
+                  />
+                  <rect
+                    x="3.5"
+                    y="11.3962"
+                    width="5.96754"
+                    height="5.96754"
+                    rx="0.661257"
+                    stroke="#666666"
+                  />
+                </svg>
 
-            <span>대시보드</span>
-          </li>
+                <span>대시보드</span>
+              </li>
 
-          <li onClick={() => navigate("/AiPersona")} className="persona">
-            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19" fill="none">
-              <path d="M4.3671 6.17358C4.47011 7.60339 5.53077 8.70483 6.68741 8.70483C7.84405 8.70483 8.90648 7.60374 9.00773 6.17358C9.1132 4.68612 8.08066 3.64233 6.68741 3.64233C5.29417 3.64233 4.26163 4.71319 4.3671 6.17358Z" stroke="#666" stroke-width="1.125" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M6.68764 10.9548C8.97877 10.9548 11.182 12.0928 11.734 14.3091C11.8071 14.6023 11.6232 14.8923 11.3219 14.8923H2.05299C1.7517 14.8923 1.56889 14.6023 1.64096 14.3091C2.19291 12.0573 4.39616 10.9548 6.68764 10.9548Z" stroke="#666" stroke-width="1.125" stroke-miterlimit="10"/>
-              <path d="M11.4688 6.80429C11.551 7.94616 12.4082 8.84546 13.3321 8.84546C14.256 8.84546 15.1145 7.94651 15.1953 6.80429C15.2794 5.61636 14.4451 4.76733 13.3321 4.76733C12.219 4.76733 11.3848 5.63815 11.4688 6.80429Z" stroke="#666" stroke-width="1.125" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M11.2575 11.0246C11.892 10.7339 12.5909 10.6221 13.3317 10.6221C15.1598 10.6221 16.9211 11.5309 17.3624 13.301C17.4204 13.5351 17.2734 13.7668 17.0329 13.7668H13.0856" stroke="#666" stroke-width="1.125" stroke-miterlimit="10" stroke-linecap="round"/>
-            </svg>
+              <li onClick={() => navigate("/AiPersona")} className="persona">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="19"
+                  height="19"
+                  viewBox="0 0 19 19"
+                  fill="none"
+                >
+                  <path
+                    d="M4.3671 6.17358C4.47011 7.60339 5.53077 8.70483 6.68741 8.70483C7.84405 8.70483 8.90648 7.60374 9.00773 6.17358C9.1132 4.68612 8.08066 3.64233 6.68741 3.64233C5.29417 3.64233 4.26163 4.71319 4.3671 6.17358Z"
+                    stroke="#666"
+                    stroke-width="1.125"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M6.68764 10.9548C8.97877 10.9548 11.182 12.0928 11.734 14.3091C11.8071 14.6023 11.6232 14.8923 11.3219 14.8923H2.05299C1.7517 14.8923 1.56889 14.6023 1.64096 14.3091C2.19291 12.0573 4.39616 10.9548 6.68764 10.9548Z"
+                    stroke="#666"
+                    stroke-width="1.125"
+                    stroke-miterlimit="10"
+                  />
+                  <path
+                    d="M11.4688 6.80429C11.551 7.94616 12.4082 8.84546 13.3321 8.84546C14.256 8.84546 15.1145 7.94651 15.1953 6.80429C15.2794 5.61636 14.4451 4.76733 13.3321 4.76733C12.219 4.76733 11.3848 5.63815 11.4688 6.80429Z"
+                    stroke="#666"
+                    stroke-width="1.125"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M11.2575 11.0246C11.892 10.7339 12.5909 10.6221 13.3317 10.6221C15.1598 10.6221 16.9211 11.5309 17.3624 13.301C17.4204 13.5351 17.2734 13.7668 17.0329 13.7668H13.0856"
+                    stroke="#666"
+                    stroke-width="1.125"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                  />
+                </svg>
 
-            <span>페르소나</span>
-          </li>
+                <span>페르소나</span>
+              </li>
 
-          <li onClick={() => navigate("/Tool")} className="research">
-            <svg xmlns="http://www.w3.org/2000/svg" width="27" height="25" viewBox="0 0 27 25" fill="none">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M18.0468 8.00732C17.7344 8.61753 17.2913 9.11436 16.8005 9.50821C16.4813 9.76433 16.1402 9.97879 15.7976 10.1558C16.5655 10.5238 17.1449 11.0936 17.5631 11.7297C17.7497 12.0133 17.9047 12.3106 18.0317 12.6101C18.308 12.1292 18.6624 11.7073 19.059 11.3464C19.4728 10.9699 19.9361 10.6557 20.4141 10.4039C19.7026 10.0837 19.1416 9.60167 18.7094 9.05924C18.4416 8.72319 18.2233 8.36469 18.0468 8.00732ZM17.4279 14.8634C17.4277 14.1931 17.2134 13.1727 16.6565 12.3258C16.1146 11.5015 15.2573 10.8479 13.916 10.8115C13.556 10.8018 13.4086 10.503 13.3831 10.3426C13.3681 10.2485 13.3736 10.1225 13.44 9.99631C13.5145 9.85469 13.6517 9.74486 13.8234 9.71151C14.4839 9.58321 15.3864 9.25175 16.1214 8.66197C16.8443 8.08188 17.3903 7.26785 17.426 6.13639C17.4377 5.7665 17.7502 5.62493 17.9097 5.60405C18.0041 5.59169 18.1278 5.60079 18.2499 5.66791C18.3862 5.74282 18.4946 5.8783 18.5268 6.05039C18.6506 6.71102 18.9592 7.63179 19.5579 8.38304C20.1431 9.11738 21.0054 9.69443 22.2969 9.72375C22.6358 9.73144 22.7981 10.0029 22.8303 10.1805C22.848 10.2788 22.8434 10.4091 22.7752 10.5383C22.6993 10.6822 22.5632 10.7863 22.4017 10.8206C21.5393 11.0042 20.5523 11.4546 19.7893 12.1489C19.0338 12.8364 18.5167 13.7425 18.5129 14.8651L18.5129 14.8778H17.4279L17.4279 14.8634ZM13.9454 9.72692L13.9474 9.72698L13.9454 9.72692ZM7.38263 8.50154C7.08301 8.50154 6.84013 8.74442 6.84013 9.04404V19.5233C6.84013 19.823 7.08301 20.0658 7.38263 20.0658H19.2113C19.5109 20.0658 19.7538 19.823 19.7538 19.5233V15.6146H20.8388V19.5233C20.8388 20.4222 20.1101 21.1508 19.2113 21.1508H7.38263C6.48379 21.1508 5.75513 20.4222 5.75513 19.5233V9.04404C5.75513 8.14519 6.48378 7.41653 7.38263 7.41653H12.6407C12.9403 7.41653 13.1832 7.65942 13.1832 7.95904C13.1832 8.25865 12.9403 8.50154 12.6407 8.50154H7.38263Z" fill="#666666"/>
-            </svg>
+              <li onClick={() => navigate("/Tool")} className="research">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="27"
+                  height="25"
+                  viewBox="0 0 27 25"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M18.0468 8.00732C17.7344 8.61753 17.2913 9.11436 16.8005 9.50821C16.4813 9.76433 16.1402 9.97879 15.7976 10.1558C16.5655 10.5238 17.1449 11.0936 17.5631 11.7297C17.7497 12.0133 17.9047 12.3106 18.0317 12.6101C18.308 12.1292 18.6624 11.7073 19.059 11.3464C19.4728 10.9699 19.9361 10.6557 20.4141 10.4039C19.7026 10.0837 19.1416 9.60167 18.7094 9.05924C18.4416 8.72319 18.2233 8.36469 18.0468 8.00732ZM17.4279 14.8634C17.4277 14.1931 17.2134 13.1727 16.6565 12.3258C16.1146 11.5015 15.2573 10.8479 13.916 10.8115C13.556 10.8018 13.4086 10.503 13.3831 10.3426C13.3681 10.2485 13.3736 10.1225 13.44 9.99631C13.5145 9.85469 13.6517 9.74486 13.8234 9.71151C14.4839 9.58321 15.3864 9.25175 16.1214 8.66197C16.8443 8.08188 17.3903 7.26785 17.426 6.13639C17.4377 5.7665 17.7502 5.62493 17.9097 5.60405C18.0041 5.59169 18.1278 5.60079 18.2499 5.66791C18.3862 5.74282 18.4946 5.8783 18.5268 6.05039C18.6506 6.71102 18.9592 7.63179 19.5579 8.38304C20.1431 9.11738 21.0054 9.69443 22.2969 9.72375C22.6358 9.73144 22.7981 10.0029 22.8303 10.1805C22.848 10.2788 22.8434 10.4091 22.7752 10.5383C22.6993 10.6822 22.5632 10.7863 22.4017 10.8206C21.5393 11.0042 20.5523 11.4546 19.7893 12.1489C19.0338 12.8364 18.5167 13.7425 18.5129 14.8651L18.5129 14.8778H17.4279L17.4279 14.8634ZM13.9454 9.72692L13.9474 9.72698L13.9454 9.72692ZM7.38263 8.50154C7.08301 8.50154 6.84013 8.74442 6.84013 9.04404V19.5233C6.84013 19.823 7.08301 20.0658 7.38263 20.0658H19.2113C19.5109 20.0658 19.7538 19.823 19.7538 19.5233V15.6146H20.8388V19.5233C20.8388 20.4222 20.1101 21.1508 19.2113 21.1508H7.38263C6.48379 21.1508 5.75513 20.4222 5.75513 19.5233V9.04404C5.75513 8.14519 6.48378 7.41653 7.38263 7.41653H12.6407C12.9403 7.41653 13.1832 7.65942 13.1832 7.95904C13.1832 8.25865 12.9403 8.50154 12.6407 8.50154H7.38263Z"
+                    fill="#666666"
+                  />
+                </svg>
 
-            <span>리서치툴</span>
-          </li>
+                <span>리서치툴</span>
+              </li>
 
-          <li onClick={() => navigate("")} className="storagebox">
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              width="18" 
-              height="19" 
-              viewBox="0 0 18 19" 
-              fill="none"
-            >
-              <path 
-                d="M4.30088 8.85938H1.91275C1.35364 8.85938 0.900391 9.31262 0.900391 9.87174V16.5C0.900391 17.0591 1.35364 17.5124 1.91275 17.5124H16.0858C16.6449 17.5124 17.0981 17.0591 17.0981 16.5V9.87173C17.0981 9.31262 16.6449 8.85938 16.0858 8.85938H13.6977C13.1385 8.85938 12.6853 9.31262 12.6853 9.87173V11.4249C12.6853 11.984 12.232 12.4372 11.6729 12.4372H8.99927H6.3256C5.76649 12.4372 5.31324 11.984 5.31324 11.4249V9.87173C5.31324 9.31262 4.85999 8.85938 4.30088 8.85938Z" 
-                stroke="#666666" 
-                stroke-width="1.01236"
-              />
-              <path 
-                d="M1.08789 9.24237L4.15858 1.56219C4.24528 1.34533 4.45529 1.20312 4.68884 1.20312H13.1816C13.4122 1.20312 13.6202 1.3419 13.7088 1.55489L16.9063 9.24237" 
-                stroke="#666666" 
-                stroke-width="1.0108"
-              />
-            </svg>
+              <li onClick={() => navigate("")} className="storagebox">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="19"
+                  viewBox="0 0 18 19"
+                  fill="none"
+                >
+                  <path
+                    d="M4.30088 8.85938H1.91275C1.35364 8.85938 0.900391 9.31262 0.900391 9.87174V16.5C0.900391 17.0591 1.35364 17.5124 1.91275 17.5124H16.0858C16.6449 17.5124 17.0981 17.0591 17.0981 16.5V9.87173C17.0981 9.31262 16.6449 8.85938 16.0858 8.85938H13.6977C13.1385 8.85938 12.6853 9.31262 12.6853 9.87173V11.4249C12.6853 11.984 12.232 12.4372 11.6729 12.4372H8.99927H6.3256C5.76649 12.4372 5.31324 11.984 5.31324 11.4249V9.87173C5.31324 9.31262 4.85999 8.85938 4.30088 8.85938Z"
+                    stroke="#666666"
+                    stroke-width="1.01236"
+                  />
+                  <path
+                    d="M1.08789 9.24237L4.15858 1.56219C4.24528 1.34533 4.45529 1.20312 4.68884 1.20312H13.1816C13.4122 1.20312 13.6202 1.3419 13.7088 1.55489L16.9063 9.24237"
+                    stroke="#666666"
+                    stroke-width="1.0108"
+                  />
+                </svg>
 
-            <span>보관함</span>
-          </li>
-
-          {/* <li onClick={handleNewProjectClick}>
-            <svg
-              width="32"
-              height="33"
-              viewBox="0 0 32 33"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect //배경 사각형
-                y="0.267578"
-                width="32"
-                height="32"
-                rx="9.84615"
-                fill="#fff"
-              />
-              <path //플러스 기호
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M16.999 13.1006C16.999 12.5483 16.5513 12.1006 15.999 12.1006C15.4467 12.1006 14.999 12.5483 14.999 13.1006V15.2676H12.833C12.2807 15.2676 11.833 15.7153 11.833 16.2676C11.833 16.8199 12.2807 17.2676 12.833 17.2676H14.999V19.4341C14.999 19.9864 15.4467 20.4341 15.999 20.4341C16.5513 20.4341 16.999 19.9864 16.999 19.4341V17.2676H19.1665C19.7188 17.2676 20.1665 16.8199 20.1665 16.2676C20.1665 15.7153 19.7188 15.2676 19.1665 15.2676H16.999V13.1006Z"
-                fill="#226FFF"
-              />
-            </svg>
-
-            <span>새 작업</span>
-          </li>
-
-          <li onClick={handleMyProjectClick} className="management">
-            <svg
-              width="18"
-              height="16"
-              viewBox="0 0 18 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M6.20104 1.3291H2C1.44772 1.3291 1 1.77682 1 2.3291V13.6713C1 14.2236 1.44772 14.6713 2 14.6713H16C16.5523 14.6713 17 14.2236 17 13.6713V4.40885C17 3.85657 16.5523 3.40885 16 3.40885H8.79244C8.48312 3.40885 8.19121 3.26571 8.00181 3.02115L6.99167 1.71681C6.80227 1.47225 6.51036 1.3291 6.20104 1.3291Z"
-                stroke="#666"
-              />
-            </svg>
-
-            <span>작업관리</span>
-          </li>
-
-          <li onClick={handleWorkManageClick} className="history">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="16"
-              viewBox="0 0 18 16"
-              fill="none"
-            >
-              <path
-                d="M11.5866 11.0594C11.8059 11.29 11.7975 11.6549 11.5669 11.8764C10.4257 12.9656 8.72978 13.5899 6.91778 13.5899C6.34332 13.5899 5.77661 13.514 5.22188 13.3881L2.81153 15.1002C2.71098 15.1705 2.59356 15.2064 2.47685 15.2064C2.36013 15.2064 2.24622 15.1719 2.14778 15.1023C1.9481 14.9638 1.85598 14.7135 1.91927 14.4779L2.55489 12.1147C1.50161 11.2491 0.900391 10.0933 0.900391 8.88173C0.900391 7.79961 1.37922 6.74348 2.25039 5.90618C2.48102 5.68469 2.84594 5.69384 3.06602 5.92235C3.28751 6.15297 3.28047 6.51789 3.04984 6.73938C2.39805 7.36376 2.05422 8.10555 2.05422 8.88108C2.05422 9.84576 2.58367 10.7493 3.54133 11.4228C3.56454 11.439 3.58282 11.4608 3.60462 11.4784C3.61165 11.484 3.61727 11.4889 3.6243 11.4967C3.6693 11.5438 3.70727 11.5993 3.73399 11.6584C3.73962 11.6689 3.74313 11.6816 3.74665 11.6942C3.76985 11.7589 3.78813 11.8257 3.78813 11.896C3.78813 11.9467 3.7811 12.0022 3.76844 12.0507L3.45133 13.2263L4.75282 12.3031C4.81962 12.256 4.89696 12.2293 4.9757 12.2131C4.97922 12.2131 4.98484 12.2131 4.98836 12.211C5.0207 12.2054 5.05305 12.197 5.08539 12.197C5.09102 12.197 5.09453 12.2005 5.09945 12.2005C5.14656 12.2005 5.19297 12.204 5.24008 12.2166C5.7857 12.3608 6.34891 12.4346 6.91768 12.4346C8.43718 12.4346 9.84058 11.927 10.7694 11.0396C11 10.8202 11.3649 10.8273 11.5864 11.0593L11.5866 11.0594ZM16.8424 12.9227C16.7454 12.9874 16.6336 13.0197 16.5218 13.0197C16.3973 13.0197 16.2736 12.9804 16.1709 12.9009L12.8085 10.3323C12.047 10.5679 11.2244 10.6979 10.3659 10.6979C6.66887 10.6979 3.66092 8.35433 3.66092 5.47088C3.66092 2.58668 6.66887 0.238281 10.3659 0.238281C14.063 0.238281 17.0709 2.58533 17.0709 5.47088C17.0709 6.47917 16.7109 7.43828 16.0303 8.27153L17.0815 12.2948C17.1426 12.5339 17.047 12.7863 16.8424 12.9213L16.8424 12.9227ZM15.5388 10.9624L14.8371 8.2715C14.7851 8.07322 14.8512 7.88057 14.9791 7.74064L14.9721 7.73361C15.5894 7.06423 15.915 6.28095 15.915 5.46951C15.915 3.22161 13.4259 1.39281 10.3659 1.39281C7.30589 1.39281 4.81679 3.22161 4.81679 5.46951C4.81679 7.71741 7.30589 9.54126 10.3659 9.54126C11.1991 9.54126 11.995 9.40837 12.7312 9.1468L12.8177 9.12008L12.8212 9.12923C12.9759 9.1004 13.1398 9.12923 13.2748 9.23329L15.5389 10.9629L15.5388 10.9624Z"
-                fill="#666"
-              />
-            </svg>
-
-            <span>Explore</span>
-          </li> */}
+                <span>보관함</span>
+              </li>
+            </>
+          )}
         </MenuList>
 
         <Setting className="logBtn">
@@ -1875,393 +1508,6 @@ const OrganismIncNavigation = () => {
         </Setting>
       </NavigationWrap>
 
-      <SubNavigation show={showSubNav}>
-        {/* 히스토리 누르면 */}
-        <SubTitle>
-          <div>
-            <images.ClockClockwise
-              width="17"
-              height="17"
-              color={palette.gray700}
-            />
-            {/* <img src={images.ClockCounterclockwise} alt="" /> */}
-            Explore 사용 내역
-          </div>
-          <img
-            src={images.ArrowBarLeft}
-            alt="닫기"
-            onClick={handleCloseSubNav}
-          />
-        </SubTitle>
-
-        <HistoryWrap
-          className="scrollbar"
-          ref={accordionContentRef}
-          style={{
-            maxHeight: isSection2Open ? "calc(100vh - 26rem)" : "auto",
-          }}
-        >
-          {chatList && chatList.length > 0 ? (
-            <>
-              <HistoryList>
-                <strong>최근 사용 내역</strong>
-                {true ? (
-                  // chatList.some(
-                  //   (chat) => Date.now() - chat.timestamp <= 604800000
-                  // )
-                  <>
-                    <ul>
-                      {chatList
-                        .filter(
-                          (chat) => Date.now() - chat.timestamp <= 604800000
-                        )
-                        .map((chat) => (
-                          <li
-                            key={chat.id}
-                            className={`toggle ${
-                              editToggleIndex === chat._id ? "active" : ""
-                            }`}
-                          >
-                            <p
-                              onClick={() =>
-                                handleConversationClick(
-                                  chat._id || chat.id,
-                                  chat.type || "expert"
-                                )
-                              }
-                            >
-                              {chat.type === "ix_target_discovery_persona"
-                                ? "타겟 탐색기 - "
-                                : chat.type === "ix_idea_generator_persona"
-                                ? "아이디어 생성기 - "
-                                : chat.type === "ix_customer_value_persona"
-                                ? "고객 핵심 가치 분석기 - "
-                                : chat.type === "ix_design_emotion_analysis"
-                                ? "디자인 감정 분석기 - "
-                                : "전문가 챗 - "}
-                              {chat.view_name ||
-                                chat.business ||
-                                chat.business_info}
-                            </p>
-                            <span
-                              id={`insight-toggle-${chat._id}`}
-                              style={{
-                                display: "inline-block",
-                                cursor: "pointer",
-                              }}
-                              onClick={(event) =>
-                                editBoxToggle(chat._id, event, "recent")
-                              }
-                              className="toggle"
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="14"
-                                height="3"
-                                viewBox="0 0 14 3"
-                                fill="none"
-                              >
-                                <circle
-                                  cx="2.0067"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 2.0067 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                                <circle
-                                  cx="7.00084"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 7.00084 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                                <circle
-                                  cx="11.993"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 11.993 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                              </svg>
-                            </span>
-
-                            {editToggleIndex === chat.id && (
-                              <div
-                                id={`insight-edit-box-${chat.id}`}
-                                className="insight-toggle"
-                                ref={historyEditBoxRef}
-                              >
-                                <EditBox
-                                  id={`insight-edit-box-${chat.id}`}
-                                  isEditToggle={editToggleIndex === chat.id}
-                                  style={{
-                                    top: `${editBoxPosition.top}px`,
-                                    left: `${editBoxPosition.left}px`,
-                                  }}
-                                >
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      handleChatDeleteButtonClick(chat.id)
-                                    }
-                                  >
-                                    <img src={images.IconDelete2} alt="" />
-                                    삭제
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      handleChangeChatNameButtonClick(chat.id)
-                                    }
-                                  >
-                                    <img src={images.IconEdit2} alt="" />
-                                    이름 변경
-                                  </button>
-                                </EditBox>
-                              </div>
-                            )}
-                          </li>
-                        ))}
-                    </ul>
-                  </>
-                ) : (
-                  <NoData Small>
-                    <Sub3 color="gray300">사용 내역 없음</Sub3>
-                  </NoData>
-                )}
-              </HistoryList>
-
-              <HistoryList>
-                <strong>지난 7일 사용 내역</strong>
-                {chatList.some(
-                  (chat) =>
-                    Date.now() - chat.timestamp > 604800000 &&
-                    Date.now() - chat.timestamp <= 2592000000
-                ) ? (
-                  <>
-                    <ul>
-                      {chatList
-                        .filter(
-                          (chat) =>
-                            Date.now() - chat.timestamp > 604800000 &&
-                            Date.now() - chat.timestamp <= 2592000000
-                        )
-                        .map((chat) => (
-                          <li
-                            key={chat.id}
-                            className={`toggle ${
-                              editToggleIndex === chat.id ? "active" : ""
-                            }`}
-                          >
-                            <p onClick={() => handleConversationClick(chat.id)}>
-                              {chat.view_name || chat.business_info}
-                            </p>
-                            <span
-                              id={`insight-toggle-${chat.id}`}
-                              style={{
-                                display: "inline-block",
-                                // padding: "10px",
-                                cursor: "pointer",
-                              }}
-                              onClick={(event) =>
-                                editBoxToggle(chat.id, event, "7days")
-                              }
-                              className="toggle"
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="14"
-                                height="3"
-                                viewBox="0 0 14 3"
-                                fill="none"
-                              >
-                                <circle
-                                  cx="2.0067"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 2.0067 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                                <circle
-                                  cx="7.00084"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 7.00084 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                                <circle
-                                  cx="11.993"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 11.993 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                              </svg>
-                            </span>
-
-                            {editToggleIndex === chat.id && (
-                              <div
-                                id={`insight-edit-box-${chat.id}`}
-                                className="insight-toggle"
-                                ref={historyEditBoxRef}
-                              >
-                                <EditBox
-                                  id={`insight-edit-box-${chat.id}`}
-                                  isEditToggle={editToggleIndex === chat.id}
-                                  style={{
-                                    top: `${editBoxPosition.top}px`,
-                                    left: `${editBoxPosition.left}px`,
-                                  }}
-                                >
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      handleChatDeleteButtonClick(chat.id)
-                                    }
-                                  >
-                                    <img src={images.IconDelete2} alt="" />
-                                    삭제
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      handleChangeChatNameButtonClick(chat.id)
-                                    }
-                                  >
-                                    <img src={images.IconEdit2} alt="" />
-                                    이름 변경
-                                  </button>
-                                </EditBox>
-                              </div>
-                            )}
-                          </li>
-                        ))}
-                    </ul>
-                  </>
-                ) : (
-                  <NoData Small>
-                    <Sub3 color="gray300">사용 내역 없음</Sub3>
-                  </NoData>
-                )}
-              </HistoryList>
-
-              <HistoryList>
-                <strong>지난 30일 사용 내역</strong>
-                {chatList.some(
-                  (chat) => Date.now() - chat.timestamp > 2592000000
-                ) ? (
-                  <>
-                    <ul>
-                      {chatList
-                        .filter(
-                          (chat) => Date.now() - chat.timestamp > 2592000000
-                        )
-                        .map((chat) => (
-                          <li
-                            key={chat.id}
-                            className={`toggle ${
-                              editToggleIndex === chat.id ? "active" : ""
-                            }`}
-                          >
-                            <p onClick={() => handleConversationClick(chat.id)}>
-                              {chat.view_name || chat.business_info}
-                            </p>
-                            <span
-                              id={`insight-toggle-${chat.id}`}
-                              style={{
-                                display: "inline-block",
-                                // padding: "10px",
-                                cursor: "pointer",
-                              }}
-                              onClick={(event) =>
-                                editBoxToggle(chat.id, event, "30days")
-                              }
-                              className="toggle"
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="14"
-                                height="3"
-                                viewBox="0 0 14 3"
-                                fill="none"
-                              >
-                                <circle
-                                  cx="2.0067"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 2.0067 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                                <circle
-                                  cx="7.00084"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 7.00084 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                                <circle
-                                  cx="11.993"
-                                  cy="1.51283"
-                                  r="1.49694"
-                                  transform="rotate(-90 11.993 1.51283)"
-                                  fill="#A0A0A0"
-                                />
-                              </svg>
-                            </span>
-
-                            {editToggleIndex === chat.id && (
-                              <div
-                                id={`insight-edit-box-${chat.id}`}
-                                className="insight-toggle"
-                                ref={historyEditBoxRef}
-                              >
-                                <EditBox
-                                  id={`insight-edit-box-${chat.id}`}
-                                  isEditToggle={editToggleIndex === chat.id}
-                                  style={{
-                                    top: `${editBoxPosition.top}px`,
-                                    left: `${editBoxPosition.left}px`,
-                                  }}
-                                >
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      handleChatDeleteButtonClick(chat.id)
-                                    }
-                                  >
-                                    <img src={images.IconDelete2} alt="" />
-                                    삭제
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      handleChangeChatNameButtonClick(chat.id)
-                                    }
-                                  >
-                                    <img src={images.IconEdit2} alt="" />
-                                    이름 변경
-                                  </button>
-                                </EditBox>
-                              </div>
-                            )}
-                          </li>
-                        ))}
-                    </ul>
-                  </>
-                ) : (
-                  <NoData Small>
-                    <Sub3 color="gray300">사용 내역 없음</Sub3>
-                  </NoData>
-                )}
-              </HistoryList>
-            </>
-          ) : (
-            <ul>
-              <p>최근 사용 내역이 없습니다.</p>
-            </ul>
-          )}
-        </HistoryWrap>
-      </SubNavigation>
       {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
       {isSignupPopupOpen && <MoleculeSignPopup onClose={closeSignupPopup} />}
 

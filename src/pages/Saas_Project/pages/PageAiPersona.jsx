@@ -57,7 +57,7 @@ import {
 } from "../../../assets/styles/Typography";
 import OrganismEmptyPersona from "../components/organisms/OrganismEmptyPersona";
 
-import { 
+import {
   createPersonaOnServer,
   updatePersonaOnServer,
   getPersonaOnServer,
@@ -67,18 +67,20 @@ import {
   InterviewXPersonaUniqueUserRequest,
   InterviewXPersonaKeyStakeholderRequest,
   InterviewXPersonaProfileRequest,
- } from "../../../utils/indexedDB";
+} from "../../../utils/indexedDB";
 
 import OrganismPersonaCardList from "../components/organisms/OrganismPersonaCardList";
-import {PROJECT_PERSONA_LIST, PROJECT_ID, PERSONA_LIST_SAAS } from "../../../pages/AtomStates";
-
+import {
+  PROJECT_PERSONA_LIST,
+  PROJECT_ID,
+  PERSONA_LIST_SAAS,
+} from "../../../pages/AtomStates";
 
 const PageAiPersona = () => {
-  const location = useLocation();
-  const project = location.state?.project;
   const navigate = useNavigate();
 
-  const [projectPersonaList, setProjectPersonaList] = useAtom(PROJECT_PERSONA_LIST);
+  const [projectPersonaList, setProjectPersonaList] =
+    useAtom(PROJECT_PERSONA_LIST);
 
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
@@ -103,6 +105,10 @@ const PageAiPersona = () => {
   const [keyStakeholderRef, setKeyStakeholderRef] = useState(null);
   const [purpose, setPurpose] = useState(null);
 
+  const [activeTab, setActiveTab] = useState("macro_segment");
+
+  const [personaStats, setPersonaStats] = useState({ active: 0, inactive: 0 });
+
   // customPersonaForm 상태 추가
   const [customPersonaForm, setCustomPersonaForm] = useState({
     gender: "",
@@ -126,6 +132,7 @@ const PageAiPersona = () => {
     consumption: '',
     productExperience: ''
   });
+
 
   const handleEditClose = () => {
     setIsEditPopupOpen(false);
@@ -226,6 +233,8 @@ const PageAiPersona = () => {
     keyStakeholder: "",
   });
 
+  const handleTabClick = (tabName) => {
+    setActiveTab(tabName);
   // 입력 필드 onChange 핸들러
   const handleBasicInfoChange = (field, value) => {
     setBasicInfo(prev => ({
@@ -314,6 +323,30 @@ const PageAiPersona = () => {
     return true;
   };
 
+  const updatePersonaList = async (updatedList) => {
+    // 업데이트된 리스트가 배열인 경우 직접 설정
+    if (Array.isArray(updatedList)) {
+      setPersonaListSaas(updatedList);
+      return;
+    }
+
+    // 그렇지 않은 경우 서버에서 최신 데이터 다시 불러오기
+    try {
+      const refreshedData = await getPersonaListOnServer(projectId, true);
+      if (refreshedData) {
+        const sortedList = [...refreshedData].sort((a, b) => {
+          const dateA = a.timestamp;
+          const dateB = b.timestamp;
+          return dateB - dateA; // 최신 날짜가 위로
+        });
+
+        setPersonaListSaas(sortedList);
+      }
+    } catch (error) {
+      console.error("페르소나 목록을 새로고침하는데 실패했습니다:", error);
+    }
+  };
+
   // isPersonaEditFormValid 함수 추가 (페르소나 편집 팝업용)
   const isPersonaEditFormValid = () => {
     if (activeTabIndex1 === 0) {
@@ -357,6 +390,7 @@ const PageAiPersona = () => {
                 <H1 color="gray800" align="left">
                   AI Persona
                 </H1>
+                <div style={{ height: "10px" }}></div>
                 <Body3 color="gray700" align="left">
                   당신의 비즈니스에 새로운 인사이트를 제시해줄 AI 페르소나가
                   대화를 기다리고 있어요
@@ -376,37 +410,62 @@ const PageAiPersona = () => {
                 <Sub1 color="primary">나만의 AI Persona 요청</Sub1>
               </Button>
             </AiPersonaTitle>
-            <AiPersonaContent>
-              <TabWrapType3 Border>
-                <TabButtonType3>Macro Segment</TabButtonType3>
-                <TabButtonType3>Unique User</TabButtonType3>
-                <TabButtonType3>Key Stakeholder</TabButtonType3>
-                <TabButtonType3>My Persona</TabButtonType3>
-              </TabWrapType3>
 
-              <AiPersonaInfo>
-                <div>
-                  <span className="active">
-                    <Sub3 color="primary">1</Sub3>
-                  </span>
-                  <Sub3 color="gray700">활성 페르소나</Sub3>
-                </div>
-                <div>
-                  <span className="inactive">
-                    <Sub3 color="primary">15</Sub3>
-                  </span>
-                  <Sub3 color="gray700">비활성 페르소나</Sub3>
-                </div>
-              </AiPersonaInfo>
+            {personaListSaas && personaListSaas.length > 0 ? (
+              <AiPersonaContent>
+                <TabWrapType3 Border>
+                  <TabButtonType3
+                    className={activeTab === "macro_segment" ? "active" : ""}
+                    onClick={() => handleTabClick("macro_segment")}
+                  >
+                    Macro Segment
+                  </TabButtonType3>
+                  <TabButtonType3
+                    className={activeTab === "unique_user" ? "active" : ""}
+                    onClick={() => handleTabClick("unique_user")}
+                  >
+                    Unique User
+                  </TabButtonType3>
+                  <TabButtonType3
+                    className={activeTab === "key_stakeholder" ? "active" : ""}
+                    onClick={() => handleTabClick("key_stakeholder")}
+                  >
+                    Key Stakeholder
+                  </TabButtonType3>
+                  <TabButtonType3
+                    className={activeTab === "my_persona" ? "active" : ""}
+                    onClick={() => handleTabClick("my_persona")}
+                  >
+                    My Persona
+                  </TabButtonType3>
+                </TabWrapType3>
 
+                <AiPersonaInfo>
+                  <div>
+                    <span className="active">
+                      <Sub3 color="primary">{personaStats.active}</Sub3>
+                    </span>
+                    <Sub3 color="gray700">활성 페르소나</Sub3>
+                  </div>
+                  <div>
+                    <span className="inactive">
+                      <Sub3 color="primary">{personaStats.inactive}</Sub3>
+                    </span>
+                    <Sub3 color="gray700">비활성 페르소나</Sub3>
+                  </div>
+                </AiPersonaInfo>
 
-              <OrganismPersonaCardList
-                isStarred={isStarred}
-                setIsStarred={setIsStarred}
-                setShowPopup={setShowPopup}
-              />
-
-            </AiPersonaContent>
+                <OrganismPersonaCardList
+                  personaData={personaListSaas}
+                  setIsStarred={updatePersonaList}
+                  setShowPopup={setShowPopup}
+                  activeTab={activeTab}
+                  setPersonaStats={setPersonaStats}
+                />
+              </AiPersonaContent>
+            ) : (
+              <OrganismEmptyPersona />
+            )}
           </AiPersonaWrap>
         </MainContent>
       </ContentsWrap>

@@ -3616,6 +3616,7 @@ export const getProjectListSaasByIdFromIndexedDB = async (isLoggedIn) => {
 
 //페르소나 DB 생성 api
 export const createPersonaOnServer = async (data, isLoggedIn) => {
+  console.log("🚀 ~ createPersonaOnServer ~ data:", data);
   if (isLoggedIn) {
     try {
       const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
@@ -3644,6 +3645,8 @@ export const createPersonaOnServer = async (data, isLoggedIn) => {
           second: "2-digit",
         }),
         timestamp: Date.now(),
+        favorite: false,
+        status: "default",
         ...data,
       };
       const response = await axios.post(
@@ -3678,17 +3681,18 @@ export const updatePersonaOnServer = async (updateData, isLoggedIn) => {
       const PUT_DATA = {
         // id: personaId,
         ...updateData,
-        updateDate: new Date().toLocaleString("ko-KR", {
-          timeZone: "Asia/Seoul",
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        }),
-        timestamp: Date.now(),
+        // updateDate: new Date().toLocaleString("ko-KR", {
+        //   timeZone: "Asia/Seoul",
+        //   year: "numeric",
+        //   month: "2-digit",
+        //   day: "2-digit",
+        //   hour: "2-digit",
+        //   minute: "2-digit",
+        //   second: "2-digit",
+        // }),
+        // timestamp: Date.now(),
       };
+
       await axios.put(
         `https://wishresearch.kr/project/persona/update`,
         PUT_DATA,

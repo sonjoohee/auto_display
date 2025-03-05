@@ -33,11 +33,11 @@ import {
   InputText,
 } from "../../../assets/styles/Typography";
 import * as d3 from "d3";
+import { PROJECT_SAAS } from "../../../pages/AtomStates";
 
 const PageDashBoard = () => {
-  const location = useLocation();
-  const project = location.state?.project;
-  console.log(project);
+  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
+  const project = projectSaas;
 
   const navigate = useNavigate();
 
@@ -115,8 +115,6 @@ const PageDashBoard = () => {
     createPieChart(uniqueChartRef, uniqueData);
     createPieChart(stakeholderChartRef, stakeholderData);
   }, []);
-
- 
 
   return (
     <>
@@ -217,116 +215,118 @@ const PageDashBoard = () => {
                 </TooltipButton>
               </div>
 
-           {project?.personaList?.length > 0 ? ( 
-              <PersonaStatusWrap>
-                <div>
-                  <div className="title">
-                    <Body1 color="gray700" align="left">
-                      Macro Segment
-                      <br />
-                      추천 페르소나
-                    </Body1>
-                    <Body1 color="gray700" align="right">
-                      총 15명
-                    </Body1>
+              {project?.personaList?.length > 0 ? (
+                <PersonaStatusWrap>
+                  <div>
+                    <div className="title">
+                      <Body1 color="gray700" align="left">
+                        Macro Segment
+                        <br />
+                        추천 페르소나
+                      </Body1>
+                      <Body1 color="gray700" align="right">
+                        총 15명
+                      </Body1>
+                    </div>
+                    <div className="content">
+                      <div ref={macroChartRef}></div>
+                      <UlInfo>
+                        <li className="start">
+                          <Sub3 color="gray500">비활성 페르소나</Sub3>
+                          <Sub2 color="gray700">10명</Sub2>
+                        </li>
+                        <li className="ing">
+                          <Sub3 color="gray500">생성 중</Sub3>
+                          <Sub2 color="gray700">3명</Sub2>
+                        </li>
+                        <li className="complete">
+                          <Sub3 color="gray500">활성 페르소나</Sub3>
+                          <Sub2 color="gray700">2명</Sub2>
+                        </li>
+                      </UlInfo>
+                    </div>
                   </div>
-                  <div className="content">
-                    <div ref={macroChartRef}></div>
-                    <UlInfo>
-                      <li className="start">
-                        <Sub3 color="gray500">비활성 페르소나</Sub3>
-                        <Sub2 color="gray700">10명</Sub2>
-                      </li>
-                      <li className="ing">
-                        <Sub3 color="gray500">생성 중</Sub3>
-                        <Sub2 color="gray700">3명</Sub2>
-                      </li>
-                      <li className="complete">
-                        <Sub3 color="gray500">활성 페르소나</Sub3>
-                        <Sub2 color="gray700">2명</Sub2>
-                      </li>
-                    </UlInfo>
-                  </div>
-                </div>
 
-                <div>
-                  <div className="title">
-                    <Body1 color="gray700" align="left">
-                      Unique User
-                      <br />
-                      추천 페르소나
-                    </Body1>
-                    <Body1 color="gray700" align="right">
-                      총 10명
-                    </Body1>
+                  <div>
+                    <div className="title">
+                      <Body1 color="gray700" align="left">
+                        Unique User
+                        <br />
+                        추천 페르소나
+                      </Body1>
+                      <Body1 color="gray700" align="right">
+                        총 10명
+                      </Body1>
+                    </div>
+                    <div className="content">
+                      <div ref={uniqueChartRef}></div>
+                      <UlInfo>
+                        <li className="start">
+                          <Sub3 color="gray500">비활성 페르소나</Sub3>
+                          <Sub2 color="gray700">5명</Sub2>
+                        </li>
+                        <li className="ing">
+                          <Sub3 color="gray500">생성 중</Sub3>
+                          <Sub2 color="gray700">3명</Sub2>
+                        </li>
+                        <li className="complete">
+                          <Sub3 color="gray500">활성 페르소나</Sub3>
+                          <Sub2 color="gray700">2명</Sub2>
+                        </li>
+                      </UlInfo>
+                    </div>
                   </div>
-                  <div className="content">
-                    <div ref={uniqueChartRef}></div>
-                    <UlInfo>
-                      <li className="start">
-                        <Sub3 color="gray500">비활성 페르소나</Sub3>
-                        <Sub2 color="gray700">5명</Sub2>
-                      </li>
-                      <li className="ing">
-                        <Sub3 color="gray500">생성 중</Sub3>
-                        <Sub2 color="gray700">3명</Sub2>
-                      </li>
-                      <li className="complete">
-                        <Sub3 color="gray500">활성 페르소나</Sub3>
-                        <Sub2 color="gray700">2명</Sub2>
-                      </li>
-                    </UlInfo>
-                  </div>
-                </div>
 
-                <div>
-                  <div className="title">
-                    <Body1 color="gray700" align="left">
-                      Key Stakeholder
-                      <br />
-                      추천 페르소나
-                    </Body1>
-                    <Body1 color="gray700" align="right">
-                      총 14명
-                    </Body1>
+                  <div>
+                    <div className="title">
+                      <Body1 color="gray700" align="left">
+                        Key Stakeholder
+                        <br />
+                        추천 페르소나
+                      </Body1>
+                      <Body1 color="gray700" align="right">
+                        총 14명
+                      </Body1>
+                    </div>
+                    <div className="content">
+                      <div ref={stakeholderChartRef}></div>
+                      <UlInfo>
+                        <li className="start">
+                          <Sub3 color="gray500">비활성 페르소나</Sub3>
+                          <Sub2 color="gray700">1명</Sub2>
+                        </li>
+                        <li className="ing">
+                          <Sub3 color="gray500">생성 중</Sub3>
+                          <Sub2 color="gray700">10명</Sub2>
+                        </li>
+                        <li className="complete">
+                          <Sub3 color="gray500">활성 페르소나</Sub3>
+                          <Sub2 color="gray700">3명</Sub2>
+                        </li>
+                      </UlInfo>
+                    </div>
                   </div>
-                  <div className="content">
-                    <div ref={stakeholderChartRef}></div>
-                    <UlInfo>
-                      <li className="start">
-                        <Sub3 color="gray500">비활성 페르소나</Sub3>
-                        <Sub2 color="gray700">1명</Sub2>
-                      </li>
-                      <li className="ing">
-                        <Sub3 color="gray500">생성 중</Sub3>
-                        <Sub2 color="gray700">10명</Sub2>
-                      </li>
-                      <li className="complete">
-                        <Sub3 color="gray500">활성 페르소나</Sub3>
-                        <Sub2 color="gray700">3명</Sub2>
-                      </li>
-                    </UlInfo>
+                </PersonaStatusWrap>
+              ) : (
+                <PersonaStatusWrap NoData>
+                  <div>
+                    <img src={images.PeopleFillPrimary2} alt="" />
+                    <Body2 color="gray500">
+                      당신의 프로젝트에 딱 맞는 AI Persona를 지금 확인해보세요
+                    </Body2>
+                    <Button
+                      Medium
+                      Outline
+                      Fill
+                      onClick={() =>
+                        navigate("/AiPersona", { state: { project: project } })
+                      }
+                    >
+                      <Caption1 color="gray700">AI Persona 확인하기</Caption1>
+                    </Button>
                   </div>
-                </div>
-              </PersonaStatusWrap>
-           ) : (
-              <PersonaStatusWrap NoData>
-                <div>
-                  <img src={images.PeopleFillPrimary2} alt="" />
-                  <Body2 color="gray500">
-                    당신의 프로젝트에 딱 맞는 AI Persona를 지금 확인해보세요
-                  </Body2>
-                  <Button
-                    Medium
-                    Outline
-                    Fill
-                    onClick={() => navigate("/AiPersona", { state: { project: project } })}
-                  >
-                    <Caption1 color="gray700">AI Persona 확인하기</Caption1>
-                  </Button>
-                </div>
-              </PersonaStatusWrap>
-            )}
+                </PersonaStatusWrap>
+              )}
             </DashBoardItem>
 
             <DashBoardItem>
@@ -528,8 +528,8 @@ const PageDashBoard = () => {
                   <div>
                     <img src={images.Tools} alt="" />
                     <Body2 color="gray500">
-                      AI 기반 리서치, 어디까지 해보셨나요? 다양한 리서치 툴을 지금
-                      사용해보세요
+                      AI 기반 리서치, 어디까지 해보셨나요? 다양한 리서치 툴을
+                      지금 사용해보세요
                       <br />
                       (AI Persona 확인 후 리서치 툴을 사용하면 더 효과적입니다)
                     </Body2>

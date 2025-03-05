@@ -6,7 +6,7 @@ import styled, { css } from "styled-components";
 import { palette } from "../../../assets/styles/Palette";
 import images from "../../../assets/styles/Images";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import axios from "axios";
 import { SubtractiveBlending } from "three/src/constants.js";
 import panelimages from "../../../assets/styles/PanelImages";
@@ -148,6 +148,39 @@ import {
   IS_SHOW_TOAST,
   PROJECT_REFRESH_TRIGGER,
   CUSTOM_PERSONA_LIST,
+  TARGET_DISCOVERY_INFO,
+  TARGET_DISCOVERY_PERSONA,
+  TARGET_DISCOVERY_SCENARIO,
+  SELECTED_TARGET_DISCOVERY_SCENARIO,
+  TARGET_DISCOVERY_FINAL_REPORT,
+  TOOL_ID,
+  TOOL_STEP,
+  TOOL_LOADING,
+  CUSTOMER_VALUE_ANALYZER_INFO,
+  CUSTOMER_VALUE_ANALYZER_PERSONA,
+  CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP,
+  CUSTOMER_VALUE_ANALYZER_FACTOR,
+  CUSTOMER_VALUE_ANALYZER_CLUSTERING,
+  CUSTOMER_VALUE_ANALYZER_POSITIONING,
+  CUSTOMER_VALUE_ANALYZER_FINAL_REPORT,
+  CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR,
+  IDEA_GENERATOR_INFO,
+  IDEA_GENERATOR_KNOW_TARGET,
+  IDEA_GENERATOR_CUSTOM_TARGET,
+  IDEA_GENERATOR_PERSONA,
+  IDEA_GENERATOR_IDEA,
+  IDEA_GENERATOR_CLUSTERING,
+  IDEA_GENERATOR_FINAL_REPORT,
+  IDEA_GENERATOR_SELECTED_PERSONA,
+  CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA,
+  DESIGN_ANALYSIS_EMOTION_ANALYSIS,
+  DESIGN_ANALYSIS_BUSINESS_INFO,
+  DESIGN_ANALYSIS_UPLOADED_FILES,
+  DESIGN_ANALYSIS_SELECTED_PERSONA,
+  DESIGN_ANALYSIS_EMOTION_TARGET,
+  DESIGN_ANALYSIS_EMOTION_SCALE,
+  DESIGN_ANALYSIS_FILE_NAMES,
+  DESIGN_ANALYSIS_FILE_ID,
 } from "../../AtomStates";
 import {
   getAllConversationsFromIndexedDB,
@@ -159,9 +192,57 @@ import MoleculeAccountPopup from "../../Login_Sign/components/molecules/Molecule
 import MoleculeSignPopup from "../../Login_Sign/components/molecules/MoleculeSignPopup"; // 회원가입 팝업 컴포넌트 임포트
 import { useSaveConversation } from "../../Expert_Insight/components/atoms/AtomSaveConversation";
 
-import OrganismReportPopup from "../../Expert_Insight/components/organisms/OrganismReportPopup"; // 팝업 컴포넌트 임포트
-
 const OrganismIncNavigation = () => {
+  const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
+    DESIGN_ANALYSIS_FILE_ID
+  );
+  const [ideaGeneratorInfo, setIdeaGeneratorInfo] =
+    useAtom(IDEA_GENERATOR_INFO);
+  const [ideaGeneratorKnowTarget, setIdeaGeneratorKnowTarget] = useAtom(
+    IDEA_GENERATOR_KNOW_TARGET
+  );
+  const [ideaGeneratorCustomTarget, setIdeaGeneratorCustomTarget] = useAtom(
+    IDEA_GENERATOR_CUSTOM_TARGET
+  );
+  const [ideaGeneratorPersona, setIdeaGeneratorPersona] = useAtom(
+    IDEA_GENERATOR_PERSONA
+  );
+  const [ideaGeneratorIdea, setIdeaGeneratorIdea] =
+    useAtom(IDEA_GENERATOR_IDEA);
+  const [ideaGeneratorClustering, setIdeaGeneratorClustering] = useAtom(
+    IDEA_GENERATOR_CLUSTERING
+  );
+  const [ideaGeneratorFinalReport, setIdeaGeneratorFinalReport] = useAtom(
+    IDEA_GENERATOR_FINAL_REPORT
+  );
+  const [ideaGeneratorSelectedPersona, setIdeaGeneratorSelectedPersona] =
+    useAtom(IDEA_GENERATOR_SELECTED_PERSONA);
+
+  // export const TARGET_DISCOVERY_PERSONA = atom([]);
+  // export const SELECTED_TARGET_DISCOVERY_PERSONA = atom([]);
+  // export const TARGET_DISCOVERY_SCENARIO = atom([]);
+  // export const SELECTED_TARGET_DISCOVERY_SCENARIO = atom([]);
+  // export const TARGET_DISCOVERY_FINAL_REPORT = atom({});
+
+  // export const TOOL_ID = atom("");
+  // export const TOOL_STEP = atom(0);
+  const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
+  const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
+    TARGET_DISCOVERY_INFO
+  );
+  const [targetDiscoveryPersona, setTargetDiscoveryPersona] = useAtom(
+    TARGET_DISCOVERY_PERSONA
+  );
+  const [targetDiscoveryScenario, setTargetDiscoveryScenario] = useAtom(
+    TARGET_DISCOVERY_SCENARIO
+  );
+  const [selectedTargetDiscoveryScenario, setSelectedTargetDiscoveryScenario] =
+    useAtom(SELECTED_TARGET_DISCOVERY_SCENARIO);
+  const [targetDiscoveryFinalReport, setTargetDiscoveryFinalReport] = useAtom(
+    TARGET_DISCOVERY_FINAL_REPORT
+  );
+  const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const location = useLocation();
   const [customPersonaList, setCustomPersonaList] =
     useAtom(CUSTOM_PERSONA_LIST);
@@ -498,10 +579,58 @@ const OrganismIncNavigation = () => {
     setMarketingRecommendedItemButtonState,
   ] = useAtom(MARKETING_RECOMMENDED_ITEM_BUTTON_STATE);
 
+  const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_INFO
+  );
+  const [customerValueAnalyzerPersona, setCustomerValueAnalyzerPersona] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_PERSONA);
+  const [customerValueAnalyzerJourneyMap, setCustomerValueAnalyzerJourneyMap] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
+  const [customerValueAnalyzerFactor, setCustomerValueAnalyzerFactor] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_FACTOR
+  );
+  const [customerValueAnalyzerClustering, setCustomerValueAnalyzerClustering] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_CLUSTERING);
+  const [
+    customerValueAnalyzerPositioning,
+    setCustomerValueAnalyzerPositioning,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_POSITIONING);
+  const [
+    customerValueAnalyzerFinalReport,
+    setCustomerValueAnalyzerFinalReport,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_FINAL_REPORT);
+  const [
+    customerValueAnalyzerSelectedFactor,
+    setCustomerValueAnalyzerSelectedFactor,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR);
+  const [
+    customerValueAnalyzerSelectedPersona,
+    setCustomerValueAnalyzerSelectedPersona,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA);
   // useEffect(() => {
   //   setIsSection1Open(false);
   //   setIsSection2Open(false);
   // }, [isLoggedIn]);
+
+  const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] =
+    useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS);
+  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(
+    DESIGN_ANALYSIS_BUSINESS_INFO
+  );
+  const [designAnalysisUploadedFiles, setDesignAnalysisUploadedFiles] = useAtom(
+    DESIGN_ANALYSIS_UPLOADED_FILES
+  );
+  const [designAnalysisSelectedPersona, setDesignAnalysisSelectedPersona] =
+    useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
+  const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(
+    DESIGN_ANALYSIS_EMOTION_TARGET
+  );
+  const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(
+    DESIGN_ANALYSIS_EMOTION_SCALE
+  );
+  const [designAnalysisFileNames, setDesignAnalysisFileNames] = useAtom(
+    DESIGN_ANALYSIS_FILE_NAMES
+  );
 
   const [isPopupLogin, setIsPopupLogin] = useState(false);
 
@@ -803,27 +932,30 @@ const OrganismIncNavigation = () => {
           setChatList([]); // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
           return;
         }
-        // const response = await axios.get(
-        //   "https://wishresearch.kr/panels/chat_list",
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${accessToken}`,
-        //     },
-        //   }
-        // // );
+        const response_chat_list = await axios.get(
+          "https://wishresearch.kr/panels/chat_list",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         const response = await getToolListOnServer(1000, 1, isLoggedIn);
-        // const sortedChatList = response.data
-        //   .filter(
-        //     (chat) => chat.business_info !== null && chat.business_info !== ""
-        //   ) // business_info가 비었으면(기초보고서 생성 전) 히스토리에 남기지 않음
-        //   .sort((a, b) => b.timestamp - a.timestamp); // 최근 날짜 순으로 정렬
-        const sortedChatList = response.data
-          // .filter((chat) => chat.business !== null && chat.business !== "") // business_info가 비었으면(기초보고서 생성 전) 히스토리에 남기지 않음
-          .sort(
-            (a, b) =>
-              b.createDate || b.createDate - a.createDate || a.createDate
-          ); // 최근 날짜 순으로 정렬
 
+        // 두 리스트 병합
+        const mergedList = [
+          ...response_chat_list.data.filter((item) => item.business_info),
+          ...response.data,
+        ];
+
+        // 날짜 기준으로 정렬
+        const sortedChatList = mergedList.sort((a, b) => {
+          const dateA = b.timestamp;
+          const dateB = a.timestamp;
+          return dateA - dateB;
+        }); // 최근 날짜 순으로 정렬
+
+        // console.log("🚀 ~ fetchChatList ~ sortedChatList:", sortedChatList);
         setChatList(sortedChatList);
       } catch (error) {
         console.error("대화 목록 가져오기 오류:", error);
@@ -858,194 +990,400 @@ const OrganismIncNavigation = () => {
     fetchReports();
   }, [reportRefreshTrigger, isLoggedIn]);
 
-  const handleConversationClick = async (conversationId) => {
+  const handleConversationClick = async (conversationId, conversationType) => {
     if (isLoading) {
       return;
     }
+    if (conversationType === "expert") {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const response = await axios.get(
+          `https://wishresearch.kr/panels/chat/${conversationId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        const chatData = response.data.chat_data;
+        setSavedTimestamp(chatData.timestamp); // 대화 날짜 설정
+        setSelectedExpertIndex(
+          chatData.expert_index !== undefined ? chatData.expert_index : "0"
+        );
+        setConversationId(chatData.id); // 대화 ID 설정
+        setConversation(chatData.conversation); // 이전 대화 내역 설정
+        setConversationStage(chatData.conversationStage); // 대화 단계 설정
+        setInputBusinessInfo(chatData.inputBusinessInfo); // 비즈니스 정보 설정
+        setTitleOfBusinessInfo(chatData.analysisReportData.title); // 분석 데이터 설정
+        setMainFeaturesOfBusinessInformation(
+          chatData.analysisReportData.mainFeatures
+        ); // 주요 특징 설정
+        setMainCharacteristicOfBusinessInformation(
+          chatData.analysisReportData.mainCharacter
+        ); // 주요 특징 설정
+        setBusinessInformationTargetCustomer(
+          chatData.analysisReportData.mainCustomer
+        ); // 목표 고객 설정
 
-    try {
-      const accessToken = sessionStorage.getItem("accessToken");
-      // const response = await axios.get(
-      //   `https://wishresearch.kr/panels/chat/${conversationId}`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${accessToken}`,
-      //     },
-      //   }
-      // );
-      const response = await getToolOnServer(conversationId, isLoggedIn);
-      const chatData = response.data.chat_data;
-      // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
-      setSavedTimestamp(chatData.timestamp); // 대화 날짜 설정
-      setSelectedExpertIndex(
-        chatData.expert_index !== undefined ? chatData.expert_index : "0"
-      );
-      setConversationId(chatData.id); // 대화 ID 설정
-      setConversation(chatData.conversation); // 이전 대화 내역 설정
-      setConversationStage(chatData.conversationStage); // 대화 단계 설정
-      setInputBusinessInfo(chatData.inputBusinessInfo); // 비즈니스 정보 설정
-      setTitleOfBusinessInfo(chatData.analysisReportData.title); // 분석 데이터 설정
-      setMainFeaturesOfBusinessInformation(
-        chatData.analysisReportData.mainFeatures
-      ); // 주요 특징 설정
-      setMainCharacteristicOfBusinessInformation(
-        chatData.analysisReportData.mainCharacter
-      ); // 주요 특징 설정
-      setBusinessInformationTargetCustomer(
-        chatData.analysisReportData.mainCustomer
-      ); // 목표 고객 설정
+        // 전문가 보고서 데이터 복구
+        setStrategyReportData(chatData.strategyReportData || {});
 
-      // 전문가 보고서 데이터 복구
-      setStrategyReportData(chatData.strategyReportData || {});
+        // 필요하다면 추가 상태 업데이트
+        setSelectedAdditionalKeyword(chatData.selectedAdditionalKeyword || []);
+        setAdditionalReportData(chatData.additionalReportData || []);
+        setCustomerAdditionalReportData(
+          chatData.customerAdditionalReportData || []
+        );
+        setSelectedCustomerAdditionalKeyword(
+          chatData.selectedCustomerAdditionalKeyword || []
+        );
 
-      // 필요하다면 추가 상태 업데이트
-      setSelectedAdditionalKeyword(chatData.selectedAdditionalKeyword || []);
-      setAdditionalReportData(chatData.additionalReportData || []);
-      setCustomerAdditionalReportData(
-        chatData.customerAdditionalReportData || []
-      );
-      setSelectedCustomerAdditionalKeyword(
-        chatData.selectedCustomerAdditionalKeyword || []
-      );
+        setSelectedPocOptions(chatData.selectedPocOptions || []);
+        setSelectedPocTarget(chatData.selectedPocTarget || {});
+        setRecommendedTargetData(chatData.recommendedTargetData || {});
+        setPocPersonaList(chatData.pocPersonaList || []);
+        setPocDetailReportData(chatData.pocDetailReportData || {});
 
-      setSelectedPocOptions(chatData.selectedPocOptions || []);
-      setSelectedPocTarget(chatData.selectedPocTarget || {});
-      setRecommendedTargetData(chatData.recommendedTargetData || {});
-      setPocPersonaList(chatData.pocPersonaList || []);
-      setPocDetailReportData(chatData.pocDetailReportData || {});
+        setIdeaFeatureData(chatData.ideaFeatureData || []);
+        setIdeaRequirementData(chatData.ideaRequirementData || []);
+        setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
+        setIdeaRequirementDataTemp(chatData.ideaRequirementData || []);
 
-      setIdeaFeatureData(chatData.ideaFeatureData || []);
-      setIdeaRequirementData(chatData.ideaRequirementData || []);
-      setIdeaFeatureDataTemp(chatData.ideaFeatureData || []);
-      setIdeaRequirementDataTemp(chatData.ideaRequirementData || []);
+        setIdeaList(chatData.ideaList || []);
+        setIdeaGroup(chatData.ideaGroup || {});
+        setIdeaPriority(chatData.ideaPriority || []);
+        setIdeaMiroState(chatData.ideaMiroState || 0);
 
-      setIdeaList(chatData.ideaList || []);
-      setIdeaGroup(chatData.ideaGroup || {});
-      setIdeaPriority(chatData.ideaPriority || []);
-      setIdeaMiroState(chatData.ideaMiroState || 0);
+        setButtonState(chatData.buttonState || {});
 
-      setButtonState(chatData.buttonState || {});
+        setGrowthHackerRecommendedSolution(
+          chatData.growthHackerRecommendedSolution || []
+        );
+        setGrowthHackerReportData(chatData.growthHackerReportData || []);
+        setGrowthHackerDetailReportData(
+          chatData.growthHackerDetailReportData || []
+        );
+        setGrowthHackerSelectedSolution(
+          chatData.growthHackerSelectedSolution || []
+        );
+        setKpiQuestionList(chatData.KpiQuestionList || []);
 
-      setGrowthHackerRecommendedSolution(
-        chatData.growthHackerRecommendedSolution || []
-      );
-      setGrowthHackerReportData(chatData.growthHackerReportData || []);
-      setGrowthHackerDetailReportData(
-        chatData.growthHackerDetailReportData || []
-      );
-      setGrowthHackerSelectedSolution(
-        chatData.growthHackerSelectedSolution || []
-      );
-      setKpiQuestionList(chatData.KpiQuestionList || []);
+        setPriceReportData(chatData.priceReportData || {});
+        setPriceScrapData(chatData.priceScrapData || {});
+        setPriceProduct(chatData.priceProduct || []);
+        setPriceSelectedProductSegmentation(
+          chatData.priceSelectedProductSegmentation || []
+        );
+        setPriceProductSegmentation(chatData.priceProductSegmentation || []);
 
-      setPriceReportData(chatData.priceReportData || {});
-      setPriceScrapData(chatData.priceScrapData || {});
-      setPriceProduct(chatData.priceProduct || []);
-      setPriceSelectedProductSegmentation(
-        chatData.priceSelectedProductSegmentation || []
-      );
-      setPriceProductSegmentation(chatData.priceProductSegmentation || []);
+        setCaseReportData(chatData.caseReportData || []);
+        setCaseHashTag(chatData.caseHashTag || []);
 
-      setCaseReportData(chatData.caseReportData || []);
-      setCaseHashTag(chatData.caseHashTag || []);
+        setSurveyGuidelineDetailReportData(
+          chatData.surveyGuidelineDetailReportData || {}
+        );
+        setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
+        setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
+        setSurveyGoalFixed(chatData.surveyGoalFixed || []);
+        setSurveyQuestionList(chatData.surveyQuestionList || []);
 
-      setSurveyGuidelineDetailReportData(
-        chatData.surveyGuidelineDetailReportData || {}
-      );
-      setSurveyGuidelineReportData(chatData.surveyGuidelineReportData || {});
-      setSurveyGoalSuggestionList(chatData.surveyGoalSuggestionList || []);
-      setSurveyGoalFixed(chatData.surveyGoalFixed || []);
-      setSurveyQuestionList(chatData.surveyQuestionList || []);
+        setBmModelSuggestionReportData(
+          chatData.bmModelSuggestionReportData || []
+        );
+        setBmQuestionList(chatData.bmQuestionList || []);
+        setBmSelectedProblemOptions(chatData.bmSelectedProblemOptions || {});
+        setBmOrLean(chatData.bmOrLean || "");
+        setBmBmAutoReportData(chatData.bmBmAutoReportData || []);
+        setBmLeanAutoReportData(chatData.bmLeanAutoReportData || []);
+        setBmBmAdsReportData(chatData.bmBmAdsReportData || []);
+        setBmLeanAdsReportData(chatData.bmLeanAdsReportData || []);
+        setBmBmCustomReportData(chatData.bmBmCustomReportData || []);
+        setBmLeanCustomReportData(chatData.bmLeanCustomReportData || []);
 
-      setBmModelSuggestionReportData(
-        chatData.bmModelSuggestionReportData || []
-      );
-      setBmQuestionList(chatData.bmQuestionList || []);
-      setBmSelectedProblemOptions(chatData.bmSelectedProblemOptions || {});
-      setBmOrLean(chatData.bmOrLean || "");
-      setBmBmAutoReportData(chatData.bmBmAutoReportData || []);
-      setBmLeanAutoReportData(chatData.bmLeanAutoReportData || []);
-      setBmBmAdsReportData(chatData.bmBmAdsReportData || []);
-      setBmLeanAdsReportData(chatData.bmLeanAdsReportData || []);
-      setBmBmCustomReportData(chatData.bmBmCustomReportData || []);
-      setBmLeanCustomReportData(chatData.bmLeanCustomReportData || []);
+        setIsMarketing(chatData.isMarketing || false);
+        setMarketingMbtiResult(chatData.marketingMbtiResult || {});
+        setMarketingResearchReportData(
+          chatData.marketingResearchReportData || []
+        );
+        setMarketingBmReportData(chatData.marketingBmReportData || []);
+        setMarketingCustomerData(chatData.marketingCustomerData || []);
+        setMarketingSelectedCustomer(chatData.marketingSelectedCustomer || []);
+        setMarketingFinalCustomer(chatData.marketingFinalCustomer || {});
+        setMarketingFinalReportData(chatData.marketingFinalReportData || []);
 
-      setIsMarketing(chatData.isMarketing || false);
-      setMarketingMbtiResult(chatData.marketingMbtiResult || {});
-      setMarketingResearchReportData(
-        chatData.marketingResearchReportData || []
-      );
-      setMarketingBmReportData(chatData.marketingBmReportData || []);
-      setMarketingCustomerData(chatData.marketingCustomerData || []);
-      setMarketingSelectedCustomer(chatData.marketingSelectedCustomer || []);
-      setMarketingFinalCustomer(chatData.marketingFinalCustomer || {});
-      setMarketingFinalReportData(chatData.marketingFinalReportData || []);
+        setStrategyConsultantReportData(
+          chatData.strategyConsultantReportData || []
+        );
 
-      setStrategyConsultantReportData(
-        chatData.strategyConsultantReportData || []
-      );
+        if (chatData.isMarketing) {
+          const updatedConversation = [...chatData.conversation];
 
-      if (chatData.isMarketing) {
-        const updatedConversation = [...chatData.conversation];
+          if (
+            updatedConversation.length > 0 &&
+            updatedConversation[updatedConversation.length - 1].type ===
+              "marketingSignUpButton"
+          ) {
+            updatedConversation.pop();
+            updatedConversation.pop();
+          }
 
-        if (
-          updatedConversation.length > 0 &&
-          updatedConversation[updatedConversation.length - 1].type ===
-            "marketingSignUpButton"
-        ) {
-          updatedConversation.pop();
-          updatedConversation.pop();
+          setConversation(updatedConversation);
+          saveConversation({
+            changingConversation: {
+              conversation: updatedConversation,
+              conversationId: chatData.id,
+              timestamp: chatData.timestamp,
+              isMarketing: chatData.isMarketing,
+              expert_index: chatData.expert_index,
+              inputBusinessInfo: chatData.inputBusinessInfo,
+              analysisReportData: chatData.analysisReportData,
+              conversationStage: chatData.conversationStage,
+              title: chatData.analysisReportData.title,
+              mainFeatures: chatData.analysisReportData.mainFeatures,
+              marketingMbtiResult: chatData.marketingMbtiResult,
+              marketingResearchReportData: chatData.marketingResearchReportData,
+              marketingBmReportData: chatData.marketingBmReportData,
+              marketingCustomerData: chatData.marketingCustomerData,
+              marketingSelectedCustomer: chatData.marketingSelectedCustomer,
+              marketingFinalCustomer: chatData.marketingFinalCustomer,
+              marketingFinalReportData: chatData.marketingFinalReportData,
+            },
+          });
         }
 
-        setConversation(updatedConversation);
-        saveConversation({
-          changingConversation: {
-            conversation: updatedConversation,
-            conversationId: chatData.id,
-            timestamp: chatData.timestamp,
-            isMarketing: chatData.isMarketing,
-            expert_index: chatData.expert_index,
-            inputBusinessInfo: chatData.inputBusinessInfo,
-            analysisReportData: chatData.analysisReportData,
-            conversationStage: chatData.conversationStage,
-            title: chatData.analysisReportData.title,
-            mainFeatures: chatData.analysisReportData.mainFeatures,
-            marketingMbtiResult: chatData.marketingMbtiResult,
-            marketingResearchReportData: chatData.marketingResearchReportData,
-            marketingBmReportData: chatData.marketingBmReportData,
-            marketingCustomerData: chatData.marketingCustomerData,
-            marketingSelectedCustomer: chatData.marketingSelectedCustomer,
-            marketingFinalCustomer: chatData.marketingFinalCustomer,
-            marketingFinalReportData: chatData.marketingFinalReportData,
-          },
-        });
+        // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
+        // set어프로치패스(2)
+        setApproachPath(2);
+
+        setIsEditingNow(false);
+        setIsEditingIdeaFeature(false);
+        setIsEditingIdeaCustomer(false);
+        setAddingIdeaFeature(false);
+        setActiveIdeaFeatureIndex(0);
+        setAddContentIdeaFeature("");
+        setEditedIdeaFeatureTitle("");
+        setAddingIdeaCustomer(false);
+        setActiveIdeaCustomerIndex(0);
+        setAddContentIdeaCustomer("");
+        setEditedIdeaCustomerTitle("");
+        setAnalysisButtonState(0);
+        setExpertButtonState(0);
+        setAdditionButtonState(0);
+        setCustomerAdditionButtonState(0);
+        setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
+
+        // 페이지를 대화가 이어지는 형태로 전환
+        navigate(`/conversation/${conversationId}`);
+      } catch (error) {
+        console.error("대화 내용 가져오기 오류:", error);
       }
+    } else {
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
 
-      // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
-      // set어프로치패스(2)
-      setApproachPath(2);
+        const response = await getToolOnServer(conversationId, isLoggedIn);
 
-      setIsEditingNow(false);
-      setIsEditingIdeaFeature(false);
-      setIsEditingIdeaCustomer(false);
-      setAddingIdeaFeature(false);
-      setActiveIdeaFeatureIndex(0);
-      setAddContentIdeaFeature("");
-      setEditedIdeaFeatureTitle("");
-      setAddingIdeaCustomer(false);
-      setActiveIdeaCustomerIndex(0);
-      setAddContentIdeaCustomer("");
-      setEditedIdeaCustomerTitle("");
-      setAnalysisButtonState(0);
-      setExpertButtonState(0);
-      setAdditionButtonState(0);
-      setCustomerAdditionButtonState(0);
-      setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
+        const chatData = response;
 
-      // 페이지를 대화가 이어지는 형태로 전환
-      navigate(`/conversation/${conversationId}`);
-    } catch (error) {
-      console.error("대화 내용 가져오기 오류:", error);
+        setToolStep(1);
+        setToolId("");
+        setTargetDiscoveryInfo({
+          type: "",
+          business: "",
+          target: "",
+          specific_situation: "",
+          country: "",
+        });
+        setTargetDiscoveryPersona([]);
+        setTargetDiscoveryScenario([]);
+        setTargetDiscoveryFinalReport({});
+        setToolLoading(false);
+        // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
+        setToolStep(chatData?.completed_step);
+        setToolId(chatData?.id);
+        setTargetDiscoveryInfo({
+          type: chatData?.type,
+          business: chatData?.business,
+          target: chatData?.target,
+          specific_situation: chatData?.specific_situation,
+          country: chatData?.country,
+        });
+        setTargetDiscoveryPersona(chatData?.target_discovery_persona);
+        setTargetDiscoveryScenario(chatData?.target_discovery_scenario);
+        setTargetDiscoveryFinalReport(chatData?.target_discovery_final_report);
+        setToolLoading(true);
+
+        // customer value persona 타입일 경우
+
+        setToolStep(1);
+        setToolId("");
+        setCustomerValueAnalyzerInfo({
+          business: "",
+          target_list: [],
+          analysis_scope: "",
+          analysis_purpose: "",
+        });
+        setCustomerValueAnalyzerPersona([]);
+        setCustomerValueAnalyzerJourneyMap([]);
+        setCustomerValueAnalyzerFactor([]);
+        setCustomerValueAnalyzerClustering([]);
+        setCustomerValueAnalyzerPositioning([]);
+        setCustomerValueAnalyzerFinalReport({});
+        setCustomerValueAnalyzerSelectedPersona([]);
+        setToolLoading(false);
+        setToolStep(chatData?.completed_step);
+        setToolId(chatData?.id);
+        setCustomerValueAnalyzerInfo({
+          business: chatData?.business,
+          target_list: chatData?.target_list,
+          analysis_scope: chatData?.analysis_scope,
+          analysis_purpose: chatData?.analysis_purpose,
+        });
+        setCustomerValueAnalyzerPersona(chatData?.customer_value_persona || []);
+        setCustomerValueAnalyzerJourneyMap(
+          chatData?.customer_value_journey_map || []
+        );
+        setCustomerValueAnalyzerSelectedPersona(
+          chatData?.selected_customer_value_persona || []
+        );
+        setCustomerValueAnalyzerFactor(chatData?.customer_value_factor || []);
+        setCustomerValueAnalyzerClustering(
+          chatData?.customer_value_clustering || []
+        );
+        // setCustomerValueAnalyzerSelectedFactor(
+        //   chatData.customer_value_selected_factor || []
+        // );
+        setCustomerValueAnalyzerPositioning(
+          chatData?.customer_value_positioning || []
+        );
+        setCustomerValueAnalyzerFinalReport(
+          chatData?.customer_value_final_report || {}
+        );
+        setToolLoading(true);
+        setIdeaGeneratorInfo({});
+        setIdeaGeneratorPersona([]);
+        setIdeaGeneratorIdea([]);
+        setIdeaGeneratorClustering([]);
+        setIdeaGeneratorFinalReport({});
+        setIdeaGeneratorSelectedPersona([]);
+        setIdeaGeneratorKnowTarget(null);
+
+        setIdeaGeneratorInfo({
+          business: chatData?.business,
+          core_value: chatData?.core_value,
+        });
+
+        setIdeaGeneratorPersona(chatData?.idea_generator_persona || []);
+        setIdeaGeneratorIdea(chatData?.idea_generator_idea || []);
+        setIdeaGeneratorClustering(chatData?.idea_generator_clustering || []);
+        setIdeaGeneratorFinalReport(
+          chatData?.idea_generator_final_report || {}
+        );
+        setIdeaGeneratorSelectedPersona(
+          chatData?.idea_generator_selected_persona || []
+        );
+        setIdeaGeneratorKnowTarget(chatData?.idea_generator_know_target);
+
+        setDesignAnalysisEmotionAnalysis([]);
+        setDesignAnalysisBusinessInfo("");
+        setDesignAnalysisUploadedFiles([]);
+        setDesignAnalysisFileId([]);
+        setDesignAnalysisSelectedPersona([]);
+        setDesignAnalysisEmotionTarget({});
+        setDesignAnalysisEmotionScale([]);
+        setDesignAnalysisFileNames([]);
+        setToolLoading(false);
+        setToolStep(chatData?.completed_step);
+        setToolId(chatData?.id);
+        setDesignAnalysisEmotionAnalysis(
+          chatData?.design_emotion_analysis || []
+        );
+        setDesignAnalysisBusinessInfo(chatData?.business || "");
+        setDesignAnalysisSelectedPersona(
+          chatData?.design_selected_persona || []
+        );
+        setDesignAnalysisEmotionTarget(chatData?.design_emotion_target || {});
+        setDesignAnalysisEmotionScale(chatData?.design_emotion_scale || []);
+        setDesignAnalysisFileNames(
+          chatData?.image_name?.map((item) => item.name) || []
+        );
+        setDesignAnalysisFileId(
+          chatData?.image_name?.map((item) => item.id) || []
+        );
+        setToolLoading(true);
+
+        if (chatData.isMarketing) {
+          const updatedConversation = [...chatData.conversation];
+
+          if (
+            updatedConversation.length > 0 &&
+            updatedConversation[updatedConversation.length - 1].type ===
+              "marketingSignUpButton"
+          ) {
+            updatedConversation.pop();
+            updatedConversation.pop();
+          }
+
+          setConversation(updatedConversation);
+          saveConversation({
+            changingConversation: {
+              conversation: updatedConversation,
+              conversationId: chatData.id,
+              timestamp: chatData.timestamp,
+              isMarketing: chatData.isMarketing,
+              expert_index: chatData.expert_index,
+              inputBusinessInfo: chatData.inputBusinessInfo,
+              analysisReportData: chatData.analysisReportData,
+              conversationStage: chatData.conversationStage,
+              title: chatData.analysisReportData.title,
+              mainFeatures: chatData.analysisReportData.mainFeatures,
+              marketingMbtiResult: chatData.marketingMbtiResult,
+              marketingResearchReportData: chatData.marketingResearchReportData,
+              marketingBmReportData: chatData.marketingBmReportData,
+              marketingCustomerData: chatData.marketingCustomerData,
+              marketingSelectedCustomer: chatData.marketingSelectedCustomer,
+              marketingFinalCustomer: chatData.marketingFinalCustomer,
+              marketingFinalReportData: chatData.marketingFinalReportData,
+            },
+          });
+        }
+
+        // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
+        // set어프로치패스(2)
+        setApproachPath(2);
+
+        setIsEditingNow(false);
+        setIsEditingIdeaFeature(false);
+        setIsEditingIdeaCustomer(false);
+        setAddingIdeaFeature(false);
+        setActiveIdeaFeatureIndex(0);
+        setAddContentIdeaFeature("");
+        setEditedIdeaFeatureTitle("");
+        setAddingIdeaCustomer(false);
+        setActiveIdeaCustomerIndex(0);
+        setAddContentIdeaCustomer("");
+        setEditedIdeaCustomerTitle("");
+        setAnalysisButtonState(0);
+        setExpertButtonState(0);
+        setAdditionButtonState(0);
+        setCustomerAdditionButtonState(0);
+        setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
+
+        // 페이지를 대화가 이어지는 형태로 전환
+        // navigate(`/TargetDiscovery`);
+
+        if (chatData.type === "ix_customer_value_persona") {
+          navigate(`/CustomerValueAnalyzer`);
+        } else if (chatData.type === "ix_idea_generator_persona") {
+          navigate(`/IdeaGenerator`);
+        } else if (chatData.type === "ix_target_discovery_persona") {
+          navigate(`/TargetDiscovery`);
+        } else if (chatData.type === "ix_design_emotion_analysis") {
+          navigate(`/DesignAnalysis`);
+        }
+      } catch (error) {
+        console.error("대화 내용 가져오기 오류:", error);
+      }
     }
   };
 
@@ -1316,7 +1654,152 @@ const OrganismIncNavigation = () => {
         </Link>
 
         <MenuList>
-          <li onClick={handleNewProjectClick}>
+          <li onClick={handleNewProjectClick} className="home">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="18"
+              viewBox="0 0 19 18"
+              fill="none"
+            >
+              <path
+                d="M10.4703 1.67781C9.94131 1.13051 9.05869 1.13051 8.52968 1.67781L1.876 8.56168C1.05756 9.40844 1.66315 10.8143 2.84632 10.8143H3.35025V15.7309C3.35025 16.5795 4.04437 17.2673 4.90061 17.2673H8.00132V13.119C8.00132 12.2987 8.6723 11.6338 9.5 11.6338C10.3277 11.6338 10.9987 12.2987 10.9987 13.119V17.2673H14.2027C15.059 17.2673 15.7531 16.5795 15.7531 15.7309V10.8143H16.1537C17.3369 10.8143 17.9424 9.40843 17.124 8.56168L10.4703 1.67781Z"
+                stroke="#666666"
+                stroke-width="1.33333"
+              />
+            </svg>
+
+            <span>HOME</span>
+          </li>
+
+          <li onClick={() => navigate("/DashBoard")} className="dashboard">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="21"
+              height="21"
+              viewBox="0 0 21 21"
+              fill="none"
+            >
+              <rect
+                x="3.5"
+                y="3.26733"
+                width="5.96754"
+                height="5.96754"
+                rx="0.661257"
+                stroke="#666666"
+              />
+              <rect
+                x="11.6289"
+                y="3.26733"
+                width="5.96754"
+                height="5.96754"
+                rx="0.661257"
+                stroke="#666666"
+              />
+              <rect
+                x="11.6289"
+                y="11.3962"
+                width="5.96754"
+                height="5.96754"
+                rx="0.661257"
+                stroke="#666666"
+              />
+              <rect
+                x="3.5"
+                y="11.3962"
+                width="5.96754"
+                height="5.96754"
+                rx="0.661257"
+                stroke="#666666"
+              />
+            </svg>
+
+            <span>대시보드</span>
+          </li>
+
+          <li onClick={() => navigate("/AiPersona")} className="persona">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="19"
+              viewBox="0 0 19 19"
+              fill="none"
+            >
+              <path
+                d="M4.3671 6.17358C4.47011 7.60339 5.53077 8.70483 6.68741 8.70483C7.84405 8.70483 8.90648 7.60374 9.00773 6.17358C9.1132 4.68612 8.08066 3.64233 6.68741 3.64233C5.29417 3.64233 4.26163 4.71319 4.3671 6.17358Z"
+                stroke="#666"
+                stroke-width="1.125"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M6.68764 10.9548C8.97877 10.9548 11.182 12.0928 11.734 14.3091C11.8071 14.6023 11.6232 14.8923 11.3219 14.8923H2.05299C1.7517 14.8923 1.56889 14.6023 1.64096 14.3091C2.19291 12.0573 4.39616 10.9548 6.68764 10.9548Z"
+                stroke="#666"
+                stroke-width="1.125"
+                stroke-miterlimit="10"
+              />
+              <path
+                d="M11.4688 6.80429C11.551 7.94616 12.4082 8.84546 13.3321 8.84546C14.256 8.84546 15.1145 7.94651 15.1953 6.80429C15.2794 5.61636 14.4451 4.76733 13.3321 4.76733C12.219 4.76733 11.3848 5.63815 11.4688 6.80429Z"
+                stroke="#666"
+                stroke-width="1.125"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M11.2575 11.0246C11.892 10.7339 12.5909 10.6221 13.3317 10.6221C15.1598 10.6221 16.9211 11.5309 17.3624 13.301C17.4204 13.5351 17.2734 13.7668 17.0329 13.7668H13.0856"
+                stroke="#666"
+                stroke-width="1.125"
+                stroke-miterlimit="10"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            <span>페르소나</span>
+          </li>
+
+          <li onClick={() => navigate("/Tool")} className="research">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="27"
+              height="25"
+              viewBox="0 0 27 25"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M18.0468 8.00732C17.7344 8.61753 17.2913 9.11436 16.8005 9.50821C16.4813 9.76433 16.1402 9.97879 15.7976 10.1558C16.5655 10.5238 17.1449 11.0936 17.5631 11.7297C17.7497 12.0133 17.9047 12.3106 18.0317 12.6101C18.308 12.1292 18.6624 11.7073 19.059 11.3464C19.4728 10.9699 19.9361 10.6557 20.4141 10.4039C19.7026 10.0837 19.1416 9.60167 18.7094 9.05924C18.4416 8.72319 18.2233 8.36469 18.0468 8.00732ZM17.4279 14.8634C17.4277 14.1931 17.2134 13.1727 16.6565 12.3258C16.1146 11.5015 15.2573 10.8479 13.916 10.8115C13.556 10.8018 13.4086 10.503 13.3831 10.3426C13.3681 10.2485 13.3736 10.1225 13.44 9.99631C13.5145 9.85469 13.6517 9.74486 13.8234 9.71151C14.4839 9.58321 15.3864 9.25175 16.1214 8.66197C16.8443 8.08188 17.3903 7.26785 17.426 6.13639C17.4377 5.7665 17.7502 5.62493 17.9097 5.60405C18.0041 5.59169 18.1278 5.60079 18.2499 5.66791C18.3862 5.74282 18.4946 5.8783 18.5268 6.05039C18.6506 6.71102 18.9592 7.63179 19.5579 8.38304C20.1431 9.11738 21.0054 9.69443 22.2969 9.72375C22.6358 9.73144 22.7981 10.0029 22.8303 10.1805C22.848 10.2788 22.8434 10.4091 22.7752 10.5383C22.6993 10.6822 22.5632 10.7863 22.4017 10.8206C21.5393 11.0042 20.5523 11.4546 19.7893 12.1489C19.0338 12.8364 18.5167 13.7425 18.5129 14.8651L18.5129 14.8778H17.4279L17.4279 14.8634ZM13.9454 9.72692L13.9474 9.72698L13.9454 9.72692ZM7.38263 8.50154C7.08301 8.50154 6.84013 8.74442 6.84013 9.04404V19.5233C6.84013 19.823 7.08301 20.0658 7.38263 20.0658H19.2113C19.5109 20.0658 19.7538 19.823 19.7538 19.5233V15.6146H20.8388V19.5233C20.8388 20.4222 20.1101 21.1508 19.2113 21.1508H7.38263C6.48379 21.1508 5.75513 20.4222 5.75513 19.5233V9.04404C5.75513 8.14519 6.48378 7.41653 7.38263 7.41653H12.6407C12.9403 7.41653 13.1832 7.65942 13.1832 7.95904C13.1832 8.25865 12.9403 8.50154 12.6407 8.50154H7.38263Z"
+                fill="#666666"
+              />
+            </svg>
+
+            <span>리서치툴</span>
+          </li>
+
+          <li onClick={() => navigate("")} className="storagebox">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="19"
+              viewBox="0 0 18 19"
+              fill="none"
+            >
+              <path
+                d="M4.30088 8.85938H1.91275C1.35364 8.85938 0.900391 9.31262 0.900391 9.87174V16.5C0.900391 17.0591 1.35364 17.5124 1.91275 17.5124H16.0858C16.6449 17.5124 17.0981 17.0591 17.0981 16.5V9.87173C17.0981 9.31262 16.6449 8.85938 16.0858 8.85938H13.6977C13.1385 8.85938 12.6853 9.31262 12.6853 9.87173V11.4249C12.6853 11.984 12.232 12.4372 11.6729 12.4372H8.99927H6.3256C5.76649 12.4372 5.31324 11.984 5.31324 11.4249V9.87173C5.31324 9.31262 4.85999 8.85938 4.30088 8.85938Z"
+                stroke="#666666"
+                stroke-width="1.01236"
+              />
+              <path
+                d="M1.08789 9.24237L4.15858 1.56219C4.24528 1.34533 4.45529 1.20312 4.68884 1.20312H13.1816C13.4122 1.20312 13.6202 1.3419 13.7088 1.55489L16.9063 9.24237"
+                stroke="#666666"
+                stroke-width="1.0108"
+              />
+            </svg>
+
+            <span>보관함</span>
+          </li>
+
+          {/* <li onClick={handleNewProjectClick}>
             <svg
               width="32"
               height="33"
@@ -1339,7 +1822,6 @@ const OrganismIncNavigation = () => {
               />
             </svg>
 
-            {/* <img src={images.PlusSquareWhite} alt="새 작업" /> */}
             <span>새 작업</span>
           </li>
 
@@ -1357,7 +1839,6 @@ const OrganismIncNavigation = () => {
               />
             </svg>
 
-            {/* <img src={images.Folder} alt="작업관리" /> */}
             <span>작업관리</span>
           </li>
 
@@ -1375,47 +1856,8 @@ const OrganismIncNavigation = () => {
               />
             </svg>
 
-            {/* <svg
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M3.57468 5.40948C4.43398 3.92612 5.79676 2.80012 7.41555 2.23594C9.03433 1.67177 10.8018 1.70685 12.3969 2.3348C13.992 2.96275 15.309 4.14194 16.1088 5.65823C16.9086 7.17451 17.138 8.92734 16.7555 10.5984C16.373 12.2695 15.4039 13.7479 14.0242 14.7653C12.6445 15.7827 10.9456 16.2716 9.23616 16.1431C7.5267 16.0147 5.92 15.2774 4.70782 14.0652C4.51256 13.87 4.19597 13.87 4.00071 14.0652C3.80545 14.2605 3.80545 14.5771 4.00071 14.7723C5.38211 16.1537 7.21312 16.9939 9.16122 17.1403C11.1093 17.2867 13.0453 16.7296 14.6177 15.5702C16.19 14.4107 17.2944 12.7259 17.7303 10.8215C18.1662 8.91718 17.9047 6.91966 16.9933 5.19169C16.0819 3.46373 14.581 2.11992 12.7632 1.40431C10.9454 0.688688 8.93122 0.648717 7.08645 1.29165C5.24167 1.93458 3.68865 3.21778 2.70939 4.90822C1.95489 6.21068 1.57955 7.68833 1.61166 9.17627L0.91703 8.48164C0.721768 8.28638 0.405185 8.28638 0.209923 8.48164C0.014661 8.6769 0.014661 8.99348 0.209923 9.18874L1.83023 10.8091C2.01742 10.9962 2.3161 11.004 2.51251 10.8323C2.57063 10.7947 2.61983 10.7456 2.65753 10.6889L4.15764 9.18874C4.35291 8.99348 4.35291 8.6769 4.15765 8.48164C3.96238 8.28638 3.6458 8.28638 3.45054 8.48164L2.61671 9.31547C2.55678 7.95571 2.88544 6.59929 3.57468 5.40948ZM9.85905 6.0391C9.85905 5.76296 9.63519 5.5391 9.35905 5.5391C9.08291 5.5391 8.85905 5.76296 8.85905 6.0391V9.54488V9.81521L9.08523 9.96324L11.8282 11.7585C12.0593 11.9098 12.3692 11.845 12.5204 11.614C12.6716 11.3829 12.6069 11.073 12.3759 10.9218L9.85905 9.27456V6.0391Z"
-                fill="#666"
-              />
-            </svg> */}
-
-            {/* <img src={images.Clock} alt="히스토리" /> */}
             <span>Explore</span>
-          </li>
-
-          {/*<li className="storagebox">
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              width="18" 
-              height="19" 
-              viewBox="0 0 18 19" 
-              fill="none"
-            >
-              <path 
-                d="M4.30088 8.85938H1.91275C1.35364 8.85938 0.900391 9.31262 0.900391 9.87174V16.5C0.900391 17.0591 1.35364 17.5124 1.91275 17.5124H16.0858C16.6449 17.5124 17.0981 17.0591 17.0981 16.5V9.87173C17.0981 9.31262 16.6449 8.85938 16.0858 8.85938H13.6977C13.1385 8.85938 12.6853 9.31262 12.6853 9.87173V11.4249C12.6853 11.984 12.232 12.4372 11.6729 12.4372H8.99927H6.3256C5.76649 12.4372 5.31324 11.984 5.31324 11.4249V9.87173C5.31324 9.31262 4.85999 8.85938 4.30088 8.85938Z" 
-                stroke="#666666" 
-                stroke-width="1.01236"
-              />
-              <path 
-                d="M1.08789 9.24237L4.15858 1.56219C4.24528 1.34533 4.45529 1.20312 4.68884 1.20312H13.1816C13.4122 1.20312 13.6202 1.3419 13.7088 1.55489L16.9063 9.24237" 
-                stroke="#666666" 
-                stroke-width="1.0108"
-              />
-            </svg>
-
-            <span>보관함</span>
-          </li>*/}
+          </li> */}
         </MenuList>
 
         <Setting className="logBtn">
@@ -1554,109 +1996,116 @@ const OrganismIncNavigation = () => {
                   <>
                     <ul>
                       {chatList
-                        // .filter(
-                        //   (chat) => Date.now() - chat.timestamp <= 604800000
-                        // )
-                        .map(
-                          (chat) => (
-                            console.log("🚀 ~ chatList ~ chat:", chat),
-                            (
-                              <li
-                                key={chat.id}
-                                className={`toggle ${
-                                  editToggleIndex === chat.id ? "active" : ""
-                                }`}
+                        .filter(
+                          (chat) => Date.now() - chat.timestamp <= 604800000
+                        )
+                        .map((chat) => (
+                          <li
+                            key={chat.id}
+                            className={`toggle ${
+                              editToggleIndex === chat._id ? "active" : ""
+                            }`}
+                          >
+                            <p
+                              onClick={() =>
+                                handleConversationClick(
+                                  chat._id || chat.id,
+                                  chat.type || "expert"
+                                )
+                              }
+                            >
+                              {chat.type === "ix_target_discovery_persona"
+                                ? "타겟 탐색기 - "
+                                : chat.type === "ix_idea_generator_persona"
+                                ? "아이디어 생성기 - "
+                                : chat.type === "ix_customer_value_persona"
+                                ? "고객 핵심 가치 분석기 - "
+                                : chat.type === "ix_design_emotion_analysis"
+                                ? "디자인 감정 분석기 - "
+                                : "전문가 챗 - "}
+                              {chat.view_name ||
+                                chat.business ||
+                                chat.business_info}
+                            </p>
+                            <span
+                              id={`insight-toggle-${chat._id}`}
+                              style={{
+                                display: "inline-block",
+                                cursor: "pointer",
+                              }}
+                              onClick={(event) =>
+                                editBoxToggle(chat._id, event, "recent")
+                              }
+                              className="toggle"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="14"
+                                height="3"
+                                viewBox="0 0 14 3"
+                                fill="none"
                               >
-                                <p
-                                  onClick={() =>
-                                    handleConversationClick(chat.id)
-                                  }
-                                >
-                                  {chat.view_name || chat.business}
-                                </p>
-                                <span
-                                  id={`insight-toggle-${chat.id}`}
-                                  style={{
-                                    display: "inline-block",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={(event) =>
-                                    editBoxToggle(chat.id, event, "recent")
-                                  }
-                                  className="toggle"
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="14"
-                                    height="3"
-                                    viewBox="0 0 14 3"
-                                    fill="none"
-                                  >
-                                    <circle
-                                      cx="2.0067"
-                                      cy="1.51283"
-                                      r="1.49694"
-                                      transform="rotate(-90 2.0067 1.51283)"
-                                      fill="#A0A0A0"
-                                    />
-                                    <circle
-                                      cx="7.00084"
-                                      cy="1.51283"
-                                      r="1.49694"
-                                      transform="rotate(-90 7.00084 1.51283)"
-                                      fill="#A0A0A0"
-                                    />
-                                    <circle
-                                      cx="11.993"
-                                      cy="1.51283"
-                                      r="1.49694"
-                                      transform="rotate(-90 11.993 1.51283)"
-                                      fill="#A0A0A0"
-                                    />
-                                  </svg>
-                                </span>
+                                <circle
+                                  cx="2.0067"
+                                  cy="1.51283"
+                                  r="1.49694"
+                                  transform="rotate(-90 2.0067 1.51283)"
+                                  fill="#A0A0A0"
+                                />
+                                <circle
+                                  cx="7.00084"
+                                  cy="1.51283"
+                                  r="1.49694"
+                                  transform="rotate(-90 7.00084 1.51283)"
+                                  fill="#A0A0A0"
+                                />
+                                <circle
+                                  cx="11.993"
+                                  cy="1.51283"
+                                  r="1.49694"
+                                  transform="rotate(-90 11.993 1.51283)"
+                                  fill="#A0A0A0"
+                                />
+                              </svg>
+                            </span>
 
-                                {editToggleIndex === chat.id && (
-                                  <div
-                                    id={`insight-edit-box-${chat.id}`}
-                                    className="insight-toggle"
-                                    ref={historyEditBoxRef}
+                            {editToggleIndex === chat.id && (
+                              <div
+                                id={`insight-edit-box-${chat.id}`}
+                                className="insight-toggle"
+                                ref={historyEditBoxRef}
+                              >
+                                <EditBox
+                                  id={`insight-edit-box-${chat.id}`}
+                                  isEditToggle={editToggleIndex === chat.id}
+                                  style={{
+                                    top: `${editBoxPosition.top}px`,
+                                    left: `${editBoxPosition.left}px`,
+                                  }}
+                                >
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleChatDeleteButtonClick(chat.id)
+                                    }
                                   >
-                                    <EditBox
-                                      id={`insight-edit-box-${chat.id}`}
-                                      isEditToggle={editToggleIndex === chat.id}
-                                      style={{
-                                        top: `${editBoxPosition.top}px`,
-                                        left: `${editBoxPosition.left}px`,
-                                      }}
-                                    >
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          handleChatDeleteButtonClick(chat.id)
-                                        }
-                                      >
-                                        <img src={images.IconDelete2} alt="" />
-                                        삭제
-                                      </button>
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          handleChangeChatNameButtonClick(
-                                            chat.id
-                                          )
-                                        }
-                                      >
-                                        <img src={images.IconEdit2} alt="" />
-                                        이름 변경
-                                      </button>
-                                    </EditBox>
-                                  </div>
-                                )}
-                              </li>
-                            )
-                          )
-                        )}
+                                    <img src={images.IconDelete2} alt="" />
+                                    삭제
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleChangeChatNameButtonClick(chat.id)
+                                    }
+                                  >
+                                    <img src={images.IconEdit2} alt="" />
+                                    이름 변경
+                                  </button>
+                                </EditBox>
+                              </div>
+                            )}
+                          </li>
+                        ))}
                     </ul>
                   </>
                 ) : (
@@ -2164,16 +2613,20 @@ const MenuList = styled.ul`
         color: ${palette.primary};
       }
 
-      &.management path {
-        stroke: ${palette.primary};
-      }
-
-      &.history path {
-        fill: ${palette.primary};
-      }
-
+      &.home path,
+      &.persona path,
+      &.management path,
       &.storagebox path {
         stroke: ${palette.primary};
+      }
+
+      &.dashboard rect {
+        stroke: ${palette.primary};
+      }
+
+      &.research path,
+      &.history path {
+        fill: ${palette.primary};
       }
     }
   }
@@ -2218,7 +2671,7 @@ const SubNavigation = styled.div`
   position: fixed;
   top: 0;
   left: 64px;
-  max-width: 250px;
+  max-width: 400px;
   width: 100%;
   height: 100dvh;
   display: flex;
