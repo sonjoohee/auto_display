@@ -110,6 +110,15 @@ function App() {
   function RequireToken({ children }) {
     const token = sessionStorage.getItem("accessToken");
     if (!token) {
+      return <Navigate to="/Login" replace />;
+    }
+    return children;
+  }
+
+  // 로그인 상태에서 로그인/회원가입 페이지 접근 제한 컴포넌트
+  function RedirectIfLoggedIn({ children }) {
+    const token = sessionStorage.getItem("accessToken");
+    if (token) {
       return <Navigate to="/" replace />;
     }
     return children;
@@ -286,8 +295,22 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<PageMain />} />
-          <Route path="*" element={<PageMain />} />
+          <Route 
+            path="/" 
+            element={
+              <RequireToken>
+                <PageProject />
+              </RequireToken>
+            }
+          />
+          <Route 
+            path="*" 
+            element={
+              <RequireToken>
+                <PageProject />
+              </RequireToken>
+            } 
+          />
           {/* <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} /> */}
           <Route
             path="/ExpertInsight"
@@ -477,19 +500,24 @@ function App() {
             }
           />
 
+
           {/* SAAS 프로젝트 */}
-          <Route path="/Login" element={<OrganismLogin />} />
 
-          <Route path="/Signin" element={<OrganismSignin />} />
-
-          <Route
-            path="/Project"
+          <Route 
+            path="/Login" 
             element={
-              <RequireToken>
-                <PageProject />
-              </RequireToken>
-            }
-          />
+              <RedirectIfLoggedIn>
+                <OrganismLogin />
+              </RedirectIfLoggedIn>
+            } />
+
+
+          <Route 
+            path="/Signin" 
+            element={
+              <RedirectIfLoggedIn>
+                <OrganismSignin />
+              </RedirectIfLoggedIn>} />
 
           <Route
             path="/ProjectCreate"
