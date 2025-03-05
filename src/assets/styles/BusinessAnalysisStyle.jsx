@@ -325,6 +325,7 @@ export const TabWrapType2 = styled(TabWrap)`
 
 export const TabWrapType3 = styled(TabWrap)`
   gap: 16px !important;
+  border-bottom: ${(props) => props.Border ? `1px solid ${palette.outlineGray}` : "none"};
 `;
 
 export const TabButtonType3 = styled(TabButton)`
@@ -976,6 +977,79 @@ export const Tag = styled.span`
         return `
           color: #020273;
           background: rgba(2, 2, 115, 0.06);
+        `;
+      default:
+        return "display: none;";
+    }
+  }}
+`;
+
+export const UniqueTag = styled.span`
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.5;
+  padding: 4px 12px;
+  border-radius: 15px;
+
+  &::before {
+    content: "${(props) => {
+      switch (props.color) {
+        case "Haker":
+          return "Haker";
+        case "LeadUser":
+          return "Lead User";
+        case "SuperUser":
+          return "Super User";
+        case "EarlyAdoptor":
+          return "Early Adoptor";
+        case "Innovator":
+          return "Innovator";
+        case "NonUser":
+          return "Non User";
+        case "Critic":
+          return "Critic";
+        default:
+          return "";
+      }
+    }}";
+  }
+
+  ${({ color }) => {
+    switch (color) {
+      case "Haker":
+        return `
+          color: #E90102;
+          background: #FEF0F0;
+        `;
+      case "LeadUser":
+        return `
+          color: #20B1EA;
+          background: #F2FBFE;
+        `;
+      case "SuperUser":
+        return `
+          color: #5471AB;
+          background: #F5F7FA;
+        `;
+      case "EarlyAdoptor":
+        return `
+          color: #8B61D1;
+          background: #F8F6FD;
+        `;
+      case "Innovator":
+        return `
+          color: #FC6602;
+          background: #FFF6F0;
+        `;
+      case "NonUser":
+        return `
+          color: #B1A098;
+          background: #FBFAF9;
+        `;
+      case "Critic":
+        return `
+          color: #FFBB52;
+          background: #FFFBF5;
         `;
       default:
         return "display: none;";
@@ -2093,7 +2167,6 @@ export const UlList = styled.ul`
   }
 `;
 
-
 export const ListGroup = styled.div`
   display: flex;
   flex-direction: row !important;
@@ -2174,6 +2247,10 @@ export const CardGroupWrap = styled.div`
   }
 `;
 
+export const AiPersonaCardGroupWrap = styled(CardGroupWrap)`
+  gap: 20px;
+`;
+
 export const ListBoxItem = styled.div`
   display: flex;
   align-items: center;
@@ -2206,6 +2283,62 @@ export const ListBoxItem = styled.div`
     justify-content: flex-start !important;
     flex-wrap: nowrap !important;
   `}
+`;
+
+export const AiPersonaCardListItem = styled(ListBoxItem)`
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 24% !important;
+  text-align: left;
+  padding: 20px;
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+
+    > div {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0 12px;
+      flex-wrap: wrap;
+    }
+  }
+
+  .content {
+    word-break: break-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    padding-top: 20px;
+    border-top: 1px solid ${palette.outlineGray};
+  }
+`;
+
+export const AiPersonaCardButtonWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 `;
 
 export const PercentBadge = styled.div`
@@ -2515,6 +2648,14 @@ export const InterviewPopup = styled.div`
           width: 1px;
           height: 9px;
           background: ${palette.gray700};
+        }
+      }
+
+      &.noLine {
+        div {
+          + div:before {
+            display: none;
+          }
         }
       }
     }
@@ -3882,17 +4023,32 @@ export const Table = styled.table`
   }
 `;
 
-export const TableHeader = styled.thead`
+export const TableHeader = styled.thead`  
   th {
     padding: 16px 10px;
     word-break: keep-all;
   }
+
+  ${props => props.Type1 && css`
+    border-radius: 10px 10px 0px 0px;
+
+    th {
+      padding: 20px;
+      background: ${palette.chatGray};
+    }
+  `}
 `;
 
 export const TableBody = styled.tbody`
   tr {
     border-top: 1px solid ${palette.outlineGray};
   }
+
+  ${props => props.Type1 && css`
+    td {
+      padding: 20px;
+    }
+  `}
 `;
 
 export const StyledDropzone = {

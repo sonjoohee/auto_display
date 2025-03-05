@@ -212,6 +212,7 @@ import PersonCircle from "../images/person-circle.svg"
 import PersonFill from "../images/person-fill.svg"
 import FileFill from "../images/file-fill.svg"
 import PeopleFillPrimary from "../images/people-fill-primary.svg"
+import PeopleFillPrimary2 from "../images/people-fill-primary2.svg"
 import NoAlarm from "../images/alarm-no.svg"
 import ExclamationCircle from "../images/exclamation-circle.svg"
 import ExclamationCircleFill from "../images/exclamation-circle-fill.svg"
@@ -305,6 +306,13 @@ import ImagePrimary from "../images/image-primary.svg";
 
 import ProjectThumbnail01 from "../images/project-thumbnail01.jpg";
 import ProjectThumbnail02 from "../images/project-thumbnail02.jpg";
+
+import Tools from "../images/tools.svg";
+
+import Star from "../images/Star.svg";
+import StarFill from "../images/StarFill.svg";
+
+
 
 const images = {
   Logo,
@@ -519,6 +527,7 @@ const images = {
   PersonFill,
   FileFill,
   PeopleFillPrimary,
+  PeopleFillPrimary2,
   NoAlarm,
   ExclamationCircle,
   ExclamationCircleFill,
@@ -602,6 +611,11 @@ const images = {
 
   ProjectThumbnail01,
   ProjectThumbnail02,
+
+  Tools,
+
+  Star,
+  StarFill,
 }
 
 export default images;

@@ -68,6 +68,8 @@ import PageBlog from "./pages/PageBlog";
 
 import PageProject from "./pages/Design_Page/PageProject";
 import PageProjectCreate from "./pages/Design_Page/PageProjectCreate";
+import PageDashBoard from "./pages/Design_Page/PageDashBoard";
+import PageAiPersona from "./pages/Design_Page/PageAiPersona";
 
 import PageStyleGuide from "./pages/Design_Page/PageStyleGuide";
 
@@ -503,6 +505,24 @@ function App() {
             element={
               <RequireToken>
                 <PageProjectCreate />
+              </RequireToken>
+            }
+          />
+
+          <Route
+            path="/DashBoard"
+            element={
+              <RequireToken>
+                <PageDashBoard />
+              </RequireToken>
+            }
+          />
+
+          <Route
+            path="/AiPersona"
+            element={
+              <RequireToken>
+                <PageAiPersona />
               </RequireToken>
             }
           />

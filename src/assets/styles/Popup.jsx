@@ -343,6 +343,37 @@ export const Body = styled.div`
     align-items: flex-start;
     gap: 20px;
     width: 100%;
+
+    > div {
+      width: 100%;
+    }
+  }
+
+  .flex {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+
+    > div {
+      width: 100%;
+    }
+  }
+
+  .box-list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+
+    > div {
+      max-width: 97px;
+      width: 100%;
+      padding: 8px 0;
+      border-radius: 5px;
+      border: 1px solid ${palette.outlineGray};
+    }
   }
 
   .bgBox {
