@@ -56,24 +56,20 @@ const PageProject = () => {
               return project.projectType === "saas";
             }
           );
-          console.log(
-            "🚀 ~ loadProjectList ~ filteredSaasProjects:",
-            filteredSaasProjects
-          );
 
           const sortedList = [...filteredSaasProjects]
             .map((project) => ({
               ...project,
               reportList:
                 project.reportList?.sort((a, b) => {
-                  const dateA = a.createDate;
-                  const dateB = b.createDate;
+                  const dateA = a.timestamp;
+                  const dateB = b.timestamp;
                   return dateB - dateA; // 최신 날짜가 위로
                 }) || [],
             }))
             .sort((a, b) => {
-              const dateA = a.updateDate;
-              const dateB = b.updateDate;
+              const dateA = a.timestamp;
+              const dateB = b.timestamp;
               return dateB - dateA; // 최신 날짜가 위로
             });
 
@@ -120,21 +116,6 @@ const PageProject = () => {
             </HeaderWrap>
 
             <ProjectListWrap>
-              {/* <TabWrapType4>
-                <TabButtonType4>
-                  <Caption1 color="gray700">All</Caption1>
-                </TabButtonType4>
-                <TabButtonType4>
-                  <Caption1 color="gray700">AI Person Interview</Caption1>
-                </TabButtonType4>
-                <TabButtonType4>
-                  <Caption1 color="gray700">Research Tool</Caption1>
-                </TabButtonType4>
-                <TabButtonType4>
-                  <Caption1 color="gray700">Business Expert</Caption1>
-                </TabButtonType4>
-              </TabWrapType4> */}
-
               <ProjectList>
                 {sampleProjects.map((project) => (
                   <OrganismProjectItem key={project.id} project={project} />

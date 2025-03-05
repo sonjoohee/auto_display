@@ -66,10 +66,11 @@ import PagePolicy from "./pages/PagePolicy";
 import PageServiceLanding from "./pages/PageServiceLanding";
 import PageBlog from "./pages/PageBlog";
 
+//! SAAS 프로젝트
 import PageProject from "./pages/Saas_Project/pages/PageProject";
 import PageProjectCreate from "./pages/Saas_Project/pages/PageProjectCreate";
-import PageDashBoard from "./pages/Design_Page/PageDashBoard";
-import PageAiPersona from "./pages/Design_Page/PageAiPersona";
+import PageDashBoard from "./pages/Saas_Project/pages/PageDashBoard";
+import PageAiPersona from "./pages/Saas_Project/pages/PageAiPersona";
 
 import PageStyleGuide from "./pages/Design_Page/PageStyleGuide";
 
@@ -476,6 +477,7 @@ function App() {
             }
           />
 
+          {/* SAAS 프로젝트 */}
           <Route path="/Login" element={<OrganismLogin />} />
 
           <Route path="/Signin" element={<OrganismSignin />} />
@@ -580,6 +582,8 @@ function App() {
               </RequireToken>
             }
           />
+
+          {/* 테스트 페이지 */}
           <Route path="/DesignLens" element={<DesignLens />} />
           <Route path="/Payment" element={<PagePayment />} />
           <Route
