@@ -35,6 +35,9 @@ import {
 import * as d3 from "d3";
 
 const PageDashBoard = () => {
+  const location = useLocation();
+  const project = location.state?.project;
+
   const navigate = useNavigate();
 
   const [showTooltip, setShowTooltip] = useState(false);
@@ -130,9 +133,7 @@ const PageDashBoard = () => {
               <Card>
                 <CardTitle>
                   <div>
-                    <H4 color="gray800">
-                      쉽고 빠르게 송금 및 이체 할 수 있는 어플리케이션
-                    </H4>
+                    <H4 color="gray800">{project?.projectTitle}</H4>
                     <TagWrap>
                       <Tag color="Amethyst" />
                       <Tag color="Amethyst" />
@@ -151,17 +152,7 @@ const PageDashBoard = () => {
                 </CardTitle>
                 <CardContent>
                   <Body3 color="gray800">
-                    이 애플리케이션은 사용자가 쉽고 빠르게 송금 및 이체를 할 수
-                    있도록 돕는 것을 목표로 합니다. 이를 통해 복잡한 금융 절차를
-                    간소화하고 사용자에게 편리함을 제공합니다. 주요 특징으로는
-                    사용 편의성을 극대화한 직관적인 UI/UX, 빠른 송금 속도,
-                    저렴한 수수료, 그리고 사용자 맞춤형 알림 서비스 등이
-                    있습니다. 이러한 특징들은 사용자에게 최상의 경험을 제공하며
-                    경쟁사 대비 차별화된 가치를 제안합니다. 주요 특징으로는 사용
-                    편의성을 극대화한 직관적인 UI/UX, 빠른 송금 속도, 저렴한
-                    수수료, 그리고 사용자 맞춤형 알림 서비스 등이 있습니다.
-                    이러한 특징들은 사용자에게 최상의 경험을 제공하며 경쟁사
-                    대비 차별화된 가치를 제안합니다.
+                    {project?.projectAnalysis.business_analysis}
                   </Body3>
                 </CardContent>
               </Card>
