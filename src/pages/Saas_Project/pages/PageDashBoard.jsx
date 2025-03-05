@@ -37,6 +37,7 @@ import * as d3 from "d3";
 const PageDashBoard = () => {
   const location = useLocation();
   const project = location.state?.project;
+  console.log(project);
 
   const navigate = useNavigate();
 
@@ -45,6 +46,11 @@ const PageDashBoard = () => {
   const macroChartRef = useRef();
   const uniqueChartRef = useRef();
   const stakeholderChartRef = useRef();
+
+  // useEffect(() => async () => {
+  //   const projectData = await getProjectByIdFromIndexedDB(project._id);
+  //   console.log(projectData);
+  // }, [project]);
 
   const createPieChart = (ref, data) => {
     if (ref.current) {
@@ -109,6 +115,8 @@ const PageDashBoard = () => {
     createPieChart(uniqueChartRef, uniqueData);
     createPieChart(stakeholderChartRef, stakeholderData);
   }, []);
+
+ 
 
   return (
     <>
@@ -209,6 +217,7 @@ const PageDashBoard = () => {
                 </TooltipButton>
               </div>
 
+           {project?.personaList?.length > 0 ? ( 
               <PersonaStatusWrap>
                 <div>
                   <div className="title">
@@ -300,7 +309,7 @@ const PageDashBoard = () => {
                   </div>
                 </div>
               </PersonaStatusWrap>
-
+           ) : (
               <PersonaStatusWrap NoData>
                 <div>
                   <img src={images.PeopleFillPrimary2} alt="" />
@@ -317,6 +326,7 @@ const PageDashBoard = () => {
                   </Button>
                 </div>
               </PersonaStatusWrap>
+            )}
             </DashBoardItem>
 
             <DashBoardItem>
@@ -333,200 +343,202 @@ const PageDashBoard = () => {
                 </Body3>
               </div>
 
-              <RecentToolWrap>
-                <Table>
-                  <colgroup>
-                    <col width="20%" />
-                    <col />
-                    <col width="20%" />
-                    <col width="10%" />
-                    <col width="10%" />
-                  </colgroup>
+              {project?.reportList?.length > 0 ? (
+                <RecentToolWrap>
+                  <Table>
+                    <colgroup>
+                      <col width="20%" />
+                      <col />
+                      <col width="20%" />
+                      <col width="10%" />
+                      <col width="10%" />
+                    </colgroup>
 
-                  <TableHeader Type1>
-                    <tr>
-                      <th>
-                        <Body1 color="gray700" align="left">
-                          리서치 툴 명
-                        </Body1>
-                      </th>
-                      <th>
-                        <Body1 color="gray700" align="left">
-                          상세 내용
-                        </Body1>
-                      </th>
-                      <th>
-                        <Body1 color="gray700" align="left">
-                          현황
-                        </Body1>
-                      </th>
-                      <th>
-                        <Body1 color="gray700" align="left">
-                          진행 일시
-                        </Body1>
-                      </th>
-                      <th>
-                        <Body1 color="gray700" align="left">
-                          상세보기
-                        </Body1>
-                      </th>
-                    </tr>
-                  </TableHeader>
+                    <TableHeader Type1>
+                      <tr>
+                        <th>
+                          <Body1 color="gray700" align="left">
+                            리서치 툴 명
+                          </Body1>
+                        </th>
+                        <th>
+                          <Body1 color="gray700" align="left">
+                            상세 내용
+                          </Body1>
+                        </th>
+                        <th>
+                          <Body1 color="gray700" align="left">
+                            현황
+                          </Body1>
+                        </th>
+                        <th>
+                          <Body1 color="gray700" align="left">
+                            진행 일시
+                          </Body1>
+                        </th>
+                        <th>
+                          <Body1 color="gray700" align="left">
+                            상세보기
+                          </Body1>
+                        </th>
+                      </tr>
+                    </TableHeader>
 
-                  <TableBody Type1>
-                    <tr>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          고객 탐색기
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          총 8명의 페르소나 시나리오 분석{" "}
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          완료
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          25.02.19
-                        </Body2>
-                      </td>
-                      <td>
-                        <Button Medium Outline Fill>
-                          <InputText color="gray700">자세히 보기</InputText>
-                        </Button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          인터뷰
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          1명의 페르소나와 “소비자 가치 분석” 인터뷰{" "}
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          완료
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          25.02.19
-                        </Body2>
-                      </td>
-                      <td>
-                        <Button Medium Outline Fill>
-                          <InputText color="gray700">자세히 보기</InputText>
-                        </Button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          인터뷰
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          1명의 페르소나와 “소비자 가치 분석” 인터뷰{" "}
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          완료
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          25.02.19
-                        </Body2>
-                      </td>
-                      <td>
-                        <Button Medium Outline Fill>
-                          <InputText color="gray700">자세히 보기</InputText>
-                        </Button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          고객 탐색기
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          총 8명의 페르소나 시나리오 분석{" "}
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          완료
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          25.02.19
-                        </Body2>
-                      </td>
-                      <td>
-                        <Button Medium Outline Fill>
-                          <InputText color="gray700">자세히 보기</InputText>
-                        </Button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          고객 탐색기
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          총 8명의 페르소나 시나리오 분석{" "}
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          완료
-                        </Body2>
-                      </td>
-                      <td>
-                        <Body2 color="gray700" align="left">
-                          25.02.19
-                        </Body2>
-                      </td>
-                      <td>
-                        <Button Medium Outline Fill>
-                          <InputText color="gray700">자세히 보기</InputText>
-                        </Button>
-                      </td>
-                    </tr>
-                  </TableBody>
-                </Table>
-              </RecentToolWrap>
-
-              <RecentToolWrap NoData>
-                <div>
-                  <img src={images.Tools} alt="" />
-                  <Body2 color="gray500">
-                    AI 기반 리서치, 어디까지 해보셨나요? 다양한 리서치 툴을 지금
-                    사용해보세요
-                    <br />
-                    (AI Persona 확인 후 리서치 툴을 사용하면 더 효과적입니다)
-                  </Body2>
-                  <Button Medium Outline Fill>
-                    <Caption1 color="gray700">리서치 툴 바로가기</Caption1>
-                  </Button>
-                </div>
-              </RecentToolWrap>
+                    <TableBody Type1>
+                      <tr>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            고객 탐색기
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            총 8명의 페르소나 시나리오 분석{" "}
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            완료
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            25.02.19
+                          </Body2>
+                        </td>
+                        <td>
+                          <Button Medium Outline Fill>
+                            <InputText color="gray700">자세히 보기</InputText>
+                          </Button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            인터뷰
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            1명의 페르소나와 "소비자 가치 분석" 인터뷰{" "}
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            완료
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            25.02.19
+                          </Body2>
+                        </td>
+                        <td>
+                          <Button Medium Outline Fill>
+                            <InputText color="gray700">자세히 보기</InputText>
+                          </Button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            인터뷰
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            1명의 페르소나와 "소비자 가치 분석" 인터뷰{" "}
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            완료
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            25.02.19
+                          </Body2>
+                        </td>
+                        <td>
+                          <Button Medium Outline Fill>
+                            <InputText color="gray700">자세히 보기</InputText>
+                          </Button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            고객 탐색기
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            총 8명의 페르소나 시나리오 분석{" "}
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            완료
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            25.02.19
+                          </Body2>
+                        </td>
+                        <td>
+                          <Button Medium Outline Fill>
+                            <InputText color="gray700">자세히 보기</InputText>
+                          </Button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            고객 탐색기
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            총 8명의 페르소나 시나리오 분석{" "}
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            완료
+                          </Body2>
+                        </td>
+                        <td>
+                          <Body2 color="gray700" align="left">
+                            25.02.19
+                          </Body2>
+                        </td>
+                        <td>
+                          <Button Medium Outline Fill>
+                            <InputText color="gray700">자세히 보기</InputText>
+                          </Button>
+                        </td>
+                      </tr>
+                    </TableBody>
+                  </Table>
+                </RecentToolWrap>
+              ) : (
+                <RecentToolWrap NoData>
+                  <div>
+                    <img src={images.Tools} alt="" />
+                    <Body2 color="gray500">
+                      AI 기반 리서치, 어디까지 해보셨나요? 다양한 리서치 툴을 지금
+                      사용해보세요
+                      <br />
+                      (AI Persona 확인 후 리서치 툴을 사용하면 더 효과적입니다)
+                    </Body2>
+                    <Button Medium Outline Fill>
+                      <Caption1 color="gray700">리서치 툴 바로가기</Caption1>
+                    </Button>
+                  </div>
+                </RecentToolWrap>
+              )}
             </DashBoardItem>
           </DashBoardWrap>
         </MainContent>
