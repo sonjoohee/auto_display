@@ -576,6 +576,7 @@ export const DESIGN_ANALYSIS_FILE_ID = atom([]);
 // 프로젝트 생성 페이지
 export const PROJECT_CREATE_INFO = atom({});
 export const PROJECT_TOTAL_INFO = atom({});
+
 // setConversation([]);
 // setConversationStage(1);
 // setInputBusinessInfo("");

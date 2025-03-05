@@ -223,6 +223,8 @@ const PageProjectCreate = () => {
 
       // API 전송 및 이미지 업로드 처리
       try {
+        const timeStamp = new Date().getTime();
+
         const data = {
           project_name: projectName,
           product_description: projectDescription,
@@ -232,8 +234,6 @@ const PageProjectCreate = () => {
           tool_id: Date.now(),
           files: uploadedFiles,
         };
-
-        console.log(data);
 
         const response = await InterviewXProjectAnalysisMultimodalRequest(
           data,
@@ -250,8 +250,29 @@ const PageProjectCreate = () => {
           return;
         }
 
+        setFileNames(
+          uploadedFiles.map((file) => ({
+            id: "file_" + timeStamp,
+            name: file.name,
+          }))
+        );
+
         console.log(response);
         setProjectCreateInfo(response.response.project_analysis_multimodal);
+
+        const projectTotalData = {
+          projectTitle: projectName,
+          projectDescription: projectDescription,
+          businessModel: business,
+          industryType: industry,
+          targetCountry: country,
+          projectAnalysis: response.response.project_analysis_multimodal,
+          files: uploadedFiles.map((file) => ({
+            id: "file_" + timeStamp,
+            name: file.name,
+          })),
+        };
+        setProjectTotalInfo(projectTotalData);
       } catch (error) {
         console.error("데이터 업로드 중 오류 발생:", error);
       } finally {
