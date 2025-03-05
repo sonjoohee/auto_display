@@ -34,14 +34,13 @@ export const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   max-width: ${(props) =>
-    props.Wide 
-    ? "1024px" 
-    : props.Wide1030 
-    ? "1030px" 
-    : props.Wide1240
-    ? "1240px"
-    : "820px"
-  };
+    props.Wide
+      ? "1024px"
+      : props.Wide1030
+      ? "1030px"
+      : props.Wide1240
+      ? "1240px"
+      : "820px"};
   // max-width: 1024px;
   // min-height: 100vh;
   width: 100%;
@@ -325,7 +324,8 @@ export const TabWrapType2 = styled(TabWrap)`
 
 export const TabWrapType3 = styled(TabWrap)`
   gap: 16px !important;
-  border-bottom: ${(props) => props.Border ? `1px solid ${palette.outlineGray}` : "none"};
+  border-bottom: ${(props) =>
+    props.Border ? `1px solid ${palette.outlineGray}` : "none"};
 `;
 
 export const TabButtonType3 = styled(TabButton)`
@@ -525,16 +525,9 @@ export const TabContent5Item = styled.div`
   align-items: flex-start;
   gap: 8px;
   width: 100%;
-  padding-bottom: ${(props) => (
-    props.borderBottom 
-    ? "40px" 
-    : "0"
-  )};
-  border-bottom: ${(props) => (
-    props.borderBottom 
-    ? `1px solid ${palette.gray200}` 
-    : "none"
-  )};
+  padding-bottom: ${(props) => (props.borderBottom ? "40px" : "0")};
+  border-bottom: ${(props) =>
+    props.borderBottom ? `1px solid ${palette.gray200}` : "none"};
 
   .title {
     display: flex;
@@ -994,20 +987,28 @@ export const UniqueTag = styled.span`
   &::before {
     content: "${(props) => {
       switch (props.color) {
-        case "Haker":
-          return "Haker";
+        case "Hacker":
+          return "Hacker";
         case "LeadUser":
           return "Lead User";
         case "SuperUser":
           return "Super User";
-        case "EarlyAdoptor":
-          return "Early Adoptor";
+        case "EarlyAdopter":
+          return "Early Adopter";
         case "Innovator":
           return "Innovator";
         case "NonUser":
           return "Non User";
         case "Critic":
           return "Critic";
+        case "Non-User":
+          return "Non User";
+        case "Lead User":
+          return "Lead User";
+        case "Super User":
+          return "Super User";
+        case "Early Adopter":
+          return "Early Adopter";
         default:
           return "";
       }
@@ -1016,7 +1017,7 @@ export const UniqueTag = styled.span`
 
   ${({ color }) => {
     switch (color) {
-      case "Haker":
+      case "Hacker":
         return `
           color: #E90102;
           background: #FEF0F0;
@@ -1026,12 +1027,27 @@ export const UniqueTag = styled.span`
           color: #20B1EA;
           background: #F2FBFE;
         `;
+      case "Lead User":
+        return `
+          color: #20B1EA;
+          background: #F2FBFE;
+        `;
       case "SuperUser":
         return `
           color: #5471AB;
           background: #F5F7FA;
         `;
-      case "EarlyAdoptor":
+      case "Super User":
+        return `
+          color: #5471AB;
+          background: #F5F7FA;
+        `;
+      case "EarlyAdopter":
+        return `
+          color: #8B61D1;
+          background: #F8F6FD;
+        `;
+      case "Early Adopter":
         return `
           color: #8B61D1;
           background: #F8F6FD;
@@ -1042,6 +1058,11 @@ export const UniqueTag = styled.span`
           background: #FFF6F0;
         `;
       case "NonUser":
+        return `
+          color: #B1A098;
+          background: #FBFAF9;
+        `;
+      case "Non-User":
         return `
           color: #B1A098;
           background: #FBFAF9;
@@ -2141,7 +2162,6 @@ export const ListBox = styled.div`
   }
 `;
 
-
 export const UlList = styled.ul`
   display: flex;
   flex-direction: column;
@@ -2217,33 +2237,20 @@ export const CardGroupWrap = styled.div`
   gap: 15px !important;
   flex-wrap: ${(props) => (props.rowW50 ? "nowrap" : "wrap")};
   width: 100%;
-  margin-bottom: ${(props) => (
-    props.column || props.rowW50
-    ? "0" 
-    : "140px"
-  )};
+  margin-bottom: ${(props) => (props.column || props.rowW50 ? "0" : "140px")};
 
   > div {
-    flex: ${(props) => (
-      props.column 
-      ? "1" 
-      : props.rowW50
-      ? "1 1 50%"
-      : "0 0 calc(33.333% - 10px)"
-    )};
-    max-width: ${(props) => (
-      props.column 
-      ? "100%" 
-      : props.rowW50
-      ? "50%"
-      : "calc(33.333% - 10px)"
-    )};
+    flex: ${(props) =>
+      props.column
+        ? "1"
+        : props.rowW50
+        ? "1 1 50%"
+        : "0 0 calc(33.333% - 10px)"};
+    max-width: ${(props) =>
+      props.column ? "100%" : props.rowW50 ? "50%" : "calc(33.333% - 10px)"};
     width: 100%;
-    justify-content: ${(props) => (
-      props.column || props.rowW50
-      ? "space-between" 
-      : "flex-start"
-    )};
+    justify-content: ${(props) =>
+      props.column || props.rowW50 ? "space-between" : "flex-start"};
   }
 `;
 
@@ -2254,13 +2261,15 @@ export const AiPersonaCardGroupWrap = styled(CardGroupWrap)`
 export const ListBoxItem = styled.div`
   display: flex;
   align-items: center;
-  justify-content: ${(props) => (props.FlexStart ? "flex-start" : "space-between")};
+  justify-content: ${(props) =>
+    props.FlexStart ? "flex-start" : "space-between"};
   flex-wrap: wrap;
   gap: 16px;
   width: 100%;
   padding: ${(props) => (props.Small ? "12px 20px" : "24px 20px")};
   border-radius: 10px;
-  border: 1px solid ${(props) => (props.active ? palette.primary : palette.outlineGray)};
+  border: 1px solid
+    ${(props) => (props.active ? palette.primary : palette.outlineGray)};
   background: ${(props) =>
     props.NoBg
       ? palette.white
@@ -2279,7 +2288,9 @@ export const ListBoxItem = styled.div`
     }
   }
 
-  ${props => props.FlexStart && `
+  ${(props) =>
+    props.FlexStart &&
+    `
     justify-content: flex-start !important;
     flex-wrap: nowrap !important;
   `}
@@ -2347,21 +2358,19 @@ export const PercentBadge = styled.div`
   justify-content: center;
   width: 40px;
   height: 40px;
-  color: ${(props) => (
-    props.primary 
-    ? palette.primary 
-    : props.green
-    ? palette.green
-    : palette.gray700
-  )};
+  color: ${(props) =>
+    props.primary
+      ? palette.primary
+      : props.green
+      ? palette.green
+      : palette.gray700};
   border-radius: 50%;
-  background: ${(props) => (
-    props.primary 
-    ? 'rgba(34, 111, 255, 0.10)' 
-    : props.green
-    ? 'rgba(52, 199, 89, 0.10)'
-    : palette.gray100
-  )};
+  background: ${(props) =>
+    props.primary
+      ? "rgba(34, 111, 255, 0.10)"
+      : props.green
+      ? "rgba(52, 199, 89, 0.10)"
+      : palette.gray100};
 `;
 
 export const ListBoxWrap = styled.div`
@@ -2719,12 +2728,12 @@ export const OCEANRangeWrap = styled.div`
     props.report &&
     css`
       p {
-      flex: 1;
+        flex: 1;
 
         &:nth-child(1) {
           text-align: left;
         }
-  
+
         &:nth-child(3) {
           text-align: right;
         }
@@ -2776,12 +2785,11 @@ export const RangeSlider = styled.input`
     height: ${(props) => (props.disabled ? "16px" : "24px")};
     border-radius: 50%;
     background: ${(props) =>
-      props.disabled 
-      ? palette.primary  // disabled일 때 gray300으로 변경
-      : props.$ignored 
-        ? palette.gray500 
-        : palette.primary
-    };
+      props.disabled
+        ? palette.primary // disabled일 때 gray300으로 변경
+        : props.$ignored
+        ? palette.gray500
+        : palette.primary};
     cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
     transition: all 0.2s;
 
@@ -2804,12 +2812,11 @@ export const RangeSlider = styled.input`
     border: none;
     border-radius: 50%;
     background: ${(props) =>
-      props.disabled 
-      ? palette.primary  // disabled일 때 gray300으로 변경
-      : props.$ignored 
-        ? palette.gray500 
-        : palette.primary
-    };
+      props.disabled
+        ? palette.primary // disabled일 때 gray300으로 변경
+        : props.$ignored
+        ? palette.gray500
+        : palette.primary};
     cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
     transition: all 0.2s;
 
@@ -3933,7 +3940,7 @@ export const ExploreCard = styled.div`
     css`
       .overlay {
         > span {
-          background: #AF52DE;
+          background: #af52de;
         }
       }
     `}
@@ -4026,7 +4033,7 @@ export const SunburstChart = styled.div`
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  border-radius: ${(props) => props.Round ? "10px" : "0"};
+  border-radius: ${(props) => (props.Round ? "10px" : "0")};
   overflow: hidden;
 
   th,
@@ -4035,20 +4042,22 @@ export const Table = styled.table`
   }
 `;
 
-export const TableHeader = styled.thead`  
+export const TableHeader = styled.thead`
   th {
     padding: 16px 10px;
     word-break: keep-all;
   }
 
-  ${props => props.Type1 && css`
-    border-radius: 10px 10px 0px 0px;
+  ${(props) =>
+    props.Type1 &&
+    css`
+      border-radius: 10px 10px 0px 0px;
 
-    th {
-      padding: 20px;
-      background: ${palette.chatGray};
-    }
-  `}
+      th {
+        padding: 20px;
+        background: ${palette.chatGray};
+      }
+    `}
 `;
 
 export const TableBody = styled.tbody`
@@ -4056,22 +4065,24 @@ export const TableBody = styled.tbody`
     border-top: 1px solid ${palette.outlineGray};
   }
 
-  ${props => props.Type1 && css`
-    td {
-      padding: 20px;
-    }
-  `}
+  ${(props) =>
+    props.Type1 &&
+    css`
+      td {
+        padding: 20px;
+      }
+    `}
 `;
 
 export const StyledDropzone = {
   dropzone: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
     gap: 16,
-    width: '100%',
-    border: 'none',
+    width: "100%",
+    border: "none",
     // borderWidth: 2,
     // borderColor: palette.outlineGray,
     // borderStyle: 'dashed',
@@ -4080,68 +4091,68 @@ export const StyledDropzone = {
     // textAlign: 'center'
   },
   inputLabel: {
-    position: 'relative',
-    fontFamily: 'Pretendard, Poppins',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '12px',
-    width: '100%',
-    padding: '100px 0',
-    borderRadius: '10px',
+    position: "relative",
+    fontFamily: "Pretendard, Poppins",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "12px",
+    width: "100%",
+    padding: "100px 0",
+    borderRadius: "10px",
     border: `2px dashed ${palette.outlineGray}`,
   },
   inputLabelWithFiles: {
-    position: 'relative',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '12px',
-    width: '100%',
-    fontFamily: 'Pretendard, Poppins',
-    margin: '0 auto',
-    padding: '100px 0',
-    borderRadius: '10px',
+    position: "relative",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "12px",
+    width: "100%",
+    fontFamily: "Pretendard, Poppins",
+    margin: "0 auto",
+    padding: "100px 0",
+    borderRadius: "10px",
     border: `2px dashed ${palette.outlineGray}`,
-    background: 'none',
+    background: "none",
     order: 1,
   },
   previewContainer: {
-    position: 'relative',
-    width: '100%',
-    marginBottom: '16px',
+    position: "relative",
+    width: "100%",
+    marginBottom: "16px",
     order: 2,
   },
   preview: {
-    position: 'relative',
-    padding: '12px',
-    marginBottom: '0',
-    borderRadius: '10px',
+    position: "relative",
+    padding: "12px",
+    marginBottom: "0",
+    borderRadius: "10px",
     border: `1px solid ${palette.outlineGray}`,
-    background: 'none',
-    overflow: 'hidden',
+    background: "none",
+    overflow: "hidden",
     order: 2,
   },
   submitButtonContainer: {
-    width: '100%',
-    margin: '0 auto',
+    width: "100%",
+    margin: "0 auto",
     order: 3,
   },
   submitButton: {
     backgroundColor: palette.primary,
-    fontFamily: 'Pretendard, Poppins',
+    fontFamily: "Pretendard, Poppins",
     color: `${palette.white}`,
-    padding: '10px 20px',
-    borderRadius: '4px',
-    cursor: 'pointer',
+    padding: "10px 20px",
+    borderRadius: "4px",
+    cursor: "pointer",
   },
   removeButton: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    color: 'white',
-    borderRadius: '50%',
-    padding: '4px',
-    width: '20px',
-    height: '20px'
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    color: "white",
+    borderRadius: "50%",
+    padding: "4px",
+    width: "20px",
+    height: "20px",
   },
 };
 

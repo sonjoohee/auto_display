@@ -326,12 +326,14 @@ const PageTargetDiscovery = () => {
       const maxAttempts = 10;
       let attempts = 0;
       while (
-        !response || 
-        !response.response || 
+        !response ||
+        !response.response ||
         !response.response.target_discovery_persona ||
         !Array.isArray(response.response.target_discovery_persona) ||
         response.response.target_discovery_persona.length === 0 ||
-        response.response.target_discovery_persona.some(persona => !persona.title || !persona.content)
+        response.response.target_discovery_persona.some(
+          (persona) => !persona.title || !persona.content
+        )
       ) {
         if (attempts >= maxAttempts) {
           setShowPopupRetry(true);
@@ -415,12 +417,12 @@ const PageTargetDiscovery = () => {
               specific_situation: targetDiscoveryInfo.specific_situation,
               country: targetDiscoveryInfo.country,
             };
-            
+
             const response = await InterviewXTargetDiscoveryScenarioRequest(
               apiRequestData,
               isLoggedIn
             );
-            
+
             const maxAttempts = 10;
             let attempts = 0;
 
@@ -428,14 +430,21 @@ const PageTargetDiscovery = () => {
               !response ||
               !response?.response ||
               !response?.response?.target_discovery_scenario ||
-              !response?.response?.target_discovery_scenario?.potential_customer_info ||
-              !response?.response?.target_discovery_scenario?.potential_customer_info?.gender ||
-              !response?.response?.target_discovery_scenario?.potential_customer_info?.age ||
-              !response?.response?.target_discovery_scenario?.potential_customer_info?.main_use_purpose ||
-              !response?.response?.target_discovery_scenario?.potential_customer_info?.pain_points ||
+              !response?.response?.target_discovery_scenario
+                ?.potential_customer_info ||
+              !response?.response?.target_discovery_scenario
+                ?.potential_customer_info?.gender ||
+              !response?.response?.target_discovery_scenario
+                ?.potential_customer_info?.age ||
+              !response?.response?.target_discovery_scenario
+                ?.potential_customer_info?.main_use_purpose ||
+              !response?.response?.target_discovery_scenario
+                ?.potential_customer_info?.pain_points ||
               !response?.response?.target_discovery_scenario?.usage_scenario ||
-              !response?.response?.target_discovery_scenario?.usage_scenario?.description ||
-              !response?.response?.target_discovery_scenario?.usage_scenario?.key_sentence
+              !response?.response?.target_discovery_scenario?.usage_scenario
+                ?.description ||
+              !response?.response?.target_discovery_scenario?.usage_scenario
+                ?.key_sentence
             ) {
               if (attempts >= maxAttempts) {
                 setShowPopupError(true);
@@ -551,11 +560,16 @@ const PageTargetDiscovery = () => {
 
       while (
         !response ||
-        !response?.response?.target_discovery_final_report?.potential_rank_1?.title ||
-        !response?.response?.target_discovery_final_report?.potential_rank_1?.discovery_criteria ||
-        !response?.response?.target_discovery_final_report?.potential_rank_1?.selection_criteria ||
-        !response?.response?.target_discovery_final_report?.potential_rank_1?.rank_reason ||
-        !response?.response?.target_discovery_final_report?.potential_rank_1?.keywords
+        !response?.response?.target_discovery_final_report?.potential_rank_1
+          ?.title ||
+        !response?.response?.target_discovery_final_report?.potential_rank_1
+          ?.discovery_criteria ||
+        !response?.response?.target_discovery_final_report?.potential_rank_1
+          ?.selection_criteria ||
+        !response?.response?.target_discovery_final_report?.potential_rank_1
+          ?.rank_reason ||
+        !response?.response?.target_discovery_final_report?.potential_rank_1
+          ?.keywords
       ) {
         if (attempts >= maxAttempts) {
           setShowPopupError(true);

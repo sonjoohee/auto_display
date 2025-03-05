@@ -142,7 +142,11 @@ const OrganismProjectCard = ({ project, index }) => {
               {project.createDate.substring(
                 0,
                 project.createDate.lastIndexOf(":")
-              )}
+              ) ||
+                project.createDate.substring(
+                  0,
+                  project.createDate.lastIndexOf(":")
+                )}
             </Caption2>
           </Name>
           <Persona>
@@ -231,7 +235,11 @@ const OrganismProjectCard = ({ project, index }) => {
                       {report.createDate.substring(
                         0,
                         report.createDate.lastIndexOf(":")
-                      )}
+                      ) ||
+                        report.createDate.substring(
+                          0,
+                          report.createDate.lastIndexOf(":")
+                        )}
                     </span>
                   </div>
                   <div className="info">

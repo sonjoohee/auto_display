@@ -5,21 +5,30 @@ import { useNavigate } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Body1, Body2, Body3 } from "../../../../assets/styles/Typography";
-import { PROJECT_ID } from "../../../../pages/AtomStates";
+import {
+  PROJECT_ID,
+  PROJECT_SAAS,
+  ACCESS_DASHBOARD,
+} from "../../../../pages/AtomStates";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 
 const OrganismProjectItem = ({ project, onClick, isNoData }) => {
   const navigate = useNavigate();
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
+  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
+  const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
+
   const handleClick = async () => {
     if (onClick) {
       onClick();
     } else if (isNoData) {
       navigate("/ProjectCreate");
     } else {
-      setProjectId(project.id);
+      setProjectId(project._id);
+      setProjectSaas(project);
+      setAccessDashboard(true);
       // 프로젝트 데이터를 state로 전달하여 DashBoard 페이지로 이동
-      navigate("/DashBoard", { state: { project: project } });
+      navigate("/DashBoard");
     }
   };
 

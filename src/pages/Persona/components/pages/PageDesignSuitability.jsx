@@ -7,13 +7,8 @@ import AtomPersonaLoader from "../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
 
-import {
-  Button,
-} from "../../../../assets/styles/ButtonStyle";
-import {
-  FormBox,
-  CustomTextarea,
-} from "../../../../assets/styles/InputStyle";
+import { Button } from "../../../../assets/styles/ButtonStyle";
+import { FormBox, CustomTextarea } from "../../../../assets/styles/InputStyle";
 import PopupWrap from "../../../../assets/styles/Popup";
 import {
   ContentsWrap,
@@ -72,9 +67,9 @@ import {
   createToolOnServer,
   updateToolOnServer,
 } from "../../../../utils/indexedDB";
-import 'react-dropzone-uploader/dist/styles.css'
-import Dropzone from 'react-dropzone-uploader'
-import RadarChart from '../../../../components/Charts/RadarChart';
+import "react-dropzone-uploader/dist/styles.css";
+import Dropzone from "react-dropzone-uploader";
+import RadarChart from "../../../../components/Charts/RadarChart";
 
 const PageDesignSuitability = () => {
   const [toolId, setToolId] = useAtom(TOOL_ID);
@@ -130,7 +125,7 @@ const PageDesignSuitability = () => {
   const [loadingPersonas, setLoadingPersonas] = useState({});
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
-  
+
   const handleToggle = (key) => {
     setState((prevState) => ({ ...prevState, [key]: !prevState[key] }));
   };
@@ -140,18 +135,17 @@ const PageDesignSuitability = () => {
     showQuestions: false,
   });
 
-
   // OCEAN 값들을 관리하기 위한 상태
   const [oceanValues, setOceanValues] = useState({
-    Comfortable: 3,        // 편안한
-    Satisfying: 3,        // 만족스러운
-    Trustworthy: 3,       // 신뢰가는
-    Anticipated: 3,       // 기대되는
-    Attractive: 3,        // 매력적인
-    Practical: 3,         // 실용적인
-    Beautiful: 3,         // 아름다운
-    Efficient: 3,         // 효율적인
-    Easy: 3,             // 사용하기 쉬운
+    Comfortable: 3, // 편안한
+    Satisfying: 3, // 만족스러운
+    Trustworthy: 3, // 신뢰가는
+    Anticipated: 3, // 기대되는
+    Attractive: 3, // 매력적인
+    Practical: 3, // 실용적인
+    Beautiful: 3, // 아름다운
+    Efficient: 3, // 효율적인
+    Easy: 3, // 사용하기 쉬운
   });
 
   // OCEAN 무시 여부를 관리하는 상태
@@ -608,35 +602,34 @@ const PageDesignSuitability = () => {
     return "대기중";
   };
 
-  
-
   // 파일 업로드 핸들러
   const handleChangeStatus = ({ meta, file }, status) => {
     // console.log(status, meta, file);
-    
+
     // 파일 상태 업데이트
-    if (status === 'done' || status === 'preparing' || status === 'uploading') {
-      setUploadedFiles(prev => {
+    if (status === "done" || status === "preparing" || status === "uploading") {
+      setUploadedFiles((prev) => {
         // 이미 존재하는 파일이 아닌 경우에만 추가
-        if (!prev.find(f => f.name === file.name)) {
+        if (!prev.find((f) => f.name === file.name)) {
           return [...prev, file];
         }
         return prev;
       });
-    } else if (status === 'removed') {
-      setUploadedFiles(prev => prev.filter(f => f.name !== file.name));
+    } else if (status === "removed") {
+      setUploadedFiles((prev) => prev.filter((f) => f.name !== file.name));
     }
 
     // 파일 크기를 KB 또는 MB 단위로 변환
     const size = file.size;
-    const sizeStr = size > 1024 * 1024 
-      ? `${(size / (1024 * 1024)).toFixed(1)}MB`
-      : `${(size / 1024).toFixed(1)}KB`;
+    const sizeStr =
+      size > 1024 * 1024
+        ? `${(size / (1024 * 1024)).toFixed(1)}MB`
+        : `${(size / 1024).toFixed(1)}KB`;
 
     // setTimeout을 사용하여 DOM이 업데이트된 후 실행
     setTimeout(() => {
-      const containers = document.querySelectorAll('.dzu-previewContainer');
-      containers.forEach(container => {
+      const containers = document.querySelectorAll(".dzu-previewContainer");
+      containers.forEach((container) => {
         if (!container.dataset.filename) {
           container.dataset.filename = file.name;
           container.dataset.size = sizeStr;
@@ -647,14 +640,14 @@ const PageDesignSuitability = () => {
 
   // 업로드 파라미터 설정
   const getUploadParams = () => {
-    return { url: '/' } // 실제 업로드 URL로 변경 필요
-  }
+    return { url: "/" }; // 실제 업로드 URL로 변경 필요
+  };
 
   // 파일 제출 핸들러
   const handleSubmit = (files) => {
-    const validFiles = files.filter(f => f.meta.status === 'done');
-    setUploadedFiles(validFiles.map(f => f.file));
-  }
+    const validFiles = files.filter((f) => f.meta.status === "done");
+    setUploadedFiles(validFiles.map((f) => f.file));
+  };
 
   // OCEAN 값 변경을 처리하는 핸들러
   const handleOceanChange = (trait, value) => {
@@ -662,10 +655,10 @@ const PageDesignSuitability = () => {
       const numValue = parseFloat(value);
       // 값이 3에 가까울 때 자동으로 3으로 스냅
       const snapValue = Math.abs(numValue - 3) < 0.2 ? 3 : numValue;
-      
-      setOceanValues(prev => ({
+
+      setOceanValues((prev) => ({
         ...prev,
-        [trait]: snapValue
+        [trait]: snapValue,
       }));
     }
   };
@@ -677,7 +670,7 @@ const PageDesignSuitability = () => {
       conscientiousness: 0.5,
       extraversion: 0.5,
       agreeableness: 0.5,
-      neuroticism: 0.5
+      neuroticism: 0.5,
     });
   };
 
@@ -685,34 +678,34 @@ const PageDesignSuitability = () => {
   const saveOceanValues = async () => {
     try {
       // API 호출 로직
-      const response = await fetch('/api/save-ocean', {
-        method: 'POST',
+      const response = await fetch("/api/save-ocean", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(oceanValues),
       });
-      
+
       if (!response.ok) {
-        throw new Error('OCEAN 값 저장에 실패했습니다');
+        throw new Error("OCEAN 값 저장에 실패했습니다");
       }
 
       // 성공 처리
       // console.log('OCEAN 값이 성공적으로 저장되었습니다');
     } catch (error) {
-      console.error('OCEAN 값 저장 중 오류 발생:', error);
+      console.error("OCEAN 값 저장 중 오류 발생:", error);
     }
   };
 
-  const [activeDesignTab, setActiveDesignTab] = useState('emotion'); // 'emotion' 또는 'scale'
+  const [activeDesignTab, setActiveDesignTab] = useState("emotion"); // 'emotion' 또는 'scale'
 
   // 레이더 차트 데이터
   const chartData = {
-    strength: Math.round(oceanValues.Trustworthy * 16.67),    // 6점 -> 100점 변환 (100/6)
-    luck: Math.round(oceanValues.Anticipated * 16.67),        // 6점 -> 100점 변환
+    strength: Math.round(oceanValues.Trustworthy * 16.67), // 6점 -> 100점 변환 (100/6)
+    luck: Math.round(oceanValues.Anticipated * 16.67), // 6점 -> 100점 변환
     intelligence: Math.round(oceanValues.Attractive * 16.67), // 6점 -> 100점 변환
-    charisma: Math.round(oceanValues.Beautiful * 16.67),      // 6점 -> 100점 변환
-    dexterity: Math.round(oceanValues.Efficient * 16.67)      // 6점 -> 100점 변환
+    charisma: Math.round(oceanValues.Beautiful * 16.67), // 6점 -> 100점 변환
+    dexterity: Math.round(oceanValues.Efficient * 16.67), // 6점 -> 100점 변환
   };
 
   return (
@@ -745,7 +738,7 @@ const PageDesignSuitability = () => {
                 <span>02</span>
                 <div className="text">
                   <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
-                    이미지 평가 
+                    이미지 평가
                   </Body1>
                   <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
                     Image Evaluation
@@ -788,7 +781,8 @@ const PageDesignSuitability = () => {
                     <div className="title">
                       <H3 color="gray800">Image Upload</H3>
                       <Body3 color="gray800">
-                        적합성 분석을 원하시는 비즈니스 설명과 디자인 이미지를 업로드해주세요
+                        적합성 분석을 원하시는 비즈니스 설명과 디자인 이미지를
+                        업로드해주세요
                       </Body3>
                     </div>
 
@@ -832,11 +826,13 @@ const PageDesignSuitability = () => {
                           inputWithFilesContent={
                             <>
                               <img src={images.ImagePrimary} alt="" />
-                              <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '4px',
-                              }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "4px",
+                                }}
+                              >
                                 <Body2 color="gray700">이미지 첨부 또는</Body2>
                                 <Body2 color="primary">이미지 가져오기</Body2>
                               </div>
@@ -845,11 +841,13 @@ const PageDesignSuitability = () => {
                           inputContent={
                             <>
                               <img src={images.ImagePrimary} alt="" />
-                              <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '4px',
-                              }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "4px",
+                                }}
+                              >
                                 <Body2 color="gray700">이미지 첨부 또는</Body2>
                                 <Body2 color="primary">이미지 가져오기</Body2>
                               </div>
@@ -895,7 +893,8 @@ const PageDesignSuitability = () => {
                     <div className="title">
                       <H3 color="gray800">Image Evaluation</H3>
                       <Body3 color="gray800">
-                        업로드된 이미지의 시각적 요소를 종합적으로 분석하여 효과성을 평가했습니다.
+                        업로드된 이미지의 시각적 요소를 종합적으로 분석하여
+                        효과성을 평가했습니다.
                       </Body3>
                     </div>
 
@@ -903,18 +902,28 @@ const PageDesignSuitability = () => {
                       <ChartWrap>
                         <RadarChart data={chartData} width={480} height={450} />
 
-                        <CardGroupWrap column $isExpanded={state.isExpanded} style={{marginBottom: "140px"}}>
+                        <CardGroupWrap
+                          column
+                          $isExpanded={state.isExpanded}
+                          style={{ marginBottom: "140px" }}
+                        >
                           <ListBoxItem FlexStart>
                             <PercentBadge primary>
                               <Caption1>5점</Caption1>
                             </PercentBadge>
 
-                            <ListText Small> 
+                            <ListText Small>
                               <ListTitle>
-                                <Sub1 color="gray800" align="left">브랜드 일관성</Sub1>
+                                <Sub1 color="gray800" align="left">
+                                  브랜드 일관성
+                                </Sub1>
                               </ListTitle>
                               <ListSubtitle>
-                                <Sub3 color="gray500" align="left">브랜드 로고의 위치와 크기를 조정하고, 핵심 가치를 나타내는 이미지를 추가하여 브랜드 일관성을 강화할 수 있습니다</Sub3>
+                                <Sub3 color="gray500" align="left">
+                                  브랜드 로고의 위치와 크기를 조정하고, 핵심
+                                  가치를 나타내는 이미지를 추가하여 브랜드
+                                  일관성을 강화할 수 있습니다
+                                </Sub3>
                               </ListSubtitle>
                             </ListText>
 
@@ -929,10 +938,24 @@ const PageDesignSuitability = () => {
                                 <div>
                                   <ul>
                                     <li>
-                                      <Body3 color="gray800" align="left">긍정적 측면 : 이미지의 색상, 폰트, 레이아웃이 전반적으로 깔끔하고 정돈된 느낌을 주어 전문적인 이미지를 연출합니다. "MAN AESTHETIC" 텍스트는 브랜드의 성격을 명확히 드러냅니다. 모델의 깨끗한 피부는 남성 피부 관리에 대한 전문성을 시각적으로 강조합니다.</Body3>
+                                      <Body3 color="gray800" align="left">
+                                        긍정적 측면 : 이미지의 색상, 폰트,
+                                        레이아웃이 전반적으로 깔끔하고 정돈된
+                                        느낌을 주어 전문적인 이미지를
+                                        연출합니다. "MAN AESTHETIC" 텍스트는
+                                        브랜드의 성격을 명확히 드러냅니다.
+                                        모델의 깨끗한 피부는 남성 피부 관리에
+                                        대한 전문성을 시각적으로 강조합니다.
+                                      </Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">개선점 : 브랜드 로고가 작고, 브랜드명을 명확히 인식하기 어렵습니다. 브랜드의 핵심 가치를 시각적으로 더 구체화할 수 있는 요소 (예: 특정 시술 장면, 신뢰감을 주는 이미지 등)가 부족합니다.</Body3>
+                                      <Body3 color="gray800" align="left">
+                                        개선점 : 브랜드 로고가 작고, 브랜드명을
+                                        명확히 인식하기 어렵습니다. 브랜드의
+                                        핵심 가치를 시각적으로 더 구체화할 수
+                                        있는 요소 (예: 특정 시술 장면, 신뢰감을
+                                        주는 이미지 등)가 부족합니다.
+                                      </Body3>
                                     </li>
                                   </ul>
                                 </div>
@@ -995,40 +1018,78 @@ const PageDesignSuitability = () => {
                     <BgBoxItem primaryLightest>
                       <H3 color="gray800">페르소나별 디자인 최적화</H3>
                       <Body3 color="gray800">
-                        페르소나에 최적화된 디자인 전략으로 더욱 직관적인 결과물을 만들어 보세요
+                        페르소나에 최적화된 디자인 전략으로 더욱 직관적인
+                        결과물을 만들어 보세요
                       </Body3>
                     </BgBoxItem>
 
                     <InsightAnalysis>
                       <div className="title">
                         <H4 color="gray800" align="left">
-                          현재 이미지는 20대 후반 ~ 40대 남성을 타겟으로 하는 데 가장 적합합니다.<br />
-                          하지만 각 타겟 그룹의 특징을 고려하여 이미지, 카피, CTA, 가격 전략 등을 다르게 구성해야 합니다.
+                          현재 이미지는 20대 후반 ~ 40대 남성을 타겟으로 하는 데
+                          가장 적합합니다.
+                          <br />
+                          하지만 각 타겟 그룹의 특징을 고려하여 이미지, 카피,
+                          CTA, 가격 전략 등을 다르게 구성해야 합니다.
                         </H4>
                       </div>
 
                       <div className="content">
                         <ReportContent>
                           <div>
-                            <Body1 color="gray700" align="left">주요 개선 방향</Body1>
+                            <Body1 color="gray700" align="left">
+                              주요 개선 방향
+                            </Body1>
                             <UlList Disc>
-                              <li>타겟 맞춤형 이미지 : 각 그룹의 관심사를 반영하여 모델, 배경, 톤, 스타일 등을 변경</li>
-                              <li>구체적인 정보 제공 : 제품/서비스 내용, 가격, 혜택, 시술 후기, 비포/애프터 사진 등</li>
-                              <li>강력한 CTA : 각 그룹에 맞는 행동 유도 (상담 신청, 예약, 구매 등)</li>
-                              <li>다양한 채널 활용 : 각 그룹이 주로 사용하는 채널 (SNS, 웹사이트, 오프라인 등)에 맞는 광고 제작</li>
-                              <li>A/B 테스트 : 다양한 버전의 광고를 제작하여 효과를 비교 분석하고, 지속적으로 개선</li>
+                              <li>
+                                타겟 맞춤형 이미지 : 각 그룹의 관심사를 반영하여
+                                모델, 배경, 톤, 스타일 등을 변경
+                              </li>
+                              <li>
+                                구체적인 정보 제공 : 제품/서비스 내용, 가격,
+                                혜택, 시술 후기, 비포/애프터 사진 등
+                              </li>
+                              <li>
+                                강력한 CTA : 각 그룹에 맞는 행동 유도 (상담
+                                신청, 예약, 구매 등)
+                              </li>
+                              <li>
+                                다양한 채널 활용 : 각 그룹이 주로 사용하는 채널
+                                (SNS, 웹사이트, 오프라인 등)에 맞는 광고 제작
+                              </li>
+                              <li>
+                                A/B 테스트 : 다양한 버전의 광고를 제작하여
+                                효과를 비교 분석하고, 지속적으로 개선
+                              </li>
                             </UlList>
                           </div>
 
                           <div>
-                            <Body1 color="gray700" align="left">주요 이미지 개선 가이드 </Body1>
+                            <Body1 color="gray700" align="left">
+                              주요 이미지 개선 가이드{" "}
+                            </Body1>
                             <UlList Disc>
-                              <li>모델 : 깨끗하고, 건강한 피부를 가진 남성 모델 (연령대 고려 필요)</li>
-                              <li>배경 : 깔끔하고, 전문적인 느낌의 배경 (색상, 레이아웃)</li>
-                              <li>텍스트 : 간결하고 명확한 메시지 전달 (폰트, 크기, 색상 등 고려 필요)</li>
-                              <li>시각 요소 : 시선 유도, 시술 관련 이미지, 긍정적인 결과 암시</li>
+                              <li>
+                                모델 : 깨끗하고, 건강한 피부를 가진 남성 모델
+                                (연령대 고려 필요)
+                              </li>
+                              <li>
+                                배경 : 깔끔하고, 전문적인 느낌의 배경 (색상,
+                                레이아웃)
+                              </li>
+                              <li>
+                                텍스트 : 간결하고 명확한 메시지 전달 (폰트,
+                                크기, 색상 등 고려 필요)
+                              </li>
+                              <li>
+                                시각 요소 : 시선 유도, 시술 관련 이미지,
+                                긍정적인 결과 암시
+                              </li>
                               <li>브랜드 로고 : 명확하게 노출</li>
-                              <li>CTA : 명확하고 눈에 띄는 버튼 또는 문구 추가 필요</li>
+                              <li>
+                                CTA : 명확하고 눈에 띄는 버튼 또는 문구 추가
+                                필요
+                              </li>
                             </UlList>
                           </div>
                         </ReportContent>
@@ -1044,10 +1105,15 @@ const PageDesignSuitability = () => {
 
                           <ListText Small>
                             <ListTitle>
-                              <Sub1 color="gray800" align="left">20대 남성 (피부 고민 시작)</Sub1>
+                              <Sub1 color="gray800" align="left">
+                                20대 남성 (피부 고민 시작)
+                              </Sub1>
                             </ListTitle>
                             <ListSubtitle>
-                              <Sub3 color="gray500" align="left">외모 관리, 패션, 자기 계발, 소셜 미디어 관심사의 내용을 줄글로 입력</Sub3>
+                              <Sub3 color="gray500" align="left">
+                                외모 관리, 패션, 자기 계발, 소셜 미디어 관심사의
+                                내용을 줄글로 입력
+                              </Sub3>
                             </ListSubtitle>
                           </ListText>
 
@@ -1060,24 +1126,42 @@ const PageDesignSuitability = () => {
                           {state.isExpanded && (
                             <ToggleContent $isExpanded={state.isExpanded}>
                               <Body3 color="gray700" align="left">
-                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
                               </Body3>
 
                               <div className="bgContent">
                                 <div>
-                                  <Body2_1 color="gray800" align="left">디자인 개선 방향</Body2_1>
+                                  <Body2_1 color="gray800" align="left">
+                                    디자인 개선 방향
+                                  </Body2_1>
                                   <ul>
                                     <li>
-                                      <Body3 color="gray800" align="left">좀 더 트렌디하고, 밝고 활기찬 느낌으로 변경 필요</Body3>
+                                      <Body3 color="gray800" align="left">
+                                        좀 더 트렌디하고, 밝고 활기찬 느낌으로
+                                        변경 필요
+                                      </Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">시술 후 긍정적 변화를 강조하는 이미지 추가 필요 (예: 톤 개선, 피부결 개선)</Body3>
+                                      <Body3 color="gray800" align="left">
+                                        시술 후 긍정적 변화를 강조하는 이미지
+                                        추가 필요 (예: 톤 개선, 피부결 개선)
+                                      </Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">소셜 미디어 친화적인 디자인 (세로형, 릴스/스토리 형식) 추가</Body3>
+                                      <Body3 color="gray800" align="left">
+                                        소셜 미디어 친화적인 디자인 (세로형,
+                                        릴스/스토리 형식) 추가
+                                      </Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">합리적인 가격 강조</Body3>
+                                      <Body3 color="gray800" align="left">
+                                        합리적인 가격 강조
+                                      </Body3>
                                     </li>
                                   </ul>
                                 </div>
@@ -1093,10 +1177,15 @@ const PageDesignSuitability = () => {
 
                           <ListText Small>
                             <ListTitle>
-                              <Sub1 color="gray800" align="left">10대 후반 남성 (외모 관심 증가)</Sub1>
+                              <Sub1 color="gray800" align="left">
+                                10대 후반 남성 (외모 관심 증가)
+                              </Sub1>
                             </ListTitle>
                             <ListSubtitle>
-                              <Sub3 color="gray500" align="left">외모 관리, 패션, 자기 계발, 소셜 미디어 관심사의 내용을 줄글로 입력</Sub3>
+                              <Sub3 color="gray500" align="left">
+                                외모 관리, 패션, 자기 계발, 소셜 미디어 관심사의
+                                내용을 줄글로 입력
+                              </Sub3>
                             </ListSubtitle>
                           </ListText>
 
@@ -1109,24 +1198,42 @@ const PageDesignSuitability = () => {
                           {state.isExpanded && (
                             <ToggleContent $isExpanded={state.isExpanded}>
                               <Body3 color="gray700" align="left">
-                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
                               </Body3>
 
                               <div className="bgContent">
                                 <div>
-                                  <Body2_1 color="gray800" align="left">디자인 개선 방향</Body2_1>
+                                  <Body2_1 color="gray800" align="left">
+                                    디자인 개선 방향
+                                  </Body2_1>
                                   <ul>
                                     <li>
-                                      <Body3 color="gray800" align="left">좀 더 트렌디하고, 밝고 활기찬 느낌으로 변경 필요</Body3>
+                                      <Body3 color="gray800" align="left">
+                                        좀 더 트렌디하고, 밝고 활기찬 느낌으로
+                                        변경 필요
+                                      </Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">시술 후 긍정적 변화를 강조하는 이미지 추가 필요 (예: 톤 개선, 피부결 개선)</Body3>
+                                      <Body3 color="gray800" align="left">
+                                        시술 후 긍정적 변화를 강조하는 이미지
+                                        추가 필요 (예: 톤 개선, 피부결 개선)
+                                      </Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">소셜 미디어 친화적인 디자인 (세로형, 릴스/스토리 형식) 추가</Body3>
+                                      <Body3 color="gray800" align="left">
+                                        소셜 미디어 친화적인 디자인 (세로형,
+                                        릴스/스토리 형식) 추가
+                                      </Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">합리적인 가격 강조</Body3>
+                                      <Body3 color="gray800" align="left">
+                                        합리적인 가격 강조
+                                      </Body3>
                                     </li>
                                   </ul>
                                 </div>
@@ -1142,10 +1249,15 @@ const PageDesignSuitability = () => {
 
                           <ListText Small>
                             <ListTitle>
-                              <Sub1 color="gray800" align="left">여성 (남편/남자친구 선물)</Sub1>
+                              <Sub1 color="gray800" align="left">
+                                여성 (남편/남자친구 선물)
+                              </Sub1>
                             </ListTitle>
                             <ListSubtitle>
-                              <Sub3 color="gray500" align="left">외모 관리, 패션, 자기 계발, 소셜 미디어 관심사의 내용을 줄글로 입력</Sub3>
+                              <Sub3 color="gray500" align="left">
+                                외모 관리, 패션, 자기 계발, 소셜 미디어 관심사의
+                                내용을 줄글로 입력
+                              </Sub3>
                             </ListSubtitle>
                           </ListText>
 
@@ -1158,24 +1270,42 @@ const PageDesignSuitability = () => {
                           {state.isExpanded && (
                             <ToggleContent $isExpanded={state.isExpanded}>
                               <Body3 color="gray700" align="left">
-                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다. 광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
+                                광고 상품에 대한 기대 요소를 줄글로 나타냅니다.
                               </Body3>
 
                               <div className="bgContent">
                                 <div>
-                                  <Body2_1 color="gray800" align="left">디자인 개선 방향</Body2_1>
+                                  <Body2_1 color="gray800" align="left">
+                                    디자인 개선 방향
+                                  </Body2_1>
                                   <ul>
                                     <li>
-                                      <Body3 color="gray800" align="left">좀 더 트렌디하고, 밝고 활기찬 느낌으로 변경 필요</Body3>
+                                      <Body3 color="gray800" align="left">
+                                        좀 더 트렌디하고, 밝고 활기찬 느낌으로
+                                        변경 필요
+                                      </Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">시술 후 긍정적 변화를 강조하는 이미지 추가 필요 (예: 톤 개선, 피부결 개선)</Body3>
+                                      <Body3 color="gray800" align="left">
+                                        시술 후 긍정적 변화를 강조하는 이미지
+                                        추가 필요 (예: 톤 개선, 피부결 개선)
+                                      </Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">소셜 미디어 친화적인 디자인 (세로형, 릴스/스토리 형식) 추가</Body3>
+                                      <Body3 color="gray800" align="left">
+                                        소셜 미디어 친화적인 디자인 (세로형,
+                                        릴스/스토리 형식) 추가
+                                      </Body3>
                                     </li>
                                     <li>
-                                      <Body3 color="gray800" align="left">합리적인 가격 강조</Body3>
+                                      <Body3 color="gray800" align="left">
+                                        합리적인 가격 강조
+                                      </Body3>
                                     </li>
                                   </ul>
                                 </div>
