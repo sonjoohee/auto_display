@@ -41,6 +41,9 @@ const PopupWrap = ({
   trialState,
   creditRequestCustomPersona,
   customAlertBox,
+  prevText,
+  onPrev,
+  showPrevButton,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -74,7 +77,10 @@ const PopupWrap = ({
     handleConfirm,
     nomalText,
     closeText,
-    confirmText
+    confirmText,
+    prevText,
+    onPrev,
+    showPrevButton
   ) => {
     if (buttonType === "Outline") {
       return (
@@ -108,6 +114,18 @@ const PopupWrap = ({
           {closeText && (
             <Button Close className="Fill" onClick={handleClose}>
               {closeText}
+            </Button>
+          )}
+          {showPrevButton && (
+            <Button 
+              className="Fill" 
+              Close 
+              onClick={onPrev}
+              style={{
+                minWidth: '140px'
+              }}
+            >
+              {prevText}
             </Button>
           )}
           {confirmText && (
@@ -203,7 +221,10 @@ const PopupWrap = ({
             handleConfirm,
             nomalText,
             closeText,
-            confirmText
+            confirmText,
+            prevText,
+            onPrev,
+            showPrevButton
           )}
         </ModalPopup>
       ) : (
@@ -242,7 +263,10 @@ const PopupWrap = ({
             handleConfirm,
             nomalText,
             closeText,
-            confirmText
+            confirmText,
+            prevText,
+            onPrev,
+            showPrevButton
           )}
         </AlertPopup>
       )}
@@ -618,6 +642,9 @@ export const ButtonWrap = styled.div`
 export const FillButtonWrap = styled(ButtonWrap)`
   padding-top: 0;
   border-top: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 `;
 
 export const Button = styled.div`
@@ -682,6 +709,9 @@ export const Button = styled.div`
           ? palette.gray100
           : palette.gray100};
     }
+
+    flex: ${props => props.Close ? '0 0 auto' : '1 1 auto'};
+    min-width: ${props => props.Close ? '80px' : 'auto'};
   }
 
   &.disabled {
