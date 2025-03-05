@@ -30,7 +30,7 @@ const OrganismPersonaCardList = ({
   useEffect(() => {
     if (!personaData || personaData.length === 0) {
       setFilteredPersonaData([]);
-      setPersonaStats({ active: 0, inactive: 0 });
+      setPersonaStats({ active: 0, inactive: 0, generating: 0 });
       return;
     }
 
@@ -48,17 +48,25 @@ const OrganismPersonaCardList = ({
 
     setFilteredPersonaData(filtered);
 
-    // 현재 탭의 활성/비활성 페르소나 수 계산
+    // 현재 탭의 활성/생성 중/비활성 페르소나 수 계산
     const activeCount = filtered.filter(
       (persona) => persona?.status === "complete"
     ).length;
 
+    const generatingCount = filtered.filter(
+      (persona) => persona?.status === "ing"
+    ).length;
+
     const inactiveCount = filtered.filter(
-      (persona) => persona?.status !== "complete"
+      (persona) => persona?.status !== "complete" && persona?.status !== "ing"
     ).length;
 
     // 통계 정보를 부모 컴포넌트에 전달
-    setPersonaStats({ active: activeCount, inactive: inactiveCount });
+    setPersonaStats({
+      active: activeCount,
+      inactive: inactiveCount,
+      generating: generatingCount,
+    });
   }, [personaData, activeTab, setPersonaStats]);
 
   // 즐겨찾기 토글 함수

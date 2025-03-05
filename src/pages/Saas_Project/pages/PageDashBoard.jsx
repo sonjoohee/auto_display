@@ -33,11 +33,13 @@ import {
   InputText,
 } from "../../../assets/styles/Typography";
 import * as d3 from "d3";
-import { PROJECT_SAAS } from "../../../pages/AtomStates";
+import { PROJECT_SAAS, PERSONA_LIST_SAAS } from "../../../pages/AtomStates";
+import { getPersonaListOnServer } from "../../../utils/indexedDB";
 
 const PageDashBoard = () => {
   const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
   const project = projectSaas;
+  const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
 
   const navigate = useNavigate();
 
@@ -51,6 +53,30 @@ const PageDashBoard = () => {
   //   const projectData = await getProjectByIdFromIndexedDB(project._id);
   //   console.log(projectData);
   // }, [project]);
+
+  useEffect(() => {
+    const loadPersonaList = async () => {
+      try {
+        const savedPersonaListInfo = await getPersonaListOnServer(
+          project?._id,
+          true
+        );
+
+        if (savedPersonaListInfo) {
+          const sortedList = [...savedPersonaListInfo].sort((a, b) => {
+            const dateA = a.timestamp;
+            const dateB = b.timestamp;
+            return dateB - dateA; // 최신 날짜가 위로
+          });
+
+          setPersonaListSaas(sortedList);
+        }
+      } catch (error) {
+        console.error("프로젝트 목록을 불러오는데 실패했습니다:", error);
+      }
+    };
+    loadPersonaList();
+  }, []); // refreshTrigger가 변경될 때마다 데이터 다시 로드
 
   const createPieChart = (ref, data) => {
     if (ref.current) {
@@ -88,33 +114,128 @@ const PageDashBoard = () => {
     }
   };
 
+  // 페르소나 타입별 상태 카운트 함수 추가
+  const countPersonasByTypeAndStatus = (personaList, type) => {
+    if (!personaList || !Array.isArray(personaList)) {
+      return { total: 0, active: 0, generating: 0, inactive: 0 };
+    }
+
+    // 해당 타입의 페르소나만 필터링
+    const filteredPersonas = personaList.filter(
+      (persona) => persona?.personaType === type
+    );
+
+    // 총 개수
+    const total = filteredPersonas.length;
+
+    // 활성 페르소나 (status가 complete인 경우)
+    const active = filteredPersonas.filter(
+      (persona) => persona?.status === "complete"
+    ).length;
+
+    // 생성 중인 페르소나 (status가 ing인 경우)
+    const generating = filteredPersonas.filter(
+      (persona) => persona?.status === "ing"
+    ).length;
+
+    // 비활성 페르소나 (status가 complete나 ing가 아닌 경우)
+    const inactive = filteredPersonas.filter(
+      (persona) => persona?.status !== "complete" && persona?.status !== "ing"
+    ).length;
+
+    return { total, active, generating, inactive };
+  };
+
+  // 컴포넌트 내부에서 사용
+  const macroSegmentStats = countPersonasByTypeAndStatus(
+    personaListSaas,
+    "macro_segment"
+  );
+  const uniqueUserStats = countPersonasByTypeAndStatus(
+    personaListSaas,
+    "unique_user"
+  );
+  const keyStakeholderStats = countPersonasByTypeAndStatus(
+    personaListSaas,
+    "key_stakeholder"
+  );
+
   useEffect(() => {
-    // Macro Segment 데이터 (총 15명)
-    const macroData = [
-      { label: "비활성 페르소나", value: 10, color: palette.outlineGray },
-      { label: "생성 중", value: 3, color: "#32ADE6" },
-      { label: "활성 페르소나", value: 2, color: palette.primary },
-    ];
+    // 페르소나 데이터가 있을 때만 차트 생성
+    if (personaListSaas && personaListSaas.length > 0) {
+      // Macro Segment 데이터
+      const macroData = [
+        {
+          label: "비활성 페르소나",
+          value: macroSegmentStats.inactive || 0,
+          color: palette.outlineGray,
+        },
+        {
+          label: "생성 중",
+          value: macroSegmentStats.generating || 0,
+          color: "#32ADE6",
+        },
+        {
+          label: "활성 페르소나",
+          value: macroSegmentStats.active || 0,
+          color: palette.primary,
+        },
+      ];
 
-    // Unique User 데이터 (총 10명)
-    const uniqueData = [
-      { label: "비활성 페르소나", value: 5, color: palette.outlineGray },
-      { label: "생성 중", value: 3, color: "#32ADE6" },
-      { label: "활성 페르소나", value: 2, color: palette.primary },
-    ];
+      // Unique User 데이터
+      const uniqueData = [
+        {
+          label: "비활성 페르소나",
+          value: uniqueUserStats.inactive || 0,
+          color: palette.outlineGray,
+        },
+        {
+          label: "생성 중",
+          value: uniqueUserStats.generating || 0,
+          color: "#32ADE6",
+        },
+        {
+          label: "활성 페르소나",
+          value: uniqueUserStats.active || 0,
+          color: palette.primary,
+        },
+      ];
 
-    // Key Stakeholder 데이터 (총 14명)
-    const stakeholderData = [
-      { label: "비활성 페르소나", value: 1, color: palette.outlineGray },
-      { label: "생성 중", value: 10, color: "#32ADE6" },
-      { label: "활성 페르소나", value: 3, color: palette.primary },
-    ];
+      // Key Stakeholder 데이터
+      const stakeholderData = [
+        {
+          label: "비활성 페르소나",
+          value: keyStakeholderStats.inactive || 0,
+          color: palette.outlineGray,
+        },
+        {
+          label: "생성 중",
+          value: keyStakeholderStats.generating || 0,
+          color: "#32ADE6",
+        },
+        {
+          label: "활성 페르소나",
+          value: keyStakeholderStats.active || 0,
+          color: palette.primary,
+        },
+      ];
 
-    // 각각의 차트 생성
-    createPieChart(macroChartRef, macroData);
-    createPieChart(uniqueChartRef, uniqueData);
-    createPieChart(stakeholderChartRef, stakeholderData);
-  }, []);
+      // 각각의 차트 생성
+      createPieChart(macroChartRef, macroData);
+      createPieChart(uniqueChartRef, uniqueData);
+      createPieChart(stakeholderChartRef, stakeholderData);
+    }
+  }, [
+    personaListSaas,
+    macroSegmentStats,
+    uniqueUserStats,
+    keyStakeholderStats,
+  ]);
+
+  // 페르소나 카드 클릭 시 AI 페르소나 페이지의 특정 탭으로 이동하는 함수 추가
+  const navigateToAiPersonaTab = (tabName) => {
+    navigate("/AiPersona", { state: { activeTab: tabName } });
+  };
 
   return (
     <>
@@ -215,9 +336,12 @@ const PageDashBoard = () => {
                 </TooltipButton>
               </div>
 
-              {project?.personaList?.length > 0 ? (
+              {personaListSaas?.length > 0 ? (
                 <PersonaStatusWrap>
-                  <div>
+                  <div
+                    onClick={() => navigateToAiPersonaTab("macro_segment")}
+                    style={{ cursor: "pointer" }}
+                  >
                     <div className="title">
                       <Body1 color="gray700" align="left">
                         Macro Segment
@@ -225,7 +349,7 @@ const PageDashBoard = () => {
                         추천 페르소나
                       </Body1>
                       <Body1 color="gray700" align="right">
-                        총 15명
+                        총 {macroSegmentStats.total}명
                       </Body1>
                     </div>
                     <div className="content">
@@ -233,21 +357,30 @@ const PageDashBoard = () => {
                       <UlInfo>
                         <li className="start">
                           <Sub3 color="gray500">비활성 페르소나</Sub3>
-                          <Sub2 color="gray700">10명</Sub2>
+                          <Sub2 color="gray700">
+                            {macroSegmentStats.inactive}명
+                          </Sub2>
                         </li>
                         <li className="ing">
                           <Sub3 color="gray500">생성 중</Sub3>
-                          <Sub2 color="gray700">3명</Sub2>
+                          <Sub2 color="gray700">
+                            {macroSegmentStats.generating}명
+                          </Sub2>
                         </li>
                         <li className="complete">
                           <Sub3 color="gray500">활성 페르소나</Sub3>
-                          <Sub2 color="gray700">2명</Sub2>
+                          <Sub2 color="gray700">
+                            {macroSegmentStats.active}명
+                          </Sub2>
                         </li>
                       </UlInfo>
                     </div>
                   </div>
 
-                  <div>
+                  <div
+                    onClick={() => navigateToAiPersonaTab("unique_user")}
+                    style={{ cursor: "pointer" }}
+                  >
                     <div className="title">
                       <Body1 color="gray700" align="left">
                         Unique User
@@ -255,7 +388,7 @@ const PageDashBoard = () => {
                         추천 페르소나
                       </Body1>
                       <Body1 color="gray700" align="right">
-                        총 10명
+                        총 {uniqueUserStats.total}명
                       </Body1>
                     </div>
                     <div className="content">
@@ -263,21 +396,30 @@ const PageDashBoard = () => {
                       <UlInfo>
                         <li className="start">
                           <Sub3 color="gray500">비활성 페르소나</Sub3>
-                          <Sub2 color="gray700">5명</Sub2>
+                          <Sub2 color="gray700">
+                            {uniqueUserStats.inactive}명
+                          </Sub2>
                         </li>
                         <li className="ing">
                           <Sub3 color="gray500">생성 중</Sub3>
-                          <Sub2 color="gray700">3명</Sub2>
+                          <Sub2 color="gray700">
+                            {uniqueUserStats.generating}명
+                          </Sub2>
                         </li>
                         <li className="complete">
                           <Sub3 color="gray500">활성 페르소나</Sub3>
-                          <Sub2 color="gray700">2명</Sub2>
+                          <Sub2 color="gray700">
+                            {uniqueUserStats.active}명
+                          </Sub2>
                         </li>
                       </UlInfo>
                     </div>
                   </div>
 
-                  <div>
+                  <div
+                    onClick={() => navigateToAiPersonaTab("key_stakeholder")}
+                    style={{ cursor: "pointer" }}
+                  >
                     <div className="title">
                       <Body1 color="gray700" align="left">
                         Key Stakeholder
@@ -285,7 +427,7 @@ const PageDashBoard = () => {
                         추천 페르소나
                       </Body1>
                       <Body1 color="gray700" align="right">
-                        총 14명
+                        총 {keyStakeholderStats.total}명
                       </Body1>
                     </div>
                     <div className="content">
@@ -293,15 +435,21 @@ const PageDashBoard = () => {
                       <UlInfo>
                         <li className="start">
                           <Sub3 color="gray500">비활성 페르소나</Sub3>
-                          <Sub2 color="gray700">1명</Sub2>
+                          <Sub2 color="gray700">
+                            {keyStakeholderStats.inactive}명
+                          </Sub2>
                         </li>
                         <li className="ing">
                           <Sub3 color="gray500">생성 중</Sub3>
-                          <Sub2 color="gray700">10명</Sub2>
+                          <Sub2 color="gray700">
+                            {keyStakeholderStats.generating}명
+                          </Sub2>
                         </li>
                         <li className="complete">
                           <Sub3 color="gray500">활성 페르소나</Sub3>
-                          <Sub2 color="gray700">3명</Sub2>
+                          <Sub2 color="gray700">
+                            {keyStakeholderStats.active}명
+                          </Sub2>
                         </li>
                       </UlInfo>
                     </div>
@@ -318,9 +466,7 @@ const PageDashBoard = () => {
                       Medium
                       Outline
                       Fill
-                      onClick={() =>
-                        navigate("/AiPersona", { state: { project: project } })
-                      }
+                      onClick={() => navigate("/AiPersona")}
                     >
                       <Caption1 color="gray700">AI Persona 확인하기</Caption1>
                     </Button>
@@ -778,11 +924,17 @@ const PersonaStatusWrap = styled.div`
     display: flex;
     flex-direction: column;
     gap: 24px;
-    // max-width: calc(100% / 3);
     width: 100%;
     padding: 20px;
     border-radius: 10px;
     border: 1px solid ${palette.outlineGray};
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      border-color: ${palette.primary};
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      transform: translateY(-2px);
+    }
   }
 
   .title {
