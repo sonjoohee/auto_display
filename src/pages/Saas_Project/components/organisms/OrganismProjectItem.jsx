@@ -1,20 +1,23 @@
 import React from "react";
+import { useAtom } from "jotai";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Body1, Body2, Body3 } from "../../../../assets/styles/Typography";
+import { PROJECT_ID } from "../../../../pages/AtomStates";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 
 const OrganismProjectItem = ({ project, onClick, isNoData }) => {
   const navigate = useNavigate();
-
+  const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const handleClick = async () => {
     if (onClick) {
       onClick();
     } else if (isNoData) {
       navigate("/ProjectCreate");
     } else {
+      setProjectId(project.id);
       // 프로젝트 데이터를 state로 전달하여 DashBoard 페이지로 이동
       navigate("/DashBoard", { state: { project: project } });
     }

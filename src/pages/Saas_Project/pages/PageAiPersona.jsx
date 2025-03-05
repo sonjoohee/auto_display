@@ -53,9 +53,14 @@ import {
   InputText,
 } from "../../../assets/styles/Typography";
 import OrganismEmptyPersona from "../components/organisms/OrganismEmptyPersona";
+import OrganismPersonaCardList from "../components/organisms/OrganismPersonaCardList";
+import { getPersonaListOnServer } from "../../../utils/indexedDB";
+import { PROJECT_ID, PERSONA_LIST_SAAS } from "../../../pages/AtomStates";
+
 const PageAiPersona = () => {
   const navigate = useNavigate();
-
+  const [projectId, setProjectId] = useAtom(PROJECT_ID);
+  const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
   const [isCustomizePopupOpen, setIsCustomizePopupOpen] = useState(false);
@@ -146,6 +151,30 @@ const PageAiPersona = () => {
     keyStakeholder: "",
   });
 
+  useEffect(() => {
+    const loadPersonaList = async () => {
+      try {
+        const savedPersonaListInfo = await getPersonaListOnServer(
+          projectId,
+          true
+        );
+
+        if (savedPersonaListInfo) {
+          const sortedList = [...savedPersonaListInfo].sort((a, b) => {
+            const dateA = a.timestamp;
+            const dateB = b.timestamp;
+            return dateB - dateA; // 최신 날짜가 위로
+          });
+
+          setPersonaListSaas(sortedList);
+        }
+      } catch (error) {
+        console.error("프로젝트 목록을 불러오는데 실패했습니다:", error);
+      }
+    };
+    loadPersonaList();
+  }, []); // refreshTrigger가 변경될 때마다 데이터 다시 로드
+
   const toggleSelectBox = (type) => {
     setSelectBoxStates((prev) => ({
       ...prev,
@@ -168,7 +197,6 @@ const PageAiPersona = () => {
     <>
       <ContentsWrap>
         <OrganismIncNavigation />
-
         <MoleculeHeader />
 
         <MainContent Wide1240>
@@ -197,7 +225,6 @@ const PageAiPersona = () => {
                 <Sub1 color="primary">나만의 AI Persona 요청</Sub1>
               </Button>
             </AiPersonaTitle>
-
             <AiPersonaContent>
               <TabWrapType3 Border>
                 <TabButtonType3>Macro Segment</TabButtonType3>
@@ -221,477 +248,11 @@ const PageAiPersona = () => {
                 </div>
               </AiPersonaInfo>
 
-              <AiPersonaCardGroupWrap>
-                <OrganismEmptyPersona />
-                <AiPersonaCardListItem>
-                  <div className="header">
-                    <UniqueTag color="Haker" />
-                    <div className="title">
-                      <Body1 color="gray800">스마트홈 자동화 유저</Body1>
-                      <div>
-                        <Sub3 color="gray700">#남성</Sub3>
-                        <Sub3 color="gray700">#20세</Sub3>
-                        <Sub3 color="gray700">#은퇴 후 건강 관리에 집중</Sub3>
-                        <Sub3 color="gray700">#부드러운 기상 선호</Sub3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="content">
-                    <Sub3 color="gray700">
-                      스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀 기능을
-                      연구, 스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀
-                      기능을 연구 스마트홈 기기와 연동하여 알람을 자동화하고,
-                      커스텀 기능을 연구, 스마트홈 기기와 연동하여 알람을
-                      자동화하고, 커스텀 기능을 연구
-                    </Sub3>
-                  </div>
-
-                  <AiPersonaCardButtonWrap>
-                    <div>
-                      <StarButton
-                        onClick={() => setIsStarred(!isStarred)}
-                        isStarred={isStarred}
-                      >
-                        {isStarred ? (
-                          <img src={images.StarFill} />
-                        ) : (
-                          <img src={images.Star} />
-                        )}
-                      </StarButton>
-                    </div>
-
-                    <div>
-                      <CustomButton
-                        Medium
-                        Outline
-                        onClick={() => setShowPopup(true)}
-                      >
-                        프로필
-                      </CustomButton>
-                      <CustomButton Medium Primary Fill>
-                        채팅
-                      </CustomButton>
-                    </div>
-                  </AiPersonaCardButtonWrap>
-                </AiPersonaCardListItem>
-                <AiPersonaCardListItem>
-                  <div className="header">
-                    <UniqueTag color="Haker" />
-                    <div className="title">
-                      <Body1 color="gray800">스마트홈 자동화 유저</Body1>
-                      <div>
-                        <Sub3 color="gray700">#남성</Sub3>
-                        <Sub3 color="gray700">#20세</Sub3>
-                        <Sub3 color="gray700">#은퇴 후 건강 관리에 집중</Sub3>
-                        <Sub3 color="gray700">#부드러운 기상 선호</Sub3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="content">
-                    <Sub3 color="gray700">
-                      스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀 기능을
-                      연구, 스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀
-                      기능을 연구 스마트홈 기기와 연동하여 알람을 자동화하고,
-                      커스텀 기능을 연구, 스마트홈 기기와 연동하여 알람을
-                      자동화하고, 커스텀 기능을 연구
-                    </Sub3>
-                  </div>
-
-                  <AiPersonaCardButtonWrap>
-                    <div>
-                      <StarButton
-                        onClick={() => setIsStarred(!isStarred)}
-                        isStarred={isStarred}
-                      >
-                        {isStarred ? (
-                          <img src={images.StarFill} />
-                        ) : (
-                          <img src={images.Star} />
-                        )}
-                      </StarButton>
-                    </div>
-
-                    <div>
-                      <CustomButton
-                        Medium
-                        Outline
-                        onClick={() => setShowPopup(true)}
-                      >
-                        프로필
-                      </CustomButton>
-                      <CustomButton Medium Primary Fill>
-                        채팅
-                      </CustomButton>
-                    </div>
-                  </AiPersonaCardButtonWrap>
-                </AiPersonaCardListItem>
-                <AiPersonaCardListItem>
-                  <div className="header">
-                    <UniqueTag color="Haker" />
-                    <div className="title">
-                      <Body1 color="gray800">스마트홈 자동화 유저</Body1>
-                      <div>
-                        <Sub3 color="gray700">#남성</Sub3>
-                        <Sub3 color="gray700">#20세</Sub3>
-                        <Sub3 color="gray700">#은퇴 후 건강 관리에 집중</Sub3>
-                        <Sub3 color="gray700">#부드러운 기상 선호</Sub3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="content">
-                    <Sub3 color="gray700">
-                      스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀 기능을
-                      연구, 스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀
-                      기능을 연구 스마트홈 기기와 연동하여 알람을 자동화하고,
-                      커스텀 기능을 연구, 스마트홈 기기와 연동하여 알람을
-                      자동화하고, 커스텀 기능을 연구
-                    </Sub3>
-                  </div>
-
-                  <AiPersonaCardButtonWrap>
-                    <div>
-                      <StarButton
-                        onClick={() => setIsStarred(!isStarred)}
-                        isStarred={isStarred}
-                      >
-                        {isStarred ? (
-                          <img src={images.StarFill} />
-                        ) : (
-                          <img src={images.Star} />
-                        )}
-                      </StarButton>
-                    </div>
-
-                    <div>
-                      <CustomButton
-                        Medium
-                        Outline
-                        onClick={() => setShowPopup(true)}
-                      >
-                        프로필
-                      </CustomButton>
-                      <CustomButton Medium Primary Fill>
-                        채팅
-                      </CustomButton>
-                    </div>
-                  </AiPersonaCardButtonWrap>
-                </AiPersonaCardListItem>
-                <AiPersonaCardListItem>
-                  <div className="header">
-                    <UniqueTag color="Haker" />
-                    <div className="title">
-                      <Body1 color="gray800">스마트홈 자동화 유저</Body1>
-                      <div>
-                        <Sub3 color="gray700">#남성</Sub3>
-                        <Sub3 color="gray700">#20세</Sub3>
-                        <Sub3 color="gray700">#은퇴 후 건강 관리에 집중</Sub3>
-                        <Sub3 color="gray700">#부드러운 기상 선호</Sub3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="content">
-                    <Sub3 color="gray700">
-                      스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀 기능을
-                      연구, 스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀
-                      기능을 연구 스마트홈 기기와 연동하여 알람을 자동화하고,
-                      커스텀 기능을 연구, 스마트홈 기기와 연동하여 알람을
-                      자동화하고, 커스텀 기능을 연구
-                    </Sub3>
-                  </div>
-
-                  <AiPersonaCardButtonWrap>
-                    <div>
-                      <StarButton
-                        onClick={() => setIsStarred(!isStarred)}
-                        isStarred={isStarred}
-                      >
-                        {isStarred ? (
-                          <img src={images.StarFill} />
-                        ) : (
-                          <img src={images.Star} />
-                        )}
-                      </StarButton>
-                    </div>
-
-                    <div>
-                      <CustomButton
-                        Medium
-                        Outline
-                        onClick={() => setShowPopup(true)}
-                      >
-                        프로필
-                      </CustomButton>
-                      <CustomButton Medium Primary Fill>
-                        채팅
-                      </CustomButton>
-                    </div>
-                  </AiPersonaCardButtonWrap>
-                </AiPersonaCardListItem>
-                <AiPersonaCardListItem>
-                  <div className="header">
-                    <UniqueTag color="Haker" />
-                    <div className="title">
-                      <Body1 color="gray800">스마트홈 자동화 유저</Body1>
-                      <div>
-                        <Sub3 color="gray700">#남성</Sub3>
-                        <Sub3 color="gray700">#20세</Sub3>
-                        <Sub3 color="gray700">#은퇴 후 건강 관리에 집중</Sub3>
-                        <Sub3 color="gray700">#부드러운 기상 선호</Sub3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="content">
-                    <Sub3 color="gray700">
-                      스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀 기능을
-                      연구, 스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀
-                      기능을 연구 스마트홈 기기와 연동하여 알람을 자동화하고,
-                      커스텀 기능을 연구, 스마트홈 기기와 연동하여 알람을
-                      자동화하고, 커스텀 기능을 연구
-                    </Sub3>
-                  </div>
-
-                  <AiPersonaCardButtonWrap>
-                    <div>
-                      <StarButton
-                        onClick={() => setIsStarred(!isStarred)}
-                        isStarred={isStarred}
-                      >
-                        {isStarred ? (
-                          <img src={images.StarFill} />
-                        ) : (
-                          <img src={images.Star} />
-                        )}
-                      </StarButton>
-                    </div>
-
-                    <div>
-                      <CustomButton
-                        Medium
-                        Outline
-                        onClick={() => setShowPopup(true)}
-                      >
-                        프로필
-                      </CustomButton>
-                      <CustomButton Medium Primary Fill>
-                        채팅
-                      </CustomButton>
-                    </div>
-                  </AiPersonaCardButtonWrap>
-                </AiPersonaCardListItem>
-                <AiPersonaCardListItem>
-                  <div className="header">
-                    <UniqueTag color="Haker" />
-                    <div className="title">
-                      <Body1 color="gray800">스마트홈 자동화 유저</Body1>
-                      <div>
-                        <Sub3 color="gray700">#남성</Sub3>
-                        <Sub3 color="gray700">#20세</Sub3>
-                        <Sub3 color="gray700">#은퇴 후 건강 관리에 집중</Sub3>
-                        <Sub3 color="gray700">#부드러운 기상 선호</Sub3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="content">
-                    <Sub3 color="gray700">
-                      스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀 기능을
-                      연구, 스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀
-                      기능을 연구 스마트홈 기기와 연동하여 알람을 자동화하고,
-                      커스텀 기능을 연구, 스마트홈 기기와 연동하여 알람을
-                      자동화하고, 커스텀 기능을 연구
-                    </Sub3>
-                  </div>
-
-                  <AiPersonaCardButtonWrap>
-                    <div>
-                      <StarButton
-                        onClick={() => setIsStarred(!isStarred)}
-                        isStarred={isStarred}
-                      >
-                        {isStarred ? (
-                          <img src={images.StarFill} />
-                        ) : (
-                          <img src={images.Star} />
-                        )}
-                      </StarButton>
-                    </div>
-
-                    <div>
-                      <CustomButton
-                        Medium
-                        Outline
-                        onClick={() => setShowPopup(true)}
-                      >
-                        프로필
-                      </CustomButton>
-                      <CustomButton Medium Primary Fill>
-                        채팅
-                      </CustomButton>
-                    </div>
-                  </AiPersonaCardButtonWrap>
-                </AiPersonaCardListItem>
-                <AiPersonaCardListItem>
-                  <div className="header">
-                    <UniqueTag color="Haker" />
-                    <div className="title">
-                      <Body1 color="gray800">스마트홈 자동화 유저</Body1>
-                      <div>
-                        <Sub3 color="gray700">#남성</Sub3>
-                        <Sub3 color="gray700">#20세</Sub3>
-                        <Sub3 color="gray700">#은퇴 후 건강 관리에 집중</Sub3>
-                        <Sub3 color="gray700">#부드러운 기상 선호</Sub3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="content">
-                    <Sub3 color="gray700">
-                      스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀 기능을
-                      연구, 스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀
-                      기능을 연구 스마트홈 기기와 연동하여 알람을 자동화하고,
-                      커스텀 기능을 연구, 스마트홈 기기와 연동하여 알람을
-                      자동화하고, 커스텀 기능을 연구
-                    </Sub3>
-                  </div>
-
-                  <AiPersonaCardButtonWrap>
-                    <div>
-                      <StarButton
-                        onClick={() => setIsStarred(!isStarred)}
-                        isStarred={isStarred}
-                      >
-                        {isStarred ? (
-                          <img src={images.StarFill} />
-                        ) : (
-                          <img src={images.Star} />
-                        )}
-                      </StarButton>
-                    </div>
-
-                    <div>
-                      <CustomButton
-                        Medium
-                        Outline
-                        onClick={() => setShowPopup(true)}
-                      >
-                        프로필
-                      </CustomButton>
-                      <CustomButton Medium Primary Fill>
-                        채팅
-                      </CustomButton>
-                    </div>
-                  </AiPersonaCardButtonWrap>
-                </AiPersonaCardListItem>
-                <AiPersonaCardListItem>
-                  <div className="header">
-                    <UniqueTag color="Haker" />
-                    <div className="title">
-                      <Body1 color="gray800">스마트홈 자동화 유저</Body1>
-                      <div>
-                        <Sub3 color="gray700">#남성</Sub3>
-                        <Sub3 color="gray700">#20세</Sub3>
-                        <Sub3 color="gray700">#은퇴 후 건강 관리에 집중</Sub3>
-                        <Sub3 color="gray700">#부드러운 기상 선호</Sub3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="content">
-                    <Sub3 color="gray700">
-                      스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀 기능을
-                      연구, 스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀
-                      기능을 연구 스마트홈 기기와 연동하여 알람을 자동화하고,
-                      커스텀 기능을 연구, 스마트홈 기기와 연동하여 알람을
-                      자동화하고, 커스텀 기능을 연구
-                    </Sub3>
-                  </div>
-
-                  <AiPersonaCardButtonWrap>
-                    <div>
-                      <StarButton
-                        onClick={() => setIsStarred(!isStarred)}
-                        isStarred={isStarred}
-                      >
-                        {isStarred ? (
-                          <img src={images.StarFill} />
-                        ) : (
-                          <img src={images.Star} />
-                        )}
-                      </StarButton>
-                    </div>
-
-                    <div>
-                      <CustomButton
-                        Medium
-                        Outline
-                        onClick={() => setShowPopup(true)}
-                      >
-                        프로필
-                      </CustomButton>
-                      <CustomButton Medium Primary Fill>
-                        채팅
-                      </CustomButton>
-                    </div>
-                  </AiPersonaCardButtonWrap>
-                </AiPersonaCardListItem>
-                <AiPersonaCardListItem>
-                  <div className="header">
-                    <UniqueTag color="Haker" />
-                    <div className="title">
-                      <Body1 color="gray800">스마트홈 자동화 유저</Body1>
-                      <div>
-                        <Sub3 color="gray700">#남성</Sub3>
-                        <Sub3 color="gray700">#20세</Sub3>
-                        <Sub3 color="gray700">#은퇴 후 건강 관리에 집중</Sub3>
-                        <Sub3 color="gray700">#부드러운 기상 선호</Sub3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="content">
-                    <Sub3 color="gray700">
-                      스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀 기능을
-                      연구, 스마트홈 기기와 연동하여 알람을 자동화하고, 커스텀
-                      기능을 연구 스마트홈 기기와 연동하여 알람을 자동화하고,
-                      커스텀 기능을 연구, 스마트홈 기기와 연동하여 알람을
-                      자동화하고, 커스텀 기능을 연구
-                    </Sub3>
-                  </div>
-
-                  <AiPersonaCardButtonWrap>
-                    <div>
-                      <StarButton
-                        onClick={() => setIsStarred(!isStarred)}
-                        isStarred={isStarred}
-                      >
-                        {isStarred ? (
-                          <img src={images.StarFill} />
-                        ) : (
-                          <img src={images.Star} />
-                        )}
-                      </StarButton>
-                    </div>
-
-                    <div>
-                      <CustomButton
-                        Medium
-                        Outline
-                        onClick={() => setShowPopup(true)}
-                      >
-                        프로필
-                      </CustomButton>
-                      <CustomButton Medium Primary Fill>
-                        채팅
-                      </CustomButton>
-                    </div>
-                  </AiPersonaCardButtonWrap>
-                </AiPersonaCardListItem>
-              </AiPersonaCardGroupWrap>
+              <OrganismPersonaCardList
+                isStarred={isStarred}
+                setIsStarred={setIsStarred}
+                setShowPopup={setShowPopup}
+              />
             </AiPersonaContent>
           </AiPersonaWrap>
         </MainContent>
@@ -1284,10 +845,6 @@ const AiPersonaInfo = styled.div`
       background: ${palette.white};
     }
   }
-`;
-
-const CustomButton = styled(Button)`
-  min-width: 92px;
 `;
 
 const StarButton = styled.span`
