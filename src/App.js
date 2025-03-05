@@ -85,7 +85,6 @@ import PagePersona3Select from "./pages/Persona/components/pages/PagePersona3Sel
 import OrganismLogin from "./pages/Global/organisms/OrganismLogin";
 import OrganismSignin from "./pages/Global/organisms/OrganismSignin";
 
-
 // 테스트 라우트 추가
 import PageMarketingNoItemsShare from "./pages/Marketing/components/pages/PageMarketingNoItemsShare";
 
@@ -475,19 +474,9 @@ function App() {
             }
           />
 
-          <Route
-            path="/Login"
-            element={
-              <OrganismLogin />
-            }
-          />
+          <Route path="/Login" element={<OrganismLogin />} />
 
-          <Route
-            path="/Signin"
-            element={
-              <OrganismSignin />
-            }
-          />
+          <Route path="/Signin" element={<OrganismSignin />} />
 
           <Route
             path="/Project"
