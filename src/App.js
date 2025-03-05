@@ -66,6 +66,8 @@ import PagePolicy from "./pages/PagePolicy";
 import PageServiceLanding from "./pages/PageServiceLanding";
 import PageBlog from "./pages/PageBlog";
 
+import PageToolList from "./pages/Persona/components/pages/PageToolList";
+
 //! SAAS 프로젝트
 import PageProject from "./pages/Saas_Project/pages/PageProject";
 import PageProjectCreate from "./pages/Saas_Project/pages/PageProjectCreate";
@@ -542,6 +544,15 @@ function App() {
             element={
               <RequireToken>
                 <PageAiPersona />
+              </RequireToken>
+            }
+          />
+
+          <Route
+            path="/Tool"
+            element={
+              <RequireToken>
+                <PageToolList />
               </RequireToken>
             }
           />
