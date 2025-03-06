@@ -67,6 +67,7 @@ import {
   InterviewXPersonaUniqueUserRequest,
   InterviewXPersonaKeyStakeholderRequest,
   InterviewXPersonaProfileRequest,
+  createRequestPersonOnServer,
 } from "../../../utils/indexedDB";
 
 import OrganismPersonaCardList from "../components/organisms/OrganismPersonaCardList";
@@ -75,6 +76,7 @@ import {
   PROJECT_ID,
   PERSONA_LIST_SAAS,
   PROJECT_SAAS,
+  IS_LOGGED_IN,
 } from "../../../pages/AtomStates";
 import AtomPersonaLoader from "../../Global/atoms/AtomPersonaLoader";
 
@@ -84,7 +86,7 @@ const PageAiPersona = () => {
   const [project, setProject] = useAtom(PROJECT_SAAS);
   const [projectPersonaList, setProjectPersonaList] =
     useAtom(PROJECT_PERSONA_LIST);
-
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
 
@@ -167,7 +169,6 @@ const PageAiPersona = () => {
       // OCEAN 정보 탭
       setActiveTabIndex(2); // 요청사항확인 탭으로 이동
       
-
     } else {
       setIsCustomizePopupOpen(false);
     }
@@ -398,6 +399,10 @@ const PageAiPersona = () => {
     setActiveTabIndex1(activeTabIndex1 - 1); // activeTabIndex1을 감소시켜 이전 탭으로 이동
   };
 
+  const handlePrevTab2 = () => {
+    setActiveTabIndex(activeTabIndex - 1); // activeTabIndex1을 감소시켜 이전 탭으로 이동
+  };
+
   // 컴포넌트가 마운트될 때 전달받은 탭으로 설정
   useEffect(() => {
     if (location.state?.activeTab) {
@@ -587,6 +592,63 @@ const PageAiPersona = () => {
         return "거의 모든 기능을 능숙하게 사용";
       default:
         return "선택해주세요";
+    }
+  };
+
+  const handleCustomPersonaRequest = async () => {
+    try {
+
+      const requestData = {
+        projectId: projectId,
+     businessAnalysis: {
+          businessModel: project.businessModel,
+          projectAnalysis: project.projectAnalysis,
+          projectDescription: project.projectDescription,
+          projectTitle: project.projectTitle,
+          targetCountry: project.targetCountry,
+          projectType: project.projectType,
+        },
+        requestDate: new Date().toLocaleString("ko-KR", {
+          timeZone: "Asia/Seoul",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+        requestTimeStamp: Date.now(),
+        personaRequest: {
+          preferences: {
+            gender: customPersonaForm.gender,
+            ageGroups: customPersonaForm.ageGroups,
+          },
+          additionalInfo: customPersonaForm.additionalInfo,
+          ocean: {
+            openness: oceanValues.openness,
+            conscientiousness: oceanValues.conscientiousness,
+            extraversion: oceanValues.extraversion,
+            agreeableness: oceanValues.agreeableness,
+            neuroticism: oceanValues.neuroticism,
+          },
+          ignoreOcean: ignoreOcean,
+          status: "request",
+        },
+      };
+      // API 호출 예시
+      const response = await createRequestPersonOnServer(
+        requestData,
+        isLoggedIn
+      );
+
+      if (!response) {
+        throw new Error('페르소나 요청에 실패했습니다.');
+      }
+      console.log('페르소나 요청 성공:', response);
+      setIsCustomizePopupOpen(false);
+      // 추가적인 성공 처리 로직
+    } catch (error) {
+      console.error('API 호출 중 오류 발생:', error);
     }
   };
 
@@ -1083,10 +1145,10 @@ const PageAiPersona = () => {
           }
           showPrevButton={activeTabIndex === 2} // 마지막 탭에서만 이전 버튼 표시
           prevText="이전"
-          onPrev={handlePrevTab}
+          onPrev={handlePrevTab2}
           isModal={true}
           onCancel={handleCustomizePopupClose}
-          onConfirm={handleCustomizePopupConfirm}
+          onConfirm={activeTabIndex === 2 ? handleCustomPersonaRequest : handleCustomizePopupConfirm}
           showTabs={true}
           tabs={["필수정보", "OCEAN 정보", "요청사항확인"]}
           onTabChange={handleTabChange}
@@ -1395,6 +1457,7 @@ const PageAiPersona = () => {
                       <br />
                       보다 정확하고 정교한 페르소나를 제공해 드릴 수 있도록
                       최선을 다하겠습니다. 😊
+             
                     </Sub3>
                   </BgBoxItem>
 
@@ -1423,9 +1486,7 @@ const PageAiPersona = () => {
                       이유, 목적
                     </Body3>
                     <Body2 color="gray800" align="left">
-                      여러가지 이유와 목적을 작성하시면 됩니다.
-                      <br />
-                      해당 내용이 길어질 수 있습니다.
+                      {customPersonaForm.purpose || "*해당정보 없음"}
                     </Body2>
                   </div>
 
@@ -1434,12 +1495,8 @@ const PageAiPersona = () => {
                       필수정보
                     </Body3>
                     <Body2 color="gray800" align="left">
-                      여러가지 내용이 들어갈 수 있는 다양한 정보를 보여줍니다.
-                      너무 많은 내용은 줄 바꿈이 필요 합니다. 당연히 두줄도 가능
-                      합니다. 너무 많은 내용은 힘들 수 있습니다.
-                      <br />
-                      물론 세줄까지도!! 가능 할지도 모릅니다. 하지만 이 이상은
-                      정말 힘들기 때문에 자제..{" "}
+                  
+                      {customPersonaForm.additionalInfo || "*해당정보 없음"}
                     </Body2>
                   </div>
 
