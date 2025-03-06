@@ -98,7 +98,16 @@ const PageAiPersona = () => {
   const [activeTab2, setActiveTab2] = useState("lifestyle");
   const [showPopup, setShowPopup] = useState(false);
   const [isPersonaEditPopupOpen, setIsPersonaEditPopupOpen] = useState(false);
-  const [currentPersona, setCurrentPersona] = useState(null);
+  const [currentPersona, setCurrentPersona] = useState({
+    gender: "",
+    age: "",
+    personaCharacteristics: "",
+    relatedInfo: "",
+    lifestyle: "",
+    interests: "",
+    consumptionPattern: "",
+    userExperience: "",
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
@@ -262,6 +271,14 @@ const PageAiPersona = () => {
   // 입력 핸들러 추가
   const handleTabInputChange = (field, value) => {
     setTabInputs((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  // currentPersona 업데이트를 위한 핸들러 추가
+  const handleCurrentPersonaChange = (field, value) => {
+    setCurrentPersona((prev) => ({
       ...prev,
       [field]: value,
     }));
@@ -1251,7 +1268,7 @@ const PageAiPersona = () => {
                           placeholder="성별"
                           value={currentPersona.gender || ""}
                           onChange={(e) =>
-                            handleBasicInfoChange("gender", e.target.value)
+                            handleCurrentPersonaChange("gender", e.target.value)
                           }
                           status="valid"
                         />
@@ -1269,9 +1286,9 @@ const PageAiPersona = () => {
                           Edit
                           type="text"
                           placeholder="나이"
-                          value={currentPersona.age}
+                          value={currentPersona.age || ""}
                           onChange={(e) =>
-                            handleBasicInfoChange("age", e.target.value)
+                            handleCurrentPersonaChange("age", e.target.value)
                           }
                           status="valid"
                         />
@@ -1289,9 +1306,9 @@ const PageAiPersona = () => {
                           Edit
                           type="text"
                           placeholder="주요 특징"
-                          value={currentPersona.personaCharacteristics}
+                          value={currentPersona.personaCharacteristics || ""}
                           onChange={(e) =>
-                            handleBasicInfoChange("characteristics", e.target.value)
+                            handleCurrentPersonaChange("personaCharacteristics", e.target.value)
                           }
                           status="valid"
                         />
@@ -1308,9 +1325,9 @@ const PageAiPersona = () => {
                         <CustomTextarea
                           Edit
                           placeholder="관련 정보"
-                          value={currentPersona.relatedInfo}
+                          value={currentPersona.relatedInfo || ""}
                           onChange={(e) =>
-                            handleBasicInfoChange("relatedInfo", e.target.value)
+                            handleCurrentPersonaChange("relatedInfo", e.target.value)
                           }
                           status="valid"
                         />
@@ -1329,9 +1346,9 @@ const PageAiPersona = () => {
                           Edit
                           rows={16}
                           placeholder="라이프스타일"
-                          value={currentPersona.lifestyle}
+                          value={currentPersona.lifestyle || ""}
                           onChange={(e) =>
-                            handleTabInputChange("lifestyle", e.target.value)
+                            handleCurrentPersonaChange("lifestyle", e.target.value)
                           }
                           status="valid"
                         />
@@ -1350,9 +1367,9 @@ const PageAiPersona = () => {
                           Edit
                           rows={16}
                           placeholder="관심사"
-                          value={currentPersona.interests}
+                          value={currentPersona.interests || ""}
                           onChange={(e) =>
-                            handleTabInputChange("interests", e.target.value)
+                            handleCurrentPersonaChange("interests", e.target.value)
                           }
                           status="valid"
                         />
@@ -1371,9 +1388,9 @@ const PageAiPersona = () => {
                           Edit
                           rows={16}
                           placeholder="소비성향"
-                          value={currentPersona.consumptionPattern}
+                          value={currentPersona.consumptionPattern || ""}
                           onChange={(e) =>
-                            handleTabInputChange("consumption", e.target.value)
+                            handleCurrentPersonaChange("consumptionPattern", e.target.value)
                           }
                           status="valid"
                         />
@@ -1622,9 +1639,9 @@ const PageAiPersona = () => {
                     None
                     rows={12}
                     placeholder="제품경험"
-                    value={currentPersona.userExperience}
+                    value={currentPersona.userExperience || ""}
                     onChange={(e) =>
-                      handleTabInputChange("userExperience", e.target.value)
+                      handleCurrentPersonaChange("userExperience", e.target.value)
                     }
                     status="valid"
                   />
