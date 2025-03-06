@@ -670,7 +670,7 @@ const PageDashBoard = () => {
                   </Table>
                 </RecentToolWrap>
               ) : (
-                <RecentToolWrap NoData>
+                <RecentToolWrap NoData onClick={() => navigate("/Tool")}>
                   <div>
                     <img src={images.Tools} alt="" />
                     <Body2 color="gray500">
@@ -679,7 +679,12 @@ const PageDashBoard = () => {
                       <br />
                       (AI Persona 확인 후 리서치 툴을 사용하면 더 효과적입니다)
                     </Body2>
-                    <Button Medium Outline Fill>
+                    <Button
+                      Medium
+                      Outline
+                      Fill
+                      onClick={() => navigate("/Tool")}
+                    >
                       <Caption1 color="gray700">리서치 툴 바로가기</Caption1>
                     </Button>
                   </div>
@@ -971,7 +976,7 @@ const RecentToolWrap = styled(PersonaStatusWrap)`
     props.NoData &&
     `
     > div {
-      padding: 130px 0 175px;
+      padding: 130px 0 155px;
     }
   `}
 `;

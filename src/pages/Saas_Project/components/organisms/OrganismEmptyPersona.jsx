@@ -24,20 +24,20 @@ import {
 import {
   PROJECT_PERSONA_LIST,
   IS_LOGGED_IN,
+  PROJECT_SAAS,
 } from "../../../../pages/AtomStates";
 
 const OrganismEmptyPersona = () => {
-  const location = useLocation();
-  const project = location.state?.project;
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const [projectPersonaList, setProjectPersonaList] =
     useAtom(PROJECT_PERSONA_LIST);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-
+  const [project, setProject] = useAtom(PROJECT_SAAS);
   const handleCreatePersona = async () => {
     setIsLoading(true);
+    console.log("🚀 ~ handleCreatePersona ~ project:", project);
 
     const data = {
       business_description:
@@ -50,6 +50,7 @@ const OrganismEmptyPersona = () => {
       industry_type: project.industryType,
       target_country: project.targetCountry,
     };
+    console.log("🚀 ~ handleCreatePersona ~ data:", data);
 
     try {
       // Macro Segment 페르소나 생성
