@@ -163,7 +163,7 @@ const OrganismPersonaCardList = ({
                 프로필
               </StyledButton>
               <StyledButton Medium Primary Fill>
-                채팅
+                페르소나 생성
               </StyledButton>
             </div>
           </AiPersonaCardButtonWrap>

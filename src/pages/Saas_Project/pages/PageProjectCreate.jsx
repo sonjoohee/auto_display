@@ -1123,6 +1123,13 @@ const PageProjectCreate = () => {
                           <ListBoxGroup>
                             <Body2 color="gray800" align="left">
                               {projectCreateInfo.business_analysis}
+                              {projectCreateInfo.file_analysis && (
+                                <>
+                                  <br />
+                                  <br />
+                                  {projectCreateInfo.file_analysis}
+                                </>
+                              )}
                             </Body2>
                           </ListBoxGroup>
                         )}

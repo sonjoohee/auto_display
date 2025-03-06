@@ -298,21 +298,21 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
-              // <RequireToken>
+              <RequireToken>
                 <PageProject />
-              // </RequireToken>
+              </RequireToken>
             }
           />
-          <Route 
-            path="*" 
+          <Route
+            path="*"
             element={
               // <RequireToken>
-                <PageProject />
+              <PageProject />
               // </RequireToken>
-            } 
+            }
           />
           {/* <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} /> */}
           <Route
@@ -503,24 +503,25 @@ function App() {
             }
           />
 
-
           {/* SAAS 프로젝트 */}
 
-          <Route 
-            path="/Login" 
+          <Route
+            path="/Login"
             element={
               <RedirectIfLoggedIn>
                 <OrganismLogin />
               </RedirectIfLoggedIn>
-            } />
+            }
+          />
 
-
-          <Route 
-            path="/Signin" 
+          <Route
+            path="/Signin"
             element={
               <RedirectIfLoggedIn>
                 <OrganismSignin />
-              </RedirectIfLoggedIn>} />
+              </RedirectIfLoggedIn>
+            }
+          />
 
           <Route
             path="/ProjectCreate"

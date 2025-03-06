@@ -39,7 +39,6 @@ const OrganismEmptyPersona = () => {
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const handleCreatePersona = async () => {
     setIsLoading(true);
-    console.log("🚀 ~ handleCreatePersona ~ project:", project);
 
     const data = {
       business_description:
@@ -52,7 +51,6 @@ const OrganismEmptyPersona = () => {
       industry_type: project.industryType,
       target_country: project.targetCountry,
     };
-    console.log("🚀 ~ handleCreatePersona ~ data:", data);
 
     try {
       // Macro Segment 페르소나 생성
