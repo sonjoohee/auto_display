@@ -12,30 +12,23 @@ const getStatusColor = (props) => {
 export const FormBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${(props) =>
-    props.Large
-    ? "0"
-    : "32px"
-  };
+  gap: ${(props) => (props.Large ? "0" : "32px")};
   width: 100%;
   padding: ${(props) =>
-    props.Small 
-    ? "8px 12px" 
-    : props.Medium 
-    ? "8px 16px" 
-    : props.Large
-    ? "16px 20px"
-    : "16px"
-  };
+    props.Small
+      ? "8px 12px"
+      : props.Medium
+      ? "8px 16px"
+      : props.Large
+      ? "16px 20px"
+      : "16px"};
   border-radius: 10px;
   border: 1px solid
     ${(props) =>
       props.status === "error" ? palette.error : palette.outlineGray};
-  background: 
-    ${(props) => 
-      props.disabled ? palette.gray100 : palette.white};
+  background: ${(props) => (props.disabled ? palette.gray100 : palette.white)};
   transition: all 0.5s;
-  cursor: ${(props) => props.disabled ? "not-allowed" : "auto"};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "auto")};
 
   &:focus-within {
     border: ${(props) =>
@@ -62,7 +55,6 @@ export const Label = styled.span`
   pointer-events: none;
   transition: all 0.5s;
 `;
-
 
 export const SelectBox = styled.div`
   position: relative;
@@ -117,42 +109,41 @@ export const SelectBoxList = styled.div`
   z-index: 2;
 
   // 드롭다운이 위로 표시될 때의 스타일
-  ${props => props.dropUp && css`
-    bottom: 100%;
-    border-radius: 5px 5px 0 0;
-    border-bottom: none;
-    border-top: 1px solid ${palette.outlineGray};
-    box-shadow: 0px -4px 8px 0px rgba(0, 0, 0, 0.12);
-  `}
+  ${(props) =>
+    props.dropUp &&
+    css`
+      bottom: 100%;
+      border-radius: 5px 5px 0 0;
+      border-bottom: none;
+      border-top: 1px solid ${palette.outlineGray};
+      box-shadow: 0px -4px 8px 0px rgba(0, 0, 0, 0.12);
+    `}
 
   // 드롭다운이 아래로 표시될 때의 스타일
-  ${props => !props.dropUp && css`
-    top: 100%;
-    border-radius: 0 0 5px 5px;
-    border-top: none;
-    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.12);
-  `}
+  ${(props) =>
+    !props.dropUp &&
+    css`
+      top: 100%;
+      border-radius: 0 0 5px 5px;
+      border-top: none;
+      box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.12);
+    `}
 
   > div {
     padding: 13px 20px;
   }
 `;
 
-
 export const CustomInput = styled.input`
   width: ${(props) => props.width || "100%"};
   font-family: "Pretendard", "Poppins";
   font-size: 1rem;
   line-height: 1.2;
-  color: ${props => props.status === "error" ? palette.error : palette.gray900};
-  padding: ${(props) => 
-    props.Small 
-    ? "13px 16px" 
-    : props.Medium 
-    ? "13px 20px" 
-    : "16px 20px"
-  };
-  border-radius: ${(props) => props.Round ? "50px" : "5px"};
+  color: ${(props) =>
+    props.status === "error" ? palette.error : palette.gray900};
+  padding: ${(props) =>
+    props.Small ? "13px 16px" : props.Medium ? "13px 20px" : "16px 20px"};
+  border-radius: ${(props) => (props.Round ? "50px" : "5px")};
   border: 1px solid ${getStatusColor};
   outline: none;
   transition: all 0.5s;
@@ -178,7 +169,7 @@ export const CustomInput = styled.input`
   ${(props) =>
     props.Edit &&
     css`
-      font-size: 1.25rem;
+      font-size: 1rem;
       line-height: 1.3;
       padding: 0;
       border: 0;
@@ -190,8 +181,7 @@ export const CustomInput = styled.input`
         padding: 0 4px;
         background: ${palette.white};
       }
-    `
-  }
+    `}
 
   ${(props) =>
     props.NoLine &&
@@ -200,8 +190,7 @@ export const CustomInput = styled.input`
       line-height: 1.55;
       padding: 0;
       border: 0;
-    `
-  }
+    `}
 
   &:focus, &:hover {
     border-color: ${(props) =>
@@ -235,12 +224,8 @@ export const CustomInput = styled.input`
   }
 
   &::placeholder {
-    font-size: ${(props) => 
-      props.Small 
-      ? "0.875rem" 
-      : props.Medium 
-      ? "1rem" 
-      : "1rem"};
+    font-size: ${(props) =>
+      props.Small ? "0.875rem" : props.Medium ? "1rem" : "1rem"};
     color: ${palette.gray300};
   }
 `;
@@ -250,10 +235,12 @@ export const CustomTextarea = styled.textarea`
   font-family: "Pretendard", "Poppins";
   font-size: 1rem;
   line-height: 1.5;
-  color: ${props => props.status === "error" ? palette.error : palette.gray800};
-  padding: ${(props) => props.None ? "0" : "8px 16px"};
+  color: ${(props) =>
+    props.status === "error" ? palette.error : palette.gray800};
+  padding: ${(props) => (props.None ? "0" : "8px 16px")};
   border-radius: 10px;
-  border: ${(props) => props.None ? "0" : `1px solid ${getStatusColor(props)}`};
+  border: ${(props) =>
+    props.None ? "0" : `1px solid ${getStatusColor(props)}`};
   outline: none;
   resize: none;
   overflow: auto;
@@ -275,8 +262,7 @@ export const CustomTextarea = styled.textarea`
         font-weight: 300;
         color: ${palette.gray300} !important;
       }
-    `
-  }
+    `}
 
   &:disabled {
     background: ${palette.gray100};
@@ -289,8 +275,8 @@ export const CustomTextarea = styled.textarea`
     color: ${palette.gray500};
   }
 
-  
-  &:focus, &:hover {
+  &:focus,
+  &:hover {
     border-color: ${(props) =>
       props.status === "error"
         ? palette.error
@@ -329,7 +315,7 @@ export const CheckCircle = styled.input`
   &:disabled {
     cursor: not-allowed;
     opacity: 0.5;
-    
+
     + label {
       cursor: not-allowed;
       opacity: 0.5;
@@ -340,7 +326,7 @@ export const CheckCircle = styled.input`
 // 라디오 버튼 컴포넌트
 export const RadioButton = ({ id, name, checked, onChange, disabled }) => {
   return (
-    <CheckCircle 
+    <CheckCircle
       as="input"
       type="radio"
       id={id}
@@ -355,7 +341,7 @@ export const RadioButton = ({ id, name, checked, onChange, disabled }) => {
 // 체크박스 버튼 컴포넌트
 export const CheckBoxButton = ({ id, name, checked, onChange, disabled }) => {
   return (
-    <CheckCircle 
+    <CheckCircle
       as="input"
       type="checkbox"
       id={id}
@@ -377,7 +363,8 @@ export const RadioRightBox = styled.label`
   // padding: 8px 12px;
   padding: 11px 12px;
   border-radius: 10px;
-  border: 1px solid ${props => props.checked ? palette.primary : palette.outlineGray};
+  border: 1px solid
+    ${(props) => (props.checked ? palette.primary : palette.outlineGray)};
   cursor: pointer;
   transition: all 0.3s;
 
@@ -390,7 +377,8 @@ export const RadioRightBox = styled.label`
     cursor: not-allowed;
 
     &:hover {
-      border-color: ${props => props.checked ? palette.primary : palette.outlineGray};
+      border-color: ${(props) =>
+        props.checked ? palette.primary : palette.outlineGray};
     }
   }
 `;
@@ -399,7 +387,7 @@ export const GenderLabel = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  color: ${props => props.checked ? palette.primary : palette.gray800};
+  color: ${(props) => (props.checked ? palette.primary : palette.gray800)};
   transition: all 0.3s;
 
   .icon-wrapper {
@@ -411,10 +399,10 @@ export const GenderLabel = styled.div`
 
     img {
       transition: all 0.3s;
-      filter: ${props => props.checked ? 
-        'brightness(0) saturate(100%) invert(36%) sepia(98%) saturate(1900%) hue-rotate(210deg) brightness(98%) contrast(106%)' : 
-        ''
-      };
+      filter: ${(props) =>
+        props.checked
+          ? "brightness(0) saturate(100%) invert(36%) sepia(98%) saturate(1900%) hue-rotate(210deg) brightness(98%) contrast(106%)"
+          : ""};
     }
   }
 
@@ -426,28 +414,25 @@ export const GenderLabel = styled.div`
 `;
 
 // 성별 선택 라디오 버튼 컴포넌트
-export const GenderRadioButton = ({ 
-  id, 
-  name, 
-  gender, 
-  checked, 
-  onChange, 
+export const GenderRadioButton = ({
+  id,
+  name,
+  gender,
+  checked,
+  onChange,
   disabled,
-  icon: Icon
+  icon: Icon,
 }) => {
   return (
     <RadioRightBox
       htmlFor={id}
       checked={checked}
-      className={disabled ? 'disabled' : ''}
+      className={disabled ? "disabled" : ""}
     >
-      <GenderLabel 
-        className={`gender ${gender}`}
-        checked={checked}
-      >
+      <GenderLabel className={`gender ${gender}`} checked={checked}>
         {Icon && (
           <div className="icon-wrapper">
-            {typeof Icon === 'string' ? (
+            {typeof Icon === "string" ? (
               <img src={Icon} alt={`Gender${gender}`} />
             ) : (
               Icon
@@ -466,4 +451,3 @@ export const GenderRadioButton = ({
     </RadioRightBox>
   );
 };
-

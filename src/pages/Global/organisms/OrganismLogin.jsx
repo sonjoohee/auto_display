@@ -13,14 +13,22 @@ import {
   MainContent,
 } from "../../../assets/styles/BusinessAnalysisStyle";
 
-import {
-  H1,
-} from "../../../assets/styles/Typography";
-
+import MoleculeLoginPopup from "../../Login_Sign/components/molecules/MoleculeLoginPopup";
+import MoleculeSignPopup from "../../Login_Sign/components/molecules/MoleculeSignPopup";
+import { H1 } from "../../../assets/styles/Typography";
 import MoleculeLoginForm from "../../Login_Sign/components/molecules/MoleculeLoginForm";
+import images from "../../../assets/styles/Images";
 
 const OrganismIncLogin = () => {
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+  const [isSignupPopupOpen, setIsSignupPopupOpen] = useState(false);
 
+  const closeLoginPopup = () => {
+    setIsLoginPopupOpen(false);
+  };
+  const handleLoginClick = () => {
+    setIsLoginPopupOpen(true); // 로그인 팝업 열기
+  };
   return (
     <>
       <ContentsWrap>
@@ -31,6 +39,13 @@ const OrganismIncLogin = () => {
           </LoginWrap>
         </MainContent>
       </ContentsWrap>
+      <button onClick={handleLoginClick} className="login">
+        <img src={images.PersonCircle} alt="로그인" />
+        로그인
+      </button>
+
+      {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
+      {/* {isSignupPopupOpen && <MoleculeSignPopup onClose={closeSignupPopup} />} */}
     </>
   );
 };

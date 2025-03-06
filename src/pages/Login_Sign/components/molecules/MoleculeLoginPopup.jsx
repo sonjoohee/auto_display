@@ -17,14 +17,14 @@ const MoleculeLoginPopup = ({ onClose = () => {} }) => {
   return (
     // <LoginPopupOverlay onClick={handleOverlayClick}>
     <>
-    <ThemeProvider theme={theme}>
-      <LoginPopupOverlay>
-        <PopupContent>
-          <CloseButton onClick={onClose}>닫기</CloseButton>
-          <MoleculeLogin onClosePopup={onClose} /> {/* 함수 전달 */}
-        </PopupContent>
-      </LoginPopupOverlay>
-    </ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <LoginPopupOverlay>
+          <PopupContent>
+            <CloseButton onClick={onClose}>닫기</CloseButton>
+            <MoleculeLogin onClosePopup={onClose} /> {/* 함수 전달 */}
+          </PopupContent>
+        </LoginPopupOverlay>
+      </ThemeProvider>
     </>
   );
 };
@@ -52,10 +52,10 @@ const PopupContent = styled.div`
   border-radius: 20px;
   padding: 64px 144px;
   background: ${palette.white};
-  
+
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    width:90%;
-    padding:32px 20px;
+    width: 90%;
+    padding: 32px 20px;
   }
 `;
 
