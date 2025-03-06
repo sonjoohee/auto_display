@@ -166,6 +166,8 @@ const PageAiPersona = () => {
     } else if (activeTabIndex === 1) {
       // OCEAN 정보 탭
       setActiveTabIndex(2); // 요청사항확인 탭으로 이동
+      
+
     } else {
       setIsCustomizePopupOpen(false);
     }
@@ -877,8 +879,7 @@ const PageAiPersona = () => {
                                   }}
                                 >
                                   <Body2 color="gray700" align="left">
-                                    몇 번 사용해봤고, 기능을 어느 정도 이해하고
-                                    있음
+                                    몇 번 사용해봤고, 기능을 어느 정도 이해하고 있음
                                   </Body2>
                                 </SelectBoxItem>
                                 <SelectBoxItem
@@ -1204,50 +1205,26 @@ const PageAiPersona = () => {
 
                         {selectBoxStates.age && (
                           <SelectBoxList>
-                            <SelectBoxItem
-                              onClick={() => {
-                                const newAgeGroups = [
-                                  ...customPersonaForm.ageGroups,
-                                ];
-                                const index = newAgeGroups.indexOf("20대");
-                                if (index === -1) {
-                                  newAgeGroups.push("20대");
-                                } else {
-                                  newAgeGroups.splice(index, 1);
-                                }
-                                handleFormChange("ageGroups", newAgeGroups);
-                                handlePurposeSelect(
-                                  newAgeGroups.join(", "),
-                                  "age"
-                                );
-                              }}
-                            >
-                              <Body2 color="gray700" align="left">
-                                20대
-                              </Body2>
-                            </SelectBoxItem>
-                            <SelectBoxItem
-                              onClick={() => {
-                                const newAgeGroups = [
-                                  ...customPersonaForm.ageGroups,
-                                ];
-                                const index = newAgeGroups.indexOf("30대");
-                                if (index === -1) {
-                                  newAgeGroups.push("30대");
-                                } else {
-                                  newAgeGroups.splice(index, 1);
-                                }
-                                handleFormChange("ageGroups", newAgeGroups);
-                                handlePurposeSelect(
-                                  newAgeGroups.join(", "),
-                                  "age"
-                                );
-                              }}
-                            >
-                              <Body2 color="gray700" align="left">
-                                30대
-                              </Body2>
-                            </SelectBoxItem>
+                            {["10대", "20대", "30대", "40대", "50대", "60대", "70대"].map((ageGroup) => (
+                              <SelectBoxItem
+                                key={ageGroup}
+                                onClick={() => {
+                                  const newAgeGroups = [...customPersonaForm.ageGroups];
+                                  const index = newAgeGroups.indexOf(ageGroup);
+                                  if (index === -1) {
+                                    newAgeGroups.push(ageGroup);
+                                  } else {
+                                    newAgeGroups.splice(index, 1);
+                                  }
+                                  handleFormChange("ageGroups", newAgeGroups);
+                                  handlePurposeSelect(newAgeGroups.join(", "), "age");
+                                }}
+                              >
+                                <Body2 color="gray700" align="left">
+                                  {ageGroup}
+                                </Body2>
+                              </SelectBoxItem>
+                            ))}
                           </SelectBoxList>
                         )}
                       </SelectBox>
