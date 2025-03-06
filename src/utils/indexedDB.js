@@ -3672,6 +3672,7 @@ export const createPersonaOnServer = async (data, isLoggedIn) => {
 
 // 페르소나 업데이트 api
 export const updatePersonaOnServer = async (updateData, isLoggedIn) => {
+  console.log("🚀 ~ updatePersonaOnServer ~ updateData:", updateData);
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {

@@ -788,7 +788,7 @@ const PageProjectCreate = () => {
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect(
-                                    "소비재 및 라이프스타일 (커머서, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)",
+                                    "소비재 및 라이프스타일 (커머스, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)",
                                     "industry"
                                   )
                                 }
@@ -944,7 +944,7 @@ const PageProjectCreate = () => {
                           canRemove={true}
                           canRestart={false}
                           disabled={toolStep >= 1}
-                          accept="image/*, application/pdf"
+                          accept="image/*, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/msword, application/vnd.ms-powerpoint"
                           maxSizeBytes={20 * 1024 * 1024}
                           inputWithFilesContent={
                             <>
