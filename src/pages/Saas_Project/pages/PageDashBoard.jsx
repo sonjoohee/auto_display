@@ -136,12 +136,15 @@ const PageDashBoard = () => {
 
     // 생성 중인 페르소나 (status가 ing인 경우)
     const generating = filteredPersonas.filter(
-      (persona) => persona?.status === "ing"
+      (persona) => persona?.status === "ing" || persona?.status === "request"
     ).length;
 
     // 비활성 페르소나 (status가 complete나 ing가 아닌 경우)
     const inactive = filteredPersonas.filter(
-      (persona) => persona?.status !== "complete" && persona?.status !== "ing"
+      (persona) =>
+        persona?.status !== "complete" &&
+        persona?.status !== "ing" &&
+        persona?.status !== "request"
     ).length;
 
     return { total, active, generating, inactive };
@@ -457,7 +460,10 @@ const PageDashBoard = () => {
                   </div>
                 </PersonaStatusWrap>
               ) : (
-                <PersonaStatusWrap NoData>
+                <PersonaStatusWrap
+                  NoData
+                  onClick={() => navigate("/AiPersona")}
+                >
                   <div>
                     <img src={images.PeopleFillPrimary2} alt="" />
                     <Body2 color="gray500">

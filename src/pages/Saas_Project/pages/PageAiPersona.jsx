@@ -68,6 +68,11 @@ import {
   InterviewXPersonaKeyStakeholderRequest,
   InterviewXPersonaProfileRequest,
   createRequestPersonOnServer,
+  UserCreditCheck,
+  UserCreditInfo,
+  UserCreditUse,
+  createRequestPersonaOnServer,
+  getProjectByIdFromIndexedDB,
 } from "../../../utils/indexedDB";
 
 import OrganismPersonaCardList from "../components/organisms/OrganismPersonaCardList";
@@ -76,6 +81,8 @@ import {
   PERSONA_LIST_SAAS,
   PROJECT_SAAS,
   IS_LOGGED_IN,
+  USER_CREDITS,
+  CREDIT_REQUEST_BUSINESS_PERSONA,
 } from "../../../pages/AtomStates";
 import AtomPersonaLoader from "../../Global/atoms/AtomPersonaLoader";
 
@@ -83,13 +90,13 @@ const PageAiPersona = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [project, setProject] = useAtom(PROJECT_SAAS);
-
-  const [projectPersonaList, setProjectPersonaList] =
-    useAtom(PROJECT_PERSONA_LIST);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [creditRequestBusinessPersona] = useAtom(
+    CREDIT_REQUEST_BUSINESS_PERSONA
+  );
 
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
@@ -97,6 +104,9 @@ const PageAiPersona = () => {
   const [isPersonaConfirmPopupOpen, setIsPersonaConfirmPopupOpen] =
     useState(false);
 
+  const [selectedPersona, setSelectedPersona] = useState(null);
+
+  const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [isStarred, setIsStarred] = useState(false);
   const [activeTab2, setActiveTab2] = useState("lifestyle");
   const [showPopup, setShowPopup] = useState(false);
@@ -125,13 +135,17 @@ const PageAiPersona = () => {
     generating: 0,
   });
 
-  // customPersonaForm 상태 추가
   const [customPersonaForm, setCustomPersonaForm] = useState({
     gender: "",
     ageGroups: [],
     purpose: "",
     additionalInfo: "",
   });
+
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
+  const [eventState, setEventState] = useState(false);
+  const [trialState, setTrialState] = useState(false);
+  const [eventTitle, setEventTitle] = useState("이벤트 제목");
 
   const handleEditClose = () => {
     setIsEditPopupOpen(false);
@@ -169,7 +183,6 @@ const PageAiPersona = () => {
     } else if (activeTabIndex === 1) {
       // OCEAN 정보 탭
       setActiveTabIndex(2); // 요청사항확인 탭으로 이동
-      
     } else {
       setIsCustomizePopupOpen(false);
     }
@@ -266,7 +279,6 @@ const PageAiPersona = () => {
     setActiveTab(tabName);
   };
 
-  // currentPersona 업데이트를 위한 핸들러 추가
   const handleCurrentPersonaChange = (field, value) => {
     setCurrentPersona((prev) => ({
       ...prev,
@@ -323,7 +335,6 @@ const PageAiPersona = () => {
     }
   };
 
-  // handleFormChange 함수 수정
   const handleFormChange = (field, value) => {
     setCustomPersonaForm((prev) => ({
       ...prev,
@@ -331,7 +342,6 @@ const PageAiPersona = () => {
     }));
   };
 
-  // isCustomizeFormValid 함수 추가 (AI 페르소나 요청 팝업용)
   const isCustomizeFormValid = () => {
     if (activeTabIndex === 0) {
       return (
@@ -370,7 +380,6 @@ const PageAiPersona = () => {
     }
   };
 
-  // isPersonaEditFormValid 함수 추가 (페르소나 편집 팝업용)
   const isPersonaEditFormValid = () => {
     if (activeTabIndex1 === 0) {
       return (
@@ -395,7 +404,6 @@ const PageAiPersona = () => {
     return true;
   };
 
-  // handlePrevTab 함수 수정
   const handlePrevTab = () => {
     setActiveTabIndex1(activeTabIndex1 - 1); // activeTabIndex1을 감소시켜 이전 탭으로 이동
   };
@@ -404,14 +412,17 @@ const PageAiPersona = () => {
     setActiveTabIndex(activeTabIndex - 1); // activeTabIndex1을 감소시켜 이전 탭으로 이동
   };
 
-  // 컴포넌트가 마운트될 때 전달받은 탭으로 설정
+  const handleRequestClick = (persona) => {
+    setSelectedPersona(persona); // 선택된 페르소나 설정
+    setShowRequestPopup(true); // 팝업 표시
+  };
+
   useEffect(() => {
     if (location.state?.activeTab) {
       setActiveTab(location.state.activeTab);
     }
   }, [location.state]);
 
-  // 페르소나 팝업을 열 때 프로필 정보를 가져오는 함수 수정
   const openPersonaPopup = async (persona) => {
     setCurrentPersona(persona);
     setShowPopup(true);
@@ -427,7 +438,7 @@ const PageAiPersona = () => {
       job: persona.job || "",
     };
     try {
-      if (persona.status === "profile") {
+      if (persona.status !== "default") {
         setIsLoading(false);
         return;
       }
@@ -458,7 +469,8 @@ const PageAiPersona = () => {
         !profileData.response.persona_profile.user_experience ||
         !profileData.response.persona_profile.interests ||
         !profileData.response.persona_profile.consumption_pattern ||
-        !profileData.response.persona_profile.usage_depth
+        !profileData.response.persona_profile.usage_depth ||
+        !profileData.response.persona_profile.family
       ) {
         profileData = await InterviewXPersonaProfileRequest(
           {
@@ -481,6 +493,7 @@ const PageAiPersona = () => {
       if (profileData) {
         const updatedPersona = {
           id: persona._id,
+          family: profileData.response.persona_profile.family,
           experienceDepth:
             profileData.response.persona_profile.experience_depth,
           lifestyle: profileData.response.persona_profile.lifestyle,
@@ -511,7 +524,105 @@ const PageAiPersona = () => {
     }
   };
 
-  // 페르소나 리스트를 새로고침하는 함수 추가
+  // 페르소나 타입별 상태 카운트 함수 추가
+  const countPersonasByTypeAndStatus = (personaList, type) => {
+    if (!personaList || !Array.isArray(personaList)) {
+      return { total: 0, active: 0, generating: 0, inactive: 0 };
+    }
+
+    // 해당 타입의 페르소나만 필터링
+    const filteredPersonas = personaList.filter(
+      (persona) => persona?.personaType === type
+    );
+
+    // 총 개수
+    const total = filteredPersonas.length;
+
+    // 활성 페르소나 (status가 complete인 경우)
+    const active = filteredPersonas.filter(
+      (persona) => persona?.status === "complete"
+    ).length;
+
+    // 생성 중인 페르소나 (status가 ing인 경우)
+    const generating = filteredPersonas.filter(
+      (persona) => persona?.status === "ing" || persona?.status === "request"
+    ).length;
+
+    // 비활성 페르소나 (status가 complete나 ing가 아닌 경우)
+    const inactive = filteredPersonas.filter(
+      (persona) =>
+        persona?.status !== "complete" &&
+        persona?.status !== "ing" &&
+        persona?.status !== "request"
+    ).length;
+
+    return { total, active, generating, inactive };
+  };
+  // 컴포넌트 내부에서 사용
+  const macroSegmentStats = countPersonasByTypeAndStatus(
+    personaListSaas,
+    "macro_segment"
+  );
+  const uniqueUserStats = countPersonasByTypeAndStatus(
+    personaListSaas,
+    "unique_user"
+  );
+  const keyStakeholderStats = countPersonasByTypeAndStatus(
+    personaListSaas,
+    "key_stakeholder"
+  );
+
+  // 현재 선택된 탭에 따라 표시할 통계 정보 결정
+  const getCurrentTabStats = () => {
+    switch (activeTab) {
+      case "macro_segment":
+        return macroSegmentStats;
+      case "unique_user":
+        return uniqueUserStats;
+      case "key_stakeholder":
+        return keyStakeholderStats;
+      case "my_persona":
+        // 즐겨찾기된 페르소나만 필터링 (다양한 형태의 isStarred 값 처리)
+        const starredPersonas = personaListSaas.filter(
+          (persona) => persona?.favorite === true
+        );
+
+        console.log("즐겨찾기된 페르소나:", starredPersonas);
+
+        // 즐겨찾기된 페르소나 중 활성 페르소나 수
+        const activeStarred = starredPersonas.filter(
+          (persona) => persona?.status === "complete"
+        ).length;
+
+        // 즐겨찾기된 페르소나 중 생성 중인 페르소나 수
+        const generatingStarred = starredPersonas.filter(
+          (persona) =>
+            persona?.status === "ing" || persona?.status === "request"
+        ).length;
+
+        // 즐겨찾기된 페르소나 중 비활성 페르소나 수
+        const inactiveStarred = starredPersonas.filter(
+          (persona) =>
+            persona?.status !== "complete" &&
+            persona?.status !== "ing" &&
+            persona?.status !== "request"
+        ).length;
+
+        return {
+          active: activeStarred,
+          generating: generatingStarred,
+          inactive: inactiveStarred,
+          total: starredPersonas.length,
+        };
+      default:
+        return macroSegmentStats;
+    }
+  };
+
+  // 현재 탭의 통계 정보
+  const currentTabStats = getCurrentTabStats();
+
+  // refreshPersonaList 함수 수정 - 전체 통계와 함께 탭별 통계도 업데이트
   const refreshPersonaList = async () => {
     try {
       const refreshedData = await getPersonaListOnServer(projectId, true);
@@ -524,20 +635,27 @@ const PageAiPersona = () => {
 
         setPersonaListSaas(sortedList);
 
-        // 페르소나 통계 업데이트
+        // 전체 페르소나 통계 업데이트
         const activeCount = sortedList.filter(
           (persona) => persona?.status === "complete"
         ).length;
 
+        const generatingCount = sortedList.filter(
+          (persona) =>
+            persona?.status === "ing" || persona?.status === "request"
+        ).length;
+
         const inactiveCount = sortedList.filter(
           (persona) =>
-            persona?.status !== "complete" && persona?.status !== "ing"
+            persona?.status !== "complete" &&
+            persona?.status !== "ing" &&
+            persona?.status !== "request"
         ).length;
 
         setPersonaStats({
           active: activeCount,
           inactive: inactiveCount,
-          generating: 0,
+          generating: generatingCount,
         });
       }
     } catch (error) {
@@ -545,7 +663,6 @@ const PageAiPersona = () => {
     }
   };
 
-  // 경험 깊이와 사용 수준을 매핑하는 함수 추가
   const mapExperienceDepth = (level) => {
     switch (level) {
       case "1":
@@ -598,17 +715,16 @@ const PageAiPersona = () => {
 
   const handleCustomPersonaRequest = async () => {
     try {
-
       const requestData = {
         projectId: projectId,
-     businessAnalysis: {
+        businessAnalysis: {
           businessModel: project.businessModel,
           projectAnalysis: project.projectAnalysis,
           projectDescription: project.projectDescription,
           projectTitle: project.projectTitle,
           targetCountry: project.targetCountry,
-          projectType: project.projectType,
         },
+        projectType: project.projectType,
         requestDate: new Date().toLocaleString("ko-KR", {
           timeZone: "Asia/Seoul",
           year: "numeric",
@@ -643,13 +759,121 @@ const PageAiPersona = () => {
       );
 
       if (!response) {
-        throw new Error('페르소나 요청에 실패했습니다.');
+        throw new Error("페르소나 요청에 실패했습니다.");
       }
-      console.log('페르소나 요청 성공:', response);
+      console.log("페르소나 요청 성공:", response);
       setIsCustomizePopupOpen(false);
       // 추가적인 성공 처리 로직
     } catch (error) {
-      console.error('API 호출 중 오류 발생:', error);
+      console.error("API 호출 중 오류 발생:", error);
+    }
+  };
+
+  // 크레딧 사용 함수
+  const creditUse = async () => {
+    // 팝업 닫기
+    setShowRequestPopup(false);
+
+    let accessToken = sessionStorage.getItem("accessToken");
+    if (!accessToken) {
+      console.error("토큰이 없습니다.");
+      return;
+    }
+
+    // 크레딧 사용전 사용 확인
+    const creditPayload = {
+      mount: creditRequestBusinessPersona,
+    };
+    const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+
+    if (creditResponse?.state !== "use") {
+      setShowCreditPopup(true);
+      return;
+    }
+
+    // 크레딧이 사용 가능한 상태면 사용 API 호출
+    const creditUsePayload = {
+      title: selectedPersona.title,
+      service_type: "페르소나 모집 요청",
+      target: "",
+      state: "use",
+      mount: creditRequestBusinessPersona,
+    };
+
+    // 크레딧 사용 후 사용자 정보 새로고침
+    accessToken = sessionStorage.getItem("accessToken");
+    if (accessToken) {
+      const userCreditValue = await UserCreditInfo(isLoggedIn);
+      setUserCredits(userCreditValue);
+    }
+
+    handleRequestPersona(selectedPersona);
+  };
+
+  // 페르소나 요청 처리 함수
+  const handleRequestPersona = async (persona) => {
+    if (!persona) {
+      console.error("선택된 페르소나가 없습니다.");
+      return;
+    }
+
+    try {
+      const projectId =
+        persona.projectId || localStorage.getItem("currentProjectId");
+      const currentProject = await getProjectByIdFromIndexedDB(
+        projectId,
+        isLoggedIn
+      );
+
+      if (persona.status === "profile" || persona.status === "default") {
+        // 새로운 requestedPersona 배열 생성
+        const newRequestedPersona = {
+          id: persona._id,
+          ...Object.fromEntries(
+            Object.entries(persona).filter(([key]) => key !== "_id")
+          ),
+          status: "request",
+        };
+
+        await updatePersonaOnServer(newRequestedPersona, true);
+
+        const requestData = {
+          projectId: projectId,
+          requestDate: new Date().toLocaleString("ko-KR", {
+            timeZone: "Asia/Seoul",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }),
+          requestTimeStamp: Date.now(),
+          businessAnalysis: {
+            businessModel: currentProject.businessModel,
+            projectAnalysis: currentProject.projectAnalysis,
+            projectDescription: currentProject.projectDescription,
+            projectTitle: currentProject.projectTitle,
+            targetCountry: currentProject.targetCountry,
+          },
+          projectType: currentProject.projectType,
+          personaRequest: { ...persona, status: "request" },
+        };
+        createRequestPersonaOnServer(requestData, isLoggedIn);
+        // 페르소나 요청 완료 후 페르소나 목록 새로고침
+        await refreshPersonaList();
+
+        // 상태 업데이트
+        setPersonaStats((prevStats) => ({
+          ...prevStats,
+          active: prevStats.active + 1,
+          generating: prevStats.generating - 1,
+        }));
+      } else {
+        console.error("이미 요청된 페르소나입니다.");
+      }
+    } catch (error) {
+      console.error("페르소나 요청 중 오류 발생:", error);
     }
   };
 
@@ -738,22 +962,22 @@ const PageAiPersona = () => {
 
                 <AiPersonaInfo>
                   <div>
-                    <span className="active">
-                      <Sub3 color="primary">{personaStats.active}</Sub3>
-                    </span>
-                    <Sub3 color="gray700">활성 페르소나</Sub3>
-                  </div>
-                  {/* <div>
-                    <span className="generating">
-                      <Sub3 color="primary">{personaStats.generating}</Sub3>
-                    </span>
-                    <Sub3 color="gray700">생성 중</Sub3>
-                  </div> */}
-                  <div>
                     <span className="inactive">
-                      <Sub3 color="primary">{personaStats.inactive}</Sub3>
+                      <Sub3 color="gray700">{currentTabStats.inactive}</Sub3>
                     </span>
                     <Sub3 color="gray700">비활성 페르소나</Sub3>
+                  </div>
+                  <div>
+                    <span className="generating">
+                      <Sub3 color="white">{currentTabStats.generating}</Sub3>
+                    </span>
+                    <Sub3 color="gray700">생성 중</Sub3>
+                  </div>
+                  <div>
+                    <span className="active">
+                      <Sub3 color="white">{currentTabStats.active}</Sub3>
+                    </span>
+                    <Sub3 color="gray700">활성 페르소나</Sub3>
                   </div>
                 </AiPersonaInfo>
 
@@ -853,15 +1077,7 @@ const PageAiPersona = () => {
                       <>
                         <BoxWrap Column Small>
                           <SelectBox>
-                            <SelectBoxTitle
-                              None
-                              onClick={() => {
-                                setSelectBoxStates1((prev) => ({
-                                  ...prev,
-                                  experienceDepth: !prev.experienceDepth,
-                                }));
-                              }}
-                            >
+                            <SelectBoxTitle None>
                               <div style={{ display: "flex", gap: "10px" }}>
                                 <Body2 color="gray300">경험여부</Body2>
                                 <Body2
@@ -876,105 +1092,11 @@ const PageAiPersona = () => {
                                   )}
                                 </Body2>
                               </div>
-                              {/* 드롭다운 아이콘 */}
                             </SelectBoxTitle>
-
-                            {selectBoxStates1.experienceDepth && (
-                              <SelectBoxList>
-                                <SelectBoxItem
-                                  onClick={() => {
-                                    handleCurrentPersonaChange(
-                                      "experienceDepth",
-                                      "1단계"
-                                    );
-                                    setSelectBoxStates1((prev) => ({
-                                      ...prev,
-                                      experienceDepth: false,
-                                    }));
-                                  }}
-                                >
-                                  <Body2 color="gray700" align="left">
-                                    이 제품/서비스를 들어본 적도 없음
-                                  </Body2>
-                                </SelectBoxItem>
-                                <SelectBoxItem
-                                  onClick={() => {
-                                    handleCurrentPersonaChange(
-                                      "experienceDepth",
-                                      "2단계"
-                                    );
-                                    setSelectBoxStates1((prev) => ({
-                                      ...prev,
-                                      experienceDepth: false,
-                                    }));
-                                  }}
-                                >
-                                  <Body2 color="gray700" align="left">
-                                    들어본 적은 있지만, 사용해본 적은 없음
-                                  </Body2>
-                                </SelectBoxItem>
-                                <SelectBoxItem
-                                  onClick={() => {
-                                    handleCurrentPersonaChange(
-                                      "experienceDepth",
-                                      "3단계"
-                                    );
-                                    setSelectBoxStates1((prev) => ({
-                                      ...prev,
-                                      experienceDepth: false,
-                                    }));
-                                  }}
-                                >
-                                  <Body2 color="gray700" align="left">
-                                    사용해본 적은 있지만, 한두 번 경험한 수준
-                                  </Body2>
-                                </SelectBoxItem>
-                                <SelectBoxItem
-                                  onClick={() => {
-                                    handleCurrentPersonaChange(
-                                      "experienceDepth",
-                                      "4단계"
-                                    );
-                                    setSelectBoxStates1((prev) => ({
-                                      ...prev,
-                                      experienceDepth: false,
-                                    }));
-                                  }}
-                                >
-                                  <Body2 color="gray700" align="left">
-                                    몇 번 사용해봤고, 기능을 어느 정도 이해하고 있음
-                                  </Body2>
-                                </SelectBoxItem>
-                                <SelectBoxItem
-                                  onClick={() => {
-                                    handleCurrentPersonaChange(
-                                      "experienceDepth",
-                                      "5단계"
-                                    );
-                                    setSelectBoxStates1((prev) => ({
-                                      ...prev,
-                                      experienceDepth: false,
-                                    }));
-                                  }}
-                                >
-                                  <Body2 color="gray700" align="left">
-                                    정기적으로 사용하고 있고, 익숙한 사용자
-                                  </Body2>
-                                </SelectBoxItem>
-                              </SelectBoxList>
-                            )}
                           </SelectBox>
 
                           <SelectBox>
-                            <SelectBoxTitle
-                              None
-                              onClick={() => {
-                                setSelectBoxStates1((prev) => ({
-                                  ...prev,
-                                  usageDepth: !prev.usageDepth,
-                                }));
-                              }}
-                            >
+                            <SelectBoxTitle None>
                               <div style={{ display: "flex", gap: "10px" }}>
                                 <Body2 color="gray300">사용수준</Body2>
                                 <Body2
@@ -987,78 +1109,7 @@ const PageAiPersona = () => {
                                   {mapUsageDepth(currentPersona.usageDepth)}
                                 </Body2>
                               </div>
-                              {/* 드롭다운 아이콘 */}
                             </SelectBoxTitle>
-
-                            {selectBoxStates1.usageDepth && (
-                              <SelectBoxList>
-                                <SelectBoxItem
-                                  onClick={() => {
-                                    handleCurrentPersonaChange(
-                                      "usageDepth",
-                                      "1단계"
-                                    );
-                                    setSelectBoxStates1((prev) => ({
-                                      ...prev,
-                                      usageDepth: false,
-                                    }));
-                                  }}
-                                >
-                                  <Body2 color="gray700" align="left">
-                                    기본적인 기능도 잘 모름
-                                  </Body2>
-                                </SelectBoxItem>
-                                <SelectBoxItem
-                                  onClick={() => {
-                                    handleCurrentPersonaChange(
-                                      "usageDepth",
-                                      "2단계"
-                                    );
-                                    setSelectBoxStates1((prev) => ({
-                                      ...prev,
-                                      usageDepth: false,
-                                    }));
-                                  }}
-                                >
-                                  <Body2 color="gray700" align="left">
-                                    몇 가지 주요 기능만 사용
-                                  </Body2>
-                                </SelectBoxItem>
-                                <SelectBoxItem
-                                  onClick={() => {
-                                    handleCurrentPersonaChange(
-                                      "usageDepth",
-                                      "3단계"
-                                    );
-                                    setSelectBoxStates1((prev) => ({
-                                      ...prev,
-                                      usageDepth: false,
-                                    }));
-                                  }}
-                                >
-                                  <Body2 color="gray700" align="left">
-                                    대부분의 기능을 사용해 봤지만, 특정 기능은
-                                    모름
-                                  </Body2>
-                                </SelectBoxItem>
-                                <SelectBoxItem
-                                  onClick={() => {
-                                    handleCurrentPersonaChange(
-                                      "usageDepth",
-                                      "4단계"
-                                    );
-                                    setSelectBoxStates1((prev) => ({
-                                      ...prev,
-                                      usageDepth: false,
-                                    }));
-                                  }}
-                                >
-                                  <Body2 color="gray700" align="left">
-                                    거의 모든 기능을 능숙하게 사용
-                                  </Body2>
-                                </SelectBoxItem>
-                              </SelectBoxList>
-                            )}
                           </SelectBox>
                         </BoxWrap>
                         <TabContent>
@@ -1073,28 +1124,33 @@ const PageAiPersona = () => {
                 )}
               </div>
 
-              {!isLoading && (
-                <ButtonGroup>
-                  <Button
-                    DbExLarge
-                    PrimaryLightest
-                    Fill
-                    W100
-                    onClick={() => setIsEditPopupOpen(true)}
-                  >
-                    페르소나 편집
-                  </Button>
-                  <Button
-                    DbExLarge
-                    Primary
-                    Fill
-                    W100
-                    onClick={() => setIsCreatePopupOpen(true)}
-                  >
-                    페르소나 생성
-                  </Button>
-                </ButtonGroup>
-              )}
+              {!isLoading &&
+                !["request", "ing", "complete"].includes(
+                  currentPersona.status
+                ) && (
+                  <ButtonGroup>
+                    <>
+                      <Button
+                        DbExLarge
+                        PrimaryLightest
+                        Fill
+                        W100
+                        onClick={() => setIsEditPopupOpen(true)}
+                      >
+                        페르소나 편집
+                      </Button>
+                      <Button
+                        DbExLarge
+                        Primary
+                        Fill
+                        W100
+                        onClick={() => handleRequestClick(currentPersona)}
+                      >
+                        페르소나 생성
+                      </Button>
+                    </>
+                  </ButtonGroup>
+                )}
             </div>
           </InterviewPopup>
         </>
@@ -1149,7 +1205,11 @@ const PageAiPersona = () => {
           onPrev={handlePrevTab2}
           isModal={true}
           onCancel={handleCustomizePopupClose}
-          onConfirm={activeTabIndex === 2 ? handleCustomPersonaRequest : handleCustomizePopupConfirm}
+          onConfirm={
+            activeTabIndex === 2
+              ? handleCustomPersonaRequest
+              : handleCustomizePopupConfirm
+          }
           showTabs={true}
           tabs={["필수정보", "OCEAN 정보", "요청사항확인"]}
           onTabChange={handleTabChange}
@@ -1268,11 +1328,21 @@ const PageAiPersona = () => {
 
                         {selectBoxStates.age && (
                           <SelectBoxList>
-                            {["10대", "20대", "30대", "40대", "50대", "60대", "70대"].map((ageGroup) => (
+                            {[
+                              "10대",
+                              "20대",
+                              "30대",
+                              "40대",
+                              "50대",
+                              "60대",
+                              "70대",
+                            ].map((ageGroup) => (
                               <SelectBoxItem
                                 key={ageGroup}
                                 onClick={() => {
-                                  const newAgeGroups = [...customPersonaForm.ageGroups];
+                                  const newAgeGroups = [
+                                    ...customPersonaForm.ageGroups,
+                                  ];
                                   const index = newAgeGroups.indexOf(ageGroup);
                                   if (index === -1) {
                                     newAgeGroups.push(ageGroup);
@@ -1280,7 +1350,10 @@ const PageAiPersona = () => {
                                     newAgeGroups.splice(index, 1);
                                   }
                                   handleFormChange("ageGroups", newAgeGroups);
-                                  handlePurposeSelect(newAgeGroups.join(", "), "age");
+                                  handlePurposeSelect(
+                                    newAgeGroups.join(", "),
+                                    "age"
+                                  );
                                 }}
                               >
                                 <Body2 color="gray700" align="left">
@@ -1458,7 +1531,6 @@ const PageAiPersona = () => {
                       <br />
                       보다 정확하고 정교한 페르소나를 제공해 드릴 수 있도록
                       최선을 다하겠습니다. 😊
-             
                     </Sub3>
                   </BgBoxItem>
 
@@ -1496,7 +1568,6 @@ const PageAiPersona = () => {
                       필수정보
                     </Body3>
                     <Body2 color="gray800" align="left">
-                  
                       {customPersonaForm.additionalInfo || "*해당정보 없음"}
                     </Body2>
                   </div>
@@ -1646,7 +1717,6 @@ const PageAiPersona = () => {
                         />
                       </FormBox>
                       <FormBox>
-                        {/* <FormBox style={{ marginTop: "10px" }}> */}
                         <CustomInput
                           Edit
                           type="text"
@@ -2030,6 +2100,88 @@ const PageAiPersona = () => {
           }}
         />
       )}
+      {showRequestPopup &&
+        (eventState ? (
+          <PopupWrap
+            Event
+            title="페르소나 모집 요청"
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditRequestBusinessPersona.toLocaleString()} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={() => {
+              creditUse(); // Call creditUse function
+              setShowRequestPopup(false); // 팝업 닫기
+            }}
+          />
+        ) : trialState ? (
+          <PopupWrap
+            Check
+            title="페르소나 모집 요청"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditRequestBusinessPersona.toLocaleString()} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={() => {
+              handleRequestPersona(selectedPersona); // 선택된 페르소나를 전달
+              setShowRequestPopup(false); // 팝업 닫기
+            }}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="페르소나 모집 요청"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditRequestBusinessPersona.toLocaleString()} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => setShowRequestPopup(false)}
+            onConfirm={() => {
+              handleRequestPersona(selectedPersona); // 선택된 페르소나를 전달
+              setShowRequestPopup(false); // 팝업 닫기
+              setShowPopup(false);
+            }}
+          />
+        ))}
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => setShowCreditPopup(false)}
+        />
+      )}
     </>
   );
 };
@@ -2065,24 +2217,31 @@ const AiPersonaInfo = styled.div`
   > div {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 6px;
   }
 
   span {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px 12px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
     border-radius: 5px;
 
     &.active {
       border: 1px solid ${palette.white};
-      background: ${palette.primaryLightest};
+      background: ${palette.primary};
+    }
+
+    &.generating {
+      border: 1px solid ${palette.white};
+      background: #32ade6;
     }
 
     &.inactive {
-      border: 1px solid ${palette.primary};
-      background: ${palette.white};
+      border: 1px solid ${palette.white};
+      background: ${palette.outlineGray};
     }
   }
 `;
