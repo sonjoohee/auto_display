@@ -74,12 +74,14 @@ import {
   PROJECT_PERSONA_LIST,
   PROJECT_ID,
   PERSONA_LIST_SAAS,
+  PROJECT_SAAS,
 } from "../../../pages/AtomStates";
+import AtomPersonaLoader from "../../Global/atoms/AtomPersonaLoader";
 
 const PageAiPersona = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const [project, setProject] = useAtom(PROJECT_SAAS);
   const [projectPersonaList, setProjectPersonaList] =
     useAtom(PROJECT_PERSONA_LIST);
 
@@ -96,6 +98,8 @@ const PageAiPersona = () => {
   const [activeTab2, setActiveTab2] = useState("lifestyle");
   const [showPopup, setShowPopup] = useState(false);
   const [isPersonaEditPopupOpen, setIsPersonaEditPopupOpen] = useState(false);
+  const [currentPersona, setCurrentPersona] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [activeTabIndex1, setActiveTabIndex1] = useState(0);
@@ -285,7 +289,7 @@ const PageAiPersona = () => {
       }
     };
     loadPersonaList();
-  }, []); // refreshTrigger가 변경될 때마다 데이터 다시 로드
+  }, []);
 
   const toggleSelectBox = (type) => {
     setSelectBoxStates((prev) => ({
@@ -396,6 +400,107 @@ const PageAiPersona = () => {
     }
   }, [location.state]);
 
+  // 페르소나 팝업을 열 때 프로필 정보를 가져오는 함수 수정
+  const openPersonaPopup = async (persona) => {
+    setCurrentPersona(persona);
+    setShowPopup(true);
+    setIsLoading(true);
+
+    console.log("🚀 ~ openPersonaPopup ~ persona:", persona);
+    const persona_info = {
+      personaType: persona.type,
+      personaName: persona.personaName,
+      personaCharacteristics: persona.personaCharacteristics || "",
+      keywords: persona.keywords || [],
+      age: persona.age || "",
+      gender: persona.gender || "",
+      job: persona.job || "",
+    };
+    try {
+      if (persona.status === "profile") {
+        setIsLoading(false);
+        return;
+      }
+      // 페르소나 기초 데이터로 프로필 정보 생성 API 호출
+      const isLoggedIn = sessionStorage.getItem("accessToken") !== null;
+      const profileData = await InterviewXPersonaProfileRequest(
+        {
+          business_description:
+            project.projectAnalysis.business_analysis +
+            (project.projectAnalysis.file_analysis || ""),
+          persona_info,
+          // 필요한 추가 데이터가 있다면 여기에 추가
+        },
+        isLoggedIn
+      );
+
+      if (profileData) {
+        const updatedPersona = {
+          id: persona._id,
+          experienceDepth:
+            profileData.response.persona_profile.experience_depth,
+          lifestyle: profileData.response.persona_profile.lifestyle,
+          monthlyIncome: profileData.response.persona_profile.monthly_income,
+          residence: profileData.response.persona_profile.residence,
+          userExperience: profileData.response.persona_profile.user_experience,
+          interests: profileData.response.persona_profile.interests,
+          consumptionPattern:
+            profileData.response.persona_profile.consumption_pattern,
+          usageDepth: profileData.response.persona_profile.usage_depth,
+          status: "profile",
+        };
+
+        // 서버에 업데이트된 페르소나 저장
+        await updatePersonaOnServer(updatedPersona, true);
+
+        // 페르소나 리스트 새로고침
+        await refreshPersonaList();
+
+        setCurrentPersona({ ...persona, ...updatedPersona });
+        // 활성 탭 설정
+        setActiveTab2("lifestyle");
+      }
+    } catch (error) {
+      console.error("페르소나 프로필 정보를 가져오는데 실패했습니다:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 페르소나 리스트를 새로고침하는 함수 추가
+  const refreshPersonaList = async () => {
+    try {
+      const refreshedData = await getPersonaListOnServer(projectId, true);
+      if (refreshedData) {
+        const sortedList = [...refreshedData].sort((a, b) => {
+          const dateA = a.timestamp;
+          const dateB = b.timestamp;
+          return dateB - dateA; // 최신 날짜가 위로
+        });
+
+        setPersonaListSaas(sortedList);
+
+        // 페르소나 통계 업데이트
+        const activeCount = sortedList.filter(
+          (persona) => persona?.status === "complete"
+        ).length;
+
+        const inactiveCount = sortedList.filter(
+          (persona) =>
+            persona?.status !== "complete" && persona?.status !== "ing"
+        ).length;
+
+        setPersonaStats({
+          active: activeCount,
+          inactive: inactiveCount,
+          generating: 0,
+        });
+      }
+    } catch (error) {
+      console.error("페르소나 목록을 새로고침하는데 실패했습니다:", error);
+    }
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -438,7 +543,7 @@ const PageAiPersona = () => {
                     onClick={() => handleTabClick("macro_segment")}
                     style={
                       activeTab === "macro_segment"
-                        ? { color: "#333333", fontWeight: "600" }
+                        ? { color: "#333333" }
                         : { color: "#999999" }
                     }
                   >
@@ -449,7 +554,7 @@ const PageAiPersona = () => {
                     onClick={() => handleTabClick("unique_user")}
                     style={
                       activeTab === "unique_user"
-                        ? { color: "#333333", fontWeight: "600" }
+                        ? { color: "#333333" }
                         : { color: "#999999" }
                     }
                   >
@@ -460,7 +565,7 @@ const PageAiPersona = () => {
                     onClick={() => handleTabClick("key_stakeholder")}
                     style={
                       activeTab === "key_stakeholder"
-                        ? { color: "#333333", fontWeight: "600" }
+                        ? { color: "#333333" }
                         : { color: "#999999" }
                     }
                   >
@@ -503,7 +608,7 @@ const PageAiPersona = () => {
                 <OrganismPersonaCardList
                   personaData={personaListSaas}
                   setIsStarred={updatePersonaList}
-                  setShowPopup={setShowPopup}
+                  setShowPopup={openPersonaPopup}
                   activeTab={activeTab}
                   setPersonaStats={setPersonaStats}
                 />
@@ -521,120 +626,86 @@ const PageAiPersona = () => {
             <div style={{ maxWidth: "560px" }}>
               <div className="header">
                 <H4>
-                  시간이 부족한 바쁜 프리랜서
+                  {currentPersona?.personaName || "시간이 부족한 바쁜 프리랜서"}
                   <span className="close" onClick={() => setShowPopup(false)} />
                 </H4>
                 <p className="info noLine">
-                  <Sub3>#남성</Sub3>
-                  <Sub3>#20세</Sub3>
-                  <Sub3>#은퇴 후 건강 관리에 집중</Sub3>
-                  <Sub3>#부드러운 기상 선호</Sub3>
+                  <Sub3>#{currentPersona?.gender || "남성"}</Sub3>
+                  <Sub3>#{currentPersona?.age || "20세"}</Sub3>
+                  <Sub3>
+                    #{currentPersona?.keywords[0] || "은퇴 후 건강 관리에 집중"}
+                  </Sub3>
+                  <Sub3>
+                    #{currentPersona?.keywords[1] || "부드러운 기상 선호"}
+                  </Sub3>
                 </p>
               </div>
 
               <div className="content">
-                <TabWrapType2>
-                  <TabButtonType2
-                    isActive={activeTab2 === "lifestyle"}
-                    onClick={() => setActiveTab2("lifestyle")}
-                  >
-                    라이프스타일
-                  </TabButtonType2>
-                  <TabButtonType2
-                    isActive={activeTab2 === "interests"}
-                    onClick={() => setActiveTab2("interests")}
-                  >
-                    관심사
-                  </TabButtonType2>
-                  <TabButtonType2
-                    isActive={activeTab2 === "consumption"}
-                    onClick={() => setActiveTab2("consumption")}
-                  >
-                    소비성향
-                  </TabButtonType2>
-                  <TabButtonType2
-                    isActive={activeTab2 === "experience"}
-                    onClick={() => setActiveTab2("experience")}
-                  >
-                    사용경험
-                  </TabButtonType2>
-                </TabWrapType2>
+                {isLoading ? (
+                  <AtomPersonaLoader message="페르소나 프로필을 생성하고 있습니다." />
+                ) : (
+                  <>
+                    <TabWrapType2>
+                      <TabButtonType2
+                        isActive={activeTab2 === "lifestyle"}
+                        onClick={() => setActiveTab2("lifestyle")}
+                      >
+                        라이프스타일
+                      </TabButtonType2>
+                      <TabButtonType2
+                        isActive={activeTab2 === "interests"}
+                        onClick={() => setActiveTab2("interests")}
+                      >
+                        관심사
+                      </TabButtonType2>
+                      <TabButtonType2
+                        isActive={activeTab2 === "consumption"}
+                        onClick={() => setActiveTab2("consumption")}
+                      >
+                        소비성향
+                      </TabButtonType2>
+                      <TabButtonType2
+                        isActive={activeTab2 === "experience"}
+                        onClick={() => setActiveTab2("experience")}
+                      >
+                        사용경험
+                      </TabButtonType2>
+                    </TabWrapType2>
 
-                {activeTab2 === "lifestyle" && (
-                  <TabContent>
-                    <Body3 color="gray700">
-                      학업과 여가를 균형 있게 추구하며, 문화적 호기심이
-                      많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술
-                      전시와 독립영화를 감상하거나 워크숍에 참여합니다. 소셜
-                      미디어를 통해 최신 문화 소식을 빠르게 접하고, 친구들과
-                      경험을 공유하는 것을 즐깁니다. 새로운 시도를 통해 자기
-                      계발을 추구하며, 학업과 관련된 창의적 활동에도
-                      열정적입니다.학업과 여가를 균형 있게 추구하며, 문화적
-                      호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며,
-                      예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다.
-                      소셜 미디어를 통해 최신 문화 소식을 빠르게 접하고,
-                      친구들과 경험을 공유하는 것을 즐깁니다. 새로운 시도를 통해
-                      자기 계발을 추구하며, 학업과 관련된 창의적 활동에도
-                      열정적입니다.
-                    </Body3>
-                  </TabContent>
-                )}
-                {activeTab2 === "interests" && (
-                  <TabContent>
-                    <Body3 color="gray700">
-                      학업과 여가를 균형 있게 추구하며, 문화적 호기심이
-                      많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술
-                      전시와 독립영화를 감상하거나 워크숍에 참여합니다. 소셜
-                      미디어를 통해 최신 문화 소식을 빠르게 접하고, 친구들과
-                      경험을 공유하는 것을 즐깁니다. 새로운 시도를 통해 자기
-                      계발을 추구하며, 학업과 관련된 창의적 활동에도
-                      열정적입니다.학업과 여가를 균형 있게 추구하며, 문화적
-                      호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며,
-                      예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다.
-                      소셜 미디어를 통해 최신 문화 소식을 빠르게 접하고,
-                      친구들과 경험을 공유하는 것을 즐깁니다. 새로운 시도를 통해
-                      자기 계발을 추구하며, 학업과 관련된 창의적 활동에도
-                      열정적입니다.
-                    </Body3>
-                  </TabContent>
-                )}
-                {activeTab2 === "consumption" && (
-                  <TabContent>
-                    <Body3 color="gray700">
-                      학업과 여가를 균형 있게 추구하며, 문화적 호기심이
-                      많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술
-                      전시와 독립영화를 감상하거나 워크숍에 참여합니다. 소셜
-                      미디어를 통해 최신 문화 소식을 빠르게 접하고, 친구들과
-                      경험을 공유하는 것을 즐깁니다. 새로운 시도를 통해 자기
-                      계발을 추구하며, 학업과 관련된 창의적 활동에도
-                      열정적입니다.학업과 여가를 균형 있게 추구하며, 문화적
-                      호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며,
-                      예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다.
-                      소셜 미디어를 통해 최신 문화 소식을 빠르게 접하고,
-                      친구들과 경험을 공유하는 것을 즐깁니다. 새로운 시도를 통해
-                      자기 계발을 추구하며, 학업과 관련된 창의적 활동에도
-                      열정적입니다.
-                    </Body3>
-                  </TabContent>
-                )}
-                {activeTab2 === "experience" && (
-                  <TabContent>
-                    <Body3 color="gray700">
-                      학업과 여가를 균형 있게 추구하며, 문화적 호기심이
-                      많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술
-                      전시와 독립영화를 감상하거나 워크숍에 참여합니다. 소셜
-                      미디어를 통해 최신 문화 소식을 빠르게 접하고, 친구들과
-                      경험을 공유하는 것을 즐깁니다. 새로운 시도를 통해 자기
-                      계발을 추구하며, 학업과 관련된 창의적 활동에도
-                      열정적입니다.학업과 여가를 균형 있게 추구하며, 문화적
-                      호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며,
-                      예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다.
-                      소셜 미디어를 통해 최신 문화 소식을 빠르게 접하고,
-                      친구들과 경험을 공유하는 것을 즐깁니다. 새로운 시도를 통해
-                      자기 계발을 추구하며, 학업과 관련된 창의적 활동에도
-                      열정적입니다.
-                    </Body3>
-                  </TabContent>
+                    {activeTab2 === "lifestyle" && (
+                      <TabContent>
+                        <Body3 color="gray700">
+                          {currentPersona.lifestyle ||
+                            "학업과 여가를 균형 있게 추구하며, 문화적 호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다."}
+                        </Body3>
+                      </TabContent>
+                    )}
+                    {activeTab2 === "interests" && (
+                      <TabContent>
+                        <Body3 color="gray700">
+                          {currentPersona.interests ||
+                            "학업과 여가를 균형 있게 추구하며, 문화적 호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다."}
+                        </Body3>
+                      </TabContent>
+                    )}
+                    {activeTab2 === "consumption" && (
+                      <TabContent>
+                        <Body3 color="gray700">
+                          {currentPersona.consumptionPattern ||
+                            "학업과 여가를 균형 있게 추구하며, 문화적 호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다."}
+                        </Body3>
+                      </TabContent>
+                    )}
+                    {activeTab2 === "experience" && (
+                      <TabContent>
+                        <Body3 color="gray700">
+                          {currentPersona.userExperience ||
+                            "학업과 여가를 균형 있게 추구하며, 문화적 호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다."}
+                        </Body3>
+                      </TabContent>
+                    )}
+                  </>
                 )}
               </div>
 

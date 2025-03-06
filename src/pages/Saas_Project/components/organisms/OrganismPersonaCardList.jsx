@@ -155,7 +155,11 @@ const OrganismPersonaCardList = ({
             </div>
 
             <div>
-              <StyledButton Medium Outline onClick={() => setShowPopup(true)}>
+              <StyledButton
+                Medium
+                Outline
+                onClick={() => setShowPopup(persona)}
+              >
                 프로필
               </StyledButton>
               <StyledButton Medium Primary Fill>
