@@ -39,6 +39,7 @@ import { getPersonaListOnServer } from "../../../utils/indexedDB";
 const PageDashBoard = () => {
   const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
   const project = projectSaas;
+  console.log("project", project);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
 
   const navigate = useNavigate();
