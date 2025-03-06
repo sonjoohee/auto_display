@@ -25,6 +25,7 @@ import {
   PROJECT_PERSONA_LIST,
   IS_LOGGED_IN,
   PROJECT_SAAS,
+  PERSONA_LIST_SAAS,
 } from "../../../../pages/AtomStates";
 
 const OrganismEmptyPersona = () => {
@@ -35,6 +36,7 @@ const OrganismEmptyPersona = () => {
     useAtom(PROJECT_PERSONA_LIST);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [project, setProject] = useAtom(PROJECT_SAAS);
+  const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const handleCreatePersona = async () => {
     setIsLoading(true);
     console.log("🚀 ~ handleCreatePersona ~ project:", project);
@@ -207,6 +209,10 @@ const OrganismEmptyPersona = () => {
         console.log(persona);
         await createPersonaOnServer(persona, isLoggedIn);
       }
+
+      // 추가: personaListSaas 상태 업데이트
+      // personaListSaas를 업데이트할 방법이 있다면 여기서 업데이트해야 합니다.
+      setPersonaListSaas(allPersonas); // 필요시 주석을 해제하고 구현하세요
     } catch (error) {
       console.error(error);
     } finally {
