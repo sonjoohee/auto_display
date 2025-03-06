@@ -366,24 +366,24 @@ const PageAiPersona = () => {
   // isPersonaEditFormValid 함수 추가 (페르소나 편집 팝업용)
   const isPersonaEditFormValid = () => {
     if (activeTabIndex1 === 0) {
-      return (
-        basicInfo.gender.trim() !== "" &&
-        basicInfo.age.trim() !== "" &&
-        basicInfo.mainFeature.trim() !== "" &&
-        basicInfo.relatedInfo.trim() !== ""
-      );
+        return (
+            basicInfo?.gender?.trim() !== "" &&
+            basicInfo?.age?.trim() !== "" &&
+            basicInfo?.mainFeature?.trim() !== "" &&
+            basicInfo?.relatedInfo?.trim() !== ""
+        );
     } else if (activeTabIndex1 === 1) {
-      return tabInputs.lifestyle.trim() !== "";
+        return tabInputs?.lifestyle?.trim() !== "";
     } else if (activeTabIndex1 === 2) {
-      return tabInputs.interests.trim() !== "";
+        return tabInputs?.interests?.trim() !== "";
     } else if (activeTabIndex1 === 3) {
-      return tabInputs.consumption.trim() !== "";
+        return tabInputs?.consumption?.trim() !== "";
     } else if (activeTabIndex1 === 4) {
-      return (
-        selectedValues.experience &&
-        selectedValues.usage &&
-        tabInputs.productExperience?.trim() !== ""
-      );
+        return (
+            selectedValues?.experience &&
+            selectedValues?.usage &&
+            tabInputs?.productExperience?.trim() !== ""
+        );
     }
     return true;
   };
@@ -709,26 +709,28 @@ const PageAiPersona = () => {
                 )}
               </div>
 
-              <ButtonGroup>
-                <Button
-                  DbExLarge
-                  PrimaryLightest
-                  Fill
-                  W100
-                  onClick={() => setIsEditPopupOpen(true)}
-                >
-                  페르소나 편집
-                </Button>
-                <Button
-                  DbExLarge
-                  Primary
-                  Fill
-                  W100
-                  onClick={() => setIsCreatePopupOpen(true)}
-                >
-                  페르소나 생성
-                </Button>
-              </ButtonGroup>
+              {!isLoading && (
+                <ButtonGroup>
+                  <Button
+                    DbExLarge
+                    PrimaryLightest
+                    Fill
+                    W100
+                    onClick={() => setIsEditPopupOpen(true)}
+                  >
+                    페르소나 편집
+                  </Button>
+                  <Button
+                    DbExLarge
+                    Primary
+                    Fill
+                    W100
+                    onClick={() => setIsCreatePopupOpen(true)}
+                  >
+                    페르소나 생성
+                  </Button>
+                </ButtonGroup>
+              )}
             </div>
           </InterviewPopup>
         </>
@@ -1214,7 +1216,13 @@ const PageAiPersona = () => {
           onPrev={handlePrevTab}
           isModal={true}
           onCancel={handlePersonaEditClose}
-          onConfirm={handlePersonaEditContinue}
+          onConfirm={() => {
+            if (activeTabIndex1 === 4) {
+              setIsPersonaConfirmPopupOpen(true); // 확인 팝업 열기
+            } else {
+              handlePersonaEditContinue(); // 다음 탭으로 이동
+            }
+          }}
           showTabs={true}
           tabs={["기본정보", "라이프스타일", "관심사", "소비성향", "제품경험"]}
           onTabChange={handleTabChange}
@@ -1241,7 +1249,7 @@ const PageAiPersona = () => {
                           Edit
                           type="text"
                           placeholder="성별"
-                          value={basicInfo.gender}
+                          value={currentPersona.gender || ""}
                           onChange={(e) =>
                             handleBasicInfoChange("gender", e.target.value)
                           }
@@ -1261,7 +1269,7 @@ const PageAiPersona = () => {
                           Edit
                           type="text"
                           placeholder="나이"
-                          value={basicInfo.age}
+                          value={currentPersona.age}
                           onChange={(e) =>
                             handleBasicInfoChange("age", e.target.value)
                           }
@@ -1281,9 +1289,9 @@ const PageAiPersona = () => {
                           Edit
                           type="text"
                           placeholder="주요 특징"
-                          value={basicInfo.mainFeature}
+                          value={currentPersona.personaCharacteristics}
                           onChange={(e) =>
-                            handleBasicInfoChange("mainFeature", e.target.value)
+                            handleBasicInfoChange("characteristics", e.target.value)
                           }
                           status="valid"
                         />
@@ -1300,7 +1308,7 @@ const PageAiPersona = () => {
                         <CustomTextarea
                           Edit
                           placeholder="관련 정보"
-                          value={basicInfo.relatedInfo}
+                          value={currentPersona.relatedInfo}
                           onChange={(e) =>
                             handleBasicInfoChange("relatedInfo", e.target.value)
                           }
@@ -1321,7 +1329,7 @@ const PageAiPersona = () => {
                           Edit
                           rows={16}
                           placeholder="라이프스타일"
-                          value={tabInputs.lifestyle}
+                          value={currentPersona.lifestyle}
                           onChange={(e) =>
                             handleTabInputChange("lifestyle", e.target.value)
                           }
@@ -1342,7 +1350,7 @@ const PageAiPersona = () => {
                           Edit
                           rows={16}
                           placeholder="관심사"
-                          value={tabInputs.interests}
+                          value={currentPersona.interests}
                           onChange={(e) =>
                             handleTabInputChange("interests", e.target.value)
                           }
@@ -1363,7 +1371,7 @@ const PageAiPersona = () => {
                           Edit
                           rows={16}
                           placeholder="소비성향"
-                          value={tabInputs.consumption}
+                          value={currentPersona.consumptionPattern}
                           onChange={(e) =>
                             handleTabInputChange("consumption", e.target.value)
                           }
@@ -1614,9 +1622,9 @@ const PageAiPersona = () => {
                     None
                     rows={12}
                     placeholder="제품경험"
-                    value={tabInputs.productExperience}
+                    value={currentPersona.userExperience}
                     onChange={(e) =>
-                      handleTabInputChange("productExperience", e.target.value)
+                      handleTabInputChange("userExperience", e.target.value)
                     }
                     status="valid"
                   />
