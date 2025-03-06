@@ -3904,6 +3904,7 @@ export const InterviewXPersonaKeyStakeholderRequest = async (
 
 //페르소나 프로필정보 생성
 export const InterviewXPersonaProfileRequest = async (data, isLoggedIn) => {
+  console.log("🚀 ~ InterviewXPersonaProfileRequest ~ data:", data);
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
