@@ -72,7 +72,6 @@ import {
 
 import OrganismPersonaCardList from "../components/organisms/OrganismPersonaCardList";
 import {
-  PROJECT_PERSONA_LIST,
   PROJECT_ID,
   PERSONA_LIST_SAAS,
   PROJECT_SAAS,
@@ -84,9 +83,11 @@ const PageAiPersona = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [project, setProject] = useAtom(PROJECT_SAAS);
+
   const [projectPersonaList, setProjectPersonaList] =
     useAtom(PROJECT_PERSONA_LIST);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
 

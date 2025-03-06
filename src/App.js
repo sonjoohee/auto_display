@@ -309,9 +309,9 @@ function App() {
           <Route
             path="*"
             element={
-              // <RequireToken>
-              <PageProject />
-              // </RequireToken>
+              <RequireToken>
+                <PageProject />
+              </RequireToken>
             }
           />
           {/* <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} /> */}
