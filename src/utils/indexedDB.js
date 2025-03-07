@@ -3944,18 +3944,46 @@ export const InterviewXPersonaProfileRequest = async (data, isLoggedIn) => {
   }
 };
 
-// 페르소나 리스트
+// 툴 리스트
 export const getToolListOnServerSaas = async (
   projectId,
   getCount,
   isLoggedIn
 ) => {
+  console.log("🚀 ~ projectId:", projectId);
   if (isLoggedIn) {
     try {
       const accessToken = sessionStorage.getItem("accessToken");
 
       const response = await axios.get(
-        `/project/ToolActivities/${projectId}/${getCount}`,
+        `https://wishresearch.kr/project/ToolActivities/${projectId}/${getCount}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching persona list from server:", error);
+      throw error;
+    }
+  }
+};
+
+// 페르소나 리스트
+export const getFindToolListOnServerSaas = async (
+  projectId,
+  getType,
+  isLoggedIn
+) => {
+  console.log("🚀 ~ projectId:", projectId);
+  if (isLoggedIn) {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      const response = await axios.get(
+        `https://wishresearch.kr/project/findToolList/${projectId}/${getType}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
