@@ -103,11 +103,12 @@ import OrganismNoPersonaMessage from "../../../public/organisms/OrganismNoPerson
 import MoleculePersonaListItem from "../../../public/molecules/MoleculePersonaListItem";
 import OrganismPersonaList from "../../../public/organisms/OrganismPersonaList";
 
+
 const PageCustomerValueAnalyzer = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
-  console.log("personaListSaas", personaListSaas);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -120,8 +121,10 @@ const PageCustomerValueAnalyzer = () => {
     customerValueAnalyzerSelectedPersona,
     setCustomerValueAnalyzerSelectedPersona,
   ] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA);
-  const [customerValueAnalyzerJourneyMap, setCustomerValueAnalyzerJourneyMap] =
-    useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
+  const [
+    customerValueAnalyzerJourneyMap,
+    setCustomerValueAnalyzerJourneyMap,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
   const [customerValueAnalyzerFactor, setCustomerValueAnalyzerFactor] = useAtom(
     CUSTOMER_VALUE_ANALYZER_FACTOR
   );
@@ -147,6 +150,7 @@ const PageCustomerValueAnalyzer = () => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
+  const [selectedPersonasSaas, setSelectedPersonasSaas] = useState([]);
   const [selectedPurposes, setSelectedPurposes] = useState({
     customerList: "",
     analysisScope: "",
@@ -452,7 +456,8 @@ const PageCustomerValueAnalyzer = () => {
             await updateToolOnServer(
               toolId,
               {
-                customer_value_journey_map: journeyMapData,
+                projectId: project._id,
+                customerValueJourneyMap: journeyMapData,
               },
               isLoggedIn
             );
@@ -493,18 +498,40 @@ const PageCustomerValueAnalyzer = () => {
     }
   }, []);
 
+  const project = projectSaas;
+
+
   const handleSubmitBusinessInfo = async () => {
     try {
       setIsLoading(true);
 
-      // targetCustomers 배열에서 빈 값을 제거합니다.
-      const filteredTargetCustomers = targetCustomers.filter(
-        (customer) => customer.trim() !== ""
-      );
+      const filteredTargetCustomers = selectedPersonasSaas.flatMap((personaId) => {
+        const prefix = personaId.split('_')[0]; // 접두사 추출 (예: 'macro_segment')
+        return personaListSaas
+          .map((persona, index) => {
+            // personaType이 접두사와 일치하는지 확인
+            if (persona.personaType.startsWith(prefix)) {
+              return persona; // 인덱스 대신 persona 정보를 반환
+            }
+            return null; // 일치하지 않으면 null 반환
+          })
+          .filter(persona => persona !== null); // null 값을 필터링
+      });
+    
+      console.log("filteredTargetCustomers", filteredTargetCustomers);
+
+      const selectedCustomers = selectedPersonasSaas.map((personaId) => {
+        const index = parseInt(personaId.split('persona')[1], 10); // 숫자 추출
+        const { personaName, personaCharacteristics, age, gender, job, keywords } = filteredTargetCustomers[index]; // 필요한 필드만 추출
+        return { personaName, personaCharacteristics, age, gender, job, keywords }; // 필요한 필드만 반환
+      }).filter(customer => customer !== undefined); // undefined 필터링
+      
+      console.log("selectedCustomers", selectedCustomers);
+      
 
       const businessData = {
-        business: selectedBusiness || businessDescription,
-        target_list: filteredTargetCustomers, // 필터링된 리스트를 사용합니다.
+        business: project.projectTitle || "",
+        target_list: selectedCustomers,
         analysis_scope: selectedPurposes.analysisScope,
         analysis_purpose: businessDescription,
       };
@@ -540,8 +567,9 @@ const PageCustomerValueAnalyzer = () => {
       const responseToolId = await createToolOnServer(
         {
           type: "ix_customer_value_persona",
-          completed_step: 1,
-          customer_value_persona: response.response.customer_value_persona,
+          projectId: project._id,
+          completedStep: 1,
+          customerValuePersona: response.response.customer_value_persona,
           ...businessData,
         },
         isLoggedIn
@@ -640,6 +668,23 @@ const PageCustomerValueAnalyzer = () => {
     }
   };
 
+  const handlePersonaSelectionChange = (index) => {
+    // if (toolStep >= 2) return;
+    setSelectedPersonasSaas((prev) => {
+      if (prev.includes(index)) {
+        return prev.filter((id) => id !== index);
+      } else {
+        if (prev.length >= 5) return prev;
+        return [...prev, index];
+      }
+    });
+  };
+
+  // selectedPersonasSaas가 변경될 때마다 로그 출력
+  useEffect(() => {
+    console.log(selectedPersonasSaas);
+  }, [selectedPersonasSaas]);
+
   const handleCheckboxChange = (index) => {
     if (toolStep >= 2) return;
     setSelectedPersonas((prev) => {
@@ -651,7 +696,6 @@ const PageCustomerValueAnalyzer = () => {
       }
     });
   };
-
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
     setCompletedSteps([...completedSteps, currentStep]);
@@ -689,7 +733,8 @@ const PageCustomerValueAnalyzer = () => {
     await updateToolOnServer(
       toolId,
       {
-        completed_step: 2,
+        projectId: project._id,
+        completedStep: 2,
       },
       isLoggedIn
     );
@@ -707,7 +752,8 @@ const PageCustomerValueAnalyzer = () => {
       await updateToolOnServer(
         toolId,
         {
-          selected_customer_value_persona: selectedPersonaData,
+          projectId: project._id,
+          selectedCustomerValuePersona: selectedPersonaData,
         },
         isLoggedIn
       );
@@ -732,7 +778,7 @@ const PageCustomerValueAnalyzer = () => {
 
         const persona = selectedPersonaData[i];
         const requestData = {
-          business: customerValueAnalyzerInfo.business,
+          business: project.projectTitle,          
           target: persona.target,
           analysis_scope: customerValueAnalyzerInfo.analysis_scope,
           customer_value_journey_map: persona.journeyMap,
@@ -789,7 +835,8 @@ const PageCustomerValueAnalyzer = () => {
       await updateToolOnServer(
         toolId,
         {
-          customer_value_factor: results,
+          projectId: project._id,
+          customerValueFactor: results,
         },
         isLoggedIn
       );
@@ -821,10 +868,12 @@ const PageCustomerValueAnalyzer = () => {
 
   const handleReport = async () => {
     try {
+      let clusteringResponse;
       await updateToolOnServer(
         toolId,
         {
-          completed_step: 3,
+          projectId: project._id,
+          completedStep: 3,
         },
         isLoggedIn
       );
@@ -837,11 +886,10 @@ const PageCustomerValueAnalyzer = () => {
       };
 
       // 클러스터링 요청
-      const clusteringResponse =
-        await InterviewXCustomerValueAnalyzerClusteringRequest(
-          clusteringData,
-          isLoggedIn
-        );
+      clusteringResponse = await InterviewXCustomerValueAnalyzerClusteringRequest(
+        clusteringData,
+        isLoggedIn
+      );
 
       const maxAttempts = 10;
       let attempts = 0;
@@ -859,11 +907,10 @@ const PageCustomerValueAnalyzer = () => {
         }
         attempts++;
 
-        clusteringResponse =
-          await InterviewXCustomerValueAnalyzerClusteringRequest(
-            clusteringData,
-            isLoggedIn
-          );
+        clusteringResponse = await InterviewXCustomerValueAnalyzerClusteringRequest(
+          clusteringData,
+          isLoggedIn
+        );
       }
 
       setCustomerValueAnalyzerClustering(
@@ -910,7 +957,7 @@ const PageCustomerValueAnalyzer = () => {
       );
 
       const finalReportData = {
-        business: customerValueAnalyzerInfo.business,
+        business: project.projectTitle,
         customer_value_factor_data: customerValueAnalyzerFactor,
         customer_value_clustering:
           clusteringResponse.response.customer_value_clustering,
@@ -961,12 +1008,13 @@ const PageCustomerValueAnalyzer = () => {
       await updateToolOnServer(
         toolId,
         {
-          completed_step: 4,
-          customer_value_clustering:
+          projectId: project._id,
+          completedStep: 4,
+          customerValueClustering:
             clusteringResponse.response.customer_value_clustering,
-          customer_value_positioning:
+          customerValuePositioning:
             positioningResponse.response.customer_value_positioning,
-          customer_value_final_report:
+          customerValueFinalReport:
             finalReportResponse.response.customer_value_final_report,
         },
         isLoggedIn
@@ -995,7 +1043,9 @@ const PageCustomerValueAnalyzer = () => {
   };
 
   const mermaidCode = customerValueAnalyzerPositioning?.mermaid || "";
+  console.log("mermaidCode", mermaidCode);
   const cleanMermaidCode = mermaidCode.replace(/quadrant-\d\s+[^\n]+\n/g, "");
+  console.log("cleanMermaidCode", cleanMermaidCode);
 
   // const clusterList = customerValueAnalyzerPositioning?.cluster_list || [];
 
@@ -1404,6 +1454,7 @@ const PageCustomerValueAnalyzer = () => {
                         selectedPersonaButtons={selectedPersonaButtons}
                         handlePersonaButtonClick={handlePersonaButtonClick}
                         onNavigate={navigate}
+                        onPersonaSelect={(id) => handlePersonaSelectionChange(id)}
                       />
                     </div>
                     <Button
@@ -1413,7 +1464,7 @@ const PageCustomerValueAnalyzer = () => {
                       Round
                       onClick={() => handleSubmitBusinessInfo()}
                       disabled={
-                        getSelectedPersonaCount() === 0 || toolStep >= 1
+                        selectedPurposes.analysisScope === "" || getSelectedPersonaCount() === 0 || toolStep >= 1
                       }
                     >
                       다음
@@ -1435,31 +1486,28 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
                   <CardGroupWrap column>
-                    {customerValueAnalyzerInfo.target_list.map(
-                      (target, index) => {
-                        return (
-                          <MoleculeCustomerValueCard
-                            key={index}
-                            id={index}
-                            title={target}
-                            content={customerValueAnalyzerPersona[index]}
-                            business={customerValueAnalyzerInfo.business}
-                            status={
-                              customerValueAnalyzerJourneyMap.length ===
-                              customerValueAnalyzerInfo.target_list.length
-                                ? "completed"
-                                : cardStatuses[index]
-                            }
-                            isSelected={selectedPersonas.includes(index)}
-                            onSelect={(id) => handleCheckboxChange(id)}
-                            viewType="list"
-                            journeyMapData={
-                              customerValueAnalyzerJourneyMap[index]
-                            }
-                          />
-                        );
-                      }
-                    )}
+                    {customerValueAnalyzerInfo.target_list.map((target, index) => {
+                   
+                      return (
+                        <MoleculeCustomerValueCard
+                          key={index}
+                          id={index}
+                          title={target.personaName} // title에 문자열을 전달
+                          content={customerValueAnalyzerPersona[index]} // content에 문자열을 전달
+                          business={customerValueAnalyzerInfo.business || "비즈니스 정보 없음"} // 기본값 설정
+                          status={
+                            customerValueAnalyzerJourneyMap.length ===
+                            customerValueAnalyzerInfo.target_list.length
+                              ? "completed"
+                              : cardStatuses[index] || "대기 중" // 기본값 설정
+                          }
+                          isSelected={selectedPersonas.includes(index)}
+                          onSelect={(id) => handleCheckboxChange(id)}
+                          viewType="list"
+                          journeyMapData={customerValueAnalyzerJourneyMap[index] || {}} // 기본값으로 빈 객체 설정
+                        />
+                      );
+                    })}
                   </CardGroupWrap>
                   <BottomBar W100>
                     <Body2
@@ -1511,13 +1559,15 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
                   <CardGroupWrap column>
-                    {customerValueAnalyzerSelectedPersona.map(
-                      (persona, index) => (
+                    {customerValueAnalyzerSelectedPersona.map((persona, index) => {
+        
+
+                      return (
                         <MoleculeCustomerValueCard
                           key={index}
                           id={index}
-                          title={persona.target}
-                          content={persona.content}
+                          title={persona.target.personaName} // title에 문자열을 전달
+                          content={persona.content} // content에 문자열을 전달
                           status={
                             customerValueAnalyzerFactor.length ===
                             customerValueAnalyzerSelectedPersona.length
@@ -1525,15 +1575,15 @@ const PageCustomerValueAnalyzer = () => {
                               : cardStatusesFactor[index]
                           }
                           factor={customerValueAnalyzerFactor[index]}
-                          business={customerValueAnalyzerInfo.business}
-                          journeyMapData={persona.journeyMap}
+                          business={project.projectTitle || "비즈니스 정보 없음"} // 기본값 설정
+                          journeyMapData={persona.journeyMap || {}} // 기본값으로 빈 객체 설정
                           showOnlySelected={true}
                           hideCheckCircle={true}
                           activeTab={3}
                           viewType="list"
                         />
-                      )
-                    )}
+                      );
+                    })}
                   </CardGroupWrap>
 
                   <BottomBar W100>
@@ -1609,7 +1659,11 @@ const PageCustomerValueAnalyzer = () => {
                       </div> */}
 
                       <div className="content">
-                        <H4 color="gray800">
+                        <H4
+                          color="gray800"
+                          align="left"
+                          style={{ marginBottom: "12px" }}
+                        >
                           {`페르소나별 고객 여정 분석 결과, ${customerValueAnalyzerInfo.business}의 핵심 구매 요소는`}
                           {(customerValueAnalyzerFinalReport.title || []).join(
                             ", "

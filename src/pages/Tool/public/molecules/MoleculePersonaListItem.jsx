@@ -17,6 +17,7 @@ const MoleculePersonaListItem = ({
   personaInfo,
   isSelected,
   onPersonaButtonClick,
+  onSelect,
 }) => {
   return (
     <ListBoxItem NoBorder>
@@ -41,7 +42,10 @@ const MoleculePersonaListItem = ({
           Medium
           PrimaryLightest={isSelected}
           Fill={isSelected}
-          onClick={() => onPersonaButtonClick(personaId)}
+          onClick={() => {
+            onPersonaButtonClick(personaId);
+            onSelect(personaId);
+          }}
         >
           <Sub2 color={isSelected ? "primary" : "gray500"}>
             {isSelected ? "Selected" : "Add"}
