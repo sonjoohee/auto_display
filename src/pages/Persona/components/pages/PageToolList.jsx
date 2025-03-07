@@ -505,17 +505,17 @@ const PageToolList = () => {
     const fetchCreditInfo = async () => {
       try {
         if (isLoggedIn) {
-        const response = await CreditInfo(isLoggedIn);
+          const response = await CreditInfo(isLoggedIn);
 
-        if (response) {
-          setCreditRequestCustomPersona(response.request_custom_persona);
-          setCreditRequestBusinessPersona(response.request_business_persona);
-          setCreditCustomTheory(response.custom_theory);
-          setCreditAdditionalQuestion(response.additional_question);
-          setCreditIndepthInterview(response.indepth_interview);
-          setEventTitle(response.event_title);
-          setEventState(response.event_state);
-          setTrialState(response.trial_state);
+          if (response) {
+            setCreditRequestCustomPersona(response.request_custom_persona);
+            setCreditRequestBusinessPersona(response.request_business_persona);
+            setCreditCustomTheory(response.custom_theory);
+            setCreditAdditionalQuestion(response.additional_question);
+            setCreditIndepthInterview(response.indepth_interview);
+            setEventTitle(response.event_title);
+            setEventState(response.event_state);
+            setTrialState(response.trial_state);
           }
         }
       } catch (error) {
@@ -1061,6 +1061,41 @@ const PageToolList = () => {
 
     return () => clearInterval(interval);
   }, []);
+  useEffect(() => {
+    // 새로고침 감지 함수
+    const detectRefresh = () => {
+      // 1. Performance API 확인
+      // if (performance.navigation && performance.navigation.type === 1) {
+      //   console.log("새로고침 감지: Performance API");
+      //   navigate("/");
+      //   return true;
+      // }
+
+      // 2. 현재 URL 확인
+      const currentUrl = window.location.href;
+      if (currentUrl.toLowerCase().includes("tool")) {
+        // 세션 스토리지에서 마지막 URL 가져오기
+        const lastUrl = sessionStorage.getItem("lastUrl");
+
+        // 마지막 URL이 현재 URL과 같으면 새로고침
+        if (lastUrl && lastUrl === currentUrl) {
+          console.log("새로고침 감지: URL 비교");
+          navigate("/");
+          return true;
+        }
+
+        // 현재 URL 저장
+        sessionStorage.setItem("lastUrl", currentUrl);
+      }
+
+      return false;
+    };
+
+    // 함수 실행
+    detectRefresh();
+
+    // 컴포넌트 마운트 시 한 번만 실행
+  }, [navigate]);
 
   return (
     <>
@@ -1072,8 +1107,13 @@ const PageToolList = () => {
         <MainContent Wide1240>
           <ToolListWrap>
             <ToolListTitle>
-              <H1 color="gray800" align="left">Expert & Business Tool</H1>
-              <Body3 color="gray700" align="left">당신의 비즈니스 데이터를 기반으로 다양한 AI 전문가와 툴을 활용하여 최적의 전략을 도출할 수 있습니다.</Body3>
+              <H1 color="gray800" align="left">
+                Expert & Business Tool
+              </H1>
+              <Body3 color="gray700" align="left">
+                당신의 비즈니스 데이터를 기반으로 다양한 AI 전문가와 툴을
+                활용하여 최적의 전략을 도출할 수 있습니다.
+              </Body3>
             </ToolListTitle>
 
             <ExploreWrap>
@@ -1084,7 +1124,7 @@ const PageToolList = () => {
                 >
                   <Caption1 color="gray700">All</Caption1>
                 </TabButtonType4Main>
-                <TabButtonType4Main 
+                <TabButtonType4Main
                   isActive={activeTab === "interview"}
                   onClick={() => setActiveTab("interview")}
                 >
@@ -1138,7 +1178,8 @@ const PageToolList = () => {
                           심층 인터뷰 룸
                         </Body1>
                         <Caption1 color="white" align="left">
-                          1:1 인터뷰를 통해 개별 사용자의 심층적인 인사이트와 핵심 니즈를 탐색하는 도구 
+                          1:1 인터뷰를 통해 개별 사용자의 심층적인 인사이트와
+                          핵심 니즈를 탐색하는 도구
                         </Caption1>
                         <i />
                       </div>
@@ -1146,40 +1187,41 @@ const PageToolList = () => {
                   </ExploreCard>,
 
                   <ExploreCard AiPersona key="analysis-2">
-                  <span>
-                    <images.LightningChargeFill color={palette.gray700} />
-                    Interveiw
-                  </span>
-                  <p>
-                    <img src={images.ImgExplore13} alt="" />
-                  </p>
-                  <Body1 color="gray800">
-                    <em>준비중</em>
-                    그룹 인터뷰 룸
-                  </Body1>
-
-                  <div
-                    className="overlay"
-                    onClick={() => {
-                      hadleToolSelect("1");
-                    }}
-                  >
                     <span>
-                      <images.LightningChargeFill color={palette.white} />
+                      <images.LightningChargeFill color={palette.gray700} />
                       Interveiw
                     </span>
+                    <p>
+                      <img src={images.ImgExplore13} alt="" />
+                    </p>
+                    <Body1 color="gray800">
+                      <em>준비중</em>
+                      그룹 인터뷰 룸
+                    </Body1>
 
-                    <div className="text">
-                      <Body1 color="white">
-                        <em>준비중</em>
-                        그룹 인터뷰 룸
-                      </Body1>
-                      <Caption1 color="white" align="left">
-                        소규모 그룹과의 대화를 통해 다양한 관점을 수집하고 핵심 인사이트를 도출하는 도구 
-                      </Caption1>
-                      <i />
+                    <div
+                      className="overlay"
+                      onClick={() => {
+                        hadleToolSelect("1");
+                      }}
+                    >
+                      <span>
+                        <images.LightningChargeFill color={palette.white} />
+                        Interveiw
+                      </span>
+
+                      <div className="text">
+                        <Body1 color="white">
+                          <em>준비중</em>
+                          그룹 인터뷰 룸
+                        </Body1>
+                        <Caption1 color="white" align="left">
+                          소규모 그룹과의 대화를 통해 다양한 관점을 수집하고
+                          핵심 인사이트를 도출하는 도구
+                        </Caption1>
+                        <i />
+                      </div>
                     </div>
-                  </div>
                   </ExploreCard>,
 
                   <ExploreCard Research key="research-1" {...{ Ready: false }}>
@@ -1294,8 +1336,8 @@ const PageToolList = () => {
                           <em>준비중</em>아이디어 생성기
                         </Body1>
                         <Caption1 color="white" align="left">
-                          만다라트 기법을 활용하여 창의적이고 구조적인 아이디어를
-                          발산하고 구체화 하는 툴
+                          만다라트 기법을 활용하여 창의적이고 구조적인
+                          아이디어를 발산하고 구체화 하는 툴
                         </Caption1>
                         <i />
                       </div>
@@ -1457,8 +1499,8 @@ const PageToolList = () => {
                           <em>준비중</em>가격 분석 전문가
                         </Body1>
                         <Caption1 color="white" align="left">
-                          시장 데이터 기반 최적 가격을 분석하여 수익성과 경쟁력을
-                          극대화할 수 있어요 (제품 한정)
+                          시장 데이터 기반 최적 가격을 분석하여 수익성과
+                          경쟁력을 극대화할 수 있어요 (제품 한정)
                         </Caption1>
                         <i />
                       </div>
@@ -1701,7 +1743,7 @@ const PageToolList = () => {
           </div>
         </Popup>
       )}
-      
+
       {isComingSoon && (
         <Popup
           Cancel

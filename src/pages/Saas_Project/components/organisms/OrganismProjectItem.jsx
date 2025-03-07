@@ -9,6 +9,7 @@ import {
   PROJECT_ID,
   PROJECT_SAAS,
   ACCESS_DASHBOARD,
+  ACCESS_STATE_SAAS,
 } from "../../../../pages/AtomStates";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 
@@ -17,6 +18,7 @@ const OrganismProjectItem = ({ project, onClick, isNoData }) => {
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
   const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
+  const [accessStateSaas, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
 
   const handleClick = async () => {
     if (onClick) {
@@ -27,6 +29,7 @@ const OrganismProjectItem = ({ project, onClick, isNoData }) => {
       setProjectId(project._id);
       setProjectSaas(project);
       setAccessDashboard(true);
+      setAccessStateSaas(true);
       // 프로젝트 데이터를 state로 전달하여 DashBoard 페이지로 이동
       navigate("/DashBoard");
     }
@@ -81,12 +84,19 @@ const ProjectItem = styled.div`
   align-items: flex-start;
   justify-content: space-around;
   overflow: hidden;
+  border: 1px solid ${palette.outlineGray};
   border-radius: 20px;
   background: ${palette.chatGray};
   cursor: pointer;
   height: ${(props) => (props.NoData ? "100%" : "auto")};
   min-height: ${(props) => (props.NoData ? "300px" : "auto")};
 
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    border-color: ${palette.primary};
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+  }
   .thumbnail {
     width: 100%;
     max-height: 200px;

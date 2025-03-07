@@ -583,6 +583,7 @@ export const PROJECT_PERSONA_LIST = atom([]);
 export const PERSONA_LIST_SAAS = atom([]);
 export const PROJECT_SAAS = atom({});
 export const ACCESS_DASHBOARD = atom(false);
+export const ACCESS_STATE_SAAS = atom(false);
 
 // setConversation([]);
 // setConversationStage(1);
