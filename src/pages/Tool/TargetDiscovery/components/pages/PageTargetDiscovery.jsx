@@ -61,6 +61,7 @@ import {
   TOOL_STEP,
   SELECTED_TARGET_DISCOVERY_SCENARIO,
   TOOL_LOADING,
+  PROJECT_SAAS,
 } from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import {
@@ -104,6 +105,7 @@ const PageTargetDiscovery = () => {
   );
   const [selectedTargetDiscoveryScenario, setSelectedTargetDiscoveryScenario] =
     useAtom(SELECTED_TARGET_DISCOVERY_SCENARIO);
+  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
 
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupMore, setShowPopupMore] = useState(false);
@@ -143,6 +145,8 @@ const PageTargetDiscovery = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const project = projectSaas;
 
   const calculateDropDirection = () => {
     if (selectBoxRef.current) {
@@ -189,11 +193,11 @@ const PageTargetDiscovery = () => {
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
 
         // 비즈니스 정보 설정 (Step 1)
-        if (targetDiscoveryInfo) {
-          setBusinessDescription(targetDiscoveryInfo?.business ?? "");
-          setTargetCustomer(targetDiscoveryInfo?.target ?? "");
+        if (project) {
+          setBusinessDescription(project?.projectAnalysis.business_analysis ?? "");
+          setTargetCustomer(project?.projectAnalysis.target_customer ?? "");
           setSpecificSituation(targetDiscoveryInfo?.specific_situation ?? "");
-          setSelectedPurpose(targetDiscoveryInfo?.country ?? "");
+          setSelectedPurpose(project?.targetCountry ?? "");
         }
 
         // 완료된 단계 설정
@@ -349,9 +353,13 @@ const PageTargetDiscovery = () => {
       const responseToolId = await createToolOnServer(
         {
           type: "ix_target_discovery_persona",
-          completed_step: 1,
-          target_discovery_persona: response.response.target_discovery_persona,
-          ...businessData,
+          completedStep: 1,
+          projectId: project._id,
+          targetDiscoveryPersona: response.response.target_discovery_persona,
+          business: businessDescription,
+          target: targetCustomer,
+          specificSituation: specificSituation,
+          country: selectedPurpose,
         },
         isLoggedIn
       );
@@ -500,8 +508,9 @@ const PageTargetDiscovery = () => {
       await updateToolOnServer(
         toolId,
         {
-          completed_step: 2,
-          target_discovery_scenario: allScenarios,
+          projectId: project._id,
+          completedStep: 2,
+          targetDiscoveryScenario: allScenarios,
           updateDate: new Date().toLocaleString("ko-KR", {
             timeZone: "Asia/Seoul",
             year: "numeric",
@@ -591,8 +600,9 @@ const PageTargetDiscovery = () => {
       await updateToolOnServer(
         toolId,
         {
-          completed_step: 4,
-          target_discovery_final_report:
+          projectId: project._id,
+          completedStep: 4,
+          targetDiscoveryFinalReport:
             response.response.target_discovery_final_report,
           updateDate: new Date().toLocaleString("ko-KR", {
             timeZone: "Asia/Seoul",

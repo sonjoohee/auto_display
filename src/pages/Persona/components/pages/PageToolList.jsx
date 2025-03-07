@@ -145,6 +145,7 @@ import {
   EVENT_STATE,
   TRIAL_STATE,
   ACCESSABLE_EXPERT,
+  TOOL_LOADING,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -180,6 +181,7 @@ const PageToolList = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [accessableExpert, setAccessableExpert] = useAtom(ACCESSABLE_EXPERT);
 
   const [projectLoading, setProjectLoading] = useAtom(PROJECT_LOADING);
@@ -868,6 +870,7 @@ const PageToolList = () => {
 
   const hadleToolSelect = (index) => {
     if (isLoggedIn) {
+      setToolLoading(true); 
       switch (index) {
         case "1":
           navigate("/TargetDiscovery");
