@@ -3943,3 +3943,29 @@ export const InterviewXPersonaProfileRequest = async (data, isLoggedIn) => {
     throw error;
   }
 };
+
+// 페르소나 리스트
+export const getToolListOnServerSaas = async (
+  projectId,
+  getCount,
+  isLoggedIn
+) => {
+  if (isLoggedIn) {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      const response = await axios.get(
+        `/project/ToolActivities/${projectId}/${getCount}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching persona list from server:", error);
+      throw error;
+    }
+  }
+};
