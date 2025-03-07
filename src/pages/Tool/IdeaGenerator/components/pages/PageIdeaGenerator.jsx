@@ -1,5 +1,6 @@
 //아이디어 제너레이터
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
 import { palette } from "../../../../../assets/styles/Palette";
@@ -48,8 +49,12 @@ import {
   Table,
   TableHeader,
   TableBody,
+  ListBoxGroup,
+  PersonaGroup,
+  Persona,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../../assets/styles/Images";
+import personaImages from "../../../../../assets/styles/PersonaImages";
 import {
   H4,
   H3,
@@ -63,6 +68,7 @@ import {
   Caption2,
 } from "../../../../../assets/styles/Typography";
 import ZoomableSunburst from "../../../../../components/Charts/ZoomableSunburst";
+import OrganismPersonaList from "../../../public/organisms/OrganismPersonaList";
 
 import {
   IDEA_GENERATOR_INFO,
@@ -77,6 +83,7 @@ import {
   TOOL_ID,
   TOOL_STEP,
   IDEA_GENERATOR_SELECTED_PERSONA,
+  PERSONA_LIST_SAAS,
 } from "../../../../AtomStates";
 
 import {
@@ -93,6 +100,8 @@ import {
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
 const PageIdeaGenerator = () => {
+  const navigate = useNavigate();
+
   const [tableData, setTableData] = useState([]);
   const [chartData, setChartData] = useState({});
   const [seletedIdeaIndex, setSeletedIdeaIndex] = useState(null);
@@ -871,6 +880,19 @@ const PageIdeaGenerator = () => {
     setShowPopupMore(true);
   };
 
+  const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
+  const [selectedPersonas, setSelectedPersonas] = useState([]);
+  const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
+  console.log("personaListSaas", personaListSaas);
+
+  // 버튼 클릭 핸들러 추가
+  const handlePersonaButtonClick = (personaId) => {
+    setSelectedPersonaButtons((prev) => ({
+      ...prev,
+      [personaId]: !prev[personaId],
+    }));
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -948,7 +970,7 @@ const PageIdeaGenerator = () => {
                 <div className="content">
                   <TabContent5Item borderBottom>
                     <div className="title">
-                      <Body1 color="gray700">비즈니스 핵심 가치 가져오기</Body1>
+                      <Body1 color="gray700">핵심 가치 가져오기</Body1>
                     </div>
 
                     <SelectBox ref={customerListRef}>
@@ -1107,7 +1129,7 @@ const PageIdeaGenerator = () => {
                   </Body3>
                 </div>
 
-                <SegmentContent>
+                {/* <SegmentContent>
                   <div>
                     <Body2 color="gray800" align="left">
                       아이디어 도출하고 싶은 고객이 있으신가요?
@@ -1173,9 +1195,9 @@ const PageIdeaGenerator = () => {
                       </ListBoxItem>
                     </CardGroupWrap>
                   </div>
-                </SegmentContent>
+                </SegmentContent> */}
 
-                <div className="content">
+                {/* <div className="content">
                   {selectedInterviewType === "yesTarget" ? (
                     <>
                       <TabContent5Item style={{ marginBottom: "140px" }}>
@@ -1269,7 +1291,77 @@ const PageIdeaGenerator = () => {
                       />
                     </Button>
                   </BottomBar>
+                </div> */}
+
+                <div className="content">
+                  <ListBoxGroup style={{ marginBottom: "24px" }}>
+                    <li>
+                      <Body2 color="gray500">분석 핵심 가치 </Body2>
+                      <div>
+                        <span>#핵심가치치</span>
+                        <span>#핵심가치치</span>
+                        <span>#핵심가치치</span>
+                      </div>
+                    </li>
+                    <li>
+                      <Body2 color="gray500">페르소나 선택</Body2>
+                      {selectedPersonas ? (
+                        <PersonaGroup>
+                          {Array.isArray(selectedPersonas) ? (
+                            <>
+                              {selectedPersonas.length > 3 && (
+                                <span>+{selectedPersonas.length - 3}</span>
+                              )}
+                              {selectedPersonas
+                                .slice(0, 3)
+                                .map((persona, index) => (
+                                  <Persona key={index} size="Small" Round>
+                                    <img
+                                      src={`/ai_person/${persona.personaImg}.png`}
+                                      alt={persona.persona}
+                                    />
+                                  </Persona>
+                                ))}
+                            </>
+                          ) : (
+                            <Persona size="Small" Round>
+                              <img
+                                src={`/ai_person/${selectedPersonas.personaImg}.png`}
+                                alt={selectedPersonas.persona}
+                              />
+                            </Persona>
+                          )}
+                        </PersonaGroup>
+                      ) : (
+                        <Body2 color="gray500">아래 리스트에서 페르소나를 선택해주세요 (1명 선택가능)</Body2>
+                      )}
+                    </li>
+                  </ListBoxGroup>
+
+                  <OrganismPersonaList
+                    personaListSaas={personaListSaas}
+                    personaImages={personaImages}
+                    selectedPersonaButtons={selectedPersonaButtons}
+                    handlePersonaButtonClick={handlePersonaButtonClick}
+                    onNavigate={navigate}
+                  />
                 </div>
+
+                <Button
+                  Other
+                  Primary
+                  Fill
+                  Round
+                  onClick={() => handleNextStep(2)}
+                  disabled={
+                    businessDescription.trim() === "" ||
+                    targetCustomers.filter((customer) => customer.trim() !== "")
+                      .length === 0 ||
+                    toolStep >= 2
+                  }
+                >
+                  다음
+                </Button>
               </TabContent5>
             )}
 
@@ -1302,7 +1394,7 @@ const PageIdeaGenerator = () => {
                   </CardGroupWrap>
 
                   <BottomBar W100>
-                    <Body2 color="gray800">종합 분석 결과를 확인해보세요</Body2>
+                    <Body2 color="gray800">시나리오 분석을 원하는 페르소나를 선택해주세요</Body2>
                     <Button
                       Large
                       Primary
