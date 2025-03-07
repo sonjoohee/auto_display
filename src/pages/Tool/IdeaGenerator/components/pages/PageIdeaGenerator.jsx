@@ -84,6 +84,7 @@ import {
   TOOL_STEP,
   IDEA_GENERATOR_SELECTED_PERSONA,
   PERSONA_LIST_SAAS,
+  PROJECT_SAAS,
 } from "../../../../AtomStates";
 
 import {
@@ -91,6 +92,8 @@ import {
   updateToolOnServer,
   getToolOnServer,
   getToolListOnServer,
+  getToolListOnServerSaas,
+  getFindToolListOnServerSaas,
   InterviewXIdeaGeneratorPersonaRequest,
   InterviewXIdeaGeneratorIdeaRequest,
   InterviewXIdeaGeneratorClusteringRequest,
@@ -101,7 +104,7 @@ import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
 const PageIdeaGenerator = () => {
   const navigate = useNavigate();
-
+  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
   const [tableData, setTableData] = useState([]);
   const [chartData, setChartData] = useState({});
   const [seletedIdeaIndex, setSeletedIdeaIndex] = useState(null);
@@ -281,30 +284,20 @@ const PageIdeaGenerator = () => {
         const size = 10;
         let allItems = [];
 
-        while (true) {
-          const response = await getToolListOnServer(size, page, isLoggedIn);
+        const response = await getFindToolListOnServerSaas(
+          projectSaas._id,
+          "ix_customer_value_persona",
+          isLoggedIn
+        );
+        console.log("🚀 ~ getAllTargetDiscovery ~ response:", response);
 
-          // Check if response exists and has data
-          if (!response || !response.data) {
-            console.error("Invalid response from server");
-            break;
-          }
+        const newItems = response.filter(
+          (item) =>
+            item?.type === "ix_customer_value_persona" &&
+            item?.completedStep === 4
+        );
 
-          const newItems = response.data.filter(
-            (item) =>
-              item.type === "ix_customer_value_persona" &&
-              item.completed_step === 4
-          );
-
-          allItems = [...allItems, ...newItems];
-
-          // Check if we've reached the end of the data
-          if (!response.count || response.count <= page * size) {
-            break;
-          }
-
-          page++;
-        }
+        allItems = [...allItems, ...newItems];
 
         setCustomerValueList(allItems);
       } catch (error) {
@@ -341,10 +334,9 @@ const PageIdeaGenerator = () => {
         !response?.response.idea_generator_persona ||
         !Array.isArray(response.response.idea_generator_persona) ||
         response.response.idea_generator_persona.length === 0 ||
-        response.response.idea_generator_persona.some(persona => 
-          !persona.name || 
-          !persona.description || 
-          !persona.keywords
+        response.response.idea_generator_persona.some(
+          (persona) =>
+            !persona.name || !persona.description || !persona.keywords
         )
       ) {
         if (attempts >= maxAttempts) {
@@ -446,8 +438,8 @@ const PageIdeaGenerator = () => {
         //   !response ||
         //   !response?.response ||
         //   !response?.response.idea_generator_idea ||
-        //   response.response.idea_generator_idea.some(idea => 
-        //     !idea.economic_value || 
+        //   response.response.idea_generator_idea.some(idea =>
+        //     !idea.economic_value ||
         //     !idea.functional_value ||
         //     !idea.social_value ||
         //     !idea.environmental_value ||
@@ -524,11 +516,12 @@ const PageIdeaGenerator = () => {
         !response1?.response.idea_generator_clustering ||
         !Array.isArray(response1.response.idea_generator_clustering) ||
         response1.response.idea_generator_clustering.length === 0 ||
-        response1.response.idea_generator_clustering.some(cluster => 
-          !cluster.name ||
-          !cluster.ideas ||
-          !Array.isArray(cluster.ideas) ||
-          cluster.ideas.length === 0
+        response1.response.idea_generator_clustering.some(
+          (cluster) =>
+            !cluster.name ||
+            !cluster.ideas ||
+            !Array.isArray(cluster.ideas) ||
+            cluster.ideas.length === 0
         )
       ) {
         if (attempts >= maxAttempts) {
@@ -1026,18 +1019,28 @@ const PageIdeaGenerator = () => {
                                 key={index}
                                 onClick={() => {
                                   handlePurposeSelect(
-                                    item.business,
+                                    `${item.updateDate.split(":")[0]}:${
+                                      item.updateDate.split(":")[1]
+                                    } 고객 핵심 가치 분석기 - 
+                                    ${
+                                      item.selectedCustomerValuePersona.length
+                                    }명
+                                    페르소나 분석`,
                                     "customerList"
                                   );
                                   setTargetCustomers(
-                                    item.customer_value_clustering.map(
+                                    item.customerValueClustering.map(
                                       (subItem) => subItem.cluster_name
                                     )
                                   );
                                 }}
                               >
                                 <Body2 color="gray700" align="left">
-                                  {item.business}
+                                  {item.updateDate.split(":")[0]}:
+                                  {item.updateDate.split(":")[1]} 고객 핵심 가치
+                                  분석기 -
+                                  {item.selectedCustomerValuePersona.length}명
+                                  페르소나 분석
                                 </Body2>
                               </SelectBoxItem>
                             ))
@@ -1056,16 +1059,21 @@ const PageIdeaGenerator = () => {
                       <CustomTextarea
                         disabled={toolStep >= 1}
                         Edit
-                        rows={4}
-                        placeholder="비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
-                        onChange={handleBusinessDescriptionChange}
-                        value={businessDescription}
-                        maxLength={150}
+                        rows={6}
+                        value={
+                          (projectSaas?.projectAnalysis.business_analysis
+                            ? projectSaas?.projectAnalysis.business_analysis
+                            : "") +
+                          (projectSaas?.projectAnalysis.business_analysis &&
+                          projectSaas?.projectAnalysis.file_analysis
+                            ? "\n"
+                            : "") +
+                          (projectSaas?.projectAnalysis.file_analysis
+                            ? projectSaas?.projectAnalysis.file_analysis
+                            : "")
+                        }
                         status="valid"
                       />
-                      <Body2 color="gray300" align="right">
-                        {businessDescription.length} / 150
-                      </Body2>
                     </FormBox>
                   </TabContent5Item>
 
@@ -1333,7 +1341,9 @@ const PageIdeaGenerator = () => {
                           )}
                         </PersonaGroup>
                       ) : (
-                        <Body2 color="gray500">아래 리스트에서 페르소나를 선택해주세요 (1명 선택가능)</Body2>
+                        <Body2 color="gray500">
+                          아래 리스트에서 페르소나를 선택해주세요 (1명 선택가능)
+                        </Body2>
                       )}
                     </li>
                   </ListBoxGroup>
@@ -1394,7 +1404,9 @@ const PageIdeaGenerator = () => {
                   </CardGroupWrap>
 
                   <BottomBar W100>
-                    <Body2 color="gray800">시나리오 분석을 원하는 페르소나를 선택해주세요</Body2>
+                    <Body2 color="gray800">
+                      시나리오 분석을 원하는 페르소나를 선택해주세요
+                    </Body2>
                     <Button
                       Large
                       Primary
@@ -1676,7 +1688,8 @@ const PageIdeaGenerator = () => {
           title={
             <>
               <H4 color="gray800" align="left">
-                "{ideaGeneratorInfo.core_value[seletedIdeaIndex]}" 가치 중심 - 아이디어 도출하기
+                "{ideaGeneratorInfo.core_value[seletedIdeaIndex]}" 가치 중심 -
+                아이디어 도출하기
               </H4>
             </>
           }

@@ -192,9 +192,20 @@ const PageTargetDiscovery = () => {
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
 
+        const projectAnalysis =
+          (project?.projectAnalysis.business_analysis
+            ? project?.projectAnalysis.business_analysis
+            : "") +
+          (project?.projectAnalysis.business_analysis &&
+          project?.projectAnalysis.file_analysis
+            ? "\n"
+            : "") +
+          (project?.projectAnalysis.file_analysis
+            ? project?.projectAnalysis.file_analysis
+            : "");
         // 비즈니스 정보 설정 (Step 1)
         if (project) {
-          setBusinessDescription(project?.projectAnalysis.business_analysis ?? "");
+          setBusinessDescription(projectAnalysis);
           setTargetCustomer(project?.projectAnalysis.target_customer ?? "");
           setSpecificSituation(targetDiscoveryInfo?.specific_situation ?? "");
           setSelectedPurpose(project?.targetCountry ?? "");
@@ -750,16 +761,11 @@ const PageTargetDiscovery = () => {
                           <CustomTextarea
                             disabled={toolStep >= 1}
                             Edit
-                            rows={4}
+                            rows={6}
                             placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
-                            onChange={handleBusinessDescriptionChange}
                             value={businessDescription}
-                            maxLength={150}
                             status="valid"
                           />
-                          <Body2 color="gray300" align="right">
-                            {businessDescription.length} / 150
-                          </Body2>
                         </FormBox>
                       </TabContent5Item>
 
@@ -779,16 +785,11 @@ const PageTargetDiscovery = () => {
                           <CustomTextarea
                             disabled={toolStep >= 1}
                             Edit
-                            rows={4}
+                            rows={5}
                             placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
-                            onChange={handleTargetCustomerChange}
                             value={targetCustomer}
-                            maxLength={150}
                             status="valid"
                           />
-                          <Body2 color="gray300" align="right">
-                            {targetCustomer.length} / 150
-                          </Body2>
                         </FormBox>
                       </TabContent5Item>
 

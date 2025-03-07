@@ -21,7 +21,12 @@ const MoleculePersonaListItem = ({
 }) => {
   return (
     <ListBoxItem NoBorder>
-      <Persona size="Large" icon="OrangeTopLeftStarFill" Round Moder>
+      <Persona
+        size="Large"
+        icon={personaInfo.favorite ? "OrangeTopLeftStarFill" : null}
+        Round
+        Moder
+      >
         <img src={personaImage} />
       </Persona>
       <ListText>

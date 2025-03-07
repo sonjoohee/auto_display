@@ -103,7 +103,6 @@ import OrganismNoPersonaMessage from "../../../public/organisms/OrganismNoPerson
 import MoleculePersonaListItem from "../../../public/molecules/MoleculePersonaListItem";
 import OrganismPersonaList from "../../../public/organisms/OrganismPersonaList";
 
-
 const PageCustomerValueAnalyzer = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -121,10 +120,8 @@ const PageCustomerValueAnalyzer = () => {
     customerValueAnalyzerSelectedPersona,
     setCustomerValueAnalyzerSelectedPersona,
   ] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA);
-  const [
-    customerValueAnalyzerJourneyMap,
-    setCustomerValueAnalyzerJourneyMap,
-  ] = useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
+  const [customerValueAnalyzerJourneyMap, setCustomerValueAnalyzerJourneyMap] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
   const [customerValueAnalyzerFactor, setCustomerValueAnalyzerFactor] = useAtom(
     CUSTOMER_VALUE_ANALYZER_FACTOR
   );
@@ -500,34 +497,50 @@ const PageCustomerValueAnalyzer = () => {
 
   const project = projectSaas;
 
-
   const handleSubmitBusinessInfo = async () => {
     try {
       setIsLoading(true);
 
-      const filteredTargetCustomers = selectedPersonasSaas.flatMap((personaId) => {
-        const prefix = personaId.split('_')[0]; // 접두사 추출 (예: 'macro_segment')
-        return personaListSaas
-          .map((persona, index) => {
-            // personaType이 접두사와 일치하는지 확인
-            if (persona.personaType.startsWith(prefix)) {
-              return persona; // 인덱스 대신 persona 정보를 반환
-            }
-            return null; // 일치하지 않으면 null 반환
-          })
-          .filter(persona => persona !== null); // null 값을 필터링
-      });
-    
+      const filteredTargetCustomers = selectedPersonasSaas.flatMap(
+        (personaId) => {
+          const prefix = personaId.split("_")[0]; // 접두사 추출 (예: 'macro_segment')
+          return personaListSaas
+            .map((persona, index) => {
+              // personaType이 접두사와 일치하는지 확인
+              if (persona.personaType.startsWith(prefix)) {
+                return persona; // 인덱스 대신 persona 정보를 반환
+              }
+              return null; // 일치하지 않으면 null 반환
+            })
+            .filter((persona) => persona !== null); // null 값을 필터링
+        }
+      );
+
       console.log("filteredTargetCustomers", filteredTargetCustomers);
 
-      const selectedCustomers = selectedPersonasSaas.map((personaId) => {
-        const index = parseInt(personaId.split('persona')[1], 10); // 숫자 추출
-        const { personaName, personaCharacteristics, age, gender, job, keywords } = filteredTargetCustomers[index]; // 필요한 필드만 추출
-        return { personaName, personaCharacteristics, age, gender, job, keywords }; // 필요한 필드만 반환
-      }).filter(customer => customer !== undefined); // undefined 필터링
-      
+      const selectedCustomers = selectedPersonasSaas
+        .map((personaId) => {
+          const index = parseInt(personaId.split("persona")[1], 10); // 숫자 추출
+          const {
+            personaName,
+            personaCharacteristics,
+            age,
+            gender,
+            job,
+            keywords,
+          } = filteredTargetCustomers[index]; // 필요한 필드만 추출
+          return {
+            personaName,
+            personaCharacteristics,
+            age,
+            gender,
+            job,
+            keywords,
+          }; // 필요한 필드만 반환
+        })
+        .filter((customer) => customer !== undefined); // undefined 필터링
+
       console.log("selectedCustomers", selectedCustomers);
-      
 
       const businessData = {
         business: project.projectTitle || "",
@@ -563,14 +576,19 @@ const PageCustomerValueAnalyzer = () => {
           isLoggedIn
         );
       }
-
+      const businessUpdateData = {
+        business: project.projectTitle || "",
+        targetList: selectedCustomers,
+        analysisScope: selectedPurposes.analysisScope,
+        analysisPurpose: businessDescription,
+      };
       const responseToolId = await createToolOnServer(
         {
           type: "ix_customer_value_persona",
           projectId: project._id,
           completedStep: 1,
           customerValuePersona: response.response.customer_value_persona,
-          ...businessData,
+          ...businessUpdateData,
         },
         isLoggedIn
       );
@@ -778,7 +796,7 @@ const PageCustomerValueAnalyzer = () => {
 
         const persona = selectedPersonaData[i];
         const requestData = {
-          business: project.projectTitle,          
+          business: project.projectTitle,
           target: persona.target,
           analysis_scope: customerValueAnalyzerInfo.analysis_scope,
           customer_value_journey_map: persona.journeyMap,
@@ -886,10 +904,11 @@ const PageCustomerValueAnalyzer = () => {
       };
 
       // 클러스터링 요청
-      clusteringResponse = await InterviewXCustomerValueAnalyzerClusteringRequest(
-        clusteringData,
-        isLoggedIn
-      );
+      clusteringResponse =
+        await InterviewXCustomerValueAnalyzerClusteringRequest(
+          clusteringData,
+          isLoggedIn
+        );
 
       const maxAttempts = 10;
       let attempts = 0;
@@ -907,10 +926,11 @@ const PageCustomerValueAnalyzer = () => {
         }
         attempts++;
 
-        clusteringResponse = await InterviewXCustomerValueAnalyzerClusteringRequest(
-          clusteringData,
-          isLoggedIn
-        );
+        clusteringResponse =
+          await InterviewXCustomerValueAnalyzerClusteringRequest(
+            clusteringData,
+            isLoggedIn
+          );
       }
 
       setCustomerValueAnalyzerClustering(
@@ -1454,7 +1474,9 @@ const PageCustomerValueAnalyzer = () => {
                         selectedPersonaButtons={selectedPersonaButtons}
                         handlePersonaButtonClick={handlePersonaButtonClick}
                         onNavigate={navigate}
-                        onPersonaSelect={(id) => handlePersonaSelectionChange(id)}
+                        onPersonaSelect={(id) =>
+                          handlePersonaSelectionChange(id)
+                        }
                       />
                     </div>
                     <Button
@@ -1464,7 +1486,9 @@ const PageCustomerValueAnalyzer = () => {
                       Round
                       onClick={() => handleSubmitBusinessInfo()}
                       disabled={
-                        selectedPurposes.analysisScope === "" || getSelectedPersonaCount() === 0 || toolStep >= 1
+                        selectedPurposes.analysisScope === "" ||
+                        getSelectedPersonaCount() === 0 ||
+                        toolStep >= 1
                       }
                     >
                       다음
@@ -1486,28 +1510,34 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
                   <CardGroupWrap column>
-                    {customerValueAnalyzerInfo.target_list.map((target, index) => {
-                   
-                      return (
-                        <MoleculeCustomerValueCard
-                          key={index}
-                          id={index}
-                          title={target.personaName} // title에 문자열을 전달
-                          content={customerValueAnalyzerPersona[index]} // content에 문자열을 전달
-                          business={customerValueAnalyzerInfo.business || "비즈니스 정보 없음"} // 기본값 설정
-                          status={
-                            customerValueAnalyzerJourneyMap.length ===
-                            customerValueAnalyzerInfo.target_list.length
-                              ? "completed"
-                              : cardStatuses[index] || "대기 중" // 기본값 설정
-                          }
-                          isSelected={selectedPersonas.includes(index)}
-                          onSelect={(id) => handleCheckboxChange(id)}
-                          viewType="list"
-                          journeyMapData={customerValueAnalyzerJourneyMap[index] || {}} // 기본값으로 빈 객체 설정
-                        />
-                      );
-                    })}
+                    {customerValueAnalyzerInfo.target_list.map(
+                      (target, index) => {
+                        return (
+                          <MoleculeCustomerValueCard
+                            key={index}
+                            id={index}
+                            title={target.personaName} // title에 문자열을 전달
+                            content={customerValueAnalyzerPersona[index]} // content에 문자열을 전달
+                            business={
+                              customerValueAnalyzerInfo.business ||
+                              "비즈니스 정보 없음"
+                            } // 기본값 설정
+                            status={
+                              customerValueAnalyzerJourneyMap.length ===
+                              customerValueAnalyzerInfo.target_list.length
+                                ? "completed"
+                                : cardStatuses[index] || "대기 중" // 기본값 설정
+                            }
+                            isSelected={selectedPersonas.includes(index)}
+                            onSelect={(id) => handleCheckboxChange(id)}
+                            viewType="list"
+                            journeyMapData={
+                              customerValueAnalyzerJourneyMap[index] || {}
+                            } // 기본값으로 빈 객체 설정
+                          />
+                        );
+                      }
+                    )}
                   </CardGroupWrap>
                   <BottomBar W100>
                     <Body2
@@ -1559,31 +1589,33 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
                   <CardGroupWrap column>
-                    {customerValueAnalyzerSelectedPersona.map((persona, index) => {
-        
-
-                      return (
-                        <MoleculeCustomerValueCard
-                          key={index}
-                          id={index}
-                          title={persona.target.personaName} // title에 문자열을 전달
-                          content={persona.content} // content에 문자열을 전달
-                          status={
-                            customerValueAnalyzerFactor.length ===
-                            customerValueAnalyzerSelectedPersona.length
-                              ? "completed"
-                              : cardStatusesFactor[index]
-                          }
-                          factor={customerValueAnalyzerFactor[index]}
-                          business={project.projectTitle || "비즈니스 정보 없음"} // 기본값 설정
-                          journeyMapData={persona.journeyMap || {}} // 기본값으로 빈 객체 설정
-                          showOnlySelected={true}
-                          hideCheckCircle={true}
-                          activeTab={3}
-                          viewType="list"
-                        />
-                      );
-                    })}
+                    {customerValueAnalyzerSelectedPersona.map(
+                      (persona, index) => {
+                        return (
+                          <MoleculeCustomerValueCard
+                            key={index}
+                            id={index}
+                            title={persona.target.personaName} // title에 문자열을 전달
+                            content={persona.content} // content에 문자열을 전달
+                            status={
+                              customerValueAnalyzerFactor.length ===
+                              customerValueAnalyzerSelectedPersona.length
+                                ? "completed"
+                                : cardStatusesFactor[index]
+                            }
+                            factor={customerValueAnalyzerFactor[index]}
+                            business={
+                              project.projectTitle || "비즈니스 정보 없음"
+                            } // 기본값 설정
+                            journeyMapData={persona.journeyMap || {}} // 기본값으로 빈 객체 설정
+                            showOnlySelected={true}
+                            hideCheckCircle={true}
+                            activeTab={3}
+                            viewType="list"
+                          />
+                        );
+                      }
+                    )}
                   </CardGroupWrap>
 
                   <BottomBar W100>
