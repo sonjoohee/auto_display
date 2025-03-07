@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
@@ -989,7 +988,7 @@ const PageAiPersona = () => {
                     onClick={() => handleTabClick("my_persona")}
                     style={
                       activeTab === "my_persona"
-                        ? { color: "#333333", fontWeight: "600" }
+                        ? { color: "#333333" }
                         : { color: "#999999" }
                     }
                   >
@@ -2341,4 +2340,3 @@ const PersonaStatusWrap = styled.div`
     }
   `}
 `;
-
