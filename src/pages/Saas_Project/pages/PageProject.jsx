@@ -41,6 +41,29 @@ const PageProject = () => {
     setIsWarningPopupOpen(false);
     navigate("/ProjectCreate");
   };
+  useEffect(() => {
+    // 새로고침 감지 함수
+    const detectRefresh = () => {
+      // 1. Performance API 확인
+      // if (performance.navigation && performance.navigation.type === 1) {
+      //   console.log("새로고침 감지: Performance API");
+      //   navigate("/");
+      //   return true;
+      // }
+
+      // 2. 현재 URL 확인
+      const currentUrl = window.location.href;
+
+      // 현재 URL 저장
+      sessionStorage.setItem("lastUrl", currentUrl);
+      const lastUrl = sessionStorage.getItem("lastUrl");
+      console.log("🚀 ~ detectRefresh ~ lastUrl:", lastUrl);
+    };
+    // 함수 실행
+    detectRefresh();
+
+    // 컴포넌트 마운트 시 한 번만 실행
+  }, [navigate]);
 
   useEffect(() => {
     const loadProjectList = async () => {

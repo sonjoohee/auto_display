@@ -33,13 +33,20 @@ import {
   InputText,
 } from "../../../assets/styles/Typography";
 import * as d3 from "d3";
-import { PROJECT_SAAS, PERSONA_LIST_SAAS } from "../../../pages/AtomStates";
+import {
+  PROJECT_SAAS,
+  PERSONA_LIST_SAAS,
+  ACCESS_STATE_SAAS,
+  ACCESS_DASHBOARD,
+} from "../../../pages/AtomStates";
 import { getPersonaListOnServer } from "../../../utils/indexedDB";
 
 const PageDashBoard = () => {
   const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
+  const [accessStateSaas, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
+  const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
   const project = projectSaas;
-  console.log("project", project);
+
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
 
   const navigate = useNavigate();
@@ -73,7 +80,7 @@ const PageDashBoard = () => {
           setPersonaListSaas(sortedList);
         }
       } catch (error) {
-        console.error("프로젝트 목록을 불러오는데 실패했습니다:", error);
+        console.error("페르소나 목록을 불러오는데 실패했습니다:", error);
       }
     };
     loadPersonaList();
@@ -238,8 +245,45 @@ const PageDashBoard = () => {
 
   // 페르소나 카드 클릭 시 AI 페르소나 페이지의 특정 탭으로 이동하는 함수 추가
   const navigateToAiPersonaTab = (tabName) => {
+    setAccessStateSaas(true);
     navigate("/AiPersona", { state: { activeTab: tabName } });
   };
+
+  useEffect(() => {
+    // 새로고침 감지 함수
+    const detectRefresh = () => {
+      // 1. Performance API 확인
+      // if (performance.navigation && performance.navigation.type === 1) {
+      //   console.log("새로고침 감지: Performance API");
+      //   navigate("/");
+      //   return true;
+      // }
+
+      // 2. 현재 URL 확인
+      const currentUrl = window.location.href;
+      if (currentUrl.toLowerCase().includes("dashboard")) {
+        // 세션 스토리지에서 마지막 URL 가져오기
+        const lastUrl = sessionStorage.getItem("lastUrl");
+
+        // 마지막 URL이 현재 URL과 같으면 새로고침
+        if (lastUrl && lastUrl === currentUrl) {
+          console.log("새로고침 감지: URL 비교");
+          navigate("/");
+          return true;
+        }
+
+        // 현재 URL 저장
+        sessionStorage.setItem("lastUrl", currentUrl);
+      }
+
+      return false;
+    };
+
+    // 함수 실행
+    detectRefresh();
+
+    // 컴포넌트 마운트 시 한 번만 실행
+  }, [navigate]);
 
   return (
     <>
@@ -283,7 +327,7 @@ const PageDashBoard = () => {
                 </CardTitle>
                 <CardContent>
                   <Body3 color="gray800">
-                    {project?.projectAnalysis.business_analysis}
+                    {project?.projectAnalysis?.business_analysis}
                   </Body3>
                 </CardContent>
               </Card>

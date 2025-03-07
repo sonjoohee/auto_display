@@ -8,7 +8,8 @@ import { Button } from "../../../../assets/styles/ButtonStyle";
 import { Body2 } from "../../../../assets/styles/Typography";
 import { useAtom } from "jotai";
 import AtomPersonaLoader from "../../../Global/atoms/AtomPersonaLoader";
-
+import { Sub3 } from "../../../../assets/styles/Typography";
+import { css } from "styled-components";
 import {
   createPersonaOnServer,
   updatePersonaOnServer,
@@ -219,20 +220,31 @@ const OrganismEmptyPersona = () => {
   };
 
   return (
-    <EmptyStateWrapper>
+    <EmptyStateWrapper
+      disabled={isLoading}
+      onClick={isLoading ? undefined : handleCreatePersona}
+    >
       {isLoading ? (
         <AtomPersonaLoader message="페르소나를 생성하고 있습니다." />
       ) : (
         <EmptyStateContent>
-          <EmptyIcon>
-            <img src={images.FileFill} alt="빈 프로젝트" />
-          </EmptyIcon>
-          <EmptyText>
-            <Body2 color="gray500">아직 생성된 페르소나가 없습니다.</Body2>
-            <Body2 color="gray500">지금 바로 AI 페르소나를 만들어보세요</Body2>
-          </EmptyText>
-          <Button Other Primary Round onClick={handleCreatePersona}>
-            <Body2 color="primary">페르소나 생성</Body2>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "12px",
+            }}
+          >
+            <img src={images.PeopleFillPrimary2} alt="" />
+            <Sub3 color="gray700">
+              아직 생성된 페르소나가 없습니다.
+              <br />
+              지금 바로 AI 페르소나를 만들어보세요
+            </Sub3>
+          </div>
+          <Button Medium Outline Fill>
+            AI Person 생성
           </Button>
         </EmptyStateContent>
       )}
@@ -249,6 +261,16 @@ const EmptyStateWrapper = styled.div`
   background: ${palette.white};
   border-radius: 10px;
   border: 1px solid ${palette.outlineGray};
+  transition: all 0.2s ease-in-out;
+  ${(props) =>
+    !props.disabled &&
+    css`
+      &:hover {
+        border-color: ${palette.primary};
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        transform: translateY(-2px);
+      }
+    `}
 `;
 
 const EmptyStateContent = styled.div`

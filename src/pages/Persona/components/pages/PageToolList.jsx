@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import styled, { css } from "styled-components";
@@ -1065,6 +1066,43 @@ const PageToolList = () => {
     return () => clearInterval(interval);
   }, []);
 
+    useEffect(() => {
+    // 새로고침 감지 함수
+    const detectRefresh = () => {
+      // 1. Performance API 확인
+      // if (performance.navigation && performance.navigation.type === 1) {
+      //   console.log("새로고침 감지: Performance API");
+      //   navigate("/");
+      //   return true;
+      // }
+
+      // 2. 현재 URL 확인
+      const currentUrl = window.location.href;
+      if (currentUrl.toLowerCase().includes("tool")) {
+        // 세션 스토리지에서 마지막 URL 가져오기
+        const lastUrl = sessionStorage.getItem("lastUrl");
+
+        // 마지막 URL이 현재 URL과 같으면 새로고침
+        if (lastUrl && lastUrl === currentUrl) {
+          console.log("새로고침 감지: URL 비교");
+          navigate("/");
+          return true;
+        }
+
+        // 현재 URL 저장
+        sessionStorage.setItem("lastUrl", currentUrl);
+      }
+
+      return false;
+    };
+
+    // 함수 실행
+    detectRefresh();
+
+    // 컴포넌트 마운트 시 한 번만 실행
+  }, [navigate]);
+
+  
   return (
     <>
       <ContentsWrap>
@@ -1897,3 +1935,4 @@ const Popup = styled.div`
       `}
   }
 `;
+
