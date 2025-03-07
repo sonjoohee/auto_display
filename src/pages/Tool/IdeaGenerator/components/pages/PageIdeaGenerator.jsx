@@ -1394,7 +1394,7 @@ const PageIdeaGenerator = () => {
                   </CardGroupWrap>
 
                   <BottomBar W100>
-                    <Body2 color="gray800">종합 분석 결과를 확인해보세요</Body2>
+                    <Body2 color="gray800">시나리오 분석을 원하는 페르소나를 선택해주세요</Body2>
                     <Button
                       Large
                       Primary
