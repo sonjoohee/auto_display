@@ -27,6 +27,7 @@ import {
   IDEA_GENERATOR_INFO,
   CUSTOMER_VALUE_ANALYZER_INFO,
   DESIGN_ANALYSIS_BUSINESS_INFO,
+  PROJECT_SAAS,
 } from "../../../pages/AtomStates";
 import OrganismBusinessAnalysis from "../../../pages/Persona/components/organisms/OrganismBusinessAnalysis";
 import { UserCreditInfo } from "../../../utils/indexedDB";
@@ -50,6 +51,7 @@ const MoleculeHeader = () => {
   const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
     TARGET_DISCOVERY_INFO
   );
+  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
   const [ideaGeneratorInfo, setIdeaGeneratorInfo] =
     useAtom(IDEA_GENERATOR_INFO);
   const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(
@@ -264,9 +266,9 @@ const MoleculeHeader = () => {
                 // : isTargetDiscoveryPage && !targetDiscoveryInfo.business
                 : isTargetDiscoveryPage
                 ? "타겟 탐색기"
-                : isIdeaGeneratorPage && ideaGeneratorInfo.business
-                ? `아이디어 생성기 - ${ideaGeneratorInfo.business}`
-                : isIdeaGeneratorPage && !ideaGeneratorInfo.business
+                : isIdeaGeneratorPage && projectSaas.projectTitle
+                ? `아이디어 생성기 - ${projectSaas.projectTitle}`
+                : isIdeaGeneratorPage && !projectSaas.projectTitle
                 ? "아이디어 생성기"
                 : isCustomerValueAnalyzerPage &&
                   customerValueAnalyzerInfo.business

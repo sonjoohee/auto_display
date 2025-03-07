@@ -102,6 +102,8 @@ import {
 
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
+
+
 const PageIdeaGenerator = () => {
   const navigate = useNavigate();
   const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
@@ -155,6 +157,7 @@ const PageIdeaGenerator = () => {
   const analysisScopeRef = useRef(null);
 
   const [customerValueList, setCustomerValueList] = useState([]);
+  const [selectedPersonasSaas, setSelectedPersonasSaas] = useState([]);
 
   const [ideaGeneratorInfo, setIdeaGeneratorInfo] =
     useAtom(IDEA_GENERATOR_INFO);
@@ -357,8 +360,9 @@ const PageIdeaGenerator = () => {
       updateToolOnServer(
         toolId,
         {
-          idea_generator_persona: response.response.idea_generator_persona,
-          idea_generator_know_target: ideaGeneratorKnowTarget,
+          projectId: projectSaas.projectId,
+          ideaGeneratorPersona: response.response.idea_generator_persona,
+          ideaGeneratorKnowTarget: ideaGeneratorKnowTarget,
         },
         isLoggedIn
       );
@@ -417,14 +421,51 @@ const PageIdeaGenerator = () => {
           [index]: "loading",
         }));
 
+
+        const filteredTargetCustomers = selectedPersonasSaas.flatMap(
+          (personaId) => {
+            const prefix = personaId.split("_")[0]; // 접두사 추출 (예: 'macro_segment')
+            return personaListSaas
+              .map((persona, index) => {
+                // personaType이 접두사와 일치하는지 확인
+                if (persona.personaType.startsWith(prefix)) {
+                  return persona; // 인덱스 대신 persona 정보를 반환
+                }
+                return null; // 일치하지 않으면 null 반환
+              })
+              .filter((persona) => persona !== null); // null 값을 필터링
+          }
+        );
+  
+        const selectedCustomers = selectedPersonasSaas.reduce((acc, personaId) => {
+          const index = parseInt(personaId.split("persona")[1], 10); // 숫자 추출
+          const customer = filteredTargetCustomers[index]; // 필요한 필드만 추출
+          if (customer) {
+            const { personaName, personaCharacteristics, age, gender, job, keywords } = customer;
+            acc.push({ personaName, personaCharacteristics, age, gender, job, keywords }); // 필요한 필드만 반환
+          }
+          return acc;
+        }, []); // undefined 필터링
+     
+
+        setIdeaGeneratorSelectedPersona(selectedCustomers);
+
         const data = {
           business: ideaGeneratorInfo.business,
           core_value: ideaGeneratorInfo.core_value[index],
           core_target:
-            selectedInterviewType === "yesTarget"
-              ? selectedCustomPersona
-              : ideaGeneratorPersona[selectedPersona],
+              selectedCustomers,
         };
+
+        await updateToolOnServer(
+          toolId,
+          {
+            projectId: projectSaas.projectId,
+            ideaGeneratorSelectedPersona: selectedCustomers,
+          },
+          isLoggedIn
+        );
+  
 
         const response = await InterviewXIdeaGeneratorIdeaRequest(
           data,
@@ -481,7 +522,8 @@ const PageIdeaGenerator = () => {
       await updateToolOnServer(
         toolId,
         {
-          idea_generator_idea: results,
+          projectId: projectSaas.projectId,
+          ideaGeneratorIdea: results,
         },
         isLoggedIn
       );
@@ -582,9 +624,10 @@ const PageIdeaGenerator = () => {
       updateToolOnServer(
         toolId,
         {
-          completed_step: 4,
-          idea_generator_clustering: clusteringData,
-          idea_generator_final_report: finalReportData,
+          projectId: projectSaas.projectId,
+          completedStep: 4,
+          ideaGeneratorClustering: clusteringData,
+          ideaGeneratorFinalReport: finalReportData,
         },
         isLoggedIn
       );
@@ -682,11 +725,25 @@ const PageIdeaGenerator = () => {
     }
   };
 
+  const handlePersonaSelectionChange = (index) => {
+    // if (toolStep >= 2) return;
+    setSelectedPersonasSaas((prev) => {
+      if (prev.includes(index)) {
+        return prev.filter((id) => id !== index);
+      } else {
+        if (prev.length >= 5) return prev;
+        return [...prev, index];
+      }
+    });
+  };
+
+
+
   // 다음 단계로 이동하는 함수
   const handleNextStep = async (currentStep) => {
     if (currentStep === 1) {
       setIdeaGeneratorInfo({
-        business: businessDescription,
+        business: projectSaas.projectTitle,
         core_value: targetCustomers.filter((value) => value !== ""),
       });
 
@@ -694,10 +751,11 @@ const PageIdeaGenerator = () => {
 
       const responseToolId = await createToolOnServer(
         {
+          projectId: projectSaas.projectId,
           type: "ix_idea_generator_persona",
-          completed_step: 1,
-          business: businessDescription,
-          core_value: targetCustomers.filter((value) => value !== ""),
+          completedStep: 1,
+          business: projectSaas.projectTitle,
+          coreValue: targetCustomers.filter((value) => value !== ""),
         },
         isLoggedIn
       );
@@ -712,20 +770,23 @@ const PageIdeaGenerator = () => {
         updateToolOnServer(
           toolId,
           {
-            idea_generator_selected_persona: selectedCustomPersona,
-            idea_generator_persona: selectedCustomPersona,
+            projectId: projectSaas.projectId,
+            ideaGeneratorSelectedPersona: selectedCustomPersona,
+            ideaGeneratorPersona: selectedCustomPersona,
           },
           isLoggedIn
         );
       } else {
         // 아직 잘 모르겠습니다
-        setIdeaGeneratorSelectedPersona(ideaGeneratorPersona[selectedPersona]);
+
+        
 
         updateToolOnServer(
           toolId,
           {
-            idea_generator_selected_persona:
-              ideaGeneratorPersona[selectedPersona],
+            projectId: projectSaas.projectId,
+            ideaGeneratorSelectedPersona:
+              ideaGeneratorPersona,
           },
           isLoggedIn
         );
@@ -736,8 +797,9 @@ const PageIdeaGenerator = () => {
       updateToolOnServer(
         toolId,
         {
-          completed_step: 2,
-          idea_generator_know_target:
+          projectId: projectSaas.projectId,
+          completedStep: 2,
+          ideaGeneratorKnowTarget:
             selectedInterviewType === "yesTarget" ? true : false,
         },
         isLoggedIn
@@ -748,7 +810,8 @@ const PageIdeaGenerator = () => {
       updateToolOnServer(
         toolId,
         {
-          completed_step: 3,
+          projectId: projectSaas.projectId,
+          completedStep: 3,
         },
         isLoggedIn
       );
@@ -885,6 +948,42 @@ const PageIdeaGenerator = () => {
       [personaId]: !prev[personaId],
     }));
   };
+
+    useEffect(() => {
+    // 새로고침 감지 함수
+    const detectRefresh = () => {
+      // 1. Performance API 확인
+      // if (performance.navigation && performance.navigation.type === 1) {
+      //   console.log("새로고침 감지: Performance API");
+      //   navigate("/");
+      //   return true;
+      // }
+
+      // 2. 현재 URL 확인
+      const currentUrl = window.location.href;
+      if (currentUrl.toLowerCase().includes("ideagenerator")) {
+        // 세션 스토리지에서 마지막 URL 가져오기
+        const lastUrl = sessionStorage.getItem("lastUrl");
+
+        // 마지막 URL이 현재 URL과 같으면 새로고침
+        if (lastUrl && lastUrl === currentUrl) {
+          console.log("새로고침 감지: URL 비교");
+          navigate("/");
+          return true;
+        }
+
+        // 현재 URL 저장
+        sessionStorage.setItem("lastUrl", currentUrl);
+      }
+
+      return false;
+    };
+
+    // 함수 실행
+    detectRefresh();
+
+    // 컴포넌트 마운트 시 한 번만 실행
+  }, [navigate]);
 
   return (
     <>
@@ -1302,25 +1401,26 @@ const PageIdeaGenerator = () => {
                 </div> */}
 
                 <div className="content">
-                  <ListBoxGroup style={{ marginBottom: "24px" }}>
+                <ListBoxGroup style={{ marginBottom: "24px" }}>
                     <li>
-                      <Body2 color="gray500">분석 핵심 가치 </Body2>
+                      <Body2 color="gray500">분석 핵심 가치</Body2>
                       <div>
-                        <span>#핵심가치치</span>
-                        <span>#핵심가치치</span>
-                        <span>#핵심가치치</span>
+                        <span>
+                          {targetCustomers.map((customer) => `#${customer}`).join(" ")}
+                        </span>
                       </div>
                     </li>
                     <li>
                       <Body2 color="gray500">페르소나 선택</Body2>
-                      {selectedPersonas ? (
+                       {console.log("selectedPersonasSaas",selectedPersonasSaas)}
+                      {selectedPersonasSaas ? (
                         <PersonaGroup>
-                          {Array.isArray(selectedPersonas) ? (
+                          {Array.isArray(selectedPersonasSaas) ? (
                             <>
-                              {selectedPersonas.length > 3 && (
-                                <span>+{selectedPersonas.length - 3}</span>
+                              {selectedPersonasSaas.length > 3 && (
+                                <span>+{selectedPersonasSaas.length - 3}</span>
                               )}
-                              {selectedPersonas
+                              {selectedPersonasSaas
                                 .slice(0, 3)
                                 .map((persona, index) => (
                                   <Persona key={index} size="Small" Round>
@@ -1334,8 +1434,8 @@ const PageIdeaGenerator = () => {
                           ) : (
                             <Persona size="Small" Round>
                               <img
-                                src={`/ai_person/${selectedPersonas.personaImg}.png`}
-                                alt={selectedPersonas.persona}
+                                src={`/ai_person/${selectedPersonasSaas.personaImg}.png`}
+                                alt={selectedPersonasSaas.persona}
                               />
                             </Persona>
                           )}
@@ -1354,6 +1454,9 @@ const PageIdeaGenerator = () => {
                     selectedPersonaButtons={selectedPersonaButtons}
                     handlePersonaButtonClick={handlePersonaButtonClick}
                     onNavigate={navigate}
+                    onPersonaSelect={(id) =>
+                      handlePersonaSelectionChange(id)
+                    }
                   />
                 </div>
 
@@ -1864,22 +1967,10 @@ const PageIdeaGenerator = () => {
                             const socialValueIdeas =
                               ideaGeneratorIdea[seletedIdeaIndex]?.social_value;
 
-                            // console.log(
-                            //   "🚀 ~ PageIdeaGenerator ~ socialValueIdeas1111111111:",
-                            //   socialValueIdeas
-                            // );
                             if (Array.isArray(socialValueIdeas)) {
-                              // console.log(
-                              //   "🚀 ~ PageIdeaGenerator ~ socialValueIdeas222222222:",
-                              //   socialValueIdeas[0]
-                              // );
                               // 첫 번째 요소가 배열인 경우
                               return socialValueIdeas[0].solution;
                             } else {
-                              // console.log(
-                              //   "🚀 ~ PageIdeaGenerator ~ socialValueIdeas3333333333:",
-                              //   socialValueIdeas
-                              // );
                               // 직접 배열인 경우
                               return socialValueIdeas.solution;
                             }
