@@ -1345,8 +1345,23 @@ const PageIdeaGenerator = () => {
                     handlePersonaButtonClick={handlePersonaButtonClick}
                     onNavigate={navigate}
                   />
-
                 </div>
+
+                <Button
+                  Other
+                  Primary
+                  Fill
+                  Round
+                  onClick={() => handleNextStep(2)}
+                  disabled={
+                    businessDescription.trim() === "" ||
+                    targetCustomers.filter((customer) => customer.trim() !== "")
+                      .length === 0 ||
+                    toolStep >= 2
+                  }
+                >
+                  다음
+                </Button>
               </TabContent5>
             )}
 
