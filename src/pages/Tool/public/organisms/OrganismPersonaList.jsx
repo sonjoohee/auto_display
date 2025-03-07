@@ -15,6 +15,7 @@ const OrganismPersonaList = ({
   selectedPersonaButtons,
   handlePersonaButtonClick,
   onNavigate,
+  onPersonaSelect,
 }) => {
   const [activeTab, setActiveTab] = useState("my_persona");
 
@@ -93,10 +94,11 @@ const OrganismPersonaList = ({
                     badgeText={persona.badgeText || ""}
                     personaId={persona.id || `persona${index}`}
                     isSelected={
-                      selectedPersonaButtons[persona.id || `persona${index}`]
+                      selectedPersonaButtons[`${activeTab}_${persona.id || `persona${index}`}`]
                     }
                     personaInfo={persona || ""}
-                    onPersonaButtonClick={handlePersonaButtonClick}
+                    onPersonaButtonClick={(id) => handlePersonaButtonClick(`${activeTab}_${id}`)}
+                    onSelect={(id) => onPersonaSelect(`${activeTab}_${id}`)}
                   />
                 ))}
             </ListBoxWrap>
