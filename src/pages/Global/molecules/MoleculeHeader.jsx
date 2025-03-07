@@ -259,9 +259,10 @@ const MoleculeHeader = () => {
                 ? businessAnalysis.title
                 : isPersona4PageSingle && businessAnalysis.title
                 ? businessAnalysis.title
-                : isTargetDiscoveryPage && targetDiscoveryInfo.business
-                ? `타겟 탐색기 - ${targetDiscoveryInfo.business}`
-                : isTargetDiscoveryPage && !targetDiscoveryInfo.business
+                // : isTargetDiscoveryPage && targetDiscoveryInfo.business
+                // ? `타겟 탐색기 - ${targetDiscoveryInfo.business}`
+                // : isTargetDiscoveryPage && !targetDiscoveryInfo.business
+                : isTargetDiscoveryPage
                 ? "타겟 탐색기"
                 : isIdeaGeneratorPage && ideaGeneratorInfo.business
                 ? `아이디어 생성기 - ${ideaGeneratorInfo.business}`

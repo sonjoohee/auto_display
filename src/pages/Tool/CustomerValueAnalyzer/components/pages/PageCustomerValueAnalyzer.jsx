@@ -79,6 +79,8 @@ import {
   CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR,
   SELECTED_INTERVIEW_PURPOSE_DATA,
   CREDIT_INDEPTH_INTERVIEW,
+  PROJECT_SAAS,
+  PERSONA_LIST_SAAS, 
 } from "../../../../AtomStates";
 
 import {
@@ -95,9 +97,13 @@ import {
 } from "../../../../../utils/indexedDB";
 
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
+import OrganismNoPersonaMessage from "../organisms/OrganismNoPersonaMessage"; // Organism 이름으로 변경
+
 
 const PageCustomerValueAnalyzer = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
+  console.log("personaListSaas", personaListSaas);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -1303,14 +1309,7 @@ const PageCustomerValueAnalyzer = () => {
                       </ListBoxGroup>
 
                       <CustomerValueWrap NoData>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                          <img src={images.PeopleFillPrimary2} alt="" />
-                          <Sub3 color="gray700">
-                            현재 분석할 페르소나가 없습니다<br />
-                            AI Person을 생성 한 후 다시 분석툴을 활용해주세요 
-                          </Sub3>
-                        </div>
-                        <Button Medium Outline Fill>AI Person 확인하기</Button>
+                        <OrganismNoPersonaMessage />
                       </CustomerValueWrap>
 
                       <CustomerValueWrap>
@@ -2318,16 +2317,6 @@ const PageCustomerValueAnalyzer = () => {
           body={
             <>
               <ListGroup>
-                <div>
-                  <Body1 color="gray800" align="left">
-                    뛰어난 지속력
-                  </Body1>
-                  <Sub3 color="gray800" align="left">
-                    시간에 민감한 페르소나에게 수정 화장은 시간 낭비이자 업무
-                    효율 저하의 원인입니다. 하루 종일 지속되는 메이크업은 그녕의
-                    프로페셔널한 이미지 유지와 업무 집중도 향상에 직결됩니다.
-                  </Sub3>
-                </div>
                 <div>
                   <Body1 color="gray800" align="left">
                     뛰어난 지속력
