@@ -507,15 +507,24 @@ const CustomButton = styled(Button)`
     css`
       position: relative;
       justify-content: ${props.children === "호출중"
-        ? "space-between"
+        ? "center"
         : "center"};
       // border: 1px solid ${palette.outlineGray} !important;
+      border: ${props.children === "호출중" 
+        ? `1px solid ${palette.outlineGray}` 
+        : `0`};
       background: ${palette.chatGray} !important;
       color: ${palette.gray700} !important;
       opacity: ${(props) => (props.children === "호출중" ? 1 : 0.5)};
 
       ${props.children === "호출중" &&
       css`
+        font-size: 0;
+        line-height: 0;
+        min-height: 30px;
+        border: 1px solid ${palette.primaryLightest} !important;
+        background: ${palette.primaryLightest} !important;
+
         &:after {
           content: "";
           width: 3px;
@@ -528,6 +537,24 @@ const CustomButton = styled(Button)`
           box-shadow: -10px 0 ${palette.white}, 10px 0 ${palette.white};
           box-sizing: border-box;
           animation: shadowPulse 2s linear infinite;
+        }
+
+        &:before {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 0;
+          height: 100%;
+          border-radius: 4px;
+          background: ${palette.primary};
+          animation: prog 5s linear infinite;
+          content: '';
+        }
+
+        @keyframes prog {
+          to  {
+            width: 100%;
+          }
         }
 
         @keyframes shadowPulse {

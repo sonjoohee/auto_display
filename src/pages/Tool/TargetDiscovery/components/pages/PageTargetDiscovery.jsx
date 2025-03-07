@@ -734,7 +734,7 @@ const PageTargetDiscovery = () => {
                       <TabContent5Item required>
                         <div className="title">
                           <Body1 color="gray700">비즈니스 설명</Body1>
-                          <Body1 color="red">*</Body1>
+                          {/* <Body1 color="red">*</Body1> */}
                         </div>
                         <FormBox Large>
                           <CustomTextarea
@@ -756,15 +756,30 @@ const PageTargetDiscovery = () => {
                       <TabContent5Item required>
                         <div className="title">
                           <Body1 color="gray700">타겟 고객</Body1>
-                          <Body1 color="red">*</Body1>
+                          {/* <Body1 color="red">*</Body1> */}
                         </div>
-                        <CustomInput
+                        {/* <CustomInput
                           disabled={toolStep >= 1}
                           type="text"
                           placeholder="핵심 타겟 고객 군을 작성해주세요 (예: 20대 여성 등)"
                           value={targetCustomer}
                           onChange={handleTargetCustomerChange}
-                        />
+                        /> */}
+                        <FormBox Large>
+                          <CustomTextarea
+                            disabled={toolStep >= 1}
+                            Edit
+                            rows={4}
+                            placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
+                            onChange={handleTargetCustomerChange}
+                            value={targetCustomer}
+                            maxLength={150}
+                            status="valid"
+                          />
+                          <Body2 color="gray300" align="right">
+                            {targetCustomer.length} / 150
+                          </Body2>
+                        </FormBox>
                       </TabContent5Item>
 
                       <TabContent5Item>
@@ -782,7 +797,7 @@ const PageTargetDiscovery = () => {
                         />
                       </TabContent5Item>
 
-                      <TabContent5Item>
+                      {/* <TabContent5Item>
                         <div className="title">
                           <Body1 color="gray700">타겟 국가</Body1>
                         </div>
@@ -848,7 +863,7 @@ const PageTargetDiscovery = () => {
                             </SelectBoxList>
                           )}
                         </SelectBox>
-                      </TabContent5Item>
+                      </TabContent5Item> */}
                     </div>
 
                     <Button

@@ -68,6 +68,15 @@ export const SelectBoxItem = styled.div`
   gap: 4px;
   cursor: pointer;
   transition: all 0.5s;
+  padding: 13px 20px;
+  
+  /* Body1과 Body2를 가로로 배치하기 위한 스타일 */
+  > div {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
 
   &:hover {
     background-color: ${palette.primaryLightest};

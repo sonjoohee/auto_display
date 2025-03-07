@@ -654,6 +654,20 @@ export const Badge = styled.div`
       ? palette.primary
       : props.Check
       ? palette.gray700
+      : props.UniqueHaker
+      ? "#E90102"
+      : props.UniqueLead
+      ? "#20B1EA"
+      : props.UniqueSuper
+      ? "#5471AB"
+      : props.UniqueEarly
+      ? "#8B61D1"
+      : props.UniqueInnovator
+      ? "#FC6602"
+      : props.UniqueNon
+      ? "#B1A098"
+      : props.UniqueCritic
+      ? "#FFBB52"
       : palette.gray500};
   line-height: ${(props) => (props.classBasic || props.New ? "1.5" : "1.2")};
   padding: ${(props) =>
@@ -674,20 +688,32 @@ export const Badge = styled.div`
       ? `1px solid rgba(52, 199, 89, 0.10)`
       : props.Custom
       ? `1px solid rgba(34, 111, 255, 0.10)`
-      : props.None
-      ? `none`
-      : props.Keyword
+      : props.None || props.Keyword || props.classBasic
       ? `none`
       : props.Complete
       ? `1px solid ${palette.green}`
-      : props.classBasic
-      ? `none`
       : props.Request
       ? `1px solid ${palette.outlineGray}`
       : props.Ing
       ? `1px solid rgba(34, 111, 255, 0.50)`
       : props.Check
       ? `1px solid ${palette.gray300}`
+      : props.UniqueHaker
+      ? `1px solid #E90102`
+      : props.UniqueLead
+      ? `1px solid #20B1EA`
+      : props.UniqueSuper
+      ? `1px solid #5471AB`
+      : props.UniqueEarly
+      ? `1px solid #8B61D1`
+      : props.UniqueInnovator
+      ? `1px solid #FC6602`
+      : props.UniqueNon
+      ? `1px solid #B1A098`
+      : props.UniqueCritic
+      ? `1px solid #FFBB52`
+      : props.Saas
+      ? `1px solid ${palette.gray500}`
       : palette.gray200};
   background: ${(props) =>
     props.Basic
@@ -704,6 +730,20 @@ export const Badge = styled.div`
       ? `rgba(34, 111, 255, 0.04)`
       : props.Check
       ? `rgba(185, 185, 185, 0.04)`
+      : props.UniqueHaker
+      ? `#FEF0F0`
+      : props.UniqueLead
+      ? `#F2FBFE`
+      : props.UniqueSuper
+      ? `#F5F7FA`
+      : props.UniqueEarly
+      ? `#F8F6FD`
+      : props.UniqueInnovator
+      ? `#FFF6F0`
+      : props.UniqueNon
+      ? `#FBFAF9`
+      : props.UniqueCritic
+      ? `#FFFBF5`
       : palette.white};
 
   ${(props) =>
@@ -1535,13 +1575,14 @@ export const Persona = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: ${(props) => (props.Round ? "50%" : "0")};
+  // border-radius: ${(props) => (props.Round ? "50%" : "0")};
   overflow: ${(props) => (props.Moder ? "initial" : "hidden")};
 
   > img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: ${(props) => (props.Round ? "50%" : "0")};
   }
 
   &:before {
@@ -1972,6 +2013,18 @@ export const Persona = styled.div`
               center no-repeat #ff9500;
           }
         `;
+      case "OrangeTopLeftStarFill":
+        return css`
+          &:before {
+            top: 0;
+            left: 0;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M5.02641 1.5398C5.42467 0.732825 6.5754 0.732827 6.97366 1.5398L8.07072 3.76269C8.12344 3.8695 8.22534 3.94354 8.34322 3.96067L10.7963 4.31712C11.6869 4.44653 12.0425 5.54093 11.3981 6.16907L9.62298 7.89935C9.53768 7.98249 9.49875 8.10229 9.51889 8.21969L9.93793 10.6629C10.0901 11.5498 9.1591 12.2262 8.36257 11.8074L6.16845 10.6539C6.06301 10.5985 5.93706 10.5985 5.83162 10.6539L3.63751 11.8074C2.84097 12.2262 1.91002 11.5498 2.06214 10.6629L2.48118 8.21969C2.50132 8.10229 2.46239 7.98249 2.3771 7.89935L0.602018 6.16907C-0.0423914 5.54093 0.313204 4.44653 1.20375 4.31712L3.65685 3.96067C3.77473 3.94354 3.87663 3.8695 3.92935 3.76269L5.02641 1.5398Z' fill='%23FF9500'/%3E%3C/svg%3E")
+              center no-repeat #FFF5E6;
+          }
+        `;
       case "OrangeTopStar":
         return css`
           &:before {
@@ -2218,7 +2271,7 @@ export const ListBoxGroup = styled.ul`
     display: flex;
     align-items: center;
 
-    div:nth-child(1) {
+    > div:nth-child(1) {
       min-width: 110px;
       width: 100px;
     }
@@ -2269,7 +2322,13 @@ export const ListBoxItem = styled.div`
   padding: ${(props) => (props.Small ? "12px 20px" : "24px 20px")};
   border-radius: 10px;
   border: 1px solid
-    ${(props) => (props.active ? palette.primary : palette.outlineGray)};
+    ${(props) => (
+      props.NoBorder 
+      ? "none" 
+      : props.active 
+      ? palette.primary 
+      : palette.outlineGray
+    )};
   background: ${(props) =>
     props.NoBg
       ? palette.white
@@ -2378,6 +2437,18 @@ export const ListBoxWrap = styled.div`
   flex-direction: column;
   gap: 32px;
   width: 100%;
+
+  ${(props) =>
+    props.Border &&
+    css`
+      gap: 4px;
+      
+      > div {
+        + div {
+          border-top: 1px solid ${palette.outlineGray};
+        }
+      }
+    `}
 `;
 
 export const ListBoxTitle = styled.div`
@@ -3585,6 +3656,14 @@ export const PersonaInfo = styled.div`
       content: "";
     }
   }
+
+  ${props => props.None && css`
+    span {
+      + span:before {
+        display: none;
+      }
+    }
+  `}
 `;
 
 export const SwitchToggle = styled.div`
