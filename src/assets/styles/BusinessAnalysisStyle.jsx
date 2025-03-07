@@ -2261,11 +2261,17 @@ export const ListGroup = styled.div`
 export const ListBoxGroup = styled.ul`
   display: flex;
   flex-direction: column;
+  align-items: ${(props) => (props.Center ? "center" : "normal")};
+  justify-content: ${(props) => (props.Center ? "center" : "normal")};
   gap: ${(props) => (props.Small ? "12px" : "20px")};
   width: 100%;
   padding: 20px;
   border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
+  border: ${(props) => (props.NoData ? `2px dashed ${palette.outlineGray}` : `1px solid ${palette.outlineGray}`)};
+
+  > div {
+    width: 100%;
+  }
 
   li {
     display: flex;
@@ -2616,11 +2622,14 @@ export const TypeButton = styled.button`
 export const BoxWrap = styled.div`
   width: 100%;
   display: flex;
-  align-items: flex-start !important;
+  flex-direction: ${(props) => (props.NoData ? "column" : "row")};
+  align-items: ${(props) => (props.Column || props.NoData ? "center !important" : "flex-start !important")};
+  justify-content: ${(props) => (props.NoData ? "center" : "normal")};
   gap: 20px !important;
+  height: ${(props) => (props.NoData ? "200px" : "auto")};
   padding: ${(props) => (props.Small ? "16px 20px" : "20px 24px")};
   border-radius: 15px;
-  border: 1px solid ${palette.outlineGray};
+  border: ${(props) => (props.NoData ? `1px dashed ${palette.outlineGray}` : `1px solid ${palette.outlineGray}`)};
 
   div,
   p,
@@ -2633,7 +2642,8 @@ export const BoxWrap = styled.div`
     css`
       flex-direction: column;
       gap: 0 !important;
-    `}
+    `
+  }
 `;
 
 export const InterviewPopup = styled.div`

@@ -317,7 +317,7 @@ import Tools from "../images/tools.svg";
 import Star from "../images/Star.svg";
 import StarFill from "../images/StarFill.svg";
 
-
+import NoData from "../images/Nodata.svg";
 
 const images = {
   Logo,
@@ -625,6 +625,8 @@ const images = {
 
   Star,
   StarFill,
+
+  NoData,
 }
 
 export default images;

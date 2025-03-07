@@ -16,6 +16,7 @@ import images from "../../../../assets/styles/Images";
 import personaImages from "../../../../assets/styles/PersonaImages";
 import { palette } from "../../../../assets/styles/Palette";
 import MoleculePersonaSelectCard from "../../../Persona/components/molecules/MoleculePersonaSelectCard";
+import OrganismPersonaList from "../../../Tool/public/organisms/OrganismPersonaList";
 import {
   ContentsWrap,
   MainContent,
@@ -45,8 +46,12 @@ import {
   SwitchToggleItem,
   SwitchHandle,
   Tooltip,
+  TabWrapType5,
+  TabButtonType5,
+  TabContent5,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import {
+  H3,
   H5,
   Body1,
   Body2,
@@ -76,6 +81,7 @@ import {
   USER_CREDITS,
   All_BUSINESS_PERSONA_LIST,
   CUSTOM_PERSONA_LIST,
+  PERSONA_LIST_SAAS,
 } from "../../../../pages/AtomStates.jsx";
 import {
   UserCreditCheck,
@@ -293,6 +299,21 @@ const PagePersona3Select = () => {
     return Array.isArray(selectedPersonas) ? selectedPersonas.length : 1;
   };
 
+  const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
+  console.log("personaListSaas", personaListSaas);
+
+  const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
+
+  // 버튼 클릭 핸들러 추가
+  const handlePersonaButtonClick = (personaId) => {
+    setSelectedPersonaButtons((prev) => ({
+      ...prev,
+      [personaId]: !prev[personaId],
+    }));
+  };
+
+  console.log("selectedInterviewType:", selectedInterviewType);  // 디버깅용
+
   return (
     <>
       <ContentsWrap>
@@ -300,10 +321,184 @@ const PagePersona3Select = () => {
 
         <MoleculeHeader />
 
-        <MainContent>
-          <AnalysisWrap>
-            <MainSection>
-              {/* <AnalysisInfo showButtons={true} /> */}
+        <MainContent Wide1030>
+          <PersonaSingleWrap>
+
+            <TabWrapType5>
+              <TabButtonType5 isActive>
+                <span>01</span>
+                <div className="text">
+                  <Body1 color="gray800">
+                    인터뷰 목표 설정
+                  </Body1>
+                  <Body1 color="gray800">
+                    Interview Define
+                  </Body1>
+                </div>
+              </TabButtonType5>
+              <TabButtonType5 isActive>
+                <span>02</span>
+                <div className="text">
+                  <Body1 color="gray800">
+                    페르소나 선택
+                  </Body1>
+                  <Body1 color="gray800">
+                    Persona Selection
+                  </Body1>
+                </div>
+              </TabButtonType5>
+              <TabButtonType5>
+                <span>03</span>
+                <div className="text">
+                  <Body1 color="gray300">
+                    {selectedInterviewType === "multiple" ? "그룹 인터뷰" : "심층 인터뷰"}
+                  </Body1>
+                  <Body1 color="gray300">
+                    {selectedInterviewType === "multiple" ? "Group Interview" : "Indepth Interview"}
+                  </Body1>
+                </div>
+              </TabButtonType5>
+              <TabButtonType5>
+                <span>04</span>
+                <div className="text">
+                  <Body1 color="gray300">
+                    최종 인사이트 분석
+                  </Body1>
+                </div>
+              </TabButtonType5>
+            </TabWrapType5>
+
+            <TabContent5>
+              <div className="title">
+                <H3 color="gray800">Persona Selection</H3>
+                <Body3 color="gray800">인터뷰에 참여할 최적의 페르소나를 선정하세요 </Body3>
+              </div>
+
+              <div className="content">
+                <div>
+                  <Body2 color="gray800" align="left">인터뷰 정보</Body2>
+
+                  <ListBoxGroup>
+                    {/* <li>
+                      <Body2 color="gray500">인터뷰 방식</Body2>
+                      {selectedInterviewType === "multiple" ? (
+                        <Body2 color="gray800">
+                          여러 페르소나 인터뷰 (1:N)
+                        </Body2>
+                      ) : selectedInterviewType === "single" ? (
+                        <Body2 color="gray800">한명과 심층 인터뷰 (1:1)</Body2>
+                      ) : null}
+                    </li> */}
+                    <li>
+                      <Body2 color="gray500">인터뷰 목적</Body2>
+                      {selectedInterviewType === "multiple" ? (
+                        <Body2 color="gray800">
+                          {selectedInterviewPurpose}
+                        </Body2>
+                      ) : selectedInterviewType === "single" ? (
+                        <Body2 color="gray800">
+                          {selectedInterviewPurposeData?.view_title || ""}
+                        </Body2>
+                      ) : null}
+                    </li>
+                    <li>
+                      <Body2 color="gray500">페르소나 선택</Body2>
+                      {selectedPersonas ? (
+                        <PersonaGroup>
+                          {Array.isArray(selectedPersonas) ? (
+                            <>
+                              {selectedPersonas.length > 3 && (
+                                <span>+{selectedPersonas.length - 3}</span>
+                              )}
+                              {selectedPersonas
+                                .slice(0, 3)
+                                .map((persona, index) => (
+                                  <Persona key={index} size="Small" Round>
+                                    <img
+                                      src={`/ai_person/${persona.personaImg}.png`}
+                                      alt={persona.persona}
+                                    />
+                                  </Persona>
+                                ))}
+                            </>
+                          ) : (
+                            <Persona size="Small" Round>
+                              <img
+                                src={`/ai_person/${selectedPersonas.personaImg}.png`}
+                                alt={selectedPersonas.persona}
+                              />
+                            </Persona>
+                          )}
+                        </PersonaGroup>
+                      ) : (
+                        <Body2 color="gray300">
+                          페르소나가 선택되지 않았습니다. 하단에서 페르소나를
+                          선택해 주세요!
+                        </Body2>
+                      )}
+                    </li>
+                    {selectedInterviewType === "multiple" ? (
+                      <></>
+                    ) : selectedInterviewType === "single" ? (
+                      <li>
+                        <Body2 color="gray500">
+                          인뎁스 인터뷰
+                          <Tooltip>
+                            <span>?</span>
+                            <Caption2 align="left" color="white">
+                              인뎁스 인터뷰란?
+                              <br />
+                              페르소나의 답변에 맞춰, 모더레이터가 자동으로 추가
+                              질문을 제시하는 맞춤형 인터뷰 방식 입니다.
+                            </Caption2>
+                          </Tooltip>
+                        </Body2>
+                        <SwitchToggle>
+                          <SwitchToggleItem>
+                            <input
+                              type="checkbox"
+                              checked={isIndepthEnabled}
+                              onChange={(e) =>
+                                setIsIndepthEnabled(e.target.checked)
+                              }
+                            />
+                            <span data-on="ON" data-off="OFF" />
+                            <SwitchHandle />
+                          </SwitchToggleItem>
+                          <Body2
+                            color={isIndepthEnabled ? "gray800" : "gray300"}
+                          >
+                            인뎁스 인터뷰 수행
+                            {!isIndepthEnabled ? (
+                              <Sub3 color="gray300" style={{ width: "auto" }}>
+                                ({creditIndepthInterview} 크레딧 소모)
+                              </Sub3>
+                            ) : (
+                              <Sub3 color="gray800" style={{ width: "auto" }}>
+                                ({creditIndepthInterview} 크레딧 소모)
+                              </Sub3>
+                            )}
+                          </Body2>
+                        </SwitchToggle>
+                      </li>
+                    ) : null}
+                  </ListBoxGroup>
+                </div>
+
+                <OrganismPersonaList
+                  personaListSaas={personaListSaas}
+                  personaImages={personaImages}
+                  selectedPersonaButtons={selectedPersonaButtons}
+                  handlePersonaButtonClick={handlePersonaButtonClick}
+                  onNavigate={navigate}
+                />
+              </div>
+            </TabContent5>
+
+
+
+
+            {/* <MainSection>
               <InterviewWayTab>
                 <InterviewWayTabItem>
                   <span>1</span>
@@ -477,11 +672,10 @@ const PagePersona3Select = () => {
                     height="20px"
                     color="white"
                   />
-                  {/* <img src={images.ChevronRight} alt="인터뷰 시작" /> */}
                 </Button>
               </BottomBar>
-            </MainSection>
-          </AnalysisWrap>
+            </MainSection> */}
+          </PersonaSingleWrap>
         </MainContent>
       </ContentsWrap>
 
@@ -605,6 +799,13 @@ const PagePersona3Select = () => {
 };
 
 export default PagePersona3Select;
+
+const PersonaSingleWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+  margin-top: 60px;
+`;
 
 const InterviewWayTab = styled.div`
   display: flex;
