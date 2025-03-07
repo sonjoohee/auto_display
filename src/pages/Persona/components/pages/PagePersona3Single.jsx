@@ -653,7 +653,37 @@ const PagePersona3Single = () => {
               </div>
             </TabContent5>
 
-            <MainSection>
+            <BottomBar W100 style={{left: "50%", transform: "translateX(-50%)"}}>
+              <Body2
+                color={
+                  !selectedInterviewType || !selectedInterviewPurpose
+                    ? "gray300"
+                    : "gray800"
+                }
+              >
+                {selectedInterviewPurpose === "product_experience_new"
+                  ? "제품 경험 평가"
+                  : ""}{" "}
+                인터뷰에 참여할 페르소나를 선택하세요
+              </Body2>
+              <Button
+                Large
+                Primary
+                Round
+                Fill
+                disabled={!selectedInterviewType || !selectedInterviewPurpose}
+                onClick={handleSelectPersona}
+              >
+                다음
+                <images.ChevronRight
+                  width="20"
+                  height="20"
+                  color={palette.white}
+                />
+              </Button>
+            </BottomBar>
+
+            {/* <MainSection>
               <InterviewWayContent>
                 <div>
                   <Body2 color="gray800" align="left">
@@ -741,7 +771,6 @@ const PagePersona3Single = () => {
                 <div>
                   {selectedInterviewType === "multiple" ? (
                     <InterviewSelect>
-                      {/* <Title>인터뷰 목적 선택</Title> */}
                       <Body2 color="gray800" align="left">
                         인터뷰 목적
                       </Body2>
@@ -865,10 +894,9 @@ const PagePersona3Single = () => {
                     height="20"
                     color={palette.white}
                   />
-                  {/* <img src={images.ChevronRight} alt="다음" /> */}
                 </Button>
               </BottomBar>
-            </MainSection>
+            </MainSection> */}
 
             {/* 크레딧 소진팝업 */}
             {showCreditPopup && (
