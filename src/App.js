@@ -86,6 +86,8 @@ import PagePersona4 from "./pages/Persona/components/pages/PagePersona4";
 import PagePersona4Single from "./pages/Persona/components/pages/PagePersona4Single";
 import PageMyProject from "./pages/Persona/components/pages/PageMyProject";
 import PagePersona3Select from "./pages/Persona/components/pages/PagePersona3Select";
+import PagePersona3Single from "./pages/Persona/components/pages/PagePersona3Single";
+import PagePersona3Multiple from "./pages/Persona/components/pages/PagePersona3Multiple";
 
 // 로그인, 회원가입
 import OrganismLogin from "./pages/Global/organisms/OrganismLogin";
@@ -490,6 +492,24 @@ function App() {
             element={
               <RequireToken>
                 <PageDesignSuitability />
+              </RequireToken>
+            }
+          ></Route>
+
+          <Route
+            path="/Persona3Single"
+            element={
+              <RequireToken>
+                <PagePersona3Single />
+              </RequireToken>
+            }
+          ></Route>
+
+          <Route
+            path="/Persona3Multiple"
+            element={
+              <RequireToken>
+                <PagePersona3Multiple />
               </RequireToken>
             }
           ></Route>
