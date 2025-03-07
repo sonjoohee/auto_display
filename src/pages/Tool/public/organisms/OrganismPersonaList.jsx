@@ -23,6 +23,107 @@ const OrganismPersonaList = ({
     setActiveTab(tabName);
   };
 
+  // 페르소나 선택 시 탭 간 동기화를 처리하는 함수
+  const handleSyncedPersonaButtonClick = (buttonId) => {
+    const [tab, id] = buttonId.split("_");
+    const persona = personaListSaas.find(
+      (p) => p.id === id || `persona${personaListSaas.indexOf(p)}` === id
+    );
+
+    if (!persona) return handlePersonaButtonClick(buttonId);
+
+    // 현재 선택 상태 토글
+    const isCurrentlySelected = !selectedPersonaButtons[buttonId];
+
+    if (tab === "my_persona" && isCurrentlySelected) {
+      // my_persona에서 선택한 경우, 해당 personaType 탭에서도 선택
+      const originalTypeButtonId = `${persona.personaType}_${id}`;
+      handlePersonaButtonClick(buttonId); // 현재 버튼 상태 변경
+
+      // 원래 타입의 탭에서도 선택되도록 함
+      if (!selectedPersonaButtons[originalTypeButtonId]) {
+        handlePersonaButtonClick(originalTypeButtonId);
+      }
+    } else if (
+      tab !== "my_persona" &&
+      persona.favorite &&
+      isCurrentlySelected
+    ) {
+      // 다른 탭에서 favorite이 true인 페르소나를 선택한 경우, my_persona 탭에서도 선택
+      const myPersonaButtonId = `my_persona_${id}`;
+      handlePersonaButtonClick(buttonId); // 현재 버튼 상태 변경
+
+      // my_persona 탭에서도 선택되도록 함
+      if (!selectedPersonaButtons[myPersonaButtonId]) {
+        handlePersonaButtonClick(myPersonaButtonId);
+      }
+    } else if (
+      tab !== "my_persona" &&
+      persona.favorite &&
+      !isCurrentlySelected
+    ) {
+      // 다른 탭에서 favorite이 true인 페르소나 선택 해제 시, my_persona 탭에서도 선택 해제
+      const myPersonaButtonId = `my_persona_${id}`;
+      handlePersonaButtonClick(buttonId); // 현재 버튼 상태 변경
+
+      // my_persona 탭에서도 선택 해제되도록 함
+      if (selectedPersonaButtons[myPersonaButtonId]) {
+        handlePersonaButtonClick(myPersonaButtonId);
+      }
+    } else if (tab === "my_persona" && !isCurrentlySelected) {
+      // my_persona에서 선택 해제한 경우, 해당 personaType 탭에서도 선택 해제
+      const originalTypeButtonId = `${persona.personaType}_${id}`;
+      handlePersonaButtonClick(buttonId); // 현재 버튼 상태 변경
+
+      // 원래 타입의 탭에서도 선택 해제되도록 함
+      if (selectedPersonaButtons[originalTypeButtonId]) {
+        handlePersonaButtonClick(originalTypeButtonId);
+      }
+    } else {
+      // 그 외의 경우는 기존 로직 사용
+      handlePersonaButtonClick(buttonId);
+    }
+  };
+
+  // 페르소나가 어떤 탭에서든 선택되었는지 확인하는 함수
+  const isPersonaSelectedInAnyTab = (persona, index) => {
+    const personaId = persona.id || `persona${index}`;
+
+    // 현재 탭에서 선택되었는지 확인
+    if (selectedPersonaButtons[`${activeTab}_${personaId}`]) {
+      return true;
+    }
+
+    // my_persona 탭이 아닌 경우, my_persona 탭에서도 확인
+    if (activeTab !== "my_persona" && persona.favorite) {
+      if (selectedPersonaButtons[`my_persona_${personaId}`]) {
+        return true;
+      }
+    }
+
+    // my_persona 탭인 경우, 원래 타입의 탭에서도 확인
+    if (activeTab === "my_persona") {
+      if (selectedPersonaButtons[`${persona.personaType}_${personaId}`]) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  // 페르소나 선택 시 올바른 탭의 ID를 반환하는 함수
+  const getCorrectTabIdForSelection = (persona, index, currentTab) => {
+    const personaId = persona.id || `persona${index}`;
+
+    // my_persona 탭인 경우, 원래 타입의 ID를 반환
+    if (currentTab === "my_persona") {
+      return `${persona.personaType}_${personaId}`;
+    }
+
+    // 그 외의 경우는 현재 탭의 ID를 반환
+    return `${currentTab}_${personaId}`;
+  };
+
   return (
     <>
       {personaListSaas && personaListSaas.length > 0 ? (
@@ -93,12 +194,19 @@ const OrganismPersonaList = ({
                     badgeType={persona.badgeType || ""}
                     badgeText={persona.badgeText || ""}
                     personaId={persona.id || `persona${index}`}
-                    isSelected={
-                      selectedPersonaButtons[`${activeTab}_${persona.id || `persona${index}`}`]
-                    }
+                    isSelected={isPersonaSelectedInAnyTab(persona, index)}
                     personaInfo={persona || ""}
-                    onPersonaButtonClick={(id) => handlePersonaButtonClick(`${activeTab}_${id}`)}
-                    onSelect={(id) => onPersonaSelect(`${activeTab}_${id}`)}
+                    onPersonaButtonClick={(id) =>
+                      handleSyncedPersonaButtonClick(`${activeTab}_${id}`)
+                    }
+                    onSelect={(id) => {
+                      const correctTabId = getCorrectTabIdForSelection(
+                        persona,
+                        index,
+                        activeTab
+                      );
+                      onPersonaSelect(correctTabId);
+                    }}
                   />
                 ))}
             </ListBoxWrap>
