@@ -29,53 +29,38 @@ import PopupWrap from "../../../../../assets/styles/Popup";
 import {
   ContentsWrap,
   MainContent,
-  Badge,
-  TabWrapType2,
-  TabButtonType2,
   TabWrapType3,
   TabButtonType3,
-  TabWrapType4,
-  TabButtonType4,
-  TabContent,
   TabWrapType5,
   TabButtonType5,
   TabContent5,
   TabContent5Item,
   CardGroupWrap,
-  ListText,
-  ListTitle,
-  ListSubtitle,
-  ListButton,
   BottomBar,
   BgBoxItem,
-  ListBoxWrap,
-  ListBoxItem,
-  ListBoxTitle,
-  ListBoxContent,
-  Keyword,
-  InterviewPopup,
-  Status,
-  ListRowWrap,
-  ListRowItem,
   BoxWrap,
-  PopupContent,
-  PopupTitle,
-  PopupTitle2,
-  TextWrap,
+  ListBoxGroup,
+  PersonaGroup,
+  ListBoxItem,
+  Badge,
+  Persona,
+  PersonaInfo,
   ListBox,
-  ListGroup,
+  ListBoxWrap,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
+import personaImages from "../../../../../assets/styles/PersonaImages";
 import images from "../../../../../assets/styles/Images";
 import {
   H4,
   H3,
   H5,
-  Sub1,
+  Sub2,
   Sub3,
   Body1,
   Body2,
   Body3,
   Caption2,
+  Helptext,
 } from "../../../../../assets/styles/Typography";
 
 import {
@@ -92,6 +77,8 @@ import {
   CUSTOMER_VALUE_ANALYZER_FINAL_REPORT,
   TOOL_LOADING,
   CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR,
+  SELECTED_INTERVIEW_PURPOSE_DATA,
+  CREDIT_INDEPTH_INTERVIEW,
 } from "../../../../AtomStates";
 
 import {
@@ -198,6 +185,9 @@ const PageCustomerValueAnalyzer = () => {
   const [apiCallCompleted, setApiCallCompleted] = useState(false);
   const [apiCallCompletedFactor, setApiCallCompletedFactor] = useState(false);
   const [completedApiCalls, setCompletedApiCalls] = useState([]);
+
+  // 상태 관리를 위한 state 추가
+  const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -1098,7 +1088,26 @@ const PageCustomerValueAnalyzer = () => {
     );
   };
 
+  const [creditIndepthInterview] = useAtom(CREDIT_INDEPTH_INTERVIEW);
 
+  const [isIndepthEnabled, setIsIndepthEnabled] = useState(false);
+
+  const [selectedInterviewPurposeData] = useAtom(
+    SELECTED_INTERVIEW_PURPOSE_DATA
+  );
+
+  // 버튼 클릭 핸들러 추가
+  const handlePersonaButtonClick = (personaId) => {
+    setSelectedPersonaButtons(prev => ({
+      ...prev,
+      [personaId]: !prev[personaId]
+    }));
+  };
+
+  // selectedPersonaButtons 객체에서 선택된 페르소나의 수를 계산하는 함수 추가
+  const getSelectedPersonaCount = () => {
+    return Object.values(selectedPersonaButtons).filter(value => value).length;
+  };
 
   return (
     <>
@@ -1117,7 +1126,7 @@ const PageCustomerValueAnalyzer = () => {
                 <span>01</span>
                 <div className="text">
                   <Body1 color={activeTab >= 1 ? "gray800" : "gray300"}>
-                    고객 정보 입력
+                    페르소나 선택
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -1189,6 +1198,472 @@ const PageCustomerValueAnalyzer = () => {
                     </div>
 
                     <div className="content">
+                      <ListBoxGroup style={{ marginBottom: "24px" }}>
+                        <li>
+                          <Body2 color="gray500">페르소나 선택</Body2>
+                          {selectedPersonas ? (
+                            <PersonaGroup>
+                              {Array.isArray(selectedPersonas) ? (
+                                <>
+                                  {selectedPersonas.length > 3 && (
+                                    <span>+{selectedPersonas.length - 3}</span>
+                                  )}
+                                  {selectedPersonas
+                                    .slice(0, 3)
+                                    .map((persona, index) => (
+                                      <Persona key={index} size="Small" Round>
+                                        <img
+                                          src={`/ai_person/${persona.personaImg}.png`}
+                                          alt={persona.persona}
+                                        />
+                                      </Persona>
+                                    ))}
+                                </>
+                              ) : (
+                                <Persona size="Small" Round>
+                                  <img
+                                    src={`/ai_person/${selectedPersonas.personaImg}.png`}
+                                    alt={selectedPersonas.persona}
+                                  />
+                                </Persona>
+                              )}
+                            </PersonaGroup>
+                          ) : (
+                            <Body2 color="gray500">
+                              페르소나가 선택되지 않았습니다. 하단에서 페르소나를
+                              선택해 주세요!
+                            </Body2>
+                          )}
+                        </li>
+                        <li>
+                          <Body2 color="gray500">여정 분석 범위</Body2>
+                          <SelectBox>
+                            <SelectBoxTitle 
+                              onClick={() => setIsSelectBoxOpen(!isSelectBoxOpen)}
+                              None
+                            >
+                              {selectedPurposes.analysisScope ? (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                  <Body1 color="gray700" align="left">
+                                    {selectedPurposes.analysisScope.split('|')[0]} |
+                                  </Body1>
+                                  <Body2 color="gray700" align="left">
+                                    {selectedPurposes.analysisScope.split('|')[1]}
+                                  </Body2>
+                                </div>
+                              ) : (
+                                <Body2 color="gray300">
+                                  고객 여정 맵의 분석 방향성을 선택하세요
+                                </Body2>
+                              )}
+                              <images.ChevronDown
+                                width="24px"
+                                height="24px"
+                                color={palette.gray500}
+                                style={{
+                                  transform: isSelectBoxOpen ? "rotate(180deg)" : "rotate(0deg)",
+                                  transition: "transform 0.3s ease"
+                                }}
+                              />
+                            </SelectBoxTitle>
+
+                            {isSelectBoxOpen && (
+                              <SelectBoxList>
+                                <SelectBoxItem 
+                                  onClick={() => {
+                                    handlePurposeSelect("시간 흐름 기반 여정 분석 | 제품/서비스의 전체적인 사용자 여정을 기반으로 분석", "analysisScope");
+                                    setIsSelectBoxOpen(false);
+                                  }}
+                                >
+                                  <Body1 color="gray700" align="left">시간 흐름 기반 여정 분석 | </Body1>
+                                  <Body2 color="gray700" align="left">제품/서비스의 전체적인 사용자 여정을 기반으로 분석</Body2>
+                                </SelectBoxItem>
+                                <SelectBoxItem
+                                  onClick={() => {
+                                    handlePurposeSelect("상황 중심 여정 분석 | 특정 이벤트나 고객 경험을 중심으로 여정 분석", "analysisScope");
+                                    setIsSelectBoxOpen(false);
+                                  }}
+                                >
+                                  <Body1 color="gray700" align="left">상황 중심 여정 분석 | </Body1>
+                                  <Body2 color="gray700" align="left">특정 이벤트나 고객 경험을 중심으로 여정 분석</Body2>
+                                </SelectBoxItem>
+                                <SelectBoxItem
+                                  onClick={() => {
+                                    handlePurposeSelect("목적 기반 여정 분석 | 고객이 제품/서비스를 사용하여 달성하려는 목표를 중심으로 여정 분석", "analysisScope");
+                                    setIsSelectBoxOpen(false);
+                                  }}
+                                >
+                                  <Body1 color="gray700" align="left">목적 기반 여정 분석 | </Body1>
+                                  <Body2 color="gray700" align="left">고객이 제품/서비스를 사용하여 달성하려는 목표를 중심으로 여정 분석</Body2>
+                                </SelectBoxItem>
+                              </SelectBoxList>
+                            )}
+                          </SelectBox>
+                        </li>
+                      </ListBoxGroup>
+
+                      <CustomerValueWrap NoData>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                          <img src={images.PeopleFillPrimary2} alt="" />
+                          <Sub3 color="gray700">
+                            현재 분석할 페르소나가 없습니다<br />
+                            AI Person을 생성 한 후 다시 분석툴을 활용해주세요 
+                          </Sub3>
+                        </div>
+                        <Button Medium Outline Fill>AI Person 확인하기</Button>
+                      </CustomerValueWrap>
+
+                      <CustomerValueWrap>
+                        <TabWrapType3>
+                          <TabButtonType3>My Persona</TabButtonType3>
+                          <TabButtonType3>Macro Segment</TabButtonType3>
+                          <TabButtonType3>Unique User</TabButtonType3>
+                          <TabButtonType3>Key Stakeholder</TabButtonType3>
+                        </TabWrapType3>
+
+                        <ListBoxWrap Border>
+                          <ListBoxItem NoBorder>
+                            <Persona size="Large" icon="OrangeTopLeftStarFill" Round Moder>
+                              <img
+                                // src={`/ai_person/${persona.personaImg}.png`}
+                                src={personaImages.PersonaWomen01}
+                              />
+                            </Persona>
+                            <ListText>
+                              <ListTitle>
+                                <Body1 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                                <Badge UniqueHaker>Haker</Badge>
+                              </ListTitle>
+                              <ListSubtitle>
+                                <PersonaInfo None>
+                                  <span>#성별</span>
+                                  <span>#나이</span>
+                                  <span>#직업</span>
+                                </PersonaInfo>
+                              </ListSubtitle>
+                            </ListText>
+                            <ListButton>
+                              <Button
+                                Medium
+                                PrimaryLightest={selectedPersonaButtons['persona0']}
+                                Fill={selectedPersonaButtons['persona0']}
+                                onClick={() => handlePersonaButtonClick('persona0')}
+                              >
+                                <Sub2 color={selectedPersonaButtons['persona0'] ? "primary" : "gray500"}>
+                                  {selectedPersonaButtons['persona0'] ? "Selected" : "Add"}
+                                </Sub2>
+                              </Button>
+                            </ListButton>
+                          </ListBoxItem>
+
+                          <ListBoxItem NoBorder>
+                            <Persona size="Large" icon="OrangeTopLeftStarFill" Round Moder>
+                              <img
+                                // src={`/ai_person/${persona.personaImg}.png`}
+                                src={personaImages.PersonaWomen01}
+                              />
+                            </Persona>
+                            <ListText>
+                              <ListTitle>
+                                <Body1 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                                  <Badge UniqueLead>Lead User</Badge>
+                              </ListTitle>
+                              <ListSubtitle>
+                                <PersonaInfo None>
+                                  <span>#성별</span>
+                                  <span>#나이</span>
+                                  <span>#직업</span>
+                                </PersonaInfo>
+                              </ListSubtitle>
+                            </ListText>
+                            <ListButton>
+                              <Button
+                                Medium
+                                PrimaryLightest={selectedPersonaButtons['persona1']}
+                                Fill={selectedPersonaButtons['persona1']}
+                                onClick={() => handlePersonaButtonClick('persona1')}
+                              >
+                                <Sub2 color={selectedPersonaButtons['persona1'] ? "primary" : "gray500"}>
+                                  {selectedPersonaButtons['persona1'] ? "Selected" : "Add"}
+                                </Sub2>
+                              </Button>
+                            </ListButton>
+                          </ListBoxItem>
+
+                          <ListBoxItem NoBorder>
+                            <Persona size="Large" icon="OrangeTopLeftStarFill" Round Moder>
+                              <img
+                                // src={`/ai_person/${persona.personaImg}.png`}
+                                src={personaImages.PersonaWomen01}
+                              />
+                            </Persona>
+                            <ListText>
+                              <ListTitle>
+                                <Body1 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                                  <Badge UniqueSuper>Super User</Badge>
+                              </ListTitle>
+                              <ListSubtitle>
+                                <PersonaInfo None>
+                                  <span>#성별</span>
+                                  <span>#나이</span>
+                                  <span>#직업</span>
+                                </PersonaInfo>
+                              </ListSubtitle>
+                            </ListText>
+                            <ListButton>
+                              <Button
+                                Medium
+                                PrimaryLightest={selectedPersonaButtons['persona2']}
+                                Fill={selectedPersonaButtons['persona2']}
+                                onClick={() => handlePersonaButtonClick('persona2')}
+                              >
+                                <Sub2 color={selectedPersonaButtons['persona2'] ? "primary" : "gray500"}>
+                                  {selectedPersonaButtons['persona2'] ? "Selected" : "Add"}
+                                </Sub2>
+                              </Button>
+                            </ListButton>
+                          </ListBoxItem>
+
+                          <ListBoxItem NoBorder>
+                            <Persona size="Large" icon="OrangeTopLeftStarFill" Round Moder>
+                              <img
+                                // src={`/ai_person/${persona.personaImg}.png`}
+                                src={personaImages.PersonaWomen01}
+                              />
+                            </Persona>
+                            <ListText>
+                              <ListTitle>
+                                <Body1 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                                  <Badge UniqueEarly>Early Adoptor</Badge>
+                              </ListTitle>
+                              <ListSubtitle>
+                                <PersonaInfo None>
+                                  <span>#성별</span>
+                                  <span>#나이</span>
+                                  <span>#직업</span>
+                                </PersonaInfo>
+                              </ListSubtitle>
+                            </ListText>
+                            <ListButton>
+                              <Button
+                                Medium
+                                PrimaryLightest={selectedPersonaButtons['persona3']}
+                                Fill={selectedPersonaButtons['persona3']}
+                                onClick={() => handlePersonaButtonClick('persona3')}
+                              >
+                                <Sub2 color={selectedPersonaButtons['persona3'] ? "primary" : "gray500"}>
+                                  {selectedPersonaButtons['persona3'] ? "Selected" : "Add"}
+                                </Sub2>
+                              </Button>
+                            </ListButton>
+                          </ListBoxItem>
+
+                          <ListBoxItem NoBorder>
+                            <Persona size="Large" icon="OrangeTopLeftStarFill" Round Moder>
+                              <img
+                                // src={`/ai_person/${persona.personaImg}.png`}
+                                src={personaImages.PersonaWomen01}
+                              />
+                            </Persona>
+                            <ListText>
+                              <ListTitle>
+                                <Body1 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                                  <Badge UniqueInnovator>Innovator</Badge>
+                              </ListTitle>
+                              <ListSubtitle>
+                                <PersonaInfo None>
+                                  <span>#성별</span>
+                                  <span>#나이</span>
+                                  <span>#직업</span>
+                                </PersonaInfo>
+                              </ListSubtitle>
+                            </ListText>
+                            <ListButton>
+                              <Button
+                                Medium
+                                PrimaryLightest={selectedPersonaButtons['persona4']}
+                                Fill={selectedPersonaButtons['persona4']}
+                                onClick={() => handlePersonaButtonClick('persona4')}
+                              >
+                                <Sub2 color={selectedPersonaButtons['persona4'] ? "primary" : "gray500"}>
+                                  {selectedPersonaButtons['persona4'] ? "Selected" : "Add"}
+                                </Sub2>
+                              </Button>
+                            </ListButton>
+                          </ListBoxItem>
+
+                          <ListBoxItem NoBorder>
+                            <Persona size="Large" icon="OrangeTopLeftStarFill" Round Moder>
+                              <img
+                                // src={`/ai_person/${persona.personaImg}.png`}
+                                src={personaImages.PersonaWomen01}
+                              />
+                            </Persona>
+                            <ListText>
+                              <ListTitle>
+                                <Body1 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                                  <Badge UniqueNon>Non User</Badge>
+                              </ListTitle>
+                              <ListSubtitle>
+                                <PersonaInfo None>
+                                  <span>#성별</span>
+                                  <span>#나이</span>
+                                  <span>#직업</span>
+                                </PersonaInfo>
+                              </ListSubtitle>
+                            </ListText>
+                            <ListButton>
+                              <Button
+                                Medium
+                                PrimaryLightest={selectedPersonaButtons['persona5']}
+                                Fill={selectedPersonaButtons['persona5']}
+                                onClick={() => handlePersonaButtonClick('persona5')}
+                              >
+                                <Sub2 color={selectedPersonaButtons['persona5'] ? "primary" : "gray500"}>
+                                  {selectedPersonaButtons['persona5'] ? "Selected" : "Add"}
+                                </Sub2>
+                              </Button>
+                            </ListButton>
+                          </ListBoxItem>
+
+                          <ListBoxItem NoBorder>
+                            <Persona size="Large" icon="OrangeTopLeftStarFill" Round Moder>
+                              <img
+                                // src={`/ai_person/${persona.personaImg}.png`}
+                                src={personaImages.PersonaWomen01}
+                              />
+                            </Persona>
+                            <ListText>
+                              <ListTitle>
+                                <Body1 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                                  <Badge UniqueCritic>Critic</Badge>
+                              </ListTitle>
+                              <ListSubtitle>
+                                <PersonaInfo None>
+                                  <span>#성별</span>
+                                  <span>#나이</span>
+                                  <span>#직업</span>
+                                </PersonaInfo>
+                              </ListSubtitle>
+                            </ListText>
+                            <ListButton>
+                              <Button
+                                Medium
+                                PrimaryLightest={selectedPersonaButtons['persona6']}
+                                Fill={selectedPersonaButtons['persona6']}
+                                onClick={() => handlePersonaButtonClick('persona6')}
+                              >
+                                <Sub2 color={selectedPersonaButtons['persona6'] ? "primary" : "gray500"}>
+                                  {selectedPersonaButtons['persona6'] ? "Selected" : "Add"}
+                                </Sub2>
+                              </Button>
+                            </ListButton>
+                          </ListBoxItem>
+
+                          <ListBoxItem NoBorder>
+                            <Persona size="Large" icon="OrangeTopLeftStarFill" Round Moder>
+                              <img
+                                // src={`/ai_person/${persona.personaImg}.png`}
+                                src={personaImages.PersonaWomen01}
+                              />
+                            </Persona>
+                            <ListText>
+                              <ListTitle>
+                                <Body1 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                                  <Badge UniqueEarly>Early Adoptor</Badge>
+                              </ListTitle>
+                              <ListSubtitle>
+                                <PersonaInfo None>
+                                  <span>#성별</span>
+                                  <span>#나이</span>
+                                  <span>#직업</span>
+                                </PersonaInfo>
+                              </ListSubtitle>
+                            </ListText>
+                            <ListButton>
+                              <Button
+                                Medium
+                                PrimaryLightest={selectedPersonaButtons['persona7']}
+                                Fill={selectedPersonaButtons['persona7']}
+                                onClick={() => handlePersonaButtonClick('persona7')}
+                              >
+                                <Sub2 color={selectedPersonaButtons['persona7'] ? "primary" : "gray500"}>
+                                  {selectedPersonaButtons['persona7'] ? "Selected" : "Add"}
+                                </Sub2>
+                              </Button>
+                            </ListButton>
+                          </ListBoxItem>
+
+                          <ListBoxItem NoBorder>
+                            <Persona size="Large" icon="OrangeTopLeftStarFill" Round Moder>
+                              <img
+                                // src={`/ai_person/${persona.personaImg}.png`}
+                                src={personaImages.PersonaWomen01}
+                              />
+                            </Persona>
+                            <ListText>
+                              <ListTitle>
+                                <Body1 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                                  <Badge UniqueNon>Non User</Badge>
+                              </ListTitle>
+                              <ListSubtitle>
+                                <PersonaInfo None>
+                                  <span>#성별</span>
+                                  <span>#나이</span>
+                                  <span>#직업</span>
+                                </PersonaInfo>
+                              </ListSubtitle>
+                            </ListText>
+                            <ListButton>
+                              <Button
+                                Medium
+                                PrimaryLightest={selectedPersonaButtons['persona8']}
+                                Fill={selectedPersonaButtons['persona8']}
+                                onClick={() => handlePersonaButtonClick('persona8')}
+                              >
+                                <Sub2 color={selectedPersonaButtons['persona8'] ? "primary" : "gray500"}>
+                                  {selectedPersonaButtons['persona8'] ? "Selected" : "Add"}
+                                </Sub2>
+                              </Button>
+                            </ListButton>
+                          </ListBoxItem>
+
+                          <ListBoxItem NoBorder>
+                            <Persona size="Large" icon="OrangeTopLeftStarFill" Round Moder>
+                              <img
+                                // src={`/ai_person/${persona.personaImg}.png`}
+                                src={personaImages.PersonaWomen01}
+                              />
+                            </Persona>
+                            <ListText>
+                              <ListTitle>
+                                <Body1 color="gray800">가족과 함께 여가를 보내는 활동 지향형 소비자</Body1>
+                                  <Badge UniqueNon>Non User</Badge>
+                              </ListTitle>
+                              <ListSubtitle>
+                                <PersonaInfo None>
+                                  <span>#성별</span>
+                                  <span>#나이</span>
+                                  <span>#직업</span>
+                                </PersonaInfo>
+                              </ListSubtitle>
+                            </ListText>
+                            <ListButton>
+                              <Button
+                                Medium
+                                PrimaryLightest={selectedPersonaButtons['persona9']}
+                                Fill={selectedPersonaButtons['persona9']}
+                                onClick={() => handlePersonaButtonClick('persona9')}
+                              >
+                                <Sub2 color={selectedPersonaButtons['persona9'] ? "primary" : "gray500"}>
+                                  {selectedPersonaButtons['persona9'] ? "Selected" : "Add"}
+                                </Sub2>
+                              </Button>
+                            </ListButton>
+                          </ListBoxItem>
+                        </ListBoxWrap>
+                      </CustomerValueWrap> 
+{/* 
                       <TabContent5Item borderBottom>
                         <div className="title">
                           <Body1 color="gray700">고객 리스트 불러오기</Body1>
@@ -1449,10 +1924,22 @@ const PageCustomerValueAnalyzer = () => {
                             </SelectBoxList>
                           )}
                         </SelectBox>
-                      </TabContent5Item>
-                    </div>
+                      </TabContent5Item> 
+*/}
 
+                    </div>
                     <Button
+                      Other
+                      Primary
+                      Fill
+                      Round
+                      onClick={() => handleSubmitBusinessInfo()}
+                      disabled={getSelectedPersonaCount() === 0 || toolStep >= 1}
+                    >
+                      다음
+                    </Button>
+
+                    {/* <Button
                       Other
                       Primary
                       Fill
@@ -1461,7 +1948,7 @@ const PageCustomerValueAnalyzer = () => {
                       disabled={!isRequiredFieldsFilled() || toolStep >= 1}
                     >
                       다음
-                    </Button>
+                    </Button> */}
                   </>
                 )}
               </TabContent5>
@@ -1949,6 +2436,40 @@ const ValueAnalyzerWrap = styled.div`
   gap: 100px;
   margin-top: 60px;
 `;
+
+const CustomerValueWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  ${(props) =>
+    props.NoData &&
+    css`
+      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+      border-radius: 10px;
+      border: 1px solid ${palette.outlineGray};
+    `}
+`;
+
+const ListText = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+const ListTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const ListSubtitle = styled.div``;
+
+const ListButton = styled.div``;
 
 const CustomButton = styled(Button)`
   min-width: 92px;

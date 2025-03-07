@@ -888,7 +888,7 @@ const PageIdeaGenerator = () => {
                 <span>01</span>
                 <div className="text">
                   <Body1 color={activeTab >= 1 ? "gray800" : "gray300"}>
-                    비즈니스 입력
+                    핵심 가치 입력
                   </Body1>
                 </div>
               </TabButtonType5>
