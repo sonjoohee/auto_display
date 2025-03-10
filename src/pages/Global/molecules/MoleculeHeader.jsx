@@ -28,6 +28,7 @@ import {
   CUSTOMER_VALUE_ANALYZER_INFO,
   DESIGN_ANALYSIS_BUSINESS_INFO,
   PROJECT_SAAS,
+  DESIGN_ANALYSIS_BUSINESS_TITLE,
 } from "../../../pages/AtomStates";
 import OrganismBusinessAnalysis from "../../../pages/Persona/components/organisms/OrganismBusinessAnalysis";
 import { UserCreditInfo } from "../../../utils/indexedDB";
@@ -57,8 +58,12 @@ const MoleculeHeader = () => {
   const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(
     CUSTOMER_VALUE_ANALYZER_INFO
   );
-  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(DESIGN_ANALYSIS_BUSINESS_INFO);
-
+  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(
+    DESIGN_ANALYSIS_BUSINESS_INFO
+  );
+  const [designAnalysisBusinessTitle, setDesignAnalysisBusinessTitle] = useAtom(
+    DESIGN_ANALYSIS_BUSINESS_TITLE
+  );
   const navigate = useNavigate();
 
   // Persona/3 경로 체크를 위한 조건 수정
@@ -261,10 +266,10 @@ const MoleculeHeader = () => {
                 ? businessAnalysis.title
                 : isPersona4PageSingle && businessAnalysis.title
                 ? businessAnalysis.title
-                // : isTargetDiscoveryPage && targetDiscoveryInfo.business
+                : // : isTargetDiscoveryPage && targetDiscoveryInfo.business
                 // ? `타겟 탐색기 - ${targetDiscoveryInfo.business}`
                 // : isTargetDiscoveryPage && !targetDiscoveryInfo.business
-                : isTargetDiscoveryPage
+                isTargetDiscoveryPage
                 ? "타겟 탐색기"
                 : isIdeaGeneratorPage && projectSaas.projectTitle
                 ? `아이디어 생성기 - ${projectSaas.projectTitle}`
@@ -276,9 +281,9 @@ const MoleculeHeader = () => {
                 : isCustomerValueAnalyzerPage &&
                   !customerValueAnalyzerInfo.business
                 ? "고객 핵심 가치 분석기"
-                : isDesignAnalysisPage && designAnalysisBusinessInfo
-                ? `디자인 감정 분석기 - ${designAnalysisBusinessInfo}`
-                : isDesignAnalysisPage && !designAnalysisBusinessInfo
+                : isDesignAnalysisPage && designAnalysisBusinessTitle
+                ? `디자인 감정 분석기 - ${designAnalysisBusinessTitle}`
+                : isDesignAnalysisPage && !designAnalysisBusinessTitle
                 ? "디자인 감정 분석기"
                 : isProjectCreatePage
                 ? "새 프로젝트 생성"
@@ -358,7 +363,9 @@ const MoleculeHeader = () => {
               </CreditTotal>
 
               {showCreditToggle && (
-                <CreditToggle className={isClosingCreditToggle ? "closing" : ""}>
+                <CreditToggle
+                  className={isClosingCreditToggle ? "closing" : ""}
+                >
                   <div className="title">
                     <Sub1 color="gray700">크레딧 내역</Sub1>
                     {isLoggedInState &&

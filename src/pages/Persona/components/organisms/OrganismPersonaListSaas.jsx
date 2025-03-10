@@ -5,11 +5,12 @@ import {
   TabButtonType3,
   ListBoxWrap,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
-import MoleculePersonaListItem from "../molecules/MoleculePersonaListItem";
-import OrganismNoPersonaMessage from "./OrganismNoPersonaMessage";
+import MoleculePersonaListItemSaas from "../molecules/MoleculePersonaListItemSaas";
+import OrganismNoPersonaMessage from "../../../Tool/public/organisms/OrganismNoPersonaMessage";
 import { palette } from "../../../../assets/styles/Palette";
+import MoleculePersonaSelectCard from "../../../Persona/components/molecules/MoleculePersonaSelectCard";
 
-const OrganismPersonaList = ({
+const OrganismPersonaListSaas = ({
   personaListSaas,
   personaImages,
   selectedPersonaButtons,
@@ -32,58 +33,78 @@ const OrganismPersonaList = ({
 
     if (!persona) return handlePersonaButtonClick(buttonId);
 
-    // 현재 선택 상태 확인 (선택되어 있지 않으면 true, 선택되어 있으면 false)
-    const willBeSelected = !selectedPersonaButtons[buttonId];
+    // 현재 선택 상태 토글
+    const isCurrentlySelected = !selectedPersonaButtons[buttonId];
 
-    // 먼저 현재 버튼 상태 변경
-    handlePersonaButtonClick(buttonId);
-
-    // favorite가 true인 페르소나는 마이페르소나 탭에만 표시되므로
-    // 마이페르소나 탭에서의 선택 상태만 변경하고 다른 탭과의 동기화는 하지 않음
-    if (persona.favorite === true) {
-      // onPersonaSelect 호출 (현재 탭 ID로)
-      onPersonaSelect(buttonId);
-      return;
-    }
-
-    if (tab === "my_persona") {
-      // my_persona에서 선택/해제한 경우, 해당 personaType 탭에서도 선택/해제
+    if (tab === "my_persona" && isCurrentlySelected) {
+      // my_persona에서 선택한 경우, 해당 personaType 탭에서도 선택
       const originalTypeButtonId = `${persona.personaType}_${id}`;
+      handlePersonaButtonClick(buttonId); // 현재 버튼 상태 변경
 
-      // 원래 타입의 탭에서 상태가 다르면 동기화
-      const originalTabSelected = selectedPersonaButtons[originalTypeButtonId];
-      if (willBeSelected !== originalTabSelected) {
+      // 원래 타입의 탭에서도 선택되도록 함
+      if (!selectedPersonaButtons[originalTypeButtonId]) {
         handlePersonaButtonClick(originalTypeButtonId);
       }
+    } else if (
+      tab !== "my_persona" &&
+      persona.favorite &&
+      isCurrentlySelected
+    ) {
+      // 다른 탭에서 favorite이 true인 페르소나를 선택한 경우, my_persona 탭에서도 선택
+      const myPersonaButtonId = `my_persona_${id}`;
+      handlePersonaButtonClick(buttonId); // 현재 버튼 상태 변경
 
-      // onPersonaSelect 호출 (올바른 탭 ID로)
-      onPersonaSelect(originalTypeButtonId);
+      // my_persona 탭에서도 선택되도록 함
+      if (!selectedPersonaButtons[myPersonaButtonId]) {
+        handlePersonaButtonClick(myPersonaButtonId);
+      }
+    } else if (
+      tab !== "my_persona" &&
+      persona.favorite &&
+      !isCurrentlySelected
+    ) {
+      // 다른 탭에서 favorite이 true인 페르소나 선택 해제 시, my_persona 탭에서도 선택 해제
+      const myPersonaButtonId = `my_persona_${id}`;
+      handlePersonaButtonClick(buttonId); // 현재 버튼 상태 변경
+
+      // my_persona 탭에서도 선택 해제되도록 함
+      if (selectedPersonaButtons[myPersonaButtonId]) {
+        handlePersonaButtonClick(myPersonaButtonId);
+      }
+    } else if (tab === "my_persona" && !isCurrentlySelected) {
+      // my_persona에서 선택 해제한 경우, 해당 personaType 탭에서도 선택 해제
+      const originalTypeButtonId = `${persona.personaType}_${id}`;
+      handlePersonaButtonClick(buttonId); // 현재 버튼 상태 변경
+
+      // 원래 타입의 탭에서도 선택 해제되도록 함
+      if (selectedPersonaButtons[originalTypeButtonId]) {
+        handlePersonaButtonClick(originalTypeButtonId);
+      }
     } else {
-      // 그 외의 경우 onPersonaSelect 호출 (현재 탭 ID로)
-      onPersonaSelect(buttonId);
+      // 그 외의 경우는 기존 로직 사용
+      handlePersonaButtonClick(buttonId);
     }
   };
 
   // 페르소나가 어떤 탭에서든 선택되었는지 확인하는 함수
   const isPersonaSelectedInAnyTab = (persona, index) => {
     const personaId = persona.id || `persona${index}`;
-    const currentTabId = `${activeTab}_${personaId}`;
 
     // 현재 탭에서 선택되었는지 확인
-    if (selectedPersonaButtons[currentTabId]) {
+    if (selectedPersonaButtons[`${activeTab}_${personaId}`]) {
       return true;
     }
 
-    // favorite가 true인 페르소나는 마이페르소나 탭에만 표시되므로
-    // 다른 탭과의 선택 상태 동기화는 확인하지 않음
-    if (persona.favorite === true) {
-      return false;
+    // my_persona 탭이 아닌 경우, my_persona 탭에서도 확인
+    if (activeTab !== "my_persona" && persona.favorite) {
+      if (selectedPersonaButtons[`my_persona_${personaId}`]) {
+        return true;
+      }
     }
 
-    // 현재 탭이 my_persona이고 원래 타입의 탭에서 선택되었는지 확인
+    // my_persona 탭인 경우, 원래 타입의 탭에서도 확인
     if (activeTab === "my_persona") {
-      const originalTypeButtonId = `${persona.personaType}_${personaId}`;
-      if (selectedPersonaButtons[originalTypeButtonId]) {
+      if (selectedPersonaButtons[`${persona.personaType}_${personaId}`]) {
         return true;
       }
     }
@@ -94,12 +115,6 @@ const OrganismPersonaList = ({
   // 페르소나 선택 시 올바른 탭의 ID를 반환하는 함수
   const getCorrectTabIdForSelection = (persona, index, currentTab) => {
     const personaId = persona.id || `persona${index}`;
-
-    // favorite가 true인 페르소나는 마이페르소나 탭에만 표시되므로
-    // 현재 탭의 ID를 반환
-    if (persona.favorite === true) {
-      return `${currentTab}_${personaId}`;
-    }
 
     // my_persona 탭인 경우, 원래 타입의 ID를 반환
     if (currentTab === "my_persona") {
@@ -171,14 +186,21 @@ const OrganismPersonaList = ({
                   if (activeTab === "my_persona") {
                     return persona.favorite === true;
                   }
-                  // favorite가 true인 페르소나는 마이페르소나 탭에만 표시
-                  if (persona.favorite === true) {
-                    return false;
-                  }
                   return persona.personaType === activeTab;
                 })
+                // .filter((persona) => persona.status === "complete")
                 .map((persona, index) => (
-                  <MoleculePersonaListItem
+                  // <MoleculePersonaSelectCard
+                  //   interviewType={selectedInterviewType}
+                  //   filteredPersonaList={filteredProjectList}
+                  //   businessPersonaList={allBusinessPersonas.filter(
+                  //     (persona) => persona?.status === "complete"
+                  //   )}
+                  //   customPersonaList={customPersonaList}
+                  //   selectedPersonas={selectedPersonas}
+                  //   onPersonaSelect={setSelectedPersonas}
+                  // />
+                  <MoleculePersonaListItemSaas
                     key={persona.id || `persona${index}`}
                     personaImage={
                       personaImages[persona.imageKey] ||
@@ -215,7 +237,7 @@ const OrganismPersonaList = ({
   );
 };
 
-export default OrganismPersonaList;
+export default OrganismPersonaListSaas;
 
 const ToolPublicPersonaWrap = styled.div`
   display: flex;

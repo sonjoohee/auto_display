@@ -526,7 +526,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
             "상세 내용 없음"
           );
         case "ix_design_emotion_analysis":
-          return "이미지 명";
+          return tool.imageName?.[0]?.name || "상세 내용 없음";
         default:
           return tool.type;
       }
