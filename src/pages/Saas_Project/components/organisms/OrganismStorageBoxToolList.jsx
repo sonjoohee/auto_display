@@ -132,9 +132,9 @@ import {
   DESIGN_ANALYSIS_EMOTION_SCALE,
   DESIGN_ANALYSIS_FILE_NAMES,
   IDEA_GENERATOR_PURPOSE,
-} from "../../../../pages/AtomStates";
+} from "../../../AtomStates";
 
-const OrganismDashboardToolList = ({ toolListSaas }) => {
+const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -944,7 +944,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
                   진행 일시
                 </Body1>
               </th>
-              <th>
+              <th colSpan={2}>
                 <Body1 color="gray700" align="left">
                   상세보기
                 </Body1>
@@ -990,6 +990,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
                     <InputText color="gray700">자세히 보기</InputText>
                   </Button>
                 </td>
+                <td>
+                  <Button View>삭제</Button>
+                </td>
               </tr>
             ))}
           </TableBody>
@@ -1014,7 +1017,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   );
 };
 
-export default OrganismDashboardToolList;
+export default OrganismStorageBoxToolList;
 
 const RecentToolWrap = styled.div`
   width: 100%;
