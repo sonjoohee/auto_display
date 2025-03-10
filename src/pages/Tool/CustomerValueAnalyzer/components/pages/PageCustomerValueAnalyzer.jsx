@@ -1121,6 +1121,7 @@ const PageCustomerValueAnalyzer = () => {
     const elementId = useRef(`mermaid-diagram-${Date.now()}`);
 
     useEffect(() => {
+      if (!code || code.trim() === "") return;
       const script = document.createElement("script");
       script.src =
         "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js";
@@ -1232,6 +1233,9 @@ const PageCustomerValueAnalyzer = () => {
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
+    if (selectedPersonasSaas.length >= 5 && !selectedPersonaButtons[personaId]) {
+      return; // 5명 이상 선택할 수 없도록 방지
+    }
     setSelectedPersonaButtons((prev) => ({
       ...prev,
       [personaId]: !prev[personaId],
@@ -1247,7 +1251,14 @@ const PageCustomerValueAnalyzer = () => {
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
-      // 현재 URL 확인
+      // 1. Performance API 확인
+      // if (performance.navigation && performance.navigation.type === 1) {
+      //   console.log("새로고침 감지: Performance API");
+      //   navigate("/");
+      //   return true;
+      // }
+
+      // 2. 현재 URL 확인
       const currentUrl = window.location.href;
       if (currentUrl.toLowerCase().includes("customervalueanalyzer")) {
         // 세션 스토리지에서 마지막 URL 가져오기
@@ -1267,41 +1278,10 @@ const PageCustomerValueAnalyzer = () => {
       return false;
     };
 
-    // beforeunload 이벤트 핸들러
-    const handleBeforeUnload = (event) => {
-      // 이벤트 취소 (표준에 따라)
-      event.preventDefault();
-      // Chrome은 returnValue 설정 필요
-      event.returnValue = "";
-
-      // 새로고침 시 루트 페이지로 이동
-      navigate("/");
-    };
-
-    // F5 키 또는 Ctrl+R 감지
-    const handleKeyDown = (event) => {
-      if (
-        (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
-        event.key === "F5"
-      ) {
-        // F5 키 코드
-        event.preventDefault();
-        navigate("/");
-      }
-    };
-
     // 함수 실행
     detectRefresh();
 
-    // 이벤트 리스너 등록
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    window.addEventListener("keydown", handleKeyDown);
-
-    // 컴포넌트 언마운트 시 이벤트 리스너 제거
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    // 컴포넌트 마운트 시 한 번만 실행
   }, [navigate]);
 
   return (
@@ -1317,6 +1297,8 @@ const PageCustomerValueAnalyzer = () => {
               <TabButtonType5
                 isActive={activeTab >= 1}
                 onClick={() => setActiveTab(1)}
+                disabled={isLoading || Object.values(cardStatuses).some(status => status !== "completed") || 
+                  Object.values(cardStatusesFactor).some(status => status !== "completed") }
               >
                 <span>01</span>
                 <div className="text">
@@ -1328,7 +1310,10 @@ const PageCustomerValueAnalyzer = () => {
               <TabButtonType5
                 isActive={activeTab >= 2}
                 onClick={() => completedSteps.includes(1) && setActiveTab(2)}
-                disabled={!completedSteps.includes(1)}
+                disabled={!completedSteps.includes(1)|| 
+                  isLoading || Object.values(cardStatuses).some(status => status !== "completed") ||
+                  Object.values(cardStatusesFactor).some(status => status !== "completed")
+                }
               >
                 <span>02</span>
                 <div className="text">
@@ -1343,7 +1328,8 @@ const PageCustomerValueAnalyzer = () => {
               <TabButtonType5
                 isActive={activeTab >= 3}
                 onClick={() => completedSteps.includes(2) && setActiveTab(3)}
-                disabled={!completedSteps.includes(2)}
+                disabled={!completedSteps.includes(2)|| isLoading || Object.values(cardStatuses).some(status => status !== "completed" ||
+                  Object.values(cardStatusesFactor).some(status => status !== "completed") ) }
               >
                 <span>03</span>
                 <div className="text">
@@ -1358,7 +1344,8 @@ const PageCustomerValueAnalyzer = () => {
               <TabButtonType5
                 isActive={activeTab >= 4}
                 onClick={() => completedSteps.includes(3) && setActiveTab(4)}
-                disabled={!completedSteps.includes(3)}
+                disabled={!completedSteps.includes(3)|| isLoading || Object.values(cardStatuses).some(status => status !== "completed" ||
+                  Object.values(cardStatusesFactor).some(status => status !== "completed") ) }
               >
                 <span>04</span>
                 <div className="text">
@@ -1550,7 +1537,7 @@ const PageCustomerValueAnalyzer = () => {
                         }
                       />
                     </div>
-                    <Button
+                    {/* <Button
                       Other
                       Primary
                       Fill
@@ -1563,7 +1550,37 @@ const PageCustomerValueAnalyzer = () => {
                       }
                     >
                       다음
+                    </Button> */}
+
+                <BottomBar W100>
+                    <Body2
+                      color={
+                        selectedPersonasSaas.length === 0 ? "gray300" : "gray800"
+                      }
+                    >
+                      고객 여정 분석을 원하는는 페르소나를 선택해주세요 (
+                      {selectedPersonasSaas.length}/5)
+                    </Body2>
+                    <Button
+                      Large
+                      Primary
+                      Round
+                      Fill
+                      disabled={
+                        selectedPurposes.analysisScope === "" ||
+                        getSelectedPersonaCount() === 0 ||
+                        toolStep >= 1
+                      }
+                      onClick={() => handleSubmitBusinessInfo()}
+                    >
+                      다음
+                      <images.ChevronRight
+                        width="20"
+                        height="20"
+                        color={palette.white}
+                      />
                     </Button>
+                  </BottomBar>
                   </>
                 )}
               </TabContent5>
@@ -2203,3 +2220,4 @@ const Tooltip = styled.div`
   transition: opacity 0.2s;
   z-index: 10;
 `;
+
