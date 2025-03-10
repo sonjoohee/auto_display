@@ -919,7 +919,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
             <col />
             <col width="10%" />
             <col width="15%" />
-            <col width="10%" />
+            <col width="12%" />
           </colgroup>
 
           <TableHeader Type1>
@@ -935,17 +935,17 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
                 </Body1>
               </th>
               <th>
-                <Body1 color="gray700" align="left">
+                <Body1 color="gray700" align="center">
                   현황
                 </Body1>
               </th>
               <th>
-                <Body1 color="gray700" align="left">
+                <Body1 color="gray700" align="center">
                   진행 일시
                 </Body1>
               </th>
               <th>
-                <Body1 color="gray700" align="left">
+                <Body1 color="gray700" align="center">
                   상세보기
                 </Body1>
               </th>
@@ -966,16 +966,16 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
                   </Body2>
                 </td>
                 <td>
-                  <Body2 color="gray700" align="left">
+                  <Body2 color="gray700" align="center">
                     {tool.status || "완료"}
                   </Body2>
                 </td>
                 <td>
-                  <Body2 color="gray700" align="left">
+                  <Body2 color="gray700" align="center">
                     {formatDate(tool.timestamp)}
                   </Body2>
                 </td>
-                <td>
+                <td style={{ textAlign: "center" }}>
                   <Button
                     Medium
                     Outline
