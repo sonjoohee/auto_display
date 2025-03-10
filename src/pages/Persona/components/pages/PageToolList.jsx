@@ -1122,6 +1122,7 @@ const PageToolList = () => {
               <H1 color="gray800" align="left">
                 Expert & Business Tool
               </H1>
+              <div style={{ height: "10px" }}></div>
               <Body3 color="gray700" align="left">
                 당신의 비즈니스 데이터를 기반으로 다양한 AI 전문가와 툴을
                 활용하여 최적의 전략을 도출할 수 있습니다.

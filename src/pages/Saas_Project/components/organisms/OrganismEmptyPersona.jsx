@@ -202,16 +202,52 @@ const OrganismEmptyPersona = () => {
       // 상태 업데이트
       setProjectPersonaList(allPersonas);
 
-      // DB에 저장 - 상태 업데이트를 기다리지 않고 바로 allPersonas 배열 사용
+      // DB에 저장하고 반환된 ID로 페르소나 객체 업데이트
+      const updatedPersonas = [];
       for (let i = 0; i < allPersonas.length; i++) {
         const persona = allPersonas[i];
         console.log(persona);
-        await createPersonaOnServer(persona, isLoggedIn);
+        try {
+          // 서버에 저장하고 ID 반환 받기
+          const insertedId = await createPersonaOnServer(persona, isLoggedIn);
+
+          // 서버에서 반환된 ID가 있으면 페르소나 객체에 _id 추가
+          if (insertedId) {
+            const updatedPersona = {
+              ...persona,
+              _id: insertedId,
+            };
+            updatedPersonas.push(updatedPersona);
+          } else {
+            // ID가 없는 경우 원래 객체 사용
+            updatedPersonas.push(persona);
+          }
+        } catch (error) {
+          console.error("페르소나 저장 중 오류 발생:", error);
+          updatedPersonas.push(persona);
+        }
       }
 
-      // 추가: personaListSaas 상태 업데이트
-      // personaListSaas를 업데이트할 방법이 있다면 여기서 업데이트해야 합니다.
-      setPersonaListSaas(allPersonas); // 필요시 주석을 해제하고 구현하세요
+      // 서버에서 최신 데이터 가져오기
+
+      try {
+        const savedPersonaListInfo = await getPersonaListOnServer(
+          project?._id,
+          true
+        );
+
+        if (savedPersonaListInfo) {
+          const sortedList = [...savedPersonaListInfo].sort((a, b) => {
+            const dateA = a.timestamp;
+            const dateB = b.timestamp;
+            return dateB - dateA; // 최신 날짜가 위로
+          });
+
+          setPersonaListSaas(sortedList);
+        }
+      } catch (error) {
+        console.error("페르소나 목록을 불러오는데 실패했습니다:", error);
+      }
     } catch (error) {
       console.error(error);
     } finally {

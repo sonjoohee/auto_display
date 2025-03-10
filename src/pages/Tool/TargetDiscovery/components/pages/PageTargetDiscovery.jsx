@@ -308,7 +308,11 @@ const PageTargetDiscovery = () => {
 
   // 필수 필드가 모두 입력되었는지 확인하는 함수
   const isRequiredFieldsFilled = () => {
-    return businessDescription.trim() !== "" && targetCustomer.trim() !== "";
+    return (
+      businessDescription.trim() !== "" &&
+      targetCustomer.trim() !== "" &&
+      specificSituation.trim() !== ""
+    );
   };
 
   // 비즈니스 설명 입력 핸들러
@@ -435,7 +439,7 @@ const PageTargetDiscovery = () => {
             const apiRequestData = {
               business: targetDiscoveryInfo.business,
               target_discovery_persona: persona,
-              specific_situation: targetDiscoveryInfo.specificSituation,
+              specific_situation: targetDiscoveryInfo.specific_situation,
               country: targetDiscoveryInfo.country,
             };
 
@@ -833,14 +837,13 @@ const PageTargetDiscovery = () => {
 
                       <TabContent5Item>
                         <div className="title">
-                          <Body1 color="gray700">
-                            분석하고자 하는 특정 상황
-                          </Body1>
+                          <Body1 color="gray700">분석하고자 하는 상황</Body1>
+                          <Body1 color="red">*</Body1>
                         </div>
                         <CustomInput
                           disabled={toolStep >= 1}
                           type="text"
-                          placeholder="특별히 분석하고자 하는 특정 상황이 있으신 경우, 입력해주세요 (예: 전기자전거의 배터리가 없는 상황 등)"
+                          placeholder="특별히 분석하고자 하는 상황을 입력해주세요 (예: 전기자전거의 배터리가 없는 상황 등)"
                           value={specificSituation}
                           onChange={(e) => setSpecificSituation(e.target.value)}
                         />

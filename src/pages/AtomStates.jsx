@@ -522,7 +522,7 @@ export const TARGET_DISCOVERY_INFO = atom({
   type: "",
   business: "",
   target: "",
-  specificSituation: "",
+  specific_situation: "",
   country: "",
 });
 
