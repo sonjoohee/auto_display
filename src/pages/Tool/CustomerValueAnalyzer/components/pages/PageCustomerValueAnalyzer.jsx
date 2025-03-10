@@ -2220,3 +2220,4 @@ const Tooltip = styled.div`
   transition: opacity 0.2s;
   z-index: 10;
 `;
+

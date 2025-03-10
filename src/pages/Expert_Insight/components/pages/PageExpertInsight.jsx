@@ -76,6 +76,7 @@ import {
   GROWTH_HACKER_RECOMMENDED_SOLUTION,
   GROWTH_HACKER_SELECTED_SOLUTION,
   STRATEGY_CONSULTANT_REPORT_DATA,
+  PROJECT_SAAS,
 } from "../../../AtomStates";
 
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
@@ -160,6 +161,7 @@ import images from "../../../../assets/styles/Images";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 
 const PageExpertInsight = () => {
+  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
   const [strategyConsultantReportData, setStrategyConsultantReportData] =
     useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
   const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] =
@@ -414,7 +416,7 @@ const PageExpertInsight = () => {
       setLastRenderedIndex(conversation.length - 1);
       return;
     }
-    
+
     let totalDelay = 0;
     const timers = [];
     const newRenderedItems = [...renderedItems];
@@ -496,17 +498,17 @@ const PageExpertInsight = () => {
           try {
             // 서버에서 새로운 대화 ID 생성
             // console.log("서버에서 새로운 대화 ID 생성");
-            const newConversationId = await createChatOnServer();
+            const newConversationId = await createChatOnServer(projectSaas._id);
             setConversationId(newConversationId); // 생성된 대화 ID 설정
             setIsExpertInsightAccessible(true);
             setIsLoadingPage(false); // 로딩 완료
             // 새로운 대화 ID로 경로 변경
-            navigate(`/conversation/${newConversationId}`, { replace: true });
+            // navigate(`/conversation`, { replace: true });
           } catch (error) {
             setIsLoadingPage(false); // 로딩 완료
             setIsExpertInsightAccessible(true);
             console.error("Failed to create conversation on server:", error);
-            navigate(`/conversation/${conversationId}`, { replace: true });
+            // navigate(`/conversation}`, { replace: true });
           }
         } else {
           // 3. 대화 ID가 이미 존재하면 IndexedDB에서 대화 불러오기
@@ -663,7 +665,7 @@ const PageExpertInsight = () => {
         // 마케팅으로 진입 시
         setIsExpertInsightAccessible(true);
         setIsLoadingPage(false);
-        navigate(`/conversation/${conversationId}`, { replace: true });
+        // navigate(`/conversation`, { replace: true });
       } else {
         // 4. 비로그인 상태인 경우, 새로운 로컬 대피 ID 생성 또는 기존 대화 로드
         // if (!conversationId) {
@@ -718,6 +720,80 @@ const PageExpertInsight = () => {
 
     loadConversation();
   }, [conversationId, isLoggedIn, navigate]);
+
+  useEffect(() => {
+    // 새로고침 감지 함수
+    const detectRefresh = () => {
+      // 현재 URL 확인
+      const currentUrl = window.location.href;
+      if (currentUrl.toLowerCase().includes("expertinsight")) {
+        // 세션 스토리지에서 마지막 URL 가져오기
+        const lastUrl = sessionStorage.getItem("lastUrl");
+
+        // 마지막 URL이 현재 URL과 같으면 새로고침
+        if (lastUrl && lastUrl === currentUrl) {
+          console.log("새로고침 감지: URL 비교");
+          navigate("/");
+          return true;
+        }
+
+        // 현재 URL 저장
+        sessionStorage.setItem("lastUrl", currentUrl);
+      }
+      // else if (currentUrl.toLowerCase().includes("conversation")) {
+      //   // 세션 스토리지에서 마지막 URL 가져오기
+      //   const lastUrl = sessionStorage.getItem("lastUrl");
+
+      //   // 마지막 URL이 현재 URL과 같으면 새로고침
+      //   if (lastUrl && lastUrl === currentUrl) {
+      //     console.log("새로고침 감지: URL 비교");
+      //     navigate("/");
+      //     return true;
+      //   }
+
+      //   // 현재 URL 저장
+      //   sessionStorage.setItem("lastUrl", currentUrl);
+      // }
+
+      return false;
+    };
+
+    // beforeunload 이벤트 핸들러
+    const handleBeforeUnload = (event) => {
+      // 이벤트 취소 (표준에 따라)
+      event.preventDefault();
+      // Chrome은 returnValue 설정 필요
+      event.returnValue = "";
+
+      // 새로고침 시 루트 페이지로 이동
+      navigate("/");
+    };
+
+    // F5 키 또는 Ctrl+R 감지
+    const handleKeyDown = (event) => {
+      if (
+        (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
+        event.key === "F5"
+      ) {
+        // F5 키 코드
+        event.preventDefault();
+        navigate("/");
+      }
+    };
+
+    // 함수 실행
+    detectRefresh();
+
+    // 이벤트 리스너 등록
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("keydown", handleKeyDown);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [navigate]);
 
   // 스크롤
   // const [isScrolled, setIsScrolled] = useState(false);
@@ -836,7 +912,11 @@ const PageExpertInsight = () => {
                   } else if (item.type === "reportButton") {
                     return <MoleculeCheckReportRightAway />;
                   } else if (item.type === "strategyButton") {
-                    return <MoleculeStrategyButton strategyConsultantCount={strategyConsultantCount} />;
+                    return (
+                      <MoleculeStrategyButton
+                        strategyConsultantCount={strategyConsultantCount}
+                      />
+                    );
                   } else if (item.type === "strategyConsultant") {
                     const currentStrategyConsultantCount =
                       strategyConsultantCount++;
@@ -1152,10 +1232,9 @@ const PageExpertInsight = () => {
                 ) : null}
               </ChatWrap>
 
-              {conversationStage === 1 && !isMarketing ? (
-                // <OrganismSearchBottomBar isBlue={false} />
-                null
-              ) : selectedExpertIndex === "2" || selectedExpertIndex === "3" ? (
+              {conversationStage === 1 &&
+              !isMarketing ? null : selectedExpertIndex === "2" || // <OrganismSearchBottomBar isBlue={false} />
+                selectedExpertIndex === "3" ? (
                 <OrganismSearchBottomBar isBlue={true} />
               ) : selectedExpertIndex === "1" ? (
                 strategyConsultantReportData.length === 3 && (

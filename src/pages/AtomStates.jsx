@@ -488,15 +488,9 @@ export const TYPES_LIST = atom({
   selected: [],
 });
 
-export const SELECTED_INTERVIEW_TYPE = atom({
-  key: "selectedInterviewType",
-  default: "",
-});
+export const SELECTED_INTERVIEW_TYPE = atom("");
 
-export const SELECTED_INTERVIEW_PURPOSE = atom({
-  key: "selectedInterviewPurpose",
-  default: "",
-});
+export const SELECTED_INTERVIEW_PURPOSE = atom("");
 export const SELECTED_PURPOSE_INDEX = atom(0);
 export const SELECTED_INTERVIEW_PURPOSE_DATA = atom({});
 

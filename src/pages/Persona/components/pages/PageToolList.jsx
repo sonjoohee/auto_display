@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAtom } from "jotai";
 import {
@@ -177,6 +176,9 @@ import {
   DESIGN_ANALYSIS_EMOTION_SCALE,
   DESIGN_ANALYSIS_FILE_NAMES,
   PROJECT_TOTAL_INFO,
+  EXPERT_BUTTON_STATE,
+  ADDITION_BUTTON_STATE,
+  CUSTOMER_ADDITION_BUTTON_STATE,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -233,6 +235,8 @@ const PageToolList = () => {
   const [personaButtonState2, setPersonaButtonState2] = useAtom(
     PERSONA_BUTTON_STATE_2
   );
+  const [expertButtonState, setExpertButtonState] =
+    useAtom(EXPERT_BUTTON_STATE);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [strategyConsultantReportData, setStrategyConsultantReportData] =
     useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
@@ -333,7 +337,6 @@ const PageToolList = () => {
   const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   const [isMobile, setIsMobile] = useAtom(IS_MOBILE);
-  const location = useLocation();
   const navigate = useNavigate();
   const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [recommendedTargetData, setRecommendedTargetData] = useAtom(
@@ -416,7 +419,7 @@ const PageToolList = () => {
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
 
-  const [pocDetailReportData, setpocDetailReportData] = useAtom(
+  const [pocDetailReportData, setPocDetailReportData] = useAtom(
     POC_DETAIL_REPORT_DATA
   );
   const [ideaMiroState, setIdeaMiroState] = useAtom(IDEA_MIRO_STATE);
@@ -620,32 +623,130 @@ const PageToolList = () => {
   const [designAnalysisFileNames, setDesignAnalysisFileNames] = useAtom(
     DESIGN_ANALYSIS_FILE_NAMES
   );
-
+  const [additionButtonState, setAdditionButtonState] = useAtom(
+    ADDITION_BUTTON_STATE
+  );
+  const [customerAdditionButtonState, setCustomerAdditionButtonState] = useAtom(
+    CUSTOMER_ADDITION_BUTTON_STATE
+  );
+  const [checkRefresh, setCheckRefresh] = useState(false);
   // 초기화 useEffect
   useEffect(() => {
+    // !chat 초기화
+    setSelectedExpertIndex("0");
+    setConversationId(""); // 대화 ID 설정
+    setConversation([]); // 이전 대화 내역 설정
+    setConversationStage(0); // 대화 단계 설정
+    setInputBusinessInfo(""); // 비즈니스 정보 설정
+    setTitleOfBusinessInfo(""); // 분석 데이터 설정
+    setMainFeaturesOfBusinessInformation([]); // 주요 특징 설정
+    setMainCharacteristicOfBusinessInformation([]); // 주요 특징 설정
+    setBusinessInformationTargetCustomer([]); // 목표 고객 설정
+
+    // 전문가 보고서 데이터 복구
+    setStrategyReportData({});
+
+    // 필요하다면 추가 상태 업데이트
+    setSelectedAdditionalKeyword([]);
+    setAdditionalReportData([]);
+    setCustomerAdditionalReportData([]);
+    setSelectedCustomerAdditionalKeyword([]);
+
+    setSelectedPocOptions([]);
+    setSelectedPocTarget({});
+    setRecommendedTargetData({});
+    setPocPersonaList([]);
+    setPocDetailReportData({});
+
+    setIdeaFeatureData([]);
+    setIdeaRequirementData([]);
+    setIdeaFeatureDataTemp([]);
+    setIdeaRequirementDataTemp([]);
+
+    setIdeaList([]);
+    setIdeaGroup({});
+    setIdeaPriority([]);
+    setIdeaMiroState(0);
+
+    setButtonState({});
+
+    setGrowthHackerRecommendedSolution([]);
+    setGrowthHackerReportData([]);
+    setGrowthHackerDetailReportData([]);
+    setGrowthHackerSelectedSolution([]);
+    setKpiQuestionList([]);
+
+    setPriceReportData({});
+    setPriceScrapData({});
+    setPriceProduct([]);
+    setPriceSelectedProductSegmentation([]);
+    setPriceProductSegmentation([]);
+
+    setCaseReportData([]);
+    setCaseHashTag([]);
+
+    setSurveyGuidelineDetailReportData({});
+    setSurveyGuidelineReportData({});
+    setSurveyGoalSuggestionList([]);
+    setSurveyGoalFixed([]);
+    setSurveyQuestionList([]);
+
+    setBmModelSuggestionReportData([]);
+    setBmQuestionList([]);
+    setBmSelectedProblemOptions({});
+    setBmOrLean("");
+    setBmBmAutoReportData([]);
+    setBmLeanAutoReportData([]);
+    setBmBmAdsReportData([]);
+    setBmLeanAdsReportData([]);
+    setBmBmCustomReportData([]);
+    setBmLeanCustomReportData([]);
+
+    setIsMarketing(false);
+    setMarketingMbtiResult({});
+    setMarketingResearchReportData([]);
+    setMarketingBmReportData([]);
+    setMarketingCustomerData([]);
+    setMarketingSelectedCustomer([]);
+    setMarketingFinalCustomer({});
+    setMarketingFinalReportData([]);
+
+    setStrategyConsultantReportData([]);
+
+    // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
+    // set어프로치패스(2)
+    setApproachPath(2);
+
+    setIsEditingNow(false);
+    setIsEditingIdeaFeature(false);
+    setIsEditingIdeaCustomer(false);
+    setAddingIdeaFeature(false);
+    setActiveIdeaFeatureIndex(0);
+    setAddContentIdeaFeature("");
+    setEditedIdeaFeatureTitle("");
+    setAddingIdeaCustomer(false);
+    setActiveIdeaCustomerIndex(0);
+    setAddContentIdeaCustomer("");
+    setEditedIdeaCustomerTitle("");
+    setAnalysisButtonState(0);
+    setExpertButtonState(0);
+    setAdditionButtonState(0);
+    setCustomerAdditionButtonState(0);
+    setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
+
+    //!tool 초기화
     // 모든 관련 atom 상태 초기화
     setToolStep(0);
     setToolId("");
 
     // Target Discovery 관련 atom 초기화
-    setTargetDiscoveryInfo({
-      type: "",
-      business: "",
-      target: "",
-      specificSituation: "",
-      country: "",
-    });
+    setTargetDiscoveryInfo({});
     setTargetDiscoveryPersona([]);
     setTargetDiscoveryScenario([]);
     setTargetDiscoveryFinalReport({});
 
     // Customer Value Analyzer 관련 atom 초기화
-    setCustomerValueAnalyzerInfo({
-      business: "",
-      targetList: [],
-      analysisScope: "",
-      analysisPurpose: "",
-    });
+    setCustomerValueAnalyzerInfo({});
     setCustomerValueAnalyzerPersona([]);
     setCustomerValueAnalyzerJourneyMap([]);
     setCustomerValueAnalyzerFactor([]);
@@ -734,52 +835,6 @@ const PageToolList = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  useEffect(() => {
-    // 새로고침 감지 함수
-    const detectRefresh = () => {
-      // 1. Performance API 확인
-      // if (performance.navigation && performance.navigation.type === 1) {
-      //   console.log("새로고침 감지: Performance API");
-      //   navigate("/");
-      //   return true;
-      // }
-
-      // 2. 현재 URL 확인
-      const currentUrl = window.location.href;
-      if (currentUrl.toLowerCase().includes("tool")) {
-        // 대시보드에서 자세히 보기로 이동한 경우 체크
-        const fromDashboard = sessionStorage.getItem("fromDashboard");
-        if (fromDashboard === "true") {
-          // 대시보드에서 왔으면 플래그 제거하고 새로고침 감지하지 않음
-          sessionStorage.removeItem("fromDashboard");
-          // 현재 URL 저장
-          sessionStorage.setItem("lastUrl", currentUrl);
-          return false;
-        }
-
-        // 세션 스토리지에서 마지막 URL 가져오기
-        const lastUrl = sessionStorage.getItem("lastUrl");
-
-        // 마지막 URL이 현재 URL과 같으면 새로고침
-        if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
-          navigate("/");
-          return true;
-        }
-
-        // 현재 URL 저장
-        sessionStorage.setItem("lastUrl", currentUrl);
-      }
-
-      return false;
-    };
-
-    // 함수 실행
-    detectRefresh();
-
-    // 컴포넌트 마운트 시 한 번만 실행
-  }, [navigate]);
 
   useEffect(() => {
     const checkboxes = document.querySelectorAll(".accordion-toggle");
@@ -942,57 +997,60 @@ const PageToolList = () => {
     if (isLoggedIn) {
       const initialMessage = getInitialSystemMessage(index);
 
-      setConversation([
-        {
-          type: "system",
-          message: initialMessage,
-          expertIndex: index,
-        },
-        {
-          type: "expertBusinessAnalysis",
-        },
-        index === "1" 
-          ? [
-              {
-                type: "system",
-                message:
-                "본격적인 전략 컨설팅을 시작해볼까요? 먼저 시장 현황을 파악해보겠습니다.",
-                expertIndex: -1,
-              },
-              { type: "strategyButton" } 
-            ]
-          : index === "7" 
+      setConversation(
+        [
+          {
+            type: "system",
+            message: initialMessage,
+            expertIndex: index,
+          },
+          {
+            type: "expertBusinessAnalysis",
+          },
+          index === "1"
             ? [
                 {
                   type: "system",
                   message:
-                    "지금 바로 시장 가격 분석을 진행하겠습니다.",
+                    "본격적인 전략 컨설팅을 시작해볼까요? 먼저 시장 현황을 파악해보겠습니다.",
                   expertIndex: -1,
                 },
-                { type: "priceStartButton" }
+                { type: "strategyButton" },
+              ]
+            : index === "7"
+            ? [
+                {
+                  type: "system",
+                  message: "지금 바로 시장 가격 분석을 진행하겠습니다.",
+                  expertIndex: -1,
+                },
+                { type: "priceStartButton" },
               ]
             : index === "9"
-              ? [
+            ? [
                 {
                   type: "system",
                   message:
                     "본격적인 비즈니스 모델 설계를 진행하겠습니다.\n먼저 현재 아이템을 진단해보겠습니다",
                   expertIndex: -1,
                 },
-                { type: "bmStartButton" }
-                ]
-              : index === "6"
-                ? [
-                    {
-                      type: "system",
-                      message:
-                        "아이템을 분석하여, 성장 가능성을 극대화할 그로스 해킹 방법을 찾아보겠습니다. 시작할까요? 🔍",
-                      expertIndex: -1,
-                    },
-                    { type: "growthHackerStartButton" }
-                  ]
-                : null
-      ].flat().filter(Boolean));
+                { type: "bmStartButton" },
+              ]
+            : index === "6"
+            ? [
+                {
+                  type: "system",
+                  message:
+                    "아이템을 분석하여, 성장 가능성을 극대화할 그로스 해킹 방법을 찾아보겠습니다. 시작할까요? 🔍",
+                  expertIndex: -1,
+                },
+                { type: "growthHackerStartButton" },
+              ]
+            : null,
+        ]
+          .flat()
+          .filter(Boolean)
+      );
 
       setAnalysisButtonState(1);
       setIsExpertInsightAccessible(true);
@@ -1005,14 +1063,12 @@ const PageToolList = () => {
         category: {},
       });
       setSelectedExpertIndex(index);
+
+      setToolLoading(true);
       navigate("/ExpertInsight");
     } else {
       setIsPopupLogin(true); // 로그인 상태가 아니라면 로그인 팝업 띄우기
     }
-  };
-
-  const handleButtonLending = () => {
-    navigate("/Landing");
   };
 
   const [showText, setShowText] = useState(false);
@@ -1148,6 +1204,70 @@ const PageToolList = () => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    // 새로고침 감지 함수
+    const detectRefresh = () => {
+      setCheckRefresh(true);
+      // 현재 URL 확인
+      const currentUrl = window.location.href;
+      console.log("🚀 ~ detectRefresh ~ currentUrl:", currentUrl);
+      if (currentUrl.toLowerCase().includes("tool")) {
+        // 세션 스토리지에서 마지막 URL 가져오기
+        const lastUrl = sessionStorage.getItem("lastUrl");
+
+        // 마지막 URL이 현재 URL과 같으면 새로고침
+        if (lastUrl && lastUrl === currentUrl) {
+          console.log("새로고침 감지: URL 비교");
+          navigate("/");
+          return true;
+        }
+
+        // 현재 URL 저장
+        sessionStorage.setItem("lastUrl", currentUrl);
+      }
+
+      return false;
+    };
+
+    // beforeunload 이벤트 핸들러
+    const handleBeforeUnload = (event) => {
+      // 이벤트 취소 (표준에 따라)
+      event.preventDefault();
+      // Chrome은 returnValue 설정 필요
+      event.returnValue = "";
+
+      // 새로고침 시 루트 페이지로 이동
+      navigate("/");
+    };
+
+    // F5 키 또는 Ctrl+R 감지
+    const handleKeyDown = (event) => {
+      if (
+        (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
+        event.key === "F5"
+      ) {
+        // F5 키 코드
+        event.preventDefault();
+        navigate("/");
+      }
+    };
+
+    // 함수 실행
+    if (checkRefresh) {
+      detectRefresh();
+    }
+
+    // 이벤트 리스너 등록
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("keydown", handleKeyDown);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [navigate]);
+
   return (
     <>
       <ContentsWrap>
@@ -1216,7 +1336,7 @@ const PageToolList = () => {
                     <div
                       className="overlay"
                       onClick={() => {
-                        hadleToolSelect("1");
+                        navigate("/Persona3Single");
                       }}
                     >
                       <span>
@@ -1254,7 +1374,7 @@ const PageToolList = () => {
                     <div
                       className="overlay"
                       onClick={() => {
-                        hadleToolSelect("1");
+                        navigate("/Persona3Multiple");
                       }}
                     >
                       <span>

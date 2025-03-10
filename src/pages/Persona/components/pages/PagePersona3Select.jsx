@@ -491,12 +491,35 @@ const PagePersona3Select = () => {
                   selectedPersonaButtons={selectedPersonaButtons}
                   handlePersonaButtonClick={handlePersonaButtonClick}
                   onNavigate={navigate}
+                  selectedPersonas={selectedPersonas}
+                  onPersonaSelect={setSelectedPersonas}
                 />
               </div>
+              <BottomBar W100>
+                <Body2 color="gray800">
+                  {selectedInterviewType === "multiple"
+                    ? `선택한 ${getSelectedCount()}명의 페르소나와 인터뷰를 진행하시겠습니까?`
+                    : getSelectedCount() === 0
+                    ? "인터뷰할 페르소나를 선택해주세요"
+                    : "선택한 페르소나와 인터뷰를 진행하시겠습니까?"}
+                </Body2>
+                <Button
+                  Large
+                  Primary
+                  Round
+                  Fill
+                  disabled={getSelectedCount() === 0}
+                  onClick={handleStartInterview}
+                >
+                  인터뷰 시작
+                  <images.ChevronRight
+                    width="20px"
+                    height="20px"
+                    color="white"
+                  />
+                </Button>
+              </BottomBar>
             </TabContent5>
-
-
-
 
             {/* <MainSection>
               <InterviewWayTab>
@@ -914,3 +937,4 @@ const CustomTitle = styled.div`
   justify-content: space-between;
   width: 100%;
 `;
+
