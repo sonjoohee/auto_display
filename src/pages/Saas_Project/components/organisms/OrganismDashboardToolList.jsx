@@ -468,7 +468,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           return tool.analysisScope || "상세 내용 없음";
         case "ix_idea_generator_persona":
           return (
-            `${tool.coreValue?.[0]}외 ${tool.coreValue?.length - 1}개` ||
+            `${tool.coreValue?.[0]} 외 ${tool.coreValue?.length - 1}개` ||
             "상세 내용 없음"
           );
         case "ix_design_emotion_analysis":
@@ -495,6 +495,10 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
     if (isLoading) {
       return;
     }
+
+    // 대시보드에서 자세히 보기로 이동하는 플래그 설정
+    sessionStorage.setItem("fromDashboard", "true");
+
     if (conversationType === "expert") {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
@@ -674,7 +678,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
 
         // 페이지를 대화가 이어지는 형태로 전환
-        navigate(`/conversation/${conversationId}`);
+        navigate(`/conversation`);
       } catch (error) {
         console.error("대화 내용 가져오기 오류:", error);
       }
@@ -868,13 +872,17 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         // navigate(`/TargetDiscovery`);
 
         if (chatData.type === "ix_customer_value_persona") {
-          navigate(`/CustomerValueAnalyzer`);
+          setToolLoading(true);
+          navigate("/CustomerValueAnalyzer");
         } else if (chatData.type === "ix_idea_generator_persona") {
-          navigate(`/IdeaGenerator`);
+          setToolLoading(true);
+          navigate("/IdeaGenerator");
         } else if (chatData.type === "ix_target_discovery_persona") {
-          navigate(`/TargetDiscovery`);
+          setToolLoading(true);
+          navigate("/TargetDiscovery");
         } else if (chatData.type === "ix_design_emotion_analysis") {
-          navigate(`/DesignAnalysis`);
+          setToolLoading(true);
+          navigate("/DesignAnalysis");
         }
       } catch (error) {
         console.error("대화 내용 가져오기 오류:", error);
@@ -1005,6 +1013,13 @@ const NoDataWrap = styled.div`
 
     button {
       margin-top: 4px;
+    }
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      border-color: ${palette.primary};
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      transform: translateY(-2px);
     }
   }
 `;

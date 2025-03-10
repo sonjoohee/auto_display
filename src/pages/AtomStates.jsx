@@ -522,7 +522,7 @@ export const TARGET_DISCOVERY_INFO = atom({
   type: "",
   business: "",
   target: "",
-  specific_situation: "",
+  specificSituation: "",
   country: "",
 });
 
@@ -544,7 +544,7 @@ export const CUSTOMER_VALUE_ANALYZER_INFO = atom({
 export const CUSTOMER_VALUE_ANALYZER_PERSONA = atom([]);
 export const CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA = atom([]);
 export const CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR = atom([]);
-export const CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP = atom({});
+export const CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP = atom([]);
 export const CUSTOMER_VALUE_ANALYZER_FACTOR = atom({});
 export const CUSTOMER_VALUE_ANALYZER_CLUSTERING = atom([]);
 export const CUSTOMER_VALUE_ANALYZER_POSITIONING = atom([]);
