@@ -319,6 +319,23 @@ import StarFill from "../images/StarFill.svg";
 
 import NoData from "../images/Nodata.svg";
 
+import ProjectTag from "../icons/ProjectTag";
+
+import ProjectInformation from "../images/Project-Information.svg";
+import ProjectBanking from "../images/Project-Banking.svg";
+import ProjectProduction from "../images/Project-Production.svg";
+import ProjectBuild from "../images/Project-Build.svg";
+import ProjectMedical from "../images/Project-Medical.svg";
+import ProjectEducation from "../images/Project-Education.svg";
+import ProjectConsumer from "../images/Project-Consumer.svg";
+import ProjectEtc from "../images/Project-Etc.svg";
+
+import ProjectKorea from "../images/Project-korea.svg";
+import ProjectUsa from "../images/Project-usa.svg";
+import ProjectChina from "../images/Project-china.svg";
+import ProjectJapan from "../images/Project-japan.svg";
+import ProjectVietnam from "../images/Project-vietnam.svg";
+
 const images = {
   Logo,
   SymbolLogo,
@@ -627,6 +644,23 @@ const images = {
   StarFill,
 
   NoData,
+
+  ProjectTag,
+
+  ProjectInformation,
+  ProjectBanking,
+  ProjectProduction,
+  ProjectBuild,
+  ProjectMedical,
+  ProjectEducation,
+  ProjectConsumer,
+  ProjectEtc,
+
+  ProjectKorea,
+  ProjectUsa,
+  ProjectChina,
+  ProjectJapan,
+  ProjectVietnam,
 }
 
 export default images;

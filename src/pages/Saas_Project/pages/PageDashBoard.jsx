@@ -13,12 +13,12 @@ import { Button } from "../../../assets/styles/ButtonStyle";
 import {
   ContentsWrap,
   MainContent,
-  Tag,
+  ProjectTag,
   Table,
   TableHeader,
   TableBody,
 } from "../../../assets/styles/BusinessAnalysisStyle";
-import images from "../../../assets/styles/Images";
+import images from '../../../assets/styles/Images';
 import {
   H1,
   H2,
@@ -339,11 +339,13 @@ const PageDashBoard = () => {
               <Card>
                 <CardTitle>
                   <div>
-                    <H4 color="gray800">{project?.projectTitle}</H4>
+                    <H4 color="gray800" align="left">{project?.projectTitle}</H4>
                     <TagWrap>
-                      <Tag color="Amethyst" />
-                      <Tag color="Amethyst" />
-                      <Tag color="Amethyst" />
+                      <ProjectTag Business="B2C">
+                        <images.ProjectTag color="#AF52DE" />
+                      </ProjectTag>
+                      <ProjectTag Type="Information" />
+                      <ProjectTag Country="Korea" />
                     </TagWrap>
                   </div>
 
