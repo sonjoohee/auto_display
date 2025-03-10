@@ -305,6 +305,9 @@ import ImgExplore13 from "../images/img-explore13.png";
 import ImgExploreNoData from "../images/img-explore-nodata.png";
 
 import LightningChargeFill from "../icons/LightningChargeFill";
+import GridTool from "../icons/GridTool";
+import GridCircle from "../icons/GridCircle";
+
 import Tag from "../icons/Tag";
 import Report2 from "../icons/Report2";
 import ImagePrimary from "../images/image-primary.svg";
@@ -631,6 +634,9 @@ const images = {
   ImgExploreNoData,
 
   LightningChargeFill,
+  GridTool,
+  GridCircle,
+
   Tag,
   Report2,
   ImagePrimary,
