@@ -1121,6 +1121,7 @@ const PageCustomerValueAnalyzer = () => {
     const elementId = useRef(`mermaid-diagram-${Date.now()}`);
 
     useEffect(() => {
+      if (!code || code.trim() === "") return;
       const script = document.createElement("script");
       script.src =
         "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js";
@@ -1232,6 +1233,9 @@ const PageCustomerValueAnalyzer = () => {
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
+    if (selectedPersonasSaas.length >= 5 && !selectedPersonaButtons[personaId]) {
+      return; // 5명 이상 선택할 수 없도록 방지
+    }
     setSelectedPersonaButtons((prev) => ({
       ...prev,
       [personaId]: !prev[personaId],
@@ -1293,6 +1297,8 @@ const PageCustomerValueAnalyzer = () => {
               <TabButtonType5
                 isActive={activeTab >= 1}
                 onClick={() => setActiveTab(1)}
+                disabled={isLoading || Object.values(cardStatuses).some(status => status !== "completed") || 
+                  Object.values(cardStatusesFactor).some(status => status !== "completed") }
               >
                 <span>01</span>
                 <div className="text">
@@ -1304,7 +1310,10 @@ const PageCustomerValueAnalyzer = () => {
               <TabButtonType5
                 isActive={activeTab >= 2}
                 onClick={() => completedSteps.includes(1) && setActiveTab(2)}
-                disabled={!completedSteps.includes(1)}
+                disabled={!completedSteps.includes(1)|| 
+                  isLoading || Object.values(cardStatuses).some(status => status !== "completed") ||
+                  Object.values(cardStatusesFactor).some(status => status !== "completed")
+                }
               >
                 <span>02</span>
                 <div className="text">
@@ -1319,7 +1328,8 @@ const PageCustomerValueAnalyzer = () => {
               <TabButtonType5
                 isActive={activeTab >= 3}
                 onClick={() => completedSteps.includes(2) && setActiveTab(3)}
-                disabled={!completedSteps.includes(2)}
+                disabled={!completedSteps.includes(2)|| isLoading || Object.values(cardStatuses).some(status => status !== "completed" ||
+                  Object.values(cardStatusesFactor).some(status => status !== "completed") ) }
               >
                 <span>03</span>
                 <div className="text">
@@ -1334,7 +1344,8 @@ const PageCustomerValueAnalyzer = () => {
               <TabButtonType5
                 isActive={activeTab >= 4}
                 onClick={() => completedSteps.includes(3) && setActiveTab(4)}
-                disabled={!completedSteps.includes(3)}
+                disabled={!completedSteps.includes(3)|| isLoading || Object.values(cardStatuses).some(status => status !== "completed" ||
+                  Object.values(cardStatusesFactor).some(status => status !== "completed") ) }
               >
                 <span>04</span>
                 <div className="text">
@@ -1526,7 +1537,7 @@ const PageCustomerValueAnalyzer = () => {
                         }
                       />
                     </div>
-                    <Button
+                    {/* <Button
                       Other
                       Primary
                       Fill
@@ -1539,7 +1550,37 @@ const PageCustomerValueAnalyzer = () => {
                       }
                     >
                       다음
+                    </Button> */}
+
+                <BottomBar W100>
+                    <Body2
+                      color={
+                        selectedPersonasSaas.length === 0 ? "gray300" : "gray800"
+                      }
+                    >
+                      고객 여정 분석을 원하는는 페르소나를 선택해주세요 (
+                      {selectedPersonasSaas.length}/5)
+                    </Body2>
+                    <Button
+                      Large
+                      Primary
+                      Round
+                      Fill
+                      disabled={
+                        selectedPurposes.analysisScope === "" ||
+                        getSelectedPersonaCount() === 0 ||
+                        toolStep >= 1
+                      }
+                      onClick={() => handleSubmitBusinessInfo()}
+                    >
+                      다음
+                      <images.ChevronRight
+                        width="20"
+                        height="20"
+                        color={palette.white}
+                      />
                     </Button>
+                  </BottomBar>
                   </>
                 )}
               </TabContent5>

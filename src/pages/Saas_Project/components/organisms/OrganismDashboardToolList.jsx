@@ -131,6 +131,7 @@ import {
   DESIGN_ANALYSIS_EMOTION_TARGET,
   DESIGN_ANALYSIS_EMOTION_SCALE,
   DESIGN_ANALYSIS_FILE_NAMES,
+  IDEA_GENERATOR_PURPOSE,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -411,8 +412,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [ideaGeneratorCustomTarget, setIdeaGeneratorCustomTarget] = useAtom(
     IDEA_GENERATOR_CUSTOM_TARGET
   );
-
-  // 대화 저장 함수
+  const [ideaGeneratorPurpose, setIdeaGeneratorPurpose] = useAtom(
+    IDEA_GENERATOR_PURPOSE
+  );
   const saveConversation = (data) => {
     // 대화 저장 로직 구현
     console.log("대화 저장:", data);
@@ -767,6 +769,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setIdeaGeneratorFinalReport({});
         setIdeaGeneratorSelectedPersona([]);
         setIdeaGeneratorKnowTarget(null);
+        setIdeaGeneratorPurpose("");
 
         setIdeaGeneratorInfo({
           business: chatData?.business,
@@ -781,6 +784,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           chatData?.ideaGeneratorSelectedPersona || []
         );
         setIdeaGeneratorKnowTarget(chatData?.ideaGeneratorKnowTarget);
+        setIdeaGeneratorPurpose(chatData?.purpose);
 
         setDesignAnalysisEmotionAnalysis([]);
         setDesignAnalysisBusinessInfo("");
