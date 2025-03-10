@@ -32,6 +32,7 @@ import {
   SELECTED_PERSONA_LIST,
   SELECTED_INTERVIEW_PURPOSE_DATA,
   PURPOSE_ITEMS_SINGLE,
+  PROJECT_TOTAL_INFO,
 } from "../../../AtomStates";
 import { InterviewXPersonaSingleInterviewRequestAddQuestion } from "../../../../utils/indexedDB";
 
@@ -68,6 +69,9 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
   const [visibleAnswers, setVisibleAnswers] = useState({});
 
   const [showAddQuestion, setShowAddQuestion] = useState(false);
+
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+
 
   //저장되었던 인터뷰 로드
   useEffect(() => {
@@ -266,7 +270,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
           <ChatWrap>
             <Header>
               <Title>
-                {businessAnalysis.title}의 {selectedInterviewPurposeData.title}
+                {projectTotalInfo.projectTitle}의 {selectedInterviewPurposeData.title}
                 <ColseButton onClick={handleClose} />
               </Title>
               <ul>

@@ -201,6 +201,7 @@ const PagePersona3Single = () => {
     //   unselected: filteredProjectList,
     // }));
 
+    setSelectedInterviewType("single");
     setPersonaStep(3);
     setIsPersonaAccessible(true);
     navigate(`/Persona/3/Select`, { replace: true });
@@ -216,139 +217,6 @@ const PagePersona3Single = () => {
   ]);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
-
-  useEffect(() => {
-    // 접근 가능 여부를 확인하여 차단 로직 수행
-    if (!isPersonaAccessible) {
-      navigate("/"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
-    }
-
-    // 페이지를 나갈 때 접근 가능 여부 초기화
-    return () => {
-      setIsPersonaAccessible(false); // 페이지 떠날 때 접근 불가로 설정
-    };
-  }, []);
-
-  const handleCategoryClick = (categoryId) => {
-    setActiveCategory(categoryId);
-  };
-
-  const handleInterviewTypeSelect = (type) => {
-    setSelectedInterviewType(type);
-  };
-
-  const purposeItemsMultiple = [
-    {
-      id: 1,
-      category: "제품 사용 경험",
-      title: "제품 경험 평가",
-      description:
-        "사용자의 기능, 디자인, 사용성 경험을 분석해 만족도와 불만족 요인을 도출",
-      expandedContent: [
-        "이 제품이 현재의 시장 경쟁 제품들과 비교해 독특하다고 느껴질 수 있는 요소는 무엇인가요?",
-        "이 제품이 더 많은 사람들에게 매력적으로 다가가기 위해 추가되거나 개선되어야 할 가장 중요한 요소는 무엇이라고 생각하시나요?",
-        "이 제품이 사용자에게 전달하려는 메시지나 숨겨진 이야기가 있다면, 그것은 무엇일까요?",
-      ],
-    },
-    {
-      id: 2,
-      category: "제품 사용 경험",
-      title: "사용 맥락 조사",
-      description: "사용 환경과 패턴을 이해해 사용자 문제와 제약 요인을 해결",
-      expandedContent: [
-        "이 제품을 사용하는 데 있어 불편하거나 부적합할 수 있는 상황은 어떤 경우일까요?",
-        "이 제품을 사용할 수 있는 환경에서 가장 중요한 조건은 무엇이라고 생각하시나요?",
-        "이 제품이 예상치 못한 환경에서도 효과적으로 사용될 가능성이 있다면, 어떤 환경일까요?",
-      ],
-    },
-    {
-      id: 3,
-      category: "구매 및 소비 심리",
-      title: "구매 전환 요인 분석",
-      description:
-        "소비자의 구매 결정에 영향을 미치는 핵심 요인을 파악해 최적의 전략을 설계",
-      expandedContent: [
-        "이 제품에 대해 소비자가 가장 많이 질문할 가능성이 있는 부분은 무엇일까요?",
-        "경쟁 제품 대비 이 제품이 소비자의 선택을 받을 가능성이 높은 이유는 무엇인가요?",
-        "소비자가 이 제품을 구매하지 않을 가능성이 있다면, 그 이유는 무엇일까요?",
-      ],
-    },
-    {
-      id: 4,
-      category: "구매 및 소비 심리",
-      title: "소비자 행동 유도 요소 분석",
-      description:
-        "사용자의 행동을 유도하는 요소를 파악해 전환율과 참여를 극대화",
-      expandedContent: [
-        "이 제품이 구매를 망설이는 소비자의 마음을 바꿀 수 있다면, 어떤 요소가 가장 중요한 역할을 할까요?",
-        "소비자가 이 제품에 대해 가장 큰 불신이나 의구심을 가질 가능성이 있다면, 그 이유는 무엇일까요?",
-        "이 제품이 소비자의 행동을 더 효과적으로 유도하기 위해 추가하거나 수정해야 할 요소는 무엇인가요?",
-      ],
-    },
-    {
-      id: 5,
-      category: "구매 및 소비 심리",
-      title: "제품 기대치 확인",
-      description: "초기 기대와 실제 경험의 차이를 줄여 사용자 만족도를 증대",
-      expandedContent: [
-        "이 제품이 소비자에게 가장 기대감을 줄 수 있는 핵심 요소는 무엇이라고 생각하시나요?",
-        "이 제품이 소비자 기대를 현실적으로 충족시키는 동시에 놀라움을 제공하려면 어떤 점을 개선하거나 추가해야 할까요?",
-        "이 제품이 소비자의 기대를 충족하지 못할 가능성이 있다면, 그 이유는 무엇일까요?",
-      ],
-    },
-    {
-      id: 6,
-      category: "제품 사용 경험",
-      title: "소비자 여정 맵핑",
-      description:
-        "다양한 시나리오에서 제품의 사용 가능성을 평가하여 부적합한 환경 발견",
-      expandedContent: [
-        "소비자가 이 제품의 구매를 결정하기 전에 가장 궁금해할 질문은 무엇일까요?",
-        "소비자가 이 제품을 구매하는 과정을 상상했을 때, 가장 큰 장벽은 무엇일까요?",
-        "이 제품을 구매 후, 소비자가 기대와 실제 사용 경험 간에 느낄 수 있는 가장 큰 차이는 무엇일까요?",
-      ],
-    },
-    {
-      id: 7,
-      category: "구매 및 소비 심리",
-      title: "제품 이해도 테스트",
-      description: "사용자 관점에서 제품의 목적과 사용법을 평가해 접근성 강화",
-      expandedContent: [
-        "제품 설명을 기준으로, 이 제품이 해결하고자 하는 문제는 무엇이라고 생각하시나요?",
-        "이 제품을 사용할 수 있는 환경에서 가장 중요한 조건은 무엇이라고 생각하시나요?",
-        "이 제품의 가장 독특하거나 주목할 만한 기능은 무엇이라고 느껴지시나요?",
-      ],
-    },
-    {
-      id: 8,
-      category: "사용자 시뮬레이션",
-      title: "사용자 경험 시뮬레이션",
-      description: "제품 사용을 가상으로 재현해 문제를 예측하고 설계를 최적화",
-      expandedContent: [
-        "이 제품이 당신의 일상에서 자연스럽게 사용될 가능성이 가장 높은 순간은 언제이며, 그 이유는 무엇인가요?",
-        "이 제품을 사용하기 전과 사용한 후에 당신이 느낄 가장 큰 차이점은 무엇일 것 같나요?",
-        "이 제품을 사용하는 과정에서 가장 큰 장애물로 예상되는 부분은 무엇이며, 이를 극복하려면 어떤 개선이 필요할까요?",
-      ],
-    },
-  ];
-  const purposeCategoriesMultiple = [
-    { id: 1, label: "전체" },
-    { id: 2, label: "제품 사용 경험" },
-    { id: 3, label: "구매 및 소비 심리" },
-    { id: 4, label: "사용자 시뮬레이션" },
-  ];
-  const categoryItemsMultiple = {
-    1: purposeItemsMultiple,
-    2: purposeItemsMultiple.filter(
-      (item) => item.category === "제품 사용 경험"
-    ),
-    3: purposeItemsMultiple.filter(
-      (item) => item.category === "구매 및 소비 심리"
-    ),
-    4: purposeItemsMultiple.filter(
-      (item) => item.category === "사용자 시뮬레이션"
-    ),
-  };
 
   const purposeItemsSingle = [
     {
@@ -608,24 +476,43 @@ const PagePersona3Single = () => {
                   <div className="title">
                     <Body1 color="gray700">인터뷰 목적 선택</Body1>
                   </div>
+                  
+                  <CustomizationWrap>
+                    {showCustomButton &&
+                      <BoxWrap NoData onClick={() => setShowRequestPopup(true)}>
+                        <img src={images.NoData} alt="no data" />
+                        <Body2 color="gray700" align="center">원하는 내용이 없다면, 목적에 따른 문항을 생성해보세요</Body2>
+                      </BoxWrap>}
 
-                  <BoxWrap NoData>
-                    <img src={images.NoData} alt="no data" />
-                    <Body2 color="gray700" align="center">원하는 내용이 없다면, 목적에 따른 문항을 생성해보세요</Body2>
-                  </BoxWrap>
-
-                  <BoxWrap Column>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
-                      <Body1 color="gray800" align="left">인터뷰 목적</Body1>
-                      <CustomTextarea
-                        rows={4}
-                        placeholder="페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다."
-                        maxLength={150}
-                        status="valid"
+                      <OrganismCustomization
+                        customizations={customizations}
+                        setCustomizations={setCustomizations}
+                        setShowPopup={setShowPopup}
+                        setShowNewListBox={setShowNewListBox}
+                        setShowCustomization={setShowCustomization}
+                        setShowCustomButton={setShowCustomButton}
+                        setShowQuestions={setShowQuestions}
                       />
-                    </div>
-                    <Button Medium Primary>목적 분석</Button>
-                  </BoxWrap>
+                      
+                      {purposeItemsSingleAtom.slice(3, 4).map((purpose) => (
+                        <MoleculeInterviewPurpose
+                          Small
+                          key={purpose.id}
+                          purpose={purpose}
+                          selectedPurpose={selectedInterviewPurpose}
+                          showQuestions={showQuestions}
+                          onPurposeSelect={handlePurposeSelect}
+                          toggleQuestions={(id) =>
+                            setShowQuestions((prev) => ({
+                              ...prev,
+                              [id]: !prev[id],
+                            }))
+                          }
+                        />
+                      ))}
+                      
+                  </CustomizationWrap>
+                  
                 </TabContent5Item>
               </div>
 
@@ -633,7 +520,7 @@ const PagePersona3Single = () => {
                 <TabContent5Item>
                   <Body1 color="gray700" align="left">💡어떤 목적을 써야할지 모르겠다면?</Body1>
                   
-                  {purposeItemsSingleAtom.map((purpose) => (
+                  {purposeItemsSingleAtom.slice(0, 3).map((purpose) => (
                     <MoleculeInterviewPurpose
                       Small
                       key={purpose.id}
@@ -651,252 +538,10 @@ const PagePersona3Single = () => {
                   ))}
                 </TabContent5Item>
               </div>
+
+              <Button Other Primary Fill disabled={!selectedInterviewPurpose} onClick={handleSelectPersona}>다음</Button>
+
             </TabContent5>
-
-            <BottomBar W100 style={{left: "50%", transform: "translateX(-50%)"}}>
-              <Body2
-                color={
-                  !selectedInterviewType || !selectedInterviewPurpose
-                    ? "gray300"
-                    : "gray800"
-                }
-              >
-                {selectedInterviewPurpose === "product_experience_new"
-                  ? "제품 경험 평가"
-                  : ""}{" "}
-                인터뷰에 참여할 페르소나를 선택하세요
-              </Body2>
-              <Button
-                Large
-                Primary
-                Round
-                Fill
-                disabled={!selectedInterviewType || !selectedInterviewPurpose}
-                onClick={handleSelectPersona}
-              >
-                다음
-                <images.ChevronRight
-                  width="20"
-                  height="20"
-                  color={palette.white}
-                />
-              </Button>
-            </BottomBar>
-
-            {/* <MainSection>
-              <InterviewWayContent>
-                <div>
-                  <Body2 color="gray800" align="left">
-                    인터뷰 방식
-                  </Body2>
-
-
-                  <CardGroupWrap column style={{ marginBottom: "0" }}>
-
-                    <ListBoxItem FlexStart active={selectedInterviewType === "multiple"}>
-                      <div>
-                        <RadioButton
-                          id="radio1"
-                          name="radioGroup1"
-                          checked={selectedInterviewType === "multiple"}
-                          onChange={() => handleInterviewTypeSelect("multiple")}
-                        />
-                      </div>
-                      <ListText>
-                        <ListTitle>
-                          <Body1
-                            color={
-                              selectedInterviewType === "multiple"
-                                ? "primary"
-                                : "gray800"
-                            }
-                          >
-                            여러 페르소나 인터뷰 (1:N)
-                          </Body1>
-                        </ListTitle>
-                        <ListSubtitle>
-                          <Caption1
-                            color={
-                              selectedInterviewType === "multiple"
-                                ? "gray800"
-                                : "gray500"
-                            }
-                          >
-                            여러 페르소나의 다양한 의견을 한 번에 확인 하세요.
-                            폭넓은 시각과 다양한 의견을 파악하는데 적합합니다.
-                          </Caption1>
-                        </ListSubtitle>
-                      </ListText>
-                    </ListBoxItem>
-
-                    <ListBoxItem FlexStart active={selectedInterviewType === "single"}>
-                      <div>
-                        <RadioButton
-                          id="radio2"
-                          name="radioGroup1"
-                          checked={selectedInterviewType === "single"}
-                          onChange={() => handleInterviewTypeSelect("single")}
-                        />
-                      </div>
-                      <ListText>
-                        <ListTitle>
-                          <Body1
-                            color={
-                              selectedInterviewType === "single"
-                                ? "primary"
-                                : "gray800"
-                            }
-                          >
-                            한 명과 심층 인터뷰 (1:1)
-                          </Body1>
-                        </ListTitle>
-                        <ListSubtitle>
-                          <Caption1
-                            color={
-                              selectedInterviewType === "multiple"
-                                ? "gray800"
-                                : "gray500"
-                            }
-                          >
-                            한 명의 페르소나와 깊이 있는 대화를 통해 자세한
-                            인사이트를 도출하세요. 구체적인 피드백이 필요한 경우
-                            유용합니다.
-                          </Caption1>
-                        </ListSubtitle>
-                      </ListText>
-                    </ListBoxItem>
-                  </CardGroupWrap>
-                </div>
-
-                <div>
-                  {selectedInterviewType === "multiple" ? (
-                    <InterviewSelect>
-                      <Body2 color="gray800" align="left">
-                        인터뷰 목적
-                      </Body2>
-
-                      <TabWrap>
-                        {purposeCategoriesMultiple.map((category) => (
-                          <TabButton
-                            key={category.id}
-                            isActive={activeCategory === category.id}
-                            onClick={() => handleCategoryClick(category.id)}
-                          >
-                            {category.label}
-                          </TabButton>
-                        ))}
-                      </TabWrap>
-
-                      <TabContent>
-                        {categoryItemsMultiple[activeCategory].map((item) => (
-                          <MoleculeInterviewCard
-                            NoBackground
-                            key={item.id}
-                            title={item.title}
-                            description={item.description}
-                            isSelected={interviewPurpose === item.title}
-                            onSelect={(title) =>
-                              handleInterviewPurposeSelect(title)
-                            }
-                            interviewPurpose={interviewPurpose}
-                            isActive={interviewPurpose === item.title}
-                          />
-                        ))}
-                      </TabContent>
-                    </InterviewSelect>
-                  ) : selectedInterviewType === "single" ? (
-                    <CardGroupWrap column>
-                      <Body2 color="gray800" align="left">
-                        인터뷰 목적
-                      </Body2>
-                      {purposeItemsSingleAtom.map((purpose) => (
-                        <MoleculeInterviewPurpose
-                          Small
-                          key={purpose.id}
-                          purpose={purpose}
-                          selectedPurpose={selectedInterviewPurpose}
-                          showQuestions={showQuestions}
-                          onPurposeSelect={handlePurposeSelect}
-                          toggleQuestions={(id) =>
-                            setShowQuestions((prev) => ({
-                              ...prev,
-                              [id]: !prev[id],
-                            }))
-                          }
-                        />
-                      ))}
-
-                      <CustomizationWrap>
-                        {showCustomButton &&
-                          !customTheoryData?.theory_title && (
-                            <Button
-                              DbExLarge
-                              W100
-                              Outline
-                              onClick={() => setShowRequestPopup(true)}
-                            >
-                              <span />
-                              <Sub1 color="gray700">인터뷰 커스터마이징</Sub1>
-                            </Button>
-                          )}
-
-                        <OrganismCustomization
-                          customizations={customizations}
-                          setCustomizations={setCustomizations}
-                          setShowPopup={setShowPopup}
-                          setShowNewListBox={setShowNewListBox}
-                          setShowCustomization={setShowCustomization}
-                          setShowCustomButton={setShowCustomButton}
-                          setShowQuestions={setShowQuestions}
-                        />
-                      </CustomizationWrap>
-                    </CardGroupWrap>
-                  ) : (
-                    <ListBoxItem>
-                      <ListText style={{ textAlign: "center", width: "100%" }}>
-                        <Body1 color="gray500">
-                          인터뷰 방법을 선택해주세요.
-                        </Body1>
-                        <Caption1 color="gray500" style={{ marginTop: "8px" }}>
-                          인터뷰 목적을 선택하기 전에 인터뷰 방법을 먼저
-                          선택해주세요.
-                        </Caption1>
-                      </ListText>
-                    </ListBoxItem>
-                  )}
-                </div>
-              </InterviewWayContent>
-
-              <BottomBar W100>
-                <Body2
-                  color={
-                    !selectedInterviewType || !selectedInterviewPurpose
-                      ? "gray300"
-                      : "gray800"
-                  }
-                >
-                  {selectedInterviewPurpose === "product_experience_new"
-                    ? "제품 경험 평가"
-                    : ""}{" "}
-                  인터뷰에 참여할 페르소나를 선택하세요
-                </Body2>
-                <Button
-                  Large
-                  Primary
-                  Round
-                  Fill
-                  disabled={!selectedInterviewType || !selectedInterviewPurpose}
-                  onClick={handleSelectPersona}
-                >
-                  다음
-                  <images.ChevronRight
-                    width="20"
-                    height="20"
-                    color={palette.white}
-                  />
-                </Button>
-              </BottomBar>
-            </MainSection> */}
 
             {/* 크레딧 소진팝업 */}
             {showCreditPopup && (
@@ -1176,6 +821,7 @@ const CustomizationWrap = styled.div`
   justify-content: center;
   gap: 12px;
   width: 100%;
+  cursor: pointer;
 
   > div {
     width: 100%;

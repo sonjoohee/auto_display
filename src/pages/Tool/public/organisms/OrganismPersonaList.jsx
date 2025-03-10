@@ -183,6 +183,7 @@ const OrganismPersonaList = ({
                   }
                   return persona.personaType === activeTab;
                 })
+                .filter((persona) => persona.status === "complete")
                 .map((persona, index) => (
                   <MoleculePersonaListItem
                     key={persona.id || `persona${index}`}

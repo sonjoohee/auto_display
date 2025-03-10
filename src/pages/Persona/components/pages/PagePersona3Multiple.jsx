@@ -201,6 +201,7 @@ const PagePersona3Multiple = () => {
     //   unselected: filteredProjectList,
     // }));
 
+    setSelectedInterviewType("multiple");
     setPersonaStep(3);
     setIsPersonaAccessible(true);
     navigate(`/Persona/3/Select`, { replace: true });
@@ -217,17 +218,17 @@ const PagePersona3Multiple = () => {
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
-  useEffect(() => {
-    // 접근 가능 여부를 확인하여 차단 로직 수행
-    if (!isPersonaAccessible) {
-      navigate("/"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
-    }
+  // useEffect(() => {
+  //   // 접근 가능 여부를 확인하여 차단 로직 수행
+  //   if (!isPersonaAccessible) {
+  //     navigate("/"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
+  //   }
 
-    // 페이지를 나갈 때 접근 가능 여부 초기화
-    return () => {
-      setIsPersonaAccessible(false); // 페이지 떠날 때 접근 불가로 설정
-    };
-  }, []);
+  //   // 페이지를 나갈 때 접근 가능 여부 초기화
+  //   return () => {
+  //     setIsPersonaAccessible(false); // 페이지 떠날 때 접근 불가로 설정
+  //   };
+  // }, []);
 
   const handleCategoryClick = (categoryId) => {
     setActiveCategory(categoryId);
@@ -639,7 +640,7 @@ const PagePersona3Multiple = () => {
                 </TabContent5Item>
               </div>
 
-              <Button Other Primary Fill onClick={handleSelectPersona}>다음</Button>
+              <Button Other Primary Fill disabled={!selectedInterviewPurpose} onClick={handleSelectPersona}>다음</Button>
             </TabContent5>
 
             {/* <MainSection>
