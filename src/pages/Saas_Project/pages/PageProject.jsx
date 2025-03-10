@@ -33,13 +33,24 @@ const PageProject = () => {
 
   const [projectList, setProjectList] = useAtom(PROJECT_LIST);
   const [isWarningPopupOpen, setIsWarningPopupOpen] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   const handleWarningClose = () => {
     setIsWarningPopupOpen(false);
   };
   const handleWarningContinue = () => {
-    setIsWarningPopupOpen(false);
-    navigate("/ProjectCreate");
+    // setIsWarningPopupOpen(false);
+    // navigate("/ProjectCreate");
+    if (selectedProject) {
+      // 여기에 실제 프로젝트 삭제 로직 구현
+      const updatedProjects = projectList.filter(
+        (project) => project._id !== selectedProject._id
+      );
+      setProjectList(updatedProjects);
+    }
+    setShowWarning(false);
+    setSelectedProject(null);
   };
   useEffect(() => {
     // 새로고침 감지 함수
@@ -108,6 +119,12 @@ const PageProject = () => {
   // 샘플 프로젝트 데이터
   const sampleProjects = projectList;
 
+  // 프로젝트 삭제 핸들러 추가
+  const handleProjectDelete = (project) => {
+    setSelectedProject(project);
+    setShowWarning(true);
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -141,15 +158,32 @@ const PageProject = () => {
             <ProjectListWrap>
               <ProjectList>
                 {sampleProjects.map((project) => (
-                  <OrganismProjectItem key={project.id} project={project} />
+                  <OrganismProjectItem 
+                    key={project._id} 
+                    project={project}
+                    onDelete={() => handleProjectDelete(project)}
+                  />
                 ))}
-
                 <OrganismProjectItem isNoData={true} />
               </ProjectList>
             </ProjectListWrap>
           </ProjectWrap>
         </MainContent>
       </ContentsWrap>
+
+      {showWarning && (
+        <PopupWrap
+          Warning
+          title="정말 삭제하시겠습니까?"
+          message="삭제된 항목은 복구가 불가합니다"
+          buttonType="Outline"
+          closeText="취소"
+          confirmText="확인"
+          isModal={false}
+          onCancel={handleWarningClose}
+          onConfirm={handleWarningContinue}
+        />
+      )}
 
       {isWarningPopupOpen && (
         <PopupWrap
