@@ -435,7 +435,7 @@ const PageTargetDiscovery = () => {
             const apiRequestData = {
               business: targetDiscoveryInfo.business,
               target_discovery_persona: persona,
-              specific_situation: targetDiscoveryInfo.specific_situation,
+              specific_situation: targetDiscoveryInfo.specificSituation,
               country: targetDiscoveryInfo.country,
             };
 

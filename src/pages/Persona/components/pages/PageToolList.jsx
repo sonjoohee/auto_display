@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import styled, { css } from "styled-components";
@@ -147,6 +146,36 @@ import {
   TRIAL_STATE,
   ACCESSABLE_EXPERT,
   TOOL_LOADING,
+  TOOL_STEP,
+  TOOL_ID,
+  TARGET_DISCOVERY_INFO,
+  TARGET_DISCOVERY_PERSONA,
+  TARGET_DISCOVERY_SCENARIO,
+  TARGET_DISCOVERY_FINAL_REPORT,
+  CUSTOMER_VALUE_ANALYZER_INFO,
+  CUSTOMER_VALUE_ANALYZER_PERSONA,
+  CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP,
+  CUSTOMER_VALUE_ANALYZER_FACTOR,
+  CUSTOMER_VALUE_ANALYZER_CLUSTERING,
+  CUSTOMER_VALUE_ANALYZER_POSITIONING,
+  CUSTOMER_VALUE_ANALYZER_FINAL_REPORT,
+  CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA,
+  IDEA_GENERATOR_INFO,
+  IDEA_GENERATOR_PERSONA,
+  IDEA_GENERATOR_IDEA,
+  IDEA_GENERATOR_CLUSTERING,
+  IDEA_GENERATOR_FINAL_REPORT,
+  IDEA_GENERATOR_SELECTED_PERSONA,
+  IDEA_GENERATOR_KNOW_TARGET,
+  IDEA_GENERATOR_CUSTOM_TARGET,
+  DESIGN_ANALYSIS_EMOTION_ANALYSIS,
+  DESIGN_ANALYSIS_BUSINESS_INFO,
+  DESIGN_ANALYSIS_UPLOADED_FILES,
+  DESIGN_ANALYSIS_FILE_ID,
+  DESIGN_ANALYSIS_SELECTED_PERSONA,
+  DESIGN_ANALYSIS_EMOTION_TARGET,
+  DESIGN_ANALYSIS_EMOTION_SCALE,
+  DESIGN_ANALYSIS_FILE_NAMES,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -504,21 +533,160 @@ const PageToolList = () => {
   const [, setEventState] = useAtom(EVENT_STATE);
   const [, setTrialState] = useAtom(TRIAL_STATE);
 
+  // 각 툴 페이지 (예: TargetDiscovery.jsx, CustomerValueAnalyzer.jsx 등)의 최상단에 추가
+
+  // 필요한 atom들을 import
+  const [toolStep, setToolStep] = useAtom(TOOL_STEP);
+  const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
+    TARGET_DISCOVERY_INFO
+  );
+  const [targetDiscoveryPersona, setTargetDiscoveryPersona] = useAtom(
+    TARGET_DISCOVERY_PERSONA
+  );
+  const [targetDiscoveryScenario, setTargetDiscoveryScenario] = useAtom(
+    TARGET_DISCOVERY_SCENARIO
+  );
+  const [targetDiscoveryFinalReport, setTargetDiscoveryFinalReport] = useAtom(
+    TARGET_DISCOVERY_FINAL_REPORT
+  );
+  const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_INFO
+  );
+  const [customerValueAnalyzerPersona, setCustomerValueAnalyzerPersona] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_PERSONA);
+  const [customerValueAnalyzerJourneyMap, setCustomerValueAnalyzerJourneyMap] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
+  const [customerValueAnalyzerFactor, setCustomerValueAnalyzerFactor] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_FACTOR
+  );
+  const [customerValueAnalyzerClustering, setCustomerValueAnalyzerClustering] =
+    useAtom(CUSTOMER_VALUE_ANALYZER_CLUSTERING);
+  const [
+    customerValueAnalyzerPositioning,
+    setCustomerValueAnalyzerPositioning,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_POSITIONING);
+  const [
+    customerValueAnalyzerFinalReport,
+    setCustomerValueAnalyzerFinalReport,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_FINAL_REPORT);
+  const [
+    customerValueAnalyzerSelectedPersona,
+    setCustomerValueAnalyzerSelectedPersona,
+  ] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA);
+  const [ideaGeneratorInfo, setIdeaGeneratorInfo] =
+    useAtom(IDEA_GENERATOR_INFO);
+  const [ideaGeneratorPersona, setIdeaGeneratorPersona] = useAtom(
+    IDEA_GENERATOR_PERSONA
+  );
+  const [ideaGeneratorIdea, setIdeaGeneratorIdea] =
+    useAtom(IDEA_GENERATOR_IDEA);
+  const [ideaGeneratorClustering, setIdeaGeneratorClustering] = useAtom(
+    IDEA_GENERATOR_CLUSTERING
+  );
+  const [ideaGeneratorFinalReport, setIdeaGeneratorFinalReport] = useAtom(
+    IDEA_GENERATOR_FINAL_REPORT
+  );
+  const [ideaGeneratorSelectedPersona, setIdeaGeneratorSelectedPersona] =
+    useAtom(IDEA_GENERATOR_SELECTED_PERSONA);
+  const [ideaGeneratorKnowTarget, setIdeaGeneratorKnowTarget] = useAtom(
+    IDEA_GENERATOR_KNOW_TARGET
+  );
+  const [ideaGeneratorCustomTarget, setIdeaGeneratorCustomTarget] = useAtom(
+    IDEA_GENERATOR_CUSTOM_TARGET
+  );
+  const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] =
+    useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS);
+  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(
+    DESIGN_ANALYSIS_BUSINESS_INFO
+  );
+  const [designAnalysisUploadedFiles, setDesignAnalysisUploadedFiles] = useAtom(
+    DESIGN_ANALYSIS_UPLOADED_FILES
+  );
+  const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
+    DESIGN_ANALYSIS_FILE_ID
+  );
+  const [designAnalysisSelectedPersona, setDesignAnalysisSelectedPersona] =
+    useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
+  const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(
+    DESIGN_ANALYSIS_EMOTION_TARGET
+  );
+  const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(
+    DESIGN_ANALYSIS_EMOTION_SCALE
+  );
+  const [designAnalysisFileNames, setDesignAnalysisFileNames] = useAtom(
+    DESIGN_ANALYSIS_FILE_NAMES
+  );
+
+  // 초기화 useEffect
+  useEffect(() => {
+    // 모든 관련 atom 상태 초기화
+    setToolStep(0);
+    setToolId("");
+
+    // Target Discovery 관련 atom 초기화
+    setTargetDiscoveryInfo({
+      type: "",
+      business: "",
+      target: "",
+      specificSituation: "",
+      country: "",
+    });
+    setTargetDiscoveryPersona([]);
+    setTargetDiscoveryScenario([]);
+    setTargetDiscoveryFinalReport({});
+
+    // Customer Value Analyzer 관련 atom 초기화
+    setCustomerValueAnalyzerInfo({
+      business: "",
+      targetList: [],
+      analysisScope: "",
+      analysisPurpose: "",
+    });
+    setCustomerValueAnalyzerPersona([]);
+    setCustomerValueAnalyzerJourneyMap([]);
+    setCustomerValueAnalyzerFactor([]);
+    setCustomerValueAnalyzerClustering([]);
+    setCustomerValueAnalyzerPositioning([]);
+    setCustomerValueAnalyzerFinalReport({});
+    setCustomerValueAnalyzerSelectedPersona([]);
+
+    // Idea Generator 관련 atom 초기화
+    setIdeaGeneratorInfo({});
+    setIdeaGeneratorPersona([]);
+    setIdeaGeneratorIdea([]);
+    setIdeaGeneratorClustering([]);
+    setIdeaGeneratorFinalReport({});
+    setIdeaGeneratorSelectedPersona([]);
+    setIdeaGeneratorKnowTarget(null);
+    setIdeaGeneratorCustomTarget({});
+
+    // Design Analysis 관련 atom 초기화
+    setDesignAnalysisEmotionAnalysis([]);
+    setDesignAnalysisBusinessInfo("");
+    setDesignAnalysisUploadedFiles([]);
+    setDesignAnalysisFileId([]);
+    setDesignAnalysisSelectedPersona([]);
+    setDesignAnalysisEmotionTarget({});
+    setDesignAnalysisEmotionScale([]);
+    setDesignAnalysisFileNames([]);
+  }, []); // 컴포넌트 마운트 시 한 번만 실행
+
   useEffect(() => {
     const fetchCreditInfo = async () => {
       try {
         if (isLoggedIn) {
-        const response = await CreditInfo(isLoggedIn);
+          const response = await CreditInfo(isLoggedIn);
 
-        if (response) {
-          setCreditRequestCustomPersona(response.request_custom_persona);
-          setCreditRequestBusinessPersona(response.request_business_persona);
-          setCreditCustomTheory(response.custom_theory);
-          setCreditAdditionalQuestion(response.additional_question);
-          setCreditIndepthInterview(response.indepth_interview);
-          setEventTitle(response.event_title);
-          setEventState(response.event_state);
-          setTrialState(response.trial_state);
+          if (response) {
+            setCreditRequestCustomPersona(response.request_custom_persona);
+            setCreditRequestBusinessPersona(response.request_business_persona);
+            setCreditCustomTheory(response.custom_theory);
+            setCreditAdditionalQuestion(response.additional_question);
+            setCreditIndepthInterview(response.indepth_interview);
+            setEventTitle(response.event_title);
+            setEventState(response.event_state);
+            setTrialState(response.trial_state);
           }
         }
       } catch (error) {
@@ -529,10 +697,6 @@ const PageToolList = () => {
     // Call the API every time PageMain is rendered (or when isLoggedIn changes)
     fetchCreditInfo();
   }, [isLoggedIn]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   const closePopupRegex = () => {
     setBusinessAnalysis({
@@ -569,171 +733,50 @@ const PageToolList = () => {
   }, []);
 
   useEffect(() => {
-    // let savedInputBusinessInfo = "";
-    // // If there's inputBusinessInfo in the location state, save it
-    // if (location.state && location.state.inputBusinessInfo) {
-    //   savedInputBusinessInfo = location.state.inputBusinessInfo;
-    //   // Remove the inputBusinessInfo from location.state
-    //   const newState = { ...location.state };
-    //   delete newState.inputBusinessInfo;
-    //   window.history.replaceState(newState, "");
+    // 새로고침 감지 함수
+    const detectRefresh = () => {
+      // 1. Performance API 확인
+      // if (performance.navigation && performance.navigation.type === 1) {
+      //   console.log("새로고침 감지: Performance API");
+      //   navigate("/");
+      //   return true;
+      // }
 
-    //   // 비로그인 상태에서 들어온 경우 로그인 팝업 띄우기
-    //   if (!isLoggedIn) {
-    //     setLoginPopupOpen(true);
-    //   }
-    // }
+      // 2. 현재 URL 확인
+      const currentUrl = window.location.href;
+      if (currentUrl.toLowerCase().includes("tool")) {
+        // 대시보드에서 자세히 보기로 이동한 경우 체크
+        const fromDashboard = sessionStorage.getItem("fromDashboard");
+        if (fromDashboard === "true") {
+          // 대시보드에서 왔으면 플래그 제거하고 새로고침 감지하지 않음
+          sessionStorage.removeItem("fromDashboard");
+          // 현재 URL 저장
+          sessionStorage.setItem("lastUrl", currentUrl);
+          return false;
+        }
 
-    // Reset all states except inputBusinessInfo
-    //새로운 세션이나 페이지 전환 시 데이터 일관성 보장
-    setNewAddContent("");
-    setIsAddingNow(false);
-    setIsLoading(false);
-    setConversation([]);
-    setConversationId(null);
-    setConversationStage(1);
-    setTitleOfBusinessInfo("");
-    setMainFeaturesOfBusinessInformation([]);
-    setMainCharacteristicOfBusinessInformation([]);
-    setBusinessInformationTargetCustomer([]);
-    setSelectedExpertIndex("0");
-    setSections([]);
-    setAdditionalReportCount(0);
-    setSelectedAdditionalKeyword([]);
-    setApproachPath(0);
-    setAdditionalReportData([]);
-    setCustomerAdditionalReportData([]);
-    setStrategyReportData({});
-    setInputAdditionalQuestion("");
-    setSelectedCustomerAdditionalKeyword([]);
-    setPassword("");
-    setNewPassword("");
-    setRePassword("");
-    setSelectedExpertList([]);
-    setIsEditingNow(false);
-    setSelectedPocOptions([]);
-    setSelectedPocTarget({});
-    setRecommendedTargetData({});
-    setpocDetailReportData({});
-    setPocPersonaList([]);
-    // setInputBusinessInfo(savedInputBusinessInfo);
-    // setBusinessAnalysis({
-    //   input: "",
-    //   title: "",
-    //   characteristics: "",
-    //   features: [],
-    //   category: {},
-    // });
-    setIsEditingIdeaFeature(false);
-    setIsEditingIdeaCustomer(false);
-    setAddingIdeaFeature(false);
-    setActiveIdeaFeatureIndex(0);
-    setAddContentIdeaFeature("");
-    setEditedIdeaFeatureTitle("");
-    setAddingIdeaCustomer(false);
-    setActiveIdeaCustomerIndex(0);
-    setAddContentIdeaCustomer("");
-    setEditedIdeaCustomerTitle("");
-    setIdeaFeatureData([]);
-    setIdeaRequirementData([]);
-    setIdeaFeatureDataTemp([]);
-    setIdeaRequirementDataTemp([]);
-    setIdeaList([]);
-    setIdeaGroup({});
-    setIdeaPriority([]);
-    setButtonState({});
-    setIdeaMiroState(0);
-    setGrowthHackerReportData([]);
-    setGrowthHackerDetailReportData([]);
-    setGrowthHackerRecommendedSolution([]);
-    setGrowthHackerSelectedSolution([]);
-    setKpiQuestionList([]);
-    setPriceScrapData([]);
-    setPriceReportData([]);
-    setPriceProduct([]);
-    setPriceSelectedProductSegmentation([]);
-    setPriceProductSegmentation([]);
-    setCaseReportData([]);
-    setCaseHashTag([]);
-    setSurveyGuidelineDetailReportData({});
-    setSurveyGuidelineReportData({});
-    setSurveyGoalSuggestionList([]);
-    setSurveyGoalFixed([]);
-    setSurveyQuestionList([]);
+        // 세션 스토리지에서 마지막 URL 가져오기
+        const lastUrl = sessionStorage.getItem("lastUrl");
 
-    setBmModelSuggestionReportData([]);
-    setBmQuestionList([]);
-    setBmSelectedProblemOptions({});
-    setBmOrLean("");
-    setBmBmAutoReportData([]);
-    setBmLeanAutoReportData([]);
-    setBmBmAdsReportData([]);
-    setBmLeanAdsReportData([]);
-    setBmBmCustomReportData([]);
-    setBmLeanCustomReportData([]);
+        // 마지막 URL이 현재 URL과 같으면 새로고침
+        if (lastUrl && lastUrl === currentUrl) {
+          console.log("새로고침 감지: URL 비교");
+          navigate("/");
+          return true;
+        }
 
-    setMarketingMbtiResult({});
-    setMarketingResearchReportData([]);
-    setMarketingBmReportData([]);
-    setMarketingCustomerData([]);
-    setMarketingSelectedCustomer([]);
-    setMarketingFinalCustomer({});
-    setMarketingFinalReportData([]);
+        // 현재 URL 저장
+        sessionStorage.setItem("lastUrl", currentUrl);
+      }
 
-    setIsMarketing(false);
-    setMarketingHaveIdea(false);
-    setMarketingMbtiStage(0);
-    setMarketingMbtiAnswer([0, 0, 0, 0]);
-    setMarketingInterest("");
-    setMarketingRecommendedItemData({});
-    setMarketingStartButtonState(0);
-    setMarketingBmButtonState(0);
-    setMarketingFinalReportButtonState(0);
-    setMarketingRecommendedItemButtonState(0);
+      return false;
+    };
 
-    setStrategyConsultantReportData([]);
+    // 함수 실행
+    detectRefresh();
 
-    setBusinessAnalysis({
-      input: "",
-      title: "",
-      characteristics: "",
-      features: [],
-      category: {},
-    });
-    setProjectId("");
-    setProjectReportId("");
-    setProjectList([]);
-    setProjectReportList([]);
-    setReportList([]);
-    setPersonaList({
-      selected: [],
-      unselected: [],
-    });
-    setSelectedPersonaList([]);
-    setCustomizePersonaList({
-      selected: [],
-      unselected: [],
-    });
-    setInterviewQuestionList([]);
-    setSelectedInterviewPurpose("");
-    setCategoryColor({});
-    setProjectLoadButtonState(false);
-    setReportLoadButtonState(false);
-    setReportDescriptionLoadButtonState(false);
-    setInterviewData([]);
-    setInterviewReport([]);
-    setInterviewReportAdditional([]);
-    setIsEditMode(false);
-    setIsShowToast(false);
-    setPersonaStep(0);
-    setIsLoadingBusinessAnalysis(false);
-    setProjectLoading({
-      isLoading: false,
-      lastLoadTime: null,
-      error: null,
-    });
-    setProjectRefreshTrigger(0);
-  }, []);
+    // 컴포넌트 마운트 시 한 번만 실행
+  }, [navigate]);
 
   useEffect(() => {
     const checkboxes = document.querySelectorAll(".accordion-toggle");
@@ -871,7 +914,7 @@ const PageToolList = () => {
 
   const hadleToolSelect = (index) => {
     if (isLoggedIn) {
-      setToolLoading(true); 
+      setToolLoading(true);
       switch (index) {
         case "1":
           navigate("/TargetDiscovery");
@@ -1066,43 +1109,6 @@ const PageToolList = () => {
     return () => clearInterval(interval);
   }, []);
 
-    useEffect(() => {
-    // 새로고침 감지 함수
-    const detectRefresh = () => {
-      // 1. Performance API 확인
-      // if (performance.navigation && performance.navigation.type === 1) {
-      //   console.log("새로고침 감지: Performance API");
-      //   navigate("/");
-      //   return true;
-      // }
-
-      // 2. 현재 URL 확인
-      const currentUrl = window.location.href;
-      if (currentUrl.toLowerCase().includes("tool")) {
-        // 세션 스토리지에서 마지막 URL 가져오기
-        const lastUrl = sessionStorage.getItem("lastUrl");
-
-        // 마지막 URL이 현재 URL과 같으면 새로고침
-        if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
-          navigate("/");
-          return true;
-        }
-
-        // 현재 URL 저장
-        sessionStorage.setItem("lastUrl", currentUrl);
-      }
-
-      return false;
-    };
-
-    // 함수 실행
-    detectRefresh();
-
-    // 컴포넌트 마운트 시 한 번만 실행
-  }, [navigate]);
-
-  
   return (
     <>
       <ContentsWrap>
@@ -1113,8 +1119,13 @@ const PageToolList = () => {
         <MainContent Wide1240>
           <ToolListWrap>
             <ToolListTitle>
-              <H1 color="gray800" align="left">Expert & Business Tool</H1>
-              <Body3 color="gray700" align="left">당신의 비즈니스 데이터를 기반으로 다양한 AI 전문가와 툴을 활용하여 최적의 전략을 도출할 수 있습니다.</Body3>
+              <H1 color="gray800" align="left">
+                Expert & Business Tool
+              </H1>
+              <Body3 color="gray700" align="left">
+                당신의 비즈니스 데이터를 기반으로 다양한 AI 전문가와 툴을
+                활용하여 최적의 전략을 도출할 수 있습니다.
+              </Body3>
             </ToolListTitle>
 
             <ExploreWrap>
@@ -1125,7 +1136,7 @@ const PageToolList = () => {
                 >
                   <Caption1 color="gray700">All</Caption1>
                 </TabButtonType4Main>
-                <TabButtonType4Main 
+                <TabButtonType4Main
                   isActive={activeTab === "interview"}
                   onClick={() => setActiveTab("interview")}
                 >
@@ -1179,7 +1190,8 @@ const PageToolList = () => {
                           심층 인터뷰 룸
                         </Body1>
                         <Caption1 color="white" align="left">
-                          1:1 인터뷰를 통해 개별 사용자의 심층적인 인사이트와 핵심 니즈를 탐색하는 도구 
+                          1:1 인터뷰를 통해 개별 사용자의 심층적인 인사이트와
+                          핵심 니즈를 탐색하는 도구
                         </Caption1>
                         <i />
                       </div>
@@ -1187,40 +1199,41 @@ const PageToolList = () => {
                   </ExploreCard>,
 
                   <ExploreCard AiPersona key="analysis-2">
-                  <span>
-                    <images.LightningChargeFill color={palette.gray700} />
-                    Interveiw
-                  </span>
-                  <p>
-                    <img src={images.ImgExplore13} alt="" />
-                  </p>
-                  <Body1 color="gray800">
-                    <em>준비중</em>
-                    그룹 인터뷰 룸
-                  </Body1>
-
-                  <div
-                    className="overlay"
-                    onClick={() => {
-                      hadleToolSelect("1");
-                    }}
-                  >
                     <span>
-                      <images.LightningChargeFill color={palette.white} />
+                      <images.LightningChargeFill color={palette.gray700} />
                       Interveiw
                     </span>
+                    <p>
+                      <img src={images.ImgExplore13} alt="" />
+                    </p>
+                    <Body1 color="gray800">
+                      <em>준비중</em>
+                      그룹 인터뷰 룸
+                    </Body1>
 
-                    <div className="text">
-                      <Body1 color="white">
-                        <em>준비중</em>
-                        그룹 인터뷰 룸
-                      </Body1>
-                      <Caption1 color="white" align="left">
-                        소규모 그룹과의 대화를 통해 다양한 관점을 수집하고 핵심 인사이트를 도출하는 도구 
-                      </Caption1>
-                      <i />
+                    <div
+                      className="overlay"
+                      onClick={() => {
+                        hadleToolSelect("1");
+                      }}
+                    >
+                      <span>
+                        <images.LightningChargeFill color={palette.white} />
+                        Interveiw
+                      </span>
+
+                      <div className="text">
+                        <Body1 color="white">
+                          <em>준비중</em>
+                          그룹 인터뷰 룸
+                        </Body1>
+                        <Caption1 color="white" align="left">
+                          소규모 그룹과의 대화를 통해 다양한 관점을 수집하고
+                          핵심 인사이트를 도출하는 도구
+                        </Caption1>
+                        <i />
+                      </div>
                     </div>
-                  </div>
                   </ExploreCard>,
 
                   <ExploreCard Research key="research-1" {...{ Ready: false }}>
@@ -1335,8 +1348,8 @@ const PageToolList = () => {
                           <em>준비중</em>아이디어 생성기
                         </Body1>
                         <Caption1 color="white" align="left">
-                          만다라트 기법을 활용하여 창의적이고 구조적인 아이디어를
-                          발산하고 구체화 하는 툴
+                          만다라트 기법을 활용하여 창의적이고 구조적인
+                          아이디어를 발산하고 구체화 하는 툴
                         </Caption1>
                         <i />
                       </div>
@@ -1498,8 +1511,8 @@ const PageToolList = () => {
                           <em>준비중</em>가격 분석 전문가
                         </Body1>
                         <Caption1 color="white" align="left">
-                          시장 데이터 기반 최적 가격을 분석하여 수익성과 경쟁력을
-                          극대화할 수 있어요 (제품 한정)
+                          시장 데이터 기반 최적 가격을 분석하여 수익성과
+                          경쟁력을 극대화할 수 있어요 (제품 한정)
                         </Caption1>
                         <i />
                       </div>
@@ -1742,7 +1755,7 @@ const PageToolList = () => {
           </div>
         </Popup>
       )}
-      
+
       {isComingSoon && (
         <Popup
           Cancel
@@ -1935,4 +1948,3 @@ const Popup = styled.div`
       `}
   }
 `;
-

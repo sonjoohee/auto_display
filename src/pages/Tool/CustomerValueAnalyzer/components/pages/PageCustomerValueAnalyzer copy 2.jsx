@@ -69,6 +69,10 @@ import {
   IS_LOGGED_IN,
   TOOL_ID,
   TOOL_STEP,
+  TOOL_LOADING,
+  CREDIT_INDEPTH_INTERVIEW,
+  PROJECT_SAAS,
+  PERSONA_LIST_SAAS,
   CUSTOMER_VALUE_ANALYZER_INFO,
   CUSTOMER_VALUE_ANALYZER_PERSONA,
   CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA,
@@ -77,12 +81,8 @@ import {
   CUSTOMER_VALUE_ANALYZER_CLUSTERING,
   CUSTOMER_VALUE_ANALYZER_POSITIONING,
   CUSTOMER_VALUE_ANALYZER_FINAL_REPORT,
-  TOOL_LOADING,
   CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR,
   SELECTED_INTERVIEW_PURPOSE_DATA,
-  CREDIT_INDEPTH_INTERVIEW,
-  PROJECT_SAAS,
-  PERSONA_LIST_SAAS,
 } from "../../../../AtomStates";
 
 import {
@@ -152,6 +152,7 @@ const PageCustomerValueAnalyzer = () => {
     customerList: "",
     analysisScope: "",
   });
+  const [selectedCustomers, setSelectedCustomers] = useState([]);
   const [selectedInterviewType, setSelectedInterviewType] = useState(null);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] =
     useState(null);
@@ -211,102 +212,129 @@ const PageCustomerValueAnalyzer = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       if (toolLoading) {
-        // 활성 탭 설정 (기본값 1)
-        setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
+        try {
+          // 활성 탭 설정 (기본값 1)
+          setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
 
-        // 비즈니스 정보 설정 (Step 1)
-        if (customerValueAnalyzerInfo) {
-          setBusinessDescription(
-            customerValueAnalyzerInfo?.analysisPurpose ?? ""
-          );
-          setTargetCustomers(customerValueAnalyzerInfo?.targetList ?? [""]);
-          setSelectedPurposes((prev) => ({
-            ...prev,
-            analysisScope: customerValueAnalyzerInfo?.analysisScope ?? "",
-            customerList: customerValueAnalyzerInfo?.business ?? "",
-          }));
-        }
+          // 비즈니스 정보 설정 (Step 1)
+          if (customerValueAnalyzerInfo) {
+            setBusinessDescription(
+              customerValueAnalyzerInfo?.analysisPurpose ?? ""
+            );
+            setTargetCustomers(customerValueAnalyzerInfo?.targetList ?? [""]);
+            setSelectedPurposes((prev) => ({
+              ...prev,
+              analysisScope: customerValueAnalyzerInfo?.analysisScope ?? "",
+              customerList: customerValueAnalyzerInfo?.business ?? "",
+            }));
+          }
 
-        // 완료된 단계 설정
-        const completedStepsArray = [];
-        for (let i = 1; i <= (toolStep ?? 1); i++) {
-          completedStepsArray.push(i);
-        }
-        setCompletedSteps(completedStepsArray);
+          // 완료된 단계 설정
+          const completedStepsArray = [];
+          for (let i = 1; i <= (toolStep ?? 1); i++) {
+            completedStepsArray.push(i);
+          }
+          setCompletedSteps(completedStepsArray);
 
-        // 카드 상태 설정
-        if (toolStep ?? 0 >= 3) {
-          const completedStates = customerValueAnalyzerPersona.reduce(
-            (acc, _, index) => {
-              acc[index] = "completed";
-              return acc;
-            },
-            {}
-          );
-          setCardStatuses(completedStates);
-        }
-        // 페르소나 설정 (Step 2)
-        if (Array.isArray(customerValueAnalyzerSelectedPersona)) {
-          setCustomerValueAnalyzerSelectedPersona(
-            customerValueAnalyzerSelectedPersona
-          );
+          // 카드 상태 설정
+          if ((toolStep ?? 0) >= 3) {
+            const completedStates = (customerValueAnalyzerPersona || []).reduce(
+              (acc, _, index) => {
+                acc[index] = "completed";
+                return acc;
+              },
+              {}
+            );
+            setCardStatuses(completedStates);
+          }
 
-          const selectedTargets = customerValueAnalyzerSelectedPersona.map(
-            (persona) => persona.target
-          );
+          // 페르소나 설정 (Step 2)
+          if (Array.isArray(customerValueAnalyzerSelectedPersona)) {
+            setCustomerValueAnalyzerSelectedPersona(
+              customerValueAnalyzerSelectedPersona
+            );
 
-          if (
-            Array.isArray(customerValueAnalyzerPersona) &&
-            customerValueAnalyzerPersona.length > 0
-          ) {
-            const selectedIndices = customerValueAnalyzerPersona
-              .map((persona, index) => {
-                const personaTarget =
-                  customerValueAnalyzerInfo?.targetList?.[index];
-                return selectedTargets.includes(personaTarget) ? index : -1;
-              })
-              .filter((index) => index !== -1);
+            const selectedTargets = (
+              customerValueAnalyzerSelectedPersona || []
+            ).map((persona) => persona?.target);
 
-            if (selectedIndices.length > 0) {
-              setSelectedPersonas(selectedIndices);
+            if (
+              Array.isArray(customerValueAnalyzerPersona) &&
+              (customerValueAnalyzerPersona?.length || 0) > 0
+            ) {
+              const selectedIndices = (customerValueAnalyzerPersona || [])
+                .map((persona, index) => {
+                  const personaTarget =
+                    customerValueAnalyzerInfo?.targetList?.[index];
+                  return (selectedTargets || []).includes(personaTarget)
+                    ? index
+                    : -1;
+                })
+                .filter((index) => index !== -1);
+
+              if (selectedIndices?.length > 0) {
+                setSelectedPersonas(selectedIndices);
+              }
             }
           }
+
+          // 고객 여정 맵 설정 (Step 3)
+
+          if (Array.isArray(customerValueAnalyzerJourneyMap)) {
+            setCustomerValueAnalyzerJourneyMap(customerValueAnalyzerJourneyMap);
+          } else if (customerValueAnalyzerJourneyMap) {
+            // 객체인 경우 배열로 변환
+            setCustomerValueAnalyzerJourneyMap([
+              customerValueAnalyzerJourneyMap,
+            ]);
+          } else {
+            // undefined나 null인 경우 빈 배열로 초기화
+            setCustomerValueAnalyzerJourneyMap([]);
+          }
+
+          // 고객 여정 맵이 로드된 경우 카드 상태 업데이트
+          if (
+            Array.isArray(customerValueAnalyzerJourneyMap) &&
+            customerValueAnalyzerJourneyMap.length > 0
+          ) {
+            const journeyMapStates = customerValueAnalyzerJourneyMap.reduce(
+              (acc, journeyMap, index) => {
+                acc[index] = journeyMap ? "completed" : "waiting";
+                return acc;
+              },
+              {}
+            );
+            setCardStatuses((prev) => ({
+              ...prev,
+              ...journeyMapStates,
+            }));
+            setApiCallCompleted(true);
+          }
+
+          // 구매 요인 설정 (Step 4)
+          if (
+            Array.isArray(customerValueAnalyzerFactor) &&
+            (customerValueAnalyzerFactor?.length || 0) > 0
+          ) {
+            setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
+          } else if (
+            (customerValueAnalyzerFactor?.length || 0) === 0 &&
+            (completedStepsArray?.length || 0) === 2
+          ) {
+            setActiveTab(2);
+            setToolStep(1);
+            setCompletedSteps(completedStepsArray?.slice(0, -1) || []);
+          }
+
+          // 최종 리포트 설정 (Step 4)
+          if (customerValueAnalyzerFinalReport) {
+            setCustomerValueAnalyzerFinalReport(
+              customerValueAnalyzerFinalReport ?? {}
+            );
+          }
+        } catch (error) {
+          console.error("Error loading interview data:", error);
         }
-        // 고객 여정 맵 설정 (Step 3)
-        if (Array.isArray(customerValueAnalyzerJourneyMap)) {
-          setCustomerValueAnalyzerJourneyMap(customerValueAnalyzerJourneyMap);
-        }
-
-        // if (Array.isArray(customerValueAnalyzerFactor)) {
-        //   setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
-        // }
-
-        // ... existing code ...
-        if (
-          Array.isArray(customerValueAnalyzerFactor) &&
-          customerValueAnalyzerFactor.length > 0
-        ) {
-          setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
-        } else if (
-          customerValueAnalyzerFactor.length === 0 &&
-          completedStepsArray.length === 2
-        ) {
-          setActiveTab(2);
-          setToolStep(1);
-          setCompletedSteps(completedStepsArray.slice(0, -1));
-        }
-
-        // console.log("customerValueAnalyzerFactor", customerValueAnalyzerFactor);
-        // console.log("completedStepsArray", completedStepsArray);
-
-        // 최종 리포트 설정 (Step 4)
-        if (customerValueAnalyzerFinalReport) {
-          setCustomerValueAnalyzerFinalReport(
-            customerValueAnalyzerFinalReport ?? {}
-          );
-        }
-
-        return;
       }
     };
 
@@ -331,23 +359,23 @@ const PageCustomerValueAnalyzer = () => {
           const response = await getToolListOnServer(size, page, isLoggedIn);
 
           // Check if response exists and has data
-          if (!response || !response.data) {
+          if (!response || !response?.data) {
             console.error("Invalid response from server");
             break;
           }
 
-          const targetDiscoveryData = response.data.filter(
-            (item) => item.type === "ix_target_discovery_persona"
+          const targetDiscoveryData = (response?.data || []).filter(
+            (item) => item?.type === "ix_target_discovery_persona"
           );
 
-          const newItems = targetDiscoveryData.filter(
-            (item) => item?.target_discovery_scenario?.length > 0
+          const newItems = (targetDiscoveryData || []).filter(
+            (item) => (item?.target_discovery_scenario?.length || 0) > 0
           );
 
-          allItems = [...allItems, ...newItems];
+          allItems = [...allItems, ...(newItems || [])];
 
           // Check if we've reached the end of the data
-          if (!response.count || response.count <= page * size) {
+          if (!response?.count || (response?.count || 0) <= page * size) {
             break;
           }
 
@@ -366,7 +394,6 @@ const PageCustomerValueAnalyzer = () => {
 
   // 고객 여정 맵 API 호출 시작
   useEffect(() => {
-    // console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
     if (
       activeTab === 2 &&
       customerValueAnalyzerPersona.length > 0 &&
@@ -374,10 +401,7 @@ const PageCustomerValueAnalyzer = () => {
       !apiCallCompleted &&
       (customerValueAnalyzerJourneyMap?.length || 0) === 0
     ) {
-      // console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
-      // toolStep이 2보다 작을 때만 API 호출
       // 모든 카드의 상태를 waiting으로 초기화
-      // console.log("customerValueAnalyzerPersona", customerValueAnalyzerPersona);
       const initialLoadingStates = customerValueAnalyzerPersona.reduce(
         (acc, _, index) => {
           acc[index] = "waiting";
@@ -389,62 +413,51 @@ const PageCustomerValueAnalyzer = () => {
 
       // 순차적으로 API 호출을 처리하는 함수
       const processSequentially = async () => {
-        // console.log("customerValueAnalyzerInfo.target_list", customerValueAnalyzerInfo.target_list);
         let journeyMapData = [];
         for (
           let index = 0;
-          index < customerValueAnalyzerInfo.target_list.length;
+          index < (customerValueAnalyzerInfo?.targetList?.length || 0);
           index++
         ) {
           try {
             // 현재 카드만 loading으로 변경
             setCardStatuses((prev) => ({
-              ...prev,
+              ...(prev || {}),
               [index]: "loading",
             }));
 
             const data = {
-              business: customerValueAnalyzerInfo.business,
-              target: customerValueAnalyzerInfo.target_list[index],
-              analysis_scope: customerValueAnalyzerInfo.analysis_scope,
-              analysis_purpose: customerValueAnalyzerPersona[index],
+              business: customerValueAnalyzerInfo?.business || "",
+              target: customerValueAnalyzerInfo?.targetList?.[index] || "",
+              analysis_scope: customerValueAnalyzerInfo?.analysisScope || "",
+              analysis_purpose: customerValueAnalyzerPersona?.[index] || "",
             };
-            // console.log("data", data);
 
             const response =
               await InterviewXCustomerValueAnalyzerJourneyMapRequest(
                 data,
                 isLoggedIn
               );
-            // console.log("Journey Map 응답:", response);
 
             if (response?.response?.customer_value_journey_map) {
-              journeyMapData.push({
-                ...response.response.customer_value_journey_map,
-                business: customerValueAnalyzerInfo.business,
-                target: customerValueAnalyzerInfo.target_list[index],
+              const newJourneyMapItem = {
+                ...(response?.response?.customer_value_journey_map || {}),
+                business: customerValueAnalyzerInfo?.business || "",
+                target: customerValueAnalyzerInfo?.targetList?.[index] || "",
+              };
+
+              journeyMapData.push(newJourneyMapItem);
+
+              // 배열로 올바르게 업데이트
+              setCustomerValueAnalyzerJourneyMap((prev) => {
+                const currentJourneyMaps = Array.isArray(prev) ? [...prev] : [];
+                currentJourneyMaps[index] = newJourneyMapItem;
+                return currentJourneyMaps;
               });
-            }
 
-            // setCustomerValueAnalyzerJourneyMap(journeyMapData);
-
-            setCustomerValueAnalyzerJourneyMap((prev) => {
-              // prev가 undefined인 경우 빈 배열로 초기화
-              const currentJourneyMaps = Array.isArray(prev) ? prev : [];
-              // 새로운 journey map이 존재하는 경우에만 추가
-              if (response?.response?.customer_value_journey_map) {
-                return [
-                  ...currentJourneyMaps,
-                  response.response.customer_value_journey_map,
-                ];
-              }
-              return currentJourneyMaps;
-            });
-
-            // 성공적인 응답 후 카드 상태 업데이트
-            if (response?.response?.customer_value_journey_map) {
+              // 성공적인 응답 후 카드 상태 업데이트
               setCardStatuses((prev) => ({
-                ...prev,
+                ...(prev || {}),
                 [index]: "completed",
               }));
             }
@@ -453,21 +466,26 @@ const PageCustomerValueAnalyzer = () => {
             await updateToolOnServer(
               toolId,
               {
-                projectId: project._id,
+                projectId: project?._id,
                 customerValueJourneyMap: journeyMapData,
               },
               isLoggedIn
             );
           } catch (error) {
             console.error(`Journey Map API 호출 실패 (카드 ${index}):`, error);
+            // 에러 발생 시 카드 상태 업데이트
+            setCardStatuses((prev) => ({
+              ...(prev || {}),
+              [index]: "error",
+            }));
           }
         }
         setApiCallCompleted(true); // API 호출 완료 상태로 설정
       };
       processSequentially();
-    } else if (activeTab === 2 && toolStep >= 2) {
+    } else if (activeTab === 2 && (toolStep || 0) >= 2) {
       // 이미 완료된 단계인 경우 카드 상태만 completed로 설정
-      const completedStates = customerValueAnalyzerPersona.reduce(
+      const completedStates = (customerValueAnalyzerPersona || []).reduce(
         (acc, _, index) => {
           acc[index] = "completed";
           return acc;
@@ -501,13 +519,13 @@ const PageCustomerValueAnalyzer = () => {
     try {
       setIsLoading(true);
 
-      const filteredTargetCustomers = selectedPersonasSaas.flatMap(
+      const filteredTargetCustomers = (selectedPersonasSaas || []).flatMap(
         (personaId) => {
-          const prefix = personaId.split("_")[0]; // 접두사 추출 (예: 'macro_segment')
-          return personaListSaas
+          const prefix = personaId?.split("_")?.[0] || ""; // 접두사 추출 (예: 'macro_segment')
+          return (personaListSaas || [])
             .map((persona, index) => {
               // personaType이 접두사와 일치하는지 확인
-              if (persona.personaType.startsWith(prefix)) {
+              if (persona?.personaType?.startsWith(prefix)) {
                 return persona; // 인덱스 대신 persona 정보를 반환
               }
               return null; // 일치하지 않으면 null 반환
@@ -518,9 +536,9 @@ const PageCustomerValueAnalyzer = () => {
 
       console.log("filteredTargetCustomers", filteredTargetCustomers);
 
-      const selectedCustomers = selectedPersonasSaas
+      const selectedCustomers = (selectedPersonasSaas || [])
         .map((personaId) => {
-          const index = parseInt(personaId.split("persona")[1], 10); // 숫자 추출
+          const index = parseInt(personaId?.split("persona")?.[1] || "0", 10); // 숫자 추출
           const {
             personaName,
             personaCharacteristics,
@@ -528,14 +546,14 @@ const PageCustomerValueAnalyzer = () => {
             gender,
             job,
             keywords,
-          } = filteredTargetCustomers[index]; // 필요한 필드만 추출
+          } = filteredTargetCustomers?.[index] || {}; // 필요한 필드만 추출
           return {
-            personaName,
-            personaCharacteristics,
-            age,
-            gender,
-            job,
-            keywords,
+            personaName: personaName || "",
+            personaCharacteristics: personaCharacteristics || "",
+            age: age || "",
+            gender: gender || "",
+            job: job || "",
+            keywords: keywords || [],
           }; // 필요한 필드만 반환
         })
         .filter((customer) => customer !== undefined); // undefined 필터링
@@ -543,17 +561,18 @@ const PageCustomerValueAnalyzer = () => {
       console.log("selectedCustomers", selectedCustomers);
 
       const businessData = {
-        business: project.projectTitle || "",
-        target_list: selectedCustomers,
-        analysis_scope: selectedPurposes.analysisScope,
-        analysis_purpose: businessDescription,
+        business: project?.projectTitle || "",
+        target_list: selectedCustomers || [],
+        analysis_scope: selectedPurposes?.analysisScope || "",
+        analysis_purpose: businessDescription || "",
       };
       // console.log("businessData", businessData);
 
-      const response = await InterviewXCustomerValueAnalyzerPersonaRequest(
+      let response = await InterviewXCustomerValueAnalyzerPersonaRequest(
         businessData,
         isLoggedIn
       );
+      console.log("🚀 ~ handleSubmitBusinessInfo ~ response:", response);
 
       const maxAttempts = 10;
       let attempts = 0;
@@ -561,9 +580,9 @@ const PageCustomerValueAnalyzer = () => {
       while (
         !response ||
         !response?.response ||
-        !response?.response.customer_value_persona ||
-        !Array.isArray(response.response.customer_value_persona) ||
-        response.response.customer_value_persona.length === 0
+        !response?.response?.customer_value_persona ||
+        !Array.isArray(response?.response?.customer_value_persona) ||
+        (response?.response?.customer_value_persona?.length || 0) === 0
       ) {
         if (attempts >= maxAttempts) {
           setShowPopupError(true);
@@ -577,17 +596,18 @@ const PageCustomerValueAnalyzer = () => {
         );
       }
       const businessUpdateData = {
-        business: project.projectTitle || "",
-        target_list: selectedCustomers,
-        analysis_scope: selectedPurposes.analysisScope,
-        analysis_purpose: businessDescription,
+        business: project?.projectTitle || "",
+        targetList: selectedCustomers || [],
+        analysisScope: selectedPurposes?.analysisScope || "",
+        analysisPurpose: businessDescription || "",
       };
       const responseToolId = await createToolOnServer(
         {
           type: "ix_customer_value_persona",
-          projectId: project._id,
+          projectId: project?._id,
           completedStep: 1,
-          customerValuePersona: response.response.customer_value_persona,
+          customerValuePersona:
+            response?.response?.customer_value_persona || [],
           ...businessUpdateData,
         },
         isLoggedIn
@@ -597,20 +617,20 @@ const PageCustomerValueAnalyzer = () => {
 
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
       setCustomerValueAnalyzerPersona(
-        response.response.customer_value_persona || []
+        response?.response?.customer_value_persona || []
       );
       // console.log("customerValueAnalyzerPersona", customerValueAnalyzerPersona);
 
       setCustomerValueAnalyzerInfo(businessData);
-
+      setSelectedCustomers(selectedCustomers);
       // API 호출 성공시 다음 단계로 이동
       handleNextStep(1);
       setIsLoading(false);
     } catch (error) {
       console.error("Error submitting business info:", error);
       setShowPopupError(true);
-      if (error.response) {
-        switch (error.response.status) {
+      if (error?.response) {
+        switch (error?.response?.status) {
           case 500:
             setShowPopupError(true);
             break;
@@ -630,18 +650,18 @@ const PageCustomerValueAnalyzer = () => {
   };
 
   const handleTargetDiscoveryClick = (business) => {
-    setBusinessDescription(business);
+    setBusinessDescription(business || "");
   };
 
   const calculateDropDirection = (ref, selectBoxId) => {
-    if (ref.current) {
+    if (ref?.current) {
       const rect = ref.current.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceBelow = (window?.innerHeight || 0) - rect.bottom;
       const spaceAbove = rect.top;
       const dropDownHeight = 200;
 
       setDropUpStates((prev) => ({
-        ...prev,
+        ...(prev || {}),
         [selectBoxId]: spaceBelow < dropDownHeight && spaceAbove > spaceBelow,
       }));
     }
@@ -650,37 +670,37 @@ const PageCustomerValueAnalyzer = () => {
   const handleSelectBoxClick = (selectBoxId, ref) => {
     calculateDropDirection(ref, selectBoxId);
     setSelectBoxStates((prev) => ({
-      ...prev,
-      [selectBoxId]: !prev[selectBoxId],
+      ...(prev || {}),
+      [selectBoxId]: !(prev?.[selectBoxId] || false),
     }));
   };
 
   const handlePurposeSelect = (purpose, selectBoxId) => {
     setSelectedPurposes((prev) => ({
-      ...prev,
-      [selectBoxId]: purpose,
+      ...(prev || {}),
+      [selectBoxId]: purpose || "",
     }));
-    handleContactInputChange("purpose", purpose);
+    handleContactInputChange("purpose", purpose || "");
     setSelectBoxStates((prev) => ({
-      ...prev,
+      ...(prev || {}),
       [selectBoxId]: false,
     }));
 
     if (selectBoxId === "customerList") {
-      setSelectedBusiness(purpose);
-      setBusinessDescription(purpose);
+      setSelectedBusiness(purpose || "");
+      setBusinessDescription(purpose || "");
     }
   };
 
   const handleContactInputChange = (field, value) => {
     setContactForm((prev) => ({
-      ...prev,
-      [field]: value,
+      ...(prev || {}),
+      [field]: value || "",
     }));
   };
 
   const handleSelectPersona = () => {
-    if (selectedPersonas.length > 0) {
+    if ((selectedPersonas?.length || 0) > 0) {
       setSelectedInterviewType("multiple");
       setSelectedInterviewPurpose("product_experience_new");
     }
@@ -689,11 +709,12 @@ const PageCustomerValueAnalyzer = () => {
   const handlePersonaSelectionChange = (index) => {
     // if (toolStep >= 2) return;
     setSelectedPersonasSaas((prev) => {
-      if (prev.includes(index)) {
-        return prev.filter((id) => id !== index);
+      const prevArray = prev || [];
+      if (prevArray.includes(index)) {
+        return prevArray.filter((id) => id !== index);
       } else {
-        if (prev.length >= 5) return prev;
-        return [...prev, index];
+        if ((prevArray?.length || 0) >= 5) return prevArray;
+        return [...prevArray, index];
       }
     });
   };
@@ -704,29 +725,33 @@ const PageCustomerValueAnalyzer = () => {
   }, [selectedPersonasSaas]);
 
   const handleCheckboxChange = (index) => {
-    if (toolStep >= 2) return;
+    if ((toolStep || 0) >= 2) return;
     setSelectedPersonas((prev) => {
-      if (prev.includes(index)) {
-        return prev.filter((id) => id !== index);
+      const prevArray = prev || [];
+      if (prevArray.includes(index)) {
+        return prevArray.filter((id) => id !== index);
       } else {
-        if (prev.length >= 5) return prev;
-        return [...prev, index];
+        if ((prevArray?.length || 0) >= 5) return prevArray;
+        return [...prevArray, index];
       }
     });
   };
+
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
-    setCompletedSteps([...completedSteps, currentStep]);
-    setActiveTab(currentStep + 1);
+    setCompletedSteps([...(completedSteps || []), currentStep]);
+    setActiveTab((currentStep || 0) + 1);
     setShowPopupError(false);
   };
 
   // 필수 필드가 모두 입력되었는지 확인하는 함수
   const isRequiredFieldsFilled = () => {
     return (
-      businessDescription.trim() !== "" &&
-      targetCustomers.some((customer) => customer.trim() !== "") && // 최소 1개 이상의 고객 정보가 입력되었는지 확인
-      selectedPurposes.analysisScope !== ""
+      (businessDescription || "").trim() !== "" &&
+      (targetCustomers || []).some(
+        (customer) => (customer || "").trim() !== ""
+      ) && // 최소 1개 이상의 고객 정보가 입력되었는지 확인
+      (selectedPurposes?.analysisScope || "") !== ""
     );
   };
 
@@ -760,6 +785,16 @@ const PageCustomerValueAnalyzer = () => {
     handleNextStep(2);
     setApiCallCompletedFactor(false);
     try {
+      // 배열 확인 및 변환
+      // const journeyMapArray = Array.isArray(customerValueAnalyzerJourneyMap)
+      //   ? customerValueAnalyzerJourneyMap
+      //   : [customerValueAnalyzerJourneyMap].filter((item) => item);
+
+      // const selectedPersonaData = selectedPersonas.map((index) => ({
+      //   content: customerValueAnalyzerPersona[index],
+      //   target: customerValueAnalyzerInfo.targetList[index],
+      //   journeyMap: journeyMapArray[index] || {},
+      // }));
       const selectedPersonaData = selectedPersonas.map((index) => ({
         content: customerValueAnalyzerPersona[index],
         target: customerValueAnalyzerInfo.target_list[index],
@@ -798,7 +833,7 @@ const PageCustomerValueAnalyzer = () => {
         const requestData = {
           business: project.projectTitle,
           target: persona.target,
-          analysis_scope: customerValueAnalyzerInfo.analysis_scope,
+          analysis_scope: customerValueAnalyzerInfo.analysisScope,
           customer_value_journey_map: persona.journeyMap,
         };
 
@@ -807,29 +842,6 @@ const PageCustomerValueAnalyzer = () => {
             requestData,
             isLoggedIn
           );
-
-          const maxAttempts = 10;
-          let attempts = 0;
-
-          // while (
-          //   !response ||
-          //   !response?.response ||
-          //   !response?.response?.customer_value_factor ||
-          //   !Array.isArray(response.response.customer_value_factor) ||
-          //   response.response.customer_value_factor.length === 0 ||
-          //   response?.response?.customer_value_factor.some(factor => !factor.key_buying_factors || !factor.conclusion)
-          // ) {
-          //   if (attempts >= maxAttempts) {
-          //     setShowPopupError(true);
-          //     return;
-          //   }
-          //   attempts++;
-
-          //   response = await InterviewXCustomerValueAnalyzerFactorRequest(
-          //     requestData,
-          //     isLoggedIn
-          //   );
-          // }
 
           // API 호출 성공 시 카드 상태를 'completed'로 설정
           if (response?.response?.customer_value_factor) {
@@ -848,16 +860,19 @@ const PageCustomerValueAnalyzer = () => {
         }
       }
 
-      setCustomerValueAnalyzerFactor(results);
+      // 결과가 있는 경우에만 상태 업데이트
+      if (results.length > 0) {
+        setCustomerValueAnalyzerFactor(results);
 
-      await updateToolOnServer(
-        toolId,
-        {
-          projectId: project._id,
-          customerValueFactor: results,
-        },
-        isLoggedIn
-      );
+        await updateToolOnServer(
+          toolId,
+          {
+            projectId: project._id,
+            customerValueFactor: results,
+          },
+          isLoggedIn
+        );
+      }
 
       // 모든 API 호출이 완료된 후 상태 업데이트
       setApiCallCompletedFactor(true); // API 호출 완료 상태로 설정
@@ -1510,43 +1525,58 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
                   <CardGroupWrap column>
-                    {customerValueAnalyzerInfo.target_list.map(
-                      (target, index) => {
-                        return (
-                          <MoleculeCustomerValueCard
-                            key={index}
-                            id={index}
-                            title={target.personaName} // title에 문자열을 전달
-                            content={customerValueAnalyzerPersona[index]} // content에 문자열을 전달
-                            business={
-                              customerValueAnalyzerInfo.business ||
-                              "비즈니스 정보 없음"
-                            } // 기본값 설정
-                            status={
-                              customerValueAnalyzerJourneyMap.length ===
-                              customerValueAnalyzerInfo.target_list.length
-                                ? "completed"
-                                : cardStatuses[index] || "대기 중" // 기본값 설정
-                            }
-                            isSelected={selectedPersonas.includes(index)}
-                            onSelect={(id) => handleCheckboxChange(id)}
-                            viewType="list"
-                            journeyMapData={
-                              customerValueAnalyzerJourneyMap[index] || {}
-                            } // 기본값으로 빈 객체 설정
-                          />
-                        );
-                      }
-                    )}
+                    {(
+                      customerValueAnalyzerInfo?.targetList || selectedCustomers
+                    ).map((target, index) => {
+                      console.log(
+                        "🚀 ~ PageCustomerValueAnalyzer ~ target:",
+                        target
+                      );
+                      return (
+                        <MoleculeCustomerValueCard
+                          key={index}
+                          id={index}
+                          title={target?.personaName || ""}
+                          content={customerValueAnalyzerPersona?.[index] || ""}
+                          business={
+                            customerValueAnalyzerInfo?.business ||
+                            "비즈니스 정보 없음"
+                          }
+                          status={
+                            Array.isArray(customerValueAnalyzerJourneyMap) &&
+                            (customerValueAnalyzerJourneyMap?.length || 0) >
+                              0 &&
+                            (customerValueAnalyzerJourneyMap?.length || 0) ===
+                              (customerValueAnalyzerInfo?.targetList?.length ||
+                                0)
+                              ? "completed"
+                              : cardStatuses[index] || "대기 중"
+                          }
+                          isSelected={(selectedPersonas || []).includes(index)}
+                          onSelect={(id) => handleCheckboxChange?.(id)}
+                          viewType="list"
+                          journeyMapData={
+                            // Array.isArray(customerValueAnalyzerJourneyMap) &&
+                            // customerValueAnalyzerJourneyMap?.[index]
+                            //   ? customerValueAnalyzerJourneyMap[index]
+                            //   : {}
+
+                            customerValueAnalyzerJourneyMap[index] || {}
+                          }
+                        />
+                      );
+                    })}
                   </CardGroupWrap>
                   <BottomBar W100>
                     <Body2
                       color={
-                        selectedPersonas.length === 0 ? "gray300" : "gray800"
+                        (selectedPersonas?.length || 0) === 0
+                          ? "gray300"
+                          : "gray800"
                       }
                     >
                       구매 결정 요인 분석을 원하는 페르소나를 선택해주세요 (
-                      {selectedPersonas.length}/5)
+                      {selectedPersonas?.length || 0}/5)
                     </Body2>
                     <Button
                       Large
@@ -1554,14 +1584,11 @@ const PageCustomerValueAnalyzer = () => {
                       Round
                       Fill
                       disabled={
-                        selectedPersonas.length === 0 ||
-                        toolStep >= 2 ||
-                        // Object.values(cardStatuses).some(
-                        //   (status) =>
-                        //     status === "loading" || status === "waiting"
-                        // )
-                        customerValueAnalyzerJourneyMap.length !==
-                          customerValueAnalyzerInfo.target_list.length
+                        (selectedPersonas?.length || 0) === 0 ||
+                        (toolStep || 0) >= 2 ||
+                        !Array.isArray(customerValueAnalyzerJourneyMap) ||
+                        (customerValueAnalyzerJourneyMap?.length || 0) !==
+                          (customerValueAnalyzerInfo?.targetList?.length || 0)
                       }
                       onClick={() => handleSubmitPersonas()}
                     >
@@ -1569,7 +1596,7 @@ const PageCustomerValueAnalyzer = () => {
                       <images.ChevronRight
                         width="20"
                         height="20"
-                        color={palette.white}
+                        color={palette?.white}
                       />
                     </Button>
                   </BottomBar>

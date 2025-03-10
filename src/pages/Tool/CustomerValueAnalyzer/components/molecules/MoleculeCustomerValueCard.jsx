@@ -506,12 +506,10 @@ const CustomButton = styled(Button)`
     props.$loading &&
     css`
       position: relative;
-      justify-content: ${props.children === "호출중"
-        ? "center"
-        : "center"};
+      justify-content: ${props.children === "호출중" ? "center" : "center"};
       // border: 1px solid ${palette.outlineGray} !important;
-      border: ${props.children === "호출중" 
-        ? `1px solid ${palette.outlineGray}` 
+      border: ${props.children === "호출중"
+        ? `1px solid ${palette.outlineGray}`
         : `0`};
       background: ${palette.chatGray} !important;
       color: ${palette.gray700} !important;
@@ -548,11 +546,11 @@ const CustomButton = styled(Button)`
           border-radius: 4px;
           background: ${palette.primary};
           animation: prog 5s linear infinite;
-          content: '';
+          content: "";
         }
 
         @keyframes prog {
-          to  {
+          to {
             width: 100%;
           }
         }
