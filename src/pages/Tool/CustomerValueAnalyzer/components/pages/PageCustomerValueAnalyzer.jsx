@@ -215,6 +215,7 @@ const PageCustomerValueAnalyzer = () => {
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
 
         // 비즈니스 정보 설정 (Step 1)
+        console.log("customerValueAnalyzerInfo", customerValueAnalyzerInfo);
         if (customerValueAnalyzerInfo) {
           setBusinessDescription(
             customerValueAnalyzerInfo?.analysisPurpose ?? ""
@@ -259,11 +260,19 @@ const PageCustomerValueAnalyzer = () => {
             Array.isArray(customerValueAnalyzerPersona) &&
             customerValueAnalyzerPersona.length > 0
           ) {
+  
             const selectedIndices = customerValueAnalyzerPersona
               .map((persona, index) => {
-                const personaTarget =
-                  customerValueAnalyzerInfo?.targetList?.[index];
-                return selectedTargets.includes(personaTarget) ? index : -1;
+                const personaTarget = customerValueAnalyzerInfo?.targetList?.[index];
+                // personaTarget이 정의되어 있는지 확인
+                // if (!personaTarget) {
+                //   console.warn(`index ${index}에 대해 personaTarget이 undefined입니다.`);
+                //   return -1; // 유효하지 않은 인덱스는 -1 반환
+                // }
+
+                // selectedTargets에 personaTarget이 포함되어 있는지 확인
+                const isSelected = selectedTargets.some(target => target.personaName === personaTarget.personaName);
+                return isSelected ? index : -1;
               })
               .filter((index) => index !== -1);
 
@@ -389,11 +398,16 @@ const PageCustomerValueAnalyzer = () => {
 
       // 순차적으로 API 호출을 처리하는 함수
       const processSequentially = async () => {
-        // console.log("customerValueAnalyzerInfo.target_list", customerValueAnalyzerInfo.target_list);
+        // targetList가 정의되어 있는지 확인
+        if (!customerValueAnalyzerInfo.targetList || !Array.isArray(customerValueAnalyzerInfo.targetList)) {
+          console.error("targetList is undefined or not an array");
+          return; // 적절한 에러 처리를 추가
+        }
+
         let journeyMapData = [];
         for (
           let index = 0;
-          index < customerValueAnalyzerInfo.target_list.length;
+          index < customerValueAnalyzerInfo.targetList.length;
           index++
         ) {
           try {
@@ -405,8 +419,8 @@ const PageCustomerValueAnalyzer = () => {
 
             const data = {
               business: customerValueAnalyzerInfo.business,
-              target: customerValueAnalyzerInfo.target_list[index],
-              analysis_scope: customerValueAnalyzerInfo.analysis_scope,
+              target: customerValueAnalyzerInfo.targetList[index],
+              analysis_scope: customerValueAnalyzerInfo.analysisScope,
               analysis_purpose: customerValueAnalyzerPersona[index],
             };
             // console.log("data", data);
@@ -422,7 +436,7 @@ const PageCustomerValueAnalyzer = () => {
               journeyMapData.push({
                 ...response.response.customer_value_journey_map,
                 business: customerValueAnalyzerInfo.business,
-                target: customerValueAnalyzerInfo.target_list[index],
+                target: customerValueAnalyzerInfo.targetList[index],
               });
             }
 
@@ -459,7 +473,7 @@ const PageCustomerValueAnalyzer = () => {
               isLoggedIn
             );
           } catch (error) {
-            console.error(`Journey Map API 호출 실패 (카드 ${index}):`, error);
+            console.error(`Error processing index ${index}:`, error);
           }
         }
         setApiCallCompleted(true); // API 호출 완료 상태로 설정
@@ -519,27 +533,19 @@ const PageCustomerValueAnalyzer = () => {
       console.log("filteredTargetCustomers", filteredTargetCustomers);
 
       const selectedCustomers = selectedPersonasSaas
-        .map((personaId) => {
-          const index = parseInt(personaId.split("persona")[1], 10); // 숫자 추출
-          const {
-            personaName,
-            personaCharacteristics,
-            age,
-            gender,
-            job,
-            keywords,
-          } = filteredTargetCustomers[index]; // 필요한 필드만 추출
-          return {
-            personaName,
-            personaCharacteristics,
-            age,
-            gender,
-            job,
-            keywords,
-          }; // 필요한 필드만 반환
-        })
-        .filter((customer) => customer !== undefined); // undefined 필터링
-
+      .map((personaId) => {
+        const index = parseInt(personaId.split("persona")[1], 10); // 숫자 추출
+        return filteredTargetCustomers[index]; // 필요한 필드만 추출
+      })
+      .filter((customer) => customer) // undefined 필터링
+      .map(({ personaName, personaCharacteristics, age, gender, job, keywords }) => ({
+        personaName,
+        personaCharacteristics,
+        age,
+        gender,
+        job,
+        keywords,
+      })); 
       console.log("selectedCustomers", selectedCustomers);
 
       const businessData = {
@@ -578,9 +584,9 @@ const PageCustomerValueAnalyzer = () => {
       }
       const businessUpdateData = {
         business: project.projectTitle || "",
-        target_list: selectedCustomers,
-        analysis_scope: selectedPurposes.analysisScope,
-        analysis_purpose: businessDescription,
+        targetList: selectedCustomers,
+        analysisScope: selectedPurposes.analysisScope,
+        analysisPurpose: businessDescription,
       };
       const responseToolId = await createToolOnServer(
         {
@@ -601,7 +607,7 @@ const PageCustomerValueAnalyzer = () => {
       );
       // console.log("customerValueAnalyzerPersona", customerValueAnalyzerPersona);
 
-      setCustomerValueAnalyzerInfo(businessData);
+      setCustomerValueAnalyzerInfo(businessUpdateData );
 
       // API 호출 성공시 다음 단계로 이동
       handleNextStep(1);
@@ -762,7 +768,7 @@ const PageCustomerValueAnalyzer = () => {
     try {
       const selectedPersonaData = selectedPersonas.map((index) => ({
         content: customerValueAnalyzerPersona[index],
-        target: customerValueAnalyzerInfo.target_list[index],
+        target: customerValueAnalyzerInfo.targetList[index],
         journeyMap: customerValueAnalyzerJourneyMap[index],
       }));
       setCustomerValueAnalyzerSelectedPersona(selectedPersonaData);
@@ -798,7 +804,7 @@ const PageCustomerValueAnalyzer = () => {
         const requestData = {
           business: project.projectTitle,
           target: persona.target,
-          analysis_scope: customerValueAnalyzerInfo.analysis_scope,
+          analysis_scope: customerValueAnalyzerInfo.analysisScope,
           customer_value_journey_map: persona.journeyMap,
         };
 
@@ -1063,9 +1069,9 @@ const PageCustomerValueAnalyzer = () => {
   };
 
   const mermaidCode = customerValueAnalyzerPositioning?.mermaid || "";
-  console.log("mermaidCode", mermaidCode);
+
   const cleanMermaidCode = mermaidCode.replace(/quadrant-\d\s+[^\n]+\n/g, "");
-  console.log("cleanMermaidCode", cleanMermaidCode);
+
 
   // const clusterList = customerValueAnalyzerPositioning?.cluster_list || [];
 
@@ -1510,7 +1516,7 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
                   <CardGroupWrap column>
-                    {customerValueAnalyzerInfo.target_list.map(
+                    {customerValueAnalyzerInfo.targetList.map(
                       (target, index) => {
                         return (
                           <MoleculeCustomerValueCard
@@ -1524,7 +1530,7 @@ const PageCustomerValueAnalyzer = () => {
                             } // 기본값 설정
                             status={
                               customerValueAnalyzerJourneyMap.length ===
-                              customerValueAnalyzerInfo.target_list.length
+                              customerValueAnalyzerInfo.targetList.length
                                 ? "completed"
                                 : cardStatuses[index] || "대기 중" // 기본값 설정
                             }
@@ -1561,7 +1567,7 @@ const PageCustomerValueAnalyzer = () => {
                         //     status === "loading" || status === "waiting"
                         // )
                         customerValueAnalyzerJourneyMap.length !==
-                          customerValueAnalyzerInfo.target_list.length
+                          customerValueAnalyzerInfo.targetList.length
                       }
                       onClick={() => handleSubmitPersonas()}
                     >
