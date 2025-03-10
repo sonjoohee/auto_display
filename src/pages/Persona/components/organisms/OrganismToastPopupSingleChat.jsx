@@ -46,6 +46,8 @@ import {
   CREDIT_ADDITIONAL_QUESTION,
   EVENT_STATE,
   EVENT_TITLE,
+  PROJECT_TOTAL_INFO,
+  PROJECT_CREATE_INFO,
 } from "../../../../pages/AtomStates";
 import {
   updateProjectOnServer,
@@ -165,6 +167,10 @@ const OrganismToastPopupSingleChat = ({
   const [countAdditionalQuestion, setCountAdditionalQuestion] = useState(1);
   const [addQuestionLoading, setAddQuestionLoading] = useState(false);
   const [currentAnswerData, setCurrentAnswerData] = useState("");
+
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+
   // const [reportInterviewData, setReportInterviewData] = useState([]);
   const axiosConfig = {
     timeout: 100000,
@@ -212,12 +218,8 @@ const OrganismToastPopupSingleChat = ({
         setAddQuestionLoading(true);
         // 생성된 질문이 없다면 API 요청
         let data = {
-          business_idea: businessAnalysis.input,
-          business_analysis_data: {
-            title: businessAnalysis.title,
-            characteristics: businessAnalysis.characteristics,
-            features: businessAnalysis.features,
-          },
+          business_idea: projectTotalInfo.projectTitle,
+          business_analysis_data: projectCreateInfo,
           answer_list: lastInterview,
           theory_data: selectedInterviewPurposeData,
           input_data: inputValue,
@@ -380,12 +382,8 @@ const OrganismToastPopupSingleChat = ({
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
-            business_idea: businessAnalysis.input,
-            business_analysis_data: {
-              title: businessAnalysis.title,
-              characteristics: businessAnalysis.characteristics,
-              features: businessAnalysis.features,
-            },
+            business_idea: projectTotalInfo.projectTitle,
+            business_analysis_data: projectCreateInfo,
             theory_name: selectedInterviewPurposeData?.title || "",
           };
           {
@@ -529,7 +527,7 @@ const OrganismToastPopupSingleChat = ({
       }
       // API 요청 데이터 준비
       const data = {
-        business_idea: businessAnalysis,
+        business_idea: projectCreateInfo,
         persona_info: personaList.selected[0],
         interview_data: reportInterviewData,
         theory_data: selectedInterviewPurposeData,
@@ -732,7 +730,7 @@ const OrganismToastPopupSingleChat = ({
         }
 
         const data = {
-          business_analysis_data: businessAnalysis,
+          business_analysis_data: projectCreateInfo,
           question: interviewQuestionListState[currentQuestionIndex],
           theory_data: purposeItemsSingleAtom,
           persona_info: {
@@ -1456,7 +1454,7 @@ const OrganismToastPopupSingleChat = ({
           <ChatWrap>
             <Header>
               <Title>
-                {businessAnalysis.title}의 {selectedInterviewPurposeData.title}
+                {projectTotalInfo.projectTitle}의 {selectedInterviewPurposeData.title}
                 <ColseButton onClick={handleClose} />
               </Title>
               <ul>

@@ -78,6 +78,7 @@ import {
   IDEA_GENERATOR_IDEA,
   IDEA_GENERATOR_CLUSTERING,
   IDEA_GENERATOR_FINAL_REPORT,
+  IDEA_GENERATOR_PURPOSE,
   TOOL_LOADING,
   IS_LOGGED_IN,
   TOOL_ID,
@@ -117,10 +118,8 @@ const PageIdeaGenerator = () => {
   const [showPopupError, setShowPopupError] = useState(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
-  const [selectedPurposes, setSelectedPurposes] = useState({
-    customerList: "",
-    analysisScope: "",
-  });
+  const [ideaGeneratorPurpose, setIdeaGeneratorPurpose] = useAtom(IDEA_GENERATOR_PURPOSE);
+  const [selectedPurposes, setSelectedPurposes] = useState("");
   const [selectedInterviewType, setSelectedInterviewType] = useState(null);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] =
     useState(null);
@@ -135,7 +134,7 @@ const PageIdeaGenerator = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
-  const [targetCustomers, setTargetCustomers] = useState([""]);
+  const [targetCustomers, setTargetCustomers] = useState([]);
   const [personaData, setPersonaData] = useState({
     personaInfo: "",
     personaScenario: "",
@@ -234,7 +233,10 @@ const PageIdeaGenerator = () => {
         // 비즈니스 정보 설정 (Step 1)
         if (ideaGeneratorInfo) {
           setBusinessDescription(ideaGeneratorInfo?.business ?? "");
-          setTargetCustomers(ideaGeneratorInfo?.coreValue ?? [""]);
+          setTargetCustomers(ideaGeneratorInfo?.coreValue ?? []);
+        }
+        if(ideaGeneratorPurpose){
+          setSelectedPurposes(ideaGeneratorPurpose);
         }
 
         // 완료된 단계 설정
@@ -253,16 +255,26 @@ const PageIdeaGenerator = () => {
         // 페르소나 설정 (Step 2)
         if (ideaGeneratorSelectedPersona) {
           // ideaGeneratorSelectedPersona가 있는 경우에만 처리
-          const selectedIndex = (ideaGeneratorPersona ?? []).findIndex(
-            (persona) =>
-              persona?.personaName === ideaGeneratorSelectedPersona?.personaName
-          );
+          // const selectedIndex = (personaListSaas ?? []).findIndex(
+          //   (persona) =>
+          //     persona?.personaName === ideaGeneratorSelectedPersona?.personaName
+          // );
 
-          // console.log("🚀 ~ interviewLoading ~ selectedIndex:", selectedIndex);
+          // ideaGeneratorSelectedPersona의 모든 personaName을 가져옵니다.
+const selectedPersonaNames = ideaGeneratorSelectedPersona.map(persona => persona.personaName);
+
+// personaListSaas에서 해당 personaName을 가진 인덱스를 찾습니다.
+const selectedIndices = selectedPersonaNames.map(selectedName => 
+    personaListSaas.findIndex(persona => persona.personaName === selectedName)
+);
+
+console.log(selectedIndices); // 일치하는 인덱스 배열 출력
+setSelectedPersonasSaas(selectedIndices);
+  
           // selectedPersona 상태 업데이트 (일치하는 항목이 없으면 -1)
-          if (selectedIndex !== -1) {
-            setSelectedPersona(selectedIndex);
-          }
+          // if (selectedIndex !== -1) {
+          //   setSelectedPersonasSaas(selectedIndex);
+          // }
         }
 
         if (ideaGeneratorFinalReport?.clusters?.length > 0) {
@@ -327,7 +339,8 @@ const PageIdeaGenerator = () => {
     try {
       const businessData = {
         business: businessDescription || "",
-        core_value: targetCustomers || [""],
+        core_value: targetCustomers || [],
+
       };
 
       let response = await InterviewXIdeaGeneratorPersonaRequest(
@@ -525,7 +538,7 @@ const PageIdeaGenerator = () => {
       // 클러스터링
       const data1 = {
         business: businessDescription || "",
-        core_value: targetCustomers || [""],
+        core_value: targetCustomers || [],
         core_target: ideaGeneratorSelectedPersona || [],
         idea_generator_idea: ideaGeneratorIdea || [],
       };
@@ -614,7 +627,7 @@ const PageIdeaGenerator = () => {
       updateToolOnServer(
         toolId,
         {
-          completedStep: 4,
+          completedStep: 3,
           ideaGeneratorClustering: clusteringData || [],
           ideaGeneratorFinalReport: finalReportData || {},
         },
@@ -715,12 +728,11 @@ const PageIdeaGenerator = () => {
   };
 
   const handlePersonaSelectionChange = (index) => {
-    // if (toolStep >= 2) return;
     setSelectedPersonasSaas((prev) => {
       if ((prev || []).includes(index)) {
         return (prev || []).filter((id) => id !== index);
       } else {
-        if ((prev || []).length >= 5) return prev || [];
+        if ((prev || []).length >= 5) return prev || []; // Prevent adding more than 5 personas
         return [...(prev || []), index];
       }
     });
@@ -731,7 +743,7 @@ const PageIdeaGenerator = () => {
     if (currentStep === 1) {
       setIdeaGeneratorInfo({
         business: projectSaas?.projectTitle || "",
-        core_value: (targetCustomers || []).filter((value) => value !== ""),
+        coreValue: (targetCustomers || []).filter((value) => value !== ""),
       });
 
       setToolStep(1);
@@ -743,6 +755,7 @@ const PageIdeaGenerator = () => {
           completedStep: 1,
           business: projectSaas?.projectTitle || "",
           coreValue: (targetCustomers || []).filter((value) => value !== ""),
+          purpose: selectedPurposes,
         },
         isLoggedIn
       );
@@ -788,13 +801,13 @@ const PageIdeaGenerator = () => {
       fetchIdeaGeneratorIdea();
     } else if (currentStep === 3) {
       setToolStep(3);
-      updateToolOnServer(
-        toolId,
-        {
-          completedStep: 3,
-        },
-        isLoggedIn
-      );
+      // updateToolOnServer(
+      //   toolId,
+      //   {
+      //     completedStep: 3,
+      //   },
+      //   isLoggedIn
+      // );
       fetchIdeaGeneratorFinalReport();
     }
 
@@ -814,9 +827,9 @@ const PageIdeaGenerator = () => {
   // 각 입력 필드의 변경을 처리하는 함수
   const handleTargetCustomerChange = (index, value) => {
     setTargetCustomers((prev) => {
-      const newTargetCustomers = [...(prev || [""])];
+      const newTargetCustomers = [...(prev || [])]; // 빈 배열로 초기화
       newTargetCustomers[index] = value || "";
-      return newTargetCustomers;
+      return newTargetCustomers.filter(customer => customer.trim() !== ""); // 빈 값 필터링
     });
   };
 
@@ -912,6 +925,11 @@ const PageIdeaGenerator = () => {
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
+    setSelectedPersonaButtons((prev) => ({
+      ...prev,
+      [personaId]: !prev[personaId], // Toggle the selected state
+  }));
+
     const selectedPersonaIndex = (ideaGeneratorPersona || []).findIndex(
       (persona) => persona?.personaName === personaId
     );
@@ -1002,7 +1020,8 @@ const PageIdeaGenerator = () => {
             <TabWrapType5>
               <TabButtonType5
                 isActive={activeTab >= 1}
-                onClick={() => setActiveTab(1)}
+                onClick={() => setActiveTab(1) }
+                disabled={isLoading || isLoadingFinalReport ||Object.values(cardStatuses).some(status => status !== "completed") } 
               >
                 <span>01</span>
                 <div className="text">
@@ -1013,8 +1032,8 @@ const PageIdeaGenerator = () => {
               </TabButtonType5>
               <TabButtonType5
                 isActive={activeTab >= 2}
-                onClick={() => completedSteps.includes(1) && setActiveTab(2)}
-                disabled={!completedSteps.includes(1)}
+                onClick={() => completedSteps.includes(1) && setActiveTab(2) }
+                disabled={!completedSteps.includes(1) || isLoading || isLoadingFinalReport || Object.values(cardStatuses).some(status => status !== "completed") }
               >
                 <span>02</span>
                 <div className="text">
@@ -1028,8 +1047,8 @@ const PageIdeaGenerator = () => {
               </TabButtonType5>
               <TabButtonType5
                 isActive={activeTab >= 3}
-                onClick={() => completedSteps.includes(2) && setActiveTab(3)}
-                disabled={!completedSteps.includes(2)}
+                onClick={() => completedSteps.includes(2) && setActiveTab(3) }
+                disabled={!completedSteps.includes(2) || isLoading || isLoadingFinalReport || Object.values(cardStatuses).some(status => status !== "completed") }
               >
                 <span>03</span>
                 <div className="text">
@@ -1043,8 +1062,8 @@ const PageIdeaGenerator = () => {
               </TabButtonType5>
               <TabButtonType5
                 isActive={activeTab >= 4}
-                onClick={() => completedSteps.includes(3) && setActiveTab(4)}
-                disabled={!completedSteps.includes(3)}
+                onClick={() => completedSteps.includes(3) && setActiveTab(4) }
+                disabled={!completedSteps.includes(3) || isLoading || isLoadingFinalReport || Object.values(cardStatuses).some(status => status !== "completed") }
               >
                 <span>04</span>
                 <div className="text">
@@ -1414,9 +1433,12 @@ const PageIdeaGenerator = () => {
                       <Body2 color="gray500">분석 핵심 가치</Body2>
                       <div>
                         <span>
-                          {targetCustomers
-                            .map((customer) => `#${customer}`)
-                            .join(" ")}
+                          {Array.isArray(targetCustomers) && targetCustomers.length > 0
+                            ? targetCustomers
+                                .filter(customer => customer.trim() !== "")
+                                .map((customer) => `#${customer}`)
+                                .join(" ")
+                            : "No customers available"}
                         </span>
                       </div>
                     </li>
@@ -1470,7 +1492,7 @@ const PageIdeaGenerator = () => {
                     onPersonaSelect={(id) => handlePersonaSelectionChange(id)}
                   />
                 </div>
-
+{/* 
                 <Button
                   Other
                   Primary
@@ -1485,7 +1507,33 @@ const PageIdeaGenerator = () => {
                   }
                 >
                   다음
-                </Button>
+                </Button> */}
+
+                <BottomBar W100>
+                  <Body2 color="gray800">
+                    아이디어 도출을 원하는 페르소나를 선택해주세요 (
+                    {selectedPersonasSaas.length}/5)
+                  </Body2>
+                  <Button
+                    Large
+                    Primary
+                    Round
+                    Fill
+                    disabled={
+                      businessDescription.trim() === "" ||
+                      selectedPersonasSaas.length === 0 ||
+                      toolStep >= 2
+                    }
+                    onClick={() => handleNextStep(2)}
+                  >
+                    다음
+                    <images.ChevronRight
+                      width="20"
+                      height="20"
+                      color={palette.white}
+                    />
+                  </Button>
+                </BottomBar>
               </TabContent5>
             )}
 
@@ -1501,20 +1549,23 @@ const PageIdeaGenerator = () => {
 
                 <div className="content">
                   <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                    {ideaGeneratorInfo.coreValue.map((coreValue, index) => (
-                      <MoleculeIdeaGeneratorCard2
-                        key={index}
-                        id={index}
-                        coreValue={coreValue}
-                        status={
-                          ideaGeneratorIdea.length ===
-                          ideaGeneratorInfo.coreValue.length
-                            ? "completed"
-                            : cardStatuses[index]
-                        }
-                        onShowDetail={() => handleShowDetailMore(index)}
-                      />
-                    ))}
+                    {Array.isArray(ideaGeneratorInfo.coreValue) && ideaGeneratorInfo.coreValue.length > 0 ? (
+                      ideaGeneratorInfo.coreValue.map((coreValue, index) => (
+                        <MoleculeIdeaGeneratorCard2
+                          key={index}
+                          id={index}
+                          coreValue={coreValue}
+                          status={
+                            Array.isArray(ideaGeneratorIdea) && ideaGeneratorIdea.length === ideaGeneratorInfo.coreValue.length
+                              ? "completed"
+                              : cardStatuses[index]
+                          }
+                          onShowDetail={() => handleShowDetailMore(index)}
+                        />
+                      ))
+                    ) : (
+                      <Body2 color="gray700">No core values available</Body2>
+                    )}
                   </CardGroupWrap>
 
                   <BottomBar W100>

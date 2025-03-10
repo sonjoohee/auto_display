@@ -51,7 +51,6 @@ const MoleculePersonaSelectCard = ({
         onPersonaSelect(null);
       } else {
         // 새로운 선택
-        // console.log("새로운 선택");
         const newUnselected = personaList.unselected.filter(
           (p) => p.persona_id !== persona.persona_id
         );
@@ -94,6 +93,9 @@ const MoleculePersonaSelectCard = ({
           ),
         });
         onPersonaSelect([...currentSelected, persona]);
+      } else {
+        // 최대 선택 개수 초과 시 알림 표시
+        alert("최대 5명의 페르소나만 선택할 수 있습니다.");
       }
     }
   };
@@ -166,7 +168,9 @@ const MoleculePersonaSelectCard = ({
                     Fill={true}
                     onClick={() => handlePersonaSelect(persona)}
                   >
-                    <Sub2 color="primary">Selected</Sub2>
+                    <Sub2 color="primary">
+                      {interviewType === "single" ? "선택됨" : "선택됨"}
+                    </Sub2>
                   </Button>
                 ) : (
                   <Button
@@ -174,8 +178,15 @@ const MoleculePersonaSelectCard = ({
                     PrimaryLightest={false}
                     Fill={false}
                     onClick={() => handlePersonaSelect(persona)}
+                    disabled={
+                      interviewType === "multiple" &&
+                      personaList.selected.length >= 5 &&
+                      !isSelected
+                    }
                   >
-                    <Sub2 color="gray500">Add</Sub2>
+                    <Sub2 color="gray500">
+                      {interviewType === "single" ? "선택" : "추가"}
+                    </Sub2>
                   </Button>
                 )}
               </ListButton>

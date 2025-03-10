@@ -23,6 +23,8 @@ import {
   INTERVIEW_REPORT_ADDITIONAL,
   IS_PERSONA_ACCESSIBLE,
   SELECTED_PERSONA_LIST,
+  PROJECT_TOTAL_INFO,
+  PROJECT_CREATE_INFO,
 } from "../../../AtomStates";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
@@ -84,6 +86,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const [showRegenerateButton1, setShowRegenerateButton1] = useState(false);
   const [showRegenerateButton2, setShowRegenerateButton2] = useState(false);
   const [showRegenerateButton3, setShowRegenerateButton3] = useState(false);
+
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
 
   const axiosConfig = {
     timeout: 100000,
@@ -169,12 +174,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
-            business_idea: businessAnalysis.input,
-            business_analysis_data: {
-              title: businessAnalysis.title,
-              characteristics: businessAnalysis.characteristics,
-              features: businessAnalysis.features,
-            },
+            business_idea: projectTotalInfo.projectTitle,
+            business_analysis_data: projectCreateInfo,
             theory_name: selectedInterviewPurpose,
           };
 
@@ -272,7 +273,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     try {
       setIsAnalyzing(true);
       const finalData1 = {
-        business_idea: businessAnalysis,
+        business_idea: projectCreateInfo,
         persona_info: personaInfoState,
         interview_data: [
           ...interviewData,
@@ -325,7 +326,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       setInterviewReport(response.response);
 
       const finalData2 = {
-        business_idea: businessAnalysis,
+        business_idea: projectCreateInfo,
         persona_info: personaInfoState,
         report_data: response.response,
         interview_data: [
@@ -848,7 +849,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         <ToastPopup isActive={active}>
           <Header>
             <Title>
-              {businessAnalysis.title}의 {selectedInterviewPurpose}
+              {projectTotalInfo.projectTitle}의 {selectedInterviewPurpose}
               <ColseButton onClick={handleClose} />
             </Title>
             <ul>

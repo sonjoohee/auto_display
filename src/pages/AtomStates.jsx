@@ -488,15 +488,9 @@ export const TYPES_LIST = atom({
   selected: [],
 });
 
-export const SELECTED_INTERVIEW_TYPE = atom({
-  key: "selectedInterviewType",
-  default: "",
-});
+export const SELECTED_INTERVIEW_TYPE = atom("");
 
-export const SELECTED_INTERVIEW_PURPOSE = atom({
-  key: "selectedInterviewPurpose",
-  default: "",
-});
+export const SELECTED_INTERVIEW_PURPOSE = atom("");
 export const SELECTED_PURPOSE_INDEX = atom(0);
 export const SELECTED_INTERVIEW_PURPOSE_DATA = atom({});
 
@@ -544,6 +538,7 @@ export const TOOL_LOADING = atom(false);
 export const IDEA_GENERATOR_INFO = atom({});
 export const IDEA_GENERATOR_KNOW_TARGET = atom(null);
 export const IDEA_GENERATOR_CUSTOM_TARGET = atom("");
+export const IDEA_GENERATOR_PURPOSE = atom("");
 export const IDEA_GENERATOR_PERSONA = atom([]);
 export const IDEA_GENERATOR_IDEA = atom([]);
 export const IDEA_GENERATOR_CLUSTERING = atom([]);
