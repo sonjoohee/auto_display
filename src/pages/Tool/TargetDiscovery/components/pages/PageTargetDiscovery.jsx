@@ -367,6 +367,13 @@ const PageTargetDiscovery = () => {
           isLoggedIn
         );
       }
+
+      const updateBusinessData = {
+        business: businessDescription,
+        target: targetCustomer,
+        specificSituation: specificSituation,
+        country: selectedPurpose,
+      };
       const responseToolId = await createToolOnServer(
         {
           type: "ix_target_discovery_persona",
@@ -386,7 +393,7 @@ const PageTargetDiscovery = () => {
       setTargetDiscoveryPersona(
         response.response.target_discovery_persona || []
       );
-      setTargetDiscoveryInfo(businessData);
+      setTargetDiscoveryInfo(updateBusinessData);
 
       // API 호출 성공시 다음 단계로 이동
       handleNextStep(1);
@@ -415,6 +422,7 @@ const PageTargetDiscovery = () => {
 
   const handleSubmitPersonas = async () => {
     handleNextStep(2);
+    setIsLoading(true);
     try {
       const selectedPersonaData = targetDiscoveryPersona.filter(
         (persona, index) => selectedPersonas.includes(index)
@@ -517,6 +525,8 @@ const PageTargetDiscovery = () => {
             ...prev,
             [persona.title]: false,
           }));
+        } finally {
+          setIsLoading(false);
         }
       }
 
@@ -668,17 +678,46 @@ const PageTargetDiscovery = () => {
     return "대기중";
   };
 
+  // useEffect(() => {
+  //   // 새로고침 감지 함수
+  //   const detectRefresh = () => {
+  //     // 1. Performance API 확인
+  //     // if (performance.navigation && performance.navigation.type === 1) {
+  //     //   console.log("새로고침 감지: Performance API");
+  //     //   navigate("/");
+  //     //   return true;
+  //     // }
+
+  //     // 2. 현재 URL 확인
+  //     const currentUrl = window.location.href;
+  //     if (currentUrl.toLowerCase().includes("targetdiscovery")) {
+  //       // 세션 스토리지에서 마지막 URL 가져오기
+  //       const lastUrl = sessionStorage.getItem("lastUrl");
+
+  //       // 마지막 URL이 현재 URL과 같으면 새로고침
+  //       if (lastUrl && lastUrl === currentUrl) {
+  //         console.log("새로고침 감지: URL 비교");
+  //         navigate("/");
+  //         return true;
+  //       }
+
+  //       // 현재 URL 저장
+  //       sessionStorage.setItem("lastUrl", currentUrl);
+  //     }
+
+  //     return false;
+  //   };
+
+  //   // 함수 실행
+  //   detectRefresh();
+
+  //   // 컴포넌트 마운트 시 한 번만 실행
+  // }, [navigate]);
+
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
-      // 1. Performance API 확인
-      // if (performance.navigation && performance.navigation.type === 1) {
-      //   console.log("새로고침 감지: Performance API");
-      //   navigate("/");
-      //   return true;
-      // }
-
-      // 2. 현재 URL 확인
+      // 현재 URL 확인
       const currentUrl = window.location.href;
       if (currentUrl.toLowerCase().includes("targetdiscovery")) {
         // 세션 스토리지에서 마지막 URL 가져오기
@@ -698,10 +737,41 @@ const PageTargetDiscovery = () => {
       return false;
     };
 
+    // beforeunload 이벤트 핸들러
+    const handleBeforeUnload = (event) => {
+      // 이벤트 취소 (표준에 따라)
+      event.preventDefault();
+      // Chrome은 returnValue 설정 필요
+      event.returnValue = "";
+
+      // 새로고침 시 루트 페이지로 이동
+      navigate("/");
+    };
+
+    // F5 키 또는 Ctrl+R 감지
+    const handleKeyDown = (event) => {
+      if (
+        (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
+        event.key === "F5"
+      ) {
+        // F5 키 코드
+        event.preventDefault();
+        navigate("/");
+      }
+    };
+
     // 함수 실행
     detectRefresh();
 
-    // 컴포넌트 마운트 시 한 번만 실행
+    // 이벤트 리스너 등록
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("keydown", handleKeyDown);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [navigate]);
 
   return (
@@ -716,7 +786,11 @@ const PageTargetDiscovery = () => {
             <TabWrapType5>
               <TabButtonType5
                 isActive={activeTab >= 1}
-                onClick={() => setActiveTab(1)}
+                onClick={() =>
+                  isLoading === false &&
+                  isLoadingScenario === false &&
+                  setActiveTab(1)
+                }
               >
                 <span>01</span>
                 <div className="text">
@@ -727,8 +801,13 @@ const PageTargetDiscovery = () => {
               </TabButtonType5>
               <TabButtonType5
                 isActive={activeTab >= 2}
-                onClick={() => completedSteps.includes(1) && setActiveTab(2)}
-                disabled={!completedSteps.includes(1) || isLoading}
+                onClick={() =>
+                  isLoading === false &&
+                  isLoadingScenario === false &&
+                  completedSteps.includes(1) &&
+                  setActiveTab(2)
+                }
+                disabled={!completedSteps.includes(1)}
               >
                 <span>02</span>
                 <div className="text">
@@ -742,8 +821,13 @@ const PageTargetDiscovery = () => {
               </TabButtonType5>
               <TabButtonType5
                 isActive={activeTab >= 3}
-                onClick={() => completedSteps.includes(2) && setActiveTab(3)}
-                disabled={!completedSteps.includes(2) || isLoading}
+                onClick={() =>
+                  isLoading === false &&
+                  isLoadingScenario === false &&
+                  completedSteps.includes(2) &&
+                  setActiveTab(3)
+                }
+                disabled={!completedSteps.includes(2)}
               >
                 <span>03</span>
                 <div className="text">
@@ -757,8 +841,13 @@ const PageTargetDiscovery = () => {
               </TabButtonType5>
               <TabButtonType5
                 isActive={activeTab >= 4}
-                onClick={() => completedSteps.includes(3) && setActiveTab(4)}
-                disabled={!completedSteps.includes(3) || isLoading}
+                onClick={() =>
+                  isLoading === false &&
+                  isLoadingScenario === false &&
+                  completedSteps.includes(3) &&
+                  setActiveTab(4)
+                }
+                disabled={!completedSteps.includes(3)}
               >
                 <span>04</span>
                 <div className="text">
@@ -924,7 +1013,9 @@ const PageTargetDiscovery = () => {
                       Fill
                       Round
                       onClick={handleSubmitBusinessInfo}
-                      disabled={!isRequiredFieldsFilled() || toolStep >= 1}
+                      disabled={
+                        !isRequiredFieldsFilled() || toolStep >= 1 || isLoading
+                      }
                     >
                       다음
                     </Button>
@@ -993,7 +1084,10 @@ const PageTargetDiscovery = () => {
                           Round
                           Fill
                           disabled={
-                            selectedPersonas.length === 0 || toolStep >= 2
+                            selectedPersonas.length === 0 ||
+                            toolStep >= 2 ||
+                            isLoading ||
+                            isLoadingScenario
                           }
                           onClick={handleSubmitPersonas}
                         >
@@ -1068,6 +1162,8 @@ const PageTargetDiscovery = () => {
                       Round
                       Fill
                       disabled={
+                        isLoading ||
+                        isLoadingScenario ||
                         toolStep >= 3 ||
                         !targetDiscoveryScenario ||
                         targetDiscoveryScenario.length !==

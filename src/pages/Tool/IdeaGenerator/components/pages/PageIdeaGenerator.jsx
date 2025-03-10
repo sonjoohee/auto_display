@@ -226,7 +226,7 @@ const PageIdeaGenerator = () => {
         // 비즈니스 정보 설정 (Step 1)
         if (ideaGeneratorInfo) {
           setBusinessDescription(ideaGeneratorInfo?.business ?? "");
-          setTargetCustomers(ideaGeneratorInfo?.coreValue ?? []);
+          setTargetCustomers(ideaGeneratorInfo?.coreValue ?? [""]);
         }
 
         // 완료된 단계 설정
@@ -247,7 +247,7 @@ const PageIdeaGenerator = () => {
           // ideaGeneratorSelectedPersona가 있는 경우에만 처리
           const selectedIndex = (ideaGeneratorPersona ?? []).findIndex(
             (persona) =>
-              persona?.personaName === ideaGeneratorSelectedPersona.personaName
+              persona?.personaName === ideaGeneratorSelectedPersona?.personaName
           );
 
           // console.log("🚀 ~ interviewLoading ~ selectedIndex:", selectedIndex);
@@ -261,12 +261,12 @@ const PageIdeaGenerator = () => {
           setTableData(
             ideaGeneratorFinalReport.clusters.map((cluster, index) => ({
               key: index + 1,
-              title: cluster.cluster_name,
-              marketSize: cluster.market_competitiveness.score,
-              productConcept: cluster.attractiveness.score,
-              implementability: cluster.feasibility.score,
-              uniqueness: cluster.differentiation.score,
-              average: cluster.total_score / 4,
+              title: cluster?.cluster_name ?? `클러스터 ${index + 1}`,
+              marketSize: cluster?.market_competitiveness?.score ?? 0,
+              productConcept: cluster?.attractiveness?.score ?? 0,
+              implementability: cluster?.feasibility?.score ?? 0,
+              uniqueness: cluster?.differentiation?.score ?? 0,
+              average: (cluster?.total_score ?? 0) / 4,
             }))
           );
         }
@@ -287,13 +287,13 @@ const PageIdeaGenerator = () => {
         let allItems = [];
 
         const response = await getFindToolListOnServerSaas(
-          projectSaas._id,
+          projectSaas?._id ?? "",
           "ix_customer_value_persona",
           isLoggedIn
         );
         console.log("🚀 ~ getAllTargetDiscovery ~ response:", response);
 
-        const newItems = response.filter(
+        const newItems = (response || []).filter(
           (item) =>
             item?.type === "ix_customer_value_persona" &&
             item?.completedStep === 4
@@ -309,20 +309,20 @@ const PageIdeaGenerator = () => {
     };
 
     getAllTargetDiscovery();
-  }, [isLoggedIn]);
+  }, [isLoggedIn, projectSaas]);
 
   const fetchIdeaGeneratorPersona = async () => {
-    if (ideaGeneratorPersona.length) {
+    if (ideaGeneratorPersona && ideaGeneratorPersona.length) {
       return;
     }
 
     try {
       const businessData = {
-        business: businessDescription,
-        core_value: targetCustomers,
+        business: businessDescription || "",
+        core_value: targetCustomers || [""],
       };
 
-      const response = await InterviewXIdeaGeneratorPersonaRequest(
+      let response = await InterviewXIdeaGeneratorPersonaRequest(
         businessData,
         isLoggedIn
       );
@@ -338,7 +338,7 @@ const PageIdeaGenerator = () => {
         response.response.idea_generator_persona.length === 0 ||
         response.response.idea_generator_persona.some(
           (persona) =>
-            !persona.name || !persona.description || !persona.keywords
+            !persona?.name || !persona?.description || !persona?.keywords
         )
       ) {
         if (attempts >= maxAttempts) {
@@ -354,12 +354,13 @@ const PageIdeaGenerator = () => {
       }
 
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
-      setIdeaGeneratorPersona(response.response.idea_generator_persona || []);
+      setIdeaGeneratorPersona(response?.response?.idea_generator_persona || []);
 
       updateToolOnServer(
         toolId,
         {
-          ideaGeneratorPersona: response.response.idea_generator_persona,
+          ideaGeneratorPersona:
+            response?.response?.idea_generator_persona || [],
           ideaGeneratorKnowTarget: ideaGeneratorKnowTarget,
         },
         isLoggedIn
@@ -369,7 +370,7 @@ const PageIdeaGenerator = () => {
     } catch (error) {
       console.error("Error submitting business info:", error);
       setShowPopupError(true);
-      if (error.response) {
+      if (error?.response) {
         switch (error.response.status) {
           case 500:
             setShowPopupError(true);
@@ -390,13 +391,13 @@ const PageIdeaGenerator = () => {
   };
 
   const fetchIdeaGeneratorIdea = async () => {
-    if (ideaGeneratorIdea.length) {
+    if (ideaGeneratorIdea && ideaGeneratorIdea.length) {
       return;
     }
 
     try {
       // 모든 카드의 상태를 waiting으로 초기화
-      const initialLoadingStates = ideaGeneratorInfo.coreValue.reduce(
+      const initialLoadingStates = (ideaGeneratorInfo?.coreValue || []).reduce(
         (acc, _, index) => {
           acc[index] = "waiting";
           return acc;
@@ -408,20 +409,24 @@ const PageIdeaGenerator = () => {
       const results = [];
 
       // 순차적으로 API 호출
-      for (let index = 0; index < ideaGeneratorInfo.coreValue.length; index++) {
+      for (
+        let index = 0;
+        index < (ideaGeneratorInfo?.coreValue || []).length;
+        index++
+      ) {
         // 현재 카드 상태를 loading으로 변경
         setCardStatuses((prev) => ({
           ...prev,
           [index]: "loading",
         }));
 
-        const filteredTargetCustomers = selectedPersonasSaas.flatMap(
+        const filteredTargetCustomers = (selectedPersonasSaas || []).flatMap(
           (personaId) => {
-            const prefix = personaId.split("_")[0]; // 접두사 추출 (예: 'macro_segment')
-            return personaListSaas
+            const prefix = personaId?.split("_")?.[0] || ""; // 접두사 추출 (예: 'macro_segment')
+            return (personaListSaas || [])
               .map((persona, index) => {
                 // personaType이 접두사와 일치하는지 확인
-                if (persona.personaType.startsWith(prefix)) {
+                if (persona?.personaType?.startsWith(prefix)) {
                   return persona; // 인덱스 대신 persona 정보를 반환
                 }
                 return null; // 일치하지 않으면 null 반환
@@ -430,9 +435,9 @@ const PageIdeaGenerator = () => {
           }
         );
 
-        const selectedCustomers = selectedPersonasSaas.reduce(
+        const selectedCustomers = (selectedPersonasSaas || []).reduce(
           (acc, personaId) => {
-            const index = parseInt(personaId.split("persona")[1], 10); // 숫자 추출
+            const index = parseInt(personaId?.split("persona")?.[1] || "0", 10); // 숫자 추출
             const customer = filteredTargetCustomers[index]; // 필요한 필드만 추출
             if (customer) {
               const {
@@ -444,12 +449,12 @@ const PageIdeaGenerator = () => {
                 keywords,
               } = customer;
               acc.push({
-                personaName,
-                personaCharacteristics,
-                age,
-                gender,
-                job,
-                keywords,
+                personaName: personaName || "",
+                personaCharacteristics: personaCharacteristics || "",
+                age: age || "",
+                gender: gender || "",
+                job: job || "",
+                keywords: keywords || [],
               }); // 필요한 필드만 반환
             }
             return acc;
@@ -460,15 +465,15 @@ const PageIdeaGenerator = () => {
         setIdeaGeneratorSelectedPersona(selectedCustomers);
 
         const data = {
-          business: ideaGeneratorInfo.business,
-          core_value: ideaGeneratorInfo.coreValue[index],
-          core_target: selectedCustomers,
+          business: ideaGeneratorInfo?.business || "",
+          core_value: (ideaGeneratorInfo?.coreValue || [])[index] || "",
+          core_target: selectedCustomers || [],
         };
 
         await updateToolOnServer(
           toolId,
           {
-            ideaGeneratorSelectedPersona: selectedCustomers,
+            ideaGeneratorSelectedPersona: selectedCustomers || [],
           },
           isLoggedIn
         );
@@ -478,47 +483,16 @@ const PageIdeaGenerator = () => {
           isLoggedIn
         );
 
-        // const maxAttempts = 10;
-        // let attempts = 0;
-
-        // while (
-        //   !response ||
-        //   !response?.response ||
-        //   !response?.response.idea_generator_idea ||
-        //   response.response.idea_generator_idea.some(idea =>
-        //     !idea.economic_value ||
-        //     !idea.functional_value ||
-        //     !idea.social_value ||
-        //     !idea.environmental_value ||
-        //     !idea.emotional_value ||
-        //     !idea.educational_value ||
-        //     !idea.conclusion
-        //   )
-        // ) {
-        //   if (attempts >= maxAttempts) {
-        //     setShowPopupError(true);
-        //     return;
-        //   }
-        //   attempts++;
-
-        //   response = await InterviewXIdeaGeneratorIdeaRequest(
-        //     data,
-        //     isLoggedIn
-        //   );
-        // }
-
-        // console.log("response", response);
-
         if (response?.response?.idea_generator_idea) {
           results.push(response.response.idea_generator_idea);
           setIdeaGeneratorIdea((prev) => [
-            ...prev,
+            ...(prev || []),
             response.response.idea_generator_idea,
           ]);
 
           // 성공적인 응답 후 카드 상태 업데이트
           setCardStatuses((prev) => ({
-            ...prev,
+            ...(prev || {}),
             [index]: "completed",
           }));
         }
@@ -528,7 +502,7 @@ const PageIdeaGenerator = () => {
       await updateToolOnServer(
         toolId,
         {
-          ideaGeneratorIdea: results,
+          ideaGeneratorIdea: results || [],
         },
         isLoggedIn
       );
@@ -542,17 +516,18 @@ const PageIdeaGenerator = () => {
     try {
       // 클러스터링
       const data1 = {
-        business: businessDescription,
-        core_value: targetCustomers,
-        core_target: ideaGeneratorSelectedPersona,
-        idea_generator_idea: ideaGeneratorIdea,
+        business: businessDescription || "",
+        core_value: targetCustomers || [""],
+        core_target: ideaGeneratorSelectedPersona || [],
+        idea_generator_idea: ideaGeneratorIdea || [],
       };
 
-      const response1 = await InterviewXIdeaGeneratorClusteringRequest(
+      let response1 = await InterviewXIdeaGeneratorClusteringRequest(
         data1,
         isLoggedIn
       );
-      const clusteringData = response1.response.idea_generator_clustering;
+      const clusteringData =
+        response1?.response?.idea_generator_clustering || [];
 
       const maxAttempts = 10;
       let attempts = 0;
@@ -565,8 +540,8 @@ const PageIdeaGenerator = () => {
         response1.response.idea_generator_clustering.length === 0 ||
         response1.response.idea_generator_clustering.some(
           (cluster) =>
-            !cluster.name ||
-            !cluster.ideas ||
+            !cluster?.name ||
+            !cluster?.ideas ||
             !Array.isArray(cluster.ideas) ||
             cluster.ideas.length === 0
         )
@@ -587,19 +562,20 @@ const PageIdeaGenerator = () => {
 
       // 결과 보고서
       const data2 = {
-        business: businessDescription,
-        core_value: targetCustomers,
-        core_target: ideaGeneratorSelectedPersona,
-        idea_generator_idea: ideaGeneratorIdea,
-        idea_generator_clustering: clusteringData,
+        business: businessDescription || "",
+        core_value: targetCustomers || [""],
+        core_target: ideaGeneratorSelectedPersona || [],
+        idea_generator_idea: ideaGeneratorIdea || [],
+        idea_generator_clustering: clusteringData || [],
       };
 
-      const response2 = await InterviewXIdeaGeneratorFinalReportRequest(
+      let response2 = await InterviewXIdeaGeneratorFinalReportRequest(
         data2,
         isLoggedIn
       );
 
-      const finalReportData = response2.response.idea_generator_final_report;
+      let finalReportData =
+        response2?.response?.idea_generator_final_report || {};
 
       let attempts2 = 0;
 
@@ -618,7 +594,8 @@ const PageIdeaGenerator = () => {
           data2,
           isLoggedIn
         );
-        finalReportData = response2.response.idea_generator_final_report;
+        finalReportData =
+          response2?.response?.idea_generator_final_report || {};
       }
 
       setIdeaGeneratorFinalReport(finalReportData);
@@ -630,22 +607,22 @@ const PageIdeaGenerator = () => {
         toolId,
         {
           completedStep: 4,
-          ideaGeneratorClustering: clusteringData,
-          ideaGeneratorFinalReport: finalReportData,
+          ideaGeneratorClustering: clusteringData || [],
+          ideaGeneratorFinalReport: finalReportData || {},
         },
         isLoggedIn
       );
 
       // 테이블 데이터 설정
       setTableData(
-        finalReportData.clusters.map((cluster, index) => ({
+        (finalReportData?.clusters || []).map((cluster, index) => ({
           key: index + 1,
-          title: cluster.cluster_name,
-          marketSize: cluster.market_competitiveness.score,
-          productConcept: cluster.attractiveness.score,
-          implementability: cluster.feasibility.score,
-          uniqueness: cluster.differentiation.score,
-          average: cluster.total_score / 4,
+          title: cluster?.cluster_name || `클러스터 ${index + 1}`,
+          marketSize: cluster?.market_competitiveness?.score || 0,
+          productConcept: cluster?.attractiveness?.score || 0,
+          implementability: cluster?.feasibility?.score || 0,
+          uniqueness: cluster?.differentiation?.score || 0,
+          average: (cluster?.total_score || 0) / 4,
         }))
       );
 
@@ -653,7 +630,7 @@ const PageIdeaGenerator = () => {
     } catch (error) {
       console.error("Error generating final report:", error);
       setShowPopupError(true);
-      if (error.response) {
+      if (error?.response) {
         switch (error.response.status) {
           case 500:
             setShowPopupError(true);
@@ -674,14 +651,14 @@ const PageIdeaGenerator = () => {
   };
 
   const calculateDropDirection = (ref, selectBoxId) => {
-    if (ref.current) {
+    if (ref?.current) {
       const rect = ref.current.getBoundingClientRect();
       const spaceBelow = window.innerHeight - rect.bottom;
       const spaceAbove = rect.top;
       const dropDownHeight = 200;
 
       setDropUpStates((prev) => ({
-        ...prev,
+        ...(prev || {}),
         [selectBoxId]: spaceBelow < dropDownHeight && spaceAbove > spaceBelow,
       }));
     }
@@ -690,31 +667,31 @@ const PageIdeaGenerator = () => {
   const handleSelectBoxClick = (selectBoxId, ref) => {
     calculateDropDirection(ref, selectBoxId);
     setSelectBoxStates((prev) => ({
-      ...prev,
-      [selectBoxId]: !prev[selectBoxId],
+      ...(prev || {}),
+      [selectBoxId]: !prev?.[selectBoxId],
     }));
   };
 
   const handlePurposeSelect = (purpose, selectBoxId) => {
     setSelectedPurposes((prev) => ({
-      ...prev,
-      [selectBoxId]: purpose,
+      ...(prev || {}),
+      [selectBoxId]: purpose || "",
     }));
-    handleContactInputChange("purpose", purpose);
+    handleContactInputChange("purpose", purpose || "");
     setSelectBoxStates((prev) => ({
-      ...prev,
+      ...(prev || {}),
       [selectBoxId]: false,
     }));
 
     if (selectBoxId === "customerList") {
-      setBusinessDescription(purpose);
+      setBusinessDescription(purpose || "");
     }
   };
 
   const handleContactInputChange = (field, value) => {
     setContactForm((prev) => ({
-      ...prev,
-      [field]: value,
+      ...(prev || {}),
+      [field]: value || "",
     }));
   };
 
@@ -732,11 +709,11 @@ const PageIdeaGenerator = () => {
   const handlePersonaSelectionChange = (index) => {
     // if (toolStep >= 2) return;
     setSelectedPersonasSaas((prev) => {
-      if (prev.includes(index)) {
-        return prev.filter((id) => id !== index);
+      if ((prev || []).includes(index)) {
+        return (prev || []).filter((id) => id !== index);
       } else {
-        if (prev.length >= 5) return prev;
-        return [...prev, index];
+        if ((prev || []).length >= 5) return prev || [];
+        return [...(prev || []), index];
       }
     });
   };
@@ -745,19 +722,19 @@ const PageIdeaGenerator = () => {
   const handleNextStep = async (currentStep) => {
     if (currentStep === 1) {
       setIdeaGeneratorInfo({
-        business: projectSaas.projectTitle,
-        core_value: targetCustomers.filter((value) => value !== ""),
+        business: projectSaas?.projectTitle || "",
+        core_value: (targetCustomers || []).filter((value) => value !== ""),
       });
 
       setToolStep(1);
 
       const responseToolId = await createToolOnServer(
         {
-          projectId: projectSaas._id,
+          projectId: projectSaas?._id || "",
           type: "ix_idea_generator_persona",
           completedStep: 1,
-          business: projectSaas.projectTitle,
-          coreValue: targetCustomers.filter((value) => value !== ""),
+          business: projectSaas?.projectTitle || "",
+          coreValue: (targetCustomers || []).filter((value) => value !== ""),
         },
         isLoggedIn
       );
@@ -766,14 +743,14 @@ const PageIdeaGenerator = () => {
     } else if (currentStep === 2) {
       if (selectedPersona === null) {
         // 제가 원하는 타겟 고객이 있습니다
-        setIdeaGeneratorPersona(selectedCustomPersona);
-        setIdeaGeneratorSelectedPersona(selectedCustomPersona);
+        setIdeaGeneratorPersona(selectedCustomPersona || []);
+        setIdeaGeneratorSelectedPersona(selectedCustomPersona || []);
 
         updateToolOnServer(
           toolId,
           {
-            ideaGeneratorSelectedPersona: selectedCustomPersona,
-            ideaGeneratorPersona: selectedCustomPersona,
+            ideaGeneratorSelectedPersona: selectedCustomPersona || [],
+            ideaGeneratorPersona: selectedCustomPersona || [],
           },
           isLoggedIn
         );
@@ -783,7 +760,7 @@ const PageIdeaGenerator = () => {
         updateToolOnServer(
           toolId,
           {
-            ideaGeneratorSelectedPersona: ideaGeneratorPersona,
+            ideaGeneratorSelectedPersona: ideaGeneratorPersona || [],
           },
           isLoggedIn
         );
@@ -813,14 +790,14 @@ const PageIdeaGenerator = () => {
       fetchIdeaGeneratorFinalReport();
     }
 
-    setCompletedSteps([...completedSteps, currentStep]);
+    setCompletedSteps([...(completedSteps || []), currentStep]);
     setActiveTab(currentStep + 1);
     setShowPopupError(false);
   };
 
   // 비즈니스 설명 입력 핸들러
   const handleBusinessDescriptionChange = (e) => {
-    const input = e.target.value;
+    const input = e?.target?.value || "";
     if (input.length <= 150) {
       setBusinessDescription(input);
     }
@@ -829,14 +806,14 @@ const PageIdeaGenerator = () => {
   // 각 입력 필드의 변경을 처리하는 함수
   const handleTargetCustomerChange = (index, value) => {
     setTargetCustomers((prev) => {
-      const newTargetCustomers = [...prev];
-      newTargetCustomers[index] = value;
+      const newTargetCustomers = [...(prev || [""])];
+      newTargetCustomers[index] = value || "";
       return newTargetCustomers;
     });
   };
 
   const handleInterviewTypeSelect = (type) => {
-    if (ideaGeneratorPersona.length === 0) {
+    if (!ideaGeneratorPersona || ideaGeneratorPersona.length === 0) {
       setIsLoading(true);
     }
     setSelectedInterviewType(type);
@@ -852,78 +829,67 @@ const PageIdeaGenerator = () => {
 
   // 팝업을 보여주는 함수
   const handleShowDetail = (persona) => {
-    setSelectedDetailPersona(persona);
+    setSelectedDetailPersona(persona || {});
     setShowPopup(true);
   };
 
   const handleShowDetailMore = (index) => {
     setChartData({
-      name: ideaGeneratorInfo.coreValue[index],
+      name: ideaGeneratorInfo?.coreValue?.[index] || `아이디어 ${index + 1}`,
       children: [
         {
           name: "경제적 가치",
-          children: ideaGeneratorIdea[index].economic_value.ideas.map(
-            (idea) => ({
-              name: idea.name,
-              value: 100,
-            })
-          ),
+          children: (
+            ideaGeneratorIdea?.[index]?.economic_value?.ideas || []
+          ).map((idea) => ({
+            name: idea?.name || "",
+            value: 100,
+          })),
         },
         {
           name: "기능적 가치",
-          children: ideaGeneratorIdea[index].functional_value.ideas.map(
-            (idea) => ({
-              name: idea.name,
-              value: 100,
-            })
-          ),
+          children: (
+            ideaGeneratorIdea?.[index]?.functional_value?.ideas || []
+          ).map((idea) => ({
+            name: idea?.name || "",
+            value: 100,
+          })),
         },
         {
           name: "환경적 가치",
-          children: ideaGeneratorIdea[index].environmental_value.ideas.map(
-            (idea) => ({
-              name: idea.name,
-              value: 100,
-            })
-          ),
-        },
-        {
-          name: "교육적 가치",
-          children: ideaGeneratorIdea[index].educational_value.ideas.map(
-            (idea) => ({
-              name: idea.name,
-              value: 100,
-            })
-          ),
-        },
-        {
-          name: "감정적 가치",
-          children: ideaGeneratorIdea[index].emotional_value.ideas.map(
-            (idea) => ({
-              name: idea.name,
-              value: 100,
-            })
-          ),
+          children: (
+            ideaGeneratorIdea?.[index]?.environmental_value?.ideas || []
+          ).map((idea) => ({
+            name: idea?.name || "",
+            value: 100,
+          })),
         },
         {
           name: "사회적 가치",
-          children: (() => {
-            const socialValueIdeas = ideaGeneratorIdea[index]?.social_value;
-
-            if (Array.isArray(socialValueIdeas)) {
-              // 첫 번째 요소가 배열인 경우
-              return socialValueIdeas[0].ideas.map((idea) => ({
-                name: idea.name,
-                value: 100,
-              }));
-            } else {
-              // 직접 배열인 경우
-              return socialValueIdeas.ideas.map((idea) => ({
-                name: idea.name,
-                value: 100,
-              }));
-            }
-          })(),
+          children: (ideaGeneratorIdea?.[index]?.social_value?.ideas || []).map(
+            (idea) => ({
+              name: idea?.name || "",
+              value: 100,
+            })
+          ),
+        },
+        {
+          name: "감성적 가치",
+          children: (
+            ideaGeneratorIdea?.[index]?.emotional_value?.ideas || []
+          ).map((idea) => ({
+            name: idea?.name || "",
+            value: 100,
+          })),
+        },
+        {
+          name: "교육적 가치",
+          children: (
+            ideaGeneratorIdea?.[index]?.educational_value?.ideas || []
+          ).map((idea) => ({
+            name: idea?.name || "",
+            value: 100,
+          })),
         },
       ],
     });
@@ -938,23 +904,28 @@ const PageIdeaGenerator = () => {
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
-    setSelectedPersonaButtons((prev) => ({
-      ...prev,
-      [personaId]: !prev[personaId],
-    }));
+    const selectedPersonaIndex = (ideaGeneratorPersona || []).findIndex(
+      (persona) => persona?.personaName === personaId
+    );
+    if (selectedPersonaIndex !== -1) {
+      setIdeaGeneratorSelectedPersona(
+        ideaGeneratorPersona?.[selectedPersonaIndex] || {}
+      );
+      updateToolOnServer(
+        toolId,
+        {
+          ideaGeneratorSelectedPersona:
+            ideaGeneratorPersona?.[selectedPersonaIndex] || {},
+        },
+        isLoggedIn
+      );
+    }
   };
 
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
-      // 1. Performance API 확인
-      // if (performance.navigation && performance.navigation.type === 1) {
-      //   console.log("새로고침 감지: Performance API");
-      //   navigate("/");
-      //   return true;
-      // }
-
-      // 2. 현재 URL 확인
+      // 현재 URL 확인
       const currentUrl = window.location.href;
       if (currentUrl.toLowerCase().includes("ideagenerator")) {
         // 세션 스토리지에서 마지막 URL 가져오기
@@ -974,10 +945,41 @@ const PageIdeaGenerator = () => {
       return false;
     };
 
+    // beforeunload 이벤트 핸들러
+    const handleBeforeUnload = (event) => {
+      // 이벤트 취소 (표준에 따라)
+      event.preventDefault();
+      // Chrome은 returnValue 설정 필요
+      event.returnValue = "";
+
+      // 새로고침 시 루트 페이지로 이동
+      navigate("/");
+    };
+
+    // F5 키 또는 Ctrl+R 감지
+    const handleKeyDown = (event) => {
+      if (
+        (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
+        event.key === "F5"
+      ) {
+        // F5 키 코드
+        event.preventDefault();
+        navigate("/");
+      }
+    };
+
     // 함수 실행
     detectRefresh();
 
-    // 컴포넌트 마운트 시 한 번만 실행
+    // 이벤트 리스너 등록
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("keydown", handleKeyDown);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [navigate]);
 
   return (
@@ -1556,28 +1558,6 @@ const PageIdeaGenerator = () => {
                 ) : (
                   <>
                     <InsightAnalysis>
-                      {/* <div className="title">
-                    <div>
-                      <TabWrapType4>
-                        <TabButtonType4
-                          active={activeAnalysisTab === "summary"}
-                          onClick={() => setActiveAnalysisTab("summary")}
-                        >
-                          종합 분석 결과
-                        </TabButtonType4>
-                        <TabButtonType4
-                          active={activeAnalysisTab === "positioning"}
-                          onClick={() => setActiveAnalysisTab("positioning")}
-                        >
-                          포지셔닝 맵
-                        </TabButtonType4>
-                      </TabWrapType4>
-                    </div>
-                    <Button Primary onClick={() => setShowPopupSave(true)}>
-                      리포트 저장하기
-                    </Button>
-                  </div> */}
-
                       <div className="content">
                         <H4 color="gray800">
                           {ideaGeneratorInfo?.business || ""}의 타겟분석결과{" "}
