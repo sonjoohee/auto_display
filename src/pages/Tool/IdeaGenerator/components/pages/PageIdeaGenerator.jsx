@@ -188,6 +188,14 @@ const PageIdeaGenerator = () => {
 
   const [selectedDetailPersona, setSelectedDetailPersona] = useState(null);
 
+  // DeleteFormWrap 삭제를 위한 state 추가
+  const [forms, setForms] = useState([]);
+  
+  // DeleteButton 클릭 핸들러 추가
+  const handleDelete = (index) => {
+    setTargetCustomers(prev => prev.filter((_, i) => i !== index));
+  };
+
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   // 스크롤 초기화
@@ -1179,16 +1187,19 @@ const PageIdeaGenerator = () => {
                       <Body1 color="red">*</Body1>
                     </div>
                     {targetCustomers.map((customer, index) => (
-                      <CustomInput
-                        disabled={toolStep >= 1}
-                        key={index}
-                        type="text"
-                        placeholder="핵심 가치를 작성해주세요 (예: 안전한 송금 등)"
-                        value={customer}
-                        onChange={(e) =>
-                          handleTargetCustomerChange(index, e.target.value)
-                        }
-                      />
+                      <DeleteFormWrap key={index}>
+                        <CustomInput
+                          disabled={toolStep >= 1}
+                          // key={index}
+                          type="text"
+                          placeholder="핵심 가치를 작성해주세요 (예: 안전한 송금 등)"
+                          value={customer}
+                          onChange={(e) =>
+                            handleTargetCustomerChange(index, e.target.value)
+                          }
+                        />
+                        <DeleteButton onClick={() => handleDelete(index)} />
+                      </DeleteFormWrap>
                     ))}
                     <Button
                       DbExLarge
@@ -2012,6 +2023,25 @@ const PageIdeaGenerator = () => {
 };
 
 export default PageIdeaGenerator;
+
+const DeleteFormWrap = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+const DeleteButton = styled.button`
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  border: none;
+  background: url(${images.Trash}) no-repeat center center;
+  background-size: cover;
+`;
 
 const IdeaGeneratorWrap = styled.div`
   display: flex;
