@@ -10,6 +10,8 @@ import {
   PROJECT_SAAS,
   ACCESS_DASHBOARD,
   ACCESS_STATE_SAAS,
+  PROJECT_TOTAL_INFO,
+  PROJECT_CREATE_INFO,
 } from "../../../../pages/AtomStates";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 
@@ -19,6 +21,8 @@ const OrganismProjectItem = ({ project, onClick, isNoData }) => {
   const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
   const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
   const [accessStateSaas, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
 
   const handleClick = async () => {
     if (onClick) {
@@ -30,6 +34,21 @@ const OrganismProjectItem = ({ project, onClick, isNoData }) => {
       setProjectSaas(project);
       setAccessDashboard(true);
       setAccessStateSaas(true);
+
+      const projectTotalData = {
+        projectTitle: project.projectTitle,
+        projectDescription: project.projectDescription,
+        businessModel: project.businessModel,
+        industryType: project.industryType,
+        targetCountry: project.targetCountry,
+        projectAnalysis: project.projectAnalysis,
+        files: project?.files?.map((file, index) => ({
+          id: file.id,
+          name: file.name,
+        })),
+      };
+      setProjectTotalInfo(projectTotalData);
+      setProjectCreateInfo(project.projectAnalysis);
       // 프로젝트 데이터를 state로 전달하여 DashBoard 페이지로 이동
       navigate("/DashBoard");
     }

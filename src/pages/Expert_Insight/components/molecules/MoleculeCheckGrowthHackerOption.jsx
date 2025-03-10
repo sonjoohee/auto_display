@@ -87,7 +87,7 @@ const MoleculeCheckGrowthHackerOption = () => {
   const options6 = [
     { label: "B2B (기업 대상)", value: "B2B (기업 대상)" },
     { label: "B2C (개인 고객 대상)", value: "B2C (개인 고객 대상)" },
-    { label: "기타 (직접 입력)", value: "기타 (직접 입력)" },
+    { label: "기타", value: "기타" },
   ];
   
 

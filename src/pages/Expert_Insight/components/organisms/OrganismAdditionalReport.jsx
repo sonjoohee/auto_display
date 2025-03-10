@@ -17,6 +17,7 @@ import {
   CONVERSATION_ID,
   SELECTED_EXPERT_LIST,
   IS_LOGGED_IN,
+  PROJECT_TOTAL_INFO,
 } from "../../../AtomStates";
 import { palette } from "../../../../assets/styles/Palette";
 import MoleculeReportController from "../molecules/MoleculeReportController";
@@ -81,6 +82,9 @@ const OrganismAdditionalReport = ({
   const [customerAdditionalReportData, setCustomerAdditionalReportData] =
     useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
   const [pocDetailReportData, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
+
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+
   useEffect(() => {
     const loadData = async () => {
       let answerData;
@@ -167,7 +171,7 @@ const OrganismAdditionalReport = ({
           if (selectedExpertList.length === 3) {
             updatedConversation2.push({
               type: "system",
-              message: `"${titleOfBusinessInfo}"과 관련된 "${
+              message: `"${projectTotalInfo.projectTitle}"과 관련된 "${
                 selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
               }" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊`,
               expertIndex: 0,
@@ -175,7 +179,7 @@ const OrganismAdditionalReport = ({
           } else {
             updatedConversation2.push({
               type: "system",
-              message: `"${titleOfBusinessInfo}"과 관련된 "${
+              message: `"${projectTotalInfo.projectTitle}"과 관련된 "${
                 selectedAdditionalKeyword[selectedAdditionalKeyword.length - 1]
               }" 분석 결과입니다.\n추가로 궁금한 점이 있으면 질문해 주세요 😊 분야별 전문가의 의견도 확인해보세요`,
               expertIndex: 0,

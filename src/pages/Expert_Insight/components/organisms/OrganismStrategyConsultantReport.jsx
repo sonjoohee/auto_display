@@ -19,6 +19,8 @@ import {
   STRATEGY_CONSULTANT_REPORT_DATA,
   APPROACH_PATH,
   IS_LOGGED_IN,
+  PROJECT_CREATE_INFO,
+  PROJECT_TOTAL_INFO,
 } from "../../../AtomStates";
 
 import Loader from "../atoms/AtomLoader"
@@ -54,6 +56,9 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
   const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
   const [approachPath] = useAtom(APPROACH_PATH);
 
+  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -81,13 +86,8 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
 
           const data = {
             expert_id: "1",
-            business_info: titleOfBusinessInfo,
-            business_analysis_data: {
-              명칭: titleOfBusinessInfo,
-              주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-              주요기능: mainCharacteristicOfBusinessInformation,
-              목표고객: businessInformationTargetCustomer,
-            },
+            business_info: projectTotalInfo.projectTitle,
+            business_analysis_data: projectCreateInfo,
             button_state: strategyConsultantReportData.length,
             standpoint: "",
             goal: "",

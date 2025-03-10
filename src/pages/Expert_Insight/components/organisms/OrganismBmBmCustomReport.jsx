@@ -20,6 +20,8 @@ import {
   BM_BM_CUSTOM_REPORT_DATA,
   CONVERSATION_STAGE,
   IS_LOGGED_IN,
+  PROJECT_TOTAL_INFO,
+  PROJECT_CREATE_INFO,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -55,6 +57,9 @@ const OrganismBmBmCustomReport = () => {
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
   const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
   const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
+
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
 
   
   const [isModalOpen, setIsModalOpen] = useState({});
@@ -225,13 +230,8 @@ const OrganismBmBmCustomReport = () => {
 
         const data = {
           expert_id: "9",
-          business_info: titleOfBusinessInfo,
-          business_analysis_data: {
-            명칭: titleOfBusinessInfo,
-            주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-            주요기능: mainCharacteristicOfBusinessInformation,
-            목표고객: businessInformationTargetCustomer,
-          },
+          business_info: projectTotalInfo.projectTitle,
+          business_analysis_data: projectCreateInfo,
           bm_bm_auto_report: bmBmAutoReportData,
           selected_bm_bm_target: bmSelectedProblemOptions.problemOptions
         };
@@ -335,8 +335,8 @@ const OrganismBmBmCustomReport = () => {
         <BoxWrap>
           <Overlay isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)} />
 
-          <h1>{titleOfBusinessInfo}의 비즈니스 모델 캔버스 - {bmSelectedProblemOptions.problemOptions}</h1>
-          <p>{mainFeaturesOfBusinessInformation[0]}</p>
+          <h1>{projectTotalInfo.projectTitle}의 비즈니스 모델 캔버스 - {bmSelectedProblemOptions.problemOptions}</h1>
+          {/* <p>{mainFeaturesOfBusinessInformation[0]}</p> */}
   
           <ModelCanvasWrap>
           <CanvasSection>

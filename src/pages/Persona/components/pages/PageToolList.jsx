@@ -176,6 +176,7 @@ import {
   DESIGN_ANALYSIS_EMOTION_TARGET,
   DESIGN_ANALYSIS_EMOTION_SCALE,
   DESIGN_ANALYSIS_FILE_NAMES,
+  PROJECT_TOTAL_INFO,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -210,6 +211,8 @@ const PageToolList = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
 
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [accessableExpert, setAccessableExpert] = useAtom(ACCESSABLE_EXPERT);
@@ -946,14 +949,50 @@ const PageToolList = () => {
           expertIndex: index,
         },
         {
-          type: "system",
-          message:
-            index === "7"
-              ? "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝\n📌 현재는 제품만 분석이 가능합니다"
-              : "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
-          expertIndex: -1,
+          type: "expertBusinessAnalysis",
         },
-      ]);
+        index === "1" 
+          ? [
+              {
+                type: "system",
+                message:
+                "본격적인 전략 컨설팅을 시작해볼까요? 먼저 시장 현황을 파악해보겠습니다.",
+                expertIndex: -1,
+              },
+              { type: "strategyButton" } 
+            ]
+          : index === "7" 
+            ? [
+                {
+                  type: "system",
+                  message:
+                    "지금 바로 시장 가격 분석을 진행하겠습니다.",
+                  expertIndex: -1,
+                },
+                { type: "priceStartButton" }
+              ]
+            : index === "9"
+              ? [
+                {
+                  type: "system",
+                  message:
+                    "본격적인 비즈니스 모델 설계를 진행하겠습니다.\n먼저 현재 아이템을 진단해보겠습니다",
+                  expertIndex: -1,
+                },
+                { type: "bmStartButton" }
+                ]
+              : index === "6"
+                ? [
+                    {
+                      type: "system",
+                      message:
+                        "아이템을 분석하여, 성장 가능성을 극대화할 그로스 해킹 방법을 찾아보겠습니다. 시작할까요? 🔍",
+                      expertIndex: -1,
+                    },
+                    { type: "growthHackerStartButton" }
+                  ]
+                : null
+      ].flat().filter(Boolean));
 
       setAnalysisButtonState(1);
       setIsExpertInsightAccessible(true);
