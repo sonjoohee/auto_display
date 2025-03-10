@@ -1262,13 +1262,13 @@ const PageAiPersona = () => {
               {activeTabIndex === 0 && (
                 <>
                   <div className="flex">
-                    <div>
+                    <div className="column">
                       <Body2 color="gray700" align="left">
                         성별<span style={{ color: "red" }}>*</span>
                       </Body2>
 
                       <SelectBox>
-                        <SelectBoxTitle
+                        <SelectBoxTitle Small
                           onClick={() => toggleSelectBox("gender")}
                         >
                           <div
@@ -1341,13 +1341,13 @@ const PageAiPersona = () => {
                       </SelectBox>
                     </div>
 
-                    <div>
+                    <div className="column">
                       <Body2 color="gray700" align="left">
                         연령<span style={{ color: "red" }}>*</span>
                       </Body2>
 
                       <SelectBox>
-                        <SelectBoxTitle onClick={() => toggleSelectBox("age")}>
+                        <SelectBoxTitle Small onClick={() => toggleSelectBox("age")}>
                           <Body2
                             color={selectedValues.age ? "gray800" : "gray300"}
                           >
@@ -1407,7 +1407,7 @@ const PageAiPersona = () => {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="column">
                     <Body2 color="gray700" align="left">
                       맞춤 페르소나를 생성하는 이유와 목적이 무엇인가요?
                       <span style={{ color: "red" }}>*</span>
@@ -1425,7 +1425,7 @@ const PageAiPersona = () => {
                     </PopupContent>
                   </div>
 
-                  <div>
+                  <div className="column">
                     <Body2 color="gray700" align="left">
                       필수적으로 필요한 정보가 있다면, 알려주세요{" "}
                       <span style={{ color: "red" }}>*</span>
