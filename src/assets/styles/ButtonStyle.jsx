@@ -251,6 +251,17 @@ export const Button = styled.button`
     }
   `}
 
+  ${props => props.None && css`
+    justify-content: flex-start;
+    width: 100%;
+    border: 0;
+    background: transparent;
+
+    &:disabled {
+      background: transparent;
+    }
+  `}
+
 `;
 
 export const ButtonGroup = styled.div`

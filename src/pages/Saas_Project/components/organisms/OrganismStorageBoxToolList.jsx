@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../../../assets/styles/ButtonStyle";
@@ -14,6 +14,7 @@ import {
   InputText,
 } from "../../../../assets/styles/Typography";
 import { palette } from "../../../../assets/styles/Palette";
+import PopupWrap from "../../../../assets/styles/Popup";
 import images from "../../../../assets/styles/Images";
 import axios from "axios";
 import { useAtom } from "jotai";
@@ -910,110 +911,138 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
     }
   };
 
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+
+  const handleDeleteClose = () => {
+    setIsDeletePopupOpen(false);
+  };
+
+  const handleDeleteConfirm = () => {
+    console.log("삭제");
+  };
+
   return (
-    <RecentToolWrap>
-      {toolListSaas?.length > 0 ? (
-        <Table>
-          <colgroup>
-            <col width="20%" />
-            <col />
-            <col width="10%" />
-            <col width="15%" />
-            <col width="10%" />
-          </colgroup>
+    <>
+      <RecentToolWrap>
+        {toolListSaas?.length > 0 ? (
+          <Table>
+            <colgroup>
+              <col width="20%" />
+              <col />
+              <col width="10%" />
+              <col width="15%" />
+              <col width="12%" />
+              <col width="5%" />
+            </colgroup>
 
-          <TableHeader Type1>
-            <tr>
-              <th>
-                <Body1 color="gray700" align="left">
-                  리서치 툴 명
-                </Body1>
-              </th>
-              <th>
-                <Body1 color="gray700" align="left">
-                  상세 내용
-                </Body1>
-              </th>
-              <th>
-                <Body1 color="gray700" align="left">
-                  현황
-                </Body1>
-              </th>
-              <th>
-                <Body1 color="gray700" align="left">
-                  진행 일시
-                </Body1>
-              </th>
-              <th colSpan={2}>
-                <Body1 color="gray700" align="left">
-                  상세보기
-                </Body1>
-              </th>
-            </tr>
-          </TableHeader>
-
-          <TableBody Type1>
-            {toolListSaas.map((tool, index) => (
-              <tr key={index}>
-                <td>
-                  <Body2 color="gray700" align="left">
-                    {getToolName(tool)}
-                  </Body2>
-                </td>
-                <td>
-                  <Body2 color="gray700" align="left">
-                    {getToolDescription(tool)}
-                  </Body2>
-                </td>
-                <td>
-                  <Body2 color="gray700" align="left">
-                    {tool.status || "완료"}
-                  </Body2>
-                </td>
-                <td>
-                  <Body2 color="gray700" align="left">
-                    {formatDate(tool.timestamp)}
-                  </Body2>
-                </td>
-                <td>
-                  <Button
-                    Medium
-                    Outline
-                    Fill
-                    onClick={() =>
-                      handleConversationClick(
-                        tool._id || tool.id,
-                        tool.type || "expert"
-                      )
-                    }
-                  >
-                    <InputText color="gray700">자세히 보기</InputText>
-                  </Button>
-                </td>
-                <td>
-                  <Button View>삭제</Button>
-                </td>
+            <TableHeader Type1>
+              <tr>
+                <th>
+                  <Body1 color="gray700" align="left">
+                    리서치 툴 명
+                  </Body1>
+                </th>
+                <th>
+                  <Body1 color="gray700" align="left">
+                    상세 내용
+                  </Body1>
+                </th>
+                <th>
+                  <Body1 color="gray700" align="center">
+                    현황
+                  </Body1>
+                </th>
+                <th>
+                  <Body1 color="gray700" align="center">
+                    진행 일시
+                  </Body1>
+                </th>
+                <th>
+                  <Body1 color="gray700" align="center">
+                    상세보기
+                  </Body1>
+                </th>
+                <th>&nbsp;</th>
               </tr>
-            ))}
-          </TableBody>
-        </Table>
-      ) : (
-        <NoDataWrap onClick={() => navigate("/Tool")}>
-          <div>
-            <img src={images.Tools} alt="" />
-            <Body2 color="gray500">
-              AI 기반 리서치, 어디까지 해보셨나요? 다양한 리서치 툴을 지금
-              사용해보세요
-              <br />
-              (AI Persona 확인 후 리서치 툴을 사용하면 더 효과적입니다)
-            </Body2>
-            <Button Medium Outline Fill onClick={() => navigate("/Tool")}>
-              <Caption1 color="gray700">리서치 툴 바로가기</Caption1>
-            </Button>
-          </div>
-        </NoDataWrap>
+            </TableHeader>
+
+            <TableBody Type1 Border>
+              {toolListSaas.map((tool, index) => (
+                <tr key={index}>
+                  <td>
+                    <Body2 color="gray700" align="left">
+                      {getToolName(tool)}
+                    </Body2>
+                  </td>
+                  <td>
+                    <Body2 color="gray700" align="left">
+                      {getToolDescription(tool)}
+                    </Body2>
+                  </td>
+                  <td>
+                    <Body2 color="gray700" align="center">
+                      {tool.status || "완료"}
+                    </Body2>
+                  </td>
+                  <td>
+                    <Body2 color="gray700" align="center">
+                      {formatDate(tool.timestamp)}
+                    </Body2>
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    <Button
+                      Medium
+                      Outline
+                      Fill
+                      onClick={() =>
+                        handleConversationClick(
+                          tool._id || tool.id,
+                          tool.type || "expert"
+                        )
+                      }
+                    >
+                      <InputText color="gray700">자세히 보기</InputText>
+                    </Button>
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    <Button None onClick={() => setIsDeletePopupOpen(true)}><img src={images.Trash} alt="" /></Button>
+                  </td>
+                </tr>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <NoDataWrap onClick={() => navigate("/Tool")}>
+            <div>
+              <img src={images.Tools} alt="" />
+              <Body2 color="gray500">
+                AI 기반 리서치, 어디까지 해보셨나요? 다양한 리서치 툴을 지금
+                사용해보세요
+                <br />
+                (AI Persona 확인 후 리서치 툴을 사용하면 더 효과적입니다)
+              </Body2>
+              <Button Medium Outline Fill onClick={() => navigate("/Tool")}>
+                <Caption1 color="gray700">리서치 툴 바로가기</Caption1>
+              </Button>
+            </div>
+          </NoDataWrap>
+        )}
+      </RecentToolWrap>
+
+      {isDeletePopupOpen && (
+        <PopupWrap
+          Warning
+          title="정말 삭제하시겠습니까?"
+          message="삭제된 항목은 복구가 불가합니다"
+          buttonType="Outline"
+          closeText="취소"
+          confirmText="확인"
+          isModal={false}
+          onCancel={handleDeleteClose}
+          onConfirm={handleDeleteConfirm}
+        />
       )}
-    </RecentToolWrap>
+    </>
   );
 };
 
