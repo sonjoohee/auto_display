@@ -1187,7 +1187,7 @@ export const UniqueTag = styled.span`
         case "Early Adopter":
           return "Early Adopter";
         default:
-          return "";
+          return props.color || "";
       }
     }}";
   }
@@ -1250,7 +1250,11 @@ export const UniqueTag = styled.span`
           background: #FFFBF5;
         `;
       default:
-        return "display: none;";
+        return `
+          color: ${palette.gray500};
+          border: 1px solid ${palette.gray500};
+          background: ${palette.white};
+        `;
     }
   }}
 `;
@@ -2451,7 +2455,7 @@ export const CardGroupWrap = styled.div`
 `;
 
 export const AiPersonaCardGroupWrap = styled(CardGroupWrap)`
-  gap: 20px;
+  gap: 32px 15px !important;
 `;
 
 export const ListBoxItem = styled.div`
