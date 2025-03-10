@@ -71,6 +71,7 @@ export const saveConversationToIndexedDB = async (
       chat_date: conversation.timestamp,
       chat_data: conversation,
       expert_index: expertIndex,
+      timestamp: conversation.timestamp,
     };
     // const PUT_DATA = {
     //   id: conversationId,
@@ -183,7 +184,8 @@ export const getAllRecordsFromIndexedDB = async () => {
   });
 };
 
-export const createChatOnServer = async () => {
+export const createChatOnServer = async (projectId) => {
+  console.log("🚀 ~ createChatOnServer ~ projectId:", projectId);
   try {
     const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
     // console.log("token");
@@ -191,10 +193,14 @@ export const createChatOnServer = async () => {
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-
+    const PUT_DATA = {
+      projectId: projectId,
+      timestamp: Date.now(),
+      toolType: "chat",
+    };
     const response = await axios.post(
       "https://wishresearch.kr/panels/create_chat",
-      {}, // POST 요청에 보낼 데이터가 없는 경우 빈 객체 전달
+      PUT_DATA, // POST 요청에 보낼 데이터가 없는 경우 빈 객체 전달
       {
         headers: {
           Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
@@ -1944,6 +1950,7 @@ export const createToolOnServer = async (data, isLoggedIn) => {
         }),
         timestamp: Date.now(),
         ...data,
+        toolType: "tool",
       };
       const response = await axios.post(
         "https://wishresearch.kr/panels/tool/create_tool",

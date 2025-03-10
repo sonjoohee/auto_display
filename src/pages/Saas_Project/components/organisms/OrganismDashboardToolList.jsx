@@ -454,10 +454,62 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
       }
     }
     if (tool.interviewType) return tool.interviewType;
-    if (tool.chat_data?.expert_index) return tool.chat_data.expert_index;
+    if (tool.chat_data?.expert_index) {
+      switch (tool.chat_data.expert_index) {
+        case "1":
+          return "전략 컨설턴트";
+        case "2":
+          return "마케팅 전문가";
+        case "3":
+          return "고객 인사이트 전문가";
+        case "4":
+          return "PoC 설계 전문가";
+        case "5":
+          return "아이디어 디벨로퍼";
+        case "6":
+          return "그로스 해커";
+        case "7":
+          return "가격 분석 전문가";
+        case "8":
+          return "사례 분석 전문가";
+        case "9":
+          return "BM 전문가";
+        case "10":
+          return "조사 설계 전문가";
+        default:
+          return tool.chat_data.expert_index;
+      }
+    }
     return "상세 내용 없음";
   };
 
+  //전문가 부분 누르면
+  const getInitialSystemMessage = (index) => {
+    switch (index) {
+      case "1":
+        return "안녕하세요! 저는 전략 컨설턴트 김도원입니다. \n고객 요구와 시장 현황을 파악하여, 성장을 위한 전략적 인사이트와 맞춤형 개선 방향을 지원하고 있습니다.";
+      case "2":
+        return "안녕하세요! 마케팅 전문가 이지현입니다. 😄 여러분의 아이디어를 효과적으로 시장에 알릴 수 있는 전략을 함께 고민해 보아요. 아이디어나 비즈니스 아이템을 여기에 작성해 주세요. 제가 분석하고, 효과적인 마케팅 전략 리포트를 준비해 드리겠습니다!";
+      case "3":
+        return "반갑습니다! 저는 고객 인사이트 전문가 박서연입니다. 😊 여러분의 비즈니스가 목표 고객에게 잘 다가갈 수 있도록 돕겠습니다. 아이디어나 비즈니스 아이템을 작성해 주세요. 분석 후, 타겟 고객을 정의하고 세분화 방법에 대한 리포트를 제공해 드리겠습니다!";
+      case "4":
+        return "안녕하세요! 저는 PoC 설계 전문가 장석훈입니다. 😊 여러분의 사업 목표에 맞춘 가설 설정과 PoC 전략을 설계하고, 성공적인 검증 과정을 지원해드립니다. 맞춤형 PoC 설계를 위해 몇가지 질문에 응답 부탁드립니다!";
+      case "5":
+        return "안녕하세요. 저는 아이디어 디벨로퍼 윤재민입니다.\n혼자 아이디어를 고민하다보면, 한정된 생각에 갇히기 쉽습니다. 제가 다각도로 사업 아이디어 발산을 돕고 우선순위 높은 아이디어를 선별해드려요. 아이템에 대한 설명을 해주세요 📝";
+      case "6":
+        return "안녕하세요. 저는 그로스 해커 김세준입니다.\n비즈니스에 적합한 성장을 목표로 데이터를 기반으로 실험하고 최적화된 전략을 제시하고 있습니다.";
+      case "7":
+        return "안녕하세요! 저는 가격 분석 전문가 한준혁입니다. 다양한 데이터 소스를 활용해 시장의 가격 변동을 분석하고, 적정 가격을 도출해드립니다. 경쟁사 동향과 시장 트렌드를 파악해 최적의 가격 전략을 세울 수 있도록 도와드려요.";
+      case "8":
+        return "안녕하세요! 저는 사례 분석 전문가 이민호입니다. 최신 데이터와 글로벌 사례등을 분석해 비즈니스에 도움을 드립니다.\n정확한 사례 분석을 위해 비즈니스 정보를 입력해 주세요 🔎";
+      case "9":
+        return "안녕하세요! 저는 BM 전문가 김소윤입니다.\n아이템에 최적화된 비즈니스 모델을 정의하고, 비즈니스 성과를 극대화 할 수 있도록 전략을 제안드립니다.";
+      case "10":
+        return "안녕하세요! 저는 조사 설계 전문가 김현우입니다.\n고객 요구와 시장 반응을 파악해 비즈니스 인사이트를 제공하고, 이를 통해 비즈니스 성장을 돕는 맞춤형 조사를 설계해드립니다. 조사 결과를 기반으로 전략적 개선 방향을 제시해 비즈니스 성과를 향상시킬 수 있습니다.\n먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝";
+      default:
+        return "비즈니스(아이디어)를 입력해주세요.";
+    }
+  };
   // 툴 설명 가져오기 함수
   const getToolDescription = (tool) => {
     if (tool.type) {
@@ -478,7 +530,32 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
       }
     }
     if (tool.interviewType) return tool.interviewType;
-    if (tool.chat_data?.expert_index) return tool.chat_data.expert_index;
+    if (tool.chat_data?.expert_index) {
+      switch (tool.chat_data.expert_index) {
+        case "1":
+          return "시장 내 경쟁 우위 방안 보고서";
+        case "2":
+          return "마케팅 전문가";
+        case "3":
+          return "고객 인사이트 전문가";
+        case "4":
+          return "PoC 설계 전문가";
+        case "5":
+          return "아이디어 디벨로퍼";
+        case "6":
+          return "최적화된 전략을 제시";
+        case "7":
+          return "제품/서비스 분석 보고서";
+        case "8":
+          return "사례 분석 전문가";
+        case "9":
+          return "린 캔버스 vs 비즈니스 모델 캔버스 매칭 분석";
+        case "10":
+          return "조사 설계 전문가";
+        default:
+          return tool.chat_data.expert_index;
+      }
+    }
     return "상세 내용 없음";
   };
   // 날짜 포맷팅 함수 (년월일시분 표기)
@@ -677,8 +754,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setCustomerAdditionButtonState(0);
         setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
 
+        console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
         // 페이지를 대화가 이어지는 형태로 전환
-        navigate(`/conversation`);
+        navigate(`/ExpertInsight`);
       } catch (error) {
         console.error("대화 내용 가져오기 오류:", error);
       }
@@ -805,63 +883,6 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           chatData?.imageName?.map((item) => item.id) || []
         );
         setToolLoading(true);
-
-        if (chatData.isMarketing) {
-          const updatedConversation = [...chatData.conversation];
-
-          if (
-            updatedConversation.length > 0 &&
-            updatedConversation[updatedConversation.length - 1].type ===
-              "marketingSignUpButton"
-          ) {
-            updatedConversation.pop();
-            updatedConversation.pop();
-          }
-
-          setConversation(updatedConversation);
-          saveConversation({
-            changingConversation: {
-              conversation: updatedConversation,
-              conversationId: chatData.id,
-              timestamp: chatData.timestamp,
-              isMarketing: chatData.isMarketing,
-              expert_index: chatData.expert_index,
-              inputBusinessInfo: chatData.inputBusinessInfo,
-              analysisReportData: chatData.analysisReportData,
-              conversationStage: chatData.conversationStage,
-              title: chatData.analysisReportData.title,
-              mainFeatures: chatData.analysisReportData.mainFeatures,
-              marketingMbtiResult: chatData.marketingMbtiResult,
-              marketingResearchReportData: chatData.marketingResearchReportData,
-              marketingBmReportData: chatData.marketingBmReportData,
-              marketingCustomerData: chatData.marketingCustomerData,
-              marketingSelectedCustomer: chatData.marketingSelectedCustomer,
-              marketingFinalCustomer: chatData.marketingFinalCustomer,
-              marketingFinalReportData: chatData.marketingFinalReportData,
-            },
-          });
-        }
-
-        // 어프로치 패스 추가 필요(보고서만 뽑고 나온 뒤에 들어가면 버튼만 추가되어 보이게)
-        // set어프로치패스(2)
-        setApproachPath(2);
-
-        setIsEditingNow(false);
-        setIsEditingIdeaFeature(false);
-        setIsEditingIdeaCustomer(false);
-        setAddingIdeaFeature(false);
-        setActiveIdeaFeatureIndex(0);
-        setAddContentIdeaFeature("");
-        setEditedIdeaFeatureTitle("");
-        setAddingIdeaCustomer(false);
-        setActiveIdeaCustomerIndex(0);
-        setAddContentIdeaCustomer("");
-        setEditedIdeaCustomerTitle("");
-        setAnalysisButtonState(0);
-        setExpertButtonState(0);
-        setAdditionButtonState(0);
-        setCustomerAdditionButtonState(0);
-        setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
 
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);
