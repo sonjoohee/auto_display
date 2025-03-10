@@ -1260,8 +1260,8 @@ const OrganismIncNavigation = () => {
         </Link>
 
         <MenuList>
-          <li 
-            onClick={handleNewProjectClick} 
+          <li
+            onClick={handleNewProjectClick}
             className={`home ${location.pathname === "/" ? "active" : ""}`}
           >
             <svg
@@ -1283,9 +1283,11 @@ const OrganismIncNavigation = () => {
 
           {accessDashboard && (
             <>
-              <li 
-                onClick={() => navigate("/DashBoard")} 
-                className={`dashboard ${location.pathname === "/DashBoard" ? "active" : ""}`}
+              <li
+                onClick={() => navigate("/DashBoard")}
+                className={`dashboard ${
+                  location.pathname === "/DashBoard" ? "active" : ""
+                }`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -1331,9 +1333,11 @@ const OrganismIncNavigation = () => {
                 <span>대시보드</span>
               </li>
 
-              <li 
-                onClick={() => navigate("/AiPersona")} 
-                className={`persona ${location.pathname === "/AiPersona" ? "active" : ""}`}
+              <li
+                onClick={() => navigate("/AiPersona")}
+                className={`persona ${
+                  location.pathname === "/AiPersona" ? "active" : ""
+                }`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -1374,9 +1378,11 @@ const OrganismIncNavigation = () => {
                 <span>페르소나</span>
               </li>
 
-              <li 
-                onClick={() => navigate("/Tool")} 
-                className={`research ${location.pathname === "/Tool" ? "active" : ""}`}
+              <li
+                onClick={() => navigate("/Tool")}
+                className={`research ${
+                  location.pathname === "/Tool" ? "active" : ""
+                }`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -1396,9 +1402,11 @@ const OrganismIncNavigation = () => {
                 <span>리서치툴</span>
               </li>
 
-              <li 
-                onClick={() => navigate("")} 
-                className={`storagebox ${location.pathname === "/Storage" ? "active" : ""}`}
+              <li
+                onClick={() => navigate("/StorageBox")}
+                className={`storagebox ${
+                  location.pathname === "/StorageBox" ? "active" : ""
+                }`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -1786,7 +1794,7 @@ const MenuList = styled.ul`
 
     &.active {
       background: rgba(34, 111, 255, 0.04);
-      
+
       &.home path,
       &.persona path,
       &.management path,
@@ -1802,7 +1810,7 @@ const MenuList = styled.ul`
       &.history path {
         fill: ${palette.primary};
       }
-      
+
       span {
         color: ${palette.primary};
       }

@@ -67,13 +67,13 @@ import PageServiceLanding from "./pages/PageServiceLanding";
 import PageBlog from "./pages/PageBlog";
 
 import PageToolList from "./pages/Persona/components/pages/PageToolList";
-import PageStorageBox from "./pages/Design_Page/PageStorageBox";
 
 //! SAAS 프로젝트
 import PageProject from "./pages/Saas_Project/pages/PageProject";
 import PageProjectCreate from "./pages/Saas_Project/pages/PageProjectCreate";
 import PageDashBoard from "./pages/Saas_Project/pages/PageDashBoard";
 import PageAiPersona from "./pages/Saas_Project/pages/PageAiPersona";
+import PageStorageBox from "./pages/Saas_Project/pages/PageStorageBox";
 
 import PageStyleGuide from "./pages/Design_Page/PageStyleGuide";
 
