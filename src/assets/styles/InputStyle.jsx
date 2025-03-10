@@ -93,7 +93,13 @@ export const SelectBoxTitle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: ${(props) => (props.None ? "0" : "16px 20px")};
+  padding: ${(props) => (
+    props.None 
+    ? "0" 
+    : props.Small
+    ? "8px 12px"
+    : "16px 20px"
+  )};
   border-radius: 5px;
   border: ${(props) => (props.None ? "0" : `1px solid ${palette.outlineGray}`)};
   cursor: pointer;

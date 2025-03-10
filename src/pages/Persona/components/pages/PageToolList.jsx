@@ -1116,7 +1116,7 @@ const PageToolList = () => {
 
         <MoleculeHeader />
 
-        <MainContent Wide1240>
+        <MainContent Wide1030>
           <ToolListWrap>
             <ToolListTitle>
               <H1 color="gray800" align="left">
@@ -1163,7 +1163,7 @@ const PageToolList = () => {
 
                   <ExploreCard AiPersona key="analysis-1">
                     <span>
-                      <images.LightningChargeFill color={palette.gray700} />
+                      <images.GridCircle color={palette.gray700} />
                       Interveiw
                     </span>
                     <p>
@@ -1181,7 +1181,7 @@ const PageToolList = () => {
                       }}
                     >
                       <span>
-                        <images.LightningChargeFill color={palette.white} />
+                        <images.GridCircle color={palette.white} />
                         Interveiw
                       </span>
 
@@ -1201,7 +1201,7 @@ const PageToolList = () => {
 
                   <ExploreCard AiPersona key="analysis-2">
                     <span>
-                      <images.LightningChargeFill color={palette.gray700} />
+                      <images.GridCircle color={palette.gray700} />
                       Interveiw
                     </span>
                     <p>
@@ -1219,7 +1219,7 @@ const PageToolList = () => {
                       }}
                     >
                       <span>
-                        <images.LightningChargeFill color={palette.white} />
+                        <images.GridCircle color={palette.white} />
                         Interveiw
                       </span>
 
@@ -1239,7 +1239,7 @@ const PageToolList = () => {
 
                   <ExploreCard Research key="research-1" {...{ Ready: false }}>
                     <span>
-                      <images.LightningChargeFill color={palette.gray700} />
+                      <images.GridTool color={palette.gray700} />
                       Tool
                     </span>
                     <p>
@@ -1257,7 +1257,7 @@ const PageToolList = () => {
                       }}
                     >
                       <span>
-                        <images.LightningChargeFill color={palette.white} />
+                        <images.GridTool color={palette.white} />
                         Tool
                       </span>
 
@@ -1280,7 +1280,7 @@ const PageToolList = () => {
                     // {...(!accessableExpert && { Ready: true })}
                   >
                     <span>
-                      <images.LightningChargeFill color={palette.gray700} />
+                      <images.GridTool color={palette.gray700} />
                       Tool
                     </span>
                     <p>
@@ -1298,7 +1298,7 @@ const PageToolList = () => {
                       }}
                     >
                       <span>
-                        <images.LightningChargeFill color={palette.white} />
+                        <images.GridTool color={palette.white} />
                         Tool
                       </span>
 
@@ -1322,7 +1322,7 @@ const PageToolList = () => {
                     // {...(!accessableExpert && { Ready: true })}
                   >
                     <span>
-                      <images.LightningChargeFill color={palette.gray700} />
+                      <images.GridTool color={palette.gray700} />
                       Tool
                     </span>
                     <p>
@@ -1340,7 +1340,7 @@ const PageToolList = () => {
                       }}
                     >
                       <span>
-                        <images.LightningChargeFill color={palette.white} />
+                        <images.GridTool color={palette.white} />
                         Tool
                       </span>
 
@@ -1363,7 +1363,7 @@ const PageToolList = () => {
                     key="research-4"
                   >
                     <span>
-                      <images.LightningChargeFill color={palette.gray700} />
+                      <images.GridTool color={palette.gray700} />
                       Tool
                     </span>
                     <p>
@@ -1381,7 +1381,7 @@ const PageToolList = () => {
                       }}
                     >
                       <span>
-                        <images.LightningChargeFill color={palette.white} />
+                        <images.GridTool color={palette.white} />
                         Tool
                       </span>
 

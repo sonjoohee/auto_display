@@ -323,7 +323,7 @@ const PageDashBoard = () => {
 
         <MoleculeHeader />
 
-        <MainContent Wide1240>
+        <MainContent Wide1030>
           <DashBoardWrap>
             <DashBoardItem>
               <div className="title">

@@ -280,7 +280,7 @@ const OrganismPersonaCardList = ({
                 <Body1 color="gray800">
                   {persona?.personaName || "제목 없음"}
                 </Body1>
-                <div>
+                <div style={{ height: "44px" }}>
                   <Sub3 color="gray700">#{persona?.gender || ""}</Sub3>
                   <Sub3 color="gray700">#{persona?.age || ""}</Sub3>
                   <Sub3 color="gray700">#{persona?.keywords[0] || ""}</Sub3>
@@ -423,7 +423,7 @@ const OrganismPersonaCardList = ({
 export default OrganismPersonaCardList;
 
 const StyledButton = styled(Button)`
-  min-width: 92px;
+  min-width: 82px;
 `;
 
 const StarButtonStyled = styled.button`

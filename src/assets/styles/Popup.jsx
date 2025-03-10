@@ -382,9 +382,18 @@ export const Body = styled.div`
     }
   }
 
+  .column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+  }
+
   .flex {
     display: flex;
     align-items: center;
+    flex-direction: row;
     gap: 12px;
     width: 100%;
 

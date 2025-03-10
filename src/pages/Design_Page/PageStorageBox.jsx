@@ -41,7 +41,7 @@ const PageStorageBox = () => {
 
         <MoleculeHeader />
 
-        <MainContent Wide1240>
+        <MainContent Wide1030>
           <StorageBoxWrap>
             <StorageBoxTitle>
               <H1 color="gray800" align="left">Knowledge Archive</H1>

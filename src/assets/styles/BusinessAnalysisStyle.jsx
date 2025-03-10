@@ -1187,7 +1187,7 @@ export const UniqueTag = styled.span`
         case "Early Adopter":
           return "Early Adopter";
         default:
-          return "";
+          return props.color || "";
       }
     }}";
   }
@@ -1250,7 +1250,11 @@ export const UniqueTag = styled.span`
           background: #FFFBF5;
         `;
       default:
-        return "display: none;";
+        return `
+          color: ${palette.gray500};
+          border: 1px solid ${palette.gray500};
+          background: ${palette.white};
+        `;
     }
   }}
 `;
@@ -2441,9 +2445,9 @@ export const CardGroupWrap = styled.div`
         ? "1"
         : props.rowW50
         ? "1 1 50%"
-        : "0 0 calc(33.333% - 10px)"};
+        : "0 0 calc(24.8% - 10px)"};
     max-width: ${(props) =>
-      props.column ? "100%" : props.rowW50 ? "50%" : "calc(33.333% - 10px)"};
+      props.column ? "100%" : props.rowW50 ? "50%" : "calc(24.8% - 10px)"};
     width: 100%;
     justify-content: ${(props) =>
       props.column || props.rowW50 ? "space-between" : "flex-start"};
@@ -2451,7 +2455,7 @@ export const CardGroupWrap = styled.div`
 `;
 
 export const AiPersonaCardGroupWrap = styled(CardGroupWrap)`
-  gap: 20px;
+  gap: 32px 15px !important;
 `;
 
 export const ListBoxItem = styled.div`
@@ -2503,7 +2507,7 @@ export const AiPersonaCardListItem = styled(ListBoxItem)`
   align-items: flex-start;
   max-width: 24% !important;
   text-align: left;
-  padding: 20px;
+  padding: 16px;
 
   .header {
     display: flex;
@@ -2522,7 +2526,7 @@ export const AiPersonaCardListItem = styled(ListBoxItem)`
     > div {
       display: flex;
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
       gap: 0 12px;
       flex-wrap: wrap;
     }
@@ -2544,13 +2548,14 @@ export const AiPersonaCardButtonWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  // gap: 12px;
   width: 100%;
 
   > div {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
+    flex-shrink: 0;
   }
 `;
 
