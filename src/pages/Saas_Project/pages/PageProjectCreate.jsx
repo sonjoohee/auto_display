@@ -480,6 +480,12 @@ const PageProjectCreate = () => {
     navigate(`/Project`, { replace: true });
   };
 
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const handleSaveClick = () => {
+    setIsEditMode(false);
+  };
+
   return (
     <>
       <DropzoneStyles />
@@ -1114,10 +1120,17 @@ const PageProjectCreate = () => {
                           <Body1 color="gray700" align="left">
                             프로젝트 개요
                           </Body1>
+                          {!isEditing ? (
                           <IconButton onClick={handleEditClick}>
                             <img src={images.PencilSquare} alt="" />
                             <span>수정하기</span>
                           </IconButton>
+                          ) : (
+                            <IconButton onClick={handleSaveClick}>
+                              <img src={images.FolderArrowDown} alt="" />
+                              <span>저장하기</span>
+                            </IconButton>
+                          )}
                         </Title>
                         {!isEditing && (
                           <ListBoxGroup>
@@ -1172,10 +1185,17 @@ const PageProjectCreate = () => {
                           <Body1 color="gray700" align="left">
                             주요 타겟 고객군
                           </Body1>
+                          {!isEditingTarget ? (
                           <IconButton onClick={handleEditTargetClick}>
                             <img src={images.PencilSquare} alt="" />
                             <span>수정하기</span>
                           </IconButton>
+                          ) : (
+                            <IconButton onClick={handleSaveClick}>
+                              <img src={images.FolderArrowDown} alt="" />
+                              <span>저장하기</span>
+                            </IconButton>
+                          )}
                         </Title>
                         {!isEditingTarget && (
                           <ListBoxGroup>

@@ -2550,6 +2550,7 @@ export const AiPersonaCardButtonWrap = styled.div`
   justify-content: space-between;
   // gap: 12px;
   width: 100%;
+  margin-top: auto;
 
   > div {
     display: flex;
