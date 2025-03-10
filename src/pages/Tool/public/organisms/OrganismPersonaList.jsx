@@ -133,6 +133,7 @@ const OrganismPersonaList = ({
               <TabButtonType3
                 className={activeTab === "my_persona" ? "active" : ""}
                 onClick={() => handleTabClick("my_persona")}
+                isActive={activeTab === "my_persona"}
                 style={
                   activeTab === "my_persona"
                     ? { color: "#333333" }
@@ -144,6 +145,7 @@ const OrganismPersonaList = ({
               <TabButtonType3
                 className={activeTab === "macro_segment" ? "active" : ""}
                 onClick={() => handleTabClick("macro_segment")}
+                isActive={activeTab === "macro_segment"}
                 style={
                   activeTab === "macro_segment"
                     ? { color: "#333333" }
@@ -155,6 +157,7 @@ const OrganismPersonaList = ({
               <TabButtonType3
                 className={activeTab === "unique_user" ? "active" : ""}
                 onClick={() => handleTabClick("unique_user")}
+                isActive={activeTab === "unique_user"}
                 style={
                   activeTab === "unique_user"
                     ? { color: "#333333" }
@@ -166,6 +169,7 @@ const OrganismPersonaList = ({
               <TabButtonType3
                 className={activeTab === "key_stakeholder" ? "active" : ""}
                 onClick={() => handleTabClick("key_stakeholder")}
+                isActive={activeTab === "key_stakeholder"}
                 style={
                   activeTab === "key_stakeholder"
                     ? { color: "#333333" }
