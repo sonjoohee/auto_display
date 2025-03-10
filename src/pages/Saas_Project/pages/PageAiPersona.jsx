@@ -934,7 +934,7 @@ const PageAiPersona = () => {
               </div>
 
               <Button
-                exLarge
+                ExLarge
                 PrimaryLightest
                 Fill
                 onClick={() => {
@@ -943,7 +943,7 @@ const PageAiPersona = () => {
                 }}
               >
                 <img src={images.PlusPrimary} width="14" height="14" />
-                <Sub1 color="primary">나만의 AI Persona 요청</Sub1>
+                <Sub2 color="primary">나만의 AI Persona 요청</Sub2>
               </Button>
             </AiPersonaTitle>
 

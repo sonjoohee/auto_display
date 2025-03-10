@@ -518,13 +518,7 @@ export const CUSTOM_PERSONA_LIST = atom([]);
 
 export const ACCESSABLE_EXPERT = atom(false);
 
-export const TARGET_DISCOVERY_INFO = atom({
-  type: "",
-  business: "",
-  target: "",
-  specific_situation: "",
-  country: "",
-});
+export const TARGET_DISCOVERY_INFO = atom({});
 
 export const TARGET_DISCOVERY_PERSONA = atom([]);
 export const SELECTED_TARGET_DISCOVERY_PERSONA = atom([]);
@@ -535,9 +529,7 @@ export const TARGET_DISCOVERY_FINAL_REPORT = atom({});
 export const TOOL_ID = atom("");
 export const TOOL_STEP = atom(0);
 
-export const CUSTOMER_VALUE_ANALYZER_INFO = atom({
- 
-});
+export const CUSTOMER_VALUE_ANALYZER_INFO = atom({});
 export const CUSTOMER_VALUE_ANALYZER_PERSONA = atom([]);
 export const CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA = atom([]);
 export const CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR = atom([]);
@@ -549,10 +541,7 @@ export const CUSTOMER_VALUE_ANALYZER_FINAL_REPORT = atom({});
 
 export const TOOL_LOADING = atom(false);
 
-export const IDEA_GENERATOR_INFO = atom({
-  business: "",
-  core_value: [],
-});
+export const IDEA_GENERATOR_INFO = atom({});
 export const IDEA_GENERATOR_KNOW_TARGET = atom(null);
 export const IDEA_GENERATOR_CUSTOM_TARGET = atom("");
 export const IDEA_GENERATOR_PERSONA = atom([]);
