@@ -1017,6 +1017,143 @@ export const Tag = styled.span`
   }}
 `;
 
+export const ProjectTag = styled.span`
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
+  color: ${palette.gray800};
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border-radius: 15px;
+  border: 1px solid ${palette.outlineGray};
+  background: ${palette.white};
+
+  &:before {
+    content: '';
+    ${props => props.Type && css`
+      width: 20px;
+      height: 20px;
+      background-image: ${(props) => {
+        switch (props.Type) {
+          case "Information":
+            return `url(${images.ProjectInformation})`;
+          case "Banking":
+            return `url(${images.ProjectBanking})`;
+          case "Production":
+            return `url(${images.ProjectProduction})`;
+          case "Build":
+            return `url(${images.ProjectBuild})`;
+          case "Medical":
+            return `url(${images.ProjectMedical})`;
+          case "Education":
+            return `url(${images.ProjectEducation})`;
+          case "Consumer":
+            return `url(${images.ProjectConsumer})`;
+          case "Etc":
+            return `url(${images.ProjectEtc})`;
+          default:
+            return "none";
+        }
+      }};
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    `}
+
+    ${props => props.Country && css`
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-image: ${(props) => {
+        switch (props.Country) {
+          case "Korea":
+            return `url(${images.ProjectKorea})`;
+          case "Usa":
+            return `url(${images.ProjectUsa})`;
+          case "China":
+            return `url(${images.ProjectChina})`;
+          case "Japan":
+            return `url(${images.ProjectJapan})`;
+          case "Vietnam":
+            return `url(${images.ProjectVietnam})`;
+          default:
+            return "none";
+        }
+      }};
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    `}
+  }
+
+  &::after {
+    content: "${(props) => {
+      if (props.Business) {
+        switch (props.Business) {
+          case "B2C":
+            return "B2C";
+          case "B2B":
+            return "B2B";
+          case "B2G":
+            return "B2G";
+          case "B2B2C":
+            return "B2B2C";
+          case "B2B2B":
+            return "B2B2B";
+          default:
+            return "";
+        }
+      }
+      
+      if (props.Type) {
+        switch (props.Type) {
+          case "Information":
+            return "정보통신 및 기술";
+          case "Banking":
+            return "금융 및 법률";
+          case "Production":
+            return "제조 및 생산";
+          case "Build":
+            return "건설 및 인프라";
+          case "Medical":
+            return "의료 및 헬스케어";
+          case "Education":
+            return "교육 및 공공 서비스";
+          case "Consumer":
+            return "소비재 및 라이프스타일";
+          case "Etc":
+            return "기타";
+          default:
+            return "";
+        }
+      }
+         
+      if (props.Country) {
+        switch (props.Country) {
+          case "Korea":
+            return "대한민국";
+          case "Usa":
+            return "미국";
+          case "China":
+            return "중국";
+          case "Japan":
+            return "일본";
+          case "Vietnam":
+            return "베트남";
+          default:
+            return "";
+        }
+      }
+   
+      return "";
+    }}";
+  }
+`;
+
 export const UniqueTag = styled.span`
   font-size: 0.75rem;
   font-weight: 500;
