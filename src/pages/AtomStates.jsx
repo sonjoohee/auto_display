@@ -522,7 +522,7 @@ export const TARGET_DISCOVERY_INFO = atom({
   type: "",
   business: "",
   target: "",
-  specificSituation: "",
+  specific_situation: "",
   country: "",
 });
 
@@ -536,10 +536,7 @@ export const TOOL_ID = atom("");
 export const TOOL_STEP = atom(0);
 
 export const CUSTOMER_VALUE_ANALYZER_INFO = atom({
-  business: "",
-  target_list: [],
-  analysis_scope: "",
-  analysis_purpose: "",
+ 
 });
 export const CUSTOMER_VALUE_ANALYZER_PERSONA = atom([]);
 export const CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA = atom([]);

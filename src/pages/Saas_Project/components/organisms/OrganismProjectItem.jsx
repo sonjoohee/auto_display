@@ -76,7 +76,7 @@ const OrganismProjectItem = ({ project, onClick, isNoData }) => {
 export default OrganismProjectItem;
 
 const ProjectItem = styled.div`
-  max-width: 32.2%;
+  max-width: 31.9%;
   max-height: 350px;
   width: 100%;
   display: flex;

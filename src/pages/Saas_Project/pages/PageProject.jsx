@@ -115,7 +115,7 @@ const PageProject = () => {
 
         <MoleculeHeader />
 
-        <MainContent Wide1240>
+        <MainContent Wide1030>
           <ProjectWrap>
             <HeaderWrap>
               <div>

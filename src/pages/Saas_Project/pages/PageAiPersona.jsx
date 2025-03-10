@@ -919,7 +919,7 @@ const PageAiPersona = () => {
         <OrganismIncNavigation />
         <MoleculeHeader />
 
-        <MainContent Wide1240>
+        <MainContent Wide1030>
           <AiPersonaWrap>
             <AiPersonaTitle>
               <div>
@@ -953,6 +953,7 @@ const PageAiPersona = () => {
                   <TabButtonType3
                     className={activeTab === "macro_segment" ? "active" : ""}
                     onClick={() => handleTabClick("macro_segment")}
+                    isActive={activeTab === "macro_segment"}
                     style={
                       activeTab === "macro_segment"
                         ? { color: "#333333" }
@@ -964,6 +965,7 @@ const PageAiPersona = () => {
                   <TabButtonType3
                     className={activeTab === "unique_user" ? "active" : ""}
                     onClick={() => handleTabClick("unique_user")}
+                    isActive={activeTab === "unique_user"}
                     style={
                       activeTab === "unique_user"
                         ? { color: "#333333" }
@@ -975,6 +977,7 @@ const PageAiPersona = () => {
                   <TabButtonType3
                     className={activeTab === "key_stakeholder" ? "active" : ""}
                     onClick={() => handleTabClick("key_stakeholder")}
+                    isActive={activeTab === "key_stakeholder"}
                     style={
                       activeTab === "key_stakeholder"
                         ? { color: "#333333" }
@@ -986,6 +989,7 @@ const PageAiPersona = () => {
                   <TabButtonType3
                     className={activeTab === "my_persona" ? "active" : ""}
                     onClick={() => handleTabClick("my_persona")}
+                    isActive={activeTab === "my_persona"}
                     style={
                       activeTab === "my_persona"
                         ? { color: "#333333" }
@@ -1001,19 +1005,19 @@ const PageAiPersona = () => {
                     <span className="inactive">
                       <Sub3 color="gray700">{currentTabStats.inactive}</Sub3>
                     </span>
-                    <Sub3 color="gray700">비활성 페르소나</Sub3>
+                    <Sub3 color="gray800">비활성 페르소나</Sub3>
                   </div>
                   <div>
                     <span className="generating">
-                      <Sub3 color="white">{currentTabStats.generating}</Sub3>
+                      <Sub3 color="gray800">{currentTabStats.generating}</Sub3>
                     </span>
-                    <Sub3 color="gray700">생성 중</Sub3>
+                    <Sub3 color="gray800">생성 중</Sub3>
                   </div>
                   <div>
                     <span className="active">
-                      <Sub3 color="white">{currentTabStats.active}</Sub3>
+                      <Sub3 color="gray800">{currentTabStats.active}</Sub3>
                     </span>
-                    <Sub3 color="gray700">활성 페르소나</Sub3>
+                    <Sub3 color="gray800">활성 페르소나</Sub3>
                   </div>
                 </AiPersonaInfo>
 
@@ -2260,24 +2264,24 @@ const AiPersonaInfo = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
-    padding: 0;
+    // width: 24px;
+    // height: 24px;
+    padding: 4px 12px;
     border-radius: 5px;
 
     &.active {
       border: 1px solid ${palette.white};
-      background: ${palette.primary};
+      background: rgba(34, 111, 255, 0.16);
     }
 
     &.generating {
       border: 1px solid ${palette.white};
-      background: #32ade6;
+      background: rgba(50, 173, 230, 0.16);
     }
 
     &.inactive {
       border: 1px solid ${palette.white};
-      background: ${palette.outlineGray};
+      background: ${palette.chatGray};
     }
   }
 `;
