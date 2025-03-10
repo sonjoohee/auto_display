@@ -17,6 +17,8 @@ import {
   PURPOSE_ITEMS_SINGLE,
   IS_LOADING_QUESTION,
   SELECTED_INTERVIEW_PURPOSE_DATA,
+  PROJECT_TOTAL_INFO,
+  PROJECT_CREATE_INFO,
 } from "../../../AtomStates";
 import {
   ListBoxItem,
@@ -70,6 +72,9 @@ const MoleculeInterviewPurpose = ({
   const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
     useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
 
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+
   const loadInterviewQuestion = async (title) => {
     setShowRegenerateButton(false);
 
@@ -118,12 +123,8 @@ const MoleculeInterviewPurpose = ({
 
         // if (generatedQuestions) {
         let data = {
-          business_idea: businessAnalysis.input,
-          business_analysis_data: {
-            title: businessAnalysis.title,
-            characteristics: businessAnalysis.characteristics,
-            features: businessAnalysis.features,
-          },
+          business_idea: projectTotalInfo.projectTitle,
+          business_analysis_data: projectCreateInfo,
           custom_theory_data: purpose.custom_theory_data,
         };
 

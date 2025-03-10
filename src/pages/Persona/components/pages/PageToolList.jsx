@@ -1336,7 +1336,7 @@ const PageToolList = () => {
                     <div
                       className="overlay"
                       onClick={() => {
-                        hadleToolSelect("1");
+                        navigate("/Persona3Single");
                       }}
                     >
                       <span>
@@ -1374,7 +1374,7 @@ const PageToolList = () => {
                     <div
                       className="overlay"
                       onClick={() => {
-                        hadleToolSelect("1");
+                        navigate("/Persona3Multiple");
                       }}
                     >
                       <span>
