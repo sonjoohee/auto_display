@@ -20,6 +20,8 @@ import {
   GROWTH_HACKER_DETAIL_REPORT_DATA,
   BUTTON_STATE,
   IS_LOGGED_IN,
+  PROJECT_TOTAL_INFO,
+  PROJECT_CREATE_INFO,
 } from "../../../AtomStates";
 
 import Loader from "../atoms/AtomLoader";
@@ -66,6 +68,9 @@ const OrganismGrowthHackerReport = ({ growthHackerReportCount }) => {
   const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
 
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -94,13 +99,8 @@ const OrganismGrowthHackerReport = ({ growthHackerReportCount }) => {
 
         const data = {
           expert_id: "6",
-          business_info: titleOfBusinessInfo,
-          business_analysis_data: {
-            명칭: titleOfBusinessInfo,
-            주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-            주요기능: mainCharacteristicOfBusinessInformation,
-            목표고객: businessInformationTargetCustomer,
-          },
+          business_info: projectTotalInfo.projectTitle,
+          business_analysis_data: projectCreateInfo,
           kpi_question_list: KpiQuestionList,
           kpi_report_data: growthHackerReportData,
           recommended_solution: growthHackerSelectedSolution[growthHackerReportCount].title,

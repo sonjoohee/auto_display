@@ -16,6 +16,8 @@ import {
   BM_LEAN_AUTO_REPORT_BUTTON_STATE,
   BM_QUESTION_LIST,
   IS_LOGGED_IN,
+  PROJECT_TOTAL_INFO,
+  PROJECT_CREATE_INFO,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -52,6 +54,9 @@ const OrganismBmLeanAutoReport = () => {
   const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
   const [bmQuestionList, setbmQuestionList] = useAtom(BM_QUESTION_LIST);
 
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -76,13 +81,8 @@ const OrganismBmLeanAutoReport = () => {
 
         const data = {
           expert_id: "9",
-          business_info: titleOfBusinessInfo,
-          business_analysis_data: {
-            명칭: titleOfBusinessInfo,
-            주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-            주요기능: mainCharacteristicOfBusinessInformation,
-            목표고객: businessInformationTargetCustomer,
-          },
+          business_info: projectTotalInfo.projectTitle,
+          business_analysis_data: projectCreateInfo,
           bm_question_list: bmQuestionList,
         };
 
@@ -163,8 +163,8 @@ const OrganismBmLeanAutoReport = () => {
         <BoxWrap>
           <Overlay isMenuOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)} />
 
-          <h1>{titleOfBusinessInfo}의 린 캔버스 - 기본형</h1>
-          <p>{mainFeaturesOfBusinessInformation[0]}</p>
+          <h1>{projectTotalInfo.projectTitle}의 린 캔버스 - 기본형</h1>
+          {/* <p>{mainFeaturesOfBusinessInformation[0]}</p> */}
   
           <ModelCanvasWrap>
           <CanvasSection>

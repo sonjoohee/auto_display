@@ -18,6 +18,8 @@ import {
   BM_BM_CUSTOM_REPORT_BUTTON_STATE,
   APPROACH_PATH,
   IS_LOGGED_IN,
+  PROJECT_TOTAL_INFO,
+  PROJECT_CREATE_INFO,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -54,6 +56,9 @@ const OrganismBmBmAdsReport = () => {
   const [problemOptions, setProblemOptions] = useState("");
   const [bmBmCustomButtonState, setBmBmCustomButtonState] = useAtom(BM_BM_CUSTOM_REPORT_BUTTON_STATE);
 
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지를 상태로 관리
 
   useEffect(() => {
@@ -85,13 +90,8 @@ const OrganismBmBmAdsReport = () => {
 
         const data = {
           expert_id: "9",
-          business_info: titleOfBusinessInfo,
-          business_analysis_data: {
-            명칭: titleOfBusinessInfo,
-            주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-            주요기능: mainCharacteristicOfBusinessInformation,
-            목표고객: businessInformationTargetCustomer,
-          },
+          business_info: projectTotalInfo.projectTitle,
+          business_analysis_data: projectCreateInfo,
           bm_question_list: bmQuestionList,
         };
 

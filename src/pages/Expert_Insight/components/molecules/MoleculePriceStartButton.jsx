@@ -12,6 +12,7 @@ import {
   PRICE_START_BUTTON_STATE,
   PRICE_PRODUCT,
   IS_EDITING_NOW,
+  PROJECT_TOTAL_INFO,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -30,6 +31,8 @@ const MoleculePriceStartButton = () => {
   const [priceStartButtonState, setPriceStartButtonState] = useAtom(PRICE_START_BUTTON_STATE);
   const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
   const [isEditingNow, setIsEditingNow] = useAtom(IS_EDITING_NOW);
+
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
   
   const handleClick = async () => {
     if (isLoading) return;
@@ -117,7 +120,7 @@ const MoleculePriceStartButton = () => {
         {
           type: "system",
           message:
-            `${titleOfBusinessInfo}에 관련된 제품 가격 정보를 확인하여 시장 가격 분석을 진행하겠습니다.`,
+            `${projectTotalInfo.projectTitle}에 관련된 제품 가격 정보를 확인하여 시장 가격 분석을 진행하겠습니다.`,
           expertIndex: selectedExpertIndex,
         },
         {
