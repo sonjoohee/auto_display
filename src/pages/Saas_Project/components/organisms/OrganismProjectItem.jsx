@@ -24,6 +24,7 @@ const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
   const [accessStateSaas, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
   const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
   const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleClick = async () => {
     if (onClick) {
