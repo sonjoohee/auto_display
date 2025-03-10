@@ -1921,6 +1921,7 @@ export const AlarmList = async (isLoggedIn) => {
 
 //TOOL 생성 api
 export const createToolOnServer = async (data, isLoggedIn) => {
+  console.log("🚀 ~ createToolOnServer ~ data:", data);
   if (isLoggedIn) {
     try {
       const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기

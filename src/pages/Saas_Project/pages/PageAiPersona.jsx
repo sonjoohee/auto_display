@@ -880,14 +880,7 @@ const PageAiPersona = () => {
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
-      // 1. Performance API 확인
-      // if (performance.navigation && performance.navigation.type === 1) {
-      //   console.log("새로고침 감지: Performance API");
-      //   navigate("/");
-      //   return true;
-      // }
-
-      // 2. 현재 URL 확인
+      // 현재 URL 확인
       const currentUrl = window.location.href;
       if (currentUrl.toLowerCase().includes("aipersona")) {
         // 세션 스토리지에서 마지막 URL 가져오기
@@ -907,12 +900,42 @@ const PageAiPersona = () => {
       return false;
     };
 
+    // beforeunload 이벤트 핸들러
+    const handleBeforeUnload = (event) => {
+      // 이벤트 취소 (표준에 따라)
+      event.preventDefault();
+      // Chrome은 returnValue 설정 필요
+      event.returnValue = "";
+
+      // 새로고침 시 루트 페이지로 이동
+      navigate("/");
+    };
+
+    // F5 키 또는 Ctrl+R 감지
+    const handleKeyDown = (event) => {
+      if (
+        (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
+        event.key === "F5"
+      ) {
+        // F5 키 코드
+        event.preventDefault();
+        navigate("/");
+      }
+    };
+
     // 함수 실행
     detectRefresh();
 
-    // 컴포넌트 마운트 시 한 번만 실행
-  }, [navigate]);
+    // 이벤트 리스너 등록
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("keydown", handleKeyDown);
 
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [navigate]);
   return (
     <>
       <ContentsWrap>
@@ -1268,7 +1291,8 @@ const PageAiPersona = () => {
                       </Body2>
 
                       <SelectBox>
-                        <SelectBoxTitle Small
+                        <SelectBoxTitle
+                          Small
                           onClick={() => toggleSelectBox("gender")}
                         >
                           <div
@@ -1347,7 +1371,10 @@ const PageAiPersona = () => {
                       </Body2>
 
                       <SelectBox>
-                        <SelectBoxTitle Small onClick={() => toggleSelectBox("age")}>
+                        <SelectBoxTitle
+                          Small
+                          onClick={() => toggleSelectBox("age")}
+                        >
                           <Body2
                             color={selectedValues.age ? "gray800" : "gray300"}
                           >

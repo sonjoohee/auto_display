@@ -16,7 +16,6 @@ import images from "../../../../assets/styles/Images";
 import personaImages from "../../../../assets/styles/PersonaImages";
 import { palette } from "../../../../assets/styles/Palette";
 import MoleculePersonaSelectCard from "../../../Persona/components/molecules/MoleculePersonaSelectCard";
-import OrganismPersonaList from "../../../Tool/public/organisms/OrganismPersonaList";
 import {
   ContentsWrap,
   MainContent,
@@ -89,13 +88,14 @@ import {
   UserCreditInfo,
 } from "../../../../utils/indexedDB";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
+import OrganismPersonaListSaas from "../organisms/OrganismPersonaListSaas";
+
 const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
 
 const PagePersona3Select = () => {
-  const [customPersonaList, setCustomPersonaList] = useAtom(
-    CUSTOM_PERSONA_LIST
-  );
+  const [customPersonaList, setCustomPersonaList] =
+    useAtom(CUSTOM_PERSONA_LIST);
   const [allBusinessPersonas, setAllBusinessPersonas] = useAtom(
     All_BUSINESS_PERSONA_LIST
   );
@@ -184,7 +184,7 @@ const PagePersona3Select = () => {
       document.body.style.overflow = "auto";
       document.documentElement.style.overflow = "auto";
     }
-  
+
     // 컴포넌트 언마운트 시 원상 복구
     return () => {
       document.body.style.overflow = "auto";
@@ -312,7 +312,7 @@ const PagePersona3Select = () => {
     }));
   };
 
-  console.log("selectedInterviewType:", selectedInterviewType);  // 디버깅용
+  console.log("selectedInterviewType:", selectedInterviewType); // 디버깅용
 
   return (
     <>
@@ -323,47 +323,40 @@ const PagePersona3Select = () => {
 
         <MainContent Wide1030>
           <PersonaSingleWrap>
-
             <TabWrapType5>
               <TabButtonType5 isActive>
                 <span>01</span>
                 <div className="text">
-                  <Body1 color="gray800">
-                    인터뷰 목표 설정
-                  </Body1>
-                  <Body1 color="gray800">
-                    Interview Define
-                  </Body1>
+                  <Body1 color="gray800">인터뷰 목표 설정</Body1>
+                  <Body1 color="gray800">Interview Define</Body1>
                 </div>
               </TabButtonType5>
               <TabButtonType5 isActive>
                 <span>02</span>
                 <div className="text">
-                  <Body1 color="gray800">
-                    페르소나 선택
-                  </Body1>
-                  <Body1 color="gray800">
-                    Persona Selection
-                  </Body1>
+                  <Body1 color="gray800">페르소나 선택</Body1>
+                  <Body1 color="gray800">Persona Selection</Body1>
                 </div>
               </TabButtonType5>
               <TabButtonType5>
                 <span>03</span>
                 <div className="text">
                   <Body1 color="gray300">
-                    {selectedInterviewType === "multiple" ? "그룹 인터뷰" : "심층 인터뷰"}
+                    {selectedInterviewType === "multiple"
+                      ? "그룹 인터뷰"
+                      : "심층 인터뷰"}
                   </Body1>
                   <Body1 color="gray300">
-                    {selectedInterviewType === "multiple" ? "Group Interview" : "Indepth Interview"}
+                    {selectedInterviewType === "multiple"
+                      ? "Group Interview"
+                      : "Indepth Interview"}
                   </Body1>
                 </div>
               </TabButtonType5>
               <TabButtonType5>
                 <span>04</span>
                 <div className="text">
-                  <Body1 color="gray300">
-                    최종 인사이트 분석
-                  </Body1>
+                  <Body1 color="gray300">최종 인사이트 분석</Body1>
                 </div>
               </TabButtonType5>
             </TabWrapType5>
@@ -371,12 +364,16 @@ const PagePersona3Select = () => {
             <TabContent5>
               <div className="title">
                 <H3 color="gray800">Persona Selection</H3>
-                <Body3 color="gray800">인터뷰에 참여할 최적의 페르소나를 선정하세요 </Body3>
+                <Body3 color="gray800">
+                  인터뷰에 참여할 최적의 페르소나를 선정하세요{" "}
+                </Body3>
               </div>
 
               <div className="content">
                 <div>
-                  <Body2 color="gray800" align="left">인터뷰 정보</Body2>
+                  <Body2 color="gray800" align="left">
+                    인터뷰 정보
+                  </Body2>
 
                   <ListBoxGroup>
                     {/* <li>
@@ -485,7 +482,7 @@ const PagePersona3Select = () => {
                   </ListBoxGroup>
                 </div>
 
-                <OrganismPersonaList
+                <OrganismPersonaListSaas
                   personaListSaas={personaListSaas}
                   personaImages={personaImages}
                   selectedPersonaButtons={selectedPersonaButtons}
@@ -937,4 +934,3 @@ const CustomTitle = styled.div`
   justify-content: space-between;
   width: 100%;
 `;
-

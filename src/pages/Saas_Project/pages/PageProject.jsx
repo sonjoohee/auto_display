@@ -27,9 +27,10 @@ import {
 } from "../../../assets/styles/Typography";
 import { getProjectListSaasByIdFromIndexedDB } from "../../../utils/indexedDB";
 import OrganismProjectItem from "../components/organisms/OrganismProjectItem";
-import { PROJECT_LIST } from "../../AtomStates";
+import { PROJECT_LIST, ACCESS_DASHBOARD } from "../../AtomStates";
 const PageProject = () => {
   const navigate = useNavigate();
+  const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
 
   const [projectList, setProjectList] = useAtom(PROJECT_LIST);
   const [isWarningPopupOpen, setIsWarningPopupOpen] = useState(false);
@@ -77,6 +78,7 @@ const PageProject = () => {
   }, [navigate]);
 
   useEffect(() => {
+    setAccessDashboard(false);
     const loadProjectList = async () => {
       try {
         const savedProjectListInfo = await getProjectListSaasByIdFromIndexedDB(
@@ -158,8 +160,8 @@ const PageProject = () => {
             <ProjectListWrap>
               <ProjectList>
                 {sampleProjects.map((project) => (
-                  <OrganismProjectItem 
-                    key={project._id} 
+                  <OrganismProjectItem
+                    key={project._id}
                     project={project}
                     onDelete={() => handleProjectDelete(project)}
                   />

@@ -1,5 +1,6 @@
 //디자인 감성 분석기기
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
 import { palette } from "../../../../../assets/styles/Palette";
@@ -8,9 +9,7 @@ import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavig
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
 import MoleculeCustomerValueCard from "../../../../Tool/CustomerValueAnalyzer/components/molecules/MoleculeCustomerValueCard";
 
-import {
-  Button,
-} from "../../../../../assets/styles/ButtonStyle";
+import { Button } from "../../../../../assets/styles/ButtonStyle";
 import {
   FormBox,
   CustomTextarea,
@@ -52,6 +51,8 @@ import {
   DESIGN_ANALYSIS_EMOTION_SCALE,
   DESIGN_ANALYSIS_FILE_NAMES,
   DESIGN_ANALYSIS_FILE_ID,
+  PROJECT_SAAS,
+  DESIGN_ANALYSIS_BUSINESS_TITLE,
 } from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import {
@@ -74,28 +75,47 @@ import {
   createToolOnServer,
   updateToolOnServer,
 } from "../../../../../utils/indexedDB";
-import 'react-dropzone-uploader/dist/styles.css'
-import Dropzone from 'react-dropzone-uploader'
-import AnalysisItem from '../molecules/MoleculeAnalysisItem'; // Import the new component
-import MoleculeDesignItem from '../molecules/MoleculeDesignItem';
+import "react-dropzone-uploader/dist/styles.css";
+import Dropzone from "react-dropzone-uploader";
+import AnalysisItem from "../molecules/MoleculeAnalysisItem"; // Import the new component
+import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
 
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
 const PageDesignAnalysis = () => {
-
+  const navigate = useNavigate();
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-
-  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(DESIGN_ANALYSIS_BUSINESS_INFO);
-  const [designAnalysisUploadedFiles, setDesignAnalysisUploadedFiles] = useAtom(DESIGN_ANALYSIS_UPLOADED_FILES);
-  const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] = useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS); 
-  const [selectedDesignAnalysisEmotionAnalysis, setSelectedDesignAnalysisEmotionAnalysis] = useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
-  const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(DESIGN_ANALYSIS_EMOTION_TARGET);
-  const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(DESIGN_ANALYSIS_EMOTION_SCALE);
-  const [designAnalysisFileNames, setDesignAnalysisFileNames] = useAtom(DESIGN_ANALYSIS_FILE_NAMES);
-  const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(DESIGN_ANALYSIS_FILE_ID);
+  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
+  const [designAnalysisBusinessTitle, setDesignAnalysisBusinessTitle] = useAtom(
+    DESIGN_ANALYSIS_BUSINESS_TITLE
+  );
+  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(
+    DESIGN_ANALYSIS_BUSINESS_INFO
+  );
+  const [designAnalysisUploadedFiles, setDesignAnalysisUploadedFiles] = useAtom(
+    DESIGN_ANALYSIS_UPLOADED_FILES
+  );
+  const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] =
+    useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS);
+  const [
+    selectedDesignAnalysisEmotionAnalysis,
+    setSelectedDesignAnalysisEmotionAnalysis,
+  ] = useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
+  const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(
+    DESIGN_ANALYSIS_EMOTION_TARGET
+  );
+  const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(
+    DESIGN_ANALYSIS_EMOTION_SCALE
+  );
+  const [designAnalysisFileNames, setDesignAnalysisFileNames] = useAtom(
+    DESIGN_ANALYSIS_FILE_NAMES
+  );
+  const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
+    DESIGN_ANALYSIS_FILE_ID
+  );
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupMore, setShowPopupMore] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -117,6 +137,8 @@ const PageDesignAnalysis = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
+  const [businessDescriptionProject, setBusinessDescriptionProject] =
+    useState("");
   const [targetCustomer, setTargetCustomer] = useState("");
   const [personaData, setPersonaData] = useState({
     personaInfo: "",
@@ -127,16 +149,11 @@ const PageDesignAnalysis = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [fileNames, setFileNames] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [activeDesignTab, setActiveDesignTab] = useState('emotion'); // 'emotion' 또는 'scale'
-  const [isLoadingReport, setIsLoadingReport] = useState(false); 
-
+  const [activeDesignTab, setActiveDesignTab] = useState("emotion"); // 'emotion' 또는 'scale'
+  const [isLoadingReport, setIsLoadingReport] = useState(false);
+  const [businessDescriptionTitle, setBusinessDescriptionTitle] = useState("");
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
-  // 스크롤 초기화
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-  
   const handleToggle = (key) => {
     setState((prevState) => ({ ...prevState, [key]: !prevState[key] }));
   };
@@ -146,7 +163,7 @@ const PageDesignAnalysis = () => {
     showQuestions: false,
   });
 
-
+  const project = projectSaas;
   // // OCEAN 값들을 관리하기 위한 상태
   // const [oceanValues, setOceanValues] = useState({
   //   Comfortable: 3,        // 편안한
@@ -210,55 +227,76 @@ const PageDesignAnalysis = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       if (toolLoading) {
+        console.log("project", project);
+        const projectAnalysis =
+          (project?.projectAnalysis.business_analysis
+            ? project?.projectAnalysis.business_analysis
+            : "") +
+          (project?.projectAnalysis.business_analysis &&
+          project?.projectAnalysis.file_analysis
+            ? "\n"
+            : "") +
+          (project?.projectAnalysis.file_analysis
+            ? project?.projectAnalysis.file_analysis
+            : "");
+        const projectTitle = project?.projectTitle;
+
+        // 비즈니스 정보 설정 (Step 1)
+        if (project) {
+          setBusinessDescriptionTitle(projectTitle);
+          setBusinessDescription(projectAnalysis);
+          setTargetCustomer(project?.projectAnalysis.target_customer ?? "");
+        }
+
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
 
         // 비즈니스 정보 설정 (Step 1)
         if (designAnalysisBusinessInfo) {
-          setBusinessDescription(designAnalysisBusinessInfo ?? "");
+          // setBusinessDescription(designAnalysisBusinessInfo ?? "");
           setFileNames(designAnalysisFileNames);
-          }
+        }
 
-          // 완료된 단계 설정
-          const completedStepsArray = [];
-          for (let i = 1; i <= (toolStep ?? 1); i++) {
-            completedStepsArray.push(i);
-          }
-          setCompletedSteps(completedStepsArray);
+        // 완료된 단계 설정
+        const completedStepsArray = [];
+        for (let i = 1; i <= (toolStep ?? 1); i++) {
+          completedStepsArray.push(i);
+        }
+        setCompletedSteps(completedStepsArray);
 
-          // 페르소나 설정 (Step 2)
-          if (
-            Array.isArray(designAnalysisEmotionAnalysis) &&
-            Array.isArray(selectedDesignAnalysisEmotionAnalysis)
-          ) {
-            // 이미 선택된 페르소나들의 인덱스 찾기
-            const selectedIndices = (designAnalysisEmotionAnalysis ?? [])
-              .map((persona, index) => {
-                return (selectedDesignAnalysisEmotionAnalysis ?? []).some(
-                  (target) => target?.name === persona?.name
-                )
-                  ? index
-                  : -1;
-              })
-              .filter((index) => index !== -1);
+        // 페르소나 설정 (Step 2)
+        if (
+          Array.isArray(designAnalysisEmotionAnalysis) &&
+          Array.isArray(selectedDesignAnalysisEmotionAnalysis)
+        ) {
+          // 이미 선택된 페르소나들의 인덱스 찾기
+          const selectedIndices = (designAnalysisEmotionAnalysis ?? [])
+            .map((persona, index) => {
+              return (selectedDesignAnalysisEmotionAnalysis ?? []).some(
+                (target) => target?.name === persona?.name
+              )
+                ? index
+                : -1;
+            })
+            .filter((index) => index !== -1);
 
-            // selectedPersonas 상태 업데이트
-            setSelectedPersonas(selectedIndices);
+          // selectedPersonas 상태 업데이트
+          setSelectedPersonas(selectedIndices);
 
-            // 선택된 페르소나 데이터 설정
-            const selectedPersonaData = selectedIndices
-              .map((index) => designAnalysisEmotionAnalysis?.[index])
-              .filter(Boolean);
+          // 선택된 페르소나 데이터 설정
+          const selectedPersonaData = selectedIndices
+            .map((index) => designAnalysisEmotionAnalysis?.[index])
+            .filter(Boolean);
 
-            setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
-          }
+          setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
+        }
 
-
-
-          // 추가된 조건 체크
-        if (Object.keys(designAnalysisEmotionTarget).length === 0 && 
-            !designAnalysisEmotionScale.length && 
-            completedStepsArray.length === 2) {
+        // 추가된 조건 체크
+        if (
+          Object.keys(designAnalysisEmotionTarget).length === 0 &&
+          !designAnalysisEmotionScale.length &&
+          completedStepsArray.length === 2
+        ) {
           // designAnalysisEmotionTarget이 빈 객체이고, designAnalysisEmotionScale이 빈 배열인 경우
           setActiveTab(2);
           setToolStep(1);
@@ -280,7 +318,6 @@ const PageDesignAnalysis = () => {
     setToolLoading(false);
   }, [toolLoading]);
 
-
   const handleCheckboxChange = (personaId) => {
     if (toolStep >= 2) return;
     setSelectedPersonas((prev) => {
@@ -293,7 +330,6 @@ const PageDesignAnalysis = () => {
     });
   };
 
-
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
     setCompletedSteps([...completedSteps, currentStep]);
@@ -303,7 +339,6 @@ const PageDesignAnalysis = () => {
 
   // 필수 필드가 모두 입력되었는지 확인하는 함수
   const isRequiredFieldsFilled = () => {
-
     return businessDescription.trim().length > 0 && uploadedFiles.length > 0;
   };
 
@@ -322,17 +357,20 @@ const PageDesignAnalysis = () => {
 
       // 비즈니스 데이터 추가
       const Data = {
-          business: businessDescription,
-          tool_id: 'image_'+timeStamp,
-          image: uploadedFiles[0],
+        business: businessDescription,
+        tool_id: "image_" + timeStamp,
+        image: uploadedFiles[0],
       };
-      
-      setDesignAnalysisFileId(['image_'+timeStamp]);
+
+      setDesignAnalysisFileId(["image_" + timeStamp]);
 
       // API 요청
-      const response = await InterviewXDesignEmotionAnalysisRequest(Data, isLoggedIn);
+      const response = await InterviewXDesignEmotionAnalysisRequest(
+        Data,
+        isLoggedIn
+      );
       if (
-        !response?.response.design_emotion_analysis  ||
+        !response?.response.design_emotion_analysis ||
         !Array.isArray(response.response.design_emotion_analysis) ||
         response.response.design_emotion_analysis.length === 0
       ) {
@@ -342,6 +380,7 @@ const PageDesignAnalysis = () => {
 
       const responseToolId = await createToolOnServer(
         {
+          projectId: project._id,
           type: "ix_design_emotion_analysis",
         },
         isLoggedIn
@@ -355,25 +394,25 @@ const PageDesignAnalysis = () => {
         response.response.design_emotion_analysis
       );
       setDesignAnalysisBusinessInfo(businessDescription);
+      setDesignAnalysisBusinessTitle(businessDescriptionTitle);
       // setDesignAnalysisUploadedFiles(uploadedFiles);
-      setFileNames(uploadedFiles.map(file => file.name));
+      setFileNames(uploadedFiles.map((file) => file.name));
 
       await updateToolOnServer(
         responseToolId,
         {
           completed_step: 1,
-          design_emotion_analysis: response.response.design_emotion_analysis,
+          designEmotionAnalysis: response.response.design_emotion_analysis,
           business: businessDescription,
-          image_name: uploadedFiles.map(file => ({
-            id: 'image_'+timeStamp,
+          imageName: uploadedFiles.map((file) => ({
+            id: "image_" + timeStamp,
             name: file.name,
           })),
         },
         isLoggedIn
       );
-     
+
       handleNextStep(1);
-    
     } catch (error) {
       console.error("Error submitting business info:", error);
       setShowPopupError(true);
@@ -410,7 +449,7 @@ const PageDesignAnalysis = () => {
         toolId,
         {
           completed_step: 2,
-          design_selected_persona: selectedPersonaData,
+          designSelectedPersona: selectedPersonaData,
         },
         isLoggedIn
       );
@@ -421,11 +460,9 @@ const PageDesignAnalysis = () => {
         const persona = selectedPersonaData[0]; // 첫 번째 페르소나 선택
         try {
           const apiRequestData = {
-
             business: designAnalysisBusinessInfo,
             design_emotion_selected_field: persona.name,
-            design_emotion_analysis: 
-             persona
+            design_emotion_analysis: persona,
           };
 
           let response = await InterviewXDesignEmotionTargetRequest(
@@ -436,12 +473,20 @@ const PageDesignAnalysis = () => {
           const maxAttempts = 10;
           let attempt = 0;
 
-          while (!response?.response?.design_emotion_target ||
-            typeof response.response.design_emotion_target !== 'object' ||
-            Object.keys(response?.response?.design_emotion_target).length === 0 ||
-            !response?.response?.design_emotion_target?.hasOwnProperty('target_emotion') ||
-            !response?.response?.design_emotion_target?.hasOwnProperty('design_perspectives') ||
-            !response?.response?.design_emotion_target?.hasOwnProperty('designer_guidelines')
+          while (
+            !response?.response?.design_emotion_target ||
+            typeof response.response.design_emotion_target !== "object" ||
+            Object.keys(response?.response?.design_emotion_target).length ===
+              0 ||
+            !response?.response?.design_emotion_target?.hasOwnProperty(
+              "target_emotion"
+            ) ||
+            !response?.response?.design_emotion_target?.hasOwnProperty(
+              "design_perspectives"
+            ) ||
+            !response?.response?.design_emotion_target?.hasOwnProperty(
+              "designer_guidelines"
+            )
           ) {
             if (attempt >= maxAttempts) {
               setShowPopupError(true);
@@ -456,25 +501,34 @@ const PageDesignAnalysis = () => {
             attempt++;
           }
 
-          setDesignAnalysisEmotionTarget(response.response.design_emotion_target);
-      
+          setDesignAnalysisEmotionTarget(
+            response.response.design_emotion_target
+          );
+
           const oceanData = {
             tool_id: designAnalysisFileId[0],
             business: designAnalysisBusinessInfo,
             design_emotion_selected_field: persona.name,
-            design_emotion_target: response?.response?.design_emotion_target
+            design_emotion_target: response?.response?.design_emotion_target,
           };
 
-          
           attempt = 0;
           let oceanResponse = null;
 
-          while (!oceanResponse ||
-            typeof oceanResponse.response.design_emotion_scale !== 'object' ||
-            Object.keys(oceanResponse?.response?.design_emotion_scale).length === 0 ||
-            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty('conclusion') ||
-            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty('evaluation_analysis') ||
-            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty('sd_scale_analysis')
+          while (
+            !oceanResponse ||
+            typeof oceanResponse.response.design_emotion_scale !== "object" ||
+            Object.keys(oceanResponse?.response?.design_emotion_scale)
+              .length === 0 ||
+            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
+              "conclusion"
+            ) ||
+            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
+              "evaluation_analysis"
+            ) ||
+            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
+              "sd_scale_analysis"
+            )
           ) {
             if (attempt >= maxAttempts) {
               setShowPopupError(true);
@@ -489,19 +543,20 @@ const PageDesignAnalysis = () => {
             attempt++;
           }
           // console.log("🚀 ~ oceanResponse:", oceanResponse);
-          setDesignAnalysisEmotionScale(oceanResponse.response.design_emotion_scale);
+          setDesignAnalysisEmotionScale(
+            oceanResponse.response.design_emotion_scale
+          );
 
           await updateToolOnServer(
             toolId,
             {
               completed_step: 3,
-              design_emotion_target:response.response.design_emotion_target,
-              design_emotion_scale: oceanResponse.response.design_emotion_scale,
-              design_selected_persona: selectedPersonaData,
+              designEmotionTarget: response.response.design_emotion_target,
+              designEmotionScale: oceanResponse.response.design_emotion_scale,
+              designSelectedPersona: selectedPersonaData,
             },
             isLoggedIn
           );
-    
         } catch (error) {
           console.error(`Error processing persona ${persona.name}:`, error);
         }
@@ -537,37 +592,38 @@ const PageDesignAnalysis = () => {
 
     // 20MB 크기 제한 체크
     const maxSize = 20 * 1024 * 1024; // 20MB in bytes
-    if (file.size > maxSize && status !== 'removed') {
+    if (file.size > maxSize && status !== "removed") {
       setShowPopupFileSize(true);
       remove();
       return;
     }
 
     // 파일 상태 업데이트
-    if (status === 'done' || status === 'preparing' || status === 'uploading') {
-      setUploadedFiles(prev => {
+    if (status === "done" || status === "preparing" || status === "uploading") {
+      setUploadedFiles((prev) => {
         // 이미 존재하는 파일이 아닌 경우에만 추가
-        if (!prev.find(f => f.name === file.name)) {
-          setFileNames(prev => [...prev, file.name]);
+        if (!prev.find((f) => f.name === file.name)) {
+          setFileNames((prev) => [...prev, file.name]);
           return [...prev, file];
         }
         return prev;
       });
-    } else if (status === 'removed') {
-      setUploadedFiles(prev => prev.filter(f => f.name !== file.name));
-      setFileNames(prev => prev.filter(name => name !== file.name));
+    } else if (status === "removed") {
+      setUploadedFiles((prev) => prev.filter((f) => f.name !== file.name));
+      setFileNames((prev) => prev.filter((name) => name !== file.name));
     }
 
     // 파일 크기를 KB 또는 MB 단위로 변환
     const size = file.size;
-    const sizeStr = size > 1024 * 1024 
-      ? `${(size / (1024 * 1024)).toFixed(1)}MB`
-      : `${(size / 1024).toFixed(1)}KB`;
+    const sizeStr =
+      size > 1024 * 1024
+        ? `${(size / (1024 * 1024)).toFixed(1)}MB`
+        : `${(size / 1024).toFixed(1)}KB`;
 
     // setTimeout을 사용하여 DOM이 업데이트된 후 실행
     setTimeout(() => {
-      const containers = document.querySelectorAll('.dzu-previewContainer');
-      containers.forEach(container => {
+      const containers = document.querySelectorAll(".dzu-previewContainer");
+      containers.forEach((container) => {
         if (!container.dataset.filename) {
           container.dataset.filename = file.name;
           container.dataset.size = sizeStr;
@@ -593,7 +649,7 @@ const PageDesignAnalysis = () => {
   //     const numValue = parseFloat(value);
   //     // 값이 3에 가까울 때 자동으로 3으로 스냅
   //     const snapValue = Math.abs(numValue - 3) < 0.2 ? 3 : numValue;
-      
+
   //     setOceanValues(prev => ({
   //       ...prev,
   //       [trait]: snapValue
@@ -612,7 +668,65 @@ const PageDesignAnalysis = () => {
   //   });
   // };
 
+  useEffect(() => {
+    // 새로고침 감지 함수
+    const detectRefresh = () => {
+      // 현재 URL 확인
+      const currentUrl = window.location.href;
+      if (currentUrl.toLowerCase().includes("designanalysis")) {
+        // 세션 스토리지에서 마지막 URL 가져오기
+        const lastUrl = sessionStorage.getItem("lastUrl");
 
+        // 마지막 URL이 현재 URL과 같으면 새로고침
+        if (lastUrl && lastUrl === currentUrl) {
+          console.log("새로고침 감지: URL 비교");
+          navigate("/");
+          return true;
+        }
+
+        // 현재 URL 저장
+        sessionStorage.setItem("lastUrl", currentUrl);
+      }
+
+      return false;
+    };
+
+    // beforeunload 이벤트 핸들러
+    const handleBeforeUnload = (event) => {
+      // 이벤트 취소 (표준에 따라)
+      event.preventDefault();
+      // Chrome은 returnValue 설정 필요
+      event.returnValue = "";
+
+      // 새로고침 시 루트 페이지로 이동
+      navigate("/");
+    };
+
+    // F5 키 또는 Ctrl+R 감지
+    const handleKeyDown = (event) => {
+      if (
+        (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
+        event.key === "F5"
+      ) {
+        // F5 키 코드
+        event.preventDefault();
+        navigate("/");
+      }
+    };
+
+    // 함수 실행
+    detectRefresh();
+
+    // 이벤트 리스너 등록
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("keydown", handleKeyDown);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [navigate]);
 
   return (
     <>
@@ -687,12 +801,13 @@ const PageDesignAnalysis = () => {
                     <div className="title">
                       <H3 color="gray800">Image Upload</H3>
                       <Body3 color="gray800">
-                        감성 분석을 원하시는 비즈니스 설명과 디자인 이미지를 업로드해주세요
+                        감성 분석을 원하시는 비즈니스 설명과 디자인 이미지를
+                        업로드해주세요
                       </Body3>
                     </div>
 
                     <div className="content">
-                      <TabContent5Item required>
+                      {/* <TabContent5Item required>
                         <div className="title">
                           <Body1 color="gray700">비즈니스 설명</Body1>
                           <Body1 color="red">*</Body1>
@@ -712,8 +827,23 @@ const PageDesignAnalysis = () => {
                             {businessDescription.length} / 500
                           </Body2>
                         </FormBox>
+                      </TabContent5Item> */}
+                      <TabContent5Item required>
+                        <div className="title">
+                          <Body1 color="gray700">비즈니스 설명</Body1>
+                          {/* <Body1 color="red">*</Body1> */}
+                        </div>
+                        <FormBox Large>
+                          <CustomTextarea
+                            disabled={toolStep >= 1}
+                            Edit
+                            rows={6}
+                            placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
+                            value={businessDescription}
+                            status="valid"
+                          />
+                        </FormBox>
                       </TabContent5Item>
-
                       <TabContent5Item required>
                         <div className="title">
                           <Body1 color="gray700">분석할 이미지 업로드</Body1>
@@ -727,26 +857,32 @@ const PageDesignAnalysis = () => {
                           multiple={true}
                           canRemove={true}
                           canRestart={false}
-                          disabled={toolStep >= 1} 
+                          disabled={toolStep >= 1}
                           accept="image/*"
                           maxSizeBytes={20 * 1024 * 1024}
                           inputWithFilesContent={
                             <>
                               <img src={images.ImagePrimary} alt="" />
                               {fileNames.length === 0 && (
-                                <div style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
-                                }}>
-                                  <Body2 color="gray700">이미지 첨부 또는</Body2>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "4px",
+                                  }}
+                                >
+                                  <Body2 color="gray700">
+                                    이미지 첨부 또는
+                                  </Body2>
                                   <Body2 color="primary">이미지 가져오기</Body2>
                                 </div>
                               )}
                               {fileNames.length > 0 && (
                                 <div>
                                   {fileNames.map((name, index) => (
-                                    <Body2 key={index} color="gray700">{name}</Body2>
+                                    <Body2 key={index} color="gray700">
+                                      {name}
+                                    </Body2>
                                   ))}
                                 </div>
                               )}
@@ -756,19 +892,25 @@ const PageDesignAnalysis = () => {
                             <>
                               <img src={images.ImagePrimary} alt="" />
                               {fileNames.length === 0 && (
-                                <div style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
-                                }}>
-                                <Body2 color="gray700">이미지 첨부 또는</Body2>
-                                <Body2 color="primary">이미지 가져오기</Body2>
-                              </div>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "4px",
+                                  }}
+                                >
+                                  <Body2 color="gray700">
+                                    이미지 첨부 또는
+                                  </Body2>
+                                  <Body2 color="primary">이미지 가져오기</Body2>
+                                </div>
                               )}
                               {fileNames.length > 0 && (
                                 <div>
                                   {fileNames.map((name, index) => (
-                                    <Body2 key={index} color="gray700">{name}</Body2>
+                                    <Body2 key={index} color="gray700">
+                                      {name}
+                                    </Body2>
                                   ))}
                                 </div>
                               )}
@@ -814,34 +956,34 @@ const PageDesignAnalysis = () => {
                     <div className="title">
                       <H3 color="gray800">Design Sector Analysis</H3>
                       <Body3 color="gray800">
-                        업로드된 이미지를 기반으로 가장 적합한 디자인 분야를 분류했습니다
+                        업로드된 이미지를 기반으로 가장 적합한 디자인 분야를
+                        분류했습니다
                       </Body3>
                     </div>
 
                     <div className="content">
-              
-
-                  <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                    {designAnalysisEmotionAnalysis.length > 0 ? (
-                      designAnalysisEmotionAnalysis.map((persona, index) => {
-                        return (
-                          <MoleculeDesignItem
-                            FlexStart
-                            key={index}
-                            id={index}
-                            title={persona.name} 
-                            subtitle={persona.reason} 
-                            isSelected={selectedPersonas.includes(index)} 
-                            onSelect={() => handleCheckboxChange(index)}
-                            disabled={toolStep >= 2 ? true : false}
-                          />
-                        );
-                      })
-                    ) : (
-                      <Body3 color="gray700">데이터가 없습니다.</Body3>
-                    )}
-                  </CardGroupWrap>
-
+                      <CardGroupWrap column style={{ marginBottom: "140px" }}>
+                        {designAnalysisEmotionAnalysis.length > 0 ? (
+                          designAnalysisEmotionAnalysis.map(
+                            (persona, index) => {
+                              return (
+                                <MoleculeDesignItem
+                                  FlexStart
+                                  key={index}
+                                  id={index}
+                                  title={persona.name}
+                                  subtitle={persona.reason}
+                                  isSelected={selectedPersonas.includes(index)}
+                                  onSelect={() => handleCheckboxChange(index)}
+                                  disabled={toolStep >= 2 ? true : false}
+                                />
+                              );
+                            }
+                          )
+                        ) : (
+                          <Body3 color="gray700">데이터가 없습니다.</Body3>
+                        )}
+                      </CardGroupWrap>
 
                       <BottomBar W100>
                         <Body2
@@ -896,7 +1038,8 @@ const PageDesignAnalysis = () => {
                     <BgBoxItem primaryLightest>
                       <H3 color="gray800">디자인 감성 분석</H3>
                       <Body3 color="gray800">
-                        디자인이 사용자에게 전달하는 감정을 분석하고, 시각적 커뮤니케이션 효과를 극대화하세요
+                        디자인이 사용자에게 전달하는 감정을 분석하고, 시각적
+                        커뮤니케이션 효과를 극대화하세요
                       </Body3>
                     </BgBoxItem>
 
@@ -904,15 +1047,15 @@ const PageDesignAnalysis = () => {
                       <div className="title">
                         <div>
                           <TabWrapType4>
-                            <TabButtonType4 
-                              active={activeDesignTab === 'emotion'}
-                              onClick={() => setActiveDesignTab('emotion')}
+                            <TabButtonType4
+                              active={activeDesignTab === "emotion"}
+                              onClick={() => setActiveDesignTab("emotion")}
                             >
                               디자인 목표 감성
                             </TabButtonType4>
-                            <TabButtonType4 
-                              active={activeDesignTab === 'scale'}
-                              onClick={() => setActiveDesignTab('scale')}
+                            <TabButtonType4
+                              active={activeDesignTab === "scale"}
+                              onClick={() => setActiveDesignTab("scale")}
                             >
                               감정 스케일 매핑
                             </TabButtonType4>
@@ -925,81 +1068,99 @@ const PageDesignAnalysis = () => {
                     </InsightAnalysis>
 
                     <InsightAnalysis>
-          
                       <div className="title">
                         <H4 color="gray800" align="left">
-                            {activeDesignTab === 'emotion' 
-                              ? 
-                            <div dangerouslySetInnerHTML={{ __html: `${designAnalysisBusinessInfo}가(${selectedDesignAnalysisEmotionAnalysis?.[0]?.name})
-                            에서 궁극적으로 달성하고자하는 주요 목표 감성은 ${designAnalysisEmotionTarget?.target_emotion} ` }} />
-                              :
-                          `${designAnalysisEmotionScale?.conclusion}` }
-                          </H4>
-                        </div> 
-                          
-                       <div className="content">
-                        {activeDesignTab === 'emotion' ? (
-                            <Body3 color="gray700">
-                         {designAnalysisEmotionTarget?.designer_guidelines}
+                          {activeDesignTab === "emotion" ? (
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: `${designAnalysisBusinessInfo}가(${selectedDesignAnalysisEmotionAnalysis?.[0]?.name})
+                            에서 궁극적으로 달성하고자하는 주요 목표 감성은 ${designAnalysisEmotionTarget?.target_emotion} `,
+                              }}
+                            />
+                          ) : (
+                            `${designAnalysisEmotionScale?.conclusion}`
+                          )}
+                        </H4>
+                      </div>
+
+                      <div className="content">
+                        {activeDesignTab === "emotion" ? (
+                          <Body3 color="gray700">
+                            {designAnalysisEmotionTarget?.designer_guidelines}
                           </Body3>
                         ) : (
                           <>
-                          <Body3 color="gray700">
-                            강점 : {designAnalysisEmotionScale?.evaluation_analysis?.strengths}
-                          </Body3>
-                          <Body3 color="gray700">
-                            약점 및 개선 방향: {designAnalysisEmotionScale?.evaluation_analysis?.weaknesses}
-                          </Body3>
-                        </>
-                        
+                            <Body3 color="gray700">
+                              강점 :{" "}
+                              {
+                                designAnalysisEmotionScale?.evaluation_analysis
+                                  ?.strengths
+                              }
+                            </Body3>
+                            <Body3 color="gray700">
+                              약점 및 개선 방향:{" "}
+                              {
+                                designAnalysisEmotionScale?.evaluation_analysis
+                                  ?.weaknesses
+                              }
+                            </Body3>
+                          </>
                         )}
-                      </div> 
+                      </div>
                     </InsightAnalysis>
 
-                    {activeDesignTab === 'emotion' && (
+                    {activeDesignTab === "emotion" && (
                       <InsightAnalysis style={{ marginBottom: "240px" }}>
-                        <Sub3 color="gray700" align="left">💡 %는 해당 비즈니스에서 차지하는 중요도를 의미합니다.</Sub3>
-                          <CardGroupWrap column $isExpanded={state.isExpanded}>
-                          {designAnalysisEmotionTarget?.design_perspectives?.map((perspective, index) => (
-                            <AnalysisItem 
-                              business={designAnalysisBusinessInfo}
-                              key={index} 
-                              percentage={perspective.weight + "%"} 
-                              title={perspective.name} 
-                              subtitle={perspective.features.map(feature => feature.title).join(", ")}
-                              details={perspective}
-                            />
-                          ))}
+                        <Sub3 color="gray700" align="left">
+                          💡 %는 해당 비즈니스에서 차지하는 중요도를 의미합니다.
+                        </Sub3>
+                        <CardGroupWrap column $isExpanded={state.isExpanded}>
+                          {designAnalysisEmotionTarget?.design_perspectives?.map(
+                            (perspective, index) => (
+                              <AnalysisItem
+                                business={designAnalysisBusinessInfo}
+                                key={index}
+                                percentage={perspective.weight + "%"}
+                                title={perspective.name}
+                                subtitle={perspective.features
+                                  .map((feature) => feature.title)
+                                  .join(", ")}
+                                details={perspective}
+                              />
+                            )
+                          )}
                         </CardGroupWrap>
                       </InsightAnalysis>
                     )}
 
-                    {activeDesignTab === 'scale' && (
-
-
+                    {activeDesignTab === "scale" && (
                       <InsightAnalysis style={{ marginBottom: "240px" }}>
-                      <OCEANRangeWrap report>
-                        {/* OCEAN 값 슬라이더 */}
-                        {designAnalysisEmotionScale?.sd_scale_analysis?.map((item, index) => (
-                          <div key={index}>
-                            <Body3 color="gray800" align="right">{item.opposite_emotion}</Body3>
-                            <RangeSlider
-                              type="range"
-                              min="1"
-                              max="7"
-                              step="1"
-                              value={item.score}
-                              // disabled={true} 
-                              // style={{ flex: "2" }}
-                            />
-                            <Body3 color="gray800" align="left">{item.target_emotion}</Body3>
-                          </div>
-                        ))}
-                      </OCEANRangeWrap>
+                        <OCEANRangeWrap report>
+                          {/* OCEAN 값 슬라이더 */}
+                          {designAnalysisEmotionScale?.sd_scale_analysis?.map(
+                            (item, index) => (
+                              <div key={index}>
+                                <Body3 color="gray800" align="right">
+                                  {item.opposite_emotion}
+                                </Body3>
+                                <RangeSlider
+                                  type="range"
+                                  min="1"
+                                  max="7"
+                                  step="1"
+                                  value={item.score}
+                                  // disabled={true}
+                                  // style={{ flex: "2" }}
+                                />
+                                <Body3 color="gray800" align="left">
+                                  {item.target_emotion}
+                                </Body3>
+                              </div>
+                            )
+                          )}
+                        </OCEANRangeWrap>
                       </InsightAnalysis>
-                      )}
-
-
+                    )}
 
                     {/* <Button
                       Small
