@@ -307,6 +307,7 @@ import ImgExploreNoData from "../images/img-explore-nodata.png";
 import LightningChargeFill from "../icons/LightningChargeFill";
 import GridTool from "../icons/GridTool";
 import GridCircle from "../icons/GridCircle";
+import ThreeDotsVertical from "../icons/ThreeDotsVertical";
 
 import Tag from "../icons/Tag";
 import Report2 from "../icons/Report2";
@@ -338,6 +339,9 @@ import ProjectUsa from "../images/Project-usa.svg";
 import ProjectChina from "../images/Project-china.svg";
 import ProjectJapan from "../images/Project-japan.svg";
 import ProjectVietnam from "../images/Project-vietnam.svg";
+
+import Image from "../images/image.svg";
+import Trash from "../images/trash.svg";
 
 const images = {
   Logo,
@@ -636,6 +640,7 @@ const images = {
   LightningChargeFill,
   GridTool,
   GridCircle,
+  ThreeDotsVertical,
 
   Tag,
   Report2,
@@ -667,6 +672,9 @@ const images = {
   ProjectChina,
   ProjectJapan,
   ProjectVietnam,
+
+  Image,
+  Trash,
 }
 
 export default images;
