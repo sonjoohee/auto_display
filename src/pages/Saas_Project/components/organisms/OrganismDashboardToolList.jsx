@@ -722,12 +722,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
 
         setToolStep(1);
         setToolId("");
-        setCustomerValueAnalyzerInfo({
-          business: "",
-          targetList: [],
-          analysisScope: "",
-          analysisPurpose: "",
-        });
+        setCustomerValueAnalyzerInfo({});
         setCustomerValueAnalyzerPersona([]);
         setCustomerValueAnalyzerJourneyMap([]);
         setCustomerValueAnalyzerFactor([]);

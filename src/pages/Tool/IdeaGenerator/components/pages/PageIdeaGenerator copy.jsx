@@ -190,6 +190,7 @@ const PageIdeaGenerator = () => {
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
+  const project = projectSaas;
   // 스크롤 초기화
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -197,7 +198,7 @@ const PageIdeaGenerator = () => {
 
   // useEffect(() => {
   //   setBusinessDescription(ideaGeneratorInfo.business);
-  //   setTargetCustomers(ideaGeneratorInfo.coreValue);
+  //   setTargetCustomers(ideaGeneratorInfo.core_value);
   //   if (toolStep === 1) {
   //     setToolStep(0);
   //   } else if (toolStep === 2) {
@@ -287,11 +288,10 @@ const PageIdeaGenerator = () => {
         let allItems = [];
 
         const response = await getFindToolListOnServerSaas(
-          projectSaas._id,
+          project._id,
           "ix_customer_value_persona",
           isLoggedIn
         );
-        console.log("🚀 ~ getAllTargetDiscovery ~ response:", response);
 
         const newItems = response.filter(
           (item) =>
@@ -858,7 +858,7 @@ const PageIdeaGenerator = () => {
 
   const handleShowDetailMore = (index) => {
     setChartData({
-      name: ideaGeneratorInfo.coreValue[index],
+      name: ideaGeneratorInfo.core_value[index],
       children: [
         {
           name: "경제적 가치",
@@ -1488,14 +1488,14 @@ const PageIdeaGenerator = () => {
 
                 <div className="content">
                   <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                    {ideaGeneratorInfo.coreValue.map((coreValue, index) => (
+                    {ideaGeneratorInfo.core_value.map((coreValue, index) => (
                       <MoleculeIdeaGeneratorCard2
                         key={index}
                         id={index}
                         coreValue={coreValue}
                         status={
                           ideaGeneratorIdea.length ===
-                          ideaGeneratorInfo.coreValue.length
+                          ideaGeneratorInfo.core_value.length
                             ? "completed"
                             : cardStatuses[index]
                         }
@@ -1516,7 +1516,7 @@ const PageIdeaGenerator = () => {
                       disabled={
                         toolStep >= 3 ||
                         ideaGeneratorIdea.length <
-                          ideaGeneratorInfo.coreValue.length
+                          ideaGeneratorInfo.core_value.length
                       }
                       onClick={() => handleNextStep(3)}
                     >
@@ -1789,7 +1789,7 @@ const PageIdeaGenerator = () => {
           title={
             <>
               <H4 color="gray800" align="left">
-                "{ideaGeneratorInfo.coreValue[seletedIdeaIndex]}" 가치 중심 -
+                "{ideaGeneratorInfo.core_value[seletedIdeaIndex]}" 가치 중심 -
                 아이디어 도출하기
               </H4>
             </>

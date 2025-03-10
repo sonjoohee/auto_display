@@ -209,7 +209,7 @@ const PageTargetDiscovery = () => {
         if (project) {
           setBusinessDescription(projectAnalysis);
           setTargetCustomer(project?.projectAnalysis.target_customer ?? "");
-          setSpecificSituation(targetDiscoveryInfo?.specific_situation ?? "");
+          setSpecificSituation(targetDiscoveryInfo?.specificSituation ?? "");
           setSelectedPurpose(project?.targetCountry ?? "");
         }
 
@@ -439,7 +439,7 @@ const PageTargetDiscovery = () => {
             const apiRequestData = {
               business: targetDiscoveryInfo.business,
               target_discovery_persona: persona,
-              specific_situation: targetDiscoveryInfo.specific_situation,
+              specific_situation: targetDiscoveryInfo.specificSituation,
               country: targetDiscoveryInfo.country,
             };
 
@@ -728,7 +728,7 @@ const PageTargetDiscovery = () => {
               <TabButtonType5
                 isActive={activeTab >= 2}
                 onClick={() => completedSteps.includes(1) && setActiveTab(2)}
-                disabled={!completedSteps.includes(1)}
+                disabled={!completedSteps.includes(1) || isLoading}
               >
                 <span>02</span>
                 <div className="text">
@@ -743,7 +743,7 @@ const PageTargetDiscovery = () => {
               <TabButtonType5
                 isActive={activeTab >= 3}
                 onClick={() => completedSteps.includes(2) && setActiveTab(3)}
-                disabled={!completedSteps.includes(2)}
+                disabled={!completedSteps.includes(2) || isLoading}
               >
                 <span>03</span>
                 <div className="text">
@@ -758,7 +758,7 @@ const PageTargetDiscovery = () => {
               <TabButtonType5
                 isActive={activeTab >= 4}
                 onClick={() => completedSteps.includes(3) && setActiveTab(4)}
-                disabled={!completedSteps.includes(3)}
+                disabled={!completedSteps.includes(3) || isLoading}
               >
                 <span>04</span>
                 <div className="text">
