@@ -97,35 +97,40 @@ const OrganismPersonaCardList = ({
 
   // 즐겨찾기 토글 함수
   const toggleFavorite = async (persona) => {
-    if (!persona || !persona._id) return;
+    if (!persona) return;
 
     try {
+      // ID가 없는 경우 처리
+      const personaId = persona._id;
+      if (!personaId) {
+        console.error("페르소나 ID가 없습니다.");
+        return;
+      }
+
       // 페르소나 객체의 favorite 값을 반전
       const updatedPersona = {
-        id: persona._id,
+        id: personaId,
         favorite: !persona.favorite,
       };
 
       // 서버에 업데이트된 페르소나 저장
       await updatePersonaOnServer(updatedPersona, true);
 
-      // 서버에서 최신 데이터 다시 불러오기
-      const projectId =
-        persona.projectId || localStorage.getItem("currentProjectId");
-      if (projectId) {
-        const refreshedData = await getPersonaListOnServer(projectId, true);
-        if (refreshedData) {
-          // 부모 컴포넌트에 새로운 데이터 전달
-          setIsStarred(refreshedData);
-          return;
+      // 로컬 상태 업데이트 (필터링된 데이터와 원본 데이터 모두 업데이트)
+      const updatedPersonaData = personaData.map((p) => {
+        if (p._id === personaId) {
+          return { ...p, favorite: !p.favorite };
         }
-      }
+        return p;
+      });
 
-      // 서버에서 데이터를 가져오지 못한 경우 로컬에서 업데이트
-      // 필터링된 데이터 업데이트
+      // 원본 데이터 업데이트 (부모 컴포넌트에 전달)
+      setIsStarred(updatedPersonaData);
+
+      // 필터링된 데이터 업데이트 (현재 탭에 표시되는 데이터)
       setFilteredPersonaData((prevData) =>
         prevData.map((p) => {
-          if (p._id === persona._id) {
+          if (p._id === personaId) {
             return { ...p, favorite: !p.favorite };
           }
           return p;
@@ -268,9 +273,7 @@ const OrganismPersonaCardList = ({
     <>
       <AiPersonaCardGroupWrap>
         {filteredPersonaData.map((persona) => (
-          <AiPersonaCardListItem
-            key={persona?._id || `persona-${Math.random()}`}
-          >
+          <AiPersonaCardListItem key={persona?._id}>
             <div className="header">
               <UniqueTag color={persona?.type || "default"} />
               <div className="title">
