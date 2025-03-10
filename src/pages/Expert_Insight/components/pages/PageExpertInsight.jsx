@@ -153,6 +153,8 @@ import MoleculeMarketingCustomer from "../molecules/Marketing/MoleculeMarketingC
 import OrganismMarketingSegmentReport from "../organisms/Marketing/OrganismMarketingSegmentReport";
 import OrganismMarketingFinalReport from "../organisms/Marketing/OrganismMarketingFinalReport";
 import MoleculeMarketingSignUpButton from "../molecules/Marketing/MoleculeMarketingSignUpButton";
+import OrganismExpertBusinessAnalysis from "../organisms/OrganismExpertBusinessAnalysis";
+
 import images from "../../../../assets/styles/Images";
 
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
@@ -789,9 +791,9 @@ const PageExpertInsight = () => {
           <MainContent>
             <div>
               <ChatWrap>
-                {(!isMarketing || (isMarketing && approachPath === 2)) && (
+                {/* {(!isMarketing || (isMarketing && approachPath === 2)) && (
                   <MoleculeBizName date={savedTimestamp} />
-                )}
+                )} */}
 
                 {itemsToRender.map((item, index) => {
                   if (item.type === "user") {
@@ -1073,6 +1075,8 @@ const PageExpertInsight = () => {
                     return <OrganismMarketingFinalReport />;
                   } else if (item.type === "marketingSignUpButton") {
                     return <MoleculeMarketingSignUpButton />;
+                  } else if (item.type === "expertBusinessAnalysis") {
+                    return <OrganismExpertBusinessAnalysis />;
                   }
 
                   return null;
@@ -1149,7 +1153,8 @@ const PageExpertInsight = () => {
               </ChatWrap>
 
               {conversationStage === 1 && !isMarketing ? (
-                <OrganismSearchBottomBar isBlue={false} />
+                // <OrganismSearchBottomBar isBlue={false} />
+                null
               ) : selectedExpertIndex === "2" || selectedExpertIndex === "3" ? (
                 <OrganismSearchBottomBar isBlue={true} />
               ) : selectedExpertIndex === "1" ? (

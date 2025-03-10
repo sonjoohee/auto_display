@@ -11,6 +11,7 @@ import {
   STRATEGY_BUTTON_STATE,
   TITLE_OF_BUSINESS_INFORMATION,
   STRATEGY_CONSULTANT_REPORT_DATA,
+  PROJECT_TOTAL_INFO,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -32,6 +33,7 @@ const MoleculeStrategyButton = ({strategyConsultantCount}) => {
   );
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [strategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
+  const [projectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
 
   let button_message, user_message, system_message;
 
@@ -47,7 +49,7 @@ const MoleculeStrategyButton = ({strategyConsultantCount}) => {
     "경쟁 우위 방법을 분석 중입니다.\n보고서를 통해 우리 비즈니스가 시장에서 차별화 할 수 있는 강점을 발견하길 바래요 !";
   const system_message_2 =
     "고객 분석과 가치 제안을 분석하고 있습니다. 잠시만 기다려 주세요...";
-  const system_message_1 = `${titleOfBusinessInfo}에 대한 시장 현황과 기회 요소를 확인하고 있습니다.`;
+  const system_message_1 = `${projectTotalInfo.projectTitle}에 대한 시장 현황과 기회 요소를 확인하고 있습니다.`;
 
   if (strategyConsultantCount === 0) {
     button_message = button_message_1;

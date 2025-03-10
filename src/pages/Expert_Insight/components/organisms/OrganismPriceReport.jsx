@@ -19,6 +19,8 @@ import {
   CONVERSATION_STAGE,
   BUTTON_STATE,
   IS_LOGGED_IN,
+  PROJECT_TOTAL_INFO,
+  PROJECT_CREATE_INFO,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
@@ -56,6 +58,9 @@ const OrganismPriceReport = () => {
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
 
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+
   const axiosConfig = {
     timeout: 100000, // 100초
     headers: {
@@ -85,13 +90,8 @@ const OrganismPriceReport = () => {
 
         const data1 = {
           expert_id: "7",
-          business_info: titleOfBusinessInfo,
-          business_analysis_data: {
-            명칭: titleOfBusinessInfo,
-            주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-            주요기능: mainCharacteristicOfBusinessInformation,
-            목표고객: businessInformationTargetCustomer,
-          },
+          business_info: projectTotalInfo.projectTitle,
+          business_analysis_data: projectCreateInfo,
         };
 
 

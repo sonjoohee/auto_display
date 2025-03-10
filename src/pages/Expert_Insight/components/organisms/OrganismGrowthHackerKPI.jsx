@@ -21,6 +21,8 @@ import {
   GROWTH_HACKER_BUTTON_STATE,
   GROWTH_HACKER_RECOMMENDED_SOLUTION,
   IS_LOGGED_IN,
+  PROJECT_TOTAL_INFO,
+  PROJECT_CREATE_INFO,
 } from "../../../../pages/AtomStates";
 
 import Loader from "../atoms/AtomLoader";
@@ -62,6 +64,9 @@ const OrganismGrowthHackerKPI = () => {
   const [growthHackerReportData, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
   const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
   
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+
   const togglePopupDownload = () => {
     setIsPopupOpenDownload(!isPopupOpenDownload);
   };
@@ -109,13 +114,8 @@ const OrganismGrowthHackerKPI = () => {
 
         const data = {
           expert_id: "6",
-          business_info: titleOfBusinessInfo,
-          business_analysis_data: {
-            명칭: titleOfBusinessInfo,
-            주요_목적_및_특징: mainFeaturesOfBusinessInformation,
-            주요기능: mainCharacteristicOfBusinessInformation,
-            목표고객: businessInformationTargetCustomer,
-          },
+          business_info: projectTotalInfo.projectTitle,
+          business_analysis_data: projectCreateInfo,
           kpi_question_list: KpiQuestionList,
         };
 
