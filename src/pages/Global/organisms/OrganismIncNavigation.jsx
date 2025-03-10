@@ -1260,7 +1260,10 @@ const OrganismIncNavigation = () => {
         </Link>
 
         <MenuList>
-          <li onClick={handleNewProjectClick} className="home">
+          <li 
+            onClick={handleNewProjectClick} 
+            className={`home ${location.pathname === "/" ? "active" : ""}`}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="19"
@@ -1280,7 +1283,10 @@ const OrganismIncNavigation = () => {
 
           {accessDashboard && (
             <>
-              <li onClick={() => navigate("/DashBoard")} className="dashboard">
+              <li 
+                onClick={() => navigate("/DashBoard")} 
+                className={`dashboard ${location.pathname === "/DashBoard" ? "active" : ""}`}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="21"
@@ -1325,7 +1331,10 @@ const OrganismIncNavigation = () => {
                 <span>대시보드</span>
               </li>
 
-              <li onClick={() => navigate("/AiPersona")} className="persona">
+              <li 
+                onClick={() => navigate("/AiPersona")} 
+                className={`persona ${location.pathname === "/AiPersona" ? "active" : ""}`}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="19"
@@ -1365,7 +1374,10 @@ const OrganismIncNavigation = () => {
                 <span>페르소나</span>
               </li>
 
-              <li onClick={() => navigate("/Tool")} className="research">
+              <li 
+                onClick={() => navigate("/Tool")} 
+                className={`research ${location.pathname === "/Tool" ? "active" : ""}`}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="27"
@@ -1384,7 +1396,10 @@ const OrganismIncNavigation = () => {
                 <span>리서치툴</span>
               </li>
 
-              <li onClick={() => navigate("")} className="storagebox">
+              <li 
+                onClick={() => navigate("")} 
+                className={`storagebox ${location.pathname === "/Storage" ? "active" : ""}`}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="18"
@@ -1768,6 +1783,30 @@ const MenuList = styled.ul`
     cursor: pointer;
     border-radius: 4px;
     transition: all 0.5s;
+
+    &.active {
+      background: rgba(34, 111, 255, 0.04);
+      
+      &.home path,
+      &.persona path,
+      &.management path,
+      &.storagebox path {
+        stroke: ${palette.primary};
+      }
+
+      &.dashboard rect {
+        stroke: ${palette.primary};
+      }
+
+      &.research path,
+      &.history path {
+        fill: ${palette.primary};
+      }
+      
+      span {
+        color: ${palette.primary};
+      }
+    }
 
     &:hover {
       background: #e5efff;
