@@ -1430,16 +1430,16 @@ setSelectedPersonasSaas(selectedIndices);
                 <div className="content">
                   <ListBoxGroup style={{ marginBottom: "24px" }}>
                     <li>
-                      <Body2 color="gray500">분석 핵심 가치</Body2>
+                      <Body2 color="gray500" style={{ alignSelf: "flex-start" }}>분석 핵심 가치</Body2>
                       <div>
-                        <span>
+                        <Body2 color="gray500" align="left">
                           {Array.isArray(targetCustomers) && targetCustomers.length > 0
                             ? targetCustomers
                                 .filter(customer => customer.trim() !== "")
                                 .map((customer) => `#${customer}`)
                                 .join(" ")
                             : "No customers available"}
-                        </span>
+                        </Body2>
                       </div>
                     </li>
                     <li>
