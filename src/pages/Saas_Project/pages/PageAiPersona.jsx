@@ -857,7 +857,8 @@ const PageAiPersona = () => {
             targetCountry: currentProject.targetCountry,
           },
           projectType: currentProject.projectType,
-          personaRequest: { ...persona, status: "request" },
+          personaRequest: { ...persona },
+          status: "request",
           requestPersonaType: "saas",
         };
         createRequestPersonaOnServer(requestData, isLoggedIn);
