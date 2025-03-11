@@ -373,11 +373,11 @@ const MoleculeInterviewPurpose = ({
                   return (
                     questions?.specialQuestions?.map((question, index) => (
                       <BgBoxItem key={index}>
-                        <Body3 color="gray700">{`${String(index + 1).padStart(
+                        <Body3 color="gray700" align="left">{`${String(index + 1).padStart(
                           2,
                           "0"
                         )}.`}</Body3>
-                        <Body3 color="gray700">{question.question}</Body3>
+                        <Body3 color="gray700" align="left">{question.question}</Body3>
                       </BgBoxItem>
                     )) || null
                   );
