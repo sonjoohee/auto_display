@@ -72,7 +72,6 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
 
   const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
 
-
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
@@ -159,7 +158,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             {/* 메인 질문 및 답변 */}
             <ChatItem Moder>
               <Persona Moder color="Gainsboro" size="Medium" Round>
-                <img src={personaImages.PersonaModer} alt="모더" />
+                <img src={personaImages.persona_moderator} alt="모더" />
                 <span>
                   <img src={images.PatchCheckFill} alt="" />
                   <Helptext color="primary">모더</Helptext>
@@ -178,7 +177,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             <ChatItem Persona>
               <Persona Persona color="Linen" size="Medium" Round>
                 <img
-                  src={`/ai_person/${selectedPersonaList[0].personaImg}.png`}
+                  src={`/ai_person/${selectedPersonaList[0].imageKey}.png`}
                   alt="페르소나"
                 />
               </Persona>
@@ -194,7 +193,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
               <>
                 <ChatItem Moder>
                   <Persona Moder color="Gainsboro" size="Medium" Round>
-                    <img src={personaImages.PersonaModer} alt="모더" />
+                    <img src={personaImages.persona_moderator} alt="모더" />
                     <span>
                       <img src={images.PatchCheckFill} alt="" />
                       <Helptext color="primary">모더</Helptext>
@@ -212,7 +211,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 <ChatItem Persona>
                   <Persona Persona color="Linen" size="Medium" Round>
                     <img
-                      src={`/ai_person/${selectedPersonaList[0].personaImg}.png`}
+                      src={`/ai_person/${selectedPersonaList[0].imageKey}.png`}
                       alt="페르소나"
                     />
                   </Persona>
@@ -270,7 +269,8 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
           <ChatWrap>
             <Header>
               <Title>
-                {projectTotalInfo.projectTitle}의 {selectedInterviewPurposeData.title}
+                {projectTotalInfo.projectTitle}의{" "}
+                {selectedInterviewPurposeData.title}
                 <ColseButton onClick={handleClose} />
               </Title>
               <ul>
@@ -279,7 +279,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                     <li key={persona.persona_id}>
                       <Thumb>
                         <img
-                          src={`/ai_person/${persona.personaImg}.png`}
+                          src={personaImages[persona.imageKey]}
                           alt={persona.persona}
                         />
                       </Thumb>
