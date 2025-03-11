@@ -140,12 +140,13 @@ export default OrganismProjectItem;
 
 const ProjectItem = styled.div`
   max-width: 31.9%;
-  max-height: 350px;
+  // max-height: 350px;
+  max-height: 330px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: space-around;
+  // justify-content: space-around;
   // overflow: hidden;
   border: 1px solid ${palette.outlineGray};
   border-radius: 20px;
