@@ -728,14 +728,10 @@ setSelectedPersonasSaas(selectedIndices);
   };
 
   const handlePersonaSelectionChange = (index) => {
-    setSelectedPersonasSaas((prev) => {
-      if ((prev || []).includes(index)) {
-        return (prev || []).filter((id) => id !== index);
-      } else {
-        if ((prev || []).length >= 5) return prev || []; // Prevent adding more than 5 personas
-        return [...(prev || []), index];
-      }
-    });
+  
+    setSelectedPersonasSaas((prev) => 
+      prev.includes(index) ? [] : [index] // 이미 선택된 경우 해제, 그렇지 않으면 새로 선택
+    );
   };
 
   // 다음 단계로 이동하는 함수
@@ -925,10 +921,16 @@ setSelectedPersonasSaas(selectedIndices);
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
-    setSelectedPersonaButtons((prev) => ({
-      ...prev,
-      [personaId]: !prev[personaId], // Toggle the selected state
-  }));
+
+    setSelectedPersonaButtons((prev) => {
+      const newSelected = { ...prev, [personaId]: !prev[personaId] };
+      if (newSelected[personaId]) {
+        Object.keys(newSelected).forEach((key) => {
+          if (key !== personaId) newSelected[key] = false;
+        });
+      }
+      return newSelected;
+    });
 
     const selectedPersonaIndex = (ideaGeneratorPersona || []).findIndex(
       (persona) => persona?.personaName === personaId
@@ -940,8 +942,7 @@ setSelectedPersonasSaas(selectedIndices);
       updateToolOnServer(
         toolId,
         {
-          ideaGeneratorSelectedPersona:
-            ideaGeneratorPersona?.[selectedPersonaIndex] || {},
+          ideaGeneratorSelectedPersona: ideaGeneratorPersona?.[selectedPersonaIndex] || {},
         },
         isLoggedIn
       );
@@ -960,7 +961,7 @@ setSelectedPersonasSaas(selectedIndices);
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
           console.log("새로고침 감지: URL 비교");
-          navigate("/");
+          navigate("/"); // 새로고침 시 루트 페이지로 이동
           return true;
         }
 
@@ -1450,7 +1451,7 @@ setSelectedPersonasSaas(selectedIndices);
                       )}
                       {selectedPersonasSaas ? (
                         <PersonaGroup>
-                          {Array.isArray(selectedPersonasSaas) ? (
+                          {Array.isArray(selectedPersonasSaas) && selectedPersonasSaas.length > 0 ? (
                             <>
                               {selectedPersonasSaas.length > 3 && (
                                 <span>+{selectedPersonasSaas.length - 3}</span>
@@ -1467,12 +1468,9 @@ setSelectedPersonasSaas(selectedIndices);
                                 ))}
                             </>
                           ) : (
-                            <Persona size="Small" Round>
-                              <img
-                                src={`/ai_person/${selectedPersonasSaas.personaImg}.png`}
-                                alt={selectedPersonasSaas.persona}
-                              />
-                            </Persona>
+                            <Body2 color="gray300">
+                              아래 리스트에서 페르소나를 선택해주세요 (1명 선택가능)
+                            </Body2>
                           )}
                         </PersonaGroup>
                       ) : (
@@ -1511,8 +1509,8 @@ setSelectedPersonasSaas(selectedIndices);
 
                 <BottomBar W100>
                   <Body2 color="gray800">
-                    아이디어 도출을 원하는 페르소나를 선택해주세요 (
-                    {selectedPersonasSaas.length}/5)
+                    아이디어 도출을 원하는 페르소나를 선택해주세요 
+                    {/* ({selectedPersonasSaas.length}/5) */}
                   </Body2>
                   <Button
                     Large

@@ -6,7 +6,9 @@ import {
   Badge,
   Persona,
   PersonaInfo,
+  UniqueTag,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
+
 
 const MoleculePersonaListItem = ({
   personaImage,
@@ -32,7 +34,8 @@ const MoleculePersonaListItem = ({
       <ListText>
         <ListTitle>
           <Body1 color="gray800">{personaTitle}</Body1>
-          <Badge {...{ [badgeType]: true }}>{badgeText}</Badge>
+          {/* <Badge {...{ [badgeType]: true }}>{badgeText}</Badge> */}
+          <UniqueTag color={badgeType || "default"} />
         </ListTitle>
         <ListSubtitle>
           <PersonaInfo None>

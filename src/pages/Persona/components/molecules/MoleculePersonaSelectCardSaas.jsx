@@ -1,22 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Body1, Sub2 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-import { Badge } from "../../../../assets/styles/BusinessAnalysisStyle";
+import { Badge, UniqueTag } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { palette } from "../../../../assets/styles/Palette";
 import personaImages from "../../../../assets/styles/PersonaImages";
 import { useAtom } from "jotai";
 import { PERSONA_LIST, FILTERED_PROJECT_LIST } from "../../../AtomStates";
+import {
+  TabWrapType3,
+  TabButtonType3,
+  ListBoxWrap,
+} from "../../../../assets/styles/BusinessAnalysisStyle";
 
-const MoleculePersonaSelectCard = ({
+const MoleculePersonaSelectCardSaas = ({
   interviewType,
   filteredPersonaList,
   businessPersonaList,
   customPersonaList,
   selectedPersonas,
   onPersonaSelect,
+  activeTab,
 }) => {
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
+  const [activeTabState, setActiveTabState] = useState("my_persona");
 
   // 컴포넌트 마운트 시 초기 unselected 리스트 설정
   useEffect(() => {
@@ -31,6 +38,11 @@ const MoleculePersonaSelectCard = ({
       });
     }
   }, [filteredPersonaList]);
+
+  const handleTabClick = (tabName) => {
+    setActiveTabState(tabName);
+    console.log(`Active Tab changed to: ${tabName}`);
+  };
 
   const handlePersonaSelect = (persona) => {
     const targetPersona = [
@@ -107,12 +119,80 @@ const MoleculePersonaSelectCard = ({
 
   return (
     <CardGroupWrap>
+      <TabWrapType3 Border>
+        <TabButtonType3
+          className={activeTabState === "my_persona" ? "active" : ""}
+          onClick={() => handleTabClick("my_persona")}
+          isActive={activeTabState === "my_persona"}
+          style={
+            activeTabState === "my_persona"
+              ? { color: "#333333" }
+              : { color: "#999999" }
+          }
+        >
+          My Persona
+        </TabButtonType3>
+        <TabButtonType3
+          className={activeTabState === "macro_segment" ? "active" : ""}
+          onClick={() => handleTabClick("macro_segment")}
+          isActive={activeTabState === "macro_segment"}
+          style={
+            activeTabState === "macro_segment"
+              ? { color: "#333333" }
+              : { color: "#999999" }
+          }
+        >
+          Macro Segment
+        </TabButtonType3>
+        <TabButtonType3
+          className={activeTabState === "unique_user" ? "active" : ""}
+          onClick={() => handleTabClick("unique_user")}
+          isActive={activeTabState === "unique_user"}
+          style={
+            activeTabState === "unique_user"
+              ? { color: "#333333" }
+              : { color: "#999999" }
+          }
+        >
+          Unique User
+        </TabButtonType3>
+        <TabButtonType3
+          className={activeTabState === "key_stakeholder" ? "active" : ""}
+          onClick={() => handleTabClick("key_stakeholder")}
+          isActive={activeTabState === "key_stakeholder"}
+          style={
+            activeTabState === "key_stakeholder"
+              ? { color: "#333333" }
+              : { color: "#999999" }
+          }
+        >
+          Key Stakeholder
+        </TabButtonType3>
+      </TabWrapType3>
       {filteredPersonaList &&
         [
           ...customPersonaList,
           ...businessPersonaList,
           ...filteredPersonaList,
-        ].map((persona) => {
+        ]
+        // 활성 탭에 따라 페르소나 필터링
+        .filter((persona) => {
+
+          if (activeTabState === "my_persona") {
+            return persona?.favorite === true; 
+          }
+          if (activeTabState === "macro_segment") {
+            return persona?.personaType === "macro_segment"; 
+          }
+          if (activeTabState === "unique_user") {
+            return persona?.personaType === "unique_user"; 
+          }
+          if (activeTabState === "key_stakeholder") {
+            return persona?.personaType === "key_stakeholder"; 
+          }
+          return true; 
+        })
+        .map((persona) => {
           // 현재 persona가 선태된 상태인지 확인 (personaList.selected 에서 조회)
           const isSelected = personaList.selected.some(
             (p) => p._id === persona._id
@@ -137,13 +217,8 @@ const MoleculePersonaSelectCard = ({
                   <Body1 color="gray800">
                     {persona.persona_view || persona.personaName}
                   </Body1>{" "}
-                  {persona.request_persona_type === "business" ? (
-                    <Badge New>커스텀</Badge>
-                  ) : persona.request_persona_type === "custom" ? (
-                    <Badge Custom>맞춤</Badge>
-                  ) : persona.requestPersonaType === "saas" ? (
-                    <Badge Custom>SaaS</Badge>
-                  ) : null}
+                 
+                  <UniqueTag color={persona.type || "default"} />
                   {/* {persona.isNew && <Badge New>비즈니스</Badge>} */}
                 </ListTitle>
                 <ListSubtitle>
@@ -195,7 +270,7 @@ const MoleculePersonaSelectCard = ({
   );
 };
 
-export default MoleculePersonaSelectCard;
+export default MoleculePersonaSelectCardSaas;
 
 const CardGroupWrap = styled.div`
   display: flex;

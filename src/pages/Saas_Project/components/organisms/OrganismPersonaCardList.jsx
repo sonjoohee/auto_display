@@ -259,7 +259,8 @@ const OrganismPersonaCardList = ({
             targetCountry: currentProject.targetCountry,
           },
           projectType: currentProject.projectType,
-          personaRequest: { ...persona, status: "request" },
+          status: "request",
+          personaRequest: { ...persona },
         };
         createRequestPersonaOnServer(requestData, isLoggedIn);
       } else {
@@ -273,11 +274,14 @@ const OrganismPersonaCardList = ({
   return (
     <>
       {/* activeTab이 'my_persona'이고 filteredPersonaData가 비어있을 때만 BoxWrap 표시 */}
-      {activeTab === "my_persona" && (!filteredPersonaData || filteredPersonaData.length === 0) ? (
+      {activeTab === "my_persona" &&
+      (!filteredPersonaData || filteredPersonaData.length === 0) ? (
         <BoxWrap NoData Border>
           <img src={images.PeopleStarFillPrimary} alt="" />
           <Body2 color="gray500" align="center !important">
-            현재 요청된 My Persona가 없습니다<br />찜(북마크)를 하시면 해당 페이지에서 확인 가능합니다
+            현재 요청된 My Persona가 없습니다
+            <br />
+            찜(북마크)를 하시면 해당 페이지에서 확인 가능합니다
           </Body2>
         </BoxWrap>
       ) : (
@@ -327,7 +331,9 @@ const OrganismPersonaCardList = ({
                   >
                     프로필
                   </StyledButton>
-                  {!["request", "ing", "complete"].includes(persona?.status) && (
+                  {!["request", "ing", "complete"].includes(
+                    persona?.status
+                  ) && (
                     <StyledButton
                       Medium
                       Primary

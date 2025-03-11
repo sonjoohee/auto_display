@@ -1073,7 +1073,7 @@ const PageDesignAnalysis = () => {
                           {activeDesignTab === "emotion" ? (
                             <div
                               dangerouslySetInnerHTML={{
-                                __html: `${designAnalysisBusinessInfo}가(${selectedDesignAnalysisEmotionAnalysis?.[0]?.name})
+                                __html: `${project?.projectTitle}가(${selectedDesignAnalysisEmotionAnalysis?.[0]?.name})
                             에서 궁극적으로 달성하고자하는 주요 목표 감성은 ${designAnalysisEmotionTarget?.target_emotion} `,
                               }}
                             />
