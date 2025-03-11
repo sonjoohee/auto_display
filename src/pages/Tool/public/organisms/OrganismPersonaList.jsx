@@ -43,7 +43,7 @@ const OrganismPersonaList = ({
     // 마이페르소나 탭에서의 선택 상태만 변경하고 다른 탭과의 동기화는 하지 않음
     if (persona.favorite === true) {
       // onPersonaSelect 호출 (현재 탭 ID로)
-      onPersonaSelect(persona._id);
+      onPersonaSelect(persona);
       return;
     }
 
@@ -58,10 +58,10 @@ const OrganismPersonaList = ({
       }
 
       // onPersonaSelect 호출 (올바른 탭 ID로)
-      onPersonaSelect(persona._id);
+      onPersonaSelect(persona);
     } else {
       // 그 외의 경우 onPersonaSelect 호출 (현재 탭 ID로)
-      onPersonaSelect(persona._id);
+      onPersonaSelect(persona);
     }
   };
 
@@ -200,7 +200,7 @@ const OrganismPersonaList = ({
                         index,
                         activeTab
                       );
-                      onPersonaSelect(persona._id);
+                      onPersonaSelect(persona);
                     }}
                   />
                 ))}

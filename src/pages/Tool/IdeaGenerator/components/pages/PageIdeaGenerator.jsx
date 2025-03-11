@@ -445,9 +445,9 @@ const PageIdeaGenerator = () => {
 
         // 선택된 페르소나 ID(_id)를 기반으로 실제 페르소나 객체를 찾습니다
         const selectedPersonaObjects = selectedPersonasSaas
-          .map((_id) => {
+          .map((persona) => {
             // _id를 사용하여 해당 페르소나 객체를 찾습니다
-            return personaListSaas.find((persona) => persona._id === _id);
+            return personaListSaas.find((persona) => persona === persona);
           })
           .filter((persona) => persona !== undefined);
 
@@ -1478,7 +1478,7 @@ const PageIdeaGenerator = () => {
                                 .map((persona, index) => (
                                   <Persona key={index} size="Small" Round>
                                     <img
-                                      src={`/ai_person/${persona.personaImg}.png`}
+                                      src={personaImages[persona.imageKey]}
                                       alt={persona.persona}
                                     />
                                   </Persona>

@@ -520,14 +520,23 @@ const PageCustomerValueAnalyzer = () => {
     try {
       setIsLoading(true);
 
+      console.log(
+        "🚀 ~ handleSubmitBusinessInfo ~ selectedPersonasSaas:",
+        selectedPersonasSaas
+      );
       // 선택된 페르소나 ID(_id)를 기반으로 실제 페르소나 객체를 찾습니다
       const selectedPersonaObjects = selectedPersonasSaas
-        .map((_id) => {
+        .map((persona) => {
+          console.log("🚀 ~ .map ~ _id:", persona);
           // _id를 사용하여 해당 페르소나 객체를 찾습니다
-          return personaListSaas.find((persona) => persona._id === _id);
+          return personaListSaas.find((persona) => persona === persona);
         })
         .filter((persona) => persona !== undefined);
 
+      console.log(
+        "🚀 ~ handleSubmitBusinessInfo ~ selectedPersonaObjects:",
+        selectedPersonaObjects
+      );
       // 선택된 페르소나 객체에서 필요한 필드만 추출합니다
       const selectedCustomers = selectedPersonaObjects.map((persona) => ({
         personaName: persona.personaName || "",
@@ -1392,7 +1401,10 @@ const PageCustomerValueAnalyzer = () => {
                                     .map((persona, index) => (
                                       <Persona key={index} size="Small" Round>
                                         <img
-                                          src={`/Persona/${persona.imageKey}.png`}
+                                          src={
+                                            personaImages[persona.imageKey] ||
+                                            personaImages.PersonaWomen01
+                                          }
                                           alt={persona.personaName}
                                         />
                                       </Persona>
