@@ -94,6 +94,9 @@ const OrganismEmptyPersona = () => {
             keywords: persona.keywords,
             personaType: "macro_segment",
             projectId: project._id,
+            imageKey: `persona_${persona.gender === "남성" ? "m" : "f"}_${
+              Math.floor(parseInt(persona.age.replace("세", "")) / 10) * 10
+            }_${String(Math.floor(Math.random() * 2) + 1).padStart(2, "0")}`,
             // 다른 필드가 있다면 여기에 추가
           };
 
@@ -138,6 +141,9 @@ const OrganismEmptyPersona = () => {
             keywords: persona.keywords,
             personaType: "unique_user",
             projectId: project._id,
+            imageKey: `persona_${persona.gender === "남성" ? "m" : "f"}_${
+              Math.floor(parseInt(persona.age.replace("세", "")) / 10) * 10
+            }_${String(Math.floor(Math.random() * 2) + 1).padStart(2, "0")}`,
             // 다른 필드가 있다면 여기에 추가
           };
 
@@ -185,6 +191,9 @@ const OrganismEmptyPersona = () => {
             keywords: persona.keywords,
             personaType: "key_stakeholder",
             projectId: project._id,
+            imageKey: `persona_${persona.gender === "남성" ? "m" : "f"}_${
+              Math.floor(parseInt(persona.age.replace("세", "")) / 10) * 10
+            }_${String(Math.floor(Math.random() * 2) + 1).padStart(2, "0")}`,
             // 다른 필드가 있다면 여기에 추가
           };
 
