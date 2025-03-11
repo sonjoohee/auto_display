@@ -16,6 +16,7 @@ import images from "../../../../assets/styles/Images";
 import personaImages from "../../../../assets/styles/PersonaImages";
 import { palette } from "../../../../assets/styles/Palette";
 import MoleculePersonaSelectCard from "../../../Persona/components/molecules/MoleculePersonaSelectCard";
+import MoleculePersonaSelectCardSaas from "../../../Persona/components/molecules/MoleculePersonaSelectCardSaas";
 import {
   ContentsWrap,
   MainContent,
@@ -481,7 +482,16 @@ const PagePersona3Select = () => {
                     ) : null}
                   </ListBoxGroup>
                 </div>
-
+                <MoleculePersonaSelectCardSaas
+                  interviewType={selectedInterviewType}
+                  filteredPersonaList={personaListSaas}
+                  businessPersonaList={allBusinessPersonas.filter(
+                    (persona) => persona?.status === "complete"
+                  )}
+                  customPersonaList={customPersonaList}
+                  selectedPersonas={selectedPersonas}
+                  onPersonaSelect={setSelectedPersonas}
+                />
                 <OrganismPersonaListSaas
                   personaListSaas={personaListSaas}
                   personaImages={personaImages}
