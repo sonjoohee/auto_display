@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Body1, Sub2 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-import { Badge, UniqueTag } from "../../../../assets/styles/BusinessAnalysisStyle";
+import { Badge, Persona, UniqueTag } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { palette } from "../../../../assets/styles/Palette";
 import personaImages from "../../../../assets/styles/PersonaImages";
 import { useAtom } from "jotai";
@@ -12,6 +12,7 @@ import {
   TabButtonType3,
   ListBoxWrap,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
+
 
 const MoleculePersonaSelectCardSaas = ({
   interviewType,
@@ -177,26 +178,27 @@ const MoleculePersonaSelectCardSaas = ({
         ]
         // 활성 탭에 따라 페르소나 필터링
         .filter((persona) => {
-
           if (activeTabState === "my_persona") {
             return persona?.favorite === true; 
           }
+          // 다른 탭에서는 personaType에 따라 필터링하고, favorite이 false인 경우 제외
           if (activeTabState === "macro_segment") {
-            return persona?.personaType === "macro_segment"; 
+            return persona?.personaType === "macro_segment" && persona?.favorite === false; 
           }
           if (activeTabState === "unique_user") {
-            return persona?.personaType === "unique_user"; 
+            return persona?.personaType === "unique_user" && persona?.favorite === false; 
           }
           if (activeTabState === "key_stakeholder") {
-            return persona?.personaType === "key_stakeholder"; 
+            return persona?.personaType === "key_stakeholder" && persona?.favorite === false; 
           }
-          return true; 
+          return true; // 기본적으로 false를 반환하여 다른 탭에서는 아무것도 표시되지 않도록 함
         })
         .map((persona) => {
           // 현재 persona가 선태된 상태인지 확인 (personaList.selected 에서 조회)
           const isSelected = personaList.selected.some(
             (p) => p._id === persona._id
           );
+
 
           return (
             <ListBoxItem
@@ -206,11 +208,19 @@ const MoleculePersonaSelectCardSaas = ({
               interviewType={interviewType}
             >
               {/* 카드 내용 렌더링 */}
-              <Persona color="Linen" size="Large" Round>
-                <img
-                  src={`/ai_person/${persona.personaImg}.png`}
+              {/* <Persona color="Linen" size="Large" Round> */}
+              <Persona
+                size="Large"
+                icon={persona.favorite ? "OrangeTopLeftStarFill" : null}
+                Round
+                Moder
+              >
+                   <img
+                  src={personaImages[persona.imageKey] ||
+                      personaImages.PersonaWomen01}
                   alt={persona.personaName}
                 />
+
               </Persona>
               <ListText>
                 <ListTitle>
@@ -301,8 +311,7 @@ const ListBoxItem = styled.div`
   ${(props) =>
     ((props.interviewType === "single" && !props.selected) ||
       props.interviewType === "multiple") &&
-    `
-    &:hover {
+    `    &:hover {
       border-radius: 10px;
       background-color: ${palette.chatGray};
       cursor: pointer;
@@ -358,18 +367,18 @@ const ListBoxItem = styled.div`
   }
 `;
 
-const Persona = styled.div`
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  overflow: hidden;
+// const Persona = styled.div`
+//   width: 48px;
+//   height: 48px;
+//   border-radius: 50%;
+//   overflow: hidden;
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`;
+//   img {
+//     width: 100%;
+//     height: 100%;
+//     object-fit: cover;
+//   }
+// `;
 
 const ListText = styled.div`
   flex: 1;
@@ -409,3 +418,4 @@ const PersonaInfo = styled.div`
 `;
 
 const ListButton = styled.div``;
+
