@@ -504,36 +504,39 @@ const PageProjectCreate = () => {
 
             <TabWrapType5>
               <TabButtonType5
+                Num3
                 isActive={activeTab >= 1}
                 onClick={() => setActiveTab(1)}
               >
                 <span>01</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 1 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     프로젝트 정보 입력
                   </Body1>
                 </div>
               </TabButtonType5>
               <TabButtonType5
+                Num3
                 isActive={activeTab >= 2}
                 onClick={() => completedSteps.includes(1) && setActiveTab(2)}
                 disabled={!completedSteps.includes(1)}
               >
                 <span>02</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     데이터 등록
                   </Body1>
                 </div>
               </TabButtonType5>
               <TabButtonType5
+                Num3
                 isActive={activeTab >= 3}
                 onClick={() => completedSteps.includes(2) && setActiveTab(3)}
                 disabled={!completedSteps.includes(2)}
               >
                 <span>03</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 3 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     프로젝트 분석 확인
                   </Body1>
                 </div>

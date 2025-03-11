@@ -374,7 +374,7 @@ const PageDashBoard = () => {
                 </H1>
 
                 <Button ExLarge Primary Fill>
-                  <Sub1 color="white">팀원 초대</Sub1>
+                  <Sub2 color="white">팀원 초대</Sub2>
                 </Button>
               </div>
 
