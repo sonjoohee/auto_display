@@ -18,10 +18,7 @@ import {
   TableHeader,
   TableBody,
 } from "../../../assets/styles/BusinessAnalysisStyle";
-import { 
-  FormBox,
-  CustomTextarea,
-} from "../../../assets/styles/InputStyle";
+import { FormBox, CustomTextarea } from "../../../assets/styles/InputStyle";
 import images from "../../../assets/styles/Images";
 import {
   H1,
@@ -355,8 +352,6 @@ const PageDashBoard = () => {
     industry: "",
     country: "",
   });
-  
-  
 
   return (
     <>
@@ -373,9 +368,9 @@ const PageDashBoard = () => {
                   Dash Board
                 </H1>
 
-                <Button ExLarge Primary Fill>
+                {/* <Button ExLarge Primary Fill>
                   <Sub2 color="white">팀원 초대</Sub2>
-                </Button>
+                </Button> */}
               </div>
 
               <Card>
@@ -393,9 +388,9 @@ const PageDashBoard = () => {
                     </TagWrap>
                   </div>
 
-                  <Button 
-                    ExLarge 
-                    PrimaryLightest 
+                  <Button
+                    ExLarge
+                    PrimaryLightest
                     Fill
                     onClick={() => setShowPopup(true)}
                   >
@@ -658,14 +653,18 @@ const PageDashBoard = () => {
                   </li>
                   <li>
                     <Body2 color="gray500">업로드 파일</Body2>
-                    <Body2 color="gray800">제품 디자인에서 감성의 차원과 표현요소.pdf</Body2>
+                    <Body2 color="gray800">
+                      제품 디자인에서 감성의 차원과 표현요소.pdf
+                    </Body2>
                     {/* <Button Large Outline Fill style={{ marginLeft: "auto" }}>파일보기</Button> */}
                   </li>
                 </ListBoxGroup>
               </SummaryWrap>
 
               <SummaryWrap>
-                <Body1 color="gray700" align="left">프로젝트 개요</Body1>
+                <Body1 color="gray700" align="left">
+                  프로젝트 개요
+                </Body1>
                 <ListBoxGroup>
                   <Body2 color="gray800" align="left">
                     {/* {project?.projectAnalysis?.business_analysis} */}
@@ -680,7 +679,9 @@ const PageDashBoard = () => {
               </SummaryWrap>
 
               <SummaryWrap>
-                <Body1 color="gray700" align="left">주요 타겟 고객군</Body1>
+                <Body1 color="gray700" align="left">
+                  주요 타겟 고객군
+                </Body1>
                 <ListBoxGroup>
                   <Body2 color="gray800" align="left">
                     {project?.projectAnalysis?.target_customer}
