@@ -99,6 +99,7 @@ import PageMarketingNoItemsShare from "./pages/Marketing/components/pages/PageMa
 //테스트 페이지
 import DesignLens from "./pages/Persona/components/pages/DesignLens";
 import AIDesignEvaluationSystem from "./pages/Persona/components/pages/AIDesignEvaluationSystem";
+import PageToolListSaas from "./pages/Saas_Project/pages/PageToolListSaas";
 
 function App() {
   const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태를 위한 아톰
@@ -574,7 +575,7 @@ function App() {
             path="/Tool"
             element={
               <RequireToken>
-                <PageToolList />
+                <PageToolListSaas />
               </RequireToken>
             }
           />

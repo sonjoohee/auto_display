@@ -490,6 +490,7 @@ const PagePersona3Select = () => {
                   onNavigate={navigate}
                   selectedPersonas={selectedPersonas}
                   onPersonaSelect={setSelectedPersonas}
+                  interviewType={selectedInterviewType}
                 />
               </div>
               <BottomBar W100>

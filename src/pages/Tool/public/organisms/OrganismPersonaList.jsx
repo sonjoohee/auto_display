@@ -211,6 +211,7 @@ const OrganismPersonaList = ({
           <OrganismNoPersonaMessage />
         </ToolPublicPersonaWrap>
       )}
+      <div style={{ height: "60px" }}></div>
     </>
   );
 };
