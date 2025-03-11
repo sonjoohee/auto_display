@@ -347,8 +347,10 @@ const PageAiPersona = () => {
       return (
         customPersonaForm.gender !== "" &&
         customPersonaForm.ageGroups.length > 0 &&
-        customPersonaForm.purpose.trim() !== "" &&
-        customPersonaForm.additionalInfo.trim() !== ""
+        // customPersonaForm.purpose.trim() !== "" &&
+        // customPersonaForm.additionalInfo.trim() !== ""
+        customPersonaForm.purpose.trim() !== ""
+        // additionalInfo는 더 이상 필수 항목이 아님
       );
     } else if (activeTabIndex === 1) {
       return true; // OCEAN 정보는 선택사항
@@ -1458,7 +1460,7 @@ const PageAiPersona = () => {
                   <div className="column">
                     <Body2 color="gray700" align="left">
                       필수적으로 필요한 정보가 있다면, 알려주세요{" "}
-                      <span style={{ color: "red" }}>*</span>
+                      {/* <span style={{ color: "red" }}>*</span> */}
                     </Body2>
                     <PopupContent>
                       <CustomTextarea
@@ -1578,6 +1580,7 @@ const PageAiPersona = () => {
                         id="chk1"
                         checked={ignoreOcean}
                         onChange={handleIgnoreOcean}
+                        style={{ display: "block" }}
                       />
                       <label htmlFor="chk1">
                         페르소나의 성격 유형을 랜덤으로 생성 하겠습니다.
