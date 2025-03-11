@@ -202,6 +202,7 @@ import Plus from "../images/plus.svg"
 import PlusPrimary from "../images/plus-primary.svg"
 import Gear from "../images/gear.svg"
 import ArrowBarLeft from "../images/arrow-bar-left.svg"
+import ArrowReturn from "../images/arrow-return.svg"
 import ArrowClockwise from "../images/arrow-clockwise.svg"
 import NoteArrowUp from "../images/note-arrow-up.svg"
 import CheckGreen from "../images/check-green.svg"
@@ -566,6 +567,7 @@ const images = {
   PlusPrimary,
   Gear,
   ArrowBarLeft,
+  ArrowReturn,
   ArrowClockwise,
   NoteArrowUp,
   CheckGreen,
