@@ -992,7 +992,7 @@ const OrganismToastPopupSingleChat = ({
           <React.Fragment key={`main-${index}`}>
             <ChatItem Moder>
               <Persona Moder color="Gainsboro" size="Medium" Round>
-                <img src={personaImages.PersonaModer} alt="모더" />
+                <img src={personaImages.persona_moderator} alt="모더" />
                 <span>
                   <img src={images.PatchCheckFill} alt="" />
                   <Helptext color="primary">모더</Helptext>
@@ -1004,12 +1004,11 @@ const OrganismToastPopupSingleChat = ({
                 </Sub1>
               </ChatBox>
             </ChatItem>
-
             {answers[index]?.map((answer, answerIndex) => (
               <ChatItem key={`answer-${answerIndex}`} Persona>
                 <Persona color="Linen" size="Medium" Round>
                   <img
-                    src={`/ai_person/${answer.persona.personaImg}.png`}
+                    src={personaImages[answer.persona.imageKey]}
                     alt={answer.persona.persona}
                   />
                 </Persona>
@@ -1020,7 +1019,6 @@ const OrganismToastPopupSingleChat = ({
                 </ChatBox>
               </ChatItem>
             ))}
-
             {/* 답변 생성 중인 경우 */}
             {status === "Ing" && isGenerating && (
               <ChatItem Persona>
@@ -1028,7 +1026,7 @@ const OrganismToastPopupSingleChat = ({
                   <img
                     src={`/ai_person/${
                       personaList.selected[answers[index]?.length || 0]
-                        ?.personaImg
+                        ?.imageKey
                     }.png`}
                     alt="페르소나"
                   />
@@ -1060,7 +1058,7 @@ const OrganismToastPopupSingleChat = ({
                     // 질문 생성 완료 → 모더 질문 표시
                     <ChatItem Moder>
                       <Persona Moder color="Gainsboro" size="Medium" Round>
-                        <img src={personaImages.PersonaModer} alt="모더" />
+                        <img src={personaImages.persona_moderator} alt="모더" />
                         <span>
                           <img src={images.PatchCheckFill} alt="" />
                           <Helptext color="primary">모더</Helptext>
@@ -1077,7 +1075,10 @@ const OrganismToastPopupSingleChat = ({
                       // 질문 생성 중 → 모더 Entering 애니메이션 표시
                       <ChatItem Moder>
                         <Persona Moder color="Gainsboro" size="Medium" Round>
-                          <img src={personaImages.PersonaModer} alt="모더" />
+                          <img
+                            src={personaImages.persona_moderator}
+                            alt="모더"
+                          />
                           <span>
                             <img src={images.PatchCheckFill} alt="" />
                             <Helptext color="primary">모더</Helptext>
@@ -1097,7 +1098,7 @@ const OrganismToastPopupSingleChat = ({
                       <ChatItem Persona>
                         <Persona color="Linen" size="Medium" Round>
                           <img
-                            src={`/ai_person/${personaList.selected[0].personaImg}.png`}
+                            src={`/ai_person/${personaList.selected[0].imageKey}.png`}
                             alt={personaList.selected[0].persona}
                           />
                         </Persona>
@@ -1113,7 +1114,7 @@ const OrganismToastPopupSingleChat = ({
                         <ChatItem Persona>
                           <Persona color="Linen" size="Medium" Round>
                             <img
-                              src={`/ai_person/${personaList.selected[0].personaImg}.png`}
+                              src={`/ai_person/${personaList.selected[0].imageKey}.png`}
                               alt="페르소나"
                             />
                           </Persona>
@@ -1456,7 +1457,7 @@ const OrganismToastPopupSingleChat = ({
                     <li key={persona?._id}>
                       <Thumb>
                         <img
-                          src={`/ai_person/${persona?.personaImg}.png`}
+                          src={personaImages[persona.imageKey]}
                           alt={persona?.personaName}
                         />
                       </Thumb>

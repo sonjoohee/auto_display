@@ -242,6 +242,7 @@ import persona_f_70_01 from "../images/Persona/persona_f_70_01.png";
 import persona_f_70_02 from "../images/Persona/persona_f_70_02.png";
 import persona_f_80_01 from "../images/Persona/persona_f_80_01.png";
 import persona_f_80_02 from "../images/Persona/persona_f_80_02.png";
+import persona_moderator from "../images/Persona/persona_moderator.png";
 
 import PersonaModer from "../images/Persona/PersonaModer.png";
 
@@ -491,7 +492,7 @@ const personaImages = {
   persona_f_70_02,
   persona_f_80_01,
   persona_f_80_02,
-
+  persona_moderator,
   PersonaModer,
 };
 
