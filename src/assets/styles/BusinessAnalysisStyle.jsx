@@ -2801,7 +2801,7 @@ export const BoxWrap = styled.div`
       ? `1px solid ${palette.outlineGray}`
       : props.Border
       ? `1px solid ${palette.outlineGray}`
-      : "1px solid ${palette.outlineGray}"};
+      : `1px solid ${palette.outlineGray}`};
 
   div,
   p,
@@ -2814,6 +2814,12 @@ export const BoxWrap = styled.div`
     css`
       flex-direction: column;
       gap: 0 !important;
+    `}
+
+  ${(props) =>
+    (props.Column && props.Small) &&
+    css`
+      gap: 10px !important;
     `}
 `;
 
