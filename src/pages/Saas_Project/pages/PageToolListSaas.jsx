@@ -972,9 +972,10 @@ const PageToolListSaas = () => {
 
   const hadleToolSelect = (index) => {
     if (isLoggedIn) {
-      setToolLoading(true);
+      setToolLoading(false);
       switch (index) {
         case "1":
+          setToolLoading(true);
           navigate("/TargetDiscovery");
           break;
         case "2":
