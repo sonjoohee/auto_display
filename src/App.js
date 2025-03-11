@@ -643,7 +643,14 @@ function App() {
           <Route path="/Policy" element={<PagePolicy />} />
 
           <Route path="/ServiceLanding" element={<PageServiceLanding />} />
-          <Route path="/blog" element={<PageBlog />} />
+          <Route
+            path="/blog"
+            element={
+              <RequireToken>
+                <PageBlog />
+              </RequireToken>
+            }
+          />
 
           <Route
             path="/style_guide"

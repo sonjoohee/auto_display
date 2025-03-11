@@ -95,7 +95,10 @@ const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
       {!isNoData ? (
         <>
           <div className="thumbnail">
-            <img src={project?.thumbnail || getRandomThumbnail()} alt="" />
+            <img
+              src={images[project?.thumbnail] || getRandomThumbnail()}
+              alt=""
+            />
           </div>
           <div className="content">
             <div className="info">
