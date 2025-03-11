@@ -118,7 +118,9 @@ const PageIdeaGenerator = () => {
   const [showPopupError, setShowPopupError] = useState(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
-  const [ideaGeneratorPurpose, setIdeaGeneratorPurpose] = useAtom(IDEA_GENERATOR_PURPOSE);
+  const [ideaGeneratorPurpose, setIdeaGeneratorPurpose] = useAtom(
+    IDEA_GENERATOR_PURPOSE
+  );
   const [selectedPurposes, setSelectedPurposes] = useState("");
   const [selectedInterviewType, setSelectedInterviewType] = useState(null);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] =
@@ -189,10 +191,10 @@ const PageIdeaGenerator = () => {
 
   // DeleteFormWrap 삭제를 위한 state 추가
   const [forms, setForms] = useState([]);
-  
+
   // DeleteButton 클릭 핸들러 추가
   const handleDelete = (index) => {
-    setTargetCustomers(prev => prev.filter((_, i) => i !== index));
+    setTargetCustomers((prev) => prev.filter((_, i) => i !== index));
   };
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -201,26 +203,6 @@ const PageIdeaGenerator = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  // useEffect(() => {
-  //   setBusinessDescription(ideaGeneratorInfo.business);
-  //   setTargetCustomers(ideaGeneratorInfo.coreValue);
-  //   if (toolStep === 1) {
-  //     setToolStep(0);
-  //   } else if (toolStep === 2) {
-  //     setCompletedSteps([1]);
-  //     setActiveTab(2);
-  //     setToolStep(1);
-  //   }
-  //   console.log("ideaGeneratorKnowTarget", ideaGeneratorKnowTarget);
-  //   if (ideaGeneratorKnowTarget) {
-  //     setSelectedCustomPersona(ideaGeneratorPersona)
-  //     setSelectedInterviewType("yesTarget");
-
-  //   } else {
-  //     setSelectedInterviewType("noTarget");
-  //   }
-  // }, []);
 
   //저장되었던 인터뷰 로드
   useEffect(() => {
@@ -235,7 +217,7 @@ const PageIdeaGenerator = () => {
           setBusinessDescription(ideaGeneratorInfo?.business ?? "");
           setTargetCustomers(ideaGeneratorInfo?.coreValue ?? []);
         }
-        if(ideaGeneratorPurpose){
+        if (ideaGeneratorPurpose) {
           setSelectedPurposes(ideaGeneratorPurpose);
         }
 
@@ -253,28 +235,45 @@ const PageIdeaGenerator = () => {
         }
 
         // 페르소나 설정 (Step 2)
-        if (ideaGeneratorSelectedPersona) {
-          // ideaGeneratorSelectedPersona가 있는 경우에만 처리
-          // const selectedIndex = (personaListSaas ?? []).findIndex(
-          //   (persona) =>
-          //     persona?.personaName === ideaGeneratorSelectedPersona?.personaName
-          // );
+        if (ideaGeneratorSelectedPersona && personaListSaas?.length > 0) {
+          // 저장된 페르소나의 personaName과 일치하는 personaListSaas의 페르소나를 찾아 _id 값을 가져옵니다
+          const savedPersonaNames = Array.isArray(ideaGeneratorSelectedPersona)
+            ? ideaGeneratorSelectedPersona.map((persona) => persona.personaName)
+            : [ideaGeneratorSelectedPersona.personaName];
 
-          // ideaGeneratorSelectedPersona의 모든 personaName을 가져옵니다.
-const selectedPersonaNames = ideaGeneratorSelectedPersona.map(persona => persona.personaName);
+          // personaListSaas에서 해당 personaName을 가진 페르소나의 _id를 찾습니다
+          const selectedPersonaIds = savedPersonaNames
+            .map((name) => {
+              const matchedPersona = personaListSaas.find(
+                (persona) => persona.personaName === name
+              );
+              return matchedPersona ? matchedPersona._id : null;
+            })
+            .filter((id) => id !== null);
 
-// personaListSaas에서 해당 personaName을 가진 인덱스를 찾습니다.
-const selectedIndices = selectedPersonaNames.map(selectedName => 
-    personaListSaas.findIndex(persona => persona.personaName === selectedName)
-);
+          console.log("Selected Persona IDs:", selectedPersonaIds);
 
-console.log(selectedIndices); // 일치하는 인덱스 배열 출력
-setSelectedPersonasSaas(selectedIndices);
-  
-          // selectedPersona 상태 업데이트 (일치하는 항목이 없으면 -1)
-          // if (selectedIndex !== -1) {
-          //   setSelectedPersonasSaas(selectedIndex);
-          // }
+          // 찾은 _id 값으로 selectedPersonasSaas 상태를 업데이트합니다
+          setSelectedPersonasSaas(selectedPersonaIds);
+
+          // 선택된 페르소나 버튼 상태도 업데이트합니다
+          const newSelectedButtons = {};
+          selectedPersonaIds.forEach((id) => {
+            const matchedPersona = personaListSaas.find(
+              (persona) => persona._id === id
+            );
+            if (matchedPersona) {
+              const buttonId = `${matchedPersona.personaType}_${id}`;
+              newSelectedButtons[buttonId] = true;
+
+              // favorite가 true인 경우 my_persona 탭에서도 선택 상태로 설정
+              if (matchedPersona.favorite) {
+                newSelectedButtons[`my_persona_${id}`] = true;
+              }
+            }
+          });
+
+          setSelectedPersonaButtons(newSelectedButtons);
         }
 
         if (ideaGeneratorFinalReport?.clusters?.length > 0) {
@@ -340,7 +339,6 @@ setSelectedPersonasSaas(selectedIndices);
       const businessData = {
         business: businessDescription || "",
         core_value: targetCustomers || [],
-
       };
 
       let response = await InterviewXIdeaGeneratorPersonaRequest(
@@ -441,81 +439,53 @@ setSelectedPersonasSaas(selectedIndices);
           [index]: "loading",
         }));
 
-        const filteredTargetCustomers = (selectedPersonasSaas || []).flatMap(
-          (personaId) => {
-            const prefix = personaId?.split("_")?.[0] || ""; // 접두사 추출 (예: 'macro_segment')
-            return (personaListSaas || [])
-              .map((persona, index) => {
-                // personaType이 접두사와 일치하는지 확인
-                if (persona?.personaType?.startsWith(prefix)) {
-                  return persona; // 인덱스 대신 persona 정보를 반환
-                }
-                return null; // 일치하지 않으면 null 반환
-              })
-              .filter((persona) => persona !== null); // null 값을 필터링
+        // 선택된 페르소나 ID(_id)를 기반으로 실제 페르소나 객체를 찾습니다
+        const selectedPersonaObjects = selectedPersonasSaas
+          .map((_id) => {
+            // _id를 사용하여 해당 페르소나 객체를 찾습니다
+            return personaListSaas.find((persona) => persona._id === _id);
+          })
+          .filter((persona) => persona !== undefined);
+
+        // 선택된 페르소나 객체에서 필요한 필드만 추출합니다
+        const selectedCustomers = selectedPersonaObjects.map((persona) => ({
+          personaName: persona.personaName || "",
+          personaCharacteristics: persona.personaCharacteristics || "",
+          age: persona.age || "",
+          gender: persona.gender || "",
+          job: persona.job || "",
+          keywords: persona.keywords || [],
+        }));
+
+        try {
+          const businessData = {
+            business: ideaGeneratorInfo?.business || "",
+            core_value: [ideaGeneratorInfo?.coreValue?.[index] || ""],
+            target_list: selectedCustomers,
+          };
+
+          setIdeaGeneratorSelectedPersona(selectedCustomers);
+
+          const response = await InterviewXIdeaGeneratorIdeaRequest(
+            businessData,
+            isLoggedIn
+          );
+
+          if (response?.response?.idea_generator_idea) {
+            results.push(response.response.idea_generator_idea);
+            setIdeaGeneratorIdea((prev) => [
+              ...(prev || []),
+              response.response.idea_generator_idea,
+            ]);
+
+            // 성공적인 응답 후 카드 상태 업데이트
+            setCardStatuses((prev) => ({
+              ...(prev || {}),
+              [index]: "completed",
+            }));
           }
-        );
-
-        const selectedCustomers = (selectedPersonasSaas || []).reduce(
-          (acc, personaId) => {
-            const index = parseInt(personaId?.split("persona")?.[1] || "0", 10); // 숫자 추출
-            const customer = filteredTargetCustomers[index]; // 필요한 필드만 추출
-            if (customer) {
-              const {
-                personaName,
-                personaCharacteristics,
-                age,
-                gender,
-                job,
-                keywords,
-              } = customer;
-              acc.push({
-                personaName: personaName || "",
-                personaCharacteristics: personaCharacteristics || "",
-                age: age || "",
-                gender: gender || "",
-                job: job || "",
-                keywords: keywords || [],
-              }); // 필요한 필드만 반환
-            }
-            return acc;
-          },
-          []
-        ); // undefined 필터링
-
-        setIdeaGeneratorSelectedPersona(selectedCustomers);
-
-        const data = {
-          business: ideaGeneratorInfo?.business || "",
-          core_value: (ideaGeneratorInfo?.coreValue || [])[index] || "",
-          core_target: selectedCustomers || [],
-        };
-
-        await updateToolOnServer(
-          toolId,
-          {
-            ideaGeneratorSelectedPersona: selectedCustomers || [],
-          },
-          isLoggedIn
-        );
-
-        const response = await InterviewXIdeaGeneratorIdeaRequest(
-          data,
-          isLoggedIn
-        );
-
-        if (response?.response?.idea_generator_idea) {
-          results.push(response.response.idea_generator_idea);
-          setIdeaGeneratorIdea((prev) => [
-            ...(prev || []),
-            response.response.idea_generator_idea,
-          ]);
-
-          // 성공적인 응답 후 카드 상태 업데이트
-          setCardStatuses((prev) => ({
-            ...(prev || {}),
-            [index]: "completed",
-          }));
+        } catch (error) {
+          console.error("Error generating idea:", error);
         }
       }
 
@@ -727,10 +697,9 @@ setSelectedPersonasSaas(selectedIndices);
     }
   };
 
-  const handlePersonaSelectionChange = (index) => {
-  
-    setSelectedPersonasSaas((prev) => 
-      prev.includes(index) ? [] : [index] // 이미 선택된 경우 해제, 그렇지 않으면 새로 선택
+  const handlePersonaSelectionChange = (_id) => {
+    setSelectedPersonasSaas(
+      (prev) => (prev.includes(_id) ? [] : [_id]) // 이미 선택된 경우 해제, 그렇지 않으면 새로 선택
     );
   };
 
@@ -825,7 +794,7 @@ setSelectedPersonasSaas(selectedIndices);
     setTargetCustomers((prev) => {
       const newTargetCustomers = [...(prev || [])]; // 빈 배열로 초기화
       newTargetCustomers[index] = value || "";
-      return newTargetCustomers.filter(customer => customer.trim() !== ""); // 빈 값 필터링
+      return newTargetCustomers.filter((customer) => customer.trim() !== ""); // 빈 값 필터링
     });
   };
 
@@ -921,7 +890,6 @@ setSelectedPersonasSaas(selectedIndices);
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
-
     setSelectedPersonaButtons((prev) => {
       const newSelected = { ...prev, [personaId]: !prev[personaId] };
       if (newSelected[personaId]) {
@@ -932,20 +900,31 @@ setSelectedPersonasSaas(selectedIndices);
       return newSelected;
     });
 
-    const selectedPersonaIndex = (ideaGeneratorPersona || []).findIndex(
-      (persona) => persona?.personaName === personaId
+    // _id를 사용하여 해당 페르소나 찾기
+    const selectedPersona = personaListSaas.find(
+      (persona) => persona._id === personaId.split("_")[1]
     );
-    if (selectedPersonaIndex !== -1) {
-      setIdeaGeneratorSelectedPersona(
-        ideaGeneratorPersona?.[selectedPersonaIndex] || {}
+    if (selectedPersona) {
+      // 선택된 페르소나의 인덱스 찾기
+      const selectedPersonaIndex = (ideaGeneratorPersona || []).findIndex(
+        (persona) => persona?.personaName === selectedPersona.personaName
       );
-      updateToolOnServer(
-        toolId,
-        {
-          ideaGeneratorSelectedPersona: ideaGeneratorPersona?.[selectedPersonaIndex] || {},
-        },
-        isLoggedIn
-      );
+
+      if (selectedPersonaIndex !== -1) {
+        setIdeaGeneratorSelectedPersona(
+          ideaGeneratorPersona?.[selectedPersonaIndex] || {}
+        );
+
+        // 툴 서버 업데이트
+        updateToolOnServer(
+          toolId,
+          {
+            ideaGeneratorSelectedPersona:
+              ideaGeneratorPersona?.[selectedPersonaIndex] || {},
+          },
+          isLoggedIn
+        );
+      }
     }
   };
 
@@ -1021,8 +1000,14 @@ setSelectedPersonasSaas(selectedIndices);
             <TabWrapType5>
               <TabButtonType5
                 isActive={activeTab >= 1}
-                onClick={() => setActiveTab(1) }
-                disabled={isLoading || isLoadingFinalReport ||Object.values(cardStatuses).some(status => status !== "completed") } 
+                onClick={() => setActiveTab(1)}
+                disabled={
+                  isLoading ||
+                  isLoadingFinalReport ||
+                  Object.values(cardStatuses).some(
+                    (status) => status !== "completed"
+                  )
+                }
               >
                 <span>01</span>
                 <div className="text">
@@ -1033,8 +1018,15 @@ setSelectedPersonasSaas(selectedIndices);
               </TabButtonType5>
               <TabButtonType5
                 isActive={activeTab >= 2}
-                onClick={() => completedSteps.includes(1) && setActiveTab(2) }
-                disabled={!completedSteps.includes(1) || isLoading || isLoadingFinalReport || Object.values(cardStatuses).some(status => status !== "completed") }
+                onClick={() => completedSteps.includes(1) && setActiveTab(2)}
+                disabled={
+                  !completedSteps.includes(1) ||
+                  isLoading ||
+                  isLoadingFinalReport ||
+                  Object.values(cardStatuses).some(
+                    (status) => status !== "completed"
+                  )
+                }
               >
                 <span>02</span>
                 <div className="text">
@@ -1048,8 +1040,15 @@ setSelectedPersonasSaas(selectedIndices);
               </TabButtonType5>
               <TabButtonType5
                 isActive={activeTab >= 3}
-                onClick={() => completedSteps.includes(2) && setActiveTab(3) }
-                disabled={!completedSteps.includes(2) || isLoading || isLoadingFinalReport || Object.values(cardStatuses).some(status => status !== "completed") }
+                onClick={() => completedSteps.includes(2) && setActiveTab(3)}
+                disabled={
+                  !completedSteps.includes(2) ||
+                  isLoading ||
+                  isLoadingFinalReport ||
+                  Object.values(cardStatuses).some(
+                    (status) => status !== "completed"
+                  )
+                }
               >
                 <span>03</span>
                 <div className="text">
@@ -1063,8 +1062,15 @@ setSelectedPersonasSaas(selectedIndices);
               </TabButtonType5>
               <TabButtonType5
                 isActive={activeTab >= 4}
-                onClick={() => completedSteps.includes(3) && setActiveTab(4) }
-                disabled={!completedSteps.includes(3) || isLoading || isLoadingFinalReport || Object.values(cardStatuses).some(status => status !== "completed") }
+                onClick={() => completedSteps.includes(3) && setActiveTab(4)}
+                disabled={
+                  !completedSteps.includes(3) ||
+                  isLoading ||
+                  isLoadingFinalReport ||
+                  Object.values(cardStatuses).some(
+                    (status) => status !== "completed"
+                  )
+                }
               >
                 <span>04</span>
                 <div className="text">
@@ -1431,12 +1437,18 @@ setSelectedPersonasSaas(selectedIndices);
                 <div className="content">
                   <ListBoxGroup style={{ marginBottom: "24px" }}>
                     <li>
-                      <Body2 color="gray500" style={{ alignSelf: "flex-start" }}>분석 핵심 가치</Body2>
+                      <Body2
+                        color="gray500"
+                        style={{ alignSelf: "flex-start" }}
+                      >
+                        분석 핵심 가치
+                      </Body2>
                       <div>
                         <Body2 color="gray500" align="left">
-                          {Array.isArray(targetCustomers) && targetCustomers.length > 0
+                          {Array.isArray(targetCustomers) &&
+                          targetCustomers.length > 0
                             ? targetCustomers
-                                .filter(customer => customer.trim() !== "")
+                                .filter((customer) => customer.trim() !== "")
                                 .map((customer) => `#${customer}`)
                                 .join(" ")
                             : "No customers available"}
@@ -1451,7 +1463,8 @@ setSelectedPersonasSaas(selectedIndices);
                       )}
                       {selectedPersonasSaas ? (
                         <PersonaGroup>
-                          {Array.isArray(selectedPersonasSaas) && selectedPersonasSaas.length > 0 ? (
+                          {Array.isArray(selectedPersonasSaas) &&
+                          selectedPersonasSaas.length > 0 ? (
                             <>
                               {selectedPersonasSaas.length > 3 && (
                                 <span>+{selectedPersonasSaas.length - 3}</span>
@@ -1469,7 +1482,8 @@ setSelectedPersonasSaas(selectedIndices);
                             </>
                           ) : (
                             <Body2 color="gray300">
-                              아래 리스트에서 페르소나를 선택해주세요 (1명 선택가능)
+                              아래 리스트에서 페르소나를 선택해주세요 (1명
+                              선택가능)
                             </Body2>
                           )}
                         </PersonaGroup>
@@ -1487,10 +1501,10 @@ setSelectedPersonasSaas(selectedIndices);
                     selectedPersonaButtons={selectedPersonaButtons}
                     handlePersonaButtonClick={handlePersonaButtonClick}
                     onNavigate={navigate}
-                    onPersonaSelect={(id) => handlePersonaSelectionChange(id)}
+                    onPersonaSelect={(_id) => handlePersonaSelectionChange(_id)}
                   />
                 </div>
-{/* 
+                {/* 
                 <Button
                   Other
                   Primary
@@ -1509,7 +1523,7 @@ setSelectedPersonasSaas(selectedIndices);
 
                 <BottomBar W100>
                   <Body2 color="gray800">
-                    아이디어 도출을 원하는 페르소나를 선택해주세요 
+                    아이디어 도출을 원하는 페르소나를 선택해주세요
                     {/* ({selectedPersonasSaas.length}/5) */}
                   </Body2>
                   <Button
@@ -1547,14 +1561,17 @@ setSelectedPersonasSaas(selectedIndices);
 
                 <div className="content">
                   <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                    {Array.isArray(ideaGeneratorInfo.coreValue) && ideaGeneratorInfo.coreValue.length > 0 ? (
+                    {Array.isArray(ideaGeneratorInfo.coreValue) &&
+                    ideaGeneratorInfo.coreValue.length > 0 ? (
                       ideaGeneratorInfo.coreValue.map((coreValue, index) => (
                         <MoleculeIdeaGeneratorCard2
                           key={index}
                           id={index}
                           coreValue={coreValue}
                           status={
-                            Array.isArray(ideaGeneratorIdea) && ideaGeneratorIdea.length === ideaGeneratorInfo.coreValue.length
+                            Array.isArray(ideaGeneratorIdea) &&
+                            ideaGeneratorIdea.length ===
+                              ideaGeneratorInfo.coreValue.length
                               ? "completed"
                               : cardStatuses[index]
                           }
