@@ -470,6 +470,24 @@ export const TabButtonType5 = styled(TabButton)`
     }
   }
 
+  ${({ Num3 }) =>
+    Num3 &&
+    css`
+      + button {
+        padding-left: 170px;
+
+        &:before {
+          left: 55px;
+          width: 64px;
+        }
+
+        &:after {
+          left: 110px;
+        }
+      }
+    `
+  }
+
   ${({ isActive }) =>
     isActive &&
     css`
