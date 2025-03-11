@@ -69,6 +69,13 @@ const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
     }
   };
 
+  // 랜덤 썸네일 이미지를 가져오는 함수
+  const getRandomThumbnail = () => {
+    const randomNum = Math.floor(Math.random() * 20) + 1;
+    const thumbnailKey = `ProjectThumbnail${String(randomNum).padStart(2, '0')}`;
+    return images[thumbnailKey];
+  };
+
   return (
     <ProjectItem
       NoData={isNoData}
@@ -78,7 +85,7 @@ const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
       {!isNoData ? (
         <>
           <div className="thumbnail">
-            <img src={project?.thumbnail || images.ProjectThumbnail01} alt="" />
+            <img src={project?.thumbnail || getRandomThumbnail()} alt="" />
           </div>
           <div className="content">
             <div className="info">

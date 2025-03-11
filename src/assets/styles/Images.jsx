@@ -315,6 +315,25 @@ import ImagePrimary from "../images/image-primary.svg";
 
 import ProjectThumbnail01 from "../images/project-thumbnail01.jpg";
 import ProjectThumbnail02 from "../images/project-thumbnail02.jpg";
+import ProjectThumbnail03 from "../images/project-thumbnail03.jpg";
+import ProjectThumbnail04 from "../images/project-thumbnail04.jpg";
+import ProjectThumbnail05 from "../images/project-thumbnail05.jpg";
+import ProjectThumbnail06 from "../images/project-thumbnail06.jpg";
+import ProjectThumbnail07 from "../images/project-thumbnail07.jpg";
+import ProjectThumbnail08 from "../images/project-thumbnail08.jpg";
+import ProjectThumbnail09 from "../images/project-thumbnail09.jpg";
+import ProjectThumbnail10 from "../images/project-thumbnail10.jpg";
+import ProjectThumbnail11 from "../images/project-thumbnail11.jpg";
+import ProjectThumbnail12 from "../images/project-thumbnail12.jpg";
+import ProjectThumbnail13 from "../images/project-thumbnail13.jpg";
+import ProjectThumbnail14 from "../images/project-thumbnail14.jpg";
+import ProjectThumbnail15 from "../images/project-thumbnail15.jpg";
+import ProjectThumbnail16 from "../images/project-thumbnail16.jpg";
+import ProjectThumbnail17 from "../images/project-thumbnail17.jpg";
+import ProjectThumbnail18 from "../images/project-thumbnail18.jpg";
+import ProjectThumbnail19 from "../images/project-thumbnail19.jpg";
+import ProjectThumbnail20 from "../images/project-thumbnail20.jpg";
+
 
 import Tools from "../images/tools.svg";
 
@@ -648,6 +667,24 @@ const images = {
 
   ProjectThumbnail01,
   ProjectThumbnail02,
+  ProjectThumbnail03,
+  ProjectThumbnail04,
+  ProjectThumbnail05,
+  ProjectThumbnail06,
+  ProjectThumbnail07,
+  ProjectThumbnail08,
+  ProjectThumbnail09,
+  ProjectThumbnail10,
+  ProjectThumbnail11,
+  ProjectThumbnail12,
+  ProjectThumbnail13,
+  ProjectThumbnail14,
+  ProjectThumbnail15,
+  ProjectThumbnail16,
+  ProjectThumbnail17,
+  ProjectThumbnail18,
+  ProjectThumbnail19,
+  ProjectThumbnail20,
 
   Tools,
 
