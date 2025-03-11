@@ -236,6 +236,10 @@ const PageIdeaGenerator = () => {
 
         // 페르소나 설정 (Step 2)
         if (ideaGeneratorSelectedPersona && personaListSaas?.length > 0) {
+          console.log(
+            "ideaGeneratorSelectedPersona",
+            ideaGeneratorSelectedPersona
+          );
           // 저장된 페르소나의 personaName과 일치하는 personaListSaas의 페르소나를 찾아 _id 값을 가져옵니다
           const savedPersonaNames = Array.isArray(ideaGeneratorSelectedPersona)
             ? ideaGeneratorSelectedPersona.map((persona) => persona.personaName)
@@ -461,7 +465,7 @@ const PageIdeaGenerator = () => {
           const businessData = {
             business: ideaGeneratorInfo?.business || "",
             core_value: [ideaGeneratorInfo?.coreValue?.[index] || ""],
-            target_list: selectedCustomers,
+            core_target: selectedCustomers,
           };
 
           setIdeaGeneratorSelectedPersona(selectedCustomers);
