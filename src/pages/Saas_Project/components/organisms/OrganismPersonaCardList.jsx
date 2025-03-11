@@ -309,7 +309,7 @@ const OrganismPersonaCardList = ({
                 </StarButtonStyled>
               </div>
 
-              <div>
+              <div style={{ flex: "1" }}>
                 <StyledButton
                   Medium
                   Outline
@@ -423,7 +423,7 @@ const OrganismPersonaCardList = ({
 export default OrganismPersonaCardList;
 
 const StyledButton = styled(Button)`
-  min-width: 82px;
+  flex-grow: 1;
 `;
 
 const StarButtonStyled = styled.button`

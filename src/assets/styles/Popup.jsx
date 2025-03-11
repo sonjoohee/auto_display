@@ -337,13 +337,19 @@ export const ModalPopup = styled(AlertPopup)`
   gap: ${(props) => (props.TitleBorder ? "20px" : "32px")};
   // max-width: 800px;
   height: ${(props) => (props.Wide1000 ? "100%" : "auto")};
-  max-height: ${(props) => (props.Wide1000 ? "800px" : "auto")};
+  max-height: ${(props) => (
+    props.Wide1000 
+    ? "800px" 
+    : "auto"
+  )};
   max-width: ${(props) =>
     props.Wide
-      ? "820px"
-      : props.Wide1000
-      ? "1000px"
-      : "583px"};
+    ? "820px"
+    : props.Wide880
+    ? "880px"
+    : props.Wide1000
+    ? "1000px"
+    : "583px"};
   padding: 32px;
 `;
 

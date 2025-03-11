@@ -14,10 +14,14 @@ import {
   ContentsWrap,
   MainContent,
   ProjectTag,
-  Table,
+  ListBoxGroup,
   TableHeader,
   TableBody,
 } from "../../../assets/styles/BusinessAnalysisStyle";
+import { 
+  FormBox,
+  CustomTextarea,
+} from "../../../assets/styles/InputStyle";
 import images from "../../../assets/styles/Images";
 import {
   H1,
@@ -51,6 +55,8 @@ const PageDashBoard = () => {
   const [accessStateSaas, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
   const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
   const project = projectSaas;
+
+  const [showPopup, setShowPopup] = useState(false);
 
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [toolListSaas, setToolListSaas] = useAtom(TOOL_LIST_SAAS);
@@ -344,6 +350,14 @@ const PageDashBoard = () => {
     };
   }, [navigate]);
 
+  const [selectedValues, setSelectedValues] = useState({
+    business: "",
+    industry: "",
+    country: "",
+  });
+  
+  
+
   return (
     <>
       <ContentsWrap>
@@ -379,7 +393,12 @@ const PageDashBoard = () => {
                     </TagWrap>
                   </div>
 
-                  <Button ExLarge PrimaryLightest Fill>
+                  <Button 
+                    ExLarge 
+                    PrimaryLightest 
+                    Fill
+                    onClick={() => setShowPopup(true)}
+                  >
                     자세히보기
                     <images.ChevronRight
                       width="14px"
@@ -608,11 +627,80 @@ const PageDashBoard = () => {
           </DashBoardWrap>
         </MainContent>
       </ContentsWrap>
+
+      {showPopup && (
+        <PopupWrap
+          Wide
+          TitleFlex
+          title={`${project?.projectTitle} 상세 정보`}
+          buttonType="Fill"
+          isModal={true}
+          onClose={() => setShowPopup(false)}
+          body={
+            <div style={{ gap: "40px" }}>
+              <SummaryWrap>
+                <Body1 color="gray700" align="left">
+                  프로젝트 개요
+                </Body1>
+                <ListBoxGroup Small>
+                  <li>
+                    <Body2 color="gray500">사업모델</Body2>
+                    <Body2 color="gray800">B2C</Body2>
+                  </li>
+                  <li>
+                    <Body2 color="gray500">업종</Body2>
+                    <Body2 color="gray800">하드웨어 디바이스 분야</Body2>
+                  </li>
+                  <li>
+                    <Body2 color="gray500">타겟 국가</Body2>
+                    <Body2 color="gray800">대한민국</Body2>
+                  </li>
+                  <li>
+                    <Body2 color="gray500">업로드 파일</Body2>
+                    <Body2 color="gray800">제품 디자인에서 감성의 차원과 표현요소.pdf</Body2>
+                    <Button Large Outline Fill style={{ marginLeft: "auto" }}>파일보기</Button>
+                  </li>
+                </ListBoxGroup>
+              </SummaryWrap>
+
+              <SummaryWrap>
+                <Body1 color="gray700" align="left">프로젝트 개요</Body1>
+                <ListBoxGroup>
+                  <Body2 color="gray800" align="left">
+                    {project?.projectAnalysis?.business_analysis}
+                  </Body2>
+                </ListBoxGroup>
+              </SummaryWrap>
+
+              <SummaryWrap>
+                <Body1 color="gray700" align="left">주요 타겟 고객군</Body1>
+                <ListBoxGroup>
+                  <Body2 color="gray800" align="left">
+                    {project?.projectAnalysis?.target_customer}
+                  </Body2>
+                </ListBoxGroup>
+              </SummaryWrap>
+            </div>
+          }
+        />
+      )}
     </>
   );
 };
 
 export default PageDashBoard;
+
+const SummaryWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+`;
 
 const DashBoardWrap = styled.div`
   width: 100%;

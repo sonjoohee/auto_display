@@ -2551,6 +2551,7 @@ export const AiPersonaCardButtonWrap = styled.div`
   align-items: center;
   justify-content: space-between;
   // gap: 12px;
+  gap: 4px;
   width: 100%;
   margin-top: auto;
 
@@ -4311,6 +4312,22 @@ export const TableBody = styled.tbody`
     css`
       td {
         padding: 20px;
+      }
+    `}
+
+  ${(props) =>
+    props.Border &&
+    css`
+      border-radius: 0 0 10px 10px;
+      border: 1px solid ${palette.outlineGray};
+      border-top: 0;
+
+      tr {
+        border-top: 0;
+
+        + tr {
+          border-top: 1px solid ${palette.outlineGray};
+        }
       }
     `}
 `;
