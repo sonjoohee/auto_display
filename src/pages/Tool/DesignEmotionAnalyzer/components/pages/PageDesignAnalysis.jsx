@@ -740,6 +740,7 @@ const PageDesignAnalysis = () => {
           <DesignAnalysisWrap>
             <TabWrapType5>
               <TabButtonType5
+                Num3
                 isActive={activeTab >= 1}
                 onClick={() => setActiveTab(1)}
               >
@@ -751,6 +752,7 @@ const PageDesignAnalysis = () => {
                 </div>
               </TabButtonType5>
               <TabButtonType5
+                Num3
                 isActive={activeTab >= 2}
                 onClick={() => completedSteps.includes(1) && setActiveTab(2)}
                 disabled={!completedSteps.includes(1)}
@@ -766,6 +768,7 @@ const PageDesignAnalysis = () => {
                 </div>
               </TabButtonType5>
               <TabButtonType5
+                Num3
                 isActive={activeTab >= 3}
                 onClick={() => completedSteps.includes(2) && setActiveTab(3)}
                 disabled={!completedSteps.includes(2)}

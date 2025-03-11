@@ -2838,6 +2838,12 @@ export const BoxWrap = styled.div`
     css`
       gap: 10px !important;
     `}
+
+  ${(props) =>
+    (props.Column && props.NoneV) &&
+    css`
+      gap: 10px !important;
+    `}
 `;
 
 export const InterviewPopup = styled.div`
