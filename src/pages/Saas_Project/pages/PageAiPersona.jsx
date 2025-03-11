@@ -1118,7 +1118,7 @@ const PageAiPersona = () => {
                     </TabWrapType2>
 
                     {activeTab2 === "lifestyle" && (
-                      <TabContent>
+                      <TabContent style={{ height: "470px" }}>
                         <Body3 color="gray700">
                           {currentPersona.lifestyle ||
                             "학업과 여가를 균형 있게 추구하며, 문화적 호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다."}
@@ -1126,7 +1126,7 @@ const PageAiPersona = () => {
                       </TabContent>
                     )}
                     {activeTab2 === "interests" && (
-                      <TabContent>
+                      <TabContent style={{ height: "470px" }}>
                         <Body3 color="gray700">
                           {currentPersona.interests ||
                             "학업과 여가를 균형 있게 추구하며, 문화적 호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다."}
@@ -1134,7 +1134,7 @@ const PageAiPersona = () => {
                       </TabContent>
                     )}
                     {activeTab2 === "consumption" && (
-                      <TabContent>
+                      <TabContent style={{ height: "470px" }}>
                         <Body3 color="gray700">
                           {currentPersona.consumptionPattern ||
                             "학업과 여가를 균형 있게 추구하며, 문화적 호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다."}
@@ -1180,7 +1180,7 @@ const PageAiPersona = () => {
                             </SelectBoxTitle>
                           </SelectBox>
                         </BoxWrap>
-                        <TabContent>
+                        <TabContent style={{ height: "358px" }}>
                           <Body3 color="gray700">
                             {currentPersona.userExperience ||
                               "학업과 여가를 균형 있게 추구하며, 문화적 호기심이 많습니다. 대학 근처의 문화 공간을 자주 방문하며, 예술 전시와 독립영화를 감상하거나 워크숍에 참여합니다."}
@@ -2177,6 +2177,7 @@ const PageAiPersona = () => {
           }}
         />
       )}
+
       {showRequestPopup &&
         (eventState ? (
           <PopupWrap
