@@ -544,46 +544,24 @@ const PageCustomerValueAnalyzer = () => {
     try {
       setIsLoading(true);
 
-      const filteredTargetCustomers = selectedPersonasSaas.flatMap(
-        (personaId) => {
-          const prefix = personaId.split("_")[0]; // 접두사 추출 (예: 'macro_segment')
-          return personaListSaas
-            .map((persona, index) => {
-              // personaType이 접두사와 일치하는지 확인
-              if (persona.personaType.startsWith(prefix)) {
-                return persona; // 인덱스 대신 persona 정보를 반환
-              }
-              return null; // 일치하지 않으면 null 반환
-            })
-            .filter((persona) => persona !== null); // null 값을 필터링
-        }
-      );
-
-      console.log("filteredTargetCustomers", filteredTargetCustomers);
-
-      const selectedCustomers = selectedPersonasSaas
-        .map((personaId) => {
-          const index = parseInt(personaId.split("persona")[1], 10); // 숫자 추출
-          return filteredTargetCustomers[index]; // 필요한 필드만 추출
+      // 선택된 페르소나 ID(_id)를 기반으로 실제 페르소나 객체를 찾습니다
+      const selectedPersonaObjects = selectedPersonasSaas
+        .map((_id) => {
+          // _id를 사용하여 해당 페르소나 객체를 찾습니다
+          return personaListSaas.find((persona) => persona._id === _id);
         })
-        .filter((customer) => customer) // undefined 필터링
-        .map(
-          ({
-            personaName,
-            personaCharacteristics,
-            age,
-            gender,
-            job,
-            keywords,
-          }) => ({
-            personaName,
-            personaCharacteristics,
-            age,
-            gender,
-            job,
-            keywords,
-          })
-        );
+        .filter((persona) => persona !== undefined);
+
+      // 선택된 페르소나 객체에서 필요한 필드만 추출합니다
+      const selectedCustomers = selectedPersonaObjects.map((persona) => ({
+        personaName: persona.personaName || "",
+        personaCharacteristics: persona.personaCharacteristics || "",
+        age: persona.age || "",
+        gender: persona.gender || "",
+        job: persona.job || "",
+        keywords: persona.keywords || [],
+      }));
+
       console.log("selectedCustomers", selectedCustomers);
 
       const businessData = {
@@ -735,14 +713,16 @@ const PageCustomerValueAnalyzer = () => {
     }
   };
 
-  const handlePersonaSelectionChange = (index) => {
+  const handlePersonaSelectionChange = (_id) => {
+    console.log("🚀 ~ handlePersonaSelectionChange ~ _id:", _id);
     // if (toolStep >= 2) return;
     setSelectedPersonasSaas((prev) => {
-      if (prev.includes(index)) {
-        return prev.filter((id) => id !== index);
+      console.log("🚀 ~ setSelectedPersonasSaas ~ prev:", prev);
+      if (prev.includes(_id)) {
+        return prev.filter((id) => id !== _id);
       } else {
         if (prev.length >= 5) return prev;
-        return [...prev, index];
+        return [...prev, _id];
       }
     });
   };
@@ -1233,7 +1213,10 @@ const PageCustomerValueAnalyzer = () => {
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
-    if (selectedPersonasSaas.length >= 5 && !selectedPersonaButtons[personaId]) {
+    if (
+      selectedPersonasSaas.length >= 5 &&
+      !selectedPersonaButtons[personaId]
+    ) {
       return; // 5명 이상 선택할 수 없도록 방지
     }
     setSelectedPersonaButtons((prev) => ({
@@ -1297,8 +1280,15 @@ const PageCustomerValueAnalyzer = () => {
               <TabButtonType5
                 isActive={activeTab >= 1}
                 onClick={() => setActiveTab(1)}
-                disabled={isLoading || Object.values(cardStatuses).some(status => status !== "completed") || 
-                  Object.values(cardStatusesFactor).some(status => status !== "completed") }
+                disabled={
+                  isLoading ||
+                  Object.values(cardStatuses).some(
+                    (status) => status !== "completed"
+                  ) ||
+                  Object.values(cardStatusesFactor).some(
+                    (status) => status !== "completed"
+                  )
+                }
               >
                 <span>01</span>
                 <div className="text">
@@ -1310,9 +1300,15 @@ const PageCustomerValueAnalyzer = () => {
               <TabButtonType5
                 isActive={activeTab >= 2}
                 onClick={() => completedSteps.includes(1) && setActiveTab(2)}
-                disabled={!completedSteps.includes(1)|| 
-                  isLoading || Object.values(cardStatuses).some(status => status !== "completed") ||
-                  Object.values(cardStatusesFactor).some(status => status !== "completed")
+                disabled={
+                  !completedSteps.includes(1) ||
+                  isLoading ||
+                  Object.values(cardStatuses).some(
+                    (status) => status !== "completed"
+                  ) ||
+                  Object.values(cardStatusesFactor).some(
+                    (status) => status !== "completed"
+                  )
                 }
               >
                 <span>02</span>
@@ -1328,8 +1324,17 @@ const PageCustomerValueAnalyzer = () => {
               <TabButtonType5
                 isActive={activeTab >= 3}
                 onClick={() => completedSteps.includes(2) && setActiveTab(3)}
-                disabled={!completedSteps.includes(2)|| isLoading || Object.values(cardStatuses).some(status => status !== "completed" ||
-                  Object.values(cardStatusesFactor).some(status => status !== "completed") ) }
+                disabled={
+                  !completedSteps.includes(2) ||
+                  isLoading ||
+                  Object.values(cardStatuses).some(
+                    (status) =>
+                      status !== "completed" ||
+                      Object.values(cardStatusesFactor).some(
+                        (status) => status !== "completed"
+                      )
+                  )
+                }
               >
                 <span>03</span>
                 <div className="text">
@@ -1344,8 +1349,17 @@ const PageCustomerValueAnalyzer = () => {
               <TabButtonType5
                 isActive={activeTab >= 4}
                 onClick={() => completedSteps.includes(3) && setActiveTab(4)}
-                disabled={!completedSteps.includes(3)|| isLoading || Object.values(cardStatuses).some(status => status !== "completed" ||
-                  Object.values(cardStatusesFactor).some(status => status !== "completed") ) }
+                disabled={
+                  !completedSteps.includes(3) ||
+                  isLoading ||
+                  Object.values(cardStatuses).some(
+                    (status) =>
+                      status !== "completed" ||
+                      Object.values(cardStatusesFactor).some(
+                        (status) => status !== "completed"
+                      )
+                  )
+                }
               >
                 <span>04</span>
                 <div className="text">
@@ -1385,22 +1399,25 @@ const PageCustomerValueAnalyzer = () => {
                           <Body2 color="gray500">페르소나 선택</Body2>
                           {selectedPersonasSaas.length === 0 ? (
                             <Body2 color="gray300">
-                              아래 리스트에서 페르소나를 선택해 주세요 (5명 선택 가능)
+                              아래 리스트에서 페르소나를 선택해 주세요 (5명 선택
+                              가능)
                             </Body2>
                           ) : (
                             <PersonaGroup>
                               {Array.isArray(selectedPersonasSaas) ? (
                                 <>
                                   {selectedPersonasSaas.length > 3 && (
-                                    <span>+{selectedPersonasSaas.length - 3}</span>
+                                    <span>
+                                      +{selectedPersonasSaas.length - 3}
+                                    </span>
                                   )}
                                   {selectedPersonasSaas
                                     .slice(0, 3)
                                     .map((persona, index) => (
                                       <Persona key={index} size="Small" Round>
                                         <img
-                                          src={`/ai_person/${persona.personaImg}.png`}
-                                          alt={persona.persona}
+                                          src={`/Persona/${persona.imageKey}.png`}
+                                          alt={persona.personaName}
                                         />
                                       </Persona>
                                     ))}
@@ -1408,8 +1425,8 @@ const PageCustomerValueAnalyzer = () => {
                               ) : (
                                 <Persona size="Small" Round>
                                   <img
-                                    src={`/ai_person/${selectedPersonasSaas.personaImg}.png`}
-                                    alt={selectedPersonasSaas.persona}
+                                    src={`/Persona/${selectedPersonasSaas.imageKey}.png`}
+                                    alt={selectedPersonasSaas.personaName}
                                   />
                                 </Persona>
                               )}
@@ -1531,8 +1548,8 @@ const PageCustomerValueAnalyzer = () => {
                         selectedPersonaButtons={selectedPersonaButtons}
                         handlePersonaButtonClick={handlePersonaButtonClick}
                         onNavigate={navigate}
-                        onPersonaSelect={(id) =>
-                          handlePersonaSelectionChange(id)
+                        onPersonaSelect={(_id) =>
+                          handlePersonaSelectionChange(_id)
                         }
                       />
                     </div>
@@ -1551,35 +1568,37 @@ const PageCustomerValueAnalyzer = () => {
                       다음
                     </Button> */}
 
-                <BottomBar W100>
-                    <Body2
-                      color={
-                        selectedPersonasSaas.length === 0 ? "gray300" : "gray800"
-                      }
-                    >
-                      고객 여정 분석을 원하는 페르소나를 선택해주세요 (
-                      {selectedPersonasSaas.length}/5)
-                    </Body2>
-                    <Button
-                      Large
-                      Primary
-                      Round
-                      Fill
-                      disabled={
-                        selectedPurposes.analysisScope === "" ||
-                        getSelectedPersonaCount() === 0 ||
-                        toolStep >= 1
-                      }
-                      onClick={() => handleSubmitBusinessInfo()}
-                    >
-                      다음
-                      <images.ChevronRight
-                        width="20"
-                        height="20"
-                        color={palette.white}
-                      />
-                    </Button>
-                  </BottomBar>
+                    <BottomBar W100>
+                      <Body2
+                        color={
+                          selectedPersonasSaas.length === 0
+                            ? "gray300"
+                            : "gray800"
+                        }
+                      >
+                        고객 여정 분석을 원하는 페르소나를 선택해주세요 (
+                        {selectedPersonasSaas.length}/5)
+                      </Body2>
+                      <Button
+                        Large
+                        Primary
+                        Round
+                        Fill
+                        disabled={
+                          selectedPurposes.analysisScope === "" ||
+                          getSelectedPersonaCount() === 0 ||
+                          toolStep >= 1
+                        }
+                        onClick={() => handleSubmitBusinessInfo()}
+                      >
+                        다음
+                        <images.ChevronRight
+                          width="20"
+                          height="20"
+                          color={palette.white}
+                        />
+                      </Button>
+                    </BottomBar>
                   </>
                 )}
               </TabContent5>
@@ -2219,4 +2238,3 @@ const Tooltip = styled.div`
   transition: opacity 0.2s;
   z-index: 10;
 `;
-
