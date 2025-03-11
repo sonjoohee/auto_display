@@ -29,6 +29,8 @@ const PopupWrap = ({
   isRadioSelected,
   isFormValid,
   Wide,
+  Wide455,
+  Wide880,
   Wide1000,
   TitleFlex,
   TitleBorder,
@@ -157,7 +159,7 @@ const PopupWrap = ({
   return (
     <PopupBox>
       {isModal ? (
-        <ModalPopup Wide={Wide} Wide1000={Wide1000} TitleBorder={TitleBorder}>
+        <ModalPopup Wide={Wide} Wide455={Wide455} Wide880={Wide880} Wide1000={Wide1000} TitleBorder={TitleBorder}>
           <Header>
             {title}
             <CloseButton TitleFlex={TitleFlex} onClick={handleClose} />
@@ -334,7 +336,13 @@ export const AlertPopup = styled.div`
 `;
 
 export const ModalPopup = styled(AlertPopup)`
-  gap: ${(props) => (props.TitleBorder ? "20px" : "32px")};
+  gap: ${(props) => (
+    props.TitleBorder 
+    ? "20px" 
+    : props.Wide455
+    ? "20px"
+    : "32px"
+  )};
   // max-width: 800px;
   height: ${(props) => (props.Wide1000 ? "100%" : "auto")};
   max-height: ${(props) => (
@@ -345,12 +353,14 @@ export const ModalPopup = styled(AlertPopup)`
   max-width: ${(props) =>
     props.Wide
     ? "820px"
+    : props.Wide455
+    ? "455px"
     : props.Wide880
     ? "880px"
     : props.Wide1000
     ? "1000px"
     : "583px"};
-  padding: 32px;
+  padding: ${(props) => (props.Wide455 ? "32px 24px 20px" : "32px")};
 `;
 
 export const Header = styled.div`
@@ -585,6 +595,45 @@ export const Body = styled.div`
 
     .check-circle {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+  }
+
+  .delete-info {
+    padding: 8px 16px;
+    margin-top: auto;
+    background-color: ${palette.primaryLightest};
+  }
+
+  .deleted-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+    height: 460px;
+    overflow-y: auto;
+
+    > div {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      svg {
+        align-self: flex-start;
+        flex-shrink: 0;
+        margin-top: 5px;
+      }
+
+      .button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+
+        span {
+          cursor: pointer;
+        }
+      }
     }
   }
 `;

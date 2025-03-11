@@ -42,6 +42,7 @@ const PageStorageBox = () => {
   const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
   const [toolListSaas, setToolListSaas] = useAtom(TOOL_LIST_SAAS);
   const project = projectSaas;
+  const [isTrashModalOpen, setIsTrashModalOpen] = useState(false);
 
   useEffect(() => {
     const loadToolList = async () => {
@@ -138,13 +139,18 @@ const PageStorageBox = () => {
         <MainContent Wide1030>
           <StorageBoxWrap>
             <StorageBoxTitle>
-              <H1 color="gray800" align="left">
-                Knowledge Archive
-              </H1>
-              <div style={{ height: "10px" }}></div>
-              <Body3 color="gray700" align="left">
-                해당 서비스를 통해 수집한 리포트들을 한곳에 모아두었어요
-              </Body3>
+              <div>
+                <H1 color="gray800" align="left">
+                  Knowledge Archive
+                </H1>
+                <Body3 color="gray700" align="left">
+                  해당 서비스를 통해 수집한 리포트들을 한곳에 모아두었어요
+                </Body3>
+              </div>
+              <Button Outline onClick={() => setIsTrashModalOpen(true)}>
+                <img src={images.Trash} alt="" />
+                <Caption1 color="gray700">임시 삭제함</Caption1>
+              </Button>
             </StorageBoxTitle>
 
             <TabWrapType4>
@@ -252,6 +258,50 @@ const PageStorageBox = () => {
           </StorageBoxWrap>
         </MainContent>
       </ContentsWrap>
+
+      {isTrashModalOpen && (
+        <PopupWrap 
+          Wide455
+          TitleFlex
+          title="임시 삭제함"
+          buttonType="Fill"
+          isModal={true}
+          onCancel={() => setIsTrashModalOpen(false)}
+          body={
+            <>
+              <div className="deleted-wrap">
+                <div>
+                  <images.GridCircle color={palette.gray700} width={12} height={12} />
+                  <div className="content">
+                    <Sub3 color="gray800" align="left">(리서치툴명) 총 8명의 페르소나 시나리오 분석</Sub3>
+                    <Caption1 color="gray500" align="left">삭제일 : 2025.01.24</Caption1>
+                  </div>
+                  <div className="button">
+                    <span><img src={images.ArrowReturn} alt="" /></span>
+                    <span><img src={images.Trash} alt="" /></span>
+                  </div>
+                </div>
+                
+                <div>
+                  <images.GridCircle color={palette.gray700} width={12} height={12} />
+                  <div className="content">
+                    <Sub3 color="gray800" align="left">(리서치툴명) 총 8명의 페르소나 시나리오 분석</Sub3>
+                    <Caption1 color="gray500" align="left">삭제일 : 2025.01.24</Caption1>
+                  </div>
+                  <div className="button">
+                    <span><img src={images.ArrowReturn} alt="" /></span>
+                    <span><img src={images.Trash} alt="" /></span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="delete-info">
+                <Caption1 color="primary">휴지통에 15일 이상 보관된 리포트는 자동으로 삭제됩니다.</Caption1>
+              </div>
+            </>
+          }
+        />
+      )}
     </>
   );
 };
@@ -269,7 +319,14 @@ const StorageBoxWrap = styled.div`
 
 const StorageBoxTitle = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 `;
 
 const DashBoardItem = styled.div`
