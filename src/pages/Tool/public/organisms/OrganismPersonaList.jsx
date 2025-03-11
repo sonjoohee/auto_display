@@ -209,15 +209,17 @@ const OrganismPersonaList = ({
             </ListBoxWrap>
 
             {/* My Persona 탭에서 데이터가 없을 때만 표시 */}
-            {activeTab === "my_persona" && 
-             !personaListSaas.some(persona => persona.favorite === true) && (
-              <BoxWrap NoData Border>
-                <img src={images.PeopleStarFillPrimary} alt="" />
-                <Body2 color="gray500" align="center !important">
-                  현재 요청된 My Persona가 없습니다<br />찜(북마크?)를 하시면 해당 페이지에서 확인 가능합니다
-                </Body2>
-              </BoxWrap>
-            )}
+            {activeTab === "my_persona" &&
+              !personaListSaas.some((persona) => persona.favorite === true) && (
+                <BoxWrap NoData Border>
+                  <img src={images.PeopleStarFillPrimary} alt="" />
+                  <Body2 color="gray500" align="center !important">
+                    현재 요청된 My Persona가 없습니다
+                    <br />
+                    찜(북마크?)를 하시면 해당 페이지에서 확인 가능합니다
+                  </Body2>
+                </BoxWrap>
+              )}
           </AiPersonaContent>
         </ToolPublicPersonaWrap>
       ) : (

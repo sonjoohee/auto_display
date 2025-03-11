@@ -210,7 +210,38 @@ import PersonaMen111 from "../images/Persona/PersonaMen111.png";
 import PersonaMen112 from "../images/Persona/PersonaMen112.png";
 import PersonaMen113 from "../images/Persona/PersonaMen113.png";
 import PersonaMen114 from "../images/Persona/PersonaMen114.png";
-
+import persona_m_10_01 from "../images/Persona/persona_m_10_01.png";
+import persona_m_10_02 from "../images/Persona/persona_m_10_02.png";
+import persona_m_20_01 from "../images/Persona/persona_m_20_01.png";
+import persona_m_20_02 from "../images/Persona/persona_m_20_02.png";
+import persona_m_30_01 from "../images/Persona/persona_m_30_01.png";
+import persona_m_30_02 from "../images/Persona/persona_m_30_02.png";
+import persona_m_40_01 from "../images/Persona/persona_m_40_01.png";
+import persona_m_40_02 from "../images/Persona/persona_m_40_02.png";
+import persona_m_50_01 from "../images/Persona/persona_m_50_01.png";
+import persona_m_50_02 from "../images/Persona/persona_m_50_02.png";
+import persona_m_60_01 from "../images/Persona/persona_m_60_01.png";
+import persona_m_60_02 from "../images/Persona/persona_m_60_02.png";
+import persona_m_70_01 from "../images/Persona/persona_m_70_01.png";
+import persona_m_70_02 from "../images/Persona/persona_m_70_02.png";
+import persona_m_80_01 from "../images/Persona/persona_m_80_01.png";
+import persona_m_80_02 from "../images/Persona/persona_m_80_02.png";
+import persona_f_10_01 from "../images/Persona/persona_f_10_01.png";
+import persona_f_10_02 from "../images/Persona/persona_f_10_02.png";
+import persona_f_20_01 from "../images/Persona/persona_f_20_01.png";
+import persona_f_20_02 from "../images/Persona/persona_f_20_02.png";
+import persona_f_30_01 from "../images/Persona/persona_f_30_01.png";
+import persona_f_30_02 from "../images/Persona/persona_f_30_02.png";
+import persona_f_40_01 from "../images/Persona/persona_f_40_01.png";
+import persona_f_40_02 from "../images/Persona/persona_f_40_02.png";
+import persona_f_50_01 from "../images/Persona/persona_f_50_01.png";
+import persona_f_50_02 from "../images/Persona/persona_f_50_02.png";
+import persona_f_60_01 from "../images/Persona/persona_f_60_01.png";
+import persona_f_60_02 from "../images/Persona/persona_f_60_02.png";
+import persona_f_70_01 from "../images/Persona/persona_f_70_01.png";
+import persona_f_70_02 from "../images/Persona/persona_f_70_02.png";
+import persona_f_80_01 from "../images/Persona/persona_f_80_01.png";
+import persona_f_80_02 from "../images/Persona/persona_f_80_02.png";
 
 import PersonaModer from "../images/Persona/PersonaModer.png";
 
@@ -428,7 +459,40 @@ const personaImages = {
   PersonaMen113,
   PersonaMen114,
 
+  persona_m_10_01,
+  persona_m_10_02,
+  persona_m_20_01,
+  persona_m_20_02,
+  persona_m_30_01,
+  persona_m_30_02,
+  persona_m_40_01,
+  persona_m_40_02,
+  persona_m_50_01,
+  persona_m_50_02,
+  persona_m_60_01,
+  persona_m_60_02,
+  persona_m_70_01,
+  persona_m_70_02,
+  persona_m_80_01,
+  persona_m_80_02,
+  persona_f_10_01,
+  persona_f_10_02,
+  persona_f_20_01,
+  persona_f_20_02,
+  persona_f_30_01,
+  persona_f_30_02,
+  persona_f_40_01,
+  persona_f_40_02,
+  persona_f_50_01,
+  persona_f_50_02,
+  persona_f_60_01,
+  persona_f_60_02,
+  persona_f_70_01,
+  persona_f_70_02,
+  persona_f_80_01,
+  persona_f_80_02,
+
   PersonaModer,
-}
+};
 
 export default personaImages;

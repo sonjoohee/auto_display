@@ -9,7 +9,6 @@ import {
   UniqueTag,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 
-
 const MoleculePersonaListItem = ({
   personaImage,
   personaTitle,
