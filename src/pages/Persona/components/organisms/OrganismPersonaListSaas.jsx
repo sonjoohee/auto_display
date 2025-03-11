@@ -268,7 +268,7 @@ const OrganismPersonaListSaas = ({
                   }
                   return persona?.personaType === activeTab;
                 })
-                // .filter((persona) => persona.status === "complete")
+                .filter((persona) => persona.status === "complete")
                 .map((persona, index) => (
                   // <MoleculePersonaSelectCard
                   //   interviewType={selectedInterviewType}
