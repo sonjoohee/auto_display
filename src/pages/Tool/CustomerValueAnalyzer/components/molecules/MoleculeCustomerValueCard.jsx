@@ -408,7 +408,7 @@ const MoleculeCustomerValueCard = ({
             <>
               {activeTabIndex === 0 && (
                 <BoxWrap>
-                  <ScrollContainer>
+                  <ScrollContainer onMouseDown={handleMouseDown}>
                     {journeyMapData?.journey_map_image || (
                       <div
                         className="mermaid"
@@ -459,6 +459,27 @@ const MoleculeCustomerValueCard = ({
         />
       );
     }
+  };
+
+  const handleMouseDown = (e) => {
+    const ele = e.currentTarget;
+    const startPos = {
+      left: ele.scrollLeft,
+      x: e.clientX,
+    };
+
+    const handleMouseMove = (e) => {
+      const dx = e.clientX - startPos.x;
+      ele.scrollLeft = startPos.left - dx;
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
   };
 
   return (
@@ -578,6 +599,12 @@ const ScrollContainer = styled.div`
   height: 400px;
   overflow-x: auto;
   overflow-y: hidden;
+  cursor: grab;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing;
+  }
 
   .mermaid {
     height: 100%;

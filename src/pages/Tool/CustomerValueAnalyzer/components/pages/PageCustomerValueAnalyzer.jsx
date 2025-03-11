@@ -226,6 +226,45 @@ const PageCustomerValueAnalyzer = () => {
             analysisScope: customerValueAnalyzerInfo?.analysisScope ?? "",
             customerList: customerValueAnalyzerInfo?.business ?? "",
           }));
+          setSelectedPersonasSaas(customerValueAnalyzerInfo?.targetList ?? []);
+
+          const savedPersonaNames = Array.isArray(customerValueAnalyzerInfo?.targetList ?? [])
+          ? customerValueAnalyzerInfo?.targetList?.map((persona) => persona?.personaName)
+          : [customerValueAnalyzerInfo?.targetList?.personaName];
+
+          const selectedPersonaIds = savedPersonaNames
+          ?.map((name) => {
+            const matchedPersona = personaListSaas?.find(
+              (persona) => persona?.personaName === name
+            );
+            return matchedPersona ? matchedPersona?._id : null;
+          })
+          .filter((id) => id !== null);
+
+        console.log("Selected Persona IDs:", selectedPersonaIds);
+
+        // 찾은 _id 값으로 selectedPersonasSaas 상태를 업데이트합니다
+        // setSelectedPersonasSaas(selectedPersonaIds);
+
+        // 선택된 페르소나 버튼 상태도 업데이트합니다
+        const newSelectedButtons = {};
+        selectedPersonaIds.forEach((id) => {
+          const matchedPersona = personaListSaas.find(
+            (persona) => persona._id === id
+          );
+          if (matchedPersona) {
+            const buttonId = `${matchedPersona.personaType}_${id}`;
+            newSelectedButtons[buttonId] = true;
+
+            // favorite가 true인 경우 my_persona 탭에서도 선택 상태로 설정
+            if (matchedPersona.favorite) {
+              newSelectedButtons[`my_persona_${id}`] = true;
+            }
+          }
+        });
+
+        setSelectedPersonaButtons(newSelectedButtons);
+        console.log("newSelectedButtons", newSelectedButtons);
         }
 
         // 완료된 단계 설정
@@ -525,12 +564,21 @@ const PageCustomerValueAnalyzer = () => {
         selectedPersonasSaas
       );
       // 선택된 페르소나 ID(_id)를 기반으로 실제 페르소나 객체를 찾습니다
-      const selectedPersonaObjects = selectedPersonasSaas
-        .map((persona) => {
-          console.log("🚀 ~ .map ~ _id:", persona);
-          // _id를 사용하여 해당 페르소나 객체를 찾습니다
-          return personaListSaas.find((persona) => persona === persona);
+      // const selectedPersonaObjects = selectedPersonasSaas
+      //   .map((persona) => {
+      //     console.log("🚀 ~ .map ~ _id:", persona);
+      //     // _id를 사용하여 해당 페르소나 객체를 찾습니다
+      //     return personaListSaas.find((persona) => persona === persona);
+      //   })
+      //   .filter((persona) => persona !== undefined);
+        const selectedPersonaObjects = selectedPersonasSaas
+        .map((selectedPersona) => {
+          // _id와 personaName을 사용하여 해당 페르소나 객체를 찾습니다
+          return personaListSaas.filter((persona) => 
+            persona._id === selectedPersona._id && persona.personaName === selectedPersona.personaName
+          );
         })
+        .flat() // 중첩 배열을 평탄화하여 모든 일치하는 페르소나 객체를 가져옵니다
         .filter((persona) => persona !== undefined);
 
       console.log(
@@ -539,12 +587,13 @@ const PageCustomerValueAnalyzer = () => {
       );
       // 선택된 페르소나 객체에서 필요한 필드만 추출합니다
       const selectedCustomers = selectedPersonaObjects.map((persona) => ({
-        personaName: persona.personaName || "",
-        personaCharacteristics: persona.personaCharacteristics || "",
-        age: persona.age || "",
-        gender: persona.gender || "",
-        job: persona.job || "",
-        keywords: persona.keywords || [],
+        personaName: persona?.personaName || "",
+        personaCharacteristics: persona?.personaCharacteristics || "",
+        age: persona?.age || "",
+        gender: persona?.gender || "",
+        job: persona?.job || "",
+        keywords: persona?.keywords || [],
+        imageKey: persona?.imageKey || "",
       }));
 
       console.log("selectedCustomers", selectedCustomers);
@@ -1389,7 +1438,8 @@ const PageCustomerValueAnalyzer = () => {
                             </Body2>
                           ) : (
                             <PersonaGroup>
-                              {Array.isArray(selectedPersonasSaas) ? (
+                            {Array.isArray(selectedPersonasSaas) &&
+                          selectedPersonasSaas.length > 0 ? (
                                 <>
                                   {selectedPersonasSaas.length > 3 && (
                                     <span>
@@ -1430,7 +1480,7 @@ const PageCustomerValueAnalyzer = () => {
                               }
                               None
                             >
-                              {selectedPurposes.analysisScope ? (
+                              {selectedPurposes?.analysisScope ? (
                                 <div
                                   style={{
                                     display: "flex",
@@ -1441,7 +1491,7 @@ const PageCustomerValueAnalyzer = () => {
                                 >
                                   <Body1 color="gray700" align="left">
                                     {
-                                      selectedPurposes.analysisScope.split(
+                                      selectedPurposes?.analysisScope?.split(
                                         "|"
                                       )[0]
                                     }{" "}
@@ -1449,7 +1499,7 @@ const PageCustomerValueAnalyzer = () => {
                                   </Body1>
                                   <Body2 color="gray700" align="left">
                                     {
-                                      selectedPurposes.analysisScope.split(
+                                      selectedPurposes?.analysisScope?.split(
                                         "|"
                                       )[1]
                                     }

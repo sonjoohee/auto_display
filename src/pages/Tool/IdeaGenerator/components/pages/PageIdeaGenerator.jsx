@@ -240,6 +240,7 @@ const PageIdeaGenerator = () => {
             "ideaGeneratorSelectedPersona",
             ideaGeneratorSelectedPersona
           );
+          setSelectedPersonasSaas(ideaGeneratorSelectedPersona);
           // 저장된 페르소나의 personaName과 일치하는 personaListSaas의 페르소나를 찾아 _id 값을 가져옵니다
           const savedPersonaNames = Array.isArray(ideaGeneratorSelectedPersona)
             ? ideaGeneratorSelectedPersona.map((persona) => persona.personaName)
@@ -258,7 +259,7 @@ const PageIdeaGenerator = () => {
           console.log("Selected Persona IDs:", selectedPersonaIds);
 
           // 찾은 _id 값으로 selectedPersonasSaas 상태를 업데이트합니다
-          setSelectedPersonasSaas(selectedPersonaIds);
+          // setSelectedPersonasSaas(selectedPersonaIds);
 
           // 선택된 페르소나 버튼 상태도 업데이트합니다
           const newSelectedButtons = {};
@@ -278,6 +279,7 @@ const PageIdeaGenerator = () => {
           });
 
           setSelectedPersonaButtons(newSelectedButtons);
+       
         }
 
         if (ideaGeneratorFinalReport?.clusters?.length > 0) {
@@ -443,13 +445,18 @@ const PageIdeaGenerator = () => {
           [index]: "loading",
         }));
 
-        // 선택된 페르소나 ID(_id)를 기반으로 실제 페르소나 객체를 찾습니다
+        // 선택된 페르소나 ID(_id)와 이름(personaName)을 기반으로 실제 페르소나 객체를 찾습니다
         const selectedPersonaObjects = selectedPersonasSaas
-          .map((persona) => {
-            // _id를 사용하여 해당 페르소나 객체를 찾습니다
-            return personaListSaas.find((persona) => persona === persona);
+          .map((selectedPersona) => {
+            // _id와 personaName을 사용하여 해당 페르소나 객체를 찾습니다
+            return personaListSaas.filter((persona) => 
+              persona._id === selectedPersona._id && persona.personaName === selectedPersona.personaName
+            );
           })
+          .flat() // 중첩 배열을 평탄화하여 모든 일치하는 페르소나 객체를 가져옵니다
           .filter((persona) => persona !== undefined);
+
+        console.log("selectedPersonaObjects", selectedPersonaObjects);
 
         // 선택된 페르소나 객체에서 필요한 필드만 추출합니다
         const selectedCustomers = selectedPersonaObjects.map((persona) => ({
@@ -459,6 +466,7 @@ const PageIdeaGenerator = () => {
           gender: persona.gender || "",
           job: persona.job || "",
           keywords: persona.keywords || [],
+          imageKey: persona.imageKey || "",
         }));
 
         try {
@@ -469,6 +477,15 @@ const PageIdeaGenerator = () => {
           };
 
           setIdeaGeneratorSelectedPersona(selectedCustomers);
+          console.log("selectedCustomers", selectedCustomers);
+
+          await updateToolOnServer(
+            toolId,
+            {
+              ideaGeneratorSelectedPersona: selectedCustomers,
+            },
+            isLoggedIn
+          );
 
           const response = await InterviewXIdeaGeneratorIdeaRequest(
             businessData,
