@@ -413,7 +413,7 @@ const PagePersona3Select = () => {
                                 .map((persona, index) => (
                                   <Persona key={index} size="Small" Round>
                                     <img
-                                      src={`/ai_person/${persona.personaImg}.png`}
+                                      src={personaImages[persona.imageKey]}
                                       alt={persona.persona}
                                     />
                                   </Persona>
@@ -422,7 +422,7 @@ const PagePersona3Select = () => {
                           ) : (
                             <Persona size="Small" Round>
                               <img
-                                src={`/ai_person/${selectedPersonas.personaImg}.png`}
+                                src={personaImages[selectedPersonas.imageKey]}
                                 alt={selectedPersonas.persona}
                               />
                             </Persona>
@@ -825,7 +825,7 @@ const PagePersona3Select = () => {
             }}
           />
         ))}
-        <div style={{height: "100px" }}></div>
+      <div style={{ height: "100px" }}></div>
     </>
   );
 };

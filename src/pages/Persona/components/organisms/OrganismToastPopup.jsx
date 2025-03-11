@@ -26,6 +26,7 @@ import {
   PROJECT_TOTAL_INFO,
   PROJECT_CREATE_INFO,
 } from "../../../AtomStates";
+import personaImages from "../../../../assets/styles/PersonaImages";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../molecules/MoleculeRecreate";
@@ -88,7 +89,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const [showRegenerateButton3, setShowRegenerateButton3] = useState(false);
 
   const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
-  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+  const [projectCreateInfo, setProjectCreateInfo] =
+    useAtom(PROJECT_CREATE_INFO);
 
   const axiosConfig = {
     timeout: 100000,
@@ -130,7 +132,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
             return {
               persona: persona,
-              personaImg: persona.personaImg,
+              imageKey: persona.imageKey,
               gender: gender,
               age: age,
               job: job,
@@ -622,7 +624,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             <TypeName>
               <Thumb>
                 <img
-                  src={`/ai_person/${answer.persona.personaImg}.png`}
+                  src={personaImages[answer.persona.imageKey]}
                   alt={answer.persona.persona}
                 />
               </Thumb>
@@ -648,9 +650,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             <TypeName>
               <Thumb>
                 <img
-                  src={`/ai_person/${
-                    personaList.selected[questionAnswers.length].personaImg
-                  }.png`}
+                  src={
+                    personaImages[
+                      personaList.selected[questionAnswers.length].imageKey
+                    ]
+                  }
                   alt={personaList.selected[questionAnswers.length].persona}
                 />
               </Thumb>
@@ -692,7 +696,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             <TypeName>
               <Thumb>
                 <img
-                  src={`/ai_person/${answer.persona.personaImg}.png`}
+                  src={personaImages[answer.persona.imageKey]}
                   alt={answer.persona.persona}
                 />
               </Thumb>
