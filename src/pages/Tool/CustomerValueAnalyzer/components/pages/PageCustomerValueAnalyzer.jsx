@@ -1383,14 +1383,18 @@ const PageCustomerValueAnalyzer = () => {
                       <ListBoxGroup style={{ marginBottom: "24px" }}>
                         <li>
                           <Body2 color="gray500">페르소나 선택</Body2>
-                          {selectedPersonas ? (
+                          {selectedPersonasSaas.length === 0 ? (
+                            <Body2 color="gray300">
+                              아래 리스트에서 페르소나를 선택해 주세요 (5명 선택 가능)
+                            </Body2>
+                          ) : (
                             <PersonaGroup>
-                              {Array.isArray(selectedPersonas) ? (
+                              {Array.isArray(selectedPersonasSaas) ? (
                                 <>
-                                  {selectedPersonas.length > 3 && (
-                                    <span>+{selectedPersonas.length - 3}</span>
+                                  {selectedPersonasSaas.length > 3 && (
+                                    <span>+{selectedPersonasSaas.length - 3}</span>
                                   )}
-                                  {selectedPersonas
+                                  {selectedPersonasSaas
                                     .slice(0, 3)
                                     .map((persona, index) => (
                                       <Persona key={index} size="Small" Round>
@@ -1404,17 +1408,12 @@ const PageCustomerValueAnalyzer = () => {
                               ) : (
                                 <Persona size="Small" Round>
                                   <img
-                                    src={`/ai_person/${selectedPersonas.personaImg}.png`}
-                                    alt={selectedPersonas.persona}
+                                    src={`/ai_person/${selectedPersonasSaas.personaImg}.png`}
+                                    alt={selectedPersonasSaas.persona}
                                   />
                                 </Persona>
                               )}
                             </PersonaGroup>
-                          ) : (
-                            <Body2 color="gray500">
-                              페르소나가 선택되지 않았습니다. 하단에서
-                              페르소나를 선택해 주세요!
-                            </Body2>
                           )}
                         </li>
                         <li>
@@ -1558,7 +1557,7 @@ const PageCustomerValueAnalyzer = () => {
                         selectedPersonasSaas.length === 0 ? "gray300" : "gray800"
                       }
                     >
-                      고객 여정 분석을 원하는는 페르소나를 선택해주세요 (
+                      고객 여정 분석을 원하는 페르소나를 선택해주세요 (
                       {selectedPersonasSaas.length}/5)
                     </Body2>
                     <Button

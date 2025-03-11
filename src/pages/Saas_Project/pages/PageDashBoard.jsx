@@ -635,7 +635,8 @@ const PageDashBoard = () => {
           title={`${project?.projectTitle} 상세 정보`}
           buttonType="Fill"
           isModal={true}
-          onClose={() => setShowPopup(false)}
+          onCancel={() => setShowPopup(false)}
+          // onClose={() => setShowPopup(false)}
           body={
             <div style={{ gap: "40px" }}>
               <SummaryWrap>
@@ -658,7 +659,7 @@ const PageDashBoard = () => {
                   <li>
                     <Body2 color="gray500">업로드 파일</Body2>
                     <Body2 color="gray800">제품 디자인에서 감성의 차원과 표현요소.pdf</Body2>
-                    <Button Large Outline Fill style={{ marginLeft: "auto" }}>파일보기</Button>
+                    {/* <Button Large Outline Fill style={{ marginLeft: "auto" }}>파일보기</Button> */}
                   </li>
                 </ListBoxGroup>
               </SummaryWrap>
@@ -667,7 +668,13 @@ const PageDashBoard = () => {
                 <Body1 color="gray700" align="left">프로젝트 개요</Body1>
                 <ListBoxGroup>
                   <Body2 color="gray800" align="left">
+                    {/* {project?.projectAnalysis?.business_analysis} */}
                     {project?.projectAnalysis?.business_analysis}
+                    {project?.projectAnalysis?.business_analysis &&
+                    project?.projectAnalysis?.file_analysis
+                      ? "\n"
+                      : ""}
+                    {project?.projectAnalysis?.file_analysis}
                   </Body2>
                 </ListBoxGroup>
               </SummaryWrap>

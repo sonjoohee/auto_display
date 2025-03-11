@@ -185,7 +185,7 @@ const OrganismPersonaList = ({
                       personaImages.PersonaWomen01
                     }
                     personaTitle={persona.personaName || ""}
-                    badgeType={persona.badgeType || ""}
+                    badgeType={persona.type || ""}
                     badgeText={persona.badgeText || ""}
                     personaId={persona.id || `persona${index}`}
                     isSelected={isPersonaSelectedInAnyTab(persona, index)}

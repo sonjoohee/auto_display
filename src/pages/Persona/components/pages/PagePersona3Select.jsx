@@ -492,7 +492,7 @@ const PagePersona3Select = () => {
                   selectedPersonas={selectedPersonas}
                   onPersonaSelect={setSelectedPersonas}
                 />
-                <OrganismPersonaListSaas
+                {/* <OrganismPersonaListSaas
                   personaListSaas={personaListSaas}
                   personaImages={personaImages}
                   selectedPersonaButtons={selectedPersonaButtons}
@@ -501,7 +501,7 @@ const PagePersona3Select = () => {
                   selectedPersonas={selectedPersonas}
                   onPersonaSelect={setSelectedPersonas}
                   interviewType={selectedInterviewType}
-                />
+                /> */}
               </div>
               <BottomBar W100>
                 <Body2 color="gray800">
