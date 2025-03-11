@@ -2780,8 +2780,10 @@ export const BoxWrap = styled.div`
   border-radius: 15px;
   border: ${(props) =>
     props.NoData
-      ? `1px dashed ${palette.outlineGray}`
-      : `1px solid ${palette.outlineGray}`};
+      ? `1px solid ${palette.outlineGray}`
+      : props.Border
+      ? `1px solid ${palette.outlineGray}`
+      : "1px solid ${palette.outlineGray}"};
 
   div,
   p,
