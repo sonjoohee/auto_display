@@ -5,10 +5,11 @@ import {
   AiPersonaCardListItem,
   AiPersonaCardButtonWrap,
   UniqueTag,
+  BoxWrap,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
+import { Body2 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import images from "../../../../assets/styles/Images";
-import OrganismEmptyPersona from "./OrganismEmptyPersona";
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import { useAtom } from "jotai";
@@ -271,69 +272,77 @@ const OrganismPersonaCardList = ({
 
   return (
     <>
-      <AiPersonaCardGroupWrap>
-        {filteredPersonaData.map((persona) => (
-          <AiPersonaCardListItem key={persona?._id}>
-            <div className="header">
-              <UniqueTag color={persona?.type || "default"} />
-              <div className="title">
-                <Body1 color="gray800">
-                  {persona?.personaName || "제목 없음"}
-                </Body1>
-                <div style={{ height: "44px" }}>
-                  <Sub3 color="gray700">#{persona?.gender || ""}</Sub3>
-                  <Sub3 color="gray700">#{persona?.age || ""}</Sub3>
-                  <Sub3 color="gray700">#{persona?.keywords[0] || ""}</Sub3>
-                  <Sub3 color="gray700">#{persona?.keywords[1] || ""}</Sub3>
+      {/* activeTab이 'my_persona'이고 filteredPersonaData가 비어있을 때만 BoxWrap 표시 */}
+      {activeTab === "my_persona" && (!filteredPersonaData || filteredPersonaData.length === 0) ? (
+        <BoxWrap NoData Border>
+          <img src={images.PeopleStarFillPrimary} alt="" />
+          <Body2 color="gray500" align="center !important">
+            현재 요청된 My Persona가 없습니다<br />찜(북마크)를 하시면 해당 페이지에서 확인 가능합니다
+          </Body2>
+        </BoxWrap>
+      ) : (
+        <AiPersonaCardGroupWrap>
+          {filteredPersonaData.map((persona) => (
+            <AiPersonaCardListItem key={persona?._id}>
+              <div className="header">
+                <UniqueTag color={persona?.type || "default"} />
+                <div className="title">
+                  <Body1 color="gray800">
+                    {persona?.personaName || "제목 없음"}
+                  </Body1>
+                  <div style={{ height: "44px" }}>
+                    <Sub3 color="gray700">#{persona?.gender || ""}</Sub3>
+                    <Sub3 color="gray700">#{persona?.age || ""}</Sub3>
+                    <Sub3 color="gray700">#{persona?.keywords[0] || ""}</Sub3>
+                    <Sub3 color="gray700">#{persona?.keywords[1] || ""}</Sub3>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="content">
-              <Sub3 color="gray700">
-                {persona?.personaCharacteristics || "설명 없음"}
-              </Sub3>
-            </div>
-
-            <AiPersonaCardButtonWrap>
-              <div>
-                <StarButtonStyled
-                  onClick={() => toggleFavorite(persona)}
-                  isStarred={persona?.favorite || false}
-                >
-                  {persona?.favorite ? (
-                    <img src={images?.StarFill || ""} alt="즐겨찾기 됨" />
-                  ) : (
-                    <img src={images?.Star || ""} alt="즐겨찾기" />
-                  )}
-                </StarButtonStyled>
+              <div className="content">
+                <Sub3 color="gray700">
+                  {persona?.personaCharacteristics || "설명 없음"}
+                </Sub3>
               </div>
 
-              <div style={{ flex: "1" }}>
-                <StyledButton
-                  Medium
-                  Outline
-                  onClick={() => setShowPopup(persona)}
-                >
-                  프로필
-                </StyledButton>
-                {!["request", "ing", "complete"].includes(persona?.status) && (
+              <AiPersonaCardButtonWrap>
+                <div>
+                  <StarButtonStyled
+                    onClick={() => toggleFavorite(persona)}
+                    isStarred={persona?.favorite || false}
+                  >
+                    {persona?.favorite ? (
+                      <img src={images?.StarFill || ""} alt="즐겨찾기 됨" />
+                    ) : (
+                      <img src={images?.Star || ""} alt="즐겨찾기" />
+                    )}
+                  </StarButtonStyled>
+                </div>
+
+                <div style={{ flex: "1" }}>
                   <StyledButton
                     Medium
-                    Primary
-                    Fill
+                    Outline
                     onClick={() => setShowPopup(persona)}
-                    // onClick={() => handleRequestPersona(persona)}
-                    // onClick={() => handleRequestClick(persona)}
                   >
-                    페르소나 생성
+                    프로필
                   </StyledButton>
-                )}
-              </div>
-            </AiPersonaCardButtonWrap>
-          </AiPersonaCardListItem>
-        ))}
-      </AiPersonaCardGroupWrap>
+                  {!["request", "ing", "complete"].includes(persona?.status) && (
+                    <StyledButton
+                      Medium
+                      Primary
+                      Fill
+                      onClick={() => setShowPopup(persona)}
+                    >
+                      페르소나 생성
+                    </StyledButton>
+                  )}
+                </div>
+              </AiPersonaCardButtonWrap>
+            </AiPersonaCardListItem>
+          ))}
+        </AiPersonaCardGroupWrap>
+      )}
 
       {showRequestPopup &&
         (eventState ? (
