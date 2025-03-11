@@ -190,6 +190,25 @@ const PageTargetDiscovery = () => {
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
+      const projectAnalysis =
+        (project?.projectAnalysis.business_analysis
+          ? project?.projectAnalysis.business_analysis
+          : "") +
+        (project?.projectAnalysis.business_analysis &&
+        project?.projectAnalysis.file_analysis
+          ? "\n"
+          : "") +
+        (project?.projectAnalysis.file_analysis
+          ? project?.projectAnalysis.file_analysis
+          : "");
+      // 비즈니스 정보 설정 (Step 1)
+      if (project) {
+        setBusinessDescription(projectAnalysis);
+        setTargetCustomer(project?.projectAnalysis.target_customer ?? "");
+        setSpecificSituation(targetDiscoveryInfo?.specificSituation ?? "");
+        setSelectedPurpose(project?.targetCountry ?? "");
+      }
+
       if (toolLoading) {
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
