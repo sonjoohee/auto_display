@@ -19,6 +19,7 @@ import {
   TableBody,
 } from "../../../assets/styles/BusinessAnalysisStyle";
 import OrganismStorageBoxToolList from "../components/organisms/OrganismStorageBoxToolList";
+import OrganismDashboardToolList from "../components/organisms/OrganismDashboardToolList";
 import { TOOL_LIST_SAAS, PROJECT_SAAS } from "../../AtomStates";
 import images from "../../../assets/styles/Images";
 import {
@@ -145,6 +146,34 @@ const PageStorageBox = () => {
                 해당 서비스를 통해 수집한 리포트들을 한곳에 모아두었어요
               </Body3>
             </StorageBoxTitle>
+
+            <TabWrapType4>
+              <TabButtonType4Main
+              // isActive={activeTab === "all"}
+              // onClick={() => setActiveTab("all")}
+              >
+                <Caption1 color="gray700">All</Caption1>
+              </TabButtonType4Main>
+              <TabButtonType4Main
+              // isActive={activeTab === "interview"}
+              // onClick={() => setActiveTab("interview")}
+              >
+                <Caption1 color="gray700">AI Person Interview</Caption1>
+              </TabButtonType4Main>
+              <TabButtonType4Main
+              // isActive={activeTab === "research"}
+              // onClick={() => setActiveTab("research")}
+              >
+                <Caption1 color="gray700">Research Tool</Caption1>
+              </TabButtonType4Main>
+              <TabButtonType4Main
+              // isActive={activeTab === "expert"}
+              // onClick={() => setActiveTab("expert")}
+              >
+                <Caption1 color="gray700">Business Expert</Caption1>
+              </TabButtonType4Main>
+            </TabWrapType4>
+
             <DashBoardItem>
               <OrganismStorageBoxToolList toolListSaas={toolListSaas} />
             </DashBoardItem>
@@ -548,4 +577,135 @@ const UlInfo = styled.ul`
       background: ${palette.primary};
     }
   }
+`;
+
+export const TabWrap = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const TabButton = styled.button`
+  font-family: "Pretendard", "Poppins";
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding: 4px 16px;
+  border-radius: 50px;
+  cursor: pointer;
+
+  ${({ isActive }) =>
+    isActive
+      ? `
+    background: rgba(34, 111, 255, 0.1);
+    border: 1px solid ${palette.primary};
+    color: ${palette.primary};
+    font-weight: 500;
+  `
+      : `
+    background: ${palette.chatGray};
+    border: 1px solid ${palette.outlineGray};
+    color: ${palette.gray500};
+    font-weight: 300;
+  `}
+`;
+
+export const TabButtonType2 = styled(TabButton)`
+  flex: 1;
+  border: 0;
+
+  ${({ isActive }) =>
+    isActive
+      ? `
+    background: ${palette.white};
+    color: ${palette.gray800};
+  `
+      : `
+    background: transparent;
+  `}
+`;
+
+export const TabWrapType2 = styled(TabWrap)`
+  gap: 4px;
+  width: 100%;
+  padding: 4px;
+  border-radius: 20px;
+  background: ${palette.chatGray};
+`;
+
+export const TabWrapType3 = styled(TabWrap)`
+  gap: 16px !important;
+  border-bottom: ${(props) =>
+    props.Border ? `1px solid ${palette.outlineGray}` : "none"};
+`;
+
+export const TabButtonType3 = styled(TabButton)`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 1rem;
+  padding: 0;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  transition: all 0.5s;
+
+  &:after {
+    height: 3px;
+    background: ${palette.gray800};
+    content: "";
+    transition: all 0.5s;
+  }
+
+  ${({ isActive }) =>
+    isActive
+      ? `
+        color: ${palette.gray800};
+        font-weight: 500;
+
+        &:after { 
+          width: 100%;
+        }
+      `
+      : `
+        &:after {
+          width: 0;
+        }
+      `}
+`;
+
+export const TabWrapType4 = styled(TabWrap)`
+  gap: 16px !important;
+`;
+
+export const TabButtonType4Main = styled(TabButton)`
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid ${palette.outlineGray};
+  cursor: pointer;
+
+  ${({ isActive }) =>
+    isActive
+      ? `
+      background: ${palette.chatGray};
+    `
+      : `
+      background: ${palette.white};
+    `}
+`;
+
+export const TabButtonType4 = styled(TabButton)`
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid ${palette.outlineGray};
+  cursor: pointer;
+
+  ${({ active }) =>
+    active
+      ? `
+      color: ${palette.gray700};
+      background: ${palette.chatGray};
+    `
+      : `
+      background: ${palette.white};
+    `}
 `;

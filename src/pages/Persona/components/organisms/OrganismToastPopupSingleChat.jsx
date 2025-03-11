@@ -169,7 +169,8 @@ const OrganismToastPopupSingleChat = ({
   const [currentAnswerData, setCurrentAnswerData] = useState("");
 
   const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
-  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+  const [projectCreateInfo, setProjectCreateInfo] =
+    useAtom(PROJECT_CREATE_INFO);
 
   // const [reportInterviewData, setReportInterviewData] = useState([]);
   const axiosConfig = {
@@ -735,20 +736,18 @@ const OrganismToastPopupSingleChat = ({
           theory_data: purposeItemsSingleAtom,
           persona_info: {
             // id: personaList.selected[0].persona_id.replace(/[^0-9]/g, ""),
-            id: personaList.selected[0].hasOwnProperty("request_persona_type")
-              ? `${personaList.selected[0].request_persona_type}_${personaList.selected[0].persona_id}`
-              : personaList.selected[0].persona_id.replace(/[^0-9]/g, ""),
-            name: personaList.selected[0].persona,
+            id: `saas_${personaList.selected[0]._id}`,
+            name: personaList.selected[0].personaName,
             keyword: personaList.selected[0].hasOwnProperty(
               "request_persona_type"
             )
-              ? personaList.selected[0].keyword
+              ? personaList.selected[0].keywords
               : personaList.selected[0].persona_keyword,
             // keyword: personaList.selected[0].persona_keyword,
             hashtag: personaList.selected[0].lifestyle,
-            summary: personaList.selected[0].consumption_pattern,
+            summary: personaList.selected[0].consumptionPattern,
             request_persona_type:
-              personaList.selected[0].request_persona_type || "preset",
+              personaList.selected[0].request_persona_type || "saas",
           },
           last_interview: lastInterview,
         };
@@ -1250,19 +1249,13 @@ const OrganismToastPopupSingleChat = ({
         question: indepthInterview,
         theory_data: purposeItemsSingleAtom,
         persona_info: {
-          id: personaList.selected[0].hasOwnProperty("request_persona_type")
-            ? `${personaList.selected[0].request_persona_type}_${personaList.selected[0].persona_id}`
-            : personaList.selected[0].persona_id.replace(/[^0-9]/g, ""),
-          name: personaList.selected[0].persona,
-          keyword: personaList.selected[0].hasOwnProperty(
-            "request_persona_type"
-          )
-            ? personaList.selected[0].keyword
-            : personaList.selected[0].persona_keyword,
+          id: `saas_${personaList.selected[0]._id}`,
+          name: personaList.selected[0].personaName,
+          keyword: personaList.selected[0].keywords,
           hashtag: personaList.selected[0].lifestyle,
-          summary: personaList.selected[0].consumption_pattern,
+          summary: personaList.selected[0].consumptionPattern,
           request_persona_type:
-            personaList.selected[0].request_persona_type || "preset",
+            personaList.selected[0].request_persona_type || "saas",
         },
         last_interview: indepthLastInterview,
       },
@@ -1283,19 +1276,17 @@ const OrganismToastPopupSingleChat = ({
           question: indepthInterview,
           theory_data: purposeItemsSingleAtom,
           persona_info: {
-            id: personaList.selected[0].hasOwnProperty("request_persona_type")
-              ? `${personaList.selected[0].request_persona_type}_${personaList.selected[0].persona_id}`
-              : personaList.selected[0].persona_id.replace(/[^0-9]/g, ""),
-            name: personaList.selected[0].persona,
+            id: `saas_${personaList.selected[0]._id}`,
+            name: personaList.selected[0].personaName,
             keyword: personaList.selected[0].hasOwnProperty(
               "request_persona_type"
             )
-              ? personaList.selected[0].keyword
+              ? personaList.selected[0].keywords
               : personaList.selected[0].persona_keyword,
             hashtag: personaList.selected[0].lifestyle,
-            summary: personaList.selected[0].consumption_pattern,
+            summary: personaList.selected[0].consumptionPattern,
             request_persona_type:
-              personaList.selected[0].request_persona_type || "preset",
+              personaList.selected[0].request_persona_type || "saas",
           },
           last_interview: indepthLastInterview,
         },
@@ -1454,31 +1445,32 @@ const OrganismToastPopupSingleChat = ({
           <ChatWrap>
             <Header>
               <Title>
-                {projectTotalInfo.projectTitle}의 {selectedInterviewPurposeData.title}
+                {projectTotalInfo.projectTitle}의{" "}
+                {selectedInterviewPurposeData.title}
                 <ColseButton onClick={handleClose} />
               </Title>
               <ul>
                 {/* 추가된 부분: 페르소나 정보 표시 */}
-                {personaList.selected.map((persona) => {
+                {personaList?.selected?.map((persona) => {
                   return (
-                    <li key={persona.persona_id}>
+                    <li key={persona?._id}>
                       <Thumb>
                         <img
-                          src={`/ai_person/${persona.personaImg}.png`}
-                          alt={persona.persona}
+                          src={`/ai_person/${persona?.personaImg}.png`}
+                          alt={persona?.personaName}
                         />
                       </Thumb>
                       <span>
-                        {persona.request_persona_type
-                          ? persona.persona
-                          : persona.persona_view || persona.persona}
+                        {persona?.request_persona_type
+                          ? persona?.personaName
+                          : persona?.persona_view || persona?.personaName}
                       </span>
                       <span>
-                        {persona.gender} |{" "}
-                        {persona.age.includes("세")
-                          ? persona.age
-                          : `${persona.age}세`}{" "}
-                        | {persona.job} {/* 성별, 나이, 직업 표시 */}
+                        {persona?.gender} |{" "}
+                        {persona?.age?.includes("세")
+                          ? persona?.age
+                          : `${persona?.age}세`}{" "}
+                        | {persona?.job} {/* 성별, 나이, 직업 표시 */}
                       </span>
                     </li>
                   );

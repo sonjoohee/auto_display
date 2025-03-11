@@ -9,17 +9,24 @@ import MoleculePersonaListItemSaas from "../molecules/MoleculePersonaListItemSaa
 import OrganismNoPersonaMessage from "../../../Tool/public/organisms/OrganismNoPersonaMessage";
 import { palette } from "../../../../assets/styles/Palette";
 import MoleculePersonaSelectCard from "../../../Persona/components/molecules/MoleculePersonaSelectCard";
+import { useAtom } from "jotai";
+import { PERSONA_LIST } from "../../../AtomStates";
 
 const OrganismPersonaListSaas = ({
   personaListSaas,
   personaImages,
   selectedPersonaButtons,
   handlePersonaButtonClick,
+  selectedPersonas,
   onNavigate,
   onPersonaSelect,
+  interviewType,
 }) => {
+  console.log("🚀 ~ selectedPersonas:", selectedPersonas);
+
   const [activeTab, setActiveTab] = useState("my_persona");
 
+  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
   };
@@ -125,6 +132,76 @@ const OrganismPersonaListSaas = ({
     return `${currentTab}_${personaId}`;
   };
 
+  const handlePersonaSelect = (persona) => {
+    console.log("🚀 ~ handlePersonaSelect ~ persona:", persona);
+    const targetPersona = [
+      ...personaList.selected,
+      ...personaList.unselected,
+    ].find((p) => p._id === persona._id);
+
+    if (interviewType === "single") {
+      if (
+        personaList?.selected?.[0]?._id === persona._id &&
+        personaList?.selected?.length > 0
+      ) {
+        // 선택 해제
+        setPersonaList({
+          selected: [],
+          unselected: [...personaList.unselected, targetPersona],
+        });
+        onPersonaSelect(null);
+      } else {
+        // 새로운 선택
+        const newUnselected = personaList.unselected.filter(
+          (p) => p._id !== persona._id
+        );
+        if (personaList.selected.length > 0) {
+          // 기존 선택된 항목이 있으면 unselected로 이동
+          newUnselected.push(personaList.selected[0]);
+        }
+        setPersonaList({
+          selected: [targetPersona],
+          unselected: newUnselected,
+        });
+        const personaListDummy = personaList;
+        console.log(
+          "🚀 ~ handlePersonaSelect ~ personaList:",
+          personaListDummy
+        );
+        onPersonaSelect(persona);
+      }
+    } else {
+      // multiple 선택 모드
+      const currentSelected = Array.isArray(selectedPersonas)
+        ? selectedPersonas
+        : [];
+
+      if (currentSelected.some((p) => p._id === persona._id)) {
+        // 이미 선택된 페르소나인 경우 선택 해제
+        const removedPersona = personaList.selected.find(
+          (p) => p._id === persona._id
+        );
+        setPersonaList({
+          selected: personaList.selected.filter((p) => p._id !== persona._id),
+          unselected: [...personaList.unselected, removedPersona],
+        });
+        onPersonaSelect(currentSelected.filter((p) => p._id !== persona._id));
+      } else if (currentSelected.length < 5) {
+        // 새로운 선택 (최대 5개)
+        setPersonaList({
+          selected: [...personaList.selected, targetPersona],
+          unselected: personaList.unselected.filter(
+            (p) => p._id !== persona._id
+          ),
+        });
+        onPersonaSelect([...currentSelected, persona]);
+      } else {
+        // 최대 선택 개수 초과 시 알림 표시
+        alert("최대 5명의 페르소나만 선택할 수 있습니다.");
+      }
+    }
+  };
+
   return (
     <>
       {personaListSaas && personaListSaas.length > 0 ? (
@@ -184,9 +261,12 @@ const OrganismPersonaListSaas = ({
               {personaListSaas
                 .filter((persona) => {
                   if (activeTab === "my_persona") {
-                    return persona.favorite === true;
+                    return persona?.favorite === true;
+                  } // favorite가 true인 페르소나는 마이페르소나 탭에만 표시
+                  if (persona?.favorite === true) {
+                    return false;
                   }
-                  return persona.personaType === activeTab;
+                  return persona?.personaType === activeTab;
                 })
                 // .filter((persona) => persona.status === "complete")
                 .map((persona, index) => (
@@ -201,20 +281,21 @@ const OrganismPersonaListSaas = ({
                   //   onPersonaSelect={setSelectedPersonas}
                   // />
                   <MoleculePersonaListItemSaas
-                    key={persona.id || `persona${index}`}
+                    key={persona?._id || `persona${index}`}
                     personaImage={
-                      personaImages[persona.imageKey] ||
+                      personaImages[persona?.imageKey] ||
                       personaImages.PersonaWomen01
                     }
-                    personaTitle={persona.personaName || ""}
-                    badgeType={persona.badgeType || ""}
-                    badgeText={persona.badgeText || ""}
-                    personaId={persona.id || `persona${index}`}
+                    personaTitle={persona?.personaName || ""}
+                    badgeType={persona?.badgeType || ""}
+                    badgeText={persona?.badgeText || ""}
+                    personaId={persona?._id || `persona${index}`}
                     isSelected={isPersonaSelectedInAnyTab(persona, index)}
                     personaInfo={persona || ""}
-                    onPersonaButtonClick={(id) =>
-                      handleSyncedPersonaButtonClick(`${activeTab}_${id}`)
-                    }
+                    onPersonaButtonClick={(id) => {
+                      handleSyncedPersonaButtonClick(`${activeTab}_${id}`);
+                      handlePersonaSelect(persona);
+                    }}
                     onSelect={(id) => {
                       const correctTabId = getCorrectTabIdForSelection(
                         persona,
@@ -233,6 +314,7 @@ const OrganismPersonaListSaas = ({
           <OrganismNoPersonaMessage />
         </ToolPublicPersonaWrap>
       )}
+      <div style={{ height: "60px" }}></div>
     </>
   );
 };

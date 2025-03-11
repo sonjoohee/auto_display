@@ -858,6 +858,7 @@ const PageAiPersona = () => {
           },
           projectType: currentProject.projectType,
           personaRequest: { ...persona, status: "request" },
+          requestPersonaType: "saas",
         };
         createRequestPersonaOnServer(requestData, isLoggedIn);
         // 페르소나 요청 완료 후 페르소나 목록 새로고침
@@ -936,6 +937,7 @@ const PageAiPersona = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
+
   return (
     <>
       <ContentsWrap>

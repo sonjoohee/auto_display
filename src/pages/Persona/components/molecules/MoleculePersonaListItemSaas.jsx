@@ -19,11 +19,12 @@ const MoleculePersonaListItemSaas = ({
   onPersonaButtonClick,
   onSelect,
 }) => {
+  console.log("🚀 ~ MoleculePersonaListItemSaas ~ personaInfo:", personaInfo);
   return (
     <ListBoxItem NoBorder>
       <Persona
         size="Large"
-        icon={personaInfo.favorite ? "OrangeTopLeftStarFill" : null}
+        icon={personaInfo?.favorite ? "OrangeTopLeftStarFill" : null}
         Round
         Moder
       >
@@ -36,9 +37,9 @@ const MoleculePersonaListItemSaas = ({
         </ListTitle>
         <ListSubtitle>
           <PersonaInfo None>
-            <span>#{personaInfo.gender}</span>
-            <span>#{personaInfo.age}</span>
-            <span>#{personaInfo.job}</span>
+            <span>#{personaInfo?.gender}</span>
+            <span>#{personaInfo?.age}</span>
+            <span>#{personaInfo?.job}</span>
           </PersonaInfo>
         </ListSubtitle>
       </ListText>

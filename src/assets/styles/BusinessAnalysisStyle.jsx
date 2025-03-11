@@ -1033,61 +1033,65 @@ export const ProjectTag = styled.span`
   background: ${palette.white};
 
   &:before {
-    content: '';
-    ${props => props.Type && css`
-      width: 20px;
-      height: 20px;
-      background-image: ${(props) => {
-        switch (props.Type) {
-          case "Information":
-            return `url(${images.ProjectInformation})`;
-          case "Banking":
-            return `url(${images.ProjectBanking})`;
-          case "Production":
-            return `url(${images.ProjectProduction})`;
-          case "Build":
-            return `url(${images.ProjectBuild})`;
-          case "Medical":
-            return `url(${images.ProjectMedical})`;
-          case "Education":
-            return `url(${images.ProjectEducation})`;
-          case "Consumer":
-            return `url(${images.ProjectConsumer})`;
-          case "Etc":
-            return `url(${images.ProjectEtc})`;
-          default:
-            return "none";
-        }
-      }};
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-    `}
+    content: "";
+    ${(props) =>
+      props.Type &&
+      css`
+        width: 20px;
+        height: 20px;
+        background-image: ${(props) => {
+          switch (props.Type) {
+            case "Information":
+              return `url(${images.ProjectInformation})`;
+            case "Banking":
+              return `url(${images.ProjectBanking})`;
+            case "Production":
+              return `url(${images.ProjectProduction})`;
+            case "Build":
+              return `url(${images.ProjectBuild})`;
+            case "Medical":
+              return `url(${images.ProjectMedical})`;
+            case "Education":
+              return `url(${images.ProjectEducation})`;
+            case "Consumer":
+              return `url(${images.ProjectConsumer})`;
+            case "Etc":
+              return `url(${images.ProjectEtc})`;
+            default:
+              return "none";
+          }
+        }};
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      `}
 
-    ${props => props.Country && css`
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background-image: ${(props) => {
-        switch (props.Country) {
-          case "Korea":
-            return `url(${images.ProjectKorea})`;
-          case "Usa":
-            return `url(${images.ProjectUsa})`;
-          case "China":
-            return `url(${images.ProjectChina})`;
-          case "Japan":
-            return `url(${images.ProjectJapan})`;
-          case "Vietnam":
-            return `url(${images.ProjectVietnam})`;
-          default:
-            return "none";
-        }
-      }};
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-    `}
+    ${(props) =>
+      props.Country &&
+      css`
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-image: ${(props) => {
+          switch (props.Country) {
+            case "Korea":
+              return `url(${images.ProjectKorea})`;
+            case "Usa":
+              return `url(${images.ProjectUsa})`;
+            case "China":
+              return `url(${images.ProjectChina})`;
+            case "Japan":
+              return `url(${images.ProjectJapan})`;
+            case "Vietnam":
+              return `url(${images.ProjectVietnam})`;
+            default:
+              return "none";
+          }
+        }};
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      `}
   }
 
   &::after {
@@ -1108,7 +1112,7 @@ export const ProjectTag = styled.span`
             return "";
         }
       }
-      
+
       if (props.Type) {
         switch (props.Type) {
           case "Information":
@@ -1131,7 +1135,7 @@ export const ProjectTag = styled.span`
             return "";
         }
       }
-         
+
       if (props.Country) {
         switch (props.Country) {
           case "Korea":
@@ -1148,7 +1152,7 @@ export const ProjectTag = styled.span`
             return "";
         }
       }
-   
+
       return "";
     }}";
   }
@@ -2163,7 +2167,7 @@ export const Persona = styled.div`
             height: 18px;
             border-radius: 50%;
             background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M5.02641 1.5398C5.42467 0.732825 6.5754 0.732827 6.97366 1.5398L8.07072 3.76269C8.12344 3.8695 8.22534 3.94354 8.34322 3.96067L10.7963 4.31712C11.6869 4.44653 12.0425 5.54093 11.3981 6.16907L9.62298 7.89935C9.53768 7.98249 9.49875 8.10229 9.51889 8.21969L9.93793 10.6629C10.0901 11.5498 9.1591 12.2262 8.36257 11.8074L6.16845 10.6539C6.06301 10.5985 5.93706 10.5985 5.83162 10.6539L3.63751 11.8074C2.84097 12.2262 1.91002 11.5498 2.06214 10.6629L2.48118 8.21969C2.50132 8.10229 2.46239 7.98249 2.3771 7.89935L0.602018 6.16907C-0.0423914 5.54093 0.313204 4.44653 1.20375 4.31712L3.65685 3.96067C3.77473 3.94354 3.87663 3.8695 3.92935 3.76269L5.02641 1.5398Z' fill='%23FF9500'/%3E%3C/svg%3E")
-              center no-repeat #FFF5E6;
+              center no-repeat #fff5e6;
           }
         `;
       case "OrangeTopStar":
@@ -2408,7 +2412,10 @@ export const ListBoxGroup = styled.ul`
   width: 100%;
   padding: 20px;
   border-radius: 10px;
-  border: ${(props) => (props.NoData ? `2px dashed ${palette.outlineGray}` : `1px solid ${palette.outlineGray}`)};
+  border: ${(props) =>
+    props.NoData
+      ? `2px dashed ${palette.outlineGray}`
+      : `1px solid ${palette.outlineGray}`};
 
   > div {
     width: 100%;
@@ -2441,11 +2448,7 @@ export const CardGroupWrap = styled.div`
 
   > div {
     flex: ${(props) =>
-      props.column
-        ? "1"
-        : props.rowW50
-        ? "1 1 50%"
-        : "0 0 calc(24.8% - 10px)"};
+      props.column ? "1" : props.rowW50 ? "1 1 50%" : "0 0 calc(24.8% - 10px)"};
     max-width: ${(props) =>
       props.column ? "100%" : props.rowW50 ? "50%" : "calc(24.8% - 10px)"};
     width: 100%;
@@ -2469,13 +2472,12 @@ export const ListBoxItem = styled.div`
   padding: ${(props) => (props.Small ? "12px 20px" : "24px 20px")};
   border-radius: 10px;
   border: 1px solid
-    ${(props) => (
-      props.NoBorder 
-      ? "none" 
-      : props.active 
-      ? palette.primary 
-      : palette.outlineGray
-    )};
+    ${(props) =>
+      props.NoBorder
+        ? "none"
+        : props.active
+        ? palette.primary
+        : palette.outlineGray};
   background: ${(props) =>
     props.NoBg
       ? palette.white
@@ -2591,7 +2593,7 @@ export const ListBoxWrap = styled.div`
     props.Border &&
     css`
       gap: 4px;
-      
+
       > div {
         + div {
           border-top: 1px solid ${palette.outlineGray};
@@ -2766,13 +2768,19 @@ export const BoxWrap = styled.div`
   width: 100%;
   display: flex;
   flex-direction: ${(props) => (props.NoData ? "column" : "row")};
-  align-items: ${(props) => (props.Column || props.NoData ? "center !important" : "flex-start !important")};
+  align-items: ${(props) =>
+    props.Column || props.NoData
+      ? "center !important"
+      : "flex-start !important"};
   justify-content: ${(props) => (props.NoData ? "center" : "normal")};
   gap: 20px !important;
   height: ${(props) => (props.NoData ? "200px" : "auto")};
   padding: ${(props) => (props.Small ? "16px 20px" : "20px 24px")};
   border-radius: 15px;
-  border: ${(props) => (props.NoData ? `1px dashed ${palette.outlineGray}` : `1px solid ${palette.outlineGray}`)};
+  border: ${(props) =>
+    props.NoData
+      ? `1px dashed ${palette.outlineGray}`
+      : `1px solid ${palette.outlineGray}`};
 
   div,
   p,
@@ -2785,8 +2793,7 @@ export const BoxWrap = styled.div`
     css`
       flex-direction: column;
       gap: 0 !important;
-    `
-  }
+    `}
 `;
 
 export const InterviewPopup = styled.div`
@@ -3810,13 +3817,15 @@ export const PersonaInfo = styled.div`
     }
   }
 
-  ${props => props.None && css`
-    span {
-      + span:before {
-        display: none;
+  ${(props) =>
+    props.None &&
+    css`
+      span {
+        + span:before {
+          display: none;
+        }
       }
-    }
-  `}
+    `}
 `;
 
 export const SwitchToggle = styled.div`
