@@ -187,6 +187,14 @@ const PageProjectCreate = () => {
       [boxName]: !prev[boxName],
     }));
   };
+  const getRandomThumbnail = () => {
+    const randomNum = Math.floor(Math.random() * 20) + 1;
+    const thumbnailKey = `ProjectThumbnail${String(randomNum).padStart(
+      2,
+      "0"
+    )}`;
+    return thumbnailKey;
+  };
 
   // 외부 클릭 감지 핸들러
   useEffect(() => {
@@ -271,6 +279,7 @@ const PageProjectCreate = () => {
             id: "file_" + timeStamp + "_" + (index + 1),
             name: file.name,
           })),
+          thumbnail: getRandomThumbnail(),
         };
         setProjectTotalInfo(projectTotalData);
       } catch (error) {
@@ -440,6 +449,7 @@ const PageProjectCreate = () => {
           industryType: response.industry_type,
           targetCountry: response.target_country,
           projectAnalysis: response.response.project_analysis,
+          thumbnail: getRandomThumbnail(),
         };
         setProjectTotalInfo(projectTotalData);
       } catch (error) {
@@ -1124,10 +1134,10 @@ const PageProjectCreate = () => {
                             프로젝트 개요
                           </Body1>
                           {!isEditing ? (
-                          <IconButton onClick={handleEditClick}>
-                            <img src={images.PencilSquare} alt="" />
-                            <span>수정하기</span>
-                          </IconButton>
+                            <IconButton onClick={handleEditClick}>
+                              <img src={images.PencilSquare} alt="" />
+                              <span>수정하기</span>
+                            </IconButton>
                           ) : (
                             <IconButton onClick={handleSaveClick}>
                               <img src={images.FolderArrowDown} alt="" />
@@ -1189,10 +1199,10 @@ const PageProjectCreate = () => {
                             주요 타겟 고객군
                           </Body1>
                           {!isEditingTarget ? (
-                          <IconButton onClick={handleEditTargetClick}>
-                            <img src={images.PencilSquare} alt="" />
-                            <span>수정하기</span>
-                          </IconButton>
+                            <IconButton onClick={handleEditTargetClick}>
+                              <img src={images.PencilSquare} alt="" />
+                              <span>수정하기</span>
+                            </IconButton>
                           ) : (
                             <IconButton onClick={handleSaveClick}>
                               <img src={images.FolderArrowDown} alt="" />

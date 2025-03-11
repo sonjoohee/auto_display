@@ -327,9 +327,10 @@ const MoleculeHeader = () => {
             {isRootPage && (
               <Sub2
                 style={{ cursor: "pointer" }}
-                onClick={() => navigate("/ServiceLanding")}
+                onClick={() => navigate("/Blog")}
               >
-                서비스 소개
+                블로그
+                {/* 서비스 소개 */}
               </Sub2>
             )}
 
