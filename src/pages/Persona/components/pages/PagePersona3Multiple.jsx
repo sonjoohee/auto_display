@@ -183,10 +183,10 @@ const PagePersona3Multiple = () => {
 
   // 인터뷰 목적 선택 핸들러 수정
   const handleInterviewPurposeSelect = (title) => {
-    if (!selectedInterviewType) {
-      setShowInterviewTypeAlert(true);
-      return;
-    }
+    // if (!selectedInterviewType) {
+    //   setShowInterviewTypeAlert(true);
+    //   return;
+    // }
     setInterviewPurpose(title);
   };
 
