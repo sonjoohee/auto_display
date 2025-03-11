@@ -474,15 +474,15 @@ export const TabButtonType5 = styled(TabButton)`
     Num3 &&
     css`
       + button {
-        padding-left: 170px;
+        padding-left: 150px;
 
         &:before {
-          left: 55px;
+          left: 40px;
           width: 64px;
         }
 
         &:after {
-          left: 110px;
+          left: 95px;
         }
       }
     `}
