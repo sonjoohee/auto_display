@@ -1031,19 +1031,19 @@ const PageAiPersona = () => {
                     <span className="inactive">
                       <Sub3 color="gray700">{currentTabStats.inactive}</Sub3>
                     </span>
-                    <Sub3 color="gray800">비활성 페르소나</Sub3>
+                    <Sub3 color="gray700">비활성 페르소나</Sub3>
                   </div>
                   <div>
                     <span className="generating">
                       <Sub3 color="gray800">{currentTabStats.generating}</Sub3>
                     </span>
-                    <Sub3 color="gray800">생성 중</Sub3>
+                    <Sub3 color="gray700">생성 중</Sub3>
                   </div>
                   <div>
                     <span className="active">
                       <Sub3 color="gray800">{currentTabStats.active}</Sub3>
                     </span>
-                    <Sub3 color="gray800">활성 페르소나</Sub3>
+                    <Sub3 color="gray700">활성 페르소나</Sub3>
                   </div>
                 </AiPersonaInfo>
 
