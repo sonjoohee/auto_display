@@ -102,6 +102,10 @@ const MoleculeHeader = () => {
 
   const isPersona3PageSelect = location.pathname === "/Persona/3/Select";
 
+  const isPersona3SinglePage = location.pathname === "/Persona3Single";
+
+  const isPersona3MultiplePage = location.pathname === "/Persona3Multiple";
+
   const isPersona4PageSingle = location.pathname === "/Persona/4/Single";
 
   const isPersona4Page = location.pathname === "/Persona/4";
@@ -256,39 +260,42 @@ const MoleculeHeader = () => {
                 ? "계정관리"
                 : isPaymentPage
                 ? "크레딧"
-                : isPersona2Page && businessAnalysis.title
-                ? businessAnalysis.title
-                : isPersona3Page && businessAnalysis.title
-                ? businessAnalysis.title
-                : isPersona3PageSelect && businessAnalysis.title
-                ? businessAnalysis.title
-                : isPersona4Page && businessAnalysis.title
-                ? businessAnalysis.title
-                : isPersona4PageSingle && businessAnalysis.title
-                ? businessAnalysis.title
-                : // : isTargetDiscoveryPage && targetDiscoveryInfo.business
-                // ? `타겟 탐색기 - ${targetDiscoveryInfo.business}`
-                // : isTargetDiscoveryPage && !targetDiscoveryInfo.business
-                isTargetDiscoveryPage
+                : isPersona2Page && projectSaas.projectTitle
+                ? projectSaas.projectTitle
+                : isPersona3Page && projectSaas.projectTitle
+                ? projectSaas.projectTitle
+                : isPersona3PageSelect && projectSaas.projectTitle
+                ? projectSaas.projectTitle
+                : isPersona3SinglePage && projectSaas.projectTitle
+                ? projectSaas.projectTitle
+                : isPersona3MultiplePage && projectSaas.projectTitle
+                ? projectSaas.projectTitle
+                : isPersona4Page && projectSaas.projectTitle
+                ? projectSaas.projectTitle
+                : isPersona4PageSingle && projectSaas.projectTitle
+                ? projectSaas.projectTitle
+                : isTargetDiscoveryPage
                 ? "타겟 탐색기"
+                : isTargetDiscoveryPage && projectSaas.projectTitle
+                ? `타겟 탐색기 - ${projectSaas.projectTitle}`
                 : isIdeaGeneratorPage && projectSaas.projectTitle
                 ? `아이디어 생성기 - ${projectSaas.projectTitle}`
                 : isIdeaGeneratorPage && !projectSaas.projectTitle
                 ? "아이디어 생성기"
-                : isCustomerValueAnalyzerPage &&
-                  customerValueAnalyzerInfo.business
-                ? `고객 핵심 가치 분석기 - ${customerValueAnalyzerInfo.business}`
-                : isCustomerValueAnalyzerPage &&
-                  !customerValueAnalyzerInfo.business
+                : isCustomerValueAnalyzerPage && projectSaas.projectTitle
+                ? `고객 핵심 가치 분석기 - ${projectSaas.projectTitle}`
+                : isCustomerValueAnalyzerPage && !projectSaas.projectTitle
                 ? "고객 핵심 가치 분석기"
-                : isDesignAnalysisPage && designAnalysisBusinessTitle
-                ? `디자인 감정 분석기 - ${designAnalysisBusinessTitle}`
-                : isDesignAnalysisPage && !designAnalysisBusinessTitle
+                : isDesignAnalysisPage && projectSaas.projectTitle
+                ? `디자인 감정 분석기 - ${projectSaas.projectTitle}`
+                : isDesignAnalysisPage && !projectSaas.projectTitle
                 ? "디자인 감정 분석기"
                 : isProjectCreatePage
                 ? "새 프로젝트 생성"
                 : "새로운 프로젝트"}
               {(isPersona3Page ||
+                isPersona3SinglePage ||
+                isPersona3MultiplePage ||
                 isPersona3PageSelect ||
                 isPersona4Page ||
                 isPersona4PageSingle) && (
