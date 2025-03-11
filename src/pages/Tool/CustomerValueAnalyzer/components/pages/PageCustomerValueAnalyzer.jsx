@@ -1379,9 +1379,9 @@ const PageCustomerValueAnalyzer = () => {
                     </div>
 
                     <div className="content">
-                      <ListBoxGroup style={{ marginBottom: "24px" }}>
-                        <li>
-                          <Body2 color="gray500">페르소나 선택</Body2>
+                      <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
+                        <div className="selectBoxWrap">
+                          <Body2 color="gray500" style={{ width: "110px" }}>페르소나 선택</Body2>
                           {selectedPersonasSaas.length === 0 ? (
                             <Body2 color="gray300">
                               아래 리스트에서 페르소나를 선택해 주세요 (5명 선택
@@ -1420,10 +1420,10 @@ const PageCustomerValueAnalyzer = () => {
                               )}
                             </PersonaGroup>
                           )}
-                        </li>
-                        <li>
-                          <Body2 color="gray500">여정 분석 범위</Body2>
-                          <SelectBox>
+                        </div>
+                        <div className="selectBoxWrap">
+                          <Body2 color="gray500" style={{ width: "110px" }}>여정 분석 범위</Body2>
+                          <SelectBox style={{ paddingRight: "20px" }}>
                             <SelectBoxTitle
                               onClick={() =>
                                 setIsSelectBoxOpen(!isSelectBoxOpen)
@@ -1436,6 +1436,7 @@ const PageCustomerValueAnalyzer = () => {
                                     display: "flex",
                                     alignItems: "center",
                                     gap: "4px",
+                                    paddingLeft: "20px",
                                   }}
                                 >
                                   <Body1 color="gray700" align="left">
@@ -1455,7 +1456,7 @@ const PageCustomerValueAnalyzer = () => {
                                   </Body2>
                                 </div>
                               ) : (
-                                <Body2 color="gray300">
+                                <Body2 color="gray300" style={{ paddingLeft: "20px" }}>
                                   고객 여정 맵의 분석 방향성을 선택하세요
                                 </Body2>
                               )}
@@ -1527,8 +1528,8 @@ const PageCustomerValueAnalyzer = () => {
                               </SelectBoxList>
                             )}
                           </SelectBox>
-                        </li>
-                      </ListBoxGroup>
+                        </div>
+                      </BoxWrap>
 
                       <OrganismPersonaList
                         personaListSaas={personaListSaas}
