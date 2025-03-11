@@ -226,6 +226,24 @@ const PageDesignAnalysis = () => {
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
+      // 비즈니스 정보 설정 (Step 1)
+      const projectAnalysis =
+        (project?.projectAnalysis.business_analysis
+          ? project?.projectAnalysis.business_analysis
+          : "") +
+        (project?.projectAnalysis.business_analysis &&
+        project?.projectAnalysis.file_analysis
+          ? "\n"
+          : "") +
+        (project?.projectAnalysis.file_analysis
+          ? project?.projectAnalysis.file_analysis
+          : "");
+      const projectTitle = project?.projectTitle;
+      if (project) {
+        setBusinessDescriptionTitle(projectTitle);
+        setBusinessDescription(projectAnalysis);
+        setTargetCustomer(project?.projectAnalysis.target_customer ?? "");
+      }
       if (toolLoading) {
         console.log("project", project);
         const projectAnalysis =

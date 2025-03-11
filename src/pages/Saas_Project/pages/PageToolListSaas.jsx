@@ -975,7 +975,6 @@ const PageToolListSaas = () => {
       setToolLoading(false);
       switch (index) {
         case "1":
-          setToolLoading(true);
           navigate("/TargetDiscovery");
           break;
         case "2":
