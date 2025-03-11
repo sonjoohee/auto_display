@@ -794,7 +794,7 @@ const PageTargetDiscovery = () => {
               >
                 <span>01</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 1 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     비즈니스 입력
                   </Body1>
                 </div>
@@ -811,10 +811,10 @@ const PageTargetDiscovery = () => {
               >
                 <span>02</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     잠재고객 맥락 분석
                   </Body1>
-                  <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Contextual Inquiry
                   </Body1>
                 </div>
@@ -831,10 +831,10 @@ const PageTargetDiscovery = () => {
               >
                 <span>03</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 3 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     시나리오 분석
                   </Body1>
-                  <Body1 color={activeTab >= 3 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     Scenario Analysis
                   </Body1>
                 </div>
@@ -851,7 +851,7 @@ const PageTargetDiscovery = () => {
               >
                 <span>04</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 4 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 4 ? "gray700" : "gray300"}>
                     최종 인사이트 분석
                   </Body1>
                 </div>

@@ -1015,7 +1015,7 @@ const PageIdeaGenerator = () => {
               >
                 <span>01</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 1 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     핵심 가치 입력
                   </Body1>
                 </div>
@@ -1034,10 +1034,10 @@ const PageIdeaGenerator = () => {
               >
                 <span>02</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     타겟 세그먼트
                   </Body1>
-                  <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Customer Segment
                   </Body1>
                 </div>
@@ -1056,10 +1056,10 @@ const PageIdeaGenerator = () => {
               >
                 <span>03</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 3 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     아이디어 도출
                   </Body1>
-                  <Body1 color={activeTab >= 3 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     Idea Generation
                   </Body1>
                 </div>
@@ -1078,7 +1078,7 @@ const PageIdeaGenerator = () => {
               >
                 <span>04</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 4 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 4 ? "gray700" : "gray300"}>
                     최종 인사이트 분석
                   </Body1>
                 </div>

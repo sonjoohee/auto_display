@@ -746,7 +746,7 @@ const PageDesignAnalysis = () => {
               >
                 <span>01</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 1 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     이미지 업로드
                   </Body1>
                 </div>
@@ -759,10 +759,10 @@ const PageDesignAnalysis = () => {
               >
                 <span>02</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     디자인 분야 분석
                   </Body1>
-                  <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Design Sector
                   </Body1>
                 </div>
@@ -775,10 +775,10 @@ const PageDesignAnalysis = () => {
               >
                 <span>03</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 3 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     디자인 감성 분석
                   </Body1>
-                  <Body1 color={activeTab >= 3 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     Sentiment Analysis
                   </Body1>
                 </div>

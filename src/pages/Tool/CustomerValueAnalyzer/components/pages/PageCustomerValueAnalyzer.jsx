@@ -1277,7 +1277,7 @@ const PageCustomerValueAnalyzer = () => {
               >
                 <span>01</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 1 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     페르소나 선택
                   </Body1>
                 </div>
@@ -1298,10 +1298,10 @@ const PageCustomerValueAnalyzer = () => {
               >
                 <span>02</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     고객 여정 맵 분석
                   </Body1>
-                  <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Customer Journey
                   </Body1>
                 </div>
@@ -1323,10 +1323,10 @@ const PageCustomerValueAnalyzer = () => {
               >
                 <span>03</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 3 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     구매 결정 요인 분석
                   </Body1>
-                  <Body1 color={activeTab >= 3 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     Key Buying Factor
                   </Body1>
                 </div>
@@ -1348,7 +1348,7 @@ const PageCustomerValueAnalyzer = () => {
               >
                 <span>04</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 4 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 4 ? "gray700" : "gray300"}>
                     최종 인사이트 분석
                   </Body1>
                 </div>

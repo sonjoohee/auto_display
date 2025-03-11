@@ -556,10 +556,10 @@ const PagePersona3Multiple = () => {
               <TabButtonType5 isActive>
                 <span>01</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 1 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     토론 주제 선정
                   </Body1>
-                  <Body1 color={activeTab >= 1 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     Discussion Topic
                   </Body1>
                 </div>
@@ -567,10 +567,10 @@ const PagePersona3Multiple = () => {
               <TabButtonType5>
                 <span>02</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     페르소나 선택
                   </Body1>
-                  <Body1 color={activeTab >= 2 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Persona Selection
                   </Body1>
                 </div>
@@ -578,10 +578,10 @@ const PagePersona3Multiple = () => {
               <TabButtonType5>
                 <span>03</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 3 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     그룹 인터뷰 
                   </Body1>
-                  <Body1 color={activeTab >= 3 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     Group Interview
                   </Body1>
                 </div>
@@ -589,7 +589,7 @@ const PagePersona3Multiple = () => {
               <TabButtonType5>
                 <span>04</span>
                 <div className="text">
-                  <Body1 color={activeTab >= 4 ? "gray800" : "gray300"}>
+                  <Body1 color={activeTab >= 4 ? "gray700" : "gray300"}>
                     최종 인사이트 분석
                   </Body1>
                 </div>
