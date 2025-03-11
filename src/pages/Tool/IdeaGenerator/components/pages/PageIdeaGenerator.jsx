@@ -513,7 +513,8 @@ const PageIdeaGenerator = () => {
       // 서버에 결과 저장
       await updateToolOnServer(
         toolId,
-        {
+        { 
+          completedStep: 2,
           ideaGeneratorIdea: results || [],
         },
         isLoggedIn
@@ -778,7 +779,7 @@ const PageIdeaGenerator = () => {
       updateToolOnServer(
         toolId,
         {
-          completedStep: 2,
+          // completedStep: 2,
           ideaGeneratorKnowTarget:
             selectedInterviewType === "yesTarget" ? true : false,
         },
