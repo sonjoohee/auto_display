@@ -1913,218 +1913,222 @@ const PageAiPersona = () => {
 
               {activeTabIndex1 === 4 && (
                 <>
-                  <BoxWrap Column Small>
-                    <SelectBox>
-                      <SelectBoxTitle
-                        None
-                        onClick={() => {
-                          setSelectBoxStates1((prev) => ({
-                            ...prev,
-                            experienceDepth: !prev.experienceDepth,
-                          }));
-                        }}
-                      >
-                        <div style={{ display: "flex", gap: "10px" }}>
-                          <Body2 color="gray300">경험여부</Body2>
-                          <Body2
-                            color={
-                              currentPersona.experienceDepth
-                                ? "gray700"
-                                : "gray300"
-                            }
-                          >
-                            {mapExperienceDepth(currentPersona.experienceDepth)}
-                          </Body2>
-                        </div>
-                        <images.ChevronDown
-                          width="24px"
-                          height="24px"
-                          color={palette.gray500}
-                          style={{
-                            transform: selectBoxStates1.experienceDepth
-                              ? "rotate(180deg)"
-                              : "rotate(0deg)",
-                            transition: "transform 0.3s ease",
+                  <BoxWrap Column NoneV>
+                    <div className="selectBoxWrap">
+                      <Body2 color="gray300">경험여부</Body2>
+                      <SelectBox style={{ paddingRight: "20px" }}>
+                        <SelectBoxTitle
+                          None
+                          onClick={() => {
+                            setSelectBoxStates1((prev) => ({
+                              ...prev,
+                              experienceDepth: !prev.experienceDepth,
+                            }));
                           }}
-                        />
-                      </SelectBoxTitle>
+                        >
+                          <div style={{ display: "flex", gap: "10px" }}>
+                            <Body2
+                              color={
+                                currentPersona.experienceDepth
+                                  ? "gray700"
+                                  : "gray300"
+                              }
+                            >
+                              {mapExperienceDepth(currentPersona.experienceDepth)}
+                            </Body2>
+                          </div>
+                          <images.ChevronDown
+                            width="24px"
+                            height="24px"
+                            color={palette.gray500}
+                            style={{
+                              transform: selectBoxStates1.experienceDepth
+                                ? "rotate(180deg)"
+                                : "rotate(0deg)",
+                              transition: "transform 0.3s ease",
+                            }}
+                          />
+                        </SelectBoxTitle>
 
-                      {selectBoxStates1.experienceDepth && (
-                        <SelectBoxList>
-                          <SelectBoxItem
-                            onClick={() => {
-                              handleCurrentPersonaChange(
-                                "experienceDepth",
-                                "1단계"
-                              );
-                              setSelectBoxStates1((prev) => ({
-                                ...prev,
-                                experienceDepth: false,
-                              }));
-                            }}
-                          >
-                            <Body2 color="gray700" align="left">
-                              이 제품/서비스를 들어본 적도 없음
-                            </Body2>
-                          </SelectBoxItem>
-                          <SelectBoxItem
-                            onClick={() => {
-                              handleCurrentPersonaChange(
-                                "experienceDepth",
-                                "2단계"
-                              );
-                              setSelectBoxStates1((prev) => ({
-                                ...prev,
-                                experienceDepth: false,
-                              }));
-                            }}
-                          >
-                            <Body2 color="gray700" align="left">
-                              들어본 적은 있지만, 사용해본 적은 없음
-                            </Body2>
-                          </SelectBoxItem>
-                          <SelectBoxItem
-                            onClick={() => {
-                              handleCurrentPersonaChange(
-                                "experienceDepth",
-                                "3단계"
-                              );
-                              setSelectBoxStates1((prev) => ({
-                                ...prev,
-                                experienceDepth: false,
-                              }));
-                            }}
-                          >
-                            <Body2 color="gray700" align="left">
-                              사용해본 적은 있지만, 한두 번 경험한 수준
-                            </Body2>
-                          </SelectBoxItem>
-                          <SelectBoxItem
-                            onClick={() => {
-                              handleCurrentPersonaChange(
-                                "experienceDepth",
-                                "4단계"
-                              );
-                              setSelectBoxStates1((prev) => ({
-                                ...prev,
-                                experienceDepth: false,
-                              }));
-                            }}
-                          >
-                            <Body2 color="gray700" align="left">
-                              몇 번 사용해봤고, 기능을 어느 정도 이해하고 있음
-                            </Body2>
-                          </SelectBoxItem>
-                          <SelectBoxItem
-                            onClick={() => {
-                              handleCurrentPersonaChange(
-                                "experienceDepth",
-                                "5단계"
-                              );
-                              setSelectBoxStates1((prev) => ({
-                                ...prev,
-                                experienceDepth: false,
-                              }));
-                            }}
-                          >
-                            <Body2 color="gray700" align="left">
-                              정기적으로 사용하고 있고, 익숙한 사용자
-                            </Body2>
-                          </SelectBoxItem>
-                        </SelectBoxList>
-                      )}
-                    </SelectBox>
+                        {selectBoxStates1.experienceDepth && (
+                          <SelectBoxList>
+                            <SelectBoxItem
+                              onClick={() => {
+                                handleCurrentPersonaChange(
+                                  "experienceDepth",
+                                  "1단계"
+                                );
+                                setSelectBoxStates1((prev) => ({
+                                  ...prev,
+                                  experienceDepth: false,
+                                }));
+                              }}
+                            >
+                              <Body2 color="gray700" align="left">
+                                이 제품/서비스를 들어본 적도 없음
+                              </Body2>
+                            </SelectBoxItem>
+                            <SelectBoxItem
+                              onClick={() => {
+                                handleCurrentPersonaChange(
+                                  "experienceDepth",
+                                  "2단계"
+                                );
+                                setSelectBoxStates1((prev) => ({
+                                  ...prev,
+                                  experienceDepth: false,
+                                }));
+                              }}
+                            >
+                              <Body2 color="gray700" align="left">
+                                들어본 적은 있지만, 사용해본 적은 없음
+                              </Body2>
+                            </SelectBoxItem>
+                            <SelectBoxItem
+                              onClick={() => {
+                                handleCurrentPersonaChange(
+                                  "experienceDepth",
+                                  "3단계"
+                                );
+                                setSelectBoxStates1((prev) => ({
+                                  ...prev,
+                                  experienceDepth: false,
+                                }));
+                              }}
+                            >
+                              <Body2 color="gray700" align="left">
+                                사용해본 적은 있지만, 한두 번 경험한 수준
+                              </Body2>
+                            </SelectBoxItem>
+                            <SelectBoxItem
+                              onClick={() => {
+                                handleCurrentPersonaChange(
+                                  "experienceDepth",
+                                  "4단계"
+                                );
+                                setSelectBoxStates1((prev) => ({
+                                  ...prev,
+                                  experienceDepth: false,
+                                }));
+                              }}
+                            >
+                              <Body2 color="gray700" align="left">
+                                몇 번 사용해봤고, 기능을 어느 정도 이해하고 있음
+                              </Body2>
+                            </SelectBoxItem>
+                            <SelectBoxItem
+                              onClick={() => {
+                                handleCurrentPersonaChange(
+                                  "experienceDepth",
+                                  "5단계"
+                                );
+                                setSelectBoxStates1((prev) => ({
+                                  ...prev,
+                                  experienceDepth: false,
+                                }));
+                              }}
+                            >
+                              <Body2 color="gray700" align="left">
+                                정기적으로 사용하고 있고, 익숙한 사용자
+                              </Body2>
+                            </SelectBoxItem>
+                          </SelectBoxList>
+                        )}
+                      </SelectBox>
+                    </div>
 
-                    <SelectBox>
-                      <SelectBoxTitle
-                        None
-                        onClick={() => {
-                          setSelectBoxStates1((prev) => ({
-                            ...prev,
-                            usageDepth: !prev.usageDepth,
-                          }));
-                        }}
-                      >
-                        <div style={{ display: "flex", gap: "10px" }}>
-                          <Body2 color="gray300">사용수준</Body2>
-                          <Body2
-                            color={
-                              currentPersona.usageDepth ? "gray700" : "gray300"
-                            }
-                          >
-                            {mapUsageDepth(currentPersona.usageDepth)}
-                          </Body2>
-                        </div>
-                        <images.ChevronDown
-                          width="24px"
-                          height="24px"
-                          color={palette.gray500}
-                          style={{
-                            transform: selectBoxStates1.usageDepth
-                              ? "rotate(180deg)"
-                              : "rotate(0deg)",
-                            transition: "transform 0.3s ease",
+                    <div className="selectBoxWrap">
+                      <Body2 color="gray300">사용수준</Body2>
+                      <SelectBox style={{ paddingRight: "20px" }}>
+                        <SelectBoxTitle
+                          None
+                          onClick={() => {
+                            setSelectBoxStates1((prev) => ({
+                              ...prev,
+                              usageDepth: !prev.usageDepth,
+                            }));
                           }}
-                        />
-                      </SelectBoxTitle>
+                        >
+                          <div style={{ display: "flex", gap: "10px" }}>
+                            <Body2
+                              color={
+                                currentPersona.usageDepth ? "gray700" : "gray300"
+                              }
+                            >
+                              {mapUsageDepth(currentPersona.usageDepth)}
+                            </Body2>
+                          </div>
+                          <images.ChevronDown
+                            width="24px"
+                            height="24px"
+                            color={palette.gray500}
+                            style={{
+                              transform: selectBoxStates1.usageDepth
+                                ? "rotate(180deg)"
+                                : "rotate(0deg)",
+                              transition: "transform 0.3s ease",
+                            }}
+                          />
+                        </SelectBoxTitle>
 
-                      {selectBoxStates1.usageDepth && (
-                        <SelectBoxList>
-                          <SelectBoxItem
-                            onClick={() => {
-                              handleCurrentPersonaChange("usageDepth", "1단계");
-                              setSelectBoxStates1((prev) => ({
-                                ...prev,
-                                usageDepth: false,
-                              }));
-                            }}
-                          >
-                            <Body2 color="gray700" align="left">
-                              기본적인 기능도 잘 모름
-                            </Body2>
-                          </SelectBoxItem>
-                          <SelectBoxItem
-                            onClick={() => {
-                              handleCurrentPersonaChange("usageDepth", "2단계");
-                              setSelectBoxStates1((prev) => ({
-                                ...prev,
-                                usageDepth: false,
-                              }));
-                            }}
-                          >
-                            <Body2 color="gray700" align="left">
-                              몇 가지 주요 기능만 사용
-                            </Body2>
-                          </SelectBoxItem>
-                          <SelectBoxItem
-                            onClick={() => {
-                              handleCurrentPersonaChange("usageDepth", "3단계");
-                              setSelectBoxStates1((prev) => ({
-                                ...prev,
-                                usageDepth: false,
-                              }));
-                            }}
-                          >
-                            <Body2 color="gray700" align="left">
-                              대부분의 기능을 사용해 봤지만, 특정 기능은 모름
-                            </Body2>
-                          </SelectBoxItem>
-                          <SelectBoxItem
-                            onClick={() => {
-                              handleCurrentPersonaChange("usageDepth", "4단계");
-                              setSelectBoxStates1((prev) => ({
-                                ...prev,
-                                usageDepth: false,
-                              }));
-                            }}
-                          >
-                            <Body2 color="gray700" align="left">
-                              거의 모든 기능을 능숙하게 사용
-                            </Body2>
-                          </SelectBoxItem>
-                        </SelectBoxList>
-                      )}
-                    </SelectBox>
+                        {selectBoxStates1.usageDepth && (
+                          <SelectBoxList>
+                            <SelectBoxItem
+                              onClick={() => {
+                                handleCurrentPersonaChange("usageDepth", "1단계");
+                                setSelectBoxStates1((prev) => ({
+                                  ...prev,
+                                  usageDepth: false,
+                                }));
+                              }}
+                            >
+                              <Body2 color="gray700" align="left">
+                                기본적인 기능도 잘 모름
+                              </Body2>
+                            </SelectBoxItem>
+                            <SelectBoxItem
+                              onClick={() => {
+                                handleCurrentPersonaChange("usageDepth", "2단계");
+                                setSelectBoxStates1((prev) => ({
+                                  ...prev,
+                                  usageDepth: false,
+                                }));
+                              }}
+                            >
+                              <Body2 color="gray700" align="left">
+                                몇 가지 주요 기능만 사용
+                              </Body2>
+                            </SelectBoxItem>
+                            <SelectBoxItem
+                              onClick={() => {
+                                handleCurrentPersonaChange("usageDepth", "3단계");
+                                setSelectBoxStates1((prev) => ({
+                                  ...prev,
+                                  usageDepth: false,
+                                }));
+                              }}
+                            >
+                              <Body2 color="gray700" align="left">
+                                대부분의 기능을 사용해 봤지만, 특정 기능은 모름
+                              </Body2>
+                            </SelectBoxItem>
+                            <SelectBoxItem
+                              onClick={() => {
+                                handleCurrentPersonaChange("usageDepth", "4단계");
+                                setSelectBoxStates1((prev) => ({
+                                  ...prev,
+                                  usageDepth: false,
+                                }));
+                              }}
+                            >
+                              <Body2 color="gray700" align="left">
+                                거의 모든 기능을 능숙하게 사용
+                              </Body2>
+                            </SelectBoxItem>
+                          </SelectBoxList>
+                        )}
+                      </SelectBox>
+                    </div>
                   </BoxWrap>
 
                   <CustomTextarea

@@ -485,8 +485,7 @@ export const TabButtonType5 = styled(TabButton)`
           left: 110px;
         }
       }
-    `
-  }
+    `}
 
   ${({ isActive }) =>
     isActive &&
@@ -2794,7 +2793,12 @@ export const BoxWrap = styled.div`
   justify-content: ${(props) => (props.NoData ? "center" : "normal")};
   gap: 20px !important;
   height: ${(props) => (props.NoData ? "200px" : "auto")};
-  padding: ${(props) => (props.Small ? "16px 20px" : "20px 24px")};
+  padding: ${(props) =>
+    props.Small
+      ? `16px 20px`
+      : props.NoneV
+      ? `16px 0 !important`
+      : `20px 24px`};
   border-radius: 15px;
   border: ${(props) =>
     props.NoData
@@ -2807,6 +2811,19 @@ export const BoxWrap = styled.div`
   p,
   strong {
     text-align: left;
+  }
+
+  .selectBoxWrap {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+
+    > ${Body2} {
+      flex-shrink: 0;
+      padding-left: 20px;
+    }
   }
 
   ${(props) =>
