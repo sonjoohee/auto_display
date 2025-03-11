@@ -29,9 +29,7 @@ const OrganismPersonaList = ({
   // 페르소나 선택 시 탭 간 동기화를 처리하는 함수
   const handleSyncedPersonaButtonClick = (buttonId) => {
     const [tab, id] = buttonId.split("_");
-    const persona = personaListSaas.find(
-      (p) => p.id === id || `persona${personaListSaas.indexOf(p)}` === id
-    );
+    const persona = personaListSaas.find((p) => p._id === id);
 
     if (!persona) return handlePersonaButtonClick(buttonId);
 
@@ -45,7 +43,7 @@ const OrganismPersonaList = ({
     // 마이페르소나 탭에서의 선택 상태만 변경하고 다른 탭과의 동기화는 하지 않음
     if (persona.favorite === true) {
       // onPersonaSelect 호출 (현재 탭 ID로)
-      onPersonaSelect(buttonId);
+      onPersonaSelect(persona._id);
       return;
     }
 
@@ -60,16 +58,16 @@ const OrganismPersonaList = ({
       }
 
       // onPersonaSelect 호출 (올바른 탭 ID로)
-      onPersonaSelect(originalTypeButtonId);
+      onPersonaSelect(persona._id);
     } else {
       // 그 외의 경우 onPersonaSelect 호출 (현재 탭 ID로)
-      onPersonaSelect(buttonId);
+      onPersonaSelect(persona._id);
     }
   };
 
   // 페르소나가 어떤 탭에서든 선택되었는지 확인하는 함수
   const isPersonaSelectedInAnyTab = (persona, index) => {
-    const personaId = persona.id || `persona${index}`;
+    const personaId = persona._id;
     const currentTabId = `${activeTab}_${personaId}`;
 
     // 현재 탭에서 선택되었는지 확인
@@ -96,7 +94,7 @@ const OrganismPersonaList = ({
 
   // 페르소나 선택 시 올바른 탭의 ID를 반환하는 함수
   const getCorrectTabIdForSelection = (persona, index, currentTab) => {
-    const personaId = persona.id || `persona${index}`;
+    const personaId = persona._id;
 
     // favorite가 true인 페르소나는 마이페르소나 탭에만 표시되므로
     // 현재 탭의 ID를 반환
@@ -182,7 +180,7 @@ const OrganismPersonaList = ({
                 })
                 .map((persona, index) => (
                   <MoleculePersonaListItem
-                    key={persona.id || `persona${index}`}
+                    key={persona._id}
                     personaImage={
                       personaImages[persona.imageKey] ||
                       personaImages.PersonaWomen01
@@ -190,7 +188,7 @@ const OrganismPersonaList = ({
                     personaTitle={persona.personaName || ""}
                     badgeType={persona.type || ""}
                     badgeText={persona.badgeText || ""}
-                    personaId={persona.id || `persona${index}`}
+                    personaId={persona._id}
                     isSelected={isPersonaSelectedInAnyTab(persona, index)}
                     personaInfo={persona || ""}
                     onPersonaButtonClick={(id) =>
@@ -202,7 +200,7 @@ const OrganismPersonaList = ({
                         index,
                         activeTab
                       );
-                      onPersonaSelect(correctTabId);
+                      onPersonaSelect(persona._id);
                     }}
                   />
                 ))}
