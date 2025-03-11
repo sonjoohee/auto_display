@@ -235,10 +235,6 @@ const PageCustomerValueAnalyzer = () => {
         }
         setCompletedSteps(completedStepsArray);
 
-        console.log(
-          "🚀 ~ interviewLoading ~ completedStepsArray:",
-          completedStepsArray
-        );
         // 카드 상태 설정
         if (toolStep ?? 0 >= 3) {
           const completedStates = customerValueAnalyzerPersona.reduce(
@@ -259,19 +255,11 @@ const PageCustomerValueAnalyzer = () => {
           const selectedTargets = customerValueAnalyzerSelectedPersona.map(
             (persona) => persona.target
           );
-          console.log(
-            "🚀 ~ interviewLoading ~ selectedTargets:",
-            selectedTargets
-          );
 
           if (
             Array.isArray(customerValueAnalyzerPersona) &&
             customerValueAnalyzerPersona.length > 0
           ) {
-            console.log(
-              "🚀 ~ interviewLoading ~ customerValueAnalyzerPersona:",
-              customerValueAnalyzerPersona
-            );
             const selectedIndices = customerValueAnalyzerPersona
               .map((persona, index) => {
                 const personaTarget =
@@ -290,26 +278,14 @@ const PageCustomerValueAnalyzer = () => {
               })
               .filter((index) => index !== -1);
 
-            console.log(
-              "🚀 ~ interviewLoading ~ selectedIndices:",
-              selectedIndices
-            );
             if (selectedIndices.length > 0) {
               setSelectedPersonas(selectedIndices);
-              console.log(
-                "🚀 ~ interviewLoading ~ selectedIndices:",
-                selectedIndices
-              );
             }
           }
         }
         // 고객 여정 맵 설정 (Step 3)
         if (Array.isArray(customerValueAnalyzerJourneyMap)) {
           setCustomerValueAnalyzerJourneyMap(customerValueAnalyzerJourneyMap);
-          console.log(
-            "🚀 ~ interviewLoading ~ customerValueAnalyzerJourneyMap:",
-            customerValueAnalyzerJourneyMap
-          );
         }
 
         // if (Array.isArray(customerValueAnalyzerFactor)) {
