@@ -712,6 +712,7 @@ const PageCustomerValueAnalyzer = () => {
   };
 
   const handlePersonaSelectionChange = (_id) => {
+    if (toolStep >= 1) return;
     // console.log("🚀 ~ handlePersonaSelectionChange ~ _id:", _id);
     // if (toolStep >= 2) return;
     setSelectedPersonasSaas((prev) => {
@@ -1204,6 +1205,7 @@ const PageCustomerValueAnalyzer = () => {
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
+    if (toolStep >= 1) return;
     if (
       selectedPersonasSaas.length >= 5 &&
       !selectedPersonaButtons[personaId]
@@ -1227,14 +1229,14 @@ const PageCustomerValueAnalyzer = () => {
     const detectRefresh = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
-      console.log("🚀 ~ detectRefresh ~ currentUrl:", currentUrl);
+      //console.log("🚀 ~ detectRefresh ~ currentUrl:", currentUrl);
       if (currentUrl.toLowerCase().includes("customervalueanalyzer")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         const lastUrl = sessionStorage.getItem("lastUrl");
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
+         // console.log("새로고침 감지: URL 비교");
           navigate("/");
           return true;
         }
@@ -1461,10 +1463,11 @@ const PageCustomerValueAnalyzer = () => {
                           </Body2>
                           <SelectBox style={{ paddingRight: "20px" }}>
                             <SelectBoxTitle
-                              onClick={() =>
-                                setIsSelectBoxOpen(!isSelectBoxOpen)
+                              onClick={() => 
+                                toolStep >= 1 ? null : setIsSelectBoxOpen(!isSelectBoxOpen)
                               }
                               None
+                              style={{ cursor: toolStep >= 1 ? 'not-allowed' : 'pointer' }}
                             >
                               {selectedPurposes?.analysisScope ? (
                                 <div
@@ -1502,7 +1505,7 @@ const PageCustomerValueAnalyzer = () => {
                               <images.ChevronDown
                                 width="24px"
                                 height="24px"
-                                color={palette.gray500}
+                                color={toolStep >= 1 ? palette.gray300 : palette.gray500}
                                 style={{
                                   transform: isSelectBoxOpen
                                     ? "rotate(180deg)"
