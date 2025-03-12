@@ -335,7 +335,7 @@ const OrganismCustomization = ({
                               정의
                             </Body3>
                             <TextBox>
-                              <Body3 color="gray700">
+                              <Body3 color="gray700" align="left">
                                 {apiResponse?.response?.custom_theory_data
                                   ?.definition || custom.definitionText}
                               </Body3>
@@ -347,7 +347,7 @@ const OrganismCustomization = ({
                               목적
                             </Body3>
                             <TextBox>
-                              <Body3 color="gray700">
+                              <Body3 color="gray700" align="left">
                                 {apiResponse?.response?.custom_theory_data
                                   ?.objective || custom.purposeText}
                               </Body3>
@@ -355,12 +355,12 @@ const OrganismCustomization = ({
                           </TextInfo>
 
                           <TextInfo style={{ width: "100%" }}>
-                            <Body3 color="gray700">주요 특징</Body3>
+                            <Body3 color="gray700" align="left">주요 특징</Body3>
 
                             {apiResponse?.response?.custom_theory_data?.characteristic?.map(
                               (char, idx) => (
                                 <TextBox key={idx}>
-                                  <Body3 color="gray700">{char}</Body3>
+                                  <Body3 color="gray700" align="left">{char}</Body3>
                                 </TextBox>
                               )
                             ) || (
