@@ -29,12 +29,27 @@ import {
   DESIGN_ANALYSIS_BUSINESS_INFO,
   PROJECT_SAAS,
   DESIGN_ANALYSIS_BUSINESS_TITLE,
+  ACCESS_DASHBOARD,
+  ACCESS_STATE_SAAS,
+  PROJECT_TOTAL_INFO,
+  PROJECT_CREATE_INFO,
+  SINGLE_INTERVIEW_QUESTION_LIST,
+  INTERVIEW_QUESTION_LIST,
+  CUSTOM_THEORY_DATA,
+  PROJECT_ID,
+  PERSONA_LIST_SAAS,
+  TOOL_LIST_SAAS,
+  DASHBOARD_TOOL_LIST_SAAS,
 } from "../../../pages/AtomStates";
 import OrganismBusinessAnalysis from "../../../pages/Persona/components/organisms/OrganismBusinessAnalysis";
 import { UserCreditInfo } from "../../../utils/indexedDB";
 // import { AlarmCreate } from '../../../utils/indexedDB';
 import { AlarmList } from "../../../utils/indexedDB";
-
+import {
+  getProjectByIdFromIndexedDB,
+  getPersonaListOnServer,
+  getToolListOnServerSaas,
+} from "../../../utils/indexedDB";
 const MoleculeHeader = () => {
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
@@ -52,7 +67,20 @@ const MoleculeHeader = () => {
   const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
     TARGET_DISCOVERY_INFO
   );
+  const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
+  const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
+  const [accessStateSaas, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, setProjectCreateInfo] =
+    useAtom(PROJECT_CREATE_INFO);
+  const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
+    SINGLE_INTERVIEW_QUESTION_LIST
+  );
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
+    INTERVIEW_QUESTION_LIST
+  );
+  const [customTheoryData, setCustomTheoryData] = useAtom(CUSTOM_THEORY_DATA);
   const [ideaGeneratorInfo, setIdeaGeneratorInfo] =
     useAtom(IDEA_GENERATOR_INFO);
   const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(
@@ -63,6 +91,11 @@ const MoleculeHeader = () => {
   );
   const [designAnalysisBusinessTitle, setDesignAnalysisBusinessTitle] = useAtom(
     DESIGN_ANALYSIS_BUSINESS_TITLE
+  );
+  const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
+  const [toolListSaas, setToolListSaas] = useAtom(TOOL_LIST_SAAS);
+  const [dashboardToolListSaas, setDashboardToolListSaas] = useAtom(
+    DASHBOARD_TOOL_LIST_SAAS
   );
   const navigate = useNavigate();
 
@@ -218,14 +251,90 @@ const MoleculeHeader = () => {
     fetchAlarms();
   }, [location, isLoggedIn]);
 
-  const handleLinkNavigation = (link) => {
-    if (!link) return;
+  const handleLinkNavigation = async (item) => {
+    console.log("🚀 ~ handleLinkNavigation ~ item:", item);
 
+    const link = item.link;
+    const projectId = item.projectId;
+    if (!link) return;
+    console.log("🚀 ~ handleLinkNavigation ~ link:", link);
+    console.log("🚀 ~ handleLinkNavigation ~ projectId:", projectId);
     try {
-      const url = new URL(link);
-      if (url.hostname === "www.interviewx.ai") {
-        // interviewx.ai 도메인인 경우 pathname으로 내부 이동
-        navigate(url.pathname);
+      // const url = new URL(link);
+      // if (url.hostname === "www.interviewx.ai") {
+      //   // interviewx.ai 도메인인 경우 pathname으로 내부 이동
+      //   navigate(url.pathname);
+      // } else
+      if (link === "dashboard") {
+        // const project = await getProjectByIdFromIndexedDB(projectId, true);
+        // console.log("🚀 ~ handleLinkNavigation ~ project:", project);
+        // setProjectId(projectId);
+        // setProjectSaas(project);
+        // setAccessDashboard(true);
+        // setAccessStateSaas(true);
+        // const projectTotalData = {
+        //   projectTitle: project.projectTitle,
+        //   projectDescription: project.projectDescription,
+        //   businessModel: project.businessModel,
+        //   industryType: project.industryType,
+        //   targetCountry: project.targetCountry,
+        //   projectAnalysis: project.projectAnalysis,
+        //   files: project?.files?.map((file, index) => ({
+        //     id: file.id,
+        //     name: file.name,
+        //   })),
+        // };
+        // setProjectTotalInfo(projectTotalData || {});
+        // setProjectCreateInfo(project.projectAnalysis || {});
+        // setSingleInterviewQuestionList(
+        //   project.singleInterviewQuestionList || []
+        // );
+        // setInterviewQuestionList(project.interviewQuestionList || []);
+        // setCustomTheoryData(project.customTheoryData || {});
+
+        // // 페르소나 리스트 불러오기
+        // try {
+        //   const savedPersonaListInfo = await getPersonaListOnServer(
+        //     projectId,
+        //     true
+        //   );
+
+        //   if (savedPersonaListInfo) {
+        //     const sortedList = [...savedPersonaListInfo].sort((a, b) => {
+        //       const dateA = a.timestamp;
+        //       const dateB = b.timestamp;
+        //       return dateB - dateA; // 최신 날짜가 위로
+        //     });
+
+        //     setPersonaListSaas(sortedList);
+        //   }
+        // } catch (error) {
+        //   console.error("페르소나 리스트 불러오기 오류:", error);
+        // }
+
+        // // 툴 리스트 불러오기
+        // try {
+        //   const savedToolListInfo = await getToolListOnServerSaas(
+        //     projectId,
+        //     5,
+        //     true
+        //   );
+
+        //   if (savedToolListInfo) {
+        //     const sortedList = [...savedToolListInfo].sort((a, b) => {
+        //       const dateA = a.timestamp;
+        //       const dateB = b.timestamp;
+        //       return dateB - dateA; // 최신 날짜가 위로
+        //     });
+
+        //     setToolListSaas(sortedList);
+        //   }
+        // } catch (error) {
+        //   console.error("툴 리스트 불러오기 오류:", error);
+        // }
+
+        navigate("/");
+        // navigate("/DashBoard");
       } else {
         // 다른 외부 링크는 새 창에서 열기
         window.open(link, "_blank");
@@ -501,11 +610,13 @@ const MoleculeHeader = () => {
                         </span>
                       </MessageContent>
 
-                      <ButtonWrap>
-                        <Button onClick={() => handleLinkNavigation(item.link)}>
-                          {item.linkText}
-                        </Button>
-                      </ButtonWrap>
+                      {item.linkText && (
+                        <ButtonWrap>
+                          <Button onClick={() => handleLinkNavigation(item)}>
+                            {item.linkText}
+                          </Button>
+                        </ButtonWrap>
+                      )}
                     </Message>
                   </Messageox>
                 ))}
