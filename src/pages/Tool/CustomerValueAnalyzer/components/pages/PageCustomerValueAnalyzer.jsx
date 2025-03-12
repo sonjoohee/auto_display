@@ -861,7 +861,7 @@ const PageCustomerValueAnalyzer = () => {
               // 새로운 factor가 존재하는 경우에만 추가
               return [
                 ...currentFactors,
-                response.response.customer_value_factor
+                response.response.customer_value_factor,
               ];
             });
             setCardStatusesFactor((prev) => ({
@@ -1227,6 +1227,7 @@ const PageCustomerValueAnalyzer = () => {
     const detectRefresh = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
+      console.log("🚀 ~ detectRefresh ~ currentUrl:", currentUrl);
       if (currentUrl.toLowerCase().includes("customervalueanalyzer")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         const lastUrl = sessionStorage.getItem("lastUrl");

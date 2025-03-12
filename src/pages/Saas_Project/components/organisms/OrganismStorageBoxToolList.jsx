@@ -443,7 +443,6 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
 
   const saveConversation = (data) => {
     // 대화 저장 로직 구현
-
   };
 
   // 서버에서 툴 정보 가져오기 함수
@@ -460,7 +459,6 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
       );
       return response.data;
     } catch (error) {
-      
       return null;
     }
   };
@@ -558,7 +556,10 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           return tool.type;
       }
     }
-    if (tool.reportTitle) return tool.reportTitle;
+    if (tool.interviewType)
+      return tool.interviewType === "single"
+        ? tool.reportTitle
+        : tool.theoryType;
     if (tool.chat_data?.expert_index) {
       switch (tool.chat_data.expert_index) {
         case "1":
@@ -931,9 +932,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           setToolLoading(true);
           navigate("/DesignAnalysis");
         }
-      } catch (error) {
-
-      }
+      } catch (error) {}
     } else if (conversationType === "interviewSingle") {
       // console.log("🚀 ~ navigateToInterviewReportPage ~ reportId:", reportId);
       setProjectId(project._id);
@@ -963,6 +962,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const handleDeleteClose = () => {
     setIsDeletePopupOpen(false);
   };
+
 
   const handleDeleteConfirm = async () => {
     setIsDeletePopupOpen(false);

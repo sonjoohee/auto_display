@@ -454,7 +454,6 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
       );
       return response.data;
     } catch (error) {
-
       return null;
     }
   };
@@ -552,7 +551,10 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           return tool.type;
       }
     }
-    if (tool.reportTitle) return tool.reportTitle;
+    if (tool.interviewType)
+      return tool.interviewType === "single"
+        ? tool.reportTitle
+        : tool.theoryType;
     if (tool.chat_data?.expert_index) {
       switch (tool.chat_data.expert_index) {
         case "1":
@@ -780,9 +782,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
         // 페이지를 대화가 이어지는 형태로 전환
         navigate(`/ExpertInsight`);
-      } catch (error) {
- 
-      }
+      } catch (error) {}
     } else if (conversationType === "tool") {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
@@ -925,9 +925,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           setToolLoading(true);
           navigate("/DesignAnalysis");
         }
-      } catch (error) {
-      
-      }
+      } catch (error) {}
     } else if (conversationType === "interviewSingle") {
       // console.log("🚀 ~ navigateToInterviewReportPage ~ reportId:", reportId);
       setProjectId(project._id);
