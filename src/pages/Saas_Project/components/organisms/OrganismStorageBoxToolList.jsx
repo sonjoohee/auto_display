@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../../../assets/styles/ButtonStyle";
@@ -151,6 +151,9 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [localToolList, setLocalToolList] = useState(toolListSaas || []);
 
+  useEffect(() => {
+    setLocalToolList(toolListSaas);
+  }, [toolListSaas]);
   // 상태 변수들 정의
   const [savedTimestamp, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
@@ -1093,7 +1096,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         <PopupWrap
           Warning
           title="정말 삭제하시겠습니까?"
-          message="삭제된 항목은 복구가 불가합니다"
+          message="삭제된 항목은 임시 삭제함에서 복구 가능합니다."
           buttonType="Outline"
           closeText="취소"
           confirmText="확인"
