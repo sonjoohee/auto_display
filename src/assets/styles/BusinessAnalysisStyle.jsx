@@ -2834,13 +2834,15 @@ export const BoxWrap = styled.div`
     `}
 
   ${(props) =>
-    (props.Column && props.Small) &&
+    props.Column &&
+    props.Small &&
     css`
       gap: 10px !important;
     `}
 
   ${(props) =>
-    (props.Column && props.NoneV) &&
+    props.Column &&
+    props.NoneV &&
     css`
       gap: 10px !important;
     `}
@@ -3043,17 +3045,16 @@ export const RangeSlider = styled.input`
     background: ${palette.outlineGray};
   }
 
-    // 중앙 구분선
-    &::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 2px;
-      height: 8px;
-      background: ${palette.outlineGray};
-    }
+  // 중앙 구분선
+  &::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 2px;
+    height: 8px;
+    background: ${palette.outlineGray};
   }
 
   // thumb 스타일링
