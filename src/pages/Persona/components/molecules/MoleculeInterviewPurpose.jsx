@@ -97,7 +97,7 @@ const MoleculeInterviewPurpose = ({
       // return newState;
     });
 
-    const existingQuestions = singleInterviewQuestionList.find(
+    const existingQuestions = singleInterviewQuestionList?.find(
       (item) =>
         item.theory_name ===
         (purpose.id === 4 ? purpose.custom_theory_data.theory_title : title)
@@ -137,12 +137,8 @@ const MoleculeInterviewPurpose = ({
         // }
       } else if (purpose.id !== 4) {
         let data = {
-          business_idea: businessAnalysis.input,
-          business_analysis_data: {
-            title: businessAnalysis.title,
-            characteristics: businessAnalysis.characteristics,
-            features: businessAnalysis.features,
-          },
+          business_idea: projectTotalInfo.projectTitle,
+          business_analysis_data: projectCreateInfo,
           theory_name: title,
         };
 
@@ -154,12 +150,12 @@ const MoleculeInterviewPurpose = ({
 
       if (response.response) {
         const commonQuestions = response.response
-          .filter((item) => item.question_type === "공통질문")
-          .map((item) => item);
+          ?.filter((item) => item.question_type === "공통질문")
+          ?.map((item) => item);
 
         const specialQuestions = response.response
-          .filter((item) => item.question_type === "특화질문")
-          .map((item) => item);
+          ?.filter((item) => item.question_type === "특화질문")
+          ?.map((item) => item);
 
         const newQuestionData = {
           theory_name:
@@ -219,7 +215,7 @@ const MoleculeInterviewPurpose = ({
 
   const handleQuestionClick = () => {
     setSelectedInterviewPurpose(purpose.id);
-    const selectedPurpose = purposeItemsSingleAtom.find(
+    const selectedPurpose = purposeItemsSingleAtom?.find(
       (item) => item.id === purpose.id
     );
 
@@ -227,7 +223,7 @@ const MoleculeInterviewPurpose = ({
     toggleQuestions(purpose.id);
 
     if (purpose.id !== 4 && !showQuestions[purpose.id]) {
-      const existingQuestions = singleInterviewQuestionList.find(
+      const existingQuestions = singleInterviewQuestionList?.find(
         (item) => item.theory_name === purpose.title
       );
 
@@ -240,7 +236,7 @@ const MoleculeInterviewPurpose = ({
         loadInterviewQuestion(purpose.title);
       }
     } else if (purpose.id === 4 && !showQuestions[purpose.id]) {
-      const existingQuestions = singleInterviewQuestionList.find(
+      const existingQuestions = singleInterviewQuestionList?.find(
         (item) => item.theory_name === purpose.theory_title
       );
 
@@ -307,7 +303,7 @@ const MoleculeInterviewPurpose = ({
                 </>
               ) : isLoadingQuestion &&
                 purpose.id === 4 &&
-                !singleInterviewQuestionList.find(
+                !singleInterviewQuestionList?.find(
                   (item) =>
                     item.theory_name === purpose.custom_theory_data.theory_title
                 ) ? (
@@ -318,7 +314,7 @@ const MoleculeInterviewPurpose = ({
                 </>
               ) : (
                 (() => {
-                  const questions = singleInterviewQuestionList.find(
+                  const questions = singleInterviewQuestionList?.find(
                     (item) =>
                       item.theory_name ===
                       (purpose.id === 4
@@ -352,7 +348,7 @@ const MoleculeInterviewPurpose = ({
                 </>
               ) : isLoadingQuestion &&
                 purpose.id === 4 &&
-                !singleInterviewQuestionList.find(
+                !singleInterviewQuestionList?.find(
                   (item) =>
                     item.theory_name === purpose.custom_theory_data.theory_title
                 ) ? (
@@ -363,7 +359,7 @@ const MoleculeInterviewPurpose = ({
                 </>
               ) : (
                 (() => {
-                  const questions = singleInterviewQuestionList.find(
+                  const questions = singleInterviewQuestionList?.find(
                     (item) =>
                       item.theory_name ===
                       (purpose.id === 4
