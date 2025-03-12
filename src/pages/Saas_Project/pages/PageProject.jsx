@@ -82,6 +82,7 @@ const PageProject = () => {
 
   useEffect(() => {
     setAccessDashboard(false);
+
     const loadProjectList = async () => {
       try {
         const savedProjectListInfo = await getProjectListSaasByIdFromIndexedDB(

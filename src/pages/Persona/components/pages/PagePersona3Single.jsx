@@ -405,6 +405,65 @@ const PagePersona3Single = () => {
     }
   };
 
+  useEffect(() => {
+    // 새로고침 감지 함수
+    const detectRefresh = () => {
+      // 현재 URL 확인
+      const currentUrl = window.location.href;
+      if (currentUrl.toLowerCase().includes("persona3single")) {
+        // 세션 스토리지에서 마지막 URL 가져오기
+        const lastUrl = sessionStorage.getItem("lastUrl");
+
+        // 마지막 URL이 현재 URL과 같으면 새로고침
+        if (lastUrl && lastUrl === currentUrl) {
+          console.log("새로고침 감지: URL 비교");
+          navigate("/");
+          return true;
+        }
+
+        // 현재 URL 저장
+        sessionStorage.setItem("lastUrl", currentUrl);
+      }
+
+      return false;
+    };
+
+    // beforeunload 이벤트 핸들러
+    const handleBeforeUnload = (event) => {
+      // 이벤트 취소 (표준에 따라)
+      event.preventDefault();
+      // Chrome은 returnValue 설정 필요
+      event.returnValue = "";
+
+      // 새로고침 시 루트 페이지로 이동
+      navigate("/");
+    };
+
+    // F5 키 또는 Ctrl+R 감지
+    const handleKeyDown = (event) => {
+      if (
+        (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
+        event.key === "F5"
+      ) {
+        // F5 키 코드
+        event.preventDefault();
+        navigate("/");
+      }
+    };
+
+    // 함수 실행
+    detectRefresh();
+
+    // 이벤트 리스너 등록
+    // window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("keydown", handleKeyDown);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      // window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [navigate]);
   const [activeTab, setActiveTab] = useState(1);
   const completedSteps = [1, 2, 3, 4];
 
@@ -446,10 +505,14 @@ const PagePersona3Single = () => {
                 <span>03</span>
                 <div className="text">
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    {selectedInterviewType === "multiple" ? "그룹 인터뷰" : "심층 인터뷰"}
+                    {selectedInterviewType === "multiple"
+                      ? "그룹 인터뷰"
+                      : "심층 인터뷰"}
                   </Body1>
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    {selectedInterviewType === "multiple" ? "Group Interview" : "Indepth Interview"}
+                    {selectedInterviewType === "multiple"
+                      ? "Group Interview"
+                      : "Indepth Interview"}
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -467,7 +530,8 @@ const PagePersona3Single = () => {
               <div className="title">
                 <H3 color="gray800">Interview Objective Define</H3>
                 <Body3 color="gray800">
-                  인터뷰 주제를 명확히하고 원하는 인사이트를 얻기 위한 질문을 설계합니다
+                  인터뷰 주제를 명확히하고 원하는 인사이트를 얻기 위한 질문을
+                  설계합니다
                 </Body3>
               </div>
 
@@ -476,50 +540,53 @@ const PagePersona3Single = () => {
                   <div className="title">
                     <Body1 color="gray700">인터뷰 목적 선택</Body1>
                   </div>
-                  
+
                   <CustomizationWrap>
-                    {showCustomButton &&
+                    {showCustomButton && (
                       <BoxWrap NoData onClick={() => setShowRequestPopup(true)}>
                         <img src={images.NoData} alt="no data" />
-                        <Body2 color="gray700" align="center">원하는 내용이 없다면, 목적에 따른 문항을 생성해보세요</Body2>
-                      </BoxWrap>}
+                        <Body2 color="gray700" align="center">
+                          원하는 내용이 없다면, 목적에 따른 문항을 생성해보세요
+                        </Body2>
+                      </BoxWrap>
+                    )}
 
-                      <OrganismCustomization
-                        customizations={customizations}
-                        setCustomizations={setCustomizations}
-                        setShowPopup={setShowPopup}
-                        setShowNewListBox={setShowNewListBox}
-                        setShowCustomization={setShowCustomization}
-                        setShowCustomButton={setShowCustomButton}
-                        setShowQuestions={setShowQuestions}
+                    <OrganismCustomization
+                      customizations={customizations}
+                      setCustomizations={setCustomizations}
+                      setShowPopup={setShowPopup}
+                      setShowNewListBox={setShowNewListBox}
+                      setShowCustomization={setShowCustomization}
+                      setShowCustomButton={setShowCustomButton}
+                      setShowQuestions={setShowQuestions}
+                    />
+
+                    {purposeItemsSingleAtom.slice(3, 4).map((purpose) => (
+                      <MoleculeInterviewPurpose
+                        Small
+                        key={purpose.id}
+                        purpose={purpose}
+                        selectedPurpose={selectedInterviewPurpose}
+                        showQuestions={showQuestions}
+                        onPurposeSelect={handlePurposeSelect}
+                        toggleQuestions={(id) =>
+                          setShowQuestions((prev) => ({
+                            ...prev,
+                            [id]: !prev[id],
+                          }))
+                        }
                       />
-                      
-                      {purposeItemsSingleAtom.slice(3, 4).map((purpose) => (
-                        <MoleculeInterviewPurpose
-                          Small
-                          key={purpose.id}
-                          purpose={purpose}
-                          selectedPurpose={selectedInterviewPurpose}
-                          showQuestions={showQuestions}
-                          onPurposeSelect={handlePurposeSelect}
-                          toggleQuestions={(id) =>
-                            setShowQuestions((prev) => ({
-                              ...prev,
-                              [id]: !prev[id],
-                            }))
-                          }
-                        />
-                      ))}
-                      
+                    ))}
                   </CustomizationWrap>
-                  
                 </TabContent5Item>
               </div>
 
               <div className="content">
                 <TabContent5Item>
-                  <Body1 color="gray700" align="left">💡어떤 목적을 써야할지 모르겠다면?</Body1>
-                  
+                  <Body1 color="gray700" align="left">
+                    💡어떤 목적을 써야할지 모르겠다면?
+                  </Body1>
+
                   {purposeItemsSingleAtom.slice(0, 3).map((purpose) => (
                     <MoleculeInterviewPurpose
                       Small
@@ -539,8 +606,15 @@ const PagePersona3Single = () => {
                 </TabContent5Item>
               </div>
 
-              <Button Other Primary Fill disabled={!selectedInterviewPurpose} onClick={handleSelectPersona}>다음</Button>
-
+              <Button
+                Other
+                Primary
+                Fill
+                disabled={!selectedInterviewPurpose}
+                onClick={handleSelectPersona}
+              >
+                다음
+              </Button>
             </TabContent5>
 
             {/* 크레딧 소진팝업 */}

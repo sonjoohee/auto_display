@@ -119,12 +119,12 @@ const PageStorageBox = () => {
     detectRefresh();
 
     // 이벤트 리스너 등록
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    // window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("keydown", handleKeyDown);
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+      // window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
@@ -260,7 +260,7 @@ const PageStorageBox = () => {
       </ContentsWrap>
 
       {isTrashModalOpen && (
-        <PopupWrap 
+        <PopupWrap
           Wide455
           TitleFlex
           title="임시 삭제함"
@@ -271,32 +271,58 @@ const PageStorageBox = () => {
             <>
               <div className="deleted-wrap">
                 <div>
-                  <images.GridCircle color={palette.gray700} width={12} height={12} />
+                  <images.GridCircle
+                    color={palette.gray700}
+                    width={12}
+                    height={12}
+                  />
                   <div className="content">
-                    <Sub3 color="gray800" align="left">(리서치툴명) 총 8명의 페르소나 시나리오 분석</Sub3>
-                    <Caption1 color="gray500" align="left">삭제일 : 2025.01.24</Caption1>
+                    <Sub3 color="gray800" align="left">
+                      (리서치툴명) 총 8명의 페르소나 시나리오 분석
+                    </Sub3>
+                    <Caption1 color="gray500" align="left">
+                      삭제일 : 2025.01.24
+                    </Caption1>
                   </div>
                   <div className="button">
-                    <span><img src={images.ArrowReturn} alt="" /></span>
-                    <span><img src={images.Trash} alt="" /></span>
+                    <span>
+                      <img src={images.ArrowReturn} alt="" />
+                    </span>
+                    <span>
+                      <img src={images.Trash} alt="" />
+                    </span>
                   </div>
                 </div>
-                
+
                 <div>
-                  <images.GridCircle color={palette.gray700} width={12} height={12} />
+                  <images.GridCircle
+                    color={palette.gray700}
+                    width={12}
+                    height={12}
+                  />
                   <div className="content">
-                    <Sub3 color="gray800" align="left">(리서치툴명) 총 8명의 페르소나 시나리오 분석</Sub3>
-                    <Caption1 color="gray500" align="left">삭제일 : 2025.01.24</Caption1>
+                    <Sub3 color="gray800" align="left">
+                      (리서치툴명) 총 8명의 페르소나 시나리오 분석
+                    </Sub3>
+                    <Caption1 color="gray500" align="left">
+                      삭제일 : 2025.01.24
+                    </Caption1>
                   </div>
                   <div className="button">
-                    <span><img src={images.ArrowReturn} alt="" /></span>
-                    <span><img src={images.Trash} alt="" /></span>
+                    <span>
+                      <img src={images.ArrowReturn} alt="" />
+                    </span>
+                    <span>
+                      <img src={images.Trash} alt="" />
+                    </span>
                   </div>
                 </div>
               </div>
 
               <div className="delete-info">
-                <Caption1 color="primary">휴지통에 15일 이상 보관된 리포트는 자동으로 삭제됩니다.</Caption1>
+                <Caption1 color="primary">
+                  휴지통에 15일 이상 보관된 리포트는 자동으로 삭제됩니다.
+                </Caption1>
               </div>
             </>
           }
