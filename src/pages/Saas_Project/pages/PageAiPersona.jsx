@@ -933,12 +933,12 @@ const PageAiPersona = () => {
     detectRefresh();
 
     // 이벤트 리스너 등록
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    // window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("keydown", handleKeyDown);
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+      // window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
@@ -1939,7 +1939,9 @@ const PageAiPersona = () => {
                                   : "gray300"
                               }
                             >
-                              {mapExperienceDepth(currentPersona.experienceDepth)}
+                              {mapExperienceDepth(
+                                currentPersona.experienceDepth
+                              )}
                             </Body2>
                           </div>
                           <images.ChevronDown
@@ -2057,7 +2059,9 @@ const PageAiPersona = () => {
                           <div style={{ display: "flex", gap: "10px" }}>
                             <Body2
                               color={
-                                currentPersona.usageDepth ? "gray700" : "gray300"
+                                currentPersona.usageDepth
+                                  ? "gray700"
+                                  : "gray300"
                               }
                             >
                               {mapUsageDepth(currentPersona.usageDepth)}
@@ -2080,7 +2084,10 @@ const PageAiPersona = () => {
                           <SelectBoxList>
                             <SelectBoxItem
                               onClick={() => {
-                                handleCurrentPersonaChange("usageDepth", "1단계");
+                                handleCurrentPersonaChange(
+                                  "usageDepth",
+                                  "1단계"
+                                );
                                 setSelectBoxStates1((prev) => ({
                                   ...prev,
                                   usageDepth: false,
@@ -2093,7 +2100,10 @@ const PageAiPersona = () => {
                             </SelectBoxItem>
                             <SelectBoxItem
                               onClick={() => {
-                                handleCurrentPersonaChange("usageDepth", "2단계");
+                                handleCurrentPersonaChange(
+                                  "usageDepth",
+                                  "2단계"
+                                );
                                 setSelectBoxStates1((prev) => ({
                                   ...prev,
                                   usageDepth: false,
@@ -2106,7 +2116,10 @@ const PageAiPersona = () => {
                             </SelectBoxItem>
                             <SelectBoxItem
                               onClick={() => {
-                                handleCurrentPersonaChange("usageDepth", "3단계");
+                                handleCurrentPersonaChange(
+                                  "usageDepth",
+                                  "3단계"
+                                );
                                 setSelectBoxStates1((prev) => ({
                                   ...prev,
                                   usageDepth: false,
@@ -2119,7 +2132,10 @@ const PageAiPersona = () => {
                             </SelectBoxItem>
                             <SelectBoxItem
                               onClick={() => {
-                                handleCurrentPersonaChange("usageDepth", "4단계");
+                                handleCurrentPersonaChange(
+                                  "usageDepth",
+                                  "4단계"
+                                );
                                 setSelectBoxStates1((prev) => ({
                                   ...prev,
                                   usageDepth: false,

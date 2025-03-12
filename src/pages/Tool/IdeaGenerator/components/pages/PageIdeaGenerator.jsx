@@ -279,7 +279,6 @@ const PageIdeaGenerator = () => {
           });
 
           setSelectedPersonaButtons(newSelectedButtons);
-       
         }
 
         if (ideaGeneratorFinalReport?.clusters?.length > 0) {
@@ -449,8 +448,10 @@ const PageIdeaGenerator = () => {
         const selectedPersonaObjects = selectedPersonasSaas
           .map((selectedPersona) => {
             // _id와 personaName을 사용하여 해당 페르소나 객체를 찾습니다
-            return personaListSaas.filter((persona) => 
-              persona._id === selectedPersona._id && persona.personaName === selectedPersona.personaName
+            return personaListSaas.filter(
+              (persona) =>
+                persona._id === selectedPersona._id &&
+                persona.personaName === selectedPersona.personaName
             );
           })
           .flat() // 중첩 배열을 평탄화하여 모든 일치하는 페르소나 객체를 가져옵니다
@@ -513,7 +514,7 @@ const PageIdeaGenerator = () => {
       // 서버에 결과 저장
       await updateToolOnServer(
         toolId,
-        { 
+        {
           completedStep: 2,
           ideaGeneratorIdea: results || [],
         },
@@ -1000,12 +1001,12 @@ const PageIdeaGenerator = () => {
     detectRefresh();
 
     // 이벤트 리스너 등록
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    // window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("keydown", handleKeyDown);
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+      // window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
