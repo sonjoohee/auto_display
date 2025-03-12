@@ -542,14 +542,12 @@ const PagePersona3Single = () => {
                   </div>
 
                   <CustomizationWrap>
-                    {showCustomButton && (
+                    {showCustomButton && (!customTheoryData || Object.keys(customTheoryData).length === 0) &&
                       <BoxWrap NoData onClick={() => setShowRequestPopup(true)}>
                         <img src={images.NoData} alt="no data" />
-                        <Body2 color="gray700" align="center">
-                          원하는 내용이 없다면, 목적에 따른 문항을 생성해보세요
-                        </Body2>
+                        <Body2 color="gray700" align="center">원하는 내용이 없다면, 목적에 따른 문항을 생성해보세요</Body2>
                       </BoxWrap>
-                    )}
+                    }
 
                     <OrganismCustomization
                       customizations={customizations}
@@ -560,8 +558,8 @@ const PagePersona3Single = () => {
                       setShowCustomButton={setShowCustomButton}
                       setShowQuestions={setShowQuestions}
                     />
-
-                    {purposeItemsSingleAtom.slice(3, 4).map((purpose) => (
+                      
+                    {purposeItemsSingleAtom.slice(3).map((purpose) => (
                       <MoleculeInterviewPurpose
                         Small
                         key={purpose.id}
@@ -577,6 +575,7 @@ const PagePersona3Single = () => {
                         }
                       />
                     ))}
+
                   </CustomizationWrap>
                 </TabContent5Item>
               </div>

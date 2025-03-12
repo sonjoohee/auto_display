@@ -20,6 +20,7 @@ import {
   PROJECT_CREATE_INFO,
   SINGLE_INTERVIEW_QUESTION_LIST,
   INTERVIEW_QUESTION_LIST,
+  CUSTOM_THEORY_DATA,
 } from "../../../../pages/AtomStates";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import PopupWrap from "../../../../assets/styles/Popup";
@@ -37,6 +38,7 @@ const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
     useAtom(SINGLE_INTERVIEW_QUESTION_LIST);
   const [interviewQuestionList, setInterviewQuestionList] =
     useAtom(INTERVIEW_QUESTION_LIST);
+  const [customTheoryData, setCustomTheoryData] = useAtom(CUSTOM_THEORY_DATA);
   const [showTooltip, setShowTooltip] = useState(false);
 
   const handleClick = async () => {
@@ -66,6 +68,8 @@ const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
       setProjectCreateInfo(project.projectAnalysis || {});
       setSingleInterviewQuestionList(project.singleInterviewQuestionList || []);
       setInterviewQuestionList(project.interviewQuestionList || []);
+      setCustomTheoryData(project.customTheoryData || {});
+
       // 프로젝트 데이터를 state로 전달하여 DashBoard 페이지로 이동
       navigate("/DashBoard");
     }

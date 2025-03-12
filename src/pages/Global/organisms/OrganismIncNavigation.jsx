@@ -1251,6 +1251,11 @@ const OrganismIncNavigation = () => {
     }
   };
 
+  const handleResearchToolClick = () => {
+    setSelectedInterviewPurpose("");
+    navigate("/Tool");
+  };
+
   //메뉴리스트-> molcules로?
   return (
     <>
@@ -1379,7 +1384,7 @@ const OrganismIncNavigation = () => {
               </li>
 
               <li
-                onClick={() => navigate("/Tool")}
+                onClick={() => handleResearchToolClick()}
                 className={`research ${
                   location.pathname === "/Tool" ? "active" : ""
                 }`}
