@@ -475,34 +475,41 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               }
             }
 
+            // const personaInfo = {
+            //   id: personaList.selected[i].hasOwnProperty("request_persona_type")
+            //     ? `${personaList.selected[i].request_persona_type}_${personaList.selected[i].persona_id}`
+            //     : personaList.selected[i].persona_id.replace(/[^0-9]/g, ""),
+            //   name: personaList.selected[i].persona,
+            //   keyword: personaList.selected[i].hasOwnProperty(
+            //     "request_persona_type"
+            //   )
+            //     ? personaList.selected[i].keyword
+            //     : personaList.selected[i].persona_keyword,
+            //   hashtag: personaList.selected[i].lifestyle,
+            //   summary: personaList.selected[i].consumption_pattern,
+            //   request_persona_type:
+            //     personaList.selected[i].request_persona_type || "preset",
+            // };
+
             const personaInfo = {
-              id: personaList.selected[i].hasOwnProperty("request_persona_type")
-                ? `${personaList.selected[i].request_persona_type}_${personaList.selected[i].persona_id}`
-                : personaList.selected[i].persona_id.replace(/[^0-9]/g, ""),
-              name: personaList.selected[i].persona,
-              keyword: personaList.selected[i].hasOwnProperty(
-                "request_persona_type"
-              )
-                ? personaList.selected[i].keyword
-                : personaList.selected[i].persona_keyword,
-              hashtag: personaList.selected[i].lifestyle,
-              summary: personaList.selected[i].consumption_pattern,
-              request_persona_type:
-                personaList.selected[i].request_persona_type || "preset",
+              id: `saas_${personaList.selected[i]._id}`,
+              name: personaList.selected[i].personaName,
+              keyword: personaList.selected[i].keywords,
+              lifestyle: personaList.selected[i].lifestyle,
+              characteristics: personaList.selected[i].personaCharacteristics,
+              consumption_pattern: personaList.selected[i].consumptionPattern,
+              request_persona_type: "saas",
             };
+
 
             //수집된 답변들 api요청에 포함
             const data = {
-              business_analysis_data: businessAnalysis,
+              business_analysis_data: projectTotalInfo,
               question: interviewQuestionListState[currentQuestionIndex],
               persona_info: personaInfo,
               last_interview: lastInterview,
-            }; // let response = await axios.post(
-            //   //페르소나 답변 생성하는 api
-            //   "https://wishresearch.kr/person/persona_interview_module",
-            //   data,
-            //   axiosConfig
-            // );
+            }; 
+
             let response = await InterviewXPersonaMultipleInterviewRequest(
               data,
               isLoggedIn
@@ -511,7 +518,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             let retryCount = 0;
             const maxRetries = 10;
 
-            //에러시 실행
+            // //에러시 실행
             while (
               retryCount < maxRetries &&
               (!response.response ||

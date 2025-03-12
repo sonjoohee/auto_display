@@ -844,7 +844,7 @@ const PagePersona4 = () => {
                             </Caption1>
                             <PersonaInfo>
                               <span>{personaItem.gender || "성별"}</span>
-                              <span>{personaItem.age || "나이"}세</span>
+                              <span>{personaItem.age || "나이"}</span>
                               <span className="job">
                                 {personaItem.job || "직업"}
                               </span>
