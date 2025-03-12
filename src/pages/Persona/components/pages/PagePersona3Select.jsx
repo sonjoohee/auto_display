@@ -49,6 +49,7 @@ import {
   TabWrapType5,
   TabButtonType5,
   TabContent5,
+  BoxWrap,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import {
   H3,
@@ -482,6 +483,7 @@ const PagePersona3Select = () => {
                     ) : null}
                   </ListBoxGroup>
                 </div>
+
                 <MoleculePersonaSelectCardSaas
                   interviewType={selectedInterviewType}
                   filteredPersonaList={personaListSaas}
@@ -492,6 +494,26 @@ const PagePersona3Select = () => {
                   selectedPersonas={selectedPersonas}
                   onPersonaSelect={setSelectedPersonas}
                 />
+                
+                <BoxWrap NoData>
+                  <img src={images.PeopleFillPrimary2} alt="" />
+
+                  <Body2 color="gray700" align="center">
+                    현재 대화가 가능한 활성 페르소나가 없습니다<br />
+                    페르소나 생성 요청을 진행하여 페르소나를 활성화해주세요
+                  </Body2>
+
+                  <Button
+                    Medium
+                    Outline
+                    Fill
+                    onClick={() => navigate("/AiPersona")}
+                  >
+                    <Caption1 color="gray700">AI Person 생성 요청</Caption1>
+                  </Button>
+                </BoxWrap>
+
+
                 {/* <OrganismPersonaListSaas
                   personaListSaas={personaListSaas}
                   personaImages={personaImages}
