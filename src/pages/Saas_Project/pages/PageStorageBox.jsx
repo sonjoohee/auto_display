@@ -72,7 +72,6 @@ const PageStorageBox = () => {
             return dateB - dateA; // 최신 날짜가 위로
           });
 
-          console.log("🚀 ~ sortedList ~ sortedList:", sortedList);
           setToolListSaas(sortedList);
         }
       } catch (error) {}
@@ -149,13 +148,8 @@ const PageStorageBox = () => {
             0,
             true
           );
-          console.log(
-            "🚀 ~ loadDeletedTools ~ deletedToolsData:",
-            deletedToolsData
-          );
           if (deletedToolsData.length > 0) {
             setDeletedTools(deletedToolsData);
-            console.log("deletedToolsData", deletedToolsData);
           }
         } catch (error) {
           console.error("삭제된 툴 목록을 불러오는데 실패했습니다:", error);

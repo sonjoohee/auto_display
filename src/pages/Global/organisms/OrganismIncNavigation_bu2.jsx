@@ -743,7 +743,6 @@ const OrganismIncNavigation = () => {
 
     // 두 아코디언이 열렸을 때의 총 높이 계산
     const totalHeight = reportHeight + chatHeight; // 조건 없이 둘 다 더함
-    //  // console.log("Total Height:", totalHeight);
 
     return totalHeight > maxSidebarHeight; // maxSidebarHeight와 비교하여 넘는지 확인
   };

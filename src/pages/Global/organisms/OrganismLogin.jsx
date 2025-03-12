@@ -39,10 +39,10 @@ const OrganismIncLogin = () => {
           </LoginWrap>
         </MainContent>
       </ContentsWrap>
-      <button onClick={handleLoginClick} className="login">
+      {/* <button onClick={handleLoginClick} className="login">
         <img src={images.PersonCircle} alt="로그인" />
         로그인
-      </button>
+      </button> */}
 
       {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
       {/* {isSignupPopupOpen && <MoleculeSignPopup onClose={closeSignupPopup} />} */}

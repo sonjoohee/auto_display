@@ -1229,7 +1229,6 @@ const PageCustomerValueAnalyzer = () => {
     const detectRefresh = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
-      //console.log("🚀 ~ detectRefresh ~ currentUrl:", currentUrl);
       if (currentUrl.toLowerCase().includes("customervalueanalyzer")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         const lastUrl = sessionStorage.getItem("lastUrl");
