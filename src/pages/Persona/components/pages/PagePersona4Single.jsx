@@ -236,7 +236,6 @@ const PagePersona4 = () => {
   }, [showToast]);
 
   useEffect(() => {
-
     const loadProjectReport = async () => {
       // 1. 로그인 여부 확인
       if (reportId && reportLoadButtonState) {
@@ -684,7 +683,6 @@ const PagePersona4 = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-    
           navigate("/");
           return true;
         }
@@ -1476,7 +1474,9 @@ const PagePersona4 = () => {
                               {selectedPersonaList[0].gender || "성별"}
                             </span>
                             <span>
-                              {selectedPersonaList[0].age || "나이"}세
+                              {selectedPersonaList[0].age?.includes("세")
+                                ? selectedPersonaList[0].age
+                                : `${selectedPersonaList[0].age || "나이"}세`}
                             </span>
                             <span className="job">
                               {selectedPersonaList[0].job || "직업"}

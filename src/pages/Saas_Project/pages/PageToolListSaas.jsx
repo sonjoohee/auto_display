@@ -793,9 +793,7 @@ const PageToolListSaas = () => {
             setTrialState(response.trial_state);
           }
         }
-      } catch (error) {
-
-      }
+      } catch (error) {}
     };
 
     // Call the API every time PageMain is rendered (or when isLoggedIn changes)
@@ -1173,9 +1171,7 @@ const PageToolListSaas = () => {
 
         // accessToken을 세션 스토리지에 저장
         sessionStorage.setItem("accessToken", accessToken);
-      } catch (error) {
- 
-      }
+      } catch (error) {}
     }
 
     const newConversationId = await createChatOnServer();
@@ -1209,13 +1205,13 @@ const PageToolListSaas = () => {
     const detectRefresh = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
+      console.log("🚀 ~ detectRefresh ~ currentUrl:", currentUrl);
       if (currentUrl.toLowerCase().includes("tool")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         const lastUrl = sessionStorage.getItem("lastUrl");
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-   
           navigate("/");
           return true;
         }
