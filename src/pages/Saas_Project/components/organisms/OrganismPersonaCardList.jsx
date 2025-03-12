@@ -136,9 +136,7 @@ const OrganismPersonaCardList = ({
           return p;
         })
       );
-    } catch (error) {
-  
-    }
+    } catch (error) {}
   };
 
   // // 데이터가 없는 경우 빈 상태 컴포넌트 표시
@@ -194,9 +192,7 @@ const OrganismPersonaCardList = ({
   };
 
   const handleRequestPersona = async (persona) => {
-
     if (!persona) {
-
       return;
     }
 
@@ -207,7 +203,6 @@ const OrganismPersonaCardList = ({
         projectId,
         isLoggedIn
       );
-
 
       // const currentRequestedPersona = currentProject?.businessPersonaList || [];
 
@@ -260,11 +255,8 @@ const OrganismPersonaCardList = ({
         };
         createRequestPersonaOnServer(requestData, isLoggedIn);
       } else {
-
       }
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   return (
@@ -275,9 +267,8 @@ const OrganismPersonaCardList = ({
         <BoxWrap NoData Border>
           <img src={images.PeopleStarFillPrimary} alt="" />
           <Body2 color="gray500" align="center !important">
-            {/* 현재 요청된 My Persona가 없습니다
-            <br /> */}
-            찜(북마크)를 하시면 해당 페이지에서 확인 가능합니다
+            즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실 수
+            있습니다.
           </Body2>
         </BoxWrap>
       ) : (

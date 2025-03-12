@@ -303,9 +303,7 @@ const PageAiPersona = () => {
 
           setPersonaListSaas(sortedList);
         }
-      } catch (error) {
-
-      }
+      } catch (error) {}
     };
     loadPersonaList();
   }, []);
@@ -377,9 +375,7 @@ const PageAiPersona = () => {
 
         setPersonaListSaas(sortedList);
       }
-    } catch (error) {
-  
-    }
+    } catch (error) {}
   };
 
   const isPersonaEditFormValid = () => {
@@ -520,7 +516,6 @@ const PageAiPersona = () => {
         setActiveTab2("lifestyle");
       }
     } catch (error) {
-
     } finally {
       setIsLoading(false);
     }
@@ -588,8 +583,6 @@ const PageAiPersona = () => {
         const starredPersonas = personaListSaas.filter(
           (persona) => persona?.favorite === true
         );
-
-  
 
         // 즐겨찾기된 페르소나 중 활성 페르소나 수
         const activeStarred = starredPersonas.filter(
@@ -660,9 +653,7 @@ const PageAiPersona = () => {
           generating: generatingCount,
         });
       }
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   const mapExperienceDepth = (level) => {
@@ -763,12 +754,10 @@ const PageAiPersona = () => {
       if (!response) {
         throw new Error("페르소나 요청에 실패했습니다.");
       }
-    
+
       setIsCustomizePopupOpen(false);
       // 추가적인 성공 처리 로직
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   };
 
   // 크레딧 사용 함수
@@ -778,7 +767,6 @@ const PageAiPersona = () => {
 
     let accessToken = sessionStorage.getItem("accessToken");
     if (!accessToken) {
-    
       return;
     }
 
@@ -817,7 +805,6 @@ const PageAiPersona = () => {
   // 페르소나 요청 처리 함수
   const handleRequestPersona = async (persona) => {
     if (!persona) {
- 
       return;
     }
 
@@ -876,11 +863,8 @@ const PageAiPersona = () => {
           generating: prevStats.generating - 1,
         }));
       } else {
-
       }
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -894,7 +878,6 @@ const PageAiPersona = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-        
           navigate("/");
           return true;
         }
@@ -958,8 +941,7 @@ const PageAiPersona = () => {
                 </H1>
                 <div style={{ height: "10px" }}></div>
                 <Body3 color="gray700" align="left">
-                  당신의 비즈니스에 새로운 인사이트를 제시해줄 AI 페르소나가
-                  대화를 기다리고 있어요
+                  AI Persona를 탐색하고, 비즈니스에 맞는 인사이트를 찾아보세요
                 </Body3>
               </div>
 
@@ -1229,8 +1211,8 @@ const PageAiPersona = () => {
       {isEditPopupOpen && (
         <PopupWrap
           Warning
-          title="편집을 진행하면 기존 페르소나가 삭제됩니다"
-          message="편집 후에는 복구 할 수 없으니, 변경 전 확인해주세요"
+          title="편집을 진행하시겠습니까?"
+          message="편집한 페르소나 정보는 되돌릴 수 없으니, 다시 한 번 내용을 확인해주세요."
           buttonType="Outline"
           closeText="취소"
           confirmText="페르소나 편집"
@@ -1281,7 +1263,7 @@ const PageAiPersona = () => {
               : handleCustomizePopupConfirm
           }
           showTabs={true}
-          tabs={["필수정보", "OCEAN 정보", "요청사항확인"]}
+          tabs={["기본정보", "OCEAN 정보", "요청사항확인"]}
           onTabChange={handleTabChange}
           activeTab={activeTabIndex}
           eventState={false}
@@ -1640,7 +1622,7 @@ const PageAiPersona = () => {
 
                   <div>
                     <Body3 color="gray500" align="left">
-                      필수정보
+                      기본정보
                     </Body3>
                     <Body2 color="gray800" align="left">
                       {customPersonaForm.additionalInfo || "*해당정보 없음"}

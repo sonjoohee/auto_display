@@ -468,7 +468,6 @@ const PageIdeaGenerator = () => {
           isLoggedIn
         );
 
-
         try {
           const businessData = {
             business: ideaGeneratorInfo?.business || "",
@@ -478,7 +477,6 @@ const PageIdeaGenerator = () => {
 
           setIdeaGeneratorSelectedPersona(selectedCustomers);
 
-    
           const response = await InterviewXIdeaGeneratorIdeaRequest(
             businessData,
             isLoggedIn
@@ -669,7 +667,7 @@ const PageIdeaGenerator = () => {
     if (toolStep >= 1) {
       return;
     }
-    
+
     calculateDropDirection(ref, selectBoxId);
     setSelectBoxStates((prev) => ({
       ...(prev || {}),
@@ -1117,7 +1115,7 @@ const PageIdeaGenerator = () => {
                           handleSelectBoxClick("customerList", customerListRef)
                         }
                         style={{
-                          cursor: toolStep >= 1 ? "not-allowed" : "pointer" 
+                          cursor: toolStep >= 1 ? "not-allowed" : "pointer",
                         }}
                       >
                         <Body2
@@ -1144,7 +1142,7 @@ const PageIdeaGenerator = () => {
                       </SelectBoxTitle>
 
                       {selectBoxStates.customerList && (
-                        <SelectBoxList dropUp={dropUpStates.customerList} >
+                        <SelectBoxList dropUp={dropUpStates.customerList}>
                           {customerValueList.length === 0 ? (
                             <SelectBoxItem
                               disabled={toolStep >= 1}
@@ -1599,7 +1597,8 @@ const PageIdeaGenerator = () => {
 
                   <BottomBar W100>
                     <Body2 color="gray800">
-                      시나리오 분석을 원하는 페르소나를 선택해주세요
+                      모든 아이디어를 종합 분석하여 최적의 우선순위를
+                      도출해드릴게요
                     </Body2>
                     <Button
                       Large
