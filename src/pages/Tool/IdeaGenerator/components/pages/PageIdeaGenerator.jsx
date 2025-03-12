@@ -665,6 +665,11 @@ const PageIdeaGenerator = () => {
   };
 
   const handleSelectBoxClick = (selectBoxId, ref) => {
+    // Don't open dropdown if toolStep >= 1 for customerList
+    if (toolStep >= 1) {
+      return;
+    }
+    
     calculateDropDirection(ref, selectBoxId);
     setSelectBoxStates((prev) => ({
       ...(prev || {}),
@@ -707,6 +712,7 @@ const PageIdeaGenerator = () => {
   };
 
   const handlePersonaSelectionChange = (_id) => {
+    if (toolStep >= 2) return;
     setSelectedPersonasSaas(
       (prev) => (prev.includes(_id) ? [] : [_id]) // 이미 선택된 경우 해제, 그렇지 않으면 새로 선택
     );
@@ -898,6 +904,7 @@ const PageIdeaGenerator = () => {
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
+    if (toolStep >= 2) return;
     setSelectedPersonaButtons((prev) => {
       const newSelected = { ...prev, [personaId]: !prev[personaId] };
       if (newSelected[personaId]) {
@@ -947,7 +954,7 @@ const PageIdeaGenerator = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
+          //console.log("새로고침 감지: URL 비교");
           navigate("/");
           return true;
         }
@@ -1109,6 +1116,9 @@ const PageIdeaGenerator = () => {
                         onClick={() =>
                           handleSelectBoxClick("customerList", customerListRef)
                         }
+                        style={{
+                          cursor: toolStep >= 1 ? "not-allowed" : "pointer" 
+                        }}
                       >
                         <Body2
                           color={
@@ -1134,7 +1144,7 @@ const PageIdeaGenerator = () => {
                       </SelectBoxTitle>
 
                       {selectBoxStates.customerList && (
-                        <SelectBoxList dropUp={dropUpStates.customerList}>
+                        <SelectBoxList dropUp={dropUpStates.customerList} >
                           {customerValueList.length === 0 ? (
                             <SelectBoxItem
                               disabled={toolStep >= 1}
