@@ -304,7 +304,7 @@ const PageAiPersona = () => {
           setPersonaListSaas(sortedList);
         }
       } catch (error) {
-        console.error("프로젝트 목록을 불러오는데 실패했습니다:", error);
+
       }
     };
     loadPersonaList();
@@ -378,7 +378,7 @@ const PageAiPersona = () => {
         setPersonaListSaas(sortedList);
       }
     } catch (error) {
-      console.error("페르소나 목록을 새로고침하는데 실패했습니다:", error);
+  
     }
   };
 
@@ -456,7 +456,7 @@ const PageAiPersona = () => {
         },
         isLoggedIn
       );
-      console.log("🚀 ~ openPersonaPopup ~ profileData:", profileData);
+
       const max_attempt = 10;
       let attempt = 0;
 
@@ -520,7 +520,7 @@ const PageAiPersona = () => {
         setActiveTab2("lifestyle");
       }
     } catch (error) {
-      console.error("페르소나 프로필 정보를 가져오는데 실패했습니다:", error);
+
     } finally {
       setIsLoading(false);
     }
@@ -589,7 +589,7 @@ const PageAiPersona = () => {
           (persona) => persona?.favorite === true
         );
 
-        console.log("즐겨찾기된 페르소나:", starredPersonas);
+  
 
         // 즐겨찾기된 페르소나 중 활성 페르소나 수
         const activeStarred = starredPersonas.filter(
@@ -661,7 +661,7 @@ const PageAiPersona = () => {
         });
       }
     } catch (error) {
-      console.error("페르소나 목록을 새로고침하는데 실패했습니다:", error);
+
     }
   };
 
@@ -763,11 +763,11 @@ const PageAiPersona = () => {
       if (!response) {
         throw new Error("페르소나 요청에 실패했습니다.");
       }
-      console.log("페르소나 요청 성공:", response);
+    
       setIsCustomizePopupOpen(false);
       // 추가적인 성공 처리 로직
     } catch (error) {
-      console.error("API 호출 중 오류 발생:", error);
+      
     }
   };
 
@@ -778,7 +778,7 @@ const PageAiPersona = () => {
 
     let accessToken = sessionStorage.getItem("accessToken");
     if (!accessToken) {
-      console.error("토큰이 없습니다.");
+    
       return;
     }
 
@@ -817,7 +817,7 @@ const PageAiPersona = () => {
   // 페르소나 요청 처리 함수
   const handleRequestPersona = async (persona) => {
     if (!persona) {
-      console.error("선택된 페르소나가 없습니다.");
+ 
       return;
     }
 
@@ -876,10 +876,10 @@ const PageAiPersona = () => {
           generating: prevStats.generating - 1,
         }));
       } else {
-        console.error("이미 요청된 페르소나입니다.");
+
       }
     } catch (error) {
-      console.error("페르소나 요청 중 오류 발생:", error);
+      
     }
   };
 
@@ -894,7 +894,7 @@ const PageAiPersona = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
+        
           navigate("/");
           return true;
         }
