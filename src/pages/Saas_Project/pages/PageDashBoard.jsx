@@ -353,6 +353,23 @@ const PageDashBoard = () => {
     country: "",
   });
 
+  const getBusinessColor = (business) => {
+    switch (business) {
+      case 'B2C':
+        return '#AF52DE';
+      case 'B2B':
+        return '#5856D6';
+      case 'B2G':
+        return '#007AFF';
+      case 'B2B2C':
+        return '#32ADE6';
+      case 'B2B2B':
+        return '#30B0C7';
+      default:
+        return '#8E8E93';
+    }
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -381,7 +398,7 @@ const PageDashBoard = () => {
                     </H4>
                     <TagWrap>
                       <ProjectTag Business={project?.businessModel}>
-                        <images.ProjectTag color="#AF52DE" />
+                        <images.ProjectTag color={getBusinessColor(project?.businessModel)} />
                       </ProjectTag>
                       <ProjectTag Type={project?.industryType} />
                       <ProjectTag Country={project?.targetCountry} />
