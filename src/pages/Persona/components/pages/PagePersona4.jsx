@@ -246,17 +246,17 @@ const PagePersona4 = () => {
         if (savedProjectInfo) {
           setBusinessAnalysis(savedProjectInfo.businessAnalysis);
           setReportList(savedProjectInfo.reportList);
-          setCategoryColor({
-            first: getCategoryColor(
-              savedProjectInfo.businessAnalysis.category.first
-            ),
-            second: getCategoryColor(
-              savedProjectInfo.businessAnalysis.category.second
-            ),
-            third: getCategoryColor(
-              savedProjectInfo.businessAnalysis.category.third
-            ),
-          });
+          // setCategoryColor({
+          //   first: getCategoryColor(
+          //     savedProjectInfo.businessAnalysis.category.first
+          //   ),
+          //   second: getCategoryColor(
+          //     savedProjectInfo.businessAnalysis.category.second
+          //   ),
+          //   third: getCategoryColor(
+          //     savedProjectInfo.businessAnalysis.category.third
+          //   ),
+          // });
         }
         const savedProjectReportInfo = await getProjectReportByIdFromIndexedDB(
           reportId,
@@ -832,9 +832,9 @@ const PagePersona4 = () => {
                     {selectedPersonaList?.length > 0 ? (
                       selectedPersonaList.map((personaItem, index) => (
                         <PersonaItem key={index}>
-                          <Persona color="Linen" size="Large" Round>
+                          <Persona size="Large" Round>
                             <img
-                              src={`/ai_person/${personaItem.imageKey}.png`}
+                              src={personaImages[personaItem.imageKey]}
                               alt="페르소나"
                             />
                           </Persona>

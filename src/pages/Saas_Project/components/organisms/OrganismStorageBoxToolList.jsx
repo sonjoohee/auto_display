@@ -476,7 +476,8 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           return tool.type;
       }
     }
-    if (tool.interviewType) return tool.interviewType;
+    if (tool.interviewType)
+      return tool.interviewType === "single" ? "심층 인터뷰" : "그룹 인터뷰";
     if (tool.chat_data?.expert_index) {
       switch (tool.chat_data.expert_index) {
         case "1":
@@ -552,7 +553,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           return tool.type;
       }
     }
-    if (tool.interviewType) return tool.interviewType;
+    if (tool.reportTitle) return tool.reportTitle;
     if (tool.chat_data?.expert_index) {
       switch (tool.chat_data.expert_index) {
         case "1":

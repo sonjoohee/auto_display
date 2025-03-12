@@ -1022,10 +1022,12 @@ const OrganismToastPopupSingleChat = ({
               <ChatItem Persona>
                 <Persona color="Linen" size="Medium" Round>
                   <img
-                    src={`/ai_person/${
-                      personaList.selected[answers[index]?.length || 0]
-                        ?.imageKey
-                    }.png`}
+                    src={
+                      personaImages[
+                        personaList.selected[answers[index]?.length || 0]
+                          ?.imageKey
+                      ]
+                    }
                     alt="페르소나"
                   />
                 </Persona>
@@ -1096,7 +1098,9 @@ const OrganismToastPopupSingleChat = ({
                       <ChatItem Persona>
                         <Persona color="Linen" size="Medium" Round>
                           <img
-                            src={`/ai_person/${personaList.selected[0].imageKey}.png`}
+                            src={
+                              personaImages[personaList.selected[0].imageKey]
+                            }
                             alt={personaList.selected[0].persona}
                           />
                         </Persona>
@@ -1112,7 +1116,9 @@ const OrganismToastPopupSingleChat = ({
                         <ChatItem Persona>
                           <Persona color="Linen" size="Medium" Round>
                             <img
-                              src={`/ai_person/${personaList.selected[0].imageKey}.png`}
+                              src={
+                                personaImages[personaList.selected[0].imageKey]
+                              }
                               alt="페르소나"
                             />
                           </Persona>
