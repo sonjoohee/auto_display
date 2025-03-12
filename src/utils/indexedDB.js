@@ -365,7 +365,7 @@ export const getProjectListByIdFromIndexedDB = async (isLoggedIn) => {
 //보고서 관련 api
 
 //보고서 생성 api
-export const createProjectReportOnServer = async () => {
+export const createProjectReportOnServer = async (projectId, interviewType) => {
   try {
     const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
     // console.log("token");
@@ -373,10 +373,23 @@ export const createProjectReportOnServer = async () => {
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
-
+    const PUT_DATA = {
+      projectId: projectId,
+      createDate: new Date().toLocaleString("ko-KR", {
+        timeZone: "Asia/Seoul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }),
+      timestamp: Date.now(),
+      toolType: interviewType,
+    };
     const response = await axios.post(
       "https://wishresearch.kr/project/report/create",
-      {}, // POST 요청에 보낼 데이터가 없는 경우 빈 객체 전달
+      PUT_DATA, // POST 요청에 보낼 데이터가 없는 경우 빈 객체 전달
       {
         headers: {
           Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
