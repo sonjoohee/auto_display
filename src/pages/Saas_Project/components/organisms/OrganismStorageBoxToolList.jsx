@@ -141,7 +141,7 @@ import {
   PROJECT_SAAS,
 } from "../../../AtomStates";
 
-import { updateToolOnServer } from "../../../../utils/indexedDB";
+import { updateToolOnServer, updateProjectReportOnServer } from "../../../../utils/indexedDB";
 
 const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
@@ -440,6 +440,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
 
   const [deleteToolId, setDeleteToolId] = useState(null);
+  const [deleteToolType, setDeleteToolType] = useState(null);
 
   const saveConversation = (data) => {
     // 대화 저장 로직 구현
@@ -966,19 +967,52 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
 
   const handleDeleteConfirm = async () => {
     setIsDeletePopupOpen(false);
-    await updateToolOnServer(
-      deleteToolId,
-      {
-        deleteState: 1,
+
+    if (deleteToolType === "interviewSingle" || deleteToolType === "interviewGroup") {
+      await updateProjectReportOnServer(
+        deleteToolId,
+        {
+          deleteState: 1,
+        },
+        true,
+      );
+    } 
+    else if (deleteToolType === "chat") {
+      // 서버에서 채팅 삭제 (deleteState를 1로 설정)
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        
+        await axios.put(`https://wishresearch.kr/panels/update_chat`, {
+          id: deleteToolId,
+          deleteState: 1
+        }, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
+      } catch (error) {
+        console.error("채팅 삭제 중 오류 발생:", error);
       }
-    );
+    }
+    else if (deleteToolType === "tool") {
+      await updateToolOnServer(
+        deleteToolId,
+        {
+          deleteState: 1,
+        }
+      );
+    }
     // 로컬 상태에서 삭제된 툴 제거
     setLocalToolList(prevList => prevList.filter(tool => (tool._id || tool.id) !== deleteToolId));
   };
 
-  const hadleDeleteTool = async (toolId) => {
+  const hadleDeleteTool = async (toolId, toolType) => {
     setIsDeletePopupOpen(true);
     setDeleteToolId(toolId);
+    setDeleteToolType(toolType);
+  };
 
   return (
     <>
@@ -1064,7 +1098,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
                     </Button>
                   </td>
                   <td style={{ textAlign: "center" }}>
-                    <Button None onClick={() => hadleDeleteTool(tool._id)}>
+                    <Button None onClick={() => hadleDeleteTool(tool._id, tool.toolType)}>
                       <img src={images.Trash} alt="" />
                     </Button>
                   </td>

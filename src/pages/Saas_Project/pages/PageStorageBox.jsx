@@ -35,7 +35,8 @@ import {
   Caption1,
   InputText,
 } from "../../../assets/styles/Typography";
-import { getToolListOnServerSaas, getToolDeleteListOnServer, updateToolOnServer } from "../../../utils/indexedDB";
+import { getToolListOnServerSaas, getToolDeleteListOnServer, updateToolOnServer, updateProjectReportOnServer } from "../../../utils/indexedDB";
+import axios from "axios";
 
 const PageStorageBox = () => {
   const navigate = useNavigate();
@@ -152,9 +153,40 @@ const PageStorageBox = () => {
   }, [isTrashModalOpen, refreshTrigger]);
 
   // 툴 복구 처리
-  const handleRestoreTool = async (toolId) => {
+  const handleRestoreTool = async (toolId, toolType) => {
     try {
-      await updateToolOnServer(toolId, { deleteState: 0 });
+      if (toolType === "interviewSingle" || toolType === "interviewGroup") {
+        await updateProjectReportOnServer(
+          toolId,
+          {
+            deleteState: 0,
+          },
+          true,
+        );
+      } 
+      else if (toolType === "chat") {
+        // 서버에서 채팅 복구 (deleteState를 0으로 설정)
+        try {
+          const accessToken = sessionStorage.getItem("accessToken");
+          
+          await axios.put(`https://wishresearch.kr/panels/update_chat`, {
+            id: toolId,
+            deleteState: 0
+          }, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          });
+        } catch (error) {
+          console.error("채팅 복구 중 오류 발생:", error);
+        }
+      }
+      else {
+        await updateToolOnServer(toolId, { deleteState: 0 });
+      }
+      
       // 화면에서 제거
       setDeletedTools(prev => prev.filter(tool => tool._id !== toolId));
       // 스토리지 박스 목록 새로고침 트리거
@@ -165,9 +197,40 @@ const PageStorageBox = () => {
   };
 
   // 툴 영구 삭제 처리
-  const handlePermanentDelete = async (toolId) => {
+  const handlePermanentDelete = async (toolId, toolType) => {
     try {
-      await updateToolOnServer(toolId, { deleteState: 2 });
+      if (toolType === "interviewSingle" || toolType === "interviewGroup") {
+        await updateProjectReportOnServer(
+          toolId,
+          {
+            deleteState: 2,
+          },
+          true,
+        );
+      } 
+      else if (toolType === "chat") {
+        // 서버에서 채팅 영구 삭제 (deleteState를 2로 설정)
+        try {
+          const accessToken = sessionStorage.getItem("accessToken");
+          
+          await axios.put(`https://wishresearch.kr/panels/update_chat`, {
+            id: toolId,
+            deleteState: 2
+          }, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          });
+        } catch (error) {
+          console.error("채팅 영구 삭제 중 오류 발생:", error);
+        }
+      }
+      else {
+        await updateToolOnServer(toolId, { deleteState: 2 });
+      }
+      
       // 화면에서 제거
       setDeletedTools(prev => prev.filter(tool => tool._id !== toolId));
     } catch (error) {
@@ -438,10 +501,10 @@ const PageStorageBox = () => {
                         </Caption1>
                       </div>
                       <div className="button">
-                        <span onClick={() => handleRestoreTool(tool._id)}>
+                        <span onClick={() => handleRestoreTool(tool._id, tool.toolType)}>
                           <img src={images.ArrowReturn} alt="복구" />
                         </span>
-                        <span onClick={() => handlePermanentDelete(tool._id)}>
+                        <span onClick={() => handlePermanentDelete(tool._id, tool.toolType)}>
                           <img src={images.Trash} alt="영구삭제" />
                         </span>
                       </div>
