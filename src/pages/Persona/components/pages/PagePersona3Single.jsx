@@ -478,38 +478,39 @@ const PagePersona3Single = () => {
                   </div>
                   
                   <CustomizationWrap>
-                    {showCustomButton &&
+                    {showCustomButton && (!customTheoryData || Object.keys(customTheoryData).length === 0) &&
                       <BoxWrap NoData onClick={() => setShowRequestPopup(true)}>
                         <img src={images.NoData} alt="no data" />
                         <Body2 color="gray700" align="center">원하는 내용이 없다면, 목적에 따른 문항을 생성해보세요</Body2>
-                      </BoxWrap>}
+                      </BoxWrap>
+                    }
 
-                      <OrganismCustomization
-                        customizations={customizations}
-                        setCustomizations={setCustomizations}
-                        setShowPopup={setShowPopup}
-                        setShowNewListBox={setShowNewListBox}
-                        setShowCustomization={setShowCustomization}
-                        setShowCustomButton={setShowCustomButton}
-                        setShowQuestions={setShowQuestions}
-                      />
+                    <OrganismCustomization
+                      customizations={customizations}
+                      setCustomizations={setCustomizations}
+                      setShowPopup={setShowPopup}
+                      setShowNewListBox={setShowNewListBox}
+                      setShowCustomization={setShowCustomization}
+                      setShowCustomButton={setShowCustomButton}
+                      setShowQuestions={setShowQuestions}
+                    />
                       
-                      {purposeItemsSingleAtom.slice(3, 4).map((purpose) => (
-                        <MoleculeInterviewPurpose
-                          Small
-                          key={purpose.id}
-                          purpose={purpose}
-                          selectedPurpose={selectedInterviewPurpose}
-                          showQuestions={showQuestions}
-                          onPurposeSelect={handlePurposeSelect}
-                          toggleQuestions={(id) =>
-                            setShowQuestions((prev) => ({
-                              ...prev,
-                              [id]: !prev[id],
-                            }))
-                          }
-                        />
-                      ))}
+                    {purposeItemsSingleAtom.slice(3).map((purpose) => (
+                      <MoleculeInterviewPurpose
+                        Small
+                        key={purpose.id}
+                        purpose={purpose}
+                        selectedPurpose={selectedInterviewPurpose}
+                        showQuestions={showQuestions}
+                        onPurposeSelect={handlePurposeSelect}
+                        toggleQuestions={(id) =>
+                          setShowQuestions((prev) => ({
+                            ...prev,
+                            [id]: !prev[id],
+                          }))
+                        }
+                      />
+                    ))}
                       
                   </CustomizationWrap>
                   
