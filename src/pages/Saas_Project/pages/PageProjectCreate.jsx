@@ -57,6 +57,7 @@ import {
   createProjectOnServerSaas,
   InterviewXProjectAnalysisMultimodalRequest,
   InterviewXProjectAnalysisRequest,
+  updateProjectOnServer,
 } from "../../../utils/indexedDB";
 
 const PageProjectCreate = () => {
@@ -501,7 +502,7 @@ const PageProjectCreate = () => {
     navigate(`/Project`, { replace: true });
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
     setIsEditing(false);
     // setProjectTotalInfo({
     //   ...projectTotalInfo,
@@ -516,9 +517,19 @@ const PageProjectCreate = () => {
       business_analysis: editingText,
       target_customer: editingTargetText,
     });
+
+    setProjectTotalInfo(
+      {
+        ...projectTotalInfo,
+        projectAnalysis: {
+          business_analysis: editingText,
+          target_customer: editingTargetText,
+        },
+      }
+    )
   };
 
-  const handleSaveTargetClick = () => {
+  const handleSaveTargetClick = async () => {
     setIsEditingTarget(false);
     // setProjectTotalInfo({
     //   ...projectTotalInfo,
@@ -535,11 +546,30 @@ const PageProjectCreate = () => {
         target_customer: editingTargetText,
         file_analysis: editingText.file_analysis,
       });
+      setProjectTotalInfo(
+        {
+          ...projectTotalInfo,
+          projectAnalysis: {
+            business_analysis: editingText.business_analysis,
+            target_customer: editingTargetText,
+            file_analysis: editingText.file_analysis,
+          },
+        }
+      )
     } else {
       setProjectCreateInfo({
         business_analysis: typeof editingText === 'object' ? editingText.business_analysis : editingText,
         target_customer: editingTargetText,
       });
+      setProjectTotalInfo(
+        {
+          ...projectTotalInfo,
+          projectAnalysis: {
+            business_analysis: typeof editingText === 'object' ? editingText.business_analysis : editingText,
+            target_customer: editingTargetText,
+          },
+        }
+      )
     }
   };
 

@@ -654,11 +654,14 @@ const PageDashBoard = () => {
                   <li>
                     <Body2 color="gray500">업로드 파일</Body2>
                     <Body2 color="gray800">
-                      {project?.files.map((file) => (
-                        <div key={file.id}>
-                            {file.name}
-                        </div>
-                      ))}
+                      {project?.files?.length > 0 
+                        ? project.files.map((file) => (
+                            <div key={file.id}>
+                                {file.name}
+                            </div>
+                          ))
+                        : "-"
+                      }
                     </Body2>
                     {/* <Button Large Outline Fill style={{ marginLeft: "auto" }}>파일보기</Button> */}
                   </li>
