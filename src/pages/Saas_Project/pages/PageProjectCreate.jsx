@@ -59,12 +59,6 @@ import {
   InterviewXProjectAnalysisRequest,
 } from "../../../utils/indexedDB";
 
-// 초기 텍스트 상수로 정의
-const INITIAL_PROJECT_OVERVIEW =
-  "50세 이상을 위한 국내 최초 전용 소셜 플랫폼으로, 소통 부재 및 사회적 고립 해소를 목표합니다. 핵심 가치는 시니어들이 관심사 기반 커뮤니티에서 자유롭게 소통하고, 새로운 관계를 형성하며, 건강하고 활기찬 노년 생활을 지원하는 데 있습니다. 주요 기능은 온라인 소통, 멤버 교류, 정보 제공이며, 경쟁 우위는 시니어 특화 플랫폼이라는 점입니다. 다만, 디지털 격차, 사용자 확보, 기존 커뮤니티와의 경쟁은 잠재적 위험 요소입니다. 성공적인 안착을 위해 사용자 친화적인 인터페이스와 차별화된 콘텐츠 전략이 필요합니다.";
-const INITIAL_TARGET_AUDIENCE =
-  "1차 타겟은 50세 이상 대한민국 거주 성인입니다. 액티브 시니어, 소셜 니즈 시니어, 건강 및 활동 관심 시니어로 세분화됩니다. 액티브 시니어는 온라인 활동에 익숙하며 새로운 관계 및 정보 습득에 적극적입니다. 소셜 니즈 시니어는 사회적 관계 단절을 경험하고 온라인 소통을 갈망합니다. 건강 및 활동 관심 시니어는 건강 관리, 취미 활동, 여행 등 활기찬 노년 생활에 높은 관심을 보입니다. 2차 타겟은 은퇴 후 사회 참여 및 자기 계발을 희망하는 50+ 세대입니다. 페르소나 기반 마케팅 전략으로 접근성을 높여야 합니다.";
-
 const PageProjectCreate = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(1);
@@ -81,11 +75,9 @@ const PageProjectCreate = () => {
   const [fileNames, setFileNames] = useState([]);
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editingText, setEditingText] = useState(INITIAL_PROJECT_OVERVIEW);
+  const [editingText, setEditingText] = useState("");
   const [isEditingTarget, setIsEditingTarget] = useState(false);
-  const [editingTargetText, setEditingTargetText] = useState(
-    INITIAL_TARGET_AUDIENCE
-  );
+  const [editingTargetText, setEditingTargetText] = useState("");
   const targetTextareaRef = useRef(null);
   const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -268,6 +260,16 @@ const PageProjectCreate = () => {
         console.log(response);
         setProjectCreateInfo(response.response.project_analysis_multimodal);
 
+        setEditingText({
+          business_analysis:
+            response.response.project_analysis_multimodal.business_analysis,
+          file_analysis:
+            response.response.project_analysis_multimodal.file_analysis,
+        });
+        setEditingTargetText(
+          response.response.project_analysis_multimodal.target_customer
+        );
+
         const projectTotalData = {
           projectTitle: projectName,
           projectDescription: projectDescription,
@@ -442,6 +444,14 @@ const PageProjectCreate = () => {
 
         setProjectCreateInfo(response.response.project_analysis);
 
+        setEditingText({
+          business_analysis:
+            response.response.project_analysis.business_analysis,
+        });
+        setEditingTargetText(
+          response.response.project_analysis.target_customer
+        );
+
         const projectTotalData = {
           projectTitle: response.project_name,
           projectDescription: response.product_description,
@@ -462,6 +472,7 @@ const PageProjectCreate = () => {
 
   // 수정하기 버튼 클릭 핸들러 추가
   const handleEditClick = () => {
+    setEditingText(projectCreateInfo.business_analysis + (projectCreateInfo.file_analysis ? projectCreateInfo.file_analysis : ""));
     setIsEditing(!isEditing);
   };
 
@@ -490,10 +501,54 @@ const PageProjectCreate = () => {
     navigate(`/Project`, { replace: true });
   };
 
-  const [isEditMode, setIsEditMode] = useState(false);
-
   const handleSaveClick = () => {
-    setIsEditMode(false);
+    setIsEditing(false);
+    // setProjectTotalInfo({
+    //   ...projectTotalInfo,
+    //   projectAnalysis: {
+    //     ...projectTotalInfo.projectAnalysis,
+    //     business_analysis: editingText.business_analysis,
+    //     target_customer: editingTargetText,
+    //   },
+    // });
+
+    setProjectCreateInfo({
+      business_analysis: editingText,
+      target_customer: editingTargetText,
+    });
+  };
+
+  const handleSaveTargetClick = () => {
+    setIsEditingTarget(false);
+    // setProjectTotalInfo({
+    //   ...projectTotalInfo,
+    //   projectAnalysis: {
+    //     ...projectTotalInfo.projectAnalysis,
+    //     business_analysis: editingText.business_analysis,
+    //     target_customer: editingTargetText,
+    //   },
+    // });
+
+    if (editingText.file_analysis) {
+      setProjectCreateInfo({
+        business_analysis: editingText.business_analysis,
+        target_customer: editingTargetText,
+        file_analysis: editingText.file_analysis,
+      });
+    } else {
+      setProjectCreateInfo({
+        business_analysis: typeof editingText === 'object' ? editingText.business_analysis : editingText,
+        target_customer: editingTargetText,
+      });
+    }
+  };
+
+  const handleUndoClick = () => {
+    setEditingText(projectCreateInfo.business_analysis + (projectCreateInfo.file_analysis ? projectCreateInfo.file_analysis : ""));
+  };
+
+  const handleUndoTargetClick = () => {
+    setEditingTargetText(projectCreateInfo.target_customer);
   };
 
   return (
@@ -1120,9 +1175,15 @@ const PageProjectCreate = () => {
                           <li>
                             <Body2 color="gray500">업로드 파일</Body2>
                             <Body2 color="gray800">
-                              {uploadedFiles.length > 0
-                                ? uploadedFiles[0].name
-                                : "-"}
+                              {uploadedFiles.length === 0 ? (
+                                "-"
+                              ) : (
+                                uploadedFiles.map((file) => (
+                                  <div key={file.id}>
+                                    {file.name}
+                                  </div>
+                                ))
+                              )}
                             </Body2>
                           </li>
                         </ListBoxGroup>
@@ -1148,13 +1209,19 @@ const PageProjectCreate = () => {
                         {!isEditing && (
                           <ListBoxGroup>
                             <Body2 color="gray800" align="left">
-                              {projectCreateInfo.business_analysis}
-                              {projectCreateInfo.file_analysis && (
+                              {typeof editingText === 'object' ? (
                                 <>
-                                  <br />
-                                  <br />
-                                  {projectCreateInfo.file_analysis}
+                                  {editingText.business_analysis}
+                                  {editingText.file_analysis && (
+                                    <>
+                                      <br />
+                                      <br />
+                                      {editingText.file_analysis}
+                                    </>
+                                  )}
                                 </>
+                              ) : (
+                                editingText
                               )}
                             </Body2>
                           </ListBoxGroup>
@@ -1177,17 +1244,17 @@ const PageProjectCreate = () => {
                               }}
                             />
                             <EditButtonGroup>
-                              <IconButton>
+                              <IconButton onClick={handleUndoClick}>
                                 <img
                                   src={images.ClockCounterclockwise}
                                   alt=""
                                 />
                                 <span>이전으로 되돌리기</span>
                               </IconButton>
-                              <IconButton>
+                              {/* <IconButton>
                                 <img src={images.MagicStick} alt="" />
                                 <span>AI로 다듬기</span>
-                              </IconButton>
+                              </IconButton> */}
                             </EditButtonGroup>
                           </FormBox>
                         )}
@@ -1204,7 +1271,7 @@ const PageProjectCreate = () => {
                               <span>수정하기</span>
                             </IconButton>
                           ) : (
-                            <IconButton onClick={handleSaveClick}>
+                            <IconButton onClick={handleSaveTargetClick}>
                               <img src={images.FolderArrowDown} alt="" />
                               <span>저장하기</span>
                             </IconButton>
@@ -1213,7 +1280,7 @@ const PageProjectCreate = () => {
                         {!isEditingTarget && (
                           <ListBoxGroup>
                             <Body2 color="gray800" align="left">
-                              {projectCreateInfo.target_customer}
+                              {editingTargetText}
                             </Body2>
                           </ListBoxGroup>
                         )}
@@ -1234,17 +1301,17 @@ const PageProjectCreate = () => {
                               }}
                             />
                             <EditButtonGroup>
-                              <IconButton>
+                              <IconButton onClick={handleUndoTargetClick}>
                                 <img
                                   src={images.ClockCounterclockwise}
                                   alt=""
                                 />
                                 <span>이전으로 되돌리기</span>
                               </IconButton>
-                              <IconButton>
+                              {/* <IconButton>
                                 <img src={images.MagicStick} alt="" />
                                 <span>AI로 다듬기</span>
-                              </IconButton>
+                              </IconButton> */}
                             </EditButtonGroup>
                           </FormBox>
                         )}

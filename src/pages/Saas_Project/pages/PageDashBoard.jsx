@@ -641,20 +641,24 @@ const PageDashBoard = () => {
                 <ListBoxGroup Small>
                   <li>
                     <Body2 color="gray500">사업모델</Body2>
-                    <Body2 color="gray800">B2C</Body2>
+                    <Body2 color="gray800">{project?.businessModel}</Body2>
                   </li>
                   <li>
                     <Body2 color="gray500">업종</Body2>
-                    <Body2 color="gray800">하드웨어 디바이스 분야</Body2>
+                    <Body2 color="gray800">{project?.industryType}</Body2>
                   </li>
                   <li>
                     <Body2 color="gray500">타겟 국가</Body2>
-                    <Body2 color="gray800">대한민국</Body2>
+                    <Body2 color="gray800">{project?.targetCountry}</Body2>
                   </li>
                   <li>
                     <Body2 color="gray500">업로드 파일</Body2>
                     <Body2 color="gray800">
-                      제품 디자인에서 감성의 차원과 표현요소.pdf
+                      {project?.files.map((file) => (
+                        <div key={file.id}>
+                            {file.name}
+                        </div>
+                      ))}
                     </Body2>
                     {/* <Button Large Outline Fill style={{ marginLeft: "auto" }}>파일보기</Button> */}
                   </li>
