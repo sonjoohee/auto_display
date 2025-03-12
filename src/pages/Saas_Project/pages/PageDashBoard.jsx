@@ -40,6 +40,7 @@ import {
   ACCESS_STATE_SAAS,
   ACCESS_DASHBOARD,
   TOOL_LIST_SAAS,
+  DASHBOARD_TOOL_LIST_SAAS,
 } from "../../../pages/AtomStates";
 import {
   getPersonaListOnServer,
@@ -56,7 +57,7 @@ const PageDashBoard = () => {
   const [showPopup, setShowPopup] = useState(false);
 
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
-  const [toolListSaas, setToolListSaas] = useAtom(TOOL_LIST_SAAS);
+  const [toolListSaas, setToolListSaas] = useAtom(DASHBOARD_TOOL_LIST_SAAS);
 
   const navigate = useNavigate();
 
@@ -65,8 +66,6 @@ const PageDashBoard = () => {
   const macroChartRef = useRef();
   const uniqueChartRef = useRef();
   const stakeholderChartRef = useRef();
-
-
 
   useEffect(() => {
     const loadPersonaList = async () => {
@@ -85,9 +84,7 @@ const PageDashBoard = () => {
 
           setPersonaListSaas(sortedList);
         }
-      } catch (error) {
-   
-      }
+      } catch (error) {}
     };
     loadPersonaList();
   }, []); // refreshTrigger가 변경될 때마다 데이터 다시 로드
@@ -106,8 +103,10 @@ const PageDashBoard = () => {
         // );
 
         if (savedToolListInfo) {
-          const filteredList = savedToolListInfo.filter(tool => !(tool.deleteState >= 1));
-          const sortedList = [...filteredList].sort((a, b) => {
+          // const filteredList = savedToolListInfo.filter(
+          //   (tool) => !(tool.deleteState >= 1)
+          // );
+          const sortedList = [...savedToolListInfo].sort((a, b) => {
             const dateA = a.timestamp;
             const dateB = b.timestamp;
             return dateB - dateA; // 최신 날짜가 위로
@@ -115,9 +114,7 @@ const PageDashBoard = () => {
 
           setToolListSaas(sortedList);
         }
-      } catch (error) {
-   
-      }
+      } catch (error) {}
     };
     loadToolList();
   }, []); // refreshTrigger가 변경될 때마다 데이터 다시 로드
@@ -157,7 +154,22 @@ const PageDashBoard = () => {
         .attr("stroke", "none");
     }
   };
-
+  const getBusinessColor = (business) => {
+    switch (business) {
+      case "B2C":
+        return "#AF52DE";
+      case "B2B":
+        return "#5856D6";
+      case "B2G":
+        return "#007AFF";
+      case "B2B2C":
+        return "#32ADE6";
+      case "B2B2B":
+        return "#30B0C7";
+      default:
+        return "#8E8E93";
+    }
+  };
   // 페르소나 타입별 상태 카운트 함수 추가
   const countPersonasByTypeAndStatus = (personaList, type) => {
     if (!personaList || !Array.isArray(personaList)) {
@@ -334,15 +346,16 @@ const PageDashBoard = () => {
     detectRefresh();
 
     // 이벤트 리스너 등록
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    // window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("keydown", handleKeyDown);
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+      // window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
+
   const [selectedValues, setSelectedValues] = useState({
     business: "",
     industry: "",
@@ -376,11 +389,13 @@ const PageDashBoard = () => {
                       {project?.projectTitle}
                     </H4>
                     <TagWrap>
-                      <ProjectTag Business="B2C">
-                        <images.ProjectTag color="#AF52DE" />
+                      <ProjectTag Business={project?.businessModel}>
+                        <images.ProjectTag
+                          color={getBusinessColor(project?.businessModel)}
+                        />
                       </ProjectTag>
-                      <ProjectTag Type="Information" />
-                      <ProjectTag Country="Korea" />
+                      <ProjectTag Type={project?.industryType} />
+                      <ProjectTag Country={project?.targetCountry} />
                     </TagWrap>
                   </div>
 
@@ -650,11 +665,11 @@ const PageDashBoard = () => {
                   <li>
                     <Body2 color="gray500">업로드 파일</Body2>
                     <Body2 color="gray800">
-                      {project?.files.map((file) => (
-                        <div key={file.id}>
-                            {file.name}
-                        </div>
-                      ))}
+                      {project?.files?.length > 0
+                        ? project.files.map((file) => (
+                            <div key={file.id}>{file.name}</div>
+                          ))
+                        : "-"}
                     </Body2>
                     {/* <Button Large Outline Fill style={{ marginLeft: "auto" }}>파일보기</Button> */}
                   </li>
