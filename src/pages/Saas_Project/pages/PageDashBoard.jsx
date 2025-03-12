@@ -346,7 +346,6 @@ const PageDashBoard = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
-
   const [selectedValues, setSelectedValues] = useState({
     business: "",
     industry: "",

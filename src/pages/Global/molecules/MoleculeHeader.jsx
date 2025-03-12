@@ -292,7 +292,7 @@ const MoleculeHeader = () => {
                 ? "디자인 감정 분석기"
                 : isProjectCreatePage
                 ? "새 프로젝트 생성"
-                : "새로운 프로젝트"}
+                : projectSaas.projectTitle}
               {/* {(isPersona3Page ||
                 isPersona3SinglePage ||
                 isPersona3MultiplePage ||

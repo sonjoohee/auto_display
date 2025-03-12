@@ -244,7 +244,6 @@ const PageCustomerValueAnalyzer = () => {
             })
             .filter((id) => id !== null);
 
-
           // 찾은 _id 값으로 selectedPersonasSaas 상태를 업데이트합니다
           // setSelectedPersonasSaas(selectedPersonaIds);
 
@@ -266,7 +265,6 @@ const PageCustomerValueAnalyzer = () => {
           });
 
           setSelectedPersonaButtons(newSelectedButtons);
-
         }
 
         // 완료된 단계 설정
@@ -305,7 +303,7 @@ const PageCustomerValueAnalyzer = () => {
               .map((persona, index) => {
                 const personaTarget =
                   customerValueAnalyzerInfo?.targetList?.[index];
-         
+
                 // selectedTargets에 personaTarget이 포함되어 있는지 확인
                 const isSelected = selectedTargets.some(
                   (target) => target.personaName === personaTarget.personaName
@@ -408,7 +406,6 @@ const PageCustomerValueAnalyzer = () => {
 
   // 고객 여정 맵 API 호출 시작
   useEffect(() => {
-
     if (
       activeTab === 2 &&
       customerValueAnalyzerPersona.length > 0 &&
@@ -416,7 +413,6 @@ const PageCustomerValueAnalyzer = () => {
       !apiCallCompleted &&
       (customerValueAnalyzerJourneyMap?.length || 0) === 0
     ) {
-
       // toolStep이 2보다 작을 때만 API 호출
       const initialLoadingStates = customerValueAnalyzerPersona.reduce(
         (acc, _, index) => {
@@ -434,7 +430,6 @@ const PageCustomerValueAnalyzer = () => {
           !customerValueAnalyzerInfo.targetList ||
           !Array.isArray(customerValueAnalyzerInfo.targetList)
         ) {
-
           return; // 적절한 에러 처리를 추가
         }
 
@@ -457,14 +452,12 @@ const PageCustomerValueAnalyzer = () => {
               analysis_scope: customerValueAnalyzerInfo.analysisScope,
               analysis_purpose: customerValueAnalyzerPersona[index],
             };
-          
 
             const response =
               await InterviewXCustomerValueAnalyzerJourneyMapRequest(
                 data,
                 isLoggedIn
               );
-        
 
             if (response?.response?.customer_value_journey_map) {
               journeyMapData.push({
@@ -506,8 +499,7 @@ const PageCustomerValueAnalyzer = () => {
               },
               isLoggedIn
             );
-          } catch (error) {
-          }
+          } catch (error) {}
         }
         setApiCallCompleted(true); // API 호출 완료 상태로 설정
       };
@@ -548,7 +540,6 @@ const PageCustomerValueAnalyzer = () => {
     try {
       setIsLoading(true);
 
-    
       const selectedPersonaObjects = selectedPersonasSaas
         .map((selectedPersona) => {
           // _id와 personaName을 사용하여 해당 페르소나 객체를 찾습니다
@@ -734,7 +725,6 @@ const PageCustomerValueAnalyzer = () => {
     });
   };
 
-
   const handleCheckboxChange = (index) => {
     if (toolStep >= 2) return;
     setSelectedPersonas((prev) => {
@@ -893,7 +883,6 @@ const PageCustomerValueAnalyzer = () => {
       // 모든 API 호출이 완료된 후 상태 업데이트
       setApiCallCompletedFactor(true); // API 호출 완료 상태로 설정
     } catch (error) {
- 
       setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
@@ -979,7 +968,6 @@ const PageCustomerValueAnalyzer = () => {
           positioningData,
           isLoggedIn
         );
-  
 
       let attempts2 = 0;
 
@@ -1021,7 +1009,6 @@ const PageCustomerValueAnalyzer = () => {
           finalReportData,
           isLoggedIn
         );
-
 
       let attempts3 = 0;
 
@@ -1169,8 +1156,7 @@ const PageCustomerValueAnalyzer = () => {
           img.src =
             "data:image/svg+xml;base64," +
             window.btoa(unescape(encodeURIComponent(modifiedSvg)));
-        } catch (error) {
-        }
+        } catch (error) {}
       };
 
       document.body.appendChild(script);
@@ -1230,14 +1216,7 @@ const PageCustomerValueAnalyzer = () => {
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
-      // 1. Performance API 확인
-      // if (performance.navigation && performance.navigation.type === 1) {
-      //   console.log("새로고침 감지: Performance API");
-      //   navigate("/");
-      //   return true;
-      // }
-
-      // 2. 현재 URL 확인
+      // 현재 URL 확인
       const currentUrl = window.location.href;
       if (currentUrl.toLowerCase().includes("customervalueanalyzer")) {
         // 세션 스토리지에서 마지막 URL 가져오기
@@ -1245,6 +1224,7 @@ const PageCustomerValueAnalyzer = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
+          console.log("새로고침 감지: URL 비교");
           navigate("/");
           return true;
         }
@@ -1256,10 +1236,41 @@ const PageCustomerValueAnalyzer = () => {
       return false;
     };
 
+    // beforeunload 이벤트 핸들러
+    const handleBeforeUnload = (event) => {
+      // 이벤트 취소 (표준에 따라)
+      event.preventDefault();
+      // Chrome은 returnValue 설정 필요
+      event.returnValue = "";
+
+      // 새로고침 시 루트 페이지로 이동
+      navigate("/");
+    };
+
+    // F5 키 또는 Ctrl+R 감지
+    const handleKeyDown = (event) => {
+      if (
+        (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
+        event.key === "F5"
+      ) {
+        // F5 키 코드
+        event.preventDefault();
+        navigate("/");
+      }
+    };
+
     // 함수 실행
     detectRefresh();
 
-    // 컴포넌트 마운트 시 한 번만 실행
+    // 이벤트 리스너 등록
+    // window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("keydown", handleKeyDown);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      // window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [navigate]);
 
   return (
