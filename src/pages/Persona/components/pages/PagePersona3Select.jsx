@@ -495,7 +495,7 @@ const PagePersona3Select = () => {
                   onPersonaSelect={setSelectedPersonas}
                 />
                 
-                <BoxWrap NoData>
+                <BoxWrap NoData style={{ height: "300px" }}>
                   <img src={images.PeopleFillPrimary2} alt="" />
 
                   <Body2 color="gray700" align="center !important">
