@@ -186,8 +186,18 @@ const MoleculeSignupForm = () => {
     setErrorStatus(''); 
   };
 
-  const handleEmailCheck = () => {
+  const handleEmailCheck = async () => {
     validateEmail(signUpEmail);
+    try {
+      const response = await axios.post('https://wishresearch.kr/api/user/checkEmail/', { email: signUpEmail });
+      if (response.data.exists) {
+        setErrorStatus('이미 사용 중인 이메일 주소입니다.');
+      } else {
+        setErrorStatus('');
+      }
+    } catch (error) {
+      setErrorStatus('중복 확인 중 오류가 발생했습니다.');
+    }
   };
 
   return (
