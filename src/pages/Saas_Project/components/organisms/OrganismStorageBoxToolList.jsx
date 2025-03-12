@@ -141,12 +141,15 @@ import {
   PROJECT_SAAS,
 } from "../../../AtomStates";
 
+import { updateToolOnServer } from "../../../../utils/indexedDB";
+
 const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
   const project = projectSaas;
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [localToolList, setLocalToolList] = useState(toolListSaas || []);
 
   // 상태 변수들 정의
   const [savedTimestamp, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
@@ -435,6 +438,8 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [reportId, setReportId] = useAtom(PROJECT_REPORT_ID);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
+
+  const [deleteToolId, setDeleteToolId] = useState(null);
 
   const saveConversation = (data) => {
     // 대화 저장 로직 구현
@@ -958,12 +963,27 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
     setIsDeletePopupOpen(false);
   };
 
-  const handleDeleteConfirm = () => {};
+
+  const handleDeleteConfirm = async () => {
+    setIsDeletePopupOpen(false);
+    await updateToolOnServer(
+      deleteToolId,
+      {
+        deleteState: 1,
+      }
+    );
+    // 로컬 상태에서 삭제된 툴 제거
+    setLocalToolList(prevList => prevList.filter(tool => (tool._id || tool.id) !== deleteToolId));
+  };
+
+  const hadleDeleteTool = async (toolId) => {
+    setIsDeletePopupOpen(true);
+    setDeleteToolId(toolId);
 
   return (
     <>
       <RecentToolWrap>
-        {toolListSaas?.length > 0 ? (
+        {localToolList?.length > 0 ? (
           <Table>
             <colgroup>
               <col width="20%" />
@@ -1006,7 +1026,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
             </TableHeader>
 
             <TableBody Type1 Border>
-              {toolListSaas.map((tool, index) => (
+              {localToolList.map((tool, index) => (
                 <tr key={index}>
                   <td>
                     <Body2 color="gray700" align="left">
@@ -1044,7 +1064,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
                     </Button>
                   </td>
                   <td style={{ textAlign: "center" }}>
-                    <Button None onClick={() => setIsDeletePopupOpen(true)}>
+                    <Button None onClick={() => hadleDeleteTool(tool._id)}>
                       <img src={images.Trash} alt="" />
                     </Button>
                   </td>
