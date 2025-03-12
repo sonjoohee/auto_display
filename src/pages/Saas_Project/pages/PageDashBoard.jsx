@@ -380,11 +380,11 @@ const PageDashBoard = () => {
                       {project?.projectTitle}
                     </H4>
                     <TagWrap>
-                      <ProjectTag Business="B2C">
+                      <ProjectTag Business={project?.businessModel}>
                         <images.ProjectTag color="#AF52DE" />
                       </ProjectTag>
-                      <ProjectTag Type="Information" />
-                      <ProjectTag Country="Korea" />
+                      <ProjectTag Type={project?.industryType} />
+                      <ProjectTag Country={project?.targetCountry} />
                     </TagWrap>
                   </div>
 
@@ -655,9 +655,7 @@ const PageDashBoard = () => {
                     <Body2 color="gray500">업로드 파일</Body2>
                     <Body2 color="gray800">
                       {project?.files.map((file) => (
-                        <div key={file.id}>
-                            {file.name}
-                        </div>
+                        <div key={file.id}>{file.name}</div>
                       ))}
                     </Body2>
                     {/* <Button Large Outline Fill style={{ marginLeft: "auto" }}>파일보기</Button> */}
