@@ -1029,7 +1029,7 @@ const PageProjectCreate = () => {
                               >
                                 <Body2 color="gray700" align="left">
                                   <img src={images.ProjectConsumer} alt="" />
-                                  소비재 및 라이프스타일 (커머서, 리빙, 유아,
+                                  소비재 및 라이프스타일 (커머스, 리빙, 유아,
                                   펫, 여행, 콘텐츠, 게임 등)
                                 </Body2>
                               </SelectBoxItem>

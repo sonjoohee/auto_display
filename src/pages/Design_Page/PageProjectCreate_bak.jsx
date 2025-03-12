@@ -574,7 +574,7 @@ const PageProjectCreate = () => {
                               </SelectBoxItem>
                               <SelectBoxItem onClick={() => handlePurposeSelect("소비재 및 라이프스타일 (커머서, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)", "industry")}>
                                 <Body2 color="gray700" align="left">
-                                  소비재 및 라이프스타일 (커머서, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)
+                                  소비재 및 라이프스타일 (커머스, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)
                                 </Body2>
                               </SelectBoxItem>
                               <SelectBoxItem onClick={() => handlePurposeSelect("기타", "industry")}>

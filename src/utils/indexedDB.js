@@ -1988,11 +1988,7 @@ export const createToolOnServer = async (data, isLoggedIn) => {
 };
 
 //TOOL 업데이트 api
-export const updateToolOnServer = async (toolId, updateData, isLoggedIn) => {
-  // console.log("🚀 ~ projectId:", projectId);
-  // console.log("🚀 ~ updateData:", updateData);
-  if (isLoggedIn) {
-    // 사용자 로그인 시 서버에 저장
+export const updateToolOnServer = async (toolId, updateData) => {
     try {
       const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
       // console.log("token", token);
@@ -2032,7 +2028,6 @@ export const updateToolOnServer = async (toolId, updateData, isLoggedIn) => {
     } catch (error) {
       console.error("Error updating project on server:", error);
     }
-  }
 };
 
 // TOOL 단건 조회
@@ -4014,6 +4009,50 @@ export const getFindToolListOnServerSaas = async (
       return response.data;
     } catch (error) {
       console.error("Error fetching persona list from server:", error);
+      throw error;
+    }
+  }
+};
+
+// 프로젝트 휴지통
+export const getProjectDeleteListOnServer = async (size, page, isLoggedIn) => {
+  if (isLoggedIn) {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      const response = await axios.get(
+        `https://wishresearch.kr/project/deleteList?size=${size}&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching project delete list from server:", error);
+      throw error;
+    }
+  }
+};
+
+// 툴 휴지통
+export const getToolDeleteListOnServer = async (size, page, isLoggedIn) => {
+  if (isLoggedIn) {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      const response = await axios.get(
+        `https://wishresearch.kr/panels/tool/delete_list?size=${size}&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching tool delete list from server:", error);
       throw error;
     }
   }
