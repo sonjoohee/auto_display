@@ -22,7 +22,7 @@ const OrganismPersonaListSaas = ({
   onPersonaSelect,
   interviewType,
 }) => {
-  console.log("🚀 ~ selectedPersonas:", selectedPersonas);
+
 
   const [activeTab, setActiveTab] = useState("my_persona");
 
@@ -133,7 +133,7 @@ const OrganismPersonaListSaas = ({
   };
 
   const handlePersonaSelect = (persona) => {
-    console.log("🚀 ~ handlePersonaSelect ~ persona:", persona);
+    // console.log("🚀 ~ handlePersonaSelect ~ persona:", persona);
     const targetPersona = [
       ...personaList.selected,
       ...personaList.unselected,
@@ -164,10 +164,7 @@ const OrganismPersonaListSaas = ({
           unselected: newUnselected,
         });
         const personaListDummy = personaList;
-        console.log(
-          "🚀 ~ handlePersonaSelect ~ personaList:",
-          personaListDummy
-        );
+       
         onPersonaSelect(persona);
       }
     } else {

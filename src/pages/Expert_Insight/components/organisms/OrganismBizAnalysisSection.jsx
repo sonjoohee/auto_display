@@ -458,7 +458,7 @@ const OrganismBizAnalysisSection = () => {
           setMainCharacteristicOfBusinessInformation(storedData.mainCharacter);
           setBusinessInformationTargetCustomer(storedData.mainCustomer);
         } else {
-          console.warn("No saved analysis data found.");
+         // console.warn("No saved analysis data found.");
         }
       }
     };
@@ -629,7 +629,7 @@ const OrganismBizAnalysisSection = () => {
       setIsLoadingAdd1(false);
       setIsLoadingAdd2(false);
     } catch (error) {
-      console.error("Error loading data:", error);
+     // console.error("Error loading data:", error);
     }
   };
 

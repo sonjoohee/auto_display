@@ -97,7 +97,7 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
         try {
           return;
         } catch (error) {
-          console.error("Failed to create conversation on server:", error);
+         // console.error("Failed to create conversation on server:", error);
           return;
         }
       }
@@ -243,7 +243,7 @@ const OrganismSearchBottomBar = ({ isBlue, isHashTag }) => {
         try {
           return;
         } catch (error) {
-          console.error("Failed to create conversation on server:", error);
+        //  console.error("Failed to create conversation on server:", error);
           return;
         }
       }

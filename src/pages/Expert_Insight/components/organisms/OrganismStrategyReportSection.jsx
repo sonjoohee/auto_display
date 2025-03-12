@@ -294,7 +294,7 @@ const OrganismStrategyReportSection = ({ expertIndex }) => {
           });
         }
       } catch (error) {
-        console.error("Error loading data:", error);
+      //  console.error("Error loading data:", error);
       }
     };
 

@@ -323,10 +323,10 @@ const MoleculeReportController = ({
       if (response.status === 200) {
         setReportRefreshTrigger((prev) => !prev); // 트리거 상태를 반전시켜 OrganismLeftSideBar가 새로고침되도록 설정
       } else {
-        console.error("API 응답 에러", response.status);
+        //console.error("API 응답 에러", response.status);
       }
     } catch (error) {
-      console.error("API 요청 실패", error);
+      //console.error("API 요청 실패", error);
     }
   };
 
@@ -580,7 +580,7 @@ ${mainCharacteristicOfBusinessInformation
         setIsPopupCopy(true); // 복사 팝업 열기
       })
       .catch((error) => {
-        console.error("복사 실패", error);
+       // console.error("복사 실패", error);
       });
   };
 

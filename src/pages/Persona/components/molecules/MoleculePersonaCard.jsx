@@ -233,7 +233,7 @@ const MoleculePersonaCard = ({
         }
       );
     } catch (error) {
-      console.error("크레딧 소모 중 오류 발생:", error);
+      // console.error("크레딧 소모 중 오류 발생:", error);
       return;
     }
 

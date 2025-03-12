@@ -289,7 +289,7 @@ const OrganismToastPopupSingleChat = ({
             setShowErrorPopup(true);
             break;
         }
-        console.error("Error details:", error);
+ 
       }
     } finally {
       setAddQuestionLoading(false);
@@ -481,7 +481,7 @@ const OrganismToastPopupSingleChat = ({
             setShowErrorPopup(true);
             break;
         }
-        console.error("Error details:", error);
+       
       }
     }
   };
@@ -561,7 +561,7 @@ const OrganismToastPopupSingleChat = ({
             break;
           }
         } catch (error) {
-          console.error(`Retry ${retryCount + 1} failed:`, error);
+
         }
 
         retryCount++;
@@ -601,7 +601,7 @@ const OrganismToastPopupSingleChat = ({
             break;
           }
         } catch (error) {
-          console.error(`Retry ${retryCount + 1} failed:`, error);
+
         }
 
         retryCount++;
@@ -635,7 +635,7 @@ const OrganismToastPopupSingleChat = ({
             break;
           }
         } catch (error) {
-          console.error(`Retry ${retryCount + 1} failed:`, error);
+  
         }
 
         retryCount++;
@@ -654,7 +654,7 @@ const OrganismToastPopupSingleChat = ({
       setIsAnalyzing(false);
       setIsAnalysisComplete(true);
     } catch (error) {
-      console.error("Error in loadInterviewReport:", error);
+      // console.error("Error in loadInterviewReport:", error);
       if (error.response) {
         switch (error.response.status) {
           case 500:
@@ -748,7 +748,7 @@ const OrganismToastPopupSingleChat = ({
           },
           last_interview: lastInterview,
         };
-        console.log("🚀 ~ processInterview ~ data:", data);
+
 
         let response = await InterviewXPersonaSingleInterviewRequest(
           data,
@@ -890,7 +890,7 @@ const OrganismToastPopupSingleChat = ({
           loadInterviewReport(response.response.answer);
         }
       } catch (error) {
-        console.error("Error in processInterview:", error);
+        // console.error("Error in processInterview:", error);
         setIsGenerating(false);
         setIsGeneratingIndepth(false);
         setIsGeneratingIndepthQuestion(false);
@@ -1154,7 +1154,7 @@ const OrganismToastPopupSingleChat = ({
       );
       setReportId(newReportId); // 생성된 대화 ID 설정
     } catch (error) {
-      console.error("Failed to create project on server:", error);
+      // console.error("Failed to create project on server:", error);
     }
     navigate(`/Persona/4/Single`, { replace: true });
     //replace: true 현재 페이지를 대체하여 이동( 뒤로 가기 시 이전 인터뷰 화면으로 돌아감 방지)
@@ -1188,7 +1188,7 @@ const OrganismToastPopupSingleChat = ({
       setInputValue(""); // input 값 초기화
       setShowAddQuestion(false); // AddQuestion 컴포넌트 숨기기
     } catch (error) {
-      console.error("Error in handleQuestionSelect:", error);
+      // console.error("Error in handleQuestionSelect:", error);
       setShowErrorPopup(true);
     }
   };
@@ -1371,7 +1371,7 @@ const OrganismToastPopupSingleChat = ({
 
     const accessToken = sessionStorage.getItem("accessToken");
     if (!accessToken) {
-      console.error("토큰이 없습니다.");
+      // console.error("토큰이 없습니다.");
       return;
     }
 

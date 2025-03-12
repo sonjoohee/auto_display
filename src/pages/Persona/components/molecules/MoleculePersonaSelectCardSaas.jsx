@@ -55,7 +55,7 @@ const MoleculePersonaSelectCardSaas = ({
 
   const handleTabClick = (tabName) => {
     setActiveTabState(tabName);
-    console.log(`Active Tab changed to: ${tabName}`);
+
   };
 
   const handlePersonaSelect = (persona) => {

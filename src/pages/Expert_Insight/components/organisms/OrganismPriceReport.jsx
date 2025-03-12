@@ -99,7 +99,7 @@ const OrganismPriceReport = () => {
           data1,
           isLoggedIn
         );
-        console.log("가격 스크랩 response", response1);
+       // console.log("가격 스크랩 response", response1);
 
         let retryCount = 0;
         const maxRetries = 10;
@@ -148,7 +148,7 @@ const OrganismPriceReport = () => {
           retryCount++;
         }
         if (retryCount === maxRetries) {
-          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+        //  console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
           // 에러 처리 로직 추가
           throw new Error("Maximum retry attempts reached. Empty response persists.");
         }
@@ -196,7 +196,7 @@ const OrganismPriceReport = () => {
             retryCount++;
           }
         if (retryCount === maxRetries) {
-          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+       //   console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
           // 에러 처리 로직 추가
           throw new Error("Maximum retry attempts reached. Empty response persists.");
         }

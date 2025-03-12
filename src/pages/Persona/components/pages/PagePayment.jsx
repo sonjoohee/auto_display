@@ -172,7 +172,7 @@ const PagePayment = () => {
         },
       });
     } else {
-      console.error("AUTHNICE is not loaded");
+      // console.error("AUTHNICE is not loaded");
     }
   };
 

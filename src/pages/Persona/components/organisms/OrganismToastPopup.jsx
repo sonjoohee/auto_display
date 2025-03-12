@@ -267,7 +267,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             setShowErrorPopup(true);
             break;
         }
-        console.error("Error details:", error);
+        // console.error("Error details:", error);
       }
     }
   };
@@ -422,7 +422,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             setShowErrorPopup(true);
             break;
         }
-        console.error("Error details:", error);
+        // console.error("Error details:", error);
       }
     }
   };
@@ -612,7 +612,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 setShowErrorPopup(true);
                 break;
             }
-            console.error("Error details:", error);
+            // console.error("Error details:", error);
           }
           setIsGenerating(false);
         }
@@ -852,7 +852,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       );
       setReportId(newReportId); // 생성된 대화 ID 설정
     } catch (error) {
-      console.error("Failed to create project on server:", error);
+      // console.error("Failed to create project on server:", error);
     }
     setSelectedPersonaList(personaList.selected);
     navigate(`/Persona/4`, { replace: true });

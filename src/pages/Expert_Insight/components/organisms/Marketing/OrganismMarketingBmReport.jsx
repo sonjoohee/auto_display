@@ -159,7 +159,7 @@ const OrganismMarketingBmReport = () => {
           await saveConversation({ changingConversation: { conversation: updatedConversation, marketingBmReportData: marketingBmReport } });
         }
       } catch (error) {
-        console.error("Error fetching marketing bm report:", error);
+        //console.error("Error fetching marketing bm report:", error);
       }
     };
 

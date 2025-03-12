@@ -116,7 +116,7 @@ const OrganismBmLeanAutoReport = () => {
           retryCount++;
         }
         if (retryCount === maxRetries) {
-          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+          //.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
           // 에러 처리 로직 추가
           throw new Error("Maximum retry attempts reached. Empty response persists.");
         }

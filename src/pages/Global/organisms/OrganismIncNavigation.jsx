@@ -684,7 +684,7 @@ const OrganismIncNavigation = () => {
       setReportIdToChangeName(null);
       setNewReportName("");
     } catch (error) {
-      console.error("Error updating report name on server:", error);
+      // console.error("Error updating report name on server:", error);
     }
   };
 
@@ -709,7 +709,7 @@ const OrganismIncNavigation = () => {
       setChatIdToChangeName(null);
       setNewChatName("");
     } catch (error) {
-      console.error("Error updating conversation on server:", error);
+      // console.error("Error updating conversation on server:", error);
     }
   };
 
@@ -960,7 +960,7 @@ const OrganismIncNavigation = () => {
         // console.log("🚀 ~ fetchChatList ~ sortedChatList:", sortedChatList);
         setChatList(sortedChatList);
       } catch (error) {
-        console.error("대화 목록 가져오기 오류:", error);
+       // console.error("대화 목록 가져오기 오류:", error);
       }
     };
     fetchChatList();
@@ -986,7 +986,7 @@ const OrganismIncNavigation = () => {
         );
         setReports(response.data); // 보고서 리스트를 상태로 설정
       } catch (error) {
-        console.error("보고서 목록 가져오기 오류:", error);
+       // console.error("보고서 목록 가져오기 오류:", error);
       }
     };
     fetchReports();
@@ -1047,7 +1047,7 @@ const OrganismIncNavigation = () => {
       );
       setSelectedReport(response.data); // 선택된 보고서의 상세 데이터 상태로 설정
     } catch (error) {
-      console.error("보고서 상세 정보 가져오기 오류:", error);
+     // console.error("보고서 상세 정보 가져오기 오류:", error);
     }
   };
 
@@ -1079,7 +1079,7 @@ const OrganismIncNavigation = () => {
       setReportIdToDelete(null);
       setReportRefreshTrigger((prev) => !prev);
     } catch (error) {
-      console.error("삭제 요청 오류:", error);
+     // console.error("삭제 요청 오류:", error);
     }
   };
 
@@ -1110,7 +1110,7 @@ const OrganismIncNavigation = () => {
         navigate("/"); // / 경로로 이동
       }
     } catch (error) {
-      console.error("삭제 요청 오류:", error);
+     // console.error("삭제 요청 오류:", error);
     }
   };
 
