@@ -53,7 +53,6 @@ const PageDashBoard = () => {
   const [accessStateSaas, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
   const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
   const project = projectSaas;
-
   const [showPopup, setShowPopup] = useState(false);
 
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
@@ -90,6 +89,7 @@ const PageDashBoard = () => {
   }, []); // refreshTrigger가 변경될 때마다 데이터 다시 로드
 
   useEffect(() => {
+    console.log("🚀 ~ PageDashBoard ~ project:", project);
     const loadToolList = async () => {
       try {
         const savedToolListInfo = await getToolListOnServerSaas(

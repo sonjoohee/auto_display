@@ -34,10 +34,12 @@ const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
   const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
   const [projectCreateInfo, setProjectCreateInfo] =
     useAtom(PROJECT_CREATE_INFO);
-  const [singleInterviewQuestionList, setSingleInterviewQuestionList] =
-    useAtom(SINGLE_INTERVIEW_QUESTION_LIST);
-  const [interviewQuestionList, setInterviewQuestionList] =
-    useAtom(INTERVIEW_QUESTION_LIST);
+  const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
+    SINGLE_INTERVIEW_QUESTION_LIST
+  );
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
+    INTERVIEW_QUESTION_LIST
+  );
   const [customTheoryData, setCustomTheoryData] = useAtom(CUSTOM_THEORY_DATA);
   const [showTooltip, setShowTooltip] = useState(false);
 
