@@ -245,7 +245,6 @@ const PageDesignAnalysis = () => {
         setTargetCustomer(project?.projectAnalysis.target_customer ?? "");
       }
       if (toolLoading) {
-        console.log("project", project);
         const projectAnalysis =
           (project?.projectAnalysis.business_analysis
             ? project?.projectAnalysis.business_analysis
@@ -432,7 +431,6 @@ const PageDesignAnalysis = () => {
 
       handleNextStep(1);
     } catch (error) {
-      console.error("Error submitting business info:", error);
       setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
@@ -462,7 +460,7 @@ const PageDesignAnalysis = () => {
         (persona, index) => selectedPersonas.includes(index)
       );
       setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
-      // console.log('selectedPersonaData:', selectedPersonaData);
+
       await updateToolOnServer(
         toolId,
         {
@@ -560,7 +558,6 @@ const PageDesignAnalysis = () => {
 
             attempt++;
           }
-          // console.log("🚀 ~ oceanResponse:", oceanResponse);
           setDesignAnalysisEmotionScale(
             oceanResponse.response.design_emotion_scale
           );
@@ -576,13 +573,11 @@ const PageDesignAnalysis = () => {
             isLoggedIn
           );
         } catch (error) {
-          console.error(`Error processing persona ${persona.name}:`, error);
         }
       }
 
       // setToolStep(3);
     } catch (error) {
-      console.error("Error submitting personas:", error);
       setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
@@ -606,7 +601,6 @@ const PageDesignAnalysis = () => {
 
   // 파일 업로드 핸들러
   const handleChangeStatus = ({ meta, file, remove }, status) => {
-    // console.log(status, meta, file);
 
     // 20MB 크기 제한 체크
     const maxSize = 20 * 1024 * 1024; // 20MB in bytes
@@ -697,7 +691,6 @@ const PageDesignAnalysis = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
           navigate("/");
           return true;
         }

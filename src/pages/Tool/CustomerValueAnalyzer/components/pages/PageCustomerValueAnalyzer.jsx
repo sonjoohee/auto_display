@@ -215,7 +215,6 @@ const PageCustomerValueAnalyzer = () => {
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
 
         // 비즈니스 정보 설정 (Step 1)
-        console.log("customerValueAnalyzerInfo", customerValueAnalyzerInfo);
         if (customerValueAnalyzerInfo) {
           setBusinessDescription(
             customerValueAnalyzerInfo?.analysisPurpose ?? ""
@@ -245,7 +244,6 @@ const PageCustomerValueAnalyzer = () => {
             })
             .filter((id) => id !== null);
 
-          console.log("Selected Persona IDs:", selectedPersonaIds);
 
           // 찾은 _id 값으로 selectedPersonasSaas 상태를 업데이트합니다
           // setSelectedPersonasSaas(selectedPersonaIds);
@@ -268,7 +266,7 @@ const PageCustomerValueAnalyzer = () => {
           });
 
           setSelectedPersonaButtons(newSelectedButtons);
-          console.log("newSelectedButtons", newSelectedButtons);
+
         }
 
         // 완료된 단계 설정
@@ -307,12 +305,7 @@ const PageCustomerValueAnalyzer = () => {
               .map((persona, index) => {
                 const personaTarget =
                   customerValueAnalyzerInfo?.targetList?.[index];
-                // personaTarget이 정의되어 있는지 확인
-                // if (!personaTarget) {
-                //   console.warn(`index ${index}에 대해 personaTarget이 undefined입니다.`);
-                //   return -1; // 유효하지 않은 인덱스는 -1 반환
-                // }
-
+         
                 // selectedTargets에 personaTarget이 포함되어 있는지 확인
                 const isSelected = selectedTargets.some(
                   (target) => target.personaName === personaTarget.personaName
@@ -350,9 +343,6 @@ const PageCustomerValueAnalyzer = () => {
           setCompletedSteps(completedStepsArray.slice(0, -1));
         }
 
-        console.log("customerValueAnalyzerFactor", customerValueAnalyzerFactor);
-        console.log("completedStepsArray", completedStepsArray);
-
         // 최종 리포트 설정 (Step 4)
         if (customerValueAnalyzerFinalReport) {
           setCustomerValueAnalyzerFinalReport(
@@ -386,7 +376,6 @@ const PageCustomerValueAnalyzer = () => {
 
           // Check if response exists and has data
           if (!response || !response.data) {
-            console.error("Invalid response from server");
             break;
           }
 
@@ -410,7 +399,6 @@ const PageCustomerValueAnalyzer = () => {
 
         setTargetDiscoveryList(allItems);
       } catch (error) {
-        console.error("Error fetching target discovery list:", error);
         setTargetDiscoveryList([]); // Set empty array on error
       }
     };
@@ -420,7 +408,7 @@ const PageCustomerValueAnalyzer = () => {
 
   // 고객 여정 맵 API 호출 시작
   useEffect(() => {
-    // console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
+
     if (
       activeTab === 2 &&
       customerValueAnalyzerPersona.length > 0 &&
@@ -428,10 +416,8 @@ const PageCustomerValueAnalyzer = () => {
       !apiCallCompleted &&
       (customerValueAnalyzerJourneyMap?.length || 0) === 0
     ) {
-      // console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
+
       // toolStep이 2보다 작을 때만 API 호출
-      // 모든 카드의 상태를 waiting으로 초기화
-      // console.log("customerValueAnalyzerPersona", customerValueAnalyzerPersona);
       const initialLoadingStates = customerValueAnalyzerPersona.reduce(
         (acc, _, index) => {
           acc[index] = "waiting";
@@ -448,7 +434,7 @@ const PageCustomerValueAnalyzer = () => {
           !customerValueAnalyzerInfo.targetList ||
           !Array.isArray(customerValueAnalyzerInfo.targetList)
         ) {
-          console.error("targetList is undefined or not an array");
+
           return; // 적절한 에러 처리를 추가
         }
 
@@ -471,14 +457,14 @@ const PageCustomerValueAnalyzer = () => {
               analysis_scope: customerValueAnalyzerInfo.analysisScope,
               analysis_purpose: customerValueAnalyzerPersona[index],
             };
-            // console.log("data", data);
+          
 
             const response =
               await InterviewXCustomerValueAnalyzerJourneyMapRequest(
                 data,
                 isLoggedIn
               );
-            // console.log("Journey Map 응답:", response);
+        
 
             if (response?.response?.customer_value_journey_map) {
               journeyMapData.push({
@@ -521,7 +507,6 @@ const PageCustomerValueAnalyzer = () => {
               isLoggedIn
             );
           } catch (error) {
-            console.error(`Error processing index ${index}:`, error);
           }
         }
         setApiCallCompleted(true); // API 호출 완료 상태로 설정
@@ -563,18 +548,7 @@ const PageCustomerValueAnalyzer = () => {
     try {
       setIsLoading(true);
 
-      console.log(
-        "🚀 ~ handleSubmitBusinessInfo ~ selectedPersonasSaas:",
-        selectedPersonasSaas
-      );
-      // 선택된 페르소나 ID(_id)를 기반으로 실제 페르소나 객체를 찾습니다
-      // const selectedPersonaObjects = selectedPersonasSaas
-      //   .map((persona) => {
-      //     console.log("🚀 ~ .map ~ _id:", persona);
-      //     // _id를 사용하여 해당 페르소나 객체를 찾습니다
-      //     return personaListSaas.find((persona) => persona === persona);
-      //   })
-      //   .filter((persona) => persona !== undefined);
+    
       const selectedPersonaObjects = selectedPersonasSaas
         .map((selectedPersona) => {
           // _id와 personaName을 사용하여 해당 페르소나 객체를 찾습니다
@@ -587,10 +561,6 @@ const PageCustomerValueAnalyzer = () => {
         .flat() // 중첩 배열을 평탄화하여 모든 일치하는 페르소나 객체를 가져옵니다
         .filter((persona) => persona !== undefined);
 
-      console.log(
-        "🚀 ~ handleSubmitBusinessInfo ~ selectedPersonaObjects:",
-        selectedPersonaObjects
-      );
       // 선택된 페르소나 객체에서 필요한 필드만 추출합니다
       const selectedCustomers = selectedPersonaObjects.map((persona) => ({
         personaName: persona?.personaName || "",
@@ -601,8 +571,6 @@ const PageCustomerValueAnalyzer = () => {
         keywords: persona?.keywords || [],
         imageKey: persona?.imageKey || "",
       }));
-
-      console.log("selectedCustomers", selectedCustomers);
 
       const businessData = {
         business: project.projectTitle || "",
@@ -674,7 +642,6 @@ const PageCustomerValueAnalyzer = () => {
       handleNextStep(1);
       setIsLoading(false);
     } catch (error) {
-      console.error("Error submitting business info:", error);
       setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
@@ -754,10 +721,10 @@ const PageCustomerValueAnalyzer = () => {
   };
 
   const handlePersonaSelectionChange = (_id) => {
-    console.log("🚀 ~ handlePersonaSelectionChange ~ _id:", _id);
+    // console.log("🚀 ~ handlePersonaSelectionChange ~ _id:", _id);
     // if (toolStep >= 2) return;
     setSelectedPersonasSaas((prev) => {
-      console.log("🚀 ~ setSelectedPersonasSaas ~ prev:", prev);
+      // console.log("🚀 ~ setSelectedPersonasSaas ~ prev:", prev);
       if (prev.includes(_id)) {
         return prev.filter((id) => id !== _id);
       } else {
@@ -767,10 +734,6 @@ const PageCustomerValueAnalyzer = () => {
     });
   };
 
-  // selectedPersonasSaas가 변경될 때마다 로그 출력
-  useEffect(() => {
-    console.log(selectedPersonasSaas);
-  }, [selectedPersonasSaas]);
 
   const handleCheckboxChange = (index) => {
     if (toolStep >= 2) return;
@@ -908,7 +871,6 @@ const PageCustomerValueAnalyzer = () => {
             }));
           }
         } catch (error) {
-          console.error("Error:", error);
           setCardStatusesFactor((prev) => ({
             ...prev,
             [i]: "error", // 에러 발생 시 상태를 'error'로 설정
@@ -931,7 +893,7 @@ const PageCustomerValueAnalyzer = () => {
       // 모든 API 호출이 완료된 후 상태 업데이트
       setApiCallCompletedFactor(true); // API 호출 완료 상태로 설정
     } catch (error) {
-      console.error("Error submitting personas:", error);
+ 
       setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
@@ -1017,7 +979,7 @@ const PageCustomerValueAnalyzer = () => {
           positioningData,
           isLoggedIn
         );
-      // console.log("Positioning response:", positioningResponse);
+  
 
       let attempts2 = 0;
 
@@ -1059,7 +1021,7 @@ const PageCustomerValueAnalyzer = () => {
           finalReportData,
           isLoggedIn
         );
-      // console.log("Final report response:", finalReportResponse);
+
 
       let attempts3 = 0;
 
@@ -1087,10 +1049,6 @@ const PageCustomerValueAnalyzer = () => {
       setCustomerValueAnalyzerFinalReport(
         finalReportResponse.response.customer_value_final_report
       );
-      // console.log(
-      //   "customerValueAnalyzerFinalReport",
-      //   customerValueAnalyzerFinalReport
-      // );
 
       setToolStep(4);
       await updateToolOnServer(
@@ -1108,7 +1066,6 @@ const PageCustomerValueAnalyzer = () => {
         isLoggedIn
       );
     } catch (error) {
-      console.error("Error in handleReport:", error);
       setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
@@ -1213,7 +1170,6 @@ const PageCustomerValueAnalyzer = () => {
             "data:image/svg+xml;base64," +
             window.btoa(unescape(encodeURIComponent(modifiedSvg)));
         } catch (error) {
-          console.error("Mermaid rendering error:", error);
         }
       };
 
@@ -1289,7 +1245,6 @@ const PageCustomerValueAnalyzer = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
           navigate("/");
           return true;
         }

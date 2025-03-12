@@ -68,7 +68,7 @@ const PageMarketLanding = () => {
         // accessToken을 세션 스토리지에 저장
         sessionStorage.setItem("accessToken", accessToken);
       } catch (error) {
-        console.error("로그인 중 오류가 발생했습니다.", error);
+       
       }
     }
 

@@ -103,7 +103,7 @@ const MoleculeSignupForm = () => {
         response = await fetch('https://wishresearch.kr/api/user/signup/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name : signUpName, email: signUpEmail, password: signUpPassword, role: signUpRole, status: signUpStatus })
+          body: JSON.stringify({ name : signUpName, email: signUpEmail, password: signUpPassword, phone_number: phoneNumber, role: signUpRole, status: signUpStatus })
         });
       }
 
