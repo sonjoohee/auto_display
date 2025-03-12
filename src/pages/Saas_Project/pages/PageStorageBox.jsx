@@ -35,6 +35,7 @@ import {
   Caption1,
   InputText,
 } from "../../../assets/styles/Typography";
+
 import { getToolListOnServerSaas, getToolDeleteListOnServer, updateToolOnServer, updateProjectReportOnServer } from "../../../utils/indexedDB";
 import axios from "axios";
 
@@ -57,18 +58,19 @@ const PageStorageBox = () => {
         );
 
         if (savedToolListInfo) {
-          const filteredList = savedToolListInfo.filter(tool => !(tool.deleteState >= 1));
-          const sortedList = [...filteredList].sort((a, b) => {
+          // const filteredList = savedToolListInfo.filter(
+          //   (tool) => !(tool.deleteState >= 1)
+          // );
+          const sortedList = [...savedToolListInfo].sort((a, b) => {
             const dateA = a.timestamp;
             const dateB = b.timestamp;
             return dateB - dateA; // 최신 날짜가 위로
           });
 
+          console.log("🚀 ~ sortedList ~ sortedList:", sortedList);
           setToolListSaas(sortedList);
         }
-      } catch (error) {
-
-      }
+      } catch (error) {}
     };
     loadToolList();
   }, []); // refreshTrigger가 변경될 때마다 데이터 다시 로드
@@ -84,7 +86,6 @@ const PageStorageBox = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-  
           navigate("/");
           return true;
         }
@@ -138,7 +139,11 @@ const PageStorageBox = () => {
     const loadDeletedTools = async () => {
       if (isTrashModalOpen) {
         try {
-          const deletedToolsData = await getToolDeleteListOnServer(100, 1, true);
+          const deletedToolsData = await getToolDeleteListOnServer(
+            100,
+            1,
+            true
+          );
           if (deletedToolsData.data.length > 0) {
             setDeletedTools(deletedToolsData.data);
             console.log("deletedToolsData", deletedToolsData.data);
@@ -148,7 +153,7 @@ const PageStorageBox = () => {
         }
       }
     };
-    
+
     loadDeletedTools();
   }, [isTrashModalOpen, refreshTrigger]);
 
@@ -188,9 +193,9 @@ const PageStorageBox = () => {
       }
       
       // 화면에서 제거
-      setDeletedTools(prev => prev.filter(tool => tool._id !== toolId));
+      setDeletedTools((prev) => prev.filter((tool) => tool._id !== toolId));
       // 스토리지 박스 목록 새로고침 트리거
-      setRefreshTrigger(prev => prev + 1);
+      setRefreshTrigger((prev) => prev + 1);
     } catch (error) {
       console.error("툴 복구에 실패했습니다:", error);
     }
@@ -232,71 +237,71 @@ const PageStorageBox = () => {
       }
       
       // 화면에서 제거
-      setDeletedTools(prev => prev.filter(tool => tool._id !== toolId));
+      setDeletedTools((prev) => prev.filter((tool) => tool._id !== toolId));
     } catch (error) {
       console.error("툴 영구 삭제에 실패했습니다:", error);
     }
   };
 
-    // 툴 설명 가져오기 함수
-    const getToolDescription = (tool) => {
-      if (tool.type) {
-        switch (tool.type) {
-          case "ix_target_discovery_persona":
-            return tool.specificSituation || "상세 내용 없음";
-          case "ix_customer_value_persona":
-            return (tool.analysisScope?.split("|")[0] || "상세 내용 없음").trim();
-          case "ix_idea_generator_persona":
-            return (
-              `${tool.coreValue?.[0]} 외 ${tool.coreValue?.length - 1}개` ||
-              "상세 내용 없음"
-            );
-          case "ix_design_emotion_analysis":
-            return tool.imageName?.[0]?.name || "상세 내용 없음";
-          default:
-            return tool.type;
-        }
+  // 툴 설명 가져오기 함수
+  const getToolDescription = (tool) => {
+    if (tool.type) {
+      switch (tool.type) {
+        case "ix_target_discovery_persona":
+          return tool.specificSituation || "상세 내용 없음";
+        case "ix_customer_value_persona":
+          return (tool.analysisScope?.split("|")[0] || "상세 내용 없음").trim();
+        case "ix_idea_generator_persona":
+          return (
+            `${tool.coreValue?.[0]} 외 ${tool.coreValue?.length - 1}개` ||
+            "상세 내용 없음"
+          );
+        case "ix_design_emotion_analysis":
+          return tool.imageName?.[0]?.name || "상세 내용 없음";
+        default:
+          return tool.type;
       }
-      if (tool.reportTitle) return tool.reportTitle;
-      if (tool.chat_data?.expert_index) {
-        switch (tool.chat_data.expert_index) {
-          case "1":
-            return "시장 내 경쟁 우위 방안 보고서";
-          case "2":
-            return "마케팅 전문가";
-          case "3":
-            return "고객 인사이트 전문가";
-          case "4":
-            return "PoC 설계 전문가";
-          case "5":
-            return "아이디어 디벨로퍼";
-          case "6":
-            return "최적화된 전략을 제시";
-          case "7":
-            return "제품/서비스 분석 보고서";
-          case "8":
-            return "사례 분석 전문가";
-          case "9":
-            return "린 캔버스 vs 비즈니스 모델 캔버스 매칭 분석";
-          case "10":
-            return "조사 설계 전문가";
-          default:
-            return tool.chat_data.expert_index;
-        }
+    }
+    if (tool.reportTitle) return tool.reportTitle;
+    if (tool.chat_data?.expert_index) {
+      switch (tool.chat_data.expert_index) {
+        case "1":
+          return "시장 내 경쟁 우위 방안 보고서";
+        case "2":
+          return "마케팅 전문가";
+        case "3":
+          return "고객 인사이트 전문가";
+        case "4":
+          return "PoC 설계 전문가";
+        case "5":
+          return "아이디어 디벨로퍼";
+        case "6":
+          return "최적화된 전략을 제시";
+        case "7":
+          return "제품/서비스 분석 보고서";
+        case "8":
+          return "사례 분석 전문가";
+        case "9":
+          return "린 캔버스 vs 비즈니스 모델 캔버스 매칭 분석";
+        case "10":
+          return "조사 설계 전문가";
+        default:
+          return tool.chat_data.expert_index;
       }
-      return "상세 내용 없음";
-    };
-    // 날짜 포맷팅 함수 (년월일시분 표기)
-    const formatDate = (timestamp) => {
-      const date = new Date(timestamp);
-      return `${date.getFullYear().toString().slice(2)}.${String(
-        date.getMonth() + 1
-      ).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")} ${String(
-        date.getHours()
-      ).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
-    };
+    }
+    return "상세 내용 없음";
+  };
+  // 날짜 포맷팅 함수 (년월일시분 표기)
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return `${date.getFullYear().toString().slice(2)}.${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")} ${String(
+      date.getHours()
+    ).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+  };
 
-      // 툴 이름 가져오기 함수
+  // 툴 이름 가져오기 함수
   const getToolName = (tool) => {
     if (tool.type) {
       switch (tool.type) {
@@ -367,7 +372,7 @@ const PageStorageBox = () => {
               </Button>
             </StorageBoxTitle>
 
-            <TabWrapType4>
+            {/* <TabWrapType4>
               <TabButtonType4Main
               // isActive={activeTab === "all"}
               // onClick={() => setActiveTab("all")}
@@ -392,7 +397,7 @@ const PageStorageBox = () => {
               >
                 <Caption1 color="gray700">Business Expert</Caption1>
               </TabButtonType4Main>
-            </TabWrapType4>
+            </TabWrapType4> */}
 
             <DashBoardItem>
               <OrganismStorageBoxToolList toolListSaas={toolListSaas} />
@@ -494,7 +499,8 @@ const PageStorageBox = () => {
                       />
                       <div className="content">
                         <Sub3 color="gray800" align="left">
-                          ({getToolName(tool) || ""}) {getToolDescription(tool) || ""}
+                          ({getToolName(tool) || ""}){" "}
+                          {getToolDescription(tool) || ""}
                         </Sub3>
                         <Caption1 color="gray500" align="left">
                           삭제일 : {formatDate(tool.timestamp)}
@@ -504,24 +510,26 @@ const PageStorageBox = () => {
                         <span onClick={() => handleRestoreTool(tool._id, tool.toolType)}>
                           <img src={images.ArrowReturn} alt="복구" />
                         </span>
-                        <span onClick={() => handlePermanentDelete(tool._id, tool.toolType)}>
+                        {/* <span onClick={() => handlePermanentDelete(tool._id)}>
                           <img src={images.Trash} alt="영구삭제" />
-                        </span>
+                        </span> */}
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div style={{ padding: '20px 0', textAlign: 'center' }}>
-                    <Caption1 color="gray500">임시 삭제된 항목이 없습니다.</Caption1>
+                  <div style={{ padding: "20px 0", textAlign: "center" }}>
+                    <Caption1 color="gray500">
+                      임시 삭제된 항목이 없습니다.
+                    </Caption1>
                   </div>
                 )}
               </div>
 
-              <div className="delete-info">
+              {/* <div className="delete-info">
                 <Caption1 color="primary">
                   휴지통에 15일 이상 보관된 리포트는 자동으로 삭제됩니다.
                 </Caption1>
-              </div>
+              </div> */}
             </>
           }
         />
