@@ -963,22 +963,21 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
     setIsDeletePopupOpen(false);
   };
 
-
   const handleDeleteConfirm = async () => {
     setIsDeletePopupOpen(false);
-    await updateToolOnServer(
-      deleteToolId,
-      {
-        deleteState: 1,
-      }
-    );
+    await updateToolOnServer(deleteToolId, {
+      deleteState: 1,
+    });
     // 로컬 상태에서 삭제된 툴 제거
-    setLocalToolList(prevList => prevList.filter(tool => (tool._id || tool.id) !== deleteToolId));
+    setLocalToolList((prevList) =>
+      prevList.filter((tool) => (tool._id || tool.id) !== deleteToolId)
+    );
   };
 
   const hadleDeleteTool = async (toolId) => {
     setIsDeletePopupOpen(true);
     setDeleteToolId(toolId);
+  };
 
   return (
     <>
