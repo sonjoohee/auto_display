@@ -236,7 +236,7 @@ const PagePersona4 = () => {
   }, [showToast]);
 
   useEffect(() => {
-    // console.log("🚀 ~ useEffect ~ reportId:", reportId);
+    console.log("🚀 ~ useEffect ~ reportId:", reportId);
     const loadProjectReport = async () => {
       // 1. 로그인 여부 확인
       if (reportId && reportLoadButtonState) {
@@ -249,17 +249,17 @@ const PagePersona4 = () => {
         if (savedProjectInfo) {
           setBusinessAnalysis(savedProjectInfo.businessAnalysis);
           setReportList(savedProjectInfo.reportList);
-          setCategoryColor({
-            first: getCategoryColor(
-              savedProjectInfo.businessAnalysis.category.first
-            ),
-            second: getCategoryColor(
-              savedProjectInfo.businessAnalysis.category.second
-            ),
-            third: getCategoryColor(
-              savedProjectInfo.businessAnalysis.category.third
-            ),
-          });
+          // setCategoryColor({
+          //   first: getCategoryColor(
+          //     savedProjectInfo.businessAnalysis.category.first
+          //   ),
+          //   second: getCategoryColor(
+          //     savedProjectInfo.businessAnalysis.category.second
+          //   ),
+          //   third: getCategoryColor(
+          //     savedProjectInfo.businessAnalysis.category.third
+          //   ),
+          // });
         }
         const savedProjectReportInfo = await getProjectReportByIdFromIndexedDB(
           reportId,
