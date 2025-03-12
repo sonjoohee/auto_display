@@ -228,43 +228,47 @@ const PageCustomerValueAnalyzer = () => {
           }));
           setSelectedPersonasSaas(customerValueAnalyzerInfo?.targetList ?? []);
 
-          const savedPersonaNames = Array.isArray(customerValueAnalyzerInfo?.targetList ?? [])
-          ? customerValueAnalyzerInfo?.targetList?.map((persona) => persona?.personaName)
-          : [customerValueAnalyzerInfo?.targetList?.personaName];
+          const savedPersonaNames = Array.isArray(
+            customerValueAnalyzerInfo?.targetList ?? []
+          )
+            ? customerValueAnalyzerInfo?.targetList?.map(
+                (persona) => persona?.personaName
+              )
+            : [customerValueAnalyzerInfo?.targetList?.personaName];
 
           const selectedPersonaIds = savedPersonaNames
-          ?.map((name) => {
-            const matchedPersona = personaListSaas?.find(
-              (persona) => persona?.personaName === name
+            ?.map((name) => {
+              const matchedPersona = personaListSaas?.find(
+                (persona) => persona?.personaName === name
+              );
+              return matchedPersona ? matchedPersona?._id : null;
+            })
+            .filter((id) => id !== null);
+
+          console.log("Selected Persona IDs:", selectedPersonaIds);
+
+          // 찾은 _id 값으로 selectedPersonasSaas 상태를 업데이트합니다
+          // setSelectedPersonasSaas(selectedPersonaIds);
+
+          // 선택된 페르소나 버튼 상태도 업데이트합니다
+          const newSelectedButtons = {};
+          selectedPersonaIds.forEach((id) => {
+            const matchedPersona = personaListSaas.find(
+              (persona) => persona._id === id
             );
-            return matchedPersona ? matchedPersona?._id : null;
-          })
-          .filter((id) => id !== null);
+            if (matchedPersona) {
+              const buttonId = `${matchedPersona.personaType}_${id}`;
+              newSelectedButtons[buttonId] = true;
 
-        console.log("Selected Persona IDs:", selectedPersonaIds);
-
-        // 찾은 _id 값으로 selectedPersonasSaas 상태를 업데이트합니다
-        // setSelectedPersonasSaas(selectedPersonaIds);
-
-        // 선택된 페르소나 버튼 상태도 업데이트합니다
-        const newSelectedButtons = {};
-        selectedPersonaIds.forEach((id) => {
-          const matchedPersona = personaListSaas.find(
-            (persona) => persona._id === id
-          );
-          if (matchedPersona) {
-            const buttonId = `${matchedPersona.personaType}_${id}`;
-            newSelectedButtons[buttonId] = true;
-
-            // favorite가 true인 경우 my_persona 탭에서도 선택 상태로 설정
-            if (matchedPersona.favorite) {
-              newSelectedButtons[`my_persona_${id}`] = true;
+              // favorite가 true인 경우 my_persona 탭에서도 선택 상태로 설정
+              if (matchedPersona.favorite) {
+                newSelectedButtons[`my_persona_${id}`] = true;
+              }
             }
-          }
-        });
+          });
 
-        setSelectedPersonaButtons(newSelectedButtons);
-        console.log("newSelectedButtons", newSelectedButtons);
+          setSelectedPersonaButtons(newSelectedButtons);
+          console.log("newSelectedButtons", newSelectedButtons);
         }
 
         // 완료된 단계 설정
@@ -571,11 +575,13 @@ const PageCustomerValueAnalyzer = () => {
       //     return personaListSaas.find((persona) => persona === persona);
       //   })
       //   .filter((persona) => persona !== undefined);
-        const selectedPersonaObjects = selectedPersonasSaas
+      const selectedPersonaObjects = selectedPersonasSaas
         .map((selectedPersona) => {
           // _id와 personaName을 사용하여 해당 페르소나 객체를 찾습니다
-          return personaListSaas.filter((persona) => 
-            persona._id === selectedPersona._id && persona.personaName === selectedPersona.personaName
+          return personaListSaas.filter(
+            (persona) =>
+              persona._id === selectedPersona._id &&
+              persona.personaName === selectedPersona.personaName
           );
         })
         .flat() // 중첩 배열을 평탄화하여 모든 일치하는 페르소나 객체를 가져옵니다
@@ -1430,7 +1436,9 @@ const PageCustomerValueAnalyzer = () => {
                     <div className="content">
                       <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
                         <div className="selectBoxWrap">
-                          <Body2 color="gray500" style={{ width: "110px" }}>페르소나 선택</Body2>
+                          <Body2 color="gray500" style={{ width: "110px" }}>
+                            페르소나 선택
+                          </Body2>
                           {selectedPersonasSaas.length === 0 ? (
                             <Body2 color="gray300">
                               아래 리스트에서 페르소나를 선택해 주세요 (5명 선택
@@ -1438,8 +1446,8 @@ const PageCustomerValueAnalyzer = () => {
                             </Body2>
                           ) : (
                             <PersonaGroup>
-                            {Array.isArray(selectedPersonasSaas) &&
-                          selectedPersonasSaas.length > 0 ? (
+                              {Array.isArray(selectedPersonasSaas) &&
+                              selectedPersonasSaas.length > 0 ? (
                                 <>
                                   {selectedPersonasSaas.length > 3 && (
                                     <span>
@@ -1472,7 +1480,9 @@ const PageCustomerValueAnalyzer = () => {
                           )}
                         </div>
                         <div className="selectBoxWrap">
-                          <Body2 color="gray500" style={{ width: "110px" }}>여정 분석 범위</Body2>
+                          <Body2 color="gray500" style={{ width: "110px" }}>
+                            여정 분석 범위
+                          </Body2>
                           <SelectBox style={{ paddingRight: "20px" }}>
                             <SelectBoxTitle
                               onClick={() =>
@@ -1506,7 +1516,10 @@ const PageCustomerValueAnalyzer = () => {
                                   </Body2>
                                 </div>
                               ) : (
-                                <Body2 color="gray300" style={{ paddingLeft: "20px" }}>
+                                <Body2
+                                  color="gray300"
+                                  style={{ paddingLeft: "20px" }}
+                                >
                                   고객 여정 맵의 분석 방향성을 선택하세요
                                 </Body2>
                               )}
@@ -1867,14 +1880,19 @@ const PageCustomerValueAnalyzer = () => {
                         >
                           고객 경험 & 핵심 가치 맵
                         </H4>
-                        <BoxWrap Column>
+                        <BoxWrap
+                          style={{
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                          }}
+                        >
                           <Body3 color="gray700">
                             가로축 (X축) - 영향력 : 많은 사람들이 중요하게
                             여기는 구매 결정 요인의 영향 정도
                           </Body3>
                           <Body3 color="gray700">
                             세로축 (Y축) - 불만족도 : 사람들이 해당 구매 요인에
-                            대해 불만족을 느끼는 정도{" "}
+                            대해 불만족을 느끼는 정도
                           </Body3>
                         </BoxWrap>
                       </div>
