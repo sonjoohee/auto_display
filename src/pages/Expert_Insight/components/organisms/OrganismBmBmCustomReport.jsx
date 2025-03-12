@@ -135,7 +135,7 @@ const OrganismBmBmCustomReport = () => {
       );
 
     } catch (error) {
-      console.error("Error fetching report:", error);
+     // console.error("Error fetching report:", error);
       setLoadingDownload(false);
       setTimeout(() => {
       }, 2000);
@@ -211,12 +211,12 @@ const OrganismBmBmCustomReport = () => {
           }, 2000);
         })
         .catch((error) => {
-          console.error("Error generating DOCX:", error);
+          //console.error("Error generating DOCX:", error);
           setLoadingDownload(false);
           setTimeout(() => {}, 2000);
         });
     } catch (error) {
-      console.error("Error generating DOCX:", error);
+     // console.error("Error generating DOCX:", error);
     }
   };
 
@@ -267,7 +267,7 @@ const OrganismBmBmCustomReport = () => {
           retryCount++;
         }
         if (retryCount === maxRetries) {
-          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+         // console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
           // 에러 처리 로직 추가
           throw new Error("Maximum retry attempts reached. Empty response persists.");
         }

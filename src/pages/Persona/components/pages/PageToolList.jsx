@@ -794,7 +794,7 @@ const PageToolList = () => {
           }
         }
       } catch (error) {
-        console.error("Failed to fetch credit info:", error);
+        // console.error("Failed to fetch credit info:", error);
       }
     };
 
@@ -1174,7 +1174,7 @@ const PageToolList = () => {
         // accessToken을 세션 스토리지에 저장
         sessionStorage.setItem("accessToken", accessToken);
       } catch (error) {
-        console.error("로그인 중 오류가 발생했습니다.", error);
+        // console.error("로그인 중 오류가 발생했습니다.", error);
       }
     }
 
@@ -1210,7 +1210,7 @@ const PageToolList = () => {
       setCheckRefresh(true);
       // 현재 URL 확인
       const currentUrl = window.location.href;
-      console.log("🚀 ~ detectRefresh ~ currentUrl:", currentUrl);
+    
       if (currentUrl.toLowerCase().includes("tool")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         const lastUrl = sessionStorage.getItem("lastUrl");

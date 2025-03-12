@@ -100,7 +100,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
             data,
             isLoggedIn
           );
-          console.log("전략 컨설팅 response", response);
+        //  console.log("전략 컨설팅 response", response);
             
           if (response && response.response && response.response.tabs) {
             let strategyConsultantReport = response.response.tabs[0];
@@ -180,11 +180,11 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
 
             await saveConversation({ changingConversation: { conversation: updatedConversation, strategyConsultantReportData: [...strategyConsultantReportData, strategyConsultantReport] } });
           } else {
-            console.error("Invalid response structure:", response);
+           // console.error("Invalid response structure:", response);
           }
         }
       } catch (error) {
-        console.error("Error fetching strategy consultant report:", error);
+       // console.error("Error fetching strategy consultant report:", error);
       }
     };
 

@@ -507,7 +507,7 @@ const PageExpertInsight = () => {
           } catch (error) {
             setIsLoadingPage(false); // 로딩 완료
             setIsExpertInsightAccessible(true);
-            console.error("Failed to create conversation on server:", error);
+           // console.error("Failed to create conversation on server:", error);
             // navigate(`/conversation}`, { replace: true });
           }
         } else {
@@ -732,7 +732,7 @@ const PageExpertInsight = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
+         // console.log("새로고침 감지: URL 비교");
           navigate("/");
           return true;
         }

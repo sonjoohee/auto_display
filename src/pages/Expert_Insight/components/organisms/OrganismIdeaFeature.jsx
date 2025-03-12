@@ -225,7 +225,7 @@ const OrganismIdeaFeature = () => {
       setIsLoading(false);
 
     } catch (error) {
-      console.error("Error loading data:", error);
+      //console.error("Error loading data:", error);
     }
   };
 
@@ -291,7 +291,7 @@ const OrganismIdeaFeature = () => {
             retryCount++;
           }
           if (retryCount === maxRetries) {
-            console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+           // console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
             // 에러 처리 로직 추가
             throw new Error("Maximum retry attempts reached. Empty response persists.");
           }
@@ -327,7 +327,7 @@ const OrganismIdeaFeature = () => {
           );
         }
       } catch (error) {
-        console.error("Error loading Idea Feature:", error);
+      //  console.error("Error loading Idea Feature:", error);
       }
     };
 

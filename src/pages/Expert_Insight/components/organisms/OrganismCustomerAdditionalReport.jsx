@@ -311,7 +311,7 @@ const OrganismCustomerAdditionalReport = ({
           );
         }
       } catch (error) {
-        console.error("Error loading data:", error);
+       // console.error("Error loading data:", error);
       }
     };
 

@@ -533,7 +533,7 @@ const PagePersona3Multiple = () => {
         setUserCredits(userCreditValue);
       }
     } catch (error) {
-      console.error("크레딧 체크 실패:", error);
+      // console.error("크레딧 체크 실패:", error);
       setShowCreditPopup(true);
     }
   };
@@ -549,7 +549,7 @@ const PagePersona3Multiple = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
+  
           navigate("/");
           return true;
         }

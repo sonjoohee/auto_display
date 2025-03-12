@@ -156,7 +156,7 @@ const PageMyProfile = () => {
         );
         closeContactPopup();
       } catch (error) {
-        console.error("문의하기 제출 실패:", error);
+        // console.error("문의하기 제출 실패:", error);
       }
     }
   };
@@ -186,7 +186,7 @@ const PageMyProfile = () => {
         setUserEmail("");
         window.location.href = "/"; // 페이지 이동
       } catch (error) {
-        console.error("회원탈퇴 제출 실패:", error);
+        // console.error("회원탈퇴 제출 실패:", error);
       }
     }
   };

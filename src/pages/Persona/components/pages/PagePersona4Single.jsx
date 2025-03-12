@@ -236,7 +236,7 @@ const PagePersona4 = () => {
   }, [showToast]);
 
   useEffect(() => {
-    console.log("🚀 ~ useEffect ~ reportId:", reportId);
+
     const loadProjectReport = async () => {
       // 1. 로그인 여부 확인
       if (reportId && reportLoadButtonState) {
@@ -684,7 +684,7 @@ const PagePersona4 = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
+    
           navigate("/");
           return true;
         }

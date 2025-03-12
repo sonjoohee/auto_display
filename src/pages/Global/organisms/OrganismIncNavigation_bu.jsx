@@ -553,7 +553,7 @@ const OrganismIncNavigation = () => {
       setReportIdToChangeName(null);
       setNewReportName("");
     } catch (error) {
-      console.error("Error updating report name on server:", error);
+      // console.error("Error updating report name on server:", error);
     }
   };
 

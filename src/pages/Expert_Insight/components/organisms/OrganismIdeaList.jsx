@@ -297,7 +297,7 @@ const handleMiro = async () => {
     // }
 
   } catch (error) {
-    console.error("Error loading Idea List:", error);
+   // console.error("Error loading Idea List:", error);
   } finally {
     // 5분 후에 ideaMiroState를 0으로 설정
     setTimeout(() => {
@@ -373,7 +373,7 @@ useEffect(() => {
             retryCount++;
           }
           if (retryCount === maxRetries) {
-            console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+           // console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
             // 에러 처리 로직 추가
             throw new Error("Maximum retry attempts reached. Empty responseIdea persists.");
           }
@@ -432,7 +432,7 @@ useEffect(() => {
           retryCount++;
         }
         if (retryCount === maxRetries) {
-          console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
+         // console.error("최대 재시도 횟수에 도달했습니다. 응답이 계속 비어있습니다.");
           // 에러 처리 로직 추가
           throw new Error("Maximum retry attempts reached. Empty responseGroup persists.");
         }
@@ -462,7 +462,7 @@ useEffect(() => {
         );
       }
     } catch (error) {
-      console.error("Error loading Idea List:", error);
+     // console.error("Error loading Idea List:", error);
     }
   };
 

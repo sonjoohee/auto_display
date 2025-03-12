@@ -162,7 +162,7 @@ const OrganismMarketingResearchReport = () => {
           await saveConversation({ changingConversation: { conversation: updatedConversation, marketingResearchReportData: marketingResearchReport } });
         }
       } catch (error) {
-        console.error("Error fetching marketing research report:", error);
+        //console.error("Error fetching marketing research report:", error);
       }
     };
 
