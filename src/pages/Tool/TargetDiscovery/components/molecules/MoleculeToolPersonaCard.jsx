@@ -296,8 +296,12 @@ const MoleculeToolPersonaCard = ({
                   |{" "}
                   {personaScenario?.potential_customer_info?.age ||
                     personaScenario?.scenario?.potential_customer_info?.age
-                    ? `${personaScenario?.potential_customer_info?.age ||
-                        personaScenario?.scenario?.potential_customer_info?.age}`
+                    ? `${(personaScenario?.potential_customer_info?.age ||
+                        personaScenario?.scenario?.potential_customer_info?.age).includes('세') 
+                        ? (personaScenario?.potential_customer_info?.age ||
+                           personaScenario?.scenario?.potential_customer_info?.age) 
+                        : (personaScenario?.potential_customer_info?.age ||
+                           personaScenario?.scenario?.potential_customer_info?.age) + '세'}`
                     : ""}
                 </Sub3>
               </p>

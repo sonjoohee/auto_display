@@ -104,7 +104,6 @@ const OrganismPersonaCardList = ({
       // ID가 없는 경우 처리
       const personaId = persona._id;
       if (!personaId) {
-        console.error("페르소나 ID가 없습니다.");
         return;
       }
 
@@ -138,7 +137,7 @@ const OrganismPersonaCardList = ({
         })
       );
     } catch (error) {
-      console.error("즐겨찾기 업데이트 실패:", error);
+  
     }
   };
 
@@ -158,7 +157,6 @@ const OrganismPersonaCardList = ({
 
     let accessToken = sessionStorage.getItem("accessToken");
     if (!accessToken) {
-      console.error("토큰이 없습니다.");
       return;
     }
 
@@ -168,7 +166,6 @@ const OrganismPersonaCardList = ({
       mount: creditRequestBusinessPersona,
     };
     const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
-    // console.log("크레딧 체크 응답:", creditResponse);
 
     if (creditResponse?.state !== "use") {
       setShowCreditPopup(true);
@@ -197,10 +194,9 @@ const OrganismPersonaCardList = ({
   };
 
   const handleRequestPersona = async (persona) => {
-    console.log("handleRequestPersona", persona);
 
     if (!persona) {
-      console.error("선택된 페르소나가 없습니다.");
+
       return;
     }
 
@@ -211,7 +207,7 @@ const OrganismPersonaCardList = ({
         projectId,
         isLoggedIn
       );
-      console.log("currentProject", currentProject);
+
 
       // const currentRequestedPersona = currentProject?.businessPersonaList || [];
 
@@ -264,10 +260,10 @@ const OrganismPersonaCardList = ({
         };
         createRequestPersonaOnServer(requestData, isLoggedIn);
       } else {
-        console.error("이미 요청된 페르소나입니다.");
+
       }
     } catch (error) {
-      console.error("페르소나 요청 중 오류 발생:", error);
+
     }
   };
 

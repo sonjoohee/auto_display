@@ -215,7 +215,6 @@ const OrganismEmptyPersona = () => {
       const updatedPersonas = [];
       for (let i = 0; i < allPersonas.length; i++) {
         const persona = allPersonas[i];
-        console.log(persona);
         try {
           // 서버에 저장하고 ID 반환 받기
           const insertedId = await createPersonaOnServer(persona, isLoggedIn);
@@ -232,7 +231,6 @@ const OrganismEmptyPersona = () => {
             updatedPersonas.push(persona);
           }
         } catch (error) {
-          console.error("페르소나 저장 중 오류 발생:", error);
           updatedPersonas.push(persona);
         }
       }
@@ -255,10 +253,8 @@ const OrganismEmptyPersona = () => {
           setPersonaListSaas(sortedList);
         }
       } catch (error) {
-        console.error("페르소나 목록을 불러오는데 실패했습니다:", error);
       }
     } catch (error) {
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
