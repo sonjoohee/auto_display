@@ -24,10 +24,21 @@ import {
   Body3,
   Sub1,
   Caption1,
+  Sub3,
 } from "../../../assets/styles/Typography";
-import { getProjectListSaasByIdFromIndexedDB, updateProjectOnServer } from "../../../utils/indexedDB";
+import {
+  getProjectListSaasByIdFromIndexedDB,
+  updateProjectOnServer,
+  getProjectDeleteListOnServer,
+} from "../../../utils/indexedDB";
 import OrganismProjectItem from "../components/organisms/OrganismProjectItem";
-import { PROJECT_LIST, ACCESS_DASHBOARD, PROJECT_ID, IS_LOGGED_IN } from "../../AtomStates";
+import {
+  PROJECT_LIST,
+  ACCESS_DASHBOARD,
+  PROJECT_ID,
+  IS_LOGGED_IN,
+} from "../../AtomStates";
+
 const PageProject = () => {
   const navigate = useNavigate();
   const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
@@ -39,10 +50,44 @@ const PageProject = () => {
 
   const [projectId, setProjectId] = useAtom(PROJECT_ID);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [deletedProjects, setDeletedProjects] = useState([]);
 
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [isTrashModalOpen, setIsTrashModalOpen] = useState(false);
   const handleWarningClose = () => {
     setIsWarningPopupOpen(false);
     setShowWarning(false);
+  };
+
+  // 임시 삭제함 데이터 로드
+  useEffect(() => {
+    const loadDeletedTools = async () => {
+      if (isTrashModalOpen) {
+        try {
+          const deletedProjectsData = await getProjectDeleteListOnServer(
+            0,
+            0,
+            true
+          );
+          if (deletedProjectsData.length > 0) {
+            setDeletedProjects(deletedProjectsData);
+          }
+        } catch (error) {
+          console.error("삭제된 툴 목록을 불러오는데 실패했습니다:", error);
+        }
+      }
+    };
+
+    loadDeletedTools();
+  }, [isTrashModalOpen, refreshTrigger]);
+  // 날짜 포맷팅 함수 (년월일시분 표기)
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return `${date.getFullYear().toString().slice(2)}.${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")} ${String(
+      date.getHours()
+    ).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
   };
   const handleWarningContinue = async () => {
     if (selectedProject) {
@@ -54,7 +99,7 @@ const PageProject = () => {
       await updateProjectOnServer(
         selectedProject._id,
         {
-          deleteState: 1
+          deleteState: 1,
         },
         isLoggedIn
       );
@@ -62,10 +107,34 @@ const PageProject = () => {
     setShowWarning(false);
     setSelectedProject(null);
   };
+
+  // 툴 복구 처리
+  const handleRestoreProject = async (projectId) => {
+    try {
+      await updateProjectOnServer(
+        projectId,
+        {
+          deleteState: 0,
+        },
+        true
+      );
+
+      // 화면에서 제거
+      setDeletedProjects((prev) =>
+        prev.filter((project) => project._id !== projectId)
+      );
+      // 스토리지 박스 목록 새로고침 트리거
+      setRefreshTrigger((prev) => prev + 1);
+    } catch (error) {
+      console.error("프로젝트 복구에 실패했습니다:", error);
+    }
+  };
+
   const handleStart = () => {
     setIsWarningPopupOpen(false);
     navigate("/ProjectCreate");
   };
+
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
@@ -82,7 +151,6 @@ const PageProject = () => {
       // 현재 URL 저장
       sessionStorage.setItem("lastUrl", currentUrl);
       const lastUrl = sessionStorage.getItem("lastUrl");
- 
     };
     // 함수 실행
     detectRefresh();
@@ -125,12 +193,10 @@ const PageProject = () => {
 
           setProjectList(sortedList);
         }
-      } catch (error) {
-
-      }
+      } catch (error) {}
     };
     loadProjectList();
-  }, []); // refreshTrigger가 변경될 때마다 데이터 다시 로드
+  }, [refreshTrigger]); // refreshTrigger가 변경될 때마다 데이터 다시 로드
 
   // 샘플 프로젝트 데이터
   const sampleProjects = projectList;
@@ -160,15 +226,22 @@ const PageProject = () => {
                   AI를 활용한 효율적인 프로젝트 인사이트를 관리하세요
                 </Body3>
               </div>
-
-              <Button
-                ExLarge
-                Primary
-                Fill
-                onClick={() => setIsWarningPopupOpen(true)}
+              <div
+                style={{ display: "flex", flexDirection: "row", gap: "10px" }}
               >
-                <Sub1 color="white">새 프로젝트</Sub1>
-              </Button>
+                <Button
+                  ExLarge
+                  Primary
+                  Fill
+                  onClick={() => setIsWarningPopupOpen(true)}
+                >
+                  <Sub1 color="white">새 프로젝트</Sub1>
+                </Button>
+                <Button Outline onClick={() => setIsTrashModalOpen(true)}>
+                  <img src={images.Trash} alt="" />
+                  <Caption1 color="gray700">임시 삭제함</Caption1>
+                </Button>
+              </div>
             </HeaderWrap>
 
             <ProjectListWrap>
@@ -186,7 +259,6 @@ const PageProject = () => {
           </ProjectWrap>
         </MainContent>
       </ContentsWrap>
-
       {showWarning && (
         <PopupWrap
           Warning
@@ -200,7 +272,6 @@ const PageProject = () => {
           onConfirm={handleWarningContinue}
         />
       )}
-
       {isWarningPopupOpen && (
         <PopupWrap
           Warning
@@ -212,6 +283,61 @@ const PageProject = () => {
           isModal={false}
           onCancel={handleWarningClose}
           onConfirm={handleStart}
+        />
+      )}{" "}
+      {isTrashModalOpen && (
+        <PopupWrap
+          Wide455
+          TitleFlex
+          title="임시 삭제함 (프로젝트)"
+          buttonType="Fill"
+          isModal={true}
+          onCancel={() => setIsTrashModalOpen(false)}
+          body={
+            <>
+              <div className="deleted-wrap">
+                {deletedProjects.length > 0 ? (
+                  deletedProjects.map((project) => (
+                    <div key={project._id}>
+                      <images.GridCircle
+                        color={palette.gray700}
+                        width={12}
+                        height={12}
+                      />
+                      <div className="content">
+                        <Sub3 color="gray800" align="left">
+                          {project.projectTitle}
+                        </Sub3>
+                        <Caption1 color="gray500" align="left">
+                          삭제일 : {formatDate(project.timestamp)}
+                        </Caption1>
+                      </div>
+                      <div className="button">
+                        <span onClick={() => handleRestoreProject(project._id)}>
+                          <img src={images.ArrowReturn} alt="복구" />
+                        </span>
+                        {/* <span onClick={() => handlePermanentDelete(tool._id)}>
+                          <img src={images.Trash} alt="영구삭제" />
+                        </span> */}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ padding: "20px 0", textAlign: "center" }}>
+                    <Caption1 color="gray500">
+                      임시 삭제된 항목이 없습니다.
+                    </Caption1>
+                  </div>
+                )}
+              </div>
+
+              {/* <div className="delete-info">
+                <Caption1 color="primary">
+                  휴지통에 15일 이상 보관된 리포트는 자동으로 삭제됩니다.
+                </Caption1>
+              </div> */}
+            </>
+          }
         />
       )}
     </>

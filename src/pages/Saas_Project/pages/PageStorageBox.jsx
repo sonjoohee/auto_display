@@ -489,7 +489,7 @@ const PageStorageBox = () => {
         <PopupWrap
           Wide455
           TitleFlex
-          title="임시 삭제함"
+          title="임시 삭제함 (Tool)"
           buttonType="Fill"
           isModal={true}
           onCancel={() => setIsTrashModalOpen(false)}

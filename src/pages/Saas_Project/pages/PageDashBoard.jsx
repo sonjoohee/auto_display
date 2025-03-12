@@ -441,8 +441,8 @@ const PageDashBoard = () => {
                             <Sub3 color="gray500">비활성 페르소나</Sub3>
                           </div>
                           <Sub3 color="gray700" align="left">
-                            프로젝트에 따라 추천된 페르소나지만, 아직 자신의
-                            경험이나 의견을 표현할 수 없는 상태의 페르소나
+                            프로젝트에 따라 추천되었지만, 아직 자신의 경험이나
+                            의견을 표현할 수 없는 상태의 페르소나
                           </Sub3>
                         </div>
 
@@ -451,8 +451,8 @@ const PageDashBoard = () => {
                             <Sub3 color="gray500">생성 중</Sub3>
                           </div>
                           <Sub3 color="gray700" align="left">
-                            페르소나 생성 요청이 접수되어, 의견을 표현할 수
-                            있도록 생성 중인 상태의 페르소나
+                            생성 요청이 접수되어, 의견을 표현할 수 있도록 생성
+                            중인 상태의 페르소나
                           </Sub3>
                         </div>
 
@@ -635,7 +635,7 @@ const PageDashBoard = () => {
 
       {showPopup && (
         <PopupWrap
-          Wide
+          Wide1000
           TitleFlex
           title={`${project?.projectTitle} 상세 정보`}
           buttonType="Fill"
