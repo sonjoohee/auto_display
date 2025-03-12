@@ -772,7 +772,7 @@ const PageAiPersona = () => {
   };
 
   // 크레딧 사용 함수
-  const creditUse = async () => {
+  const creditUse = async (selectedPersona) => {
     // 팝업 닫기
     setShowRequestPopup(false);
 
@@ -795,12 +795,14 @@ const PageAiPersona = () => {
 
     // 크레딧이 사용 가능한 상태면 사용 API 호출
     const creditUsePayload = {
-      title: selectedPersona.title,
+      title: project.projectTitle,
       service_type: "페르소나 모집 요청",
       target: "",
       state: "use",
       mount: creditRequestBusinessPersona,
     };
+
+    await UserCreditUse(creditUsePayload, isLoggedIn);
 
     // 크레딧 사용 후 사용자 정보 새로고침
     accessToken = sessionStorage.getItem("accessToken");
@@ -2195,7 +2197,7 @@ const PageAiPersona = () => {
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
             onConfirm={() => {
-              creditUse(); // Call creditUse function
+              creditUse(selectedPersona); // Call creditUse function
               setShowRequestPopup(false); // 팝업 닫기
             }}
           />
@@ -2217,7 +2219,8 @@ const PageAiPersona = () => {
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
             onConfirm={() => {
-              handleRequestPersona(selectedPersona); // 선택된 페르소나를 전달
+              // handleRequestPersona(selectedPersona); // 선택된 페르소나를 전달
+              creditUse(selectedPersona);
               setShowRequestPopup(false); // 팝업 닫기
             }}
           />
@@ -2237,7 +2240,8 @@ const PageAiPersona = () => {
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
             onConfirm={() => {
-              handleRequestPersona(selectedPersona); // 선택된 페르소나를 전달
+              // handleRequestPersona(selectedPersona); // 선택된 페르소나를 전달
+              creditUse(selectedPersona);
               setShowRequestPopup(false); // 팝업 닫기
               setShowPopup(false);
             }}
