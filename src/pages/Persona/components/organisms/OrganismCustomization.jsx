@@ -28,6 +28,8 @@ import {
   SELECTED_INTERVIEW_PURPOSE,
   SELECTED_INTERVIEW_PURPOSE_DATA,
   USER_CREDITS,
+  PROJECT_TOTAL_INFO,
+  PROJECT_CREATE_INFO,
 } from "../../../AtomStates";
 
 const OrganismCustomization = ({
@@ -39,6 +41,8 @@ const OrganismCustomization = ({
   setShowCustomButton,
   setShowQuestions,
 }) => {
+  const [projectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [projectId] = useAtom(PROJECT_ID);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -207,12 +211,8 @@ const OrganismCustomization = ({
 
       // 5. API 호출
       const data = {
-        business_idea: businessAnalysis.input,
-        business_analysis_data: {
-          title: businessAnalysis.title,
-          characteristics: businessAnalysis.characteristics,
-          features: businessAnalysis.features,
-        },
+        business_idea: projectTotalInfo.projectTitle,
+        business_analysis_data: projectCreateInfo,
         custom_theory_data: customTheoryData,
       };
 
@@ -277,7 +277,7 @@ const OrganismCustomization = ({
     <>
       {showOrganismCustomization && (
         <>
-          {customizations.map((custom, index) => (
+          {customizations?.map((custom, index) => (
             <div key={custom.id}>
               {!custom.showMethodology ? (
                 <CustomizationBox>

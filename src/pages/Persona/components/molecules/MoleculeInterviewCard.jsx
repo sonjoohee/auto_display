@@ -11,7 +11,8 @@ import {
   INTERVIEW_QUESTION_LIST,
   PROJECT_ID,
   IS_LOGGED_IN,
-  IS_LOADING,
+  PROJECT_TOTAL_INFO,
+  PROJECT_CREATE_INFO,
 } from "../../../AtomStates";
 import {
   SkeletonTitle,
@@ -65,6 +66,8 @@ const MoleculeInterviewCard = ({
   isActive,
   ...props
 }) => {
+  const [projectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
   const [projectId] = useAtom(PROJECT_ID);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -118,7 +121,7 @@ const MoleculeInterviewCard = ({
     setShowRegenerateButton(false);
 
     //이미 해당하는 title에 대한 질문이 있는지 확인
-    const existingQuestions = interviewQuestionList.find(
+    const existingQuestions = interviewQuestionList?.find(
       (item) => item.theory_name === title
     );
 
@@ -130,12 +133,8 @@ const MoleculeInterviewCard = ({
       setIsLoadingQuestion(true);
       //API 요청 데이터 생성
       let data = {
-        business_idea: businessAnalysis.input,
-        business_analysis_data: {
-          title: businessAnalysis.title,
-          characteristics: businessAnalysis.characteristics,
-          features: businessAnalysis.features,
-        },
+        business_idea: projectTotalInfo.projectTitle,
+        business_analysis_data: projectCreateInfo,
         theory_name: title,
       };
 
@@ -184,9 +183,13 @@ const MoleculeInterviewCard = ({
           questions: questionList,
         },
       ]);
+
+      // interviewQuestionList가 undefined나 null인 경우 빈 배열로 초기화
+      const currentList = interviewQuestionList || [];
+      
       // 새로운 데이터를 포함한 전체 리스트를 생성
       const newQuestionList = [
-        ...interviewQuestionList,
+        ...currentList,
         {
           theory_name: title,
           questions: questionList,
@@ -311,9 +314,9 @@ const MoleculeInterviewCard = ({
                   ) : (
                     // 실제 질문 데이터
                     interviewQuestionList
-                      .find((item) => item.theory_name === title)
+                      ?.find((item) => item.theory_name === title)
                       ?.questions.slice(2, 5)
-                      .map((item, index) => (
+                      ?.map((item, index) => (
                         <li key={index}>
                           <span className="number">Q{index + 1}.</span>
                           {item.question}
