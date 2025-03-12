@@ -177,7 +177,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
             <ChatItem Persona>
               <Persona Persona color="Linen" size="Medium" Round>
                 <img
-                  src={`/ai_person/${selectedPersonaList[0].imageKey}.png`}
+                  src={personaImages[selectedPersonaList[0].imageKey]}
                   alt="페르소나"
                 />
               </Persona>
@@ -211,7 +211,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 <ChatItem Persona>
                   <Persona Persona color="Linen" size="Medium" Round>
                     <img
-                      src={`/ai_person/${selectedPersonaList[0].imageKey}.png`}
+                      src={personaImages[selectedPersonaList[0].imageKey]}
                       alt="페르소나"
                     />
                   </Persona>

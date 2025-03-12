@@ -875,9 +875,11 @@ const PagePersona4 = () => {
                       <H4>1. 페르소나 정보</H4>
                       <PersonaInformationWrap>
                         <PersonaInformation>
-                          <Persona color="Linen" size="Large" Round>
+                          <Persona size="Large" Round>
                             <img
-                              src={`/ai_person/${selectedPersonaList[0]?.imageKey}.png`}
+                              src={
+                                personaImages[selectedPersonaList[0]?.imageKey]
+                              }
                               alt="페르소나"
                             />
                           </Persona>
@@ -1396,9 +1398,11 @@ const PagePersona4 = () => {
                   <PersonaInfoContent>
                     {selectedPersonaList?.[0] ? (
                       <>
-                        <Persona color="Linen" size="Large" Round>
+                        <Persona size="Large" Round>
                           <img
-                            src={`/ai_person/${selectedPersonaList[0]?.imageKey}.png`}
+                            src={
+                              personaImages[selectedPersonaList[0]?.imageKey]
+                            }
                             alt="페르소나"
                           />
                         </Persona>

@@ -501,14 +501,13 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               request_persona_type: "saas",
             };
 
-
             //수집된 답변들 api요청에 포함
             const data = {
               business_analysis_data: projectTotalInfo,
               question: interviewQuestionListState[currentQuestionIndex],
               persona_info: personaInfo,
               last_interview: lastInterview,
-            }; 
+            };
 
             let response = await InterviewXPersonaMultipleInterviewRequest(
               data,
