@@ -89,7 +89,6 @@ const PageDashBoard = () => {
   }, []); // refreshTrigger가 변경될 때마다 데이터 다시 로드
 
   useEffect(() => {
-    console.log("🚀 ~ PageDashBoard ~ project:", project);
     const loadToolList = async () => {
       try {
         const savedToolListInfo = await getToolListOnServerSaas(

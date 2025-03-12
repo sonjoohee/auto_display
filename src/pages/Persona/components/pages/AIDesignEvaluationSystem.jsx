@@ -425,8 +425,6 @@ const AIDesignEvaluationSystem = () => {
 
   // Render different stages based on currentStage
   const renderStage = () => {
-    console.log("renderStage called, currentStage:", currentStage);
-
     if (isTransitioning) {
       return renderTransitionScreen();
     }
@@ -437,10 +435,8 @@ const AIDesignEvaluationSystem = () => {
       case 2:
         return renderStage2();
       case 3:
-        console.log("Rendering stage 3");
         return renderStage3();
       case 4:
-        console.log("Rendering stage 4");
         return renderStage4();
       case 5:
         return renderStage5Generation();
@@ -647,12 +643,6 @@ const AIDesignEvaluationSystem = () => {
 
   // Render Stage 2 content
   const renderStage2 = () => {
-    console.log("isStage2Complete:", isStage2Complete);
-    console.log("uploadStatus:", uploadStatus);
-    console.log("designTitle:", designTitle);
-    console.log("designType:", designType);
-    console.log("designPurpose:", designPurpose);
-
     return (
       <S.ContentArea>
         <S.ProgressBarContainer>
@@ -814,7 +804,6 @@ const AIDesignEvaluationSystem = () => {
           <S.NextButton
             disabled={!isStage2Complete}
             onClick={() => {
-              console.log("Next button clicked");
               handleNextStage();
             }}
           >

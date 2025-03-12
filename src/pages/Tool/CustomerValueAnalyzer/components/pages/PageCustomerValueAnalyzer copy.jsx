@@ -107,7 +107,6 @@ const PageCustomerValueAnalyzer = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
-  console.log("personaListSaas", personaListSaas);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -1145,7 +1144,6 @@ const PageCustomerValueAnalyzer = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
           navigate("/");
           return true;
         }

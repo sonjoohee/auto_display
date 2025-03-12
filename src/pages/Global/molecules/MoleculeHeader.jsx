@@ -252,13 +252,9 @@ const MoleculeHeader = () => {
   }, [location, isLoggedIn]);
 
   const handleLinkNavigation = async (item) => {
-    console.log("🚀 ~ handleLinkNavigation ~ item:", item);
-
     const link = item.link;
     const projectId = item.projectId;
     if (!link) return;
-    console.log("🚀 ~ handleLinkNavigation ~ link:", link);
-    console.log("🚀 ~ handleLinkNavigation ~ projectId:", projectId);
     try {
       // const url = new URL(link);
       // if (url.hostname === "www.interviewx.ai") {

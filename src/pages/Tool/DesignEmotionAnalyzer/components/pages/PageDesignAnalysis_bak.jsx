@@ -7,9 +7,7 @@ import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
 
-import {
-  Button,
-} from "../../../../../assets/styles/ButtonStyle";
+import { Button } from "../../../../../assets/styles/ButtonStyle";
 import {
   FormBox,
   CustomTextarea,
@@ -76,8 +74,8 @@ import {
   createToolOnServer,
   updateToolOnServer,
 } from "../../../../../utils/indexedDB";
-import 'react-dropzone-uploader/dist/styles.css'
-import Dropzone from 'react-dropzone-uploader'
+import "react-dropzone-uploader/dist/styles.css";
+import Dropzone from "react-dropzone-uploader";
 
 const PageDesignAnalysis = () => {
   const [toolId, setToolId] = useAtom(TOOL_ID);
@@ -101,11 +99,19 @@ const PageDesignAnalysis = () => {
   const [selectedTargetDiscoveryScenario, setSelectedTargetDiscoveryScenario] =
     useAtom(SELECTED_TARGET_DISCOVERY_SCENARIO);
 
-  const [designBusinessInfo, setDesignBusinessInfo] = useAtom(DESIGN_BUSINESS_INFO);
-  const [designUploadedFiles, setDesignUploadedFiles] = useAtom(DESIGN_UPLOADED_FILES);
-  const [designEmotionAnalysis, setDesignEmotionAnalysis] = useAtom(DESIGN_EMOTION_ANALYSIS); 
-  const [selectedDesignEmotionAnalysis, setSelectedDesignEmotionAnalysis] = useAtom(DESIGN_SELECTED_PERSONA);
-  const [designEmotionTarget, setDesignEmotionTarget] = useAtom(DESIGN_EMOTION_TARGET);
+  const [designBusinessInfo, setDesignBusinessInfo] =
+    useAtom(DESIGN_BUSINESS_INFO);
+  const [designUploadedFiles, setDesignUploadedFiles] = useAtom(
+    DESIGN_UPLOADED_FILES
+  );
+  const [designEmotionAnalysis, setDesignEmotionAnalysis] = useAtom(
+    DESIGN_EMOTION_ANALYSIS
+  );
+  const [selectedDesignEmotionAnalysis, setSelectedDesignEmotionAnalysis] =
+    useAtom(DESIGN_SELECTED_PERSONA);
+  const [designEmotionTarget, setDesignEmotionTarget] = useAtom(
+    DESIGN_EMOTION_TARGET
+  );
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupMore, setShowPopupMore] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -138,7 +144,7 @@ const PageDesignAnalysis = () => {
   const [loadingPersonas, setLoadingPersonas] = useState({});
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
-  
+
   const handleToggle = (key) => {
     setState((prevState) => ({ ...prevState, [key]: !prevState[key] }));
   };
@@ -148,18 +154,17 @@ const PageDesignAnalysis = () => {
     showQuestions: false,
   });
 
-
   // OCEAN 값들을 관리하기 위한 상태
   const [oceanValues, setOceanValues] = useState({
-    Comfortable: 3,        // 편안한
-    Satisfying: 3,        // 만족스러운
-    Trustworthy: 3,       // 신뢰가는
-    Anticipated: 3,       // 기대되는
-    Attractive: 3,        // 매력적인
-    Practical: 3,         // 실용적인
-    Beautiful: 3,         // 아름다운
-    Efficient: 3,         // 효율적인
-    Easy: 3,             // 사용하기 쉬운
+    Comfortable: 3, // 편안한
+    Satisfying: 3, // 만족스러운
+    Trustworthy: 3, // 신뢰가는
+    Anticipated: 3, // 기대되는
+    Attractive: 3, // 매력적인
+    Practical: 3, // 실용적인
+    Beautiful: 3, // 아름다운
+    Efficient: 3, // 효율적인
+    Easy: 3, // 사용하기 쉬운
   });
 
   // OCEAN 무시 여부를 관리하는 상태
@@ -303,7 +308,6 @@ const PageDesignAnalysis = () => {
     });
   };
 
-  
   // const handleCheckboxChange = (index) => {
   //   // 이미 선택된 항목을 다시 클릭하면 선택 해제
   //   if (selectedPersona === index) {
@@ -314,10 +318,6 @@ const PageDesignAnalysis = () => {
   //   }
   // };
 
-
-
-  
-
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
     setCompletedSteps([...completedSteps, currentStep]);
@@ -327,8 +327,8 @@ const PageDesignAnalysis = () => {
 
   // 필수 필드가 모두 입력되었는지 확인하는 함수
   const isRequiredFieldsFilled = () => {
-    console.log('Business Description:', businessDescription.trim());
-    console.log('Uploaded Files:', uploadedFiles);
+    console.log("Business Description:", businessDescription.trim());
+    console.log("Uploaded Files:", uploadedFiles);
     return businessDescription.trim().length > 0 && uploadedFiles.length > 0;
   };
 
@@ -347,7 +347,6 @@ const PageDesignAnalysis = () => {
 
   const handleSubmitBusinessInfo = async () => {
     try {
-
       const responseToolId = await createToolOnServer(
         {
           type: "ix_target_discovery_persona",
@@ -355,7 +354,7 @@ const PageDesignAnalysis = () => {
         isLoggedIn
       );
       setToolId(responseToolId);
-      console.log('responseToolId:', responseToolId);
+      console.log("responseToolId:", responseToolId);
 
       setIsLoading(true);
 
@@ -363,9 +362,9 @@ const PageDesignAnalysis = () => {
 
       // 파일이 선택된 경우에만 'image' 필드 추가 (파일이 없는 경우엔 추가하지 않음)
       if (uploadedFiles.length > 0) {
-        data.append('image', uploadedFiles[0]); 
+        data.append("image", uploadedFiles[0]);
       } else {
-        console.warn("파일이 선택되지 않았습니다."); 
+        console.warn("파일이 선택되지 않았습니다.");
       }
 
       // 비즈니스 데이터 추가
@@ -375,11 +374,11 @@ const PageDesignAnalysis = () => {
       };
 
       // FormData에 비즈니스 데이터 추가
-      data.append('business', JSON.stringify(businessData));
+      data.append("business", JSON.stringify(businessData));
 
-      console.log('전송할 데이터:', {
+      console.log("전송할 데이터:", {
         image: uploadedFiles.length > 0 ? uploadedFiles[0] : null,
-        business: businessData
+        business: businessData,
       });
 
       // const response = await api(
@@ -395,7 +394,7 @@ const PageDesignAnalysis = () => {
       //   setShowPopupError(true);
       //   return;
       // }
-     
+
       setToolStep(1);
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
       // setDesignEmotionAnalysis(
@@ -404,7 +403,7 @@ const PageDesignAnalysis = () => {
 
       // Atom에 저장 (이미지 파일은 FormData에 담았으므로, 여기서는 비즈니스 데이터만 저장)
       setDesignBusinessInfo(businessData);
-      setDesignUploadedFiles(uploadedFiles); 
+      setDesignUploadedFiles(uploadedFiles);
 
       await updateToolOnServer(
         toolId,
@@ -413,11 +412,10 @@ const PageDesignAnalysis = () => {
           target_discovery_persona: designEmotionAnalysis,
           business: businessData,
           image: uploadedFiles.length > 0 ? uploadedFiles[0] : null,
-  
         },
         isLoggedIn
       );
-     
+
       // API 호출 성공시 다음 단계로 이동
       handleNextStep(1);
       setIsLoading(false);
@@ -487,10 +485,7 @@ const PageDesignAnalysis = () => {
           }
 
           setDesignEmotionTarget(response.response.design_emotion_target);
-
         } catch (error) {
-  
-     
           console.error(`Error processing persona ${persona.title}:`, error);
         }
       }
@@ -535,35 +530,34 @@ const PageDesignAnalysis = () => {
     return "대기중";
   };
 
-  
-
   // 파일 업로드 핸들러
   const handleChangeStatus = ({ meta, file }, status) => {
     console.log(status, meta, file);
-    
+
     // 파일 상태 업데이트
-    if (status === 'done' || status === 'preparing' || status === 'uploading') {
-      setUploadedFiles(prev => {
+    if (status === "done" || status === "preparing" || status === "uploading") {
+      setUploadedFiles((prev) => {
         // 이미 존재하는 파일이 아닌 경우에만 추가
-        if (!prev.find(f => f.name === file.name)) {
+        if (!prev.find((f) => f.name === file.name)) {
           return [...prev, file];
         }
         return prev;
       });
-    } else if (status === 'removed') {
-      setUploadedFiles(prev => prev.filter(f => f.name !== file.name));
+    } else if (status === "removed") {
+      setUploadedFiles((prev) => prev.filter((f) => f.name !== file.name));
     }
 
     // 파일 크기를 KB 또는 MB 단위로 변환
     const size = file.size;
-    const sizeStr = size > 1024 * 1024 
-      ? `${(size / (1024 * 1024)).toFixed(1)}MB`
-      : `${(size / 1024).toFixed(1)}KB`;
+    const sizeStr =
+      size > 1024 * 1024
+        ? `${(size / (1024 * 1024)).toFixed(1)}MB`
+        : `${(size / 1024).toFixed(1)}KB`;
 
     // setTimeout을 사용하여 DOM이 업데이트된 후 실행
     setTimeout(() => {
-      const containers = document.querySelectorAll('.dzu-previewContainer');
-      containers.forEach(container => {
+      const containers = document.querySelectorAll(".dzu-previewContainer");
+      containers.forEach((container) => {
         if (!container.dataset.filename) {
           container.dataset.filename = file.name;
           container.dataset.size = sizeStr;
@@ -574,14 +568,14 @@ const PageDesignAnalysis = () => {
 
   // 업로드 파라미터 설정
   const getUploadParams = () => {
-    return { url: '/' } // 실제 업로드 URL로 변경 필요
-  }
+    return { url: "/" }; // 실제 업로드 URL로 변경 필요
+  };
 
   // 파일 제출 핸들러
   const handleSubmit = (files) => {
-    const validFiles = files.filter(f => f.meta.status === 'done');
-    setUploadedFiles(validFiles.map(f => f.file));
-  }
+    const validFiles = files.filter((f) => f.meta.status === "done");
+    setUploadedFiles(validFiles.map((f) => f.file));
+  };
 
   // OCEAN 값 변경을 처리하는 핸들러
   const handleOceanChange = (trait, value) => {
@@ -589,10 +583,10 @@ const PageDesignAnalysis = () => {
       const numValue = parseFloat(value);
       // 값이 3에 가까울 때 자동으로 3으로 스냅
       const snapValue = Math.abs(numValue - 3) < 0.2 ? 3 : numValue;
-      
-      setOceanValues(prev => ({
+
+      setOceanValues((prev) => ({
         ...prev,
-        [trait]: snapValue
+        [trait]: snapValue,
       }));
     }
   };
@@ -604,7 +598,7 @@ const PageDesignAnalysis = () => {
       conscientiousness: 0.5,
       extraversion: 0.5,
       agreeableness: 0.5,
-      neuroticism: 0.5
+      neuroticism: 0.5,
     });
   };
 
@@ -612,26 +606,26 @@ const PageDesignAnalysis = () => {
   const saveOceanValues = async () => {
     try {
       // API 호출 로직
-      const response = await fetch('/api/save-ocean', {
-        method: 'POST',
+      const response = await fetch("/api/save-ocean", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(oceanValues),
       });
-      
+
       if (!response.ok) {
-        throw new Error('OCEAN 값 저장에 실패했습니다');
+        throw new Error("OCEAN 값 저장에 실패했습니다");
       }
 
       // 성공 처리
-      console.log('OCEAN 값이 성공적으로 저장되었습니다');
+      console.log("OCEAN 값이 성공적으로 저장되었습니다");
     } catch (error) {
-      console.error('OCEAN 값 저장 중 오류 발생:', error);
+      console.error("OCEAN 값 저장 중 오류 발생:", error);
     }
   };
 
-  const [activeDesignTab, setActiveDesignTab] = useState('emotion'); // 'emotion' 또는 'scale'
+  const [activeDesignTab, setActiveDesignTab] = useState("emotion"); // 'emotion' 또는 'scale'
 
   return (
     <>
@@ -706,7 +700,8 @@ const PageDesignAnalysis = () => {
                     <div className="title">
                       <H3 color="gray800">Image Upload</H3>
                       <Body3 color="gray800">
-                        감성 분석을 원하시는 비즈니스 설명과 디자인 이미지를 업로드해주세요
+                        감성 분석을 원하시는 비즈니스 설명과 디자인 이미지를
+                        업로드해주세요
                       </Body3>
                     </div>
 
@@ -750,11 +745,13 @@ const PageDesignAnalysis = () => {
                           inputWithFilesContent={
                             <>
                               <img src={images.ImagePrimary} alt="" />
-                              <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '4px',
-                              }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "4px",
+                                }}
+                              >
                                 <Body2 color="gray700">이미지 첨부 또는</Body2>
                                 <Body2 color="primary">이미지 가져오기</Body2>
                               </div>
@@ -763,11 +760,13 @@ const PageDesignAnalysis = () => {
                           inputContent={
                             <>
                               <img src={images.ImagePrimary} alt="" />
-                              <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '4px',
-                              }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "4px",
+                                }}
+                              >
                                 <Body2 color="gray700">이미지 첨부 또는</Body2>
                                 <Body2 color="primary">이미지 가져오기</Body2>
                               </div>
@@ -813,7 +812,8 @@ const PageDesignAnalysis = () => {
                     <div className="title">
                       <H3 color="gray800">Design Sector Analysis</H3>
                       <Body3 color="gray800">
-                        업로드된 이미지를 기반으로 가장 적합한 디자인 분야를 분류했습니다
+                        업로드된 이미지를 기반으로 가장 적합한 디자인 분야를
+                        분류했습니다
                       </Body3>
                     </div>
 
@@ -824,10 +824,14 @@ const PageDesignAnalysis = () => {
 
                           <ListText>
                             <ListTitle>
-                              <Body1 color="gray800" align="left">제품 디자인</Body1>
+                              <Body1 color="gray800" align="left">
+                                제품 디자인
+                              </Body1>
                             </ListTitle>
                             <ListSubtitle>
-                              <Sub2 color="gray500" align="left">왜 제품 디자인에 해당 되는 근거</Sub2>
+                              <Sub2 color="gray500" align="left">
+                                왜 제품 디자인에 해당 되는 근거
+                              </Sub2>
                             </ListSubtitle>
                           </ListText>
                         </ListBoxItem>
@@ -837,10 +841,14 @@ const PageDesignAnalysis = () => {
 
                           <ListText>
                             <ListTitle>
-                              <Body1 color="gray800" align="left">제품 디자인</Body1>
+                              <Body1 color="gray800" align="left">
+                                제품 디자인
+                              </Body1>
                             </ListTitle>
                             <ListSubtitle>
-                              <Sub2 color="gray500" align="left">왜 제품 디자인에 해당 되는 근거</Sub2>
+                              <Sub2 color="gray500" align="left">
+                                왜 제품 디자인에 해당 되는 근거
+                              </Sub2>
                             </ListSubtitle>
                           </ListText>
                         </ListBoxItem>
@@ -850,10 +858,14 @@ const PageDesignAnalysis = () => {
 
                           <ListText>
                             <ListTitle>
-                              <Body1 color="gray800" align="left">제품 디자인</Body1>
+                              <Body1 color="gray800" align="left">
+                                제품 디자인
+                              </Body1>
                             </ListTitle>
                             <ListSubtitle>
-                              <Sub2 color="gray500" align="left">왜 제품 디자인에 해당 되는 근거</Sub2>
+                              <Sub2 color="gray500" align="left">
+                                왜 제품 디자인에 해당 되는 근거
+                              </Sub2>
                             </ListSubtitle>
                           </ListText>
                         </ListBoxItem>
@@ -874,9 +886,7 @@ const PageDesignAnalysis = () => {
                           Primary
                           Round
                           Fill
-                          disabled={
-                            toolStep >= 2
-                          }
+                          disabled={toolStep >= 2}
                           onClick={handleSubmitPersonas}
                         >
                           다음
@@ -912,7 +922,8 @@ const PageDesignAnalysis = () => {
                     <BgBoxItem primaryLightest>
                       <H3 color="gray800">디자인 감성 분석</H3>
                       <Body3 color="gray800">
-                        디자인이 사용자에게 전달하는 감정을 분석하고, 시각적 커뮤니케이션 효과를 극대화하세요
+                        디자인이 사용자에게 전달하는 감정을 분석하고, 시각적
+                        커뮤니케이션 효과를 극대화하세요
                       </Body3>
                     </BgBoxItem>
 
@@ -920,15 +931,15 @@ const PageDesignAnalysis = () => {
                       <div className="title">
                         <div>
                           <TabWrapType4>
-                            <TabButtonType4 
-                              active={activeDesignTab === 'emotion'}
-                              onClick={() => setActiveDesignTab('emotion')}
+                            <TabButtonType4
+                              active={activeDesignTab === "emotion"}
+                              onClick={() => setActiveDesignTab("emotion")}
                             >
                               디자인 목표 감성
                             </TabButtonType4>
-                            <TabButtonType4 
-                              active={activeDesignTab === 'scale'}
-                              onClick={() => setActiveDesignTab('scale')}
+                            <TabButtonType4
+                              active={activeDesignTab === "scale"}
+                              onClick={() => setActiveDesignTab("scale")}
                             >
                               감정 스케일 매핑
                             </TabButtonType4>
@@ -943,8 +954,10 @@ const PageDesignAnalysis = () => {
                     <InsightAnalysis>
                       <div className="title">
                         <H4 color="gray800" align="left">
-                          (Business)의 (목표감성)을 기반으로 이미지의 감성 스케일 맵핑을 진행했을때...<br />
-                          어떤 보완점이 발견되었습니다. 
+                          (Business)의 (목표감성)을 기반으로 이미지의 감성
+                          스케일 맵핑을 진행했을때...
+                          <br />
+                          어떤 보완점이 발견되었습니다.
                         </H4>
                       </div>
                       {/* <div className="title">
@@ -955,308 +968,498 @@ const PageDesignAnalysis = () => {
                       </div> */}
 
                       <div className="content">
-                      {/* <Body3 color="gray700">
+                        {/* <Body3 color="gray700">
                         {designEmotionTarget.designer_guidelines}
                       </Body3> */}
                         <Body3 color="gray700">
-                          강점: '편리한(6점)', '명확한(6점)', '간편한(6점)'으로 높은 점수를 받은 것은 디자인이 고객에게 전달하고자 하는 핵심 가치를 잘 표현하고 있음을 의미합니다. 텍스트와 이미지를 통해 서비스의 핵심적인 특징을 효과적으로 전달하고, 사용자들이 쉽게 이해하고 이용할 수 있도록 시각적인 정보를 명확하게 제공하고 있습니다. 스마트폰 UI 이미지를 통해 모바일 주문의 편리함을 강조하는 것은 긍정적인 부분입니다.
+                          강점: '편리한(6점)', '명확한(6점)', '간편한(6점)'으로
+                          높은 점수를 받은 것은 디자인이 고객에게 전달하고자
+                          하는 핵심 가치를 잘 표현하고 있음을 의미합니다.
+                          텍스트와 이미지를 통해 서비스의 핵심적인 특징을
+                          효과적으로 전달하고, 사용자들이 쉽게 이해하고 이용할
+                          수 있도록 시각적인 정보를 명확하게 제공하고 있습니다.
+                          스마트폰 UI 이미지를 통해 모바일 주문의 편리함을
+                          강조하는 것은 긍정적인 부분입니다.
                         </Body3>
 
                         <Body3 color="gray700">
-                          약점 및 개선 방향: '신속한(4점)', '즐거운(3점)', '생동감 있는(3점)', '세련된(3점)' 감성에 낮은 점수를 받은 것은 디자인이 신속하고 즐거운 경험을 충분히 전달하지 못하고 있다는 것을 의미합니다. 전반적으로 레이아웃이 다소 정적이고 획일적이며, 샌드위치 이미지 외에 시선을 사로잡는 요소가 부족하여 생동감과 즐거움을 느끼기 어렵습니다. 특히, 배경 이미지와 스마트폰 UI 이미지의 부조화, 브랜드 로고의 과도한 사용은 세련된 느낌을 저해합니다.
+                          약점 및 개선 방향: '신속한(4점)', '즐거운(3점)',
+                          '생동감 있는(3점)', '세련된(3점)' 감성에 낮은 점수를
+                          받은 것은 디자인이 신속하고 즐거운 경험을 충분히
+                          전달하지 못하고 있다는 것을 의미합니다. 전반적으로
+                          레이아웃이 다소 정적이고 획일적이며, 샌드위치 이미지
+                          외에 시선을 사로잡는 요소가 부족하여 생동감과 즐거움을
+                          느끼기 어렵습니다. 특히, 배경 이미지와 스마트폰 UI
+                          이미지의 부조화, 브랜드 로고의 과도한 사용은 세련된
+                          느낌을 저해합니다.
                         </Body3>
                       </div>
                     </InsightAnalysis>
 
-                    {activeDesignTab === 'emotion' && (
+                    {activeDesignTab === "emotion" && (
                       <InsightAnalysis>
-                        <Sub3 color="gray700" align="left">💡 %는 해당 비즈니스에서 차지하는 중요도를 의미합니다.</Sub3>
+                        <Sub3 color="gray700" align="left">
+                          💡 %는 해당 비즈니스에서 차지하는 중요도를 의미합니다.
+                        </Sub3>
 
-                      <CardGroupWrap column $isExpanded={state.isExpanded}>
-                        <ListBoxItem FlexStart>
-                          <PercentBadge primary>
-                            <Caption1>30%</Caption1>
-                          </PercentBadge>
+                        <CardGroupWrap column $isExpanded={state.isExpanded}>
+                          <ListBoxItem FlexStart>
+                            <PercentBadge primary>
+                              <Caption1>30%</Caption1>
+                            </PercentBadge>
 
-                          <ListText Small>
-                            <ListTitle>
-                              <Sub1 color="gray800" align="left">기능성 (Functional Perspective)</Sub1>
-                            </ListTitle>
-                            <ListSubtitle>
-                              <Sub3 color="gray500" align="left">제품의 효율적인 기능 수행, 다목적 사용성, 사용 목적에 부합하는 기능 제공</Sub3>
-                            </ListSubtitle>
-                          </ListText>
+                            <ListText Small>
+                              <ListTitle>
+                                <Sub1 color="gray800" align="left">
+                                  기능성 (Functional Perspective)
+                                </Sub1>
+                              </ListTitle>
+                              <ListSubtitle>
+                                <Sub3 color="gray500" align="left">
+                                  제품의 효율적인 기능 수행, 다목적 사용성, 사용
+                                  목적에 부합하는 기능 제공
+                                </Sub3>
+                              </ListSubtitle>
+                            </ListText>
 
-                          <ToggleButton
-                            className="toggleButton"
-                            $isExpanded={state.isExpanded}
-                            onClick={() => handleToggle("isExpanded")}
-                          />
+                            <ToggleButton
+                              className="toggleButton"
+                              $isExpanded={state.isExpanded}
+                              onClick={() => handleToggle("isExpanded")}
+                            />
 
-                          {state.isExpanded && (
-                            <ToggleContent $isExpanded={state.isExpanded}>
-                              <Body3 color="gray700" align="left">
-                                제품이 사용 목적을 얼마나 효율적으로, 효과적으로 수행하는지를 나타냅니다. 아래 목표 감성 달성 설계 방향에 따라 (Business)를 평가 및 개선하세요. 줄글로 작성 
-                              </Body3>
+                            {state.isExpanded && (
+                              <ToggleContent $isExpanded={state.isExpanded}>
+                                <Body3 color="gray700" align="left">
+                                  제품이 사용 목적을 얼마나 효율적으로,
+                                  효과적으로 수행하는지를 나타냅니다. 아래 목표
+                                  감성 달성 설계 방향에 따라 (Business)를 평가
+                                  및 개선하세요. 줄글로 작성
+                                </Body3>
 
-                              <div className="bgContent">
-                                <div>
-                                  <Body2_1 color="gray800" align="left">기능 및 성능 제안 방향</Body2_1>
-                                  <ul>
-                                    <li>
-                                      <Body3 color="gray800" align="left">사용 목적에 적합한 기능 제공 : 저당 아이스크림, 다양한 맛 선택, 장기 보관 기능</Body3>
-                                    </li>
-                                    <li>
-                                      <Body3 color="gray800" align="left">제품의 성능 보장 : 아이스크림이 쉽게 녹지 않도록 온도 유지, 스틱이 쉽게 부러지지 않는 견고한 구조</Body3>
-                                    </li>
-                                    <li>
-                                      <Body3 color="gray800" align="left">다양한 사용 환경에서의 적합성 : 실내, 야외 어디서나 편리하게 즐길 수 있음</Body3>
-                                    </li>
-                                  </ul>
+                                <div className="bgContent">
+                                  <div>
+                                    <Body2_1 color="gray800" align="left">
+                                      기능 및 성능 제안 방향
+                                    </Body2_1>
+                                    <ul>
+                                      <li>
+                                        <Body3 color="gray800" align="left">
+                                          사용 목적에 적합한 기능 제공 : 저당
+                                          아이스크림, 다양한 맛 선택, 장기 보관
+                                          기능
+                                        </Body3>
+                                      </li>
+                                      <li>
+                                        <Body3 color="gray800" align="left">
+                                          제품의 성능 보장 : 아이스크림이 쉽게
+                                          녹지 않도록 온도 유지, 스틱이 쉽게
+                                          부러지지 않는 견고한 구조
+                                        </Body3>
+                                      </li>
+                                      <li>
+                                        <Body3 color="gray800" align="left">
+                                          다양한 사용 환경에서의 적합성 : 실내,
+                                          야외 어디서나 편리하게 즐길 수 있음
+                                        </Body3>
+                                      </li>
+                                    </ul>
+                                  </div>
+
+                                  <div>
+                                    <Body2_1 color="gray800" align="left">
+                                      디자인 및 구조 제안 방향
+                                    </Body2_1>
+                                    <ul>
+                                      <li>
+                                        <Body3 color="gray800" align="left">
+                                          포장의 밀폐력 및 보존 기능 : 외부 공기
+                                          차단, 보온, 보냉 기능, 습기에 강한
+                                          방수 성능
+                                        </Body3>
+                                      </li>
+                                      <li>
+                                        <Body3 color="gray800" align="left">
+                                          스틱의 재질과 디자인 : 손에 잘 잡히는
+                                          인체공학적 형태, 견고한 소재 사용
+                                        </Body3>
+                                      </li>
+                                      <li>
+                                        <Body3 color="gray800" align="left">
+                                          제품의 크기와 무게 : 휴대성이 좋고 한
+                                          손으로 쉽게 들고 먹을 수 있는 크기
+                                        </Body3>
+                                      </li>
+                                    </ul>
+                                  </div>
                                 </div>
+                              </ToggleContent>
+                            )}
+                          </ListBoxItem>
 
-                                <div>
-                                  <Body2_1 color="gray800" align="left">디자인 및 구조 제안 방향</Body2_1>
-                                  <ul>
-                                    <li>
-                                      <Body3 color="gray800" align="left">포장의 밀폐력 및 보존 기능 : 외부 공기 차단, 보온, 보냉 기능, 습기에 강한 방수 성능</Body3>
-                                    </li>
-                                    <li>
-                                      <Body3 color="gray800" align="left">스틱의 재질과 디자인 : 손에 잘 잡히는 인체공학적 형태, 견고한 소재 사용</Body3>
-                                    </li>
-                                    <li>
-                                      <Body3 color="gray800" align="left">제품의 크기와 무게 : 휴대성이 좋고 한 손으로 쉽게 들고 먹을 수 있는 크기</Body3>
-                                    </li>
-                                  </ul>
+                          <ListBoxItem FlexStart>
+                            <PercentBadge>
+                              <Caption1>3%</Caption1>
+                            </PercentBadge>
+
+                            <ListText Small>
+                              <ListTitle>
+                                <Sub1 color="gray800" align="left">
+                                  윤리성 (Ethical Perspective)
+                                </Sub1>
+                              </ListTitle>
+                              <ListSubtitle>
+                                <Sub3 color="gray500" align="left">
+                                  친환경 소재 사용, 지속 가능한 생산 방식,
+                                  사회적 책임 실천
+                                </Sub3>
+                              </ListSubtitle>
+                            </ListText>
+
+                            <ToggleButton
+                              className="toggleButton"
+                              $isExpanded={state.isExpanded}
+                              onClick={() => handleToggle("isExpanded")}
+                            />
+
+                            {state.isExpanded && (
+                              <ToggleContent $isExpanded={state.isExpanded}>
+                                <Body3 color="gray700" align="left">
+                                  제품이 사용 목적을 얼마나 효율적으로,
+                                  효과적으로 수행하는지를 나타냅니다. 아래 목표
+                                  감성 달성 설계 방향에 따라 (Business)를 평가
+                                  및 개선하세요. 줄글로 작성
+                                </Body3>
+
+                                <div className="bgContent">
+                                  <div>
+                                    <Body2_1 color="gray800" align="left">
+                                      기능 및 성능 제안 방향
+                                    </Body2_1>
+                                    <ul>
+                                      <li>
+                                        <Body3 color="gray800" align="left">
+                                          사용 목적에 적합한 기능 제공 : 저당
+                                          아이스크림, 다양한 맛 선택, 장기 보관
+                                          기능
+                                        </Body3>
+                                      </li>
+                                      <li>
+                                        <Body3 color="gray800" align="left">
+                                          제품의 성능 보장 : 아이스크림이 쉽게
+                                          녹지 않도록 온도 유지, 스틱이 쉽게
+                                          부러지지 않는 견고한 구조
+                                        </Body3>
+                                      </li>
+                                      <li>
+                                        <Body3 color="gray800" align="left">
+                                          다양한 사용 환경에서의 적합성 : 실내,
+                                          야외 어디서나 편리하게 즐길 수 있음
+                                        </Body3>
+                                      </li>
+                                    </ul>
+                                  </div>
+
+                                  <div>
+                                    <Body2_1 color="gray800" align="left">
+                                      디자인 및 구조 제안 방향
+                                    </Body2_1>
+                                    <ul>
+                                      <li>
+                                        <Body3 color="gray800" align="left">
+                                          포장의 밀폐력 및 보존 기능 : 외부 공기
+                                          차단, 보온, 보냉 기능, 습기에 강한
+                                          방수 성능
+                                        </Body3>
+                                      </li>
+                                      <li>
+                                        <Body3 color="gray800" align="left">
+                                          스틱의 재질과 디자인 : 손에 잘 잡히는
+                                          인체공학적 형태, 견고한 소재 사용
+                                        </Body3>
+                                      </li>
+                                      <li>
+                                        <Body3 color="gray800" align="left">
+                                          제품의 크기와 무게 : 휴대성이 좋고 한
+                                          손으로 쉽게 들고 먹을 수 있는 크기
+                                        </Body3>
+                                      </li>
+                                    </ul>
+                                  </div>
                                 </div>
-                              </div>
-                            </ToggleContent>
-                          )}
-                        </ListBoxItem>
-
-                        <ListBoxItem FlexStart>
-                          <PercentBadge>
-                            <Caption1>3%</Caption1>
-                          </PercentBadge>
-
-                          <ListText Small>
-                            <ListTitle>
-                              <Sub1 color="gray800" align="left">윤리성 (Ethical Perspective)</Sub1>
-                            </ListTitle>
-                            <ListSubtitle>
-                              <Sub3 color="gray500" align="left">친환경 소재 사용, 지속 가능한 생산 방식, 사회적 책임 실천</Sub3>
-                            </ListSubtitle>
-                          </ListText>
-
-                          <ToggleButton
-                            className="toggleButton"
-                            $isExpanded={state.isExpanded}
-                            onClick={() => handleToggle("isExpanded")}
-                          />
-
-                          {state.isExpanded && (
-                            <ToggleContent $isExpanded={state.isExpanded}>
-                              <Body3 color="gray700" align="left">
-                                제품이 사용 목적을 얼마나 효율적으로, 효과적으로 수행하는지를 나타냅니다. 아래 목표 감성 달성 설계 방향에 따라 (Business)를 평가 및 개선하세요. 줄글로 작성 
-                              </Body3>
-
-                              <div className="bgContent">
-                                <div>
-                                  <Body2_1 color="gray800" align="left">기능 및 성능 제안 방향</Body2_1>
-                                  <ul>
-                                    <li>
-                                      <Body3 color="gray800" align="left">사용 목적에 적합한 기능 제공 : 저당 아이스크림, 다양한 맛 선택, 장기 보관 기능</Body3>
-                                    </li>
-                                    <li>
-                                      <Body3 color="gray800" align="left">제품의 성능 보장 : 아이스크림이 쉽게 녹지 않도록 온도 유지, 스틱이 쉽게 부러지지 않는 견고한 구조</Body3>
-                                    </li>
-                                    <li>
-                                      <Body3 color="gray800" align="left">다양한 사용 환경에서의 적합성 : 실내, 야외 어디서나 편리하게 즐길 수 있음</Body3>
-                                    </li>
-                                  </ul>
-                                </div>
-
-                                <div>
-                                  <Body2_1 color="gray800" align="left">디자인 및 구조 제안 방향</Body2_1>
-                                  <ul>
-                                    <li>
-                                      <Body3 color="gray800" align="left">포장의 밀폐력 및 보존 기능 : 외부 공기 차단, 보온, 보냉 기능, 습기에 강한 방수 성능</Body3>
-                                    </li>
-                                    <li>
-                                      <Body3 color="gray800" align="left">스틱의 재질과 디자인 : 손에 잘 잡히는 인체공학적 형태, 견고한 소재 사용</Body3>
-                                    </li>
-                                    <li>
-                                      <Body3 color="gray800" align="left">제품의 크기와 무게 : 휴대성이 좋고 한 손으로 쉽게 들고 먹을 수 있는 크기</Body3>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </ToggleContent>
-                          )}
-                        </ListBoxItem>
-                      </CardGroupWrap>
-                    </InsightAnalysis>
+                              </ToggleContent>
+                            )}
+                          </ListBoxItem>
+                        </CardGroupWrap>
+                      </InsightAnalysis>
                     )}
 
-                    {activeDesignTab === 'scale' && (
-                    <InsightAnalysis>
-                      <OCEANRangeWrap>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>편안한 (Comfortable)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Comfortable}
-                            onChange={(e) => handleOceanChange("Comfortable", e.target.value)}
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>불편한 (Uncomfortable)</Body3>
-                        </div>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>만족스러운 (Satisfying)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Satisfying}
-                            onChange={(e) =>
-                              handleOceanChange(
-                                "Satisfying",
-                                e.target.value
-                              )
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>불만족스러운 (Dissatisfying)</Body3>
-                        </div>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>신뢰가는 (Trustworthy)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Trustworthy}
-                            onChange={(e) =>
-                              handleOceanChange("Trustworthy", e.target.value)
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>불신하는 (Untrustworthy)</Body3>
-                        </div>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>기대되는 (Anticipated)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Anticipated}
-                            onChange={(e) =>
-                              handleOceanChange("Anticipated", e.target.value)
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>실망스러운 (Disappointing)</Body3>
-                        </div>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>매력적인 (Attractive)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Attractive}
-                            onChange={(e) =>
-                              handleOceanChange("Attractive", e.target.value)
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>비매력적인 (Unacttractive)</Body3>
-                        </div> 
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>실용적인 (Practical)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Practical}
-                            onChange={(e) =>
-                              handleOceanChange("Practical", e.target.value)
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>비실용적인 (Impratical)</Body3>
-                        </div>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>아름다운 (Beautiful)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Beautiful}
-                            onChange={(e) =>
-                              handleOceanChange("Beautiful", e.target.value)
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>추한 (Ugly)</Body3>
-                        </div>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>효율적인 (Efficient)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Efficient}
-                            onChange={(e) =>
-                              handleOceanChange("Efficient", e.target.value)
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>비효율적인 (Inefficient)</Body3>
-                        </div>
-                        <div>
-                          <Body3 color="gray800" align="left" style={{flex: "1"}}>사용하기 쉬운 (Easy to use)</Body3>
-                          <RangeSlider
-                            type="range"
-                            min="0"
-                            max="6"
-                            step="1"
-                            value={oceanValues.Easy}
-                            onChange={(e) =>
-                              handleOceanChange("Easy", e.target.value)
-                            }
-                            disabled={ignoreOcean}
-                            $ignored={ignoreOcean}
-                            style={{flex: "2"}}
-                          />
-                          <Body3 color="gray800" align="right" style={{flex: "1"}}>불편한 (Uncomfortable)</Body3>
-                        </div> 
-                      </OCEANRangeWrap>
-                    </InsightAnalysis>
+                    {activeDesignTab === "scale" && (
+                      <InsightAnalysis>
+                        <OCEANRangeWrap>
+                          <div>
+                            <Body3
+                              color="gray800"
+                              align="left"
+                              style={{ flex: "1" }}
+                            >
+                              편안한 (Comfortable)
+                            </Body3>
+                            <RangeSlider
+                              type="range"
+                              min="0"
+                              max="6"
+                              step="1"
+                              value={oceanValues.Comfortable}
+                              onChange={(e) =>
+                                handleOceanChange("Comfortable", e.target.value)
+                              }
+                              disabled={ignoreOcean}
+                              $ignored={ignoreOcean}
+                              style={{ flex: "2" }}
+                            />
+                            <Body3
+                              color="gray800"
+                              align="right"
+                              style={{ flex: "1" }}
+                            >
+                              불편한 (Uncomfortable)
+                            </Body3>
+                          </div>
+                          <div>
+                            <Body3
+                              color="gray800"
+                              align="left"
+                              style={{ flex: "1" }}
+                            >
+                              만족스러운 (Satisfying)
+                            </Body3>
+                            <RangeSlider
+                              type="range"
+                              min="0"
+                              max="6"
+                              step="1"
+                              value={oceanValues.Satisfying}
+                              onChange={(e) =>
+                                handleOceanChange("Satisfying", e.target.value)
+                              }
+                              disabled={ignoreOcean}
+                              $ignored={ignoreOcean}
+                              style={{ flex: "2" }}
+                            />
+                            <Body3
+                              color="gray800"
+                              align="right"
+                              style={{ flex: "1" }}
+                            >
+                              불만족스러운 (Dissatisfying)
+                            </Body3>
+                          </div>
+                          <div>
+                            <Body3
+                              color="gray800"
+                              align="left"
+                              style={{ flex: "1" }}
+                            >
+                              신뢰가는 (Trustworthy)
+                            </Body3>
+                            <RangeSlider
+                              type="range"
+                              min="0"
+                              max="6"
+                              step="1"
+                              value={oceanValues.Trustworthy}
+                              onChange={(e) =>
+                                handleOceanChange("Trustworthy", e.target.value)
+                              }
+                              disabled={ignoreOcean}
+                              $ignored={ignoreOcean}
+                              style={{ flex: "2" }}
+                            />
+                            <Body3
+                              color="gray800"
+                              align="right"
+                              style={{ flex: "1" }}
+                            >
+                              불신하는 (Untrustworthy)
+                            </Body3>
+                          </div>
+                          <div>
+                            <Body3
+                              color="gray800"
+                              align="left"
+                              style={{ flex: "1" }}
+                            >
+                              기대되는 (Anticipated)
+                            </Body3>
+                            <RangeSlider
+                              type="range"
+                              min="0"
+                              max="6"
+                              step="1"
+                              value={oceanValues.Anticipated}
+                              onChange={(e) =>
+                                handleOceanChange("Anticipated", e.target.value)
+                              }
+                              disabled={ignoreOcean}
+                              $ignored={ignoreOcean}
+                              style={{ flex: "2" }}
+                            />
+                            <Body3
+                              color="gray800"
+                              align="right"
+                              style={{ flex: "1" }}
+                            >
+                              실망스러운 (Disappointing)
+                            </Body3>
+                          </div>
+                          <div>
+                            <Body3
+                              color="gray800"
+                              align="left"
+                              style={{ flex: "1" }}
+                            >
+                              매력적인 (Attractive)
+                            </Body3>
+                            <RangeSlider
+                              type="range"
+                              min="0"
+                              max="6"
+                              step="1"
+                              value={oceanValues.Attractive}
+                              onChange={(e) =>
+                                handleOceanChange("Attractive", e.target.value)
+                              }
+                              disabled={ignoreOcean}
+                              $ignored={ignoreOcean}
+                              style={{ flex: "2" }}
+                            />
+                            <Body3
+                              color="gray800"
+                              align="right"
+                              style={{ flex: "1" }}
+                            >
+                              비매력적인 (Unacttractive)
+                            </Body3>
+                          </div>
+                          <div>
+                            <Body3
+                              color="gray800"
+                              align="left"
+                              style={{ flex: "1" }}
+                            >
+                              실용적인 (Practical)
+                            </Body3>
+                            <RangeSlider
+                              type="range"
+                              min="0"
+                              max="6"
+                              step="1"
+                              value={oceanValues.Practical}
+                              onChange={(e) =>
+                                handleOceanChange("Practical", e.target.value)
+                              }
+                              disabled={ignoreOcean}
+                              $ignored={ignoreOcean}
+                              style={{ flex: "2" }}
+                            />
+                            <Body3
+                              color="gray800"
+                              align="right"
+                              style={{ flex: "1" }}
+                            >
+                              비실용적인 (Impratical)
+                            </Body3>
+                          </div>
+                          <div>
+                            <Body3
+                              color="gray800"
+                              align="left"
+                              style={{ flex: "1" }}
+                            >
+                              아름다운 (Beautiful)
+                            </Body3>
+                            <RangeSlider
+                              type="range"
+                              min="0"
+                              max="6"
+                              step="1"
+                              value={oceanValues.Beautiful}
+                              onChange={(e) =>
+                                handleOceanChange("Beautiful", e.target.value)
+                              }
+                              disabled={ignoreOcean}
+                              $ignored={ignoreOcean}
+                              style={{ flex: "2" }}
+                            />
+                            <Body3
+                              color="gray800"
+                              align="right"
+                              style={{ flex: "1" }}
+                            >
+                              추한 (Ugly)
+                            </Body3>
+                          </div>
+                          <div>
+                            <Body3
+                              color="gray800"
+                              align="left"
+                              style={{ flex: "1" }}
+                            >
+                              효율적인 (Efficient)
+                            </Body3>
+                            <RangeSlider
+                              type="range"
+                              min="0"
+                              max="6"
+                              step="1"
+                              value={oceanValues.Efficient}
+                              onChange={(e) =>
+                                handleOceanChange("Efficient", e.target.value)
+                              }
+                              disabled={ignoreOcean}
+                              $ignored={ignoreOcean}
+                              style={{ flex: "2" }}
+                            />
+                            <Body3
+                              color="gray800"
+                              align="right"
+                              style={{ flex: "1" }}
+                            >
+                              비효율적인 (Inefficient)
+                            </Body3>
+                          </div>
+                          <div>
+                            <Body3
+                              color="gray800"
+                              align="left"
+                              style={{ flex: "1" }}
+                            >
+                              사용하기 쉬운 (Easy to use)
+                            </Body3>
+                            <RangeSlider
+                              type="range"
+                              min="0"
+                              max="6"
+                              step="1"
+                              value={oceanValues.Easy}
+                              onChange={(e) =>
+                                handleOceanChange("Easy", e.target.value)
+                              }
+                              disabled={ignoreOcean}
+                              $ignored={ignoreOcean}
+                              style={{ flex: "2" }}
+                            />
+                            <Body3
+                              color="gray800"
+                              align="right"
+                              style={{ flex: "1" }}
+                            >
+                              불편한 (Uncomfortable)
+                            </Body3>
+                          </div>
+                        </OCEANRangeWrap>
+                      </InsightAnalysis>
                     )}
 
                     <Button
