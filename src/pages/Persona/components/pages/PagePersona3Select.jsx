@@ -484,35 +484,40 @@ const PagePersona3Select = () => {
                   </ListBoxGroup>
                 </div>
 
-                <MoleculePersonaSelectCardSaas
-                  interviewType={selectedInterviewType}
-                  filteredPersonaList={personaListSaas}
-                  businessPersonaList={allBusinessPersonas.filter(
-                    (persona) => persona?.status === "complete"
-                  )}
-                  customPersonaList={customPersonaList}
-                  selectedPersonas={selectedPersonas}
-                  onPersonaSelect={setSelectedPersonas}
-                />
-                
-                <BoxWrap NoData style={{ height: "300px" }}>
-                  <img src={images.PeopleFillPrimary2} alt="" />
+                {personaListSaas &&
+                personaListSaas.some(
+                  (persona) => persona?.status === "complete"
+                ) ? (
+                  <MoleculePersonaSelectCardSaas
+                    interviewType={selectedInterviewType}
+                    filteredPersonaList={personaListSaas}
+                    businessPersonaList={allBusinessPersonas.filter(
+                      (persona) => persona?.status === "complete"
+                    )}
+                    customPersonaList={customPersonaList}
+                    selectedPersonas={selectedPersonas}
+                    onPersonaSelect={setSelectedPersonas}
+                  />
+                ) : (
+                  <BoxWrap NoData style={{ height: "300px" }}>
+                    <img src={images.PeopleFillPrimary2} alt="" />
 
-                  <Body2 color="gray700" align="center !important">
-                    현재 대화가 가능한 활성 페르소나가 없습니다<br />
-                    페르소나 생성 요청을 진행하여 페르소나를 활성화해주세요
-                  </Body2>
+                    <Body2 color="gray700" align="center !important">
+                      현재 대화가 가능한 활성 페르소나가 없습니다
+                      <br />
+                      페르소나 생성 요청을 진행하여 페르소나를 활성화해주세요
+                    </Body2>
 
-                  <Button
-                    Medium
-                    Outline
-                    Fill
-                    onClick={() => navigate("/AiPersona")}
-                  >
-                    <Caption1 color="gray700">AI Person 생성 요청</Caption1>
-                  </Button>
-                </BoxWrap>
-
+                    <Button
+                      Medium
+                      Outline
+                      Fill
+                      onClick={() => navigate("/AiPersona")}
+                    >
+                      <Caption1 color="gray700">AI Person 생성 요청</Caption1>
+                    </Button>
+                  </BoxWrap>
+                )}
 
                 {/* <OrganismPersonaListSaas
                   personaListSaas={personaListSaas}

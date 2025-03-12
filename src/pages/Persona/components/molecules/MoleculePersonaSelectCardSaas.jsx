@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { Body1, Body2, Sub2, Caption1 } from "../../../../assets/styles/Typography";
+import {
+  Body1,
+  Body2,
+  Sub2,
+  Caption1,
+} from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import {
   Badge,
@@ -181,7 +186,6 @@ const MoleculePersonaSelectCardSaas = ({
       {filteredPersonaList &&
         [...customPersonaList, ...businessPersonaList, ...filteredPersonaList]
           // 활성 탭에 따라 페르소나 필터링
-
           .filter((persona) => persona.status === "complete")
           .filter((persona) => {
             if (activeTabState === "my_persona") {
@@ -216,79 +220,79 @@ const MoleculePersonaSelectCardSaas = ({
 
             return (
               <>
-              <ListBoxItem
-                key={persona._id}
-                selected={isSelected}
-                anySelected={personaList.selected.length > 0}
-                interviewType={interviewType}
-              >
-                {/* 카드 내용 렌더링 */}
-                {/* <Persona color="Linen" size="Large" Round> */}
-                <Persona
-                  size="Large"
-                  icon={persona.favorite ? "OrangeTopLeftStarFill" : null}
-                  Round
-                  Moder
+                <ListBoxItem
+                  key={persona._id}
+                  selected={isSelected}
+                  anySelected={personaList.selected.length > 0}
+                  interviewType={interviewType}
                 >
-                  <img
-                    src={
-                      personaImages[persona.imageKey] ||
-                      personaImages.PersonaWomen01
-                    }
-                    alt={persona.personaName}
-                  />
-                </Persona>
-                <ListText>
-                  <ListTitle>
-                    <Body1 color="gray800">
-                      {persona.persona_view || persona.personaName}
-                    </Body1>{" "}
-                    <UniqueTag color={persona.type || "default"} />
-                    {/* {persona.isNew && <Badge New>비즈니스</Badge>} */}
-                  </ListTitle>
-                  <ListSubtitle>
-                    <PersonaInfo>
-                      <span>{persona.gender}</span>
-                      <span>
-                        {persona.age.includes("세")
-                          ? persona.age
-                          : `${persona.age}세`}
-                      </span>
-                      <span>{persona.job}</span>
-                    </PersonaInfo>
-                  </ListSubtitle>
-                </ListText>
-                <ListButton>
-                  {isSelected ? (
-                    <Button
-                      Medium
-                      PrimaryLightest={true}
-                      Fill={true}
-                      onClick={() => handlePersonaSelect(persona)}
-                    >
-                      <Sub2 color="primary">
-                        {interviewType === "single" ? "선택됨" : "선택됨"}
-                      </Sub2>
-                    </Button>
-                  ) : (
-                    <Button
-                      Medium
-                      PrimaryLightest={false}
-                      Fill={false}
-                      onClick={() => handlePersonaSelect(persona)}
-                      disabled={
-                        interviewType === "multiple" &&
-                        personaList.selected.length >= 5 &&
-                        !isSelected
+                  {/* 카드 내용 렌더링 */}
+                  {/* <Persona color="Linen" size="Large" Round> */}
+                  <Persona
+                    size="Large"
+                    icon={persona.favorite ? "OrangeTopLeftStarFill" : null}
+                    Round
+                    Moder
+                  >
+                    <img
+                      src={
+                        personaImages[persona.imageKey] ||
+                        personaImages.PersonaWomen01
                       }
-                    >
-                      <Sub2 color="gray500">
-                        {interviewType === "single" ? "선택" : "추가"}
-                      </Sub2>
-                    </Button>
-                  )}
-                </ListButton>
-              </ListBoxItem>
+                      alt={persona.personaName}
+                    />
+                  </Persona>
+                  <ListText>
+                    <ListTitle>
+                      <Body1 color="gray800">
+                        {persona.persona_view || persona.personaName}
+                      </Body1>{" "}
+                      <UniqueTag color={persona.type || "default"} />
+                      {/* {persona.isNew && <Badge New>비즈니스</Badge>} */}
+                    </ListTitle>
+                    <ListSubtitle>
+                      <PersonaInfo>
+                        <span>{persona.gender}</span>
+                        <span>
+                          {persona.age.includes("세")
+                            ? persona.age
+                            : `${persona.age}세`}
+                        </span>
+                        <span>{persona.job}</span>
+                      </PersonaInfo>
+                    </ListSubtitle>
+                  </ListText>
+                  <ListButton>
+                    {isSelected ? (
+                      <Button
+                        Medium
+                        PrimaryLightest={true}
+                        Fill={true}
+                        onClick={() => handlePersonaSelect(persona)}
+                      >
+                        <Sub2 color="primary">
+                          {interviewType === "single" ? "선택됨" : "선택됨"}
+                        </Sub2>
+                      </Button>
+                    ) : (
+                      <Button
+                        Medium
+                        PrimaryLightest={false}
+                        Fill={false}
+                        onClick={() => handlePersonaSelect(persona)}
+                        disabled={
+                          interviewType === "multiple" &&
+                          personaList.selected.length >= 5 &&
+                          !isSelected
+                        }
+                      >
+                        <Sub2 color="gray500">
+                          {interviewType === "single" ? "선택" : "추가"}
+                        </Sub2>
+                      </Button>
+                    )}
+                  </ListButton>
+                </ListBoxItem>
               </>
             );
           })}
