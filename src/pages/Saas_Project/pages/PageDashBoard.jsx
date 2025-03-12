@@ -109,7 +109,8 @@ const PageDashBoard = () => {
         );
 
         if (savedToolListInfo) {
-          const sortedList = [...savedToolListInfo].sort((a, b) => {
+          const filteredList = savedToolListInfo.filter(tool => !(tool.deleteState >= 1));
+          const sortedList = [...filteredList].sort((a, b) => {
             const dateA = a.timestamp;
             const dateB = b.timestamp;
             return dateB - dateA; // 최신 날짜가 위로
@@ -337,12 +338,12 @@ const PageDashBoard = () => {
     detectRefresh();
 
     // 이벤트 리스너 등록
-    // window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("keydown", handleKeyDown);
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      // window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
@@ -352,23 +353,6 @@ const PageDashBoard = () => {
     industry: "",
     country: "",
   });
-
-  const getBusinessColor = (business) => {
-    switch (business) {
-      case "B2C":
-        return "#AF52DE";
-      case "B2B":
-        return "#5856D6";
-      case "B2G":
-        return "#007AFF";
-      case "B2B2C":
-        return "#32ADE6";
-      case "B2B2B":
-        return "#30B0C7";
-      default:
-        return "#8E8E93";
-    }
-  };
 
   return (
     <>
@@ -397,13 +381,11 @@ const PageDashBoard = () => {
                       {project?.projectTitle}
                     </H4>
                     <TagWrap>
-                      <ProjectTag Business={project?.businessModel}>
-                        <images.ProjectTag
-                          color={getBusinessColor(project?.businessModel)}
-                        />
+                      <ProjectTag Business="B2C">
+                        <images.ProjectTag color="#AF52DE" />
                       </ProjectTag>
-                      <ProjectTag Type={project?.industryType} />
-                      <ProjectTag Country={project?.targetCountry} />
+                      <ProjectTag Type="Information" />
+                      <ProjectTag Country="Korea" />
                     </TagWrap>
                   </div>
 
@@ -673,11 +655,11 @@ const PageDashBoard = () => {
                   <li>
                     <Body2 color="gray500">업로드 파일</Body2>
                     <Body2 color="gray800">
-                      {project?.files?.length > 0
-                        ? project.files.map((file) => (
-                            <div key={file.id}>{file.name}</div>
-                          ))
-                        : "-"}
+                      {project?.files.map((file) => (
+                        <div key={file.id}>
+                            {file.name}
+                        </div>
+                      ))}
                     </Body2>
                     {/* <Button Large Outline Fill style={{ marginLeft: "auto" }}>파일보기</Button> */}
                   </li>

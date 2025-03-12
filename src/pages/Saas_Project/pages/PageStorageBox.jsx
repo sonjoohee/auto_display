@@ -35,7 +35,7 @@ import {
   Caption1,
   InputText,
 } from "../../../assets/styles/Typography";
-import { getToolListOnServerSaas } from "../../../utils/indexedDB";
+import { getToolListOnServerSaas, getToolDeleteListOnServer, updateToolOnServer } from "../../../utils/indexedDB";
 
 const PageStorageBox = () => {
   const navigate = useNavigate();
@@ -43,6 +43,8 @@ const PageStorageBox = () => {
   const [toolListSaas, setToolListSaas] = useAtom(TOOL_LIST_SAAS);
   const project = projectSaas;
   const [isTrashModalOpen, setIsTrashModalOpen] = useState(false);
+  const [deletedTools, setDeletedTools] = useState([]);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     const loadToolList = async () => {
@@ -54,7 +56,8 @@ const PageStorageBox = () => {
         );
 
         if (savedToolListInfo) {
-          const sortedList = [...savedToolListInfo].sort((a, b) => {
+          const filteredList = savedToolListInfo.filter(tool => !(tool.deleteState >= 1));
+          const sortedList = [...filteredList].sort((a, b) => {
             const dateA = a.timestamp;
             const dateB = b.timestamp;
             return dateB - dateA; // 최신 날짜가 위로
@@ -128,6 +131,154 @@ const PageStorageBox = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
+
+  // 임시 삭제함 데이터 로드
+  useEffect(() => {
+    const loadDeletedTools = async () => {
+      if (isTrashModalOpen) {
+        try {
+          const deletedToolsData = await getToolDeleteListOnServer(100, 1, true);
+          if (deletedToolsData.data.length > 0) {
+            setDeletedTools(deletedToolsData.data);
+            console.log("deletedToolsData", deletedToolsData.data);
+          }
+        } catch (error) {
+          console.error("삭제된 툴 목록을 불러오는데 실패했습니다:", error);
+        }
+      }
+    };
+    
+    loadDeletedTools();
+  }, [isTrashModalOpen, refreshTrigger]);
+
+  // 툴 복구 처리
+  const handleRestoreTool = async (toolId) => {
+    try {
+      await updateToolOnServer(toolId, { deleteState: 0 });
+      // 화면에서 제거
+      setDeletedTools(prev => prev.filter(tool => tool._id !== toolId));
+      // 스토리지 박스 목록 새로고침 트리거
+      setRefreshTrigger(prev => prev + 1);
+    } catch (error) {
+      console.error("툴 복구에 실패했습니다:", error);
+    }
+  };
+
+  // 툴 영구 삭제 처리
+  const handlePermanentDelete = async (toolId) => {
+    try {
+      await updateToolOnServer(toolId, { deleteState: 2 });
+      // 화면에서 제거
+      setDeletedTools(prev => prev.filter(tool => tool._id !== toolId));
+    } catch (error) {
+      console.error("툴 영구 삭제에 실패했습니다:", error);
+    }
+  };
+
+    // 툴 설명 가져오기 함수
+    const getToolDescription = (tool) => {
+      if (tool.type) {
+        switch (tool.type) {
+          case "ix_target_discovery_persona":
+            return tool.specificSituation || "상세 내용 없음";
+          case "ix_customer_value_persona":
+            return (tool.analysisScope?.split("|")[0] || "상세 내용 없음").trim();
+          case "ix_idea_generator_persona":
+            return (
+              `${tool.coreValue?.[0]} 외 ${tool.coreValue?.length - 1}개` ||
+              "상세 내용 없음"
+            );
+          case "ix_design_emotion_analysis":
+            return tool.imageName?.[0]?.name || "상세 내용 없음";
+          default:
+            return tool.type;
+        }
+      }
+      if (tool.reportTitle) return tool.reportTitle;
+      if (tool.chat_data?.expert_index) {
+        switch (tool.chat_data.expert_index) {
+          case "1":
+            return "시장 내 경쟁 우위 방안 보고서";
+          case "2":
+            return "마케팅 전문가";
+          case "3":
+            return "고객 인사이트 전문가";
+          case "4":
+            return "PoC 설계 전문가";
+          case "5":
+            return "아이디어 디벨로퍼";
+          case "6":
+            return "최적화된 전략을 제시";
+          case "7":
+            return "제품/서비스 분석 보고서";
+          case "8":
+            return "사례 분석 전문가";
+          case "9":
+            return "린 캔버스 vs 비즈니스 모델 캔버스 매칭 분석";
+          case "10":
+            return "조사 설계 전문가";
+          default:
+            return tool.chat_data.expert_index;
+        }
+      }
+      return "상세 내용 없음";
+    };
+    // 날짜 포맷팅 함수 (년월일시분 표기)
+    const formatDate = (timestamp) => {
+      const date = new Date(timestamp);
+      return `${date.getFullYear().toString().slice(2)}.${String(
+        date.getMonth() + 1
+      ).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")} ${String(
+        date.getHours()
+      ).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+    };
+
+      // 툴 이름 가져오기 함수
+  const getToolName = (tool) => {
+    if (tool.type) {
+      switch (tool.type) {
+        case "ix_target_discovery_persona":
+          return "타겟 탐색기";
+        case "ix_customer_value_persona":
+          return "고객 핵심 가치 분석기";
+        case "ix_design_emotion_analysis":
+          return "디자인 감성 분석기";
+        case "ix_idea_generator_persona":
+          return "아이디어 생성기";
+        default:
+          return tool.type;
+      }
+    }
+    if (tool.interviewType)
+      return tool.interviewType === "single" ? "심층 인터뷰" : "그룹 인터뷰";
+    if (tool.chat_data?.expert_index) {
+      switch (tool.chat_data.expert_index) {
+        case "1":
+          return "전략 컨설턴트";
+        case "2":
+          return "마케팅 전문가";
+        case "3":
+          return "고객 인사이트 전문가";
+        case "4":
+          return "PoC 설계 전문가";
+        case "5":
+          return "아이디어 디벨로퍼";
+        case "6":
+          return "그로스 해커";
+        case "7":
+          return "가격 분석 전문가";
+        case "8":
+          return "사례 분석 전문가";
+        case "9":
+          return "BM 전문가";
+        case "10":
+          return "조사 설계 전문가";
+        default:
+          return tool.chat_data.expert_index;
+      }
+    }
+    return "상세 내용 없음";
+  };
 
   return (
     <>
@@ -270,53 +421,37 @@ const PageStorageBox = () => {
           body={
             <>
               <div className="deleted-wrap">
-                <div>
-                  <images.GridCircle
-                    color={palette.gray700}
-                    width={12}
-                    height={12}
-                  />
-                  <div className="content">
-                    <Sub3 color="gray800" align="left">
-                      (리서치툴명) 총 8명의 페르소나 시나리오 분석
-                    </Sub3>
-                    <Caption1 color="gray500" align="left">
-                      삭제일 : 2025.01.24
-                    </Caption1>
+                {deletedTools.length > 0 ? (
+                  deletedTools.map((tool) => (
+                    <div key={tool._id}>
+                      <images.GridCircle
+                        color={palette.gray700}
+                        width={12}
+                        height={12}
+                      />
+                      <div className="content">
+                        <Sub3 color="gray800" align="left">
+                          ({getToolName(tool) || ""}) {getToolDescription(tool) || ""}
+                        </Sub3>
+                        <Caption1 color="gray500" align="left">
+                          삭제일 : {formatDate(tool.timestamp)}
+                        </Caption1>
+                      </div>
+                      <div className="button">
+                        <span onClick={() => handleRestoreTool(tool._id)}>
+                          <img src={images.ArrowReturn} alt="복구" />
+                        </span>
+                        <span onClick={() => handlePermanentDelete(tool._id)}>
+                          <img src={images.Trash} alt="영구삭제" />
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ padding: '20px 0', textAlign: 'center' }}>
+                    <Caption1 color="gray500">임시 삭제된 항목이 없습니다.</Caption1>
                   </div>
-                  <div className="button">
-                    <span>
-                      <img src={images.ArrowReturn} alt="" />
-                    </span>
-                    <span>
-                      <img src={images.Trash} alt="" />
-                    </span>
-                  </div>
-                </div>
-
-                <div>
-                  <images.GridCircle
-                    color={palette.gray700}
-                    width={12}
-                    height={12}
-                  />
-                  <div className="content">
-                    <Sub3 color="gray800" align="left">
-                      (리서치툴명) 총 8명의 페르소나 시나리오 분석
-                    </Sub3>
-                    <Caption1 color="gray500" align="left">
-                      삭제일 : 2025.01.24
-                    </Caption1>
-                  </div>
-                  <div className="button">
-                    <span>
-                      <img src={images.ArrowReturn} alt="" />
-                    </span>
-                    <span>
-                      <img src={images.Trash} alt="" />
-                    </span>
-                  </div>
-                </div>
+                )}
               </div>
 
               <div className="delete-info">

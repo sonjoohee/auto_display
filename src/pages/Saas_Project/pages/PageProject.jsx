@@ -25,9 +25,9 @@ import {
   Sub1,
   Caption1,
 } from "../../../assets/styles/Typography";
-import { getProjectListSaasByIdFromIndexedDB } from "../../../utils/indexedDB";
+import { getProjectListSaasByIdFromIndexedDB, updateProjectOnServer } from "../../../utils/indexedDB";
 import OrganismProjectItem from "../components/organisms/OrganismProjectItem";
-import { PROJECT_LIST, ACCESS_DASHBOARD } from "../../AtomStates";
+import { PROJECT_LIST, ACCESS_DASHBOARD, PROJECT_ID, IS_LOGGED_IN } from "../../AtomStates";
 const PageProject = () => {
   const navigate = useNavigate();
   const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
@@ -37,17 +37,27 @@ const PageProject = () => {
   const [showWarning, setShowWarning] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
 
+  const [projectId, setProjectId] = useAtom(PROJECT_ID);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+
   const handleWarningClose = () => {
     setIsWarningPopupOpen(false);
     setShowWarning(false);
   };
-  const handleWarningContinue = () => {
+  const handleWarningContinue = async () => {
     if (selectedProject) {
-      // 여기에 실제 프로젝트 삭제 로직 구현
       const updatedProjects = projectList.filter(
         (project) => project._id !== selectedProject._id
       );
       setProjectList(updatedProjects);
+
+      await updateProjectOnServer(
+        selectedProject._id,
+        {
+          deleteState: 1
+        },
+        isLoggedIn
+      );
     }
     setShowWarning(false);
     setSelectedProject(null);
