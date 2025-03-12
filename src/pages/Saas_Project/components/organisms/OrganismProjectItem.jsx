@@ -122,7 +122,7 @@ const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
                   <images.ThreeDotsVertical />
                   {showTooltip && (
                     <Tooltip>
-                      <div>
+                      {/* <div>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="16"
@@ -150,7 +150,7 @@ const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
                           />
                         </svg>
                         <Caption1 color="gray500">이미지 변경</Caption1>
-                      </div>
+                      </div> */}
                       <div onClick={handleDeleteClick}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"

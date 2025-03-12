@@ -1775,12 +1775,13 @@ const PageCustomerValueAnalyzer = () => {
                       Fill
                       disabled={
                         !Array.isArray(customerValueAnalyzerFactor) ||
-                        !customerValueAnalyzerFactor.every(
-                          (factor) => factor
-                        ) ||
-                        customerValueAnalyzerFactor.length === 0
-                        // toolStep >= 4 ||
-                        // !customerValueAnalyzerFactor.every((factor) => factor)
+                        customerValueAnalyzerFactor.length === 0 ||
+                        customerValueAnalyzerFactor.length !==
+                          customerValueAnalyzerSelectedPersona.length ||
+                        Object.values(cardStatusesFactor).some(
+                          (status) =>
+                            status === "loading" || status === "waiting"
+                        )
                       }
                       onClick={handleReport}
                     >
