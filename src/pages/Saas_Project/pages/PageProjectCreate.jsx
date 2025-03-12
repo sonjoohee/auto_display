@@ -470,7 +470,10 @@ const PageProjectCreate = () => {
 
   // 수정하기 버튼 클릭 핸들러 추가
   const handleEditClick = () => {
-    setEditingText(projectCreateInfo.business_analysis + (projectCreateInfo.file_analysis ? projectCreateInfo.file_analysis : ""));
+    setEditingText(
+      projectCreateInfo.business_analysis +
+        (projectCreateInfo.file_analysis ? projectCreateInfo.file_analysis : "")
+    );
     setIsEditing(!isEditing);
   };
 
@@ -515,15 +518,13 @@ const PageProjectCreate = () => {
       target_customer: editingTargetText,
     });
 
-    setProjectTotalInfo(
-      {
-        ...projectTotalInfo,
-        projectAnalysis: {
-          business_analysis: editingText,
-          target_customer: editingTargetText,
-        },
-      }
-    )
+    setProjectTotalInfo({
+      ...projectTotalInfo,
+      projectAnalysis: {
+        business_analysis: editingText,
+        target_customer: editingTargetText,
+      },
+    });
   };
 
   const handleSaveTargetClick = async () => {
@@ -543,40 +544,105 @@ const PageProjectCreate = () => {
         target_customer: editingTargetText,
         file_analysis: editingText.file_analysis,
       });
-      setProjectTotalInfo(
-        {
-          ...projectTotalInfo,
-          projectAnalysis: {
-            business_analysis: editingText.business_analysis,
-            target_customer: editingTargetText,
-            file_analysis: editingText.file_analysis,
-          },
-        }
-      )
+      setProjectTotalInfo({
+        ...projectTotalInfo,
+        projectAnalysis: {
+          business_analysis: editingText.business_analysis,
+          target_customer: editingTargetText,
+          file_analysis: editingText.file_analysis,
+        },
+      });
     } else {
       setProjectCreateInfo({
-        business_analysis: typeof editingText === 'object' ? editingText.business_analysis : editingText,
+        business_analysis:
+          typeof editingText === "object"
+            ? editingText.business_analysis
+            : editingText,
         target_customer: editingTargetText,
       });
-      setProjectTotalInfo(
-        {
-          ...projectTotalInfo,
-          projectAnalysis: {
-            business_analysis: typeof editingText === 'object' ? editingText.business_analysis : editingText,
-            target_customer: editingTargetText,
-          },
-        }
-      )
+      setProjectTotalInfo({
+        ...projectTotalInfo,
+        projectAnalysis: {
+          business_analysis:
+            typeof editingText === "object"
+              ? editingText.business_analysis
+              : editingText,
+          target_customer: editingTargetText,
+        },
+      });
     }
   };
 
   const handleUndoClick = () => {
-    setEditingText(projectCreateInfo.business_analysis + (projectCreateInfo.file_analysis ? projectCreateInfo.file_analysis : ""));
+    setEditingText(
+      projectCreateInfo.business_analysis +
+        (projectCreateInfo.file_analysis ? projectCreateInfo.file_analysis : "")
+    );
   };
 
   const handleUndoTargetClick = () => {
     setEditingTargetText(projectCreateInfo.target_customer);
   };
+
+  useEffect(() => {
+    // 새로고침 감지 함수
+    const detectRefresh = () => {
+      // 현재 URL 확인
+      const currentUrl = window.location.href;
+      if (currentUrl.toLowerCase().includes("projectcreate")) {
+        // 세션 스토리지에서 마지막 URL 가져오기
+        const lastUrl = sessionStorage.getItem("lastUrl");
+
+        // 마지막 URL이 현재 URL과 같으면 새로고침
+        if (lastUrl && lastUrl === currentUrl) {
+          console.log("새로고침 감지: URL 비교");
+          navigate("/");
+          return true;
+        }
+
+        // 현재 URL 저장
+        sessionStorage.setItem("lastUrl", currentUrl);
+      }
+
+      return false;
+    };
+
+    // beforeunload 이벤트 핸들러
+    const handleBeforeUnload = (event) => {
+      // 이벤트 취소 (표준에 따라)
+      event.preventDefault();
+      // Chrome은 returnValue 설정 필요
+      event.returnValue = "";
+
+      // 새로고침 시 루트 페이지로 이동
+      navigate("/");
+    };
+
+    // F5 키 또는 Ctrl+R 감지
+    const handleKeyDown = (event) => {
+      if (
+        (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
+        event.key === "F5"
+      ) {
+        // F5 키 코드
+        event.preventDefault();
+        navigate("/");
+      }
+    };
+
+    // 함수 실행
+    detectRefresh();
+
+    // 이벤트 리스너 등록
+    // window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("keydown", handleKeyDown);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      // window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [navigate]);
 
   return (
     <>
@@ -709,18 +775,29 @@ const PageProjectCreate = () => {
                             onClick={(e) => toggleSelectBox("business", e)}
                           >
                             <Body2
-                              color={selectedValues.business ? "gray800" : "gray300"}
-                              style={{ display: "flex", alignItems: "center", gap: "4px" }}
+                              color={
+                                selectedValues.business ? "gray800" : "gray300"
+                              }
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "4px",
+                              }}
                             >
                               {selectedValues.business && (
-                                <images.ProjectTag 
+                                <images.ProjectTag
                                   color={
-                                    selectedValues.business === "B2C" ? "#AF52DE" :
-                                    selectedValues.business === "B2B" ? "#5856D6" :
-                                    selectedValues.business === "B2G" ? "#007AFF" :
-                                    selectedValues.business === "B2B2C" ? "#32ADE6" :
-                                    selectedValues.business === "B2B2B" ? "#30B0C7" :
-                                    "#AF52DE"
+                                    selectedValues.business === "B2C"
+                                      ? "#AF52DE"
+                                      : selectedValues.business === "B2B"
+                                      ? "#5856D6"
+                                      : selectedValues.business === "B2G"
+                                      ? "#007AFF"
+                                      : selectedValues.business === "B2B2C"
+                                      ? "#32ADE6"
+                                      : selectedValues.business === "B2B2B"
+                                      ? "#30B0C7"
+                                      : "#AF52DE"
                                   }
                                 />
                               )}
@@ -806,24 +883,44 @@ const PageProjectCreate = () => {
                             onClick={(e) => toggleSelectBox("industry", e)}
                           >
                             <Body2
-                              color={selectedValues.industry ? "gray800" : "gray300"}
-                              style={{ display: "flex", alignItems: "center", gap: "4px" }}
+                              color={
+                                selectedValues.industry ? "gray800" : "gray300"
+                              }
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "4px",
+                              }}
                             >
                               {selectedValues.industry && (
-                                <img 
+                                <img
                                   src={
-                                    selectedValues.industry === "정보통신 및 기술 (IT, 소프트웨어, 커뮤니티, 광고, 마케팅 등)" ? images.ProjectInformation :
-                                    selectedValues.industry === "금융 및 법률 (핀테크, 인사, 법률 등)" ? images.ProjectBanking :
-                                    selectedValues.industry === "제조 및 생산 (의류, 뷰티, 식음료, 환경/에너지 등)" ? images.ProjectProduction :
-                                    selectedValues.industry === "건설 및 인프라 (부동산, 모빌리티, 물류 등)" ? images.ProjectBuild :
-                                    selectedValues.industry === "의료 및 헬스케어 (헬스케어, 바이오 등)" ? images.ProjectMedical :
-                                    selectedValues.industry === "교육 및 공공 서비스 (교육, 정부 및 공공기관 등)" ? images.ProjectEducation :
-                                    selectedValues.industry === "소비재 및 라이프스타일 (커머스, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)" ? images.ProjectConsumer :
-                                    images.ProjectEtc
-                                  } 
-                                  alt="" 
+                                    selectedValues.industry ===
+                                    "정보통신 및 기술 (IT, 소프트웨어, 커뮤니티, 광고, 마케팅 등)"
+                                      ? images.ProjectInformation
+                                      : selectedValues.industry ===
+                                        "금융 및 법률 (핀테크, 인사, 법률 등)"
+                                      ? images.ProjectBanking
+                                      : selectedValues.industry ===
+                                        "제조 및 생산 (의류, 뷰티, 식음료, 환경/에너지 등)"
+                                      ? images.ProjectProduction
+                                      : selectedValues.industry ===
+                                        "건설 및 인프라 (부동산, 모빌리티, 물류 등)"
+                                      ? images.ProjectBuild
+                                      : selectedValues.industry ===
+                                        "의료 및 헬스케어 (헬스케어, 바이오 등)"
+                                      ? images.ProjectMedical
+                                      : selectedValues.industry ===
+                                        "교육 및 공공 서비스 (교육, 정부 및 공공기관 등)"
+                                      ? images.ProjectEducation
+                                      : selectedValues.industry ===
+                                        "소비재 및 라이프스타일 (커머스, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)"
+                                      ? images.ProjectConsumer
+                                      : images.ProjectEtc
+                                  }
+                                  alt=""
                                 />
-                            )}
+                              )}
                               {selectedValues.industry || "선택해주세요"}
                             </Body2>
                             <images.ChevronDown
@@ -961,20 +1058,31 @@ const PageProjectCreate = () => {
                             onClick={(e) => toggleSelectBox("country", e)}
                           >
                             <Body2
-                              color={selectedValues.country ? "gray800" : "gray300"}
-                              style={{ display: "flex", alignItems: "center", gap: "4px" }}
+                              color={
+                                selectedValues.country ? "gray800" : "gray300"
+                              }
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "4px",
+                              }}
                             >
                               {selectedValues.country && (
-                                <img 
+                                <img
                                   src={
-                                    selectedValues.country === "대한민국" ? images.ProjectKorea :
-                                    selectedValues.country === "미국" ? images.ProjectUsa :
-                                    selectedValues.country === "중국" ? images.ProjectChina :
-                                    selectedValues.country === "일본" ? images.ProjectJapan :
-                                    selectedValues.country === "베트남" ? images.ProjectVietnam :
-                                    images.ProjectKorea
-                                  } 
-                                  alt="" 
+                                    selectedValues.country === "대한민국"
+                                      ? images.ProjectKorea
+                                      : selectedValues.country === "미국"
+                                      ? images.ProjectUsa
+                                      : selectedValues.country === "중국"
+                                      ? images.ProjectChina
+                                      : selectedValues.country === "일본"
+                                      ? images.ProjectJapan
+                                      : selectedValues.country === "베트남"
+                                      ? images.ProjectVietnam
+                                      : images.ProjectKorea
+                                  }
+                                  alt=""
                                 />
                               )}
                               {selectedValues.country || "선택해주세요"}
@@ -1257,15 +1365,11 @@ const PageProjectCreate = () => {
                           <li>
                             <Body2 color="gray500">업로드 파일</Body2>
                             <Body2 color="gray800">
-                              {uploadedFiles.length === 0 ? (
-                                "-"
-                              ) : (
-                                uploadedFiles.map((file) => (
-                                  <div key={file.id}>
-                                    {file.name}
-                                  </div>
-                                ))
-                              )}
+                              {uploadedFiles.length === 0
+                                ? "-"
+                                : uploadedFiles.map((file) => (
+                                    <div key={file.id}>{file.name}</div>
+                                  ))}
                             </Body2>
                           </li>
                         </ListBoxGroup>
@@ -1291,7 +1395,7 @@ const PageProjectCreate = () => {
                         {!isEditing && (
                           <ListBoxGroup>
                             <Body2 color="gray800" align="left">
-                              {typeof editingText === 'object' ? (
+                              {typeof editingText === "object" ? (
                                 <>
                                   {editingText.business_analysis}
                                   {editingText.file_analysis && (

@@ -572,8 +572,7 @@ const PageDesignAnalysis = () => {
             },
             isLoggedIn
           );
-        } catch (error) {
-        }
+        } catch (error) {}
       }
 
       // setToolStep(3);
@@ -601,7 +600,6 @@ const PageDesignAnalysis = () => {
 
   // 파일 업로드 핸들러
   const handleChangeStatus = ({ meta, file, remove }, status) => {
-
     // 20MB 크기 제한 체크
     const maxSize = 20 * 1024 * 1024; // 20MB in bytes
     if (file.size > maxSize && status !== "removed") {
@@ -691,6 +689,7 @@ const PageDesignAnalysis = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
+          console.log("새로고침 감지: URL 비교");
           navigate("/");
           return true;
         }

@@ -597,6 +597,7 @@ const PagePersona3Multiple = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
+
   const [activeTab, setActiveTab] = useState(1);
   const completedSteps = [1, 2, 3, 4];
 

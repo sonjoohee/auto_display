@@ -1207,10 +1207,8 @@ const PageToolListSaas = () => {
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
-      setCheckRefresh(true);
       // 현재 URL 확인
       const currentUrl = window.location.href;
-
       if (currentUrl.toLowerCase().includes("tool")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         const lastUrl = sessionStorage.getItem("lastUrl");
@@ -1253,9 +1251,7 @@ const PageToolListSaas = () => {
     };
 
     // 함수 실행
-    if (checkRefresh) {
-      detectRefresh();
-    }
+    detectRefresh();
 
     // 이벤트 리스너 등록
     // window.addEventListener("beforeunload", handleBeforeUnload);
