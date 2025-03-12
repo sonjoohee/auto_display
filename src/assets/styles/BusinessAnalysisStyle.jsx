@@ -1058,21 +1058,21 @@ export const ProjectTag = styled.span`
         height: 20px;
         background-image: ${(props) => {
           switch (props.Type) {
-            case "Information":
+            case "정보통신 및 기술 (IT, 소프트웨어, 커뮤니티, 광고, 마케팅 등)":
               return `url(${images.ProjectInformation})`;
-            case "Banking":
+            case "금융 및 법률 (핀테크, 인사, 법률 등)":
               return `url(${images.ProjectBanking})`;
-            case "Production":
+            case "제조 및 생산 (의류, 뷰티, 식음료, 환경/에너지 등)":
               return `url(${images.ProjectProduction})`;
-            case "Build":
+            case "건설 및 인프라 (부동산, 모빌리티, 물류 등)":
               return `url(${images.ProjectBuild})`;
-            case "Medical":
+            case "의료 및 헬스케어 (헬스케어, 바이오 등)":
               return `url(${images.ProjectMedical})`;
-            case "Education":
+            case "교육 및 공공 서비스 (교육, 정부 및 공공기관 등)":
               return `url(${images.ProjectEducation})`;
-            case "Consumer":
+            case "소비재 및 라이프스타일 (커머스, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)":
               return `url(${images.ProjectConsumer})`;
-            case "Etc":
+            case "기타":
               return `url(${images.ProjectEtc})`;
             default:
               return "none";
@@ -1091,15 +1091,15 @@ export const ProjectTag = styled.span`
         border-radius: 50%;
         background-image: ${(props) => {
           switch (props.Country) {
-            case "Korea":
+            case "대한민국":
               return `url(${images.ProjectKorea})`;
-            case "Usa":
+            case "미국":
               return `url(${images.ProjectUsa})`;
-            case "China":
+            case "중국":
               return `url(${images.ProjectChina})`;
-            case "Japan":
+            case "일본":
               return `url(${images.ProjectJapan})`;
-            case "Vietnam":
+            case "베트남":
               return `url(${images.ProjectVietnam})`;
             default:
               return "none";
@@ -1132,21 +1132,21 @@ export const ProjectTag = styled.span`
 
       if (props.Type) {
         switch (props.Type) {
-          case "Information":
+          case "정보통신 및 기술 (IT, 소프트웨어, 커뮤니티, 광고, 마케팅 등)":
             return "정보통신 및 기술";
-          case "Banking":
+          case "금융 및 법률 (핀테크, 인사, 법률 등)":
             return "금융 및 법률";
-          case "Production":
+          case "제조 및 생산 (의류, 뷰티, 식음료, 환경/에너지 등)":
             return "제조 및 생산";
-          case "Build":
+          case "건설 및 인프라 (부동산, 모빌리티, 물류 등)":
             return "건설 및 인프라";
-          case "Medical":
+          case "의료 및 헬스케어 (헬스케어, 바이오 등)":
             return "의료 및 헬스케어";
-          case "Education":
+          case "교육 및 공공 서비스 (교육, 정부 및 공공기관 등)":
             return "교육 및 공공 서비스";
-          case "Consumer":
+          case "소비재 및 라이프스타일 (커머스, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)":
             return "소비재 및 라이프스타일";
-          case "Etc":
+          case "기타":
             return "기타";
           default:
             return "";
@@ -1155,15 +1155,15 @@ export const ProjectTag = styled.span`
 
       if (props.Country) {
         switch (props.Country) {
-          case "Korea":
+          case "대한민국":
             return "대한민국";
-          case "Usa":
+          case "미국":
             return "미국";
-          case "China":
+          case "중국":
             return "중국";
-          case "Japan":
+          case "일본":
             return "일본";
-          case "Vietnam":
+          case "베트남":
             return "베트남";
           default:
             return "";
