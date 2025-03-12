@@ -180,7 +180,7 @@ const MoleculeCustomerValueCard = ({
 
           window.mermaid.contentLoaded();
         } catch (error) {
-          console.error("Mermaid rendering error:", error);
+        
         }
       };
 

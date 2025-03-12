@@ -421,14 +421,14 @@ const PageMarketingNoItemsResult = () => {
                 });
                 setShowSuccessPopup(true);
               } catch (shareError) {
-                console.error("Sharing failed:", shareError);
+                
               }
             } else {
               // 데스크톱이나 공유 불가능한 모바일의 경우
               downloadWithBlob(blob);
             }
           } catch (error) {
-            console.error("Error in blob handling:", error);
+          
             setShowErrorPopup(true);
           }
         },
@@ -440,7 +440,7 @@ const PageMarketingNoItemsResult = () => {
 
       await navigator.clipboard.writeText(shareUrl);
     } catch (err) {
-      console.error("Error capturing:", err);
+    
       setShowErrorPopup(true);
     } finally {
       setIsCapturing(false);
@@ -463,7 +463,7 @@ const PageMarketingNoItemsResult = () => {
       }, 100);
       setShowSuccessPopup(true);
     } catch (error) {
-      console.error("Download failed:", error);
+      // console.error("Download failed:", error);
       setShowErrorPopup(true);
     }
   };

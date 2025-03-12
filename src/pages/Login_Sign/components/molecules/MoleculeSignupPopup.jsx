@@ -45,7 +45,7 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
         }
       }
     } catch (error) {
-      console.error("이메일 재발송 요청 중 오류 발생:", error);
+      
       alert("서버와의 통신 중 오류가 발생했습니다.");
     }
   };

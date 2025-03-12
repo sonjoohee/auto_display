@@ -30,7 +30,6 @@ const VerifyEmail = () => {
           }
         })
         .catch((error) => {
-          console.error("이메일 인증 중 오류 발생:", error);
           navigate("/email-verification-failed"); // 오류 시 이메일 인증 실패 페이지로 이동
         });
     }

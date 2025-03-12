@@ -236,10 +236,10 @@ const PageIdeaGenerator = () => {
 
         // 페르소나 설정 (Step 2)
         if (ideaGeneratorSelectedPersona && personaListSaas?.length > 0) {
-          console.log(
-            "ideaGeneratorSelectedPersona",
-            ideaGeneratorSelectedPersona
-          );
+          // console.log(
+          //   "ideaGeneratorSelectedPersona",
+          //   ideaGeneratorSelectedPersona
+          // );
           setSelectedPersonasSaas(ideaGeneratorSelectedPersona);
           // 저장된 페르소나의 personaName과 일치하는 personaListSaas의 페르소나를 찾아 _id 값을 가져옵니다
           const savedPersonaNames = Array.isArray(ideaGeneratorSelectedPersona)
@@ -255,11 +255,6 @@ const PageIdeaGenerator = () => {
               return matchedPersona ? matchedPersona._id : null;
             })
             .filter((id) => id !== null);
-
-          console.log("Selected Persona IDs:", selectedPersonaIds);
-
-          // 찾은 _id 값으로 selectedPersonasSaas 상태를 업데이트합니다
-          // setSelectedPersonasSaas(selectedPersonaIds);
 
           // 선택된 페르소나 버튼 상태도 업데이트합니다
           const newSelectedButtons = {};
@@ -315,7 +310,6 @@ const PageIdeaGenerator = () => {
           "ix_customer_value_persona",
           isLoggedIn
         );
-        console.log("🚀 ~ getAllTargetDiscovery ~ response:", response);
 
         const newItems = (response || []).filter(
           (item) =>
@@ -327,7 +321,6 @@ const PageIdeaGenerator = () => {
 
         setCustomerValueList(allItems);
       } catch (error) {
-        console.error("Error fetching target discovery list:", error);
         setCustomerValueList([]); // Set empty array on error
       }
     };
@@ -392,7 +385,6 @@ const PageIdeaGenerator = () => {
 
       setIsLoading(false);
     } catch (error) {
-      console.error("Error submitting business info:", error);
       setShowPopupError(true);
       if (error?.response) {
         switch (error.response.status) {
@@ -457,8 +449,6 @@ const PageIdeaGenerator = () => {
           .flat() // 중첩 배열을 평탄화하여 모든 일치하는 페르소나 객체를 가져옵니다
           .filter((persona) => persona !== undefined);
 
-        console.log("selectedPersonaObjects", selectedPersonaObjects);
-
         // 선택된 페르소나 객체에서 필요한 필드만 추출합니다
         const selectedCustomers = selectedPersonaObjects.map((persona) => ({
           personaName: persona.personaName || "",
@@ -478,7 +468,6 @@ const PageIdeaGenerator = () => {
           };
 
           setIdeaGeneratorSelectedPersona(selectedCustomers);
-          console.log("selectedCustomers", selectedCustomers);
 
           await updateToolOnServer(
             toolId,
@@ -507,7 +496,6 @@ const PageIdeaGenerator = () => {
             }));
           }
         } catch (error) {
-          console.error("Error generating idea:", error);
         }
       }
 
@@ -521,7 +509,6 @@ const PageIdeaGenerator = () => {
         isLoggedIn
       );
     } catch (error) {
-      console.error("Error generating ideas:", error);
     }
   };
 
@@ -642,7 +629,6 @@ const PageIdeaGenerator = () => {
 
       setIsLoadingFinalReport(false);
     } catch (error) {
-      console.error("Error generating final report:", error);
       setShowPopupError(true);
       if (error?.response) {
         switch (error.response.status) {
@@ -909,7 +895,7 @@ const PageIdeaGenerator = () => {
   const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
-  console.log("personaListSaas", personaListSaas);
+
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
@@ -962,7 +948,6 @@ const PageIdeaGenerator = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
           navigate("/"); // 새로고침 시 루트 페이지로 이동
           return true;
         }
@@ -1480,10 +1465,6 @@ const PageIdeaGenerator = () => {
                     </li>
                     <li>
                       <Body2 color="gray500">페르소나 선택</Body2>
-                      {console.log(
-                        "selectedPersonasSaas",
-                        selectedPersonasSaas
-                      )}
                       {selectedPersonasSaas ? (
                         <PersonaGroup>
                           {Array.isArray(selectedPersonasSaas) &&
