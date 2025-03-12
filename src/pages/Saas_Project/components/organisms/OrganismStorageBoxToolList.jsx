@@ -133,9 +133,17 @@ import {
   DESIGN_ANALYSIS_EMOTION_SCALE,
   DESIGN_ANALYSIS_FILE_NAMES,
   IDEA_GENERATOR_PURPOSE,
+  IS_PERSONA_ACCESSIBLE,
+  PERSONA_STEP,
+  PROJECT_ID,
+  PROJECT_REPORT_ID,
+  REPORT_LOAD_BUTTON_STATE,
+  PROJECT_SAAS,
 } from "../../../AtomStates";
 
 const OrganismStorageBoxToolList = ({ toolListSaas }) => {
+  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
+  const project = projectSaas;
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -416,6 +424,18 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [ideaGeneratorPurpose, setIdeaGeneratorPurpose] = useAtom(
     IDEA_GENERATOR_PURPOSE
   );
+
+  const [reportLoadButtonState, setReportLoadButtonState] = useAtom(
+    REPORT_LOAD_BUTTON_STATE
+  );
+
+  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
+    IS_PERSONA_ACCESSIBLE
+  );
+  const [reportId, setReportId] = useAtom(PROJECT_REPORT_ID);
+  const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
+  const [projectId, setProjectId] = useAtom(PROJECT_ID);
+
   const saveConversation = (data) => {
     // 대화 저장 로직 구현
     console.log("대화 저장:", data);
@@ -579,7 +599,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
     // 대시보드에서 자세히 보기로 이동하는 플래그 설정
     sessionStorage.setItem("fromDashboard", "true");
 
-    if (conversationType === "expert") {
+    if (conversationType === "chat") {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get(
@@ -763,7 +783,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
       } catch (error) {
         console.error("대화 내용 가져오기 오류:", error);
       }
-    } else {
+    } else if (conversationType === "tool") {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
 
@@ -908,6 +928,27 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
       } catch (error) {
         console.error("대화 내용 가져오기 오류:", error);
       }
+    } else if (conversationType === "interviewSingle") {
+      console.log("🚀 ~ navigateToInterviewReportPage ~ reportId:", reportId);
+      setProjectId(project._id);
+      setReportId(conversationId);
+      // setPersonaStep(4);
+      setReportLoadButtonState(true);
+      setIsPersonaAccessible(true);
+
+      setPersonaStep(4);
+
+      navigate(`/Persona/4/Single`);
+    } else if (conversationType === "interviewGroup") {
+      // console.log("🚀 ~ navigateToInterviewReportPage ~ reportId:", reportId);
+      setProjectId(project._id);
+      setReportId(conversationId);
+      // setPersonaStep(4);
+      setReportLoadButtonState(true);
+      setIsPersonaAccessible(true);
+
+      setPersonaStep(4);
+      navigate(`/Persona/4`);
     }
   };
 
@@ -997,7 +1038,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
                       onClick={() =>
                         handleConversationClick(
                           tool._id || tool.id,
-                          tool.type || "expert"
+                          tool.toolType
                         )
                       }
                     >
@@ -1005,7 +1046,9 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
                     </Button>
                   </td>
                   <td style={{ textAlign: "center" }}>
-                    <Button None onClick={() => setIsDeletePopupOpen(true)}><img src={images.Trash} alt="" /></Button>
+                    <Button None onClick={() => setIsDeletePopupOpen(true)}>
+                      <img src={images.Trash} alt="" />
+                    </Button>
                   </td>
                 </tr>
               ))}

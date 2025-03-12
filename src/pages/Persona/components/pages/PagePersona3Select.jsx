@@ -498,7 +498,7 @@ const PagePersona3Select = () => {
                 <BoxWrap NoData>
                   <img src={images.PeopleFillPrimary2} alt="" />
 
-                  <Body2 color="gray700" align="center">
+                  <Body2 color="gray700" align="center !important">
                     현재 대화가 가능한 활성 페르소나가 없습니다<br />
                     페르소나 생성 요청을 진행하여 페르소나를 활성화해주세요
                   </Body2>
