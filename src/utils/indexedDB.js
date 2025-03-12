@@ -185,7 +185,6 @@ export const getAllRecordsFromIndexedDB = async () => {
 };
 
 export const createChatOnServer = async (projectId) => {
- 
   try {
     const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
     // console.log("token");
@@ -1934,7 +1933,6 @@ export const AlarmList = async (isLoggedIn) => {
 
 //TOOL 생성 api
 export const createToolOnServer = async (data, isLoggedIn) => {
- 
   if (isLoggedIn) {
     try {
       const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
@@ -1989,45 +1987,45 @@ export const createToolOnServer = async (data, isLoggedIn) => {
 
 //TOOL 업데이트 api
 export const updateToolOnServer = async (toolId, updateData) => {
-    try {
-      const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
-      // console.log("token", token);
+  try {
+    const token = sessionStorage.getItem("accessToken"); // 액세스 토큰을 세션에서 가져오기
+    // console.log("token", token);
 
-      if (!token) {
-        throw new Error("액세스 토큰이 존재하지 않습니다.");
-      }
-
-      if (!toolId) {
-        throw new Error("TOOL ID가 필요합니다.");
-      }
-      const PUT_DATA = {
-        id: toolId,
-        ...updateData,
-        updateDate: new Date().toLocaleString("ko-KR", {
-          timeZone: "Asia/Seoul",
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        }),
-        timestamp: Date.now(),
-      };
-      await axios.put(
-        `https://wishresearch.kr/panels/tool/update_tool`,
-        PUT_DATA,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
-            "Content-Type": "application/json",
-          },
-          withCredentials: true, // 쿠키와 함께 자격 증명을 전달 (optional)
-        }
-      );
-    } catch (error) {
-      console.error("Error updating project on server:", error);
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
     }
+
+    if (!toolId) {
+      throw new Error("TOOL ID가 필요합니다.");
+    }
+    const PUT_DATA = {
+      id: toolId,
+      ...updateData,
+      updateDate: new Date().toLocaleString("ko-KR", {
+        timeZone: "Asia/Seoul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }),
+      timestamp: Date.now(),
+    };
+    await axios.put(
+      `https://wishresearch.kr/panels/tool/update_tool`,
+      PUT_DATA,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Bearer 토큰을 헤더에 추가
+          "Content-Type": "application/json",
+        },
+        withCredentials: true, // 쿠키와 함께 자격 증명을 전달 (optional)
+      }
+    );
+  } catch (error) {
+    console.error("Error updating project on server:", error);
+  }
 };
 
 // TOOL 단건 조회
@@ -3632,7 +3630,6 @@ export const getProjectListSaasByIdFromIndexedDB = async (isLoggedIn) => {
 
 //페르소나 DB 생성 api
 export const createPersonaOnServer = async (data, isLoggedIn) => {
-
   if (isLoggedIn) {
     try {
       const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
@@ -3688,7 +3685,6 @@ export const createPersonaOnServer = async (data, isLoggedIn) => {
 
 // 페르소나 업데이트 api
 export const updatePersonaOnServer = async (updateData, isLoggedIn) => {
- 
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
@@ -3921,7 +3917,6 @@ export const InterviewXPersonaKeyStakeholderRequest = async (
 
 //페르소나 프로필정보 생성
 export const InterviewXPersonaProfileRequest = async (data, isLoggedIn) => {
-
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -3993,7 +3988,6 @@ export const getFindToolListOnServerSaas = async (
   getType,
   isLoggedIn
 ) => {
-
   if (isLoggedIn) {
     try {
       const accessToken = sessionStorage.getItem("accessToken");
@@ -4037,13 +4031,17 @@ export const getProjectDeleteListOnServer = async (size, page, isLoggedIn) => {
 };
 
 // 툴 휴지통
-export const getToolDeleteListOnServer = async (size, page, isLoggedIn) => {
+export const getToolDeleteListOnServer = async (
+  projectId,
+  size,
+  isLoggedIn
+) => {
   if (isLoggedIn) {
     try {
       const accessToken = sessionStorage.getItem("accessToken");
 
       const response = await axios.get(
-        `https://wishresearch.kr/panels/tool/delete_list?size=${size}&page=${page}`,
+        `https://wishresearch.kr/project/ToolDeleteList/${projectId}/${size}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

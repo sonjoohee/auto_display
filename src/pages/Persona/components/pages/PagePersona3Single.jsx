@@ -538,16 +538,24 @@ const PagePersona3Single = () => {
               <div className="content">
                 <TabContent5Item>
                   <div className="title">
-                    <Body1 color="gray700">인터뷰 목적 선택</Body1>
+                    <Body1 color="gray700">맞춤형 인터뷰 문항 생성</Body1>
                   </div>
 
                   <CustomizationWrap>
-                    {showCustomButton && (!customTheoryData || Object.keys(customTheoryData).length === 0) &&
-                      <BoxWrap NoData onClick={() => setShowRequestPopup(true)}>
-                        <img src={images.NoData} alt="no data" />
-                        <Body2 color="gray700" align="center">원하는 내용이 없다면, 목적에 따른 문항을 생성해보세요</Body2>
-                      </BoxWrap>
-                    }
+                    {showCustomButton &&
+                      (!customTheoryData ||
+                        Object.keys(customTheoryData).length === 0) && (
+                        <BoxWrap
+                          NoData
+                          onClick={() => setShowRequestPopup(true)}
+                        >
+                          <img src={images.NoData} alt="no data" />
+                          <Body2 color="gray700" align="center">
+                            페르소나에게 어떤 인사이트를 얻고 싶은가요? 원하는
+                            목적을 직접 입력하세요
+                          </Body2>
+                        </BoxWrap>
+                      )}
 
                     <OrganismCustomization
                       customizations={customizations}
@@ -558,7 +566,7 @@ const PagePersona3Single = () => {
                       setShowCustomButton={setShowCustomButton}
                       setShowQuestions={setShowQuestions}
                     />
-                      
+
                     {purposeItemsSingleAtom.slice(3).map((purpose) => (
                       <MoleculeInterviewPurpose
                         Small
@@ -575,7 +583,6 @@ const PagePersona3Single = () => {
                         }
                       />
                     ))}
-
                   </CustomizationWrap>
                 </TabContent5Item>
               </div>
@@ -583,7 +590,7 @@ const PagePersona3Single = () => {
               <div className="content">
                 <TabContent5Item>
                   <Body1 color="gray700" align="left">
-                    💡어떤 목적을 써야할지 모르겠다면?
+                    추천 질문 템플릿
                   </Body1>
 
                   {purposeItemsSingleAtom.slice(0, 3).map((purpose) => (

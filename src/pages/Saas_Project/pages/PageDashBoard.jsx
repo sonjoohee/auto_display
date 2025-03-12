@@ -443,7 +443,7 @@ const PageDashBoard = () => {
                           </div>
                           <Sub3 color="gray700" align="left">
                             프로젝트에 따라 추천된 페르소나지만, 아직 자신의
-                            경험이나 의견을 표현할 수 없는 상태
+                            경험이나 의견을 표현할 수 없는 상태의 페르소나
                           </Sub3>
                         </div>
 
@@ -453,7 +453,7 @@ const PageDashBoard = () => {
                           </div>
                           <Sub3 color="gray700" align="left">
                             페르소나 생성 요청이 접수되어, 의견을 표현할 수
-                            있도록 생성 중인 상태
+                            있도록 생성 중인 상태의 페르소나
                           </Sub3>
                         </div>
 
@@ -463,7 +463,7 @@ const PageDashBoard = () => {
                           </div>
                           <Sub3 color="gray700" align="left">
                             생성이 완료되어 자신의 경험과 의견을 자유롭게 표현할
-                            수 있는 상태
+                            수 있는 상태의 페르소나
                           </Sub3>
                         </div>
                       </TooltipBody>
@@ -647,7 +647,7 @@ const PageDashBoard = () => {
             <div style={{ gap: "40px" }}>
               <SummaryWrap>
                 <Body1 color="gray700" align="left">
-                  프로젝트 개요
+                  프로젝트 정보
                 </Body1>
                 <ListBoxGroup Small>
                   <li>

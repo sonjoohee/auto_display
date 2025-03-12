@@ -247,7 +247,6 @@ const PageProjectCreate = () => {
           !response.response ||
           !response.response.project_analysis_multimodal
         ) {
-   
           return;
         }
 
@@ -421,7 +420,6 @@ const PageProjectCreate = () => {
           target_country: country,
         };
 
-
         const response = await InterviewXProjectAnalysisRequest(
           datas,
           isLoggedIn
@@ -434,11 +432,8 @@ const PageProjectCreate = () => {
           !response.response.project_analysis.business_analysis ||
           !response.response.project_analysis.target_customer
         ) {
-     
           return;
         }
-
-   
 
         setProjectCreateInfo(response.response.project_analysis);
 
@@ -461,7 +456,6 @@ const PageProjectCreate = () => {
         };
         setProjectTotalInfo(projectTotalData);
       } catch (error) {
-
       } finally {
         setIsLoadingScenario(false);
       }
@@ -1341,7 +1335,7 @@ const PageProjectCreate = () => {
 
                       <SummaryWrap>
                         <Body1 color="gray700" align="left">
-                          프로젝트 개요
+                          프로젝트 정보
                         </Body1>
                         <ListBoxGroup Small>
                           <li>

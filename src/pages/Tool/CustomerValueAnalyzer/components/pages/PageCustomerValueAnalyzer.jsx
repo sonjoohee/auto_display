@@ -1236,7 +1236,7 @@ const PageCustomerValueAnalyzer = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-         // console.log("새로고침 감지: URL 비교");
+          // console.log("새로고침 감지: URL 비교");
           navigate("/");
           return true;
         }
@@ -1400,7 +1400,7 @@ const PageCustomerValueAnalyzer = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="잠재 고객을 분석하고 있어요" />
+                    <AtomPersonaLoader message="선택한 페르소나의 고객 여정을 분석하고 있어요..." />
                   </div>
                 ) : (
                   <>
@@ -1463,11 +1463,16 @@ const PageCustomerValueAnalyzer = () => {
                           </Body2>
                           <SelectBox style={{ paddingRight: "20px" }}>
                             <SelectBoxTitle
-                              onClick={() => 
-                                toolStep >= 1 ? null : setIsSelectBoxOpen(!isSelectBoxOpen)
+                              onClick={() =>
+                                toolStep >= 1
+                                  ? null
+                                  : setIsSelectBoxOpen(!isSelectBoxOpen)
                               }
                               None
-                              style={{ cursor: toolStep >= 1 ? 'not-allowed' : 'pointer' }}
+                              style={{
+                                cursor:
+                                  toolStep >= 1 ? "not-allowed" : "pointer",
+                              }}
                             >
                               {selectedPurposes?.analysisScope ? (
                                 <div
@@ -1505,7 +1510,11 @@ const PageCustomerValueAnalyzer = () => {
                               <images.ChevronDown
                                 width="24px"
                                 height="24px"
-                                color={toolStep >= 1 ? palette.gray300 : palette.gray500}
+                                color={
+                                  toolStep >= 1
+                                    ? palette.gray300
+                                    : palette.gray500
+                                }
                                 style={{
                                   transform: isSelectBoxOpen
                                     ? "rotate(180deg)"
@@ -1719,8 +1728,8 @@ const PageCustomerValueAnalyzer = () => {
                 <div className="title">
                   <H3 color="gray800">Key Buying Factor</H3>
                   <Body3 color="gray800">
-                    각 페르소나 별로 어떤 구매 핵심 요소가 도출되었을까요?
-                    우리는 어떤 요소에 집중하면 좋을까요?
+                    각 페르소나별 핵심 구매 요인은 무엇이며, 우리는 어떤 요소에
+                    집중해야 할까요?
                   </Body3>
                 </div>
 
@@ -1757,8 +1766,8 @@ const PageCustomerValueAnalyzer = () => {
 
                   <BottomBar W100>
                     <Body2 color="gray800">
-                      {selectedPersonas.length}명의 페르소나에 대한 잠재고객
-                      가능성을 분석해드릴게요
+                      {selectedPersonas.length}명의 페르소나가 구매를 결정하는
+                      이유를 분석해드릴게요
                     </Body2>
                     <Button
                       Large
