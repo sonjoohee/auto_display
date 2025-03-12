@@ -460,6 +460,15 @@ const PageIdeaGenerator = () => {
           imageKey: persona.imageKey || "",
         }));
 
+        await updateToolOnServer(
+          toolId,
+          {
+            ideaGeneratorSelectedPersona: selectedCustomers,
+          },
+          isLoggedIn
+        );
+
+
         try {
           const businessData = {
             business: ideaGeneratorInfo?.business || "",
@@ -469,14 +478,7 @@ const PageIdeaGenerator = () => {
 
           setIdeaGeneratorSelectedPersona(selectedCustomers);
 
-          await updateToolOnServer(
-            toolId,
-            {
-              ideaGeneratorSelectedPersona: selectedCustomers,
-            },
-            isLoggedIn
-          );
-
+    
           const response = await InterviewXIdeaGeneratorIdeaRequest(
             businessData,
             isLoggedIn
@@ -495,8 +497,7 @@ const PageIdeaGenerator = () => {
               [index]: "completed",
             }));
           }
-        } catch (error) {
-        }
+        } catch (error) {}
       }
 
       // 서버에 결과 저장
@@ -508,8 +509,7 @@ const PageIdeaGenerator = () => {
         },
         isLoggedIn
       );
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const fetchIdeaGeneratorFinalReport = async () => {
@@ -896,7 +896,6 @@ const PageIdeaGenerator = () => {
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
 
-
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
     setSelectedPersonaButtons((prev) => {
@@ -948,7 +947,8 @@ const PageIdeaGenerator = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          navigate("/"); // 새로고침 시 루트 페이지로 이동
+          console.log("새로고침 감지: URL 비교");
+          navigate("/");
           return true;
         }
 

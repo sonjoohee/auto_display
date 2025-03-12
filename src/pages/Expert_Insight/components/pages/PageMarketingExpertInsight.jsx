@@ -483,7 +483,7 @@ const PageMarketingExpertInsight = () => {
           } catch (error) {
             setIsLoadingPage(false); // 로딩 완료
             setIsExpertInsightAccessible(true);
-            console.error("Failed to create conversation on server:", error);
+            //console.error("Failed to create conversation on server:", error);
             navigate(`/conversation/${conversationId}`, { replace: true });
           }
         } else {

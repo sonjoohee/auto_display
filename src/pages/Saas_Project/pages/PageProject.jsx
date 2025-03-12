@@ -82,7 +82,7 @@ const PageProject = () => {
       // 현재 URL 저장
       sessionStorage.setItem("lastUrl", currentUrl);
       const lastUrl = sessionStorage.getItem("lastUrl");
-      console.log("🚀 ~ detectRefresh ~ lastUrl:", lastUrl);
+ 
     };
     // 함수 실행
     detectRefresh();
@@ -126,7 +126,7 @@ const PageProject = () => {
           setProjectList(sortedList);
         }
       } catch (error) {
-        console.error("프로젝트 목록을 불러오는데 실패했습니다:", error);
+
       }
     };
     loadProjectList();

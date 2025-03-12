@@ -19,7 +19,7 @@ const MoleculePersonaListItemSaas = ({
   onPersonaButtonClick,
   onSelect,
 }) => {
-  console.log("🚀 ~ MoleculePersonaListItemSaas ~ personaInfo:", personaInfo);
+
   return (
     <ListBoxItem NoBorder>
       <Persona

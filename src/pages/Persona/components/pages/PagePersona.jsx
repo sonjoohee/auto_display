@@ -110,7 +110,7 @@ const PagePersona = () => {
           } catch (error) {
             // setIsLoadingPage(false); // 로딩 완료
             setIsPersonaAccessible(true);
-            console.error("Failed to create project on server:", error);
+            // console.error("Failed to create project on server:", error);
             navigate(`/Persona`, { replace: true });
           }
         }

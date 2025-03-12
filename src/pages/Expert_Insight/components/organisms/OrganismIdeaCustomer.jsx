@@ -218,7 +218,7 @@ const OrganismIdeaCustomer = () => {
       setIsLoading(false);
 
     } catch (error) {
-      console.error("Error loading data:", error);
+      //console.error("Error loading data:", error);
     }
   };
 

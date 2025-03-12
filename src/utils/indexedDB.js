@@ -185,7 +185,7 @@ export const getAllRecordsFromIndexedDB = async () => {
 };
 
 export const createChatOnServer = async (projectId) => {
-  console.log("🚀 ~ createChatOnServer ~ projectId:", projectId);
+ 
   try {
     const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
     // console.log("token");
@@ -1934,7 +1934,7 @@ export const AlarmList = async (isLoggedIn) => {
 
 //TOOL 생성 api
 export const createToolOnServer = async (data, isLoggedIn) => {
-  console.log("🚀 ~ createToolOnServer ~ data:", data);
+ 
   if (isLoggedIn) {
     try {
       const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
@@ -3632,7 +3632,7 @@ export const getProjectListSaasByIdFromIndexedDB = async (isLoggedIn) => {
 
 //페르소나 DB 생성 api
 export const createPersonaOnServer = async (data, isLoggedIn) => {
-  console.log("🚀 ~ createPersonaOnServer ~ data:", data);
+
   if (isLoggedIn) {
     try {
       const token = sessionStorage.getItem("accessToken"); // 세션에서 액세스 토큰 가져오기
@@ -3688,7 +3688,7 @@ export const createPersonaOnServer = async (data, isLoggedIn) => {
 
 // 페르소나 업데이트 api
 export const updatePersonaOnServer = async (updateData, isLoggedIn) => {
-  console.log("🚀 ~ updatePersonaOnServer ~ updateData:", updateData);
+ 
   if (isLoggedIn) {
     // 사용자 로그인 시 서버에 저장
     try {
@@ -3921,7 +3921,7 @@ export const InterviewXPersonaKeyStakeholderRequest = async (
 
 //페르소나 프로필정보 생성
 export const InterviewXPersonaProfileRequest = async (data, isLoggedIn) => {
-  console.log("🚀 ~ InterviewXPersonaProfileRequest ~ data:", data);
+
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -3966,7 +3966,7 @@ export const getToolListOnServerSaas = async (
   getCount,
   isLoggedIn
 ) => {
-  console.log("🚀 ~ projectId:", projectId);
+  // console.log("🚀 ~ projectId:", projectId);
   if (isLoggedIn) {
     try {
       const accessToken = sessionStorage.getItem("accessToken");
@@ -3993,7 +3993,7 @@ export const getFindToolListOnServerSaas = async (
   getType,
   isLoggedIn
 ) => {
-  console.log("🚀 ~ projectId:", projectId);
+
   if (isLoggedIn) {
     try {
       const accessToken = sessionStorage.getItem("accessToken");

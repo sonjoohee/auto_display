@@ -240,7 +240,7 @@ const PagePersona3Select = () => {
         setUserCredits(userCreditValue);
       }
     } catch (error) {
-      console.error("크레딧 체크 실패:", error);
+      // console.error("크레딧 체크 실패:", error);
       setShowCreditPopup(true);
       return;
     }
@@ -302,7 +302,7 @@ const PagePersona3Select = () => {
   };
 
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
-  console.log("personaListSaas", personaListSaas);
+
 
   const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
 
@@ -325,7 +325,7 @@ const PagePersona3Select = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
+         
           navigate("/");
           return true;
         }
@@ -373,7 +373,7 @@ const PagePersona3Select = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
-  console.log("selectedInterviewType:", selectedInterviewType); // 디버깅용
+
 
   return (
     <>

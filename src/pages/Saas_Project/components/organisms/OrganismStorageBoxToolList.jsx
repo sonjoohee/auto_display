@@ -443,7 +443,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
 
   const saveConversation = (data) => {
     // 대화 저장 로직 구현
-    console.log("대화 저장:", data);
+
   };
 
   // 서버에서 툴 정보 가져오기 함수
@@ -460,7 +460,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
       );
       return response.data;
     } catch (error) {
-      console.error("툴 정보 가져오기 오류:", error);
+      
       return null;
     }
   };
@@ -783,11 +783,11 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setCustomerAdditionButtonState(0);
         setIsExpertInsightAccessible(true); // 접근 가능 상태로 설정
 
-        console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
+        // console.log("🚀 ~ handleConversationClick ~ chatData:", chatData);
         // 페이지를 대화가 이어지는 형태로 전환
         navigate(`/ExpertInsight`);
       } catch (error) {
-        console.error("대화 내용 가져오기 오류:", error);
+        // console.error("대화 내용 가져오기 오류:", error);
       }
     } else if (conversationType === "tool") {
       try {
@@ -932,10 +932,10 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           navigate("/DesignAnalysis");
         }
       } catch (error) {
-        console.error("대화 내용 가져오기 오류:", error);
+
       }
     } else if (conversationType === "interviewSingle") {
-      console.log("🚀 ~ navigateToInterviewReportPage ~ reportId:", reportId);
+      // console.log("🚀 ~ navigateToInterviewReportPage ~ reportId:", reportId);
       setProjectId(project._id);
       setReportId(conversationId);
       // setPersonaStep(4);
@@ -979,7 +979,6 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const hadleDeleteTool = async (toolId) => {
     setIsDeletePopupOpen(true);
     setDeleteToolId(toolId);
-  };
 
   return (
     <>

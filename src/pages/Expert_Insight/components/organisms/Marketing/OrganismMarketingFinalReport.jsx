@@ -186,7 +186,7 @@ const OrganismMarketingFinalReport = () => {
           await saveConversation({ changingConversation: { conversation: updatedConversation, marketingFinalReportData: marketingFinalReport } });
         }
       } catch (error) {
-        console.error("Error fetching marketing final report:", error);
+        //console.error("Error fetching marketing final report:", error);
       }
     };
 

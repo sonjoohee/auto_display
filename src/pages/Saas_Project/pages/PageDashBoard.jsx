@@ -66,10 +66,7 @@ const PageDashBoard = () => {
   const uniqueChartRef = useRef();
   const stakeholderChartRef = useRef();
 
-  // useEffect(() => async () => {
-  //   const projectData = await getProjectByIdFromIndexedDB(project._id);
-  //   console.log(projectData);
-  // }, [project]);
+
 
   useEffect(() => {
     const loadPersonaList = async () => {
@@ -89,7 +86,7 @@ const PageDashBoard = () => {
           setPersonaListSaas(sortedList);
         }
       } catch (error) {
-        console.error("페르소나 목록을 불러오는데 실패했습니다:", error);
+   
       }
     };
     loadPersonaList();
@@ -103,10 +100,10 @@ const PageDashBoard = () => {
           5,
           true
         );
-        console.log(
-          "🚀 ~ loadToolList ~ savedToolListInfo:",
-          savedToolListInfo
-        );
+        // console.log(
+        //   "🚀 ~ loadToolList ~ savedToolListInfo:",
+        //   savedToolListInfo
+        // );
 
         if (savedToolListInfo) {
           const filteredList = savedToolListInfo.filter(tool => !(tool.deleteState >= 1));
@@ -119,7 +116,7 @@ const PageDashBoard = () => {
           setToolListSaas(sortedList);
         }
       } catch (error) {
-        console.error("툴 목록을 불러오는데 실패했습니다:", error);
+   
       }
     };
     loadToolList();
@@ -299,7 +296,6 @@ const PageDashBoard = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
           navigate("/");
           return true;
         }
@@ -347,7 +343,6 @@ const PageDashBoard = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
-
   const [selectedValues, setSelectedValues] = useState({
     business: "",
     industry: "",
