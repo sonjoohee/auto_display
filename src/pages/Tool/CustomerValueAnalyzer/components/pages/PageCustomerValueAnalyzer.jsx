@@ -865,6 +865,15 @@ const PageCustomerValueAnalyzer = () => {
           // API 호출 성공 시 카드 상태를 'completed'로 설정
           if (response?.response?.customer_value_factor) {
             results.push(response.response.customer_value_factor);
+            setCustomerValueAnalyzerFactor((prev) => {
+              // prev가 undefined인 경우 빈 배열로 초기화
+              const currentFactors = Array.isArray(prev) ? prev : [];
+              // 새로운 factor가 존재하는 경우에만 추가
+              return [
+                ...currentFactors,
+                response.response.customer_value_factor
+              ];
+            });
             setCardStatusesFactor((prev) => ({
               ...prev,
               [i]: "completed",
@@ -878,7 +887,7 @@ const PageCustomerValueAnalyzer = () => {
         }
       }
 
-      setCustomerValueAnalyzerFactor(results);
+      // setCustomerValueAnalyzerFactor(results);
 
       await updateToolOnServer(
         toolId,

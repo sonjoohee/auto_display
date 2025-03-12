@@ -460,6 +460,15 @@ const PageIdeaGenerator = () => {
           imageKey: persona.imageKey || "",
         }));
 
+        await updateToolOnServer(
+          toolId,
+          {
+            ideaGeneratorSelectedPersona: selectedCustomers,
+          },
+          isLoggedIn
+        );
+
+
         try {
           const businessData = {
             business: ideaGeneratorInfo?.business || "",
@@ -469,14 +478,7 @@ const PageIdeaGenerator = () => {
 
           setIdeaGeneratorSelectedPersona(selectedCustomers);
 
-          await updateToolOnServer(
-            toolId,
-            {
-              ideaGeneratorSelectedPersona: selectedCustomers,
-            },
-            isLoggedIn
-          );
-
+    
           const response = await InterviewXIdeaGeneratorIdeaRequest(
             businessData,
             isLoggedIn

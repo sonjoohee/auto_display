@@ -247,7 +247,7 @@ const PageProjectCreate = () => {
           !response.response ||
           !response.response.project_analysis_multimodal
         ) {
-          console.error("유효하지 않은 응답입니다.");
+   
           return;
         }
 
@@ -258,7 +258,6 @@ const PageProjectCreate = () => {
           }))
         );
 
-        console.log(response);
         setProjectCreateInfo(response.response.project_analysis_multimodal);
 
         setEditingText({
@@ -286,7 +285,6 @@ const PageProjectCreate = () => {
         };
         setProjectTotalInfo(projectTotalData);
       } catch (error) {
-        console.error("데이터 업로드 중 오류 발생:", error);
       } finally {
         setIsLoadingScenario(false);
       }
@@ -423,7 +421,6 @@ const PageProjectCreate = () => {
           target_country: country,
         };
 
-        console.log(datas);
 
         const response = await InterviewXProjectAnalysisRequest(
           datas,
@@ -437,11 +434,11 @@ const PageProjectCreate = () => {
           !response.response.project_analysis.business_analysis ||
           !response.response.project_analysis.target_customer
         ) {
-          console.error("유효하지 않은 응답입니다.");
+     
           return;
         }
 
-        console.log(response);
+   
 
         setProjectCreateInfo(response.response.project_analysis);
 
@@ -464,7 +461,7 @@ const PageProjectCreate = () => {
         };
         setProjectTotalInfo(projectTotalData);
       } catch (error) {
-        console.error("데이터 업로드 중 오류 발생:", error);
+
       } finally {
         setIsLoadingScenario(false);
       }
