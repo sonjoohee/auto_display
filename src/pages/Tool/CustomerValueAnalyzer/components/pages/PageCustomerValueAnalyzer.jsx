@@ -1745,7 +1745,7 @@ const PageCustomerValueAnalyzer = () => {
                   </Body3>
                 </div>
 
-                <div className="content">
+                <div className="content" style={{ marginBottom: "320px" }}>
                   <CardGroupWrap column>
                     {customerValueAnalyzerSelectedPersona.map(
                       (persona, index) => {
