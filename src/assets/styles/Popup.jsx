@@ -344,7 +344,8 @@ export const ModalPopup = styled(AlertPopup)`
     : "32px"
   )};
   // max-width: 800px;
-  height: ${(props) => (props.Wide1000 ? "100%" : "auto")};
+  height: ${(props) => (props.Wide1000 ? "100%" :  "auto")};
+  height: ${(props) => (props.Wide ? "100%" :  "auto")};
   max-height: ${(props) => (
     props.Wide1000 
     ? "800px" 

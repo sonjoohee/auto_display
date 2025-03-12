@@ -1737,7 +1737,7 @@ export const Persona = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  // border-radius: ${(props) => (props.Round ? "50%" : "0")};
+  border-radius: ${(props) => (props.Round ? "50%" : "0")};
   overflow: ${(props) => (props.Moder ? "initial" : "hidden")};
 
   > img {
