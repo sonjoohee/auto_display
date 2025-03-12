@@ -380,11 +380,11 @@ const PageDashBoard = () => {
                       {project?.projectTitle}
                     </H4>
                     <TagWrap>
-                      <ProjectTag Business="B2C">
+                      <ProjectTag Business={project?.businessModel}>
                         <images.ProjectTag color="#AF52DE" />
                       </ProjectTag>
-                      <ProjectTag Type="Information" />
-                      <ProjectTag Country="Korea" />
+                      <ProjectTag Type={project?.industryType} />
+                      <ProjectTag Country={project?.targetCountry} />
                     </TagWrap>
                   </div>
 
