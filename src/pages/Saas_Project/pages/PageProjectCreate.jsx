@@ -682,10 +682,21 @@ const PageProjectCreate = () => {
                             onClick={(e) => toggleSelectBox("business", e)}
                           >
                             <Body2
-                              color={
-                                selectedValues.business ? "gray800" : "gray300"
-                              }
+                              color={selectedValues.business ? "gray800" : "gray300"}
+                              style={{ display: "flex", alignItems: "center", gap: "4px" }}
                             >
+                              {selectedValues.business && (
+                                <images.ProjectTag 
+                                  color={
+                                    selectedValues.business === "B2C" ? "#AF52DE" :
+                                    selectedValues.business === "B2B" ? "#5856D6" :
+                                    selectedValues.business === "B2G" ? "#007AFF" :
+                                    selectedValues.business === "B2B2C" ? "#32ADE6" :
+                                    selectedValues.business === "B2B2B" ? "#30B0C7" :
+                                    "#AF52DE"
+                                  }
+                                />
+                              )}
                               {selectedValues.business || "선택해주세요"}
                             </Body2>
                             <images.ChevronDown
@@ -709,6 +720,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <images.ProjectTag color="#AF52DE" />
                                   B2C
                                 </Body2>
                               </SelectBoxItem>
@@ -718,6 +730,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <images.ProjectTag color="#5856D6" />
                                   B2B
                                 </Body2>
                               </SelectBoxItem>
@@ -727,6 +740,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <images.ProjectTag color="#007AFF" />
                                   B2G
                                 </Body2>
                               </SelectBoxItem>
@@ -736,6 +750,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <images.ProjectTag color="#32ADE6" />
                                   B2B2C
                                 </Body2>
                               </SelectBoxItem>
@@ -745,6 +760,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <images.ProjectTag color="#30B0C7" />
                                   B2B2B
                                 </Body2>
                               </SelectBoxItem>
@@ -763,10 +779,24 @@ const PageProjectCreate = () => {
                             onClick={(e) => toggleSelectBox("industry", e)}
                           >
                             <Body2
-                              color={
-                                selectedValues.industry ? "gray800" : "gray300"
-                              }
+                              color={selectedValues.industry ? "gray800" : "gray300"}
+                              style={{ display: "flex", alignItems: "center", gap: "4px" }}
                             >
+                              {selectedValues.industry && (
+                                <img 
+                                  src={
+                                    selectedValues.industry === "정보통신 및 기술 (IT, 소프트웨어, 커뮤니티, 광고, 마케팅 등)" ? images.ProjectInformation :
+                                    selectedValues.industry === "금융 및 법률 (핀테크, 인사, 법률 등)" ? images.ProjectBanking :
+                                    selectedValues.industry === "제조 및 생산 (의류, 뷰티, 식음료, 환경/에너지 등)" ? images.ProjectProduction :
+                                    selectedValues.industry === "건설 및 인프라 (부동산, 모빌리티, 물류 등)" ? images.ProjectBuild :
+                                    selectedValues.industry === "의료 및 헬스케어 (헬스케어, 바이오 등)" ? images.ProjectMedical :
+                                    selectedValues.industry === "교육 및 공공 서비스 (교육, 정부 및 공공기관 등)" ? images.ProjectEducation :
+                                    selectedValues.industry === "소비재 및 라이프스타일 (커머스, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)" ? images.ProjectConsumer :
+                                    images.ProjectEtc
+                                  } 
+                                  alt="" 
+                                />
+                            )}
                               {selectedValues.industry || "선택해주세요"}
                             </Body2>
                             <images.ChevronDown
@@ -793,6 +823,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <img src={images.ProjectInformation} alt="" />
                                   정보통신 및 기술 (IT, 소프트웨어, 커뮤니티,
                                   광고, 마케팅 등)
                                 </Body2>
@@ -806,6 +837,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <img src={images.ProjectBanking} alt="" />
                                   금융 및 법률 (핀테크, 인사, 법률 등)
                                 </Body2>
                               </SelectBoxItem>
@@ -818,6 +850,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <img src={images.ProjectProduction} alt="" />
                                   제조 및 생산 (의류, 뷰티, 식음료, 환경/에너지
                                   등)
                                 </Body2>
@@ -831,6 +864,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <img src={images.ProjectBuild} alt="" />
                                   건설 및 인프라 (부동산, 모빌리티, 물류 등)
                                 </Body2>
                               </SelectBoxItem>
@@ -843,6 +877,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <img src={images.ProjectMedical} alt="" />
                                   의료 및 헬스케어 (헬스케어, 바이오 등)
                                 </Body2>
                               </SelectBoxItem>
@@ -855,6 +890,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <img src={images.ProjectEducation} alt="" />
                                   교육 및 공공 서비스 (교육, 정부 및 공공기관
                                   등)
                                 </Body2>
@@ -868,6 +904,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <img src={images.ProjectConsumer} alt="" />
                                   소비재 및 라이프스타일 (커머서, 리빙, 유아,
                                   펫, 여행, 콘텐츠, 게임 등)
                                 </Body2>
@@ -878,6 +915,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <img src={images.ProjectEtc} alt="" />
                                   기타
                                 </Body2>
                               </SelectBoxItem>
@@ -896,10 +934,22 @@ const PageProjectCreate = () => {
                             onClick={(e) => toggleSelectBox("country", e)}
                           >
                             <Body2
-                              color={
-                                selectedValues.country ? "gray800" : "gray300"
-                              }
+                              color={selectedValues.country ? "gray800" : "gray300"}
+                              style={{ display: "flex", alignItems: "center", gap: "4px" }}
                             >
+                              {selectedValues.country && (
+                                <img 
+                                  src={
+                                    selectedValues.country === "대한민국" ? images.ProjectKorea :
+                                    selectedValues.country === "미국" ? images.ProjectUsa :
+                                    selectedValues.country === "중국" ? images.ProjectChina :
+                                    selectedValues.country === "일본" ? images.ProjectJapan :
+                                    selectedValues.country === "베트남" ? images.ProjectVietnam :
+                                    images.ProjectKorea
+                                  } 
+                                  alt="" 
+                                />
+                              )}
                               {selectedValues.country || "선택해주세요"}
                             </Body2>
                             <images.ChevronDown
@@ -923,6 +973,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <img src={images.ProjectKorea} alt="" />
                                   대한민국
                                 </Body2>
                               </SelectBoxItem>
@@ -932,6 +983,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <img src={images.ProjectUsa} alt="" />
                                   미국
                                 </Body2>
                               </SelectBoxItem>
@@ -941,6 +993,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <img src={images.ProjectChina} alt="" />
                                   중국
                                 </Body2>
                               </SelectBoxItem>
@@ -950,6 +1003,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <img src={images.ProjectJapan} alt="" />
                                   일본
                                 </Body2>
                               </SelectBoxItem>
@@ -959,6 +1013,7 @@ const PageProjectCreate = () => {
                                 }
                               >
                                 <Body2 color="gray700" align="left">
+                                  <img src={images.ProjectVietnam} alt="" />
                                   베트남
                                 </Body2>
                               </SelectBoxItem>
