@@ -477,7 +477,7 @@ const PagePersona4 = () => {
     setReportDescriptionLoadButtonState(false);
     setProjectLoadButtonState(true);
     setIsPersonaAccessible(true);
-    navigate(`/Persona/2`);
+    navigate(`/AiPersona`);
   };
 
   return (
@@ -834,13 +834,13 @@ const PagePersona4 = () => {
                         <PersonaItem key={index}>
                           <Persona color="Linen" size="Large" Round>
                             <img
-                              src={`/ai_person/${personaItem.personaImg}.png`}
+                              src={`/ai_person/${personaItem.imageKey}.png`}
                               alt="페르소나"
                             />
                           </Persona>
                           <PersonaText>
                             <Caption1 color="gray800" align="left">
-                              {personaItem.persona || "성향 정보 없음"}
+                              {personaItem.personaName || "성향 정보 없음"}
                             </Caption1>
                             <PersonaInfo>
                               <span>{personaItem.gender || "성별"}</span>

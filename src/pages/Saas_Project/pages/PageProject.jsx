@@ -39,10 +39,9 @@ const PageProject = () => {
 
   const handleWarningClose = () => {
     setIsWarningPopupOpen(false);
+    setShowWarning(false);
   };
   const handleWarningContinue = () => {
-    // setIsWarningPopupOpen(false);
-    // navigate("/ProjectCreate");
     if (selectedProject) {
       // 여기에 실제 프로젝트 삭제 로직 구현
       const updatedProjects = projectList.filter(
@@ -52,6 +51,10 @@ const PageProject = () => {
     }
     setShowWarning(false);
     setSelectedProject(null);
+  };
+  const handleStart = () => {
+    setIsWarningPopupOpen(false);
+    navigate("/ProjectCreate");
   };
   useEffect(() => {
     // 새로고침 감지 함수
@@ -197,7 +200,7 @@ const PageProject = () => {
           confirmText="시작"
           isModal={false}
           onCancel={handleWarningClose}
-          onConfirm={handleWarningContinue}
+          onConfirm={handleStart}
         />
       )}
     </>

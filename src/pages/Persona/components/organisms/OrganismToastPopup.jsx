@@ -25,6 +25,7 @@ import {
   SELECTED_PERSONA_LIST,
   PROJECT_TOTAL_INFO,
   PROJECT_CREATE_INFO,
+  PROJECT_SAAS,
 } from "../../../AtomStates";
 import personaImages from "../../../../assets/styles/PersonaImages";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
@@ -36,6 +37,8 @@ import { InterviewXInterviewReportRequest } from "../../../../utils/indexedDB";
 import { InterviewXInterviewReportAdditionalRequest } from "../../../../utils/indexedDB";
 
 const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
+  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
+  const project = projectSaas;
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
@@ -837,7 +840,10 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     setIsPersonaAccessible(true);
     try {
       // 인터뷰 완료 후 결과 저장하기 위해 새로운 리포트 생성 (나중에 리포트 조회)
-      let newReportId = await createProjectReportOnServer(isLoggedIn);
+      let newReportId = await createProjectReportOnServer(
+        project._id,
+        "interviewGroup"
+      );
       setReportId(newReportId); // 생성된 대화 ID 설정
     } catch (error) {
       console.error("Failed to create project on server:", error);

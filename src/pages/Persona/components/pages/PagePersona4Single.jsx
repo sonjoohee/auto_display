@@ -492,7 +492,7 @@ const PagePersona4 = () => {
     setReportDescriptionLoadButtonState(false);
     setProjectLoadButtonState(true);
     setIsPersonaAccessible(true);
-    navigate(`/Persona/2`);
+    navigate(`/AiPersona`);
   };
 
   const handleTabClick = (tabNumber) => {
@@ -877,13 +877,13 @@ const PagePersona4 = () => {
                         <PersonaInformation>
                           <Persona color="Linen" size="Large" Round>
                             <img
-                              src={`/ai_person/${selectedPersonaList[0]?.personaImg}.png`}
+                              src={`/ai_person/${selectedPersonaList[0]?.imageKey}.png`}
                               alt="페르소나"
                             />
                           </Persona>
                           <div className="info">
                             <Body1>
-                              {selectedPersonaList[0]?.persona_view || ""}
+                              {selectedPersonaList[0]?.personaName || ""}
                             </Body1>
                             <PersonaInfo>
                               <Body3 color="gray500">
@@ -1398,13 +1398,14 @@ const PagePersona4 = () => {
                       <>
                         <Persona color="Linen" size="Large" Round>
                           <img
-                            src={`/ai_person/${selectedPersonaList[0]?.personaImg}.png`}
+                            src={`/ai_person/${selectedPersonaList[0]?.imageKey}.png`}
                             alt="페르소나"
                           />
                         </Persona>
                         <PersonaText>
                           <Caption1 color="gray800" align="left">
-                            {selectedPersonaList[0].persona || "성향 정보 없음"}
+                            {selectedPersonaList[0].personaName ||
+                              "성향 정보 없음"}
                           </Caption1>
                           <PersonaInfo>
                             <span>

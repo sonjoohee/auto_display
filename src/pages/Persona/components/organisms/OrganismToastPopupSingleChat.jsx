@@ -48,6 +48,7 @@ import {
   EVENT_TITLE,
   PROJECT_TOTAL_INFO,
   PROJECT_CREATE_INFO,
+  PROJECT_SAAS,
 } from "../../../../pages/AtomStates";
 import {
   updateProjectOnServer,
@@ -74,6 +75,8 @@ const OrganismToastPopupSingleChat = ({
   isComplete,
   isIndepth,
 }) => {
+  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
+  const project = projectSaas;
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
@@ -735,22 +738,17 @@ const OrganismToastPopupSingleChat = ({
           question: interviewQuestionListState[currentQuestionIndex],
           theory_data: purposeItemsSingleAtom,
           persona_info: {
-            // id: personaList.selected[0].persona_id.replace(/[^0-9]/g, ""),
             id: `saas_${personaList.selected[0]._id}`,
             name: personaList.selected[0].personaName,
-            keyword: personaList.selected[0].hasOwnProperty(
-              "request_persona_type"
-            )
-              ? personaList.selected[0].keywords
-              : personaList.selected[0].persona_keyword,
-            // keyword: personaList.selected[0].persona_keyword,
-            hashtag: personaList.selected[0].lifestyle,
-            summary: personaList.selected[0].consumptionPattern,
-            request_persona_type:
-              personaList.selected[0].request_persona_type || "saas",
+            keyword: personaList.selected[0].keywords,
+            lifestyle: personaList.selected[0].lifestyle,
+            characteristics: personaList.selected[0].personaCharacteristics,
+            consumption_pattern: personaList.selected[0].consumptionPattern,
+            request_persona_type: "saas",
           },
           last_interview: lastInterview,
         };
+        console.log("🚀 ~ processInterview ~ data:", data);
 
         let response = await InterviewXPersonaSingleInterviewRequest(
           data,
@@ -1144,7 +1142,10 @@ const OrganismToastPopupSingleChat = ({
     setIsPersonaAccessible(true);
     try {
       // 인터뷰 완료 후 결과 저장하기 위해 새로운 리포트 생성 (나중에 리포트 조회)
-      let newReportId = await createProjectReportOnServer(isLoggedIn);
+      let newReportId = await createProjectReportOnServer(
+        project._id,
+        "interviewSingle"
+      );
       setReportId(newReportId); // 생성된 대화 ID 설정
     } catch (error) {
       console.error("Failed to create project on server:", error);
@@ -1253,10 +1254,10 @@ const OrganismToastPopupSingleChat = ({
           id: `saas_${personaList.selected[0]._id}`,
           name: personaList.selected[0].personaName,
           keyword: personaList.selected[0].keywords,
-          hashtag: personaList.selected[0].lifestyle,
-          summary: personaList.selected[0].consumptionPattern,
-          request_persona_type:
-            personaList.selected[0].request_persona_type || "saas",
+          lifestyle: personaList.selected[0].lifestyle,
+          characteristics: personaList.selected[0].personaCharacteristics,
+          consumption_pattern: personaList.selected[0].consumptionPattern,
+          request_persona_type: "saas",
         },
         last_interview: indepthLastInterview,
       },
@@ -1279,15 +1280,11 @@ const OrganismToastPopupSingleChat = ({
           persona_info: {
             id: `saas_${personaList.selected[0]._id}`,
             name: personaList.selected[0].personaName,
-            keyword: personaList.selected[0].hasOwnProperty(
-              "request_persona_type"
-            )
-              ? personaList.selected[0].keywords
-              : personaList.selected[0].persona_keyword,
-            hashtag: personaList.selected[0].lifestyle,
-            summary: personaList.selected[0].consumptionPattern,
-            request_persona_type:
-              personaList.selected[0].request_persona_type || "saas",
+            keyword: personaList.selected[0].keywords,
+            lifestyle: personaList.selected[0].lifestyle,
+            characteristics: personaList.selected[0].personaCharacteristics,
+            consumption_pattern: personaList.selected[0].consumptionPattern,
+            request_persona_type: "saas",
           },
           last_interview: indepthLastInterview,
         },

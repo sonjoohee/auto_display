@@ -1954,10 +1954,10 @@ const PageCustomerValueAnalyzer = () => {
                                               textAlign: "left",
                                             }}
                                           >
-                                            {cluster.cluster_name.length > 16
+                                            {cluster.cluster_name.length > 14
                                               ? `${label} : ${cluster.cluster_name.substring(
                                                   0,
-                                                  16
+                                                  14
                                                 )}...`
                                               : `${label} : ${cluster.cluster_name}`}
                                           </Sub3>
