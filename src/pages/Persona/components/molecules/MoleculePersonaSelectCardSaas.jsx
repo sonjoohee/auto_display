@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { Body1, Sub2 } from "../../../../assets/styles/Typography";
+import { Body1, Body2, Sub2, Caption1 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import {
   Badge,
@@ -15,7 +16,9 @@ import {
   TabWrapType3,
   TabButtonType3,
   ListBoxWrap,
+  BoxWrap,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
+import images from "../../../../assets/styles/Images";
 
 const MoleculePersonaSelectCardSaas = ({
   interviewType,
@@ -26,6 +29,8 @@ const MoleculePersonaSelectCardSaas = ({
   onPersonaSelect,
   activeTab,
 }) => {
+  const navigate = useNavigate();
+
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
   const [activeTabState, setActiveTabState] = useState("my_persona");
 
@@ -210,6 +215,7 @@ const MoleculePersonaSelectCardSaas = ({
             );
 
             return (
+              <>
               <ListBoxItem
                 key={persona._id}
                 selected={isSelected}
@@ -283,6 +289,7 @@ const MoleculePersonaSelectCardSaas = ({
                   )}
                 </ListButton>
               </ListBoxItem>
+              </>
             );
           })}
     </CardGroupWrap>
