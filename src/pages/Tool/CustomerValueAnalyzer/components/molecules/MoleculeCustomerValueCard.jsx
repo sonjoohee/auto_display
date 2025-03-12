@@ -358,7 +358,7 @@ const MoleculeCustomerValueCard = ({
           }
           body={
             <>
-              <ListGroup>
+              <ListGroup style={{ alignItems: "stretch" }}>
                 {factor?.key_buying_factors?.map((factorItem, index) => (
                   <div key={index}>
                     <Body1 color="gray800" align="left">
