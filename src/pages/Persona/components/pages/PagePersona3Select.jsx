@@ -314,6 +314,65 @@ const PagePersona3Select = () => {
     }));
   };
 
+  useEffect(() => {
+    // 새로고침 감지 함수
+    const detectRefresh = () => {
+      // 현재 URL 확인
+      const currentUrl = window.location.href;
+      if (currentUrl.toLowerCase().includes("persona/3/select")) {
+        // 세션 스토리지에서 마지막 URL 가져오기
+        const lastUrl = sessionStorage.getItem("lastUrl");
+
+        // 마지막 URL이 현재 URL과 같으면 새로고침
+        if (lastUrl && lastUrl === currentUrl) {
+          console.log("새로고침 감지: URL 비교");
+          navigate("/");
+          return true;
+        }
+
+        // 현재 URL 저장
+        sessionStorage.setItem("lastUrl", currentUrl);
+      }
+
+      return false;
+    };
+
+    // beforeunload 이벤트 핸들러
+    const handleBeforeUnload = (event) => {
+      // 이벤트 취소 (표준에 따라)
+      event.preventDefault();
+      // Chrome은 returnValue 설정 필요
+      event.returnValue = "";
+
+      // 새로고침 시 루트 페이지로 이동
+      navigate("/");
+    };
+
+    // F5 키 또는 Ctrl+R 감지
+    const handleKeyDown = (event) => {
+      if (
+        (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
+        event.key === "F5"
+      ) {
+        // F5 키 코드
+        event.preventDefault();
+        navigate("/");
+      }
+    };
+
+    // 함수 실행
+    detectRefresh();
+
+    // 이벤트 리스너 등록
+    // window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("keydown", handleKeyDown);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      // window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [navigate]);
   console.log("selectedInterviewType:", selectedInterviewType); // 디버깅용
 
   return (
@@ -484,35 +543,40 @@ const PagePersona3Select = () => {
                   </ListBoxGroup>
                 </div>
 
-                <MoleculePersonaSelectCardSaas
-                  interviewType={selectedInterviewType}
-                  filteredPersonaList={personaListSaas}
-                  businessPersonaList={allBusinessPersonas.filter(
-                    (persona) => persona?.status === "complete"
-                  )}
-                  customPersonaList={customPersonaList}
-                  selectedPersonas={selectedPersonas}
-                  onPersonaSelect={setSelectedPersonas}
-                />
-                
-                <BoxWrap NoData style={{ height: "300px" }}>
-                  <img src={images.PeopleFillPrimary2} alt="" />
+                {personaListSaas &&
+                personaListSaas.some(
+                  (persona) => persona?.status === "complete"
+                ) ? (
+                  <MoleculePersonaSelectCardSaas
+                    interviewType={selectedInterviewType}
+                    filteredPersonaList={personaListSaas}
+                    businessPersonaList={allBusinessPersonas.filter(
+                      (persona) => persona?.status === "complete"
+                    )}
+                    customPersonaList={customPersonaList}
+                    selectedPersonas={selectedPersonas}
+                    onPersonaSelect={setSelectedPersonas}
+                  />
+                ) : (
+                  <BoxWrap NoData style={{ height: "300px" }}>
+                    <img src={images.PeopleFillPrimary2} alt="" />
 
-                  <Body2 color="gray700" align="center !important">
-                    현재 대화가 가능한 활성 페르소나가 없습니다<br />
-                    페르소나 생성 요청을 진행하여 페르소나를 활성화해주세요
-                  </Body2>
+                    <Body2 color="gray700" align="center !important">
+                      현재 대화가 가능한 활성 페르소나가 없습니다
+                      <br />
+                      페르소나 생성 요청을 진행하여 페르소나를 활성화해주세요
+                    </Body2>
 
-                  <Button
-                    Medium
-                    Outline
-                    Fill
-                    onClick={() => navigate("/AiPersona")}
-                  >
-                    <Caption1 color="gray700">AI Person 생성 요청</Caption1>
-                  </Button>
-                </BoxWrap>
-
+                    <Button
+                      Medium
+                      Outline
+                      Fill
+                      onClick={() => navigate("/AiPersona")}
+                    >
+                      <Caption1 color="gray700">AI Person 생성 요청</Caption1>
+                    </Button>
+                  </BoxWrap>
+                )}
 
                 {/* <OrganismPersonaListSaas
                   personaListSaas={personaListSaas}
