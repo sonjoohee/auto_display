@@ -418,7 +418,7 @@ const PageDesignAnalysis = () => {
       await updateToolOnServer(
         responseToolId,
         {
-          completed_step: 1,
+          completedStep: 1,
           designEmotionAnalysis: response.response.design_emotion_analysis,
           business: businessDescription,
           imageName: uploadedFiles.map((file) => ({
@@ -464,7 +464,7 @@ const PageDesignAnalysis = () => {
       await updateToolOnServer(
         toolId,
         {
-          completed_step: 2,
+          completedStep: 2,
           designSelectedPersona: selectedPersonaData,
         },
         isLoggedIn
@@ -565,7 +565,7 @@ const PageDesignAnalysis = () => {
           await updateToolOnServer(
             toolId,
             {
-              completed_step: 3,
+              completedStep: 3,
               designEmotionTarget: response.response.design_emotion_target,
               designEmotionScale: oceanResponse.response.design_emotion_scale,
               designSelectedPersona: selectedPersonaData,
@@ -689,7 +689,7 @@ const PageDesignAnalysis = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
+         // console.log("새로고침 감지: URL 비교");
           navigate("/");
           return true;
         }
