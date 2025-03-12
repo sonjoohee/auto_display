@@ -293,7 +293,7 @@ const MoleculeHeader = () => {
                 : isProjectCreatePage
                 ? "새 프로젝트 생성"
                 : "새로운 프로젝트"}
-              {(isPersona3Page ||
+              {/* {(isPersona3Page ||
                 isPersona3SinglePage ||
                 isPersona3MultiplePage ||
                 isPersona3PageSelect ||
@@ -313,7 +313,7 @@ const MoleculeHeader = () => {
                     </>
                   )}
                 </>
-              )}
+              )} */}
             </Title>
           </>
         )}
