@@ -503,17 +503,17 @@ const PageMain = () => {
     const fetchCreditInfo = async () => {
       try {
         if (isLoggedIn) {
-        const response = await CreditInfo(isLoggedIn);
+          const response = await CreditInfo(isLoggedIn);
 
-        if (response) {
-          setCreditRequestCustomPersona(response.request_custom_persona);
-          setCreditRequestBusinessPersona(response.request_business_persona);
-          setCreditCustomTheory(response.custom_theory);
-          setCreditAdditionalQuestion(response.additional_question);
-          setCreditIndepthInterview(response.indepth_interview);
-          setEventTitle(response.event_title);
-          setEventState(response.event_state);
-          setTrialState(response.trial_state);
+          if (response) {
+            setCreditRequestCustomPersona(response.request_custom_persona);
+            setCreditRequestBusinessPersona(response.request_business_persona);
+            setCreditCustomTheory(response.custom_theory);
+            setCreditAdditionalQuestion(response.additional_question);
+            setCreditIndepthInterview(response.indepth_interview);
+            setEventTitle(response.event_title);
+            setEventState(response.event_state);
+            setTrialState(response.trial_state);
           }
         }
       } catch (error) {
@@ -1299,7 +1299,6 @@ const PageMain = () => {
                     </div>
                   </div>
                 </ExploreCard>,
-
 
                 <ExploreCard
                   Research

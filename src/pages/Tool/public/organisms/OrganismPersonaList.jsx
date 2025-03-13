@@ -211,7 +211,12 @@ const OrganismPersonaList = ({
             {/* My Persona 탭에서 데이터가 없을 때만 표시 */}
             {activeTab === "my_persona" &&
               !personaListSaas.some((persona) => persona.favorite === true) && (
-                <BoxWrap NoData Border onClick={() => navigate("/AiPersona")}>
+                <BoxWrap
+                  Hover
+                  NoData
+                  Border
+                  onClick={() => navigate("/AiPersona")}
+                >
                   <img src={images.PeopleStarFillPrimary} alt="" />
                   <Body2 color="gray500" align="center !important">
                     즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서

@@ -256,7 +256,7 @@ const PageCustomerValueAnalyzer = () => {
           const selectedTargets = customerValueAnalyzerSelectedPersona.map(
             (persona) => persona.target
           );
-       
+
           // customerValueAnalyzerPersona가 있는지 확인하고 매칭
           if (
             Array.isArray(customerValueAnalyzerPersona) &&
@@ -289,17 +289,22 @@ const PageCustomerValueAnalyzer = () => {
         // }
 
         // ... existing code ...
-      if (Array.isArray(customerValueAnalyzerFactor) && customerValueAnalyzerFactor.length > 0) {
-        setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
-        } else if (customerValueAnalyzerFactor.length === 0 && completedStepsArray.length === 2) {
-        setActiveTab(2);
-        setToolStep(1);
-        setCompletedSteps(completedStepsArray.slice(0, -1));
+        if (
+          Array.isArray(customerValueAnalyzerFactor) &&
+          customerValueAnalyzerFactor.length > 0
+        ) {
+          setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
+        } else if (
+          customerValueAnalyzerFactor.length === 0 &&
+          completedStepsArray.length === 2
+        ) {
+          setActiveTab(2);
+          setToolStep(1);
+          setCompletedSteps(completedStepsArray.slice(0, -1));
         }
 
         // console.log("customerValueAnalyzerFactor", customerValueAnalyzerFactor);
         // console.log("completedStepsArray", completedStepsArray);
-
 
         // 최종 리포트 설정 (Step 4)
         if (customerValueAnalyzerFinalReport) {
@@ -495,7 +500,9 @@ const PageCustomerValueAnalyzer = () => {
       setIsLoading(true);
 
       // targetCustomers 배열에서 빈 값을 제거합니다.
-      const filteredTargetCustomers = targetCustomers.filter(customer => customer.trim() !== "");
+      const filteredTargetCustomers = targetCustomers.filter(
+        (customer) => customer.trim() !== ""
+      );
 
       const businessData = {
         business: selectedBusiness || businessDescription,
@@ -509,7 +516,6 @@ const PageCustomerValueAnalyzer = () => {
         businessData,
         isLoggedIn
       );
-
 
       const maxAttempts = 10;
       let attempts = 0;
@@ -781,7 +787,7 @@ const PageCustomerValueAnalyzer = () => {
       }
 
       setCustomerValueAnalyzerFactor(results);
-     
+
       await updateToolOnServer(
         toolId,
         {
@@ -855,10 +861,11 @@ const PageCustomerValueAnalyzer = () => {
         }
         attempts++;
 
-        clusteringResponse = await InterviewXCustomerValueAnalyzerClusteringRequest(
-          clusteringData,
-          isLoggedIn
-        );
+        clusteringResponse =
+          await InterviewXCustomerValueAnalyzerClusteringRequest(
+            clusteringData,
+            isLoggedIn
+          );
       }
 
       setCustomerValueAnalyzerClustering(
@@ -894,10 +901,11 @@ const PageCustomerValueAnalyzer = () => {
         }
         attempts2++;
 
-        positioningResponse = await InterviewXCustomerValueAnalyzerPositioningRequest(
-          positioningData,
-          isLoggedIn
-        );
+        positioningResponse =
+          await InterviewXCustomerValueAnalyzerPositioningRequest(
+            positioningData,
+            isLoggedIn
+          );
       }
       setCustomerValueAnalyzerPositioning(
         positioningResponse.response.customer_value_positioning
@@ -936,10 +944,11 @@ const PageCustomerValueAnalyzer = () => {
         }
         attempts3++;
 
-        finalReportResponse = await InterviewXCustomerValueAnalyzerFinalReportRequest(
-          finalReportData,
-          isLoggedIn
-        );
+        finalReportResponse =
+          await InterviewXCustomerValueAnalyzerFinalReportRequest(
+            finalReportData,
+            isLoggedIn
+          );
       }
 
       setCustomerValueAnalyzerFinalReport(
@@ -1097,8 +1106,6 @@ const PageCustomerValueAnalyzer = () => {
       </DiagramContainer>
     );
   };
-
-
 
   return (
     <>
@@ -1479,24 +1486,31 @@ const PageCustomerValueAnalyzer = () => {
 
                 <div className="content">
                   <CardGroupWrap column>
-                    {customerValueAnalyzerInfo.target_list.map((target, index) => {
-                      return (
-                        <MoleculeCustomerValueCard
-                          key={index}
-                          id={index}
-                          title={target}
-                          content={customerValueAnalyzerPersona[index]}
-                          business={customerValueAnalyzerInfo.business}
-                          status={customerValueAnalyzerJourneyMap.length === customerValueAnalyzerInfo.target_list.length ? "completed" : cardStatuses[index]}
-                          isSelected={selectedPersonas.includes(index)}
-                          onSelect={(id) => handleCheckboxChange(id)}
-                          viewType="list"
-                          journeyMapData={
-                            customerValueAnalyzerJourneyMap[index]
-                          }
-                        />
-                      );
-                    })}
+                    {customerValueAnalyzerInfo.target_list.map(
+                      (target, index) => {
+                        return (
+                          <MoleculeCustomerValueCard
+                            key={index}
+                            id={index}
+                            title={target}
+                            content={customerValueAnalyzerPersona[index]}
+                            business={customerValueAnalyzerInfo.business}
+                            status={
+                              customerValueAnalyzerJourneyMap.length ===
+                              customerValueAnalyzerInfo.target_list.length
+                                ? "completed"
+                                : cardStatuses[index]
+                            }
+                            isSelected={selectedPersonas.includes(index)}
+                            onSelect={(id) => handleCheckboxChange(id)}
+                            viewType="list"
+                            journeyMapData={
+                              customerValueAnalyzerJourneyMap[index]
+                            }
+                          />
+                        );
+                      }
+                    )}
                   </CardGroupWrap>
                   <BottomBar W100>
                     <Body2
@@ -1519,7 +1533,8 @@ const PageCustomerValueAnalyzer = () => {
                         //   (status) =>
                         //     status === "loading" || status === "waiting"
                         // )
-                        customerValueAnalyzerJourneyMap.length !== customerValueAnalyzerInfo.target_list.length
+                        customerValueAnalyzerJourneyMap.length !==
+                          customerValueAnalyzerInfo.target_list.length
                       }
                       onClick={() => handleSubmitPersonas()}
                     >
@@ -1554,7 +1569,12 @@ const PageCustomerValueAnalyzer = () => {
                           id={index}
                           title={persona.target}
                           content={persona.content}
-                          status={customerValueAnalyzerFactor.length === customerValueAnalyzerSelectedPersona.length ? "completed" : cardStatusesFactor[index]}
+                          status={
+                            customerValueAnalyzerFactor.length ===
+                            customerValueAnalyzerSelectedPersona.length
+                              ? "completed"
+                              : cardStatusesFactor[index]
+                          }
                           factor={customerValueAnalyzerFactor[index]}
                           business={customerValueAnalyzerInfo.business}
                           journeyMapData={persona.journeyMap}
@@ -1579,7 +1599,9 @@ const PageCustomerValueAnalyzer = () => {
                       Fill
                       disabled={
                         !Array.isArray(customerValueAnalyzerFactor) ||
-                        !customerValueAnalyzerFactor.every((factor) => factor) ||
+                        !customerValueAnalyzerFactor.every(
+                          (factor) => factor
+                        ) ||
                         customerValueAnalyzerFactor.length === 0
                         // toolStep >= 4 ||
                         // !customerValueAnalyzerFactor.every((factor) => factor)

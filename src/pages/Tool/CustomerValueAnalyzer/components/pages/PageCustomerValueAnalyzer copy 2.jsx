@@ -533,9 +533,6 @@ const PageCustomerValueAnalyzer = () => {
             .filter((persona) => persona !== null); // null 값을 필터링
         }
       );
-
-      console.log("filteredTargetCustomers", filteredTargetCustomers);
-
       const selectedCustomers = (selectedPersonasSaas || [])
         .map((personaId) => {
           const index = parseInt(personaId?.split("persona")?.[1] || "0", 10); // 숫자 추출
@@ -557,9 +554,6 @@ const PageCustomerValueAnalyzer = () => {
           }; // 필요한 필드만 반환
         })
         .filter((customer) => customer !== undefined); // undefined 필터링
-
-      console.log("selectedCustomers", selectedCustomers);
-
       const businessData = {
         business: project?.projectTitle || "",
         target_list: selectedCustomers || [],
@@ -572,7 +566,6 @@ const PageCustomerValueAnalyzer = () => {
         businessData,
         isLoggedIn
       );
-      console.log("🚀 ~ handleSubmitBusinessInfo ~ response:", response);
 
       const maxAttempts = 10;
       let attempts = 0;
@@ -1078,9 +1071,7 @@ const PageCustomerValueAnalyzer = () => {
   };
 
   const mermaidCode = customerValueAnalyzerPositioning?.mermaid || "";
-  console.log("mermaidCode", mermaidCode);
   const cleanMermaidCode = mermaidCode.replace(/quadrant-\d\s+[^\n]+\n/g, "");
-  console.log("cleanMermaidCode", cleanMermaidCode);
 
   // const clusterList = customerValueAnalyzerPositioning?.cluster_list || [];
 
@@ -1230,7 +1221,6 @@ const PageCustomerValueAnalyzer = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
           navigate("/");
           return true;
         }
@@ -1528,10 +1518,6 @@ const PageCustomerValueAnalyzer = () => {
                     {(
                       customerValueAnalyzerInfo?.targetList || selectedCustomers
                     ).map((target, index) => {
-                      console.log(
-                        "🚀 ~ PageCustomerValueAnalyzer ~ target:",
-                        target
-                      );
                       return (
                         <MoleculeCustomerValueCard
                           key={index}

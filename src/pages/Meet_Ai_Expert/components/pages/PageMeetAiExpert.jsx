@@ -125,9 +125,12 @@ import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 const PageMeetAiExpert = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
-  const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
-  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
-  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] = useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
+  const [strategyConsultantReportData, setStrategyConsultantReportData] =
+    useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
+  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] =
+    useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
+  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] =
+    useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
   const { saveConversation } = useSaveConversation();
   const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(
     BM_MODEL_SUGGESTION_REPORT_DATA
@@ -660,7 +663,10 @@ const PageMeetAiExpert = () => {
         },
         {
           type: "system",
-          message: index === "7" ? "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝\n📌 현재는 제품만 분석이 가능합니다" : "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
+          message:
+            index === "7"
+              ? "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝\n📌 현재는 제품만 분석이 가능합니다"
+              : "먼저 분석이 필요한 제품이나 서비스에 대해서 알려주세요 📝",
           expertIndex: -1,
         },
       ]);
@@ -843,7 +849,11 @@ const PageMeetAiExpert = () => {
                 }}
               >
                 <strong>가격 분석 전문가</strong>
-                <p>시장 데이터를 기반으로 최적의<br />가격 전략 제시 (제품 한정)</p>
+                <p>
+                  시장 데이터를 기반으로 최적의
+                  <br />
+                  가격 전략 제시 (제품 한정)
+                </p>
                 <span>
                   <img src={images.ImgPrice} alt="" />
                 </span>
@@ -1198,7 +1208,7 @@ const QuickMenu = styled.div`
     // gap: 10px;
     width: ${(props) => (props.showText ? "auto" : "40px")};
     height: 40px;
-    font-family:Pretendard, Poppins;
+    font-family: Pretendard, Poppins;
     font-size: 0.88rem;
     font-weight: 500;
     color: ${palette.white};

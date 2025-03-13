@@ -38,8 +38,10 @@ import {
   PROJECT_ID,
   IS_LOGGED_IN,
 } from "../../AtomStates";
+import { useDynamicViewport } from "../../../assets/DynamicViewport";
 
 const PageProject = () => {
+  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const navigate = useNavigate();
   const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
 
