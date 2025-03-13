@@ -303,7 +303,6 @@ const PagePersona3Select = () => {
 
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
 
-
   const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
 
   // 버튼 클릭 핸들러 추가
@@ -325,7 +324,6 @@ const PagePersona3Select = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-         
           navigate("/");
           return true;
         }
@@ -373,7 +371,6 @@ const PagePersona3Select = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
-
 
   return (
     <>
@@ -558,7 +555,11 @@ const PagePersona3Select = () => {
                     onPersonaSelect={setSelectedPersonas}
                   />
                 ) : (
-                  <BoxWrap NoData style={{ height: "300px" }}>
+                  <BoxWrap
+                    NoData
+                    style={{ height: "300px" }}
+                    onClick={() => navigate("/AiPersona")}
+                  >
                     <img src={images.PeopleFillPrimary2} alt="" />
 
                     <Body2 color="gray700" align="center !important">
