@@ -3,14 +3,14 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../assets/styles/ButtonStyle";
 import { palette } from "../assets/styles/Palette";
+import Landingimages from "../assets/styles/Landingimages";
 import images from "../assets/styles/Images";
 import { media } from "../assets/styles/Breakpoints";
 
 const PageServiceLanding = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [textColor, setTextColor] = useState("#fff");
-  const [logoColor, setLogoColor] = useState(palette.white);
+  const [logoColor, setLogoColor] = useState(palette.black);
   const [buttonColor, setButtonColor] = useState(palette.white);
   const totalSlides = 3;
   const [openFaq, setOpenFaq] = useState(null);
@@ -35,35 +35,6 @@ const PageServiceLanding = () => {
       const scrollPosition = window.scrollY;
       setScrollPosition(scrollPosition); // 스크롤 위치 업데이트
       const isMobile = window.innerWidth <= 768; // 모바일 기준 너비 설정
-
-      if (isMobile) {
-        // 모바일일 때의 스크롤 위치 조건
-        if (scrollPosition > 720) {
-          setTextColor("#000");
-          setLogoColor(palette.black);
-        } else if (scrollPosition > 0) {
-          setTextColor("#fff");
-          setLogoColor(palette.white);
-        }
-
-        if (scrollPosition > 1500) {
-          setTextColor("#fff");
-          setLogoColor(palette.white);
-        }
-      } else {
-        // PC일 때의 스크롤 위치 조건
-        if (scrollPosition > 1100) {
-          setTextColor("#000");
-          setLogoColor(palette.black);
-        } else if (scrollPosition > 0) {
-          setTextColor("#fff");
-          setLogoColor(palette.white);
-        }
-        if (scrollPosition > 2250) {
-          setTextColor("#fff");
-          setLogoColor(palette.white);
-        }
-      }
 
       if (scrollPosition < 600) {
         setButtonColor(palette.white);
@@ -203,159 +174,105 @@ const PageServiceLanding = () => {
 
   return (
     <>
-      <Header textColor={textColor} scrollPosition={scrollPosition}>
-        <h1 className="logo">
-          <images.Logo2 color={logoColor} />
-        </h1>
-        <div className="gnb">
-          <Link to="/blog">Blog</Link>
-          <Button Large Round Primary Fill onClick={() => navigate("/")}>
-            Get Started
-          </Button>
+      <Header scrollPosition={scrollPosition}>
+        <div>
+          <h1 className="logo">
+            <images.Logo2 color="black" />
+            <span>.beta</span>
+          </h1>
+          <Nav>
+            <Link to="/blog">주요 기능</Link>
+            <Link to="/blog">블로그</Link>
+          </Nav>
+          <div className="gnb">
+            <Link to="/Login">로그인</Link>
+            <Button Large Primary Fill onClick={() => navigate("/")}>
+              바로 시작하기
+            </Button>
+          </div>
         </div>
       </Header>
 
-      <SectionButtonWrap buttonColor={buttonColor}>
-        {[1, 2, 3, 4, 5, 6].map((num) => (
-          <span
-            key={num}
-            className={activeSection === num ? "active" : ""}
-            onClick={() => scrollToSection(num)}
-          >
-            {num}
-          </span>
-        ))}
-      </SectionButtonWrap>
-
       <MainVisual id="mainVisual">
-        <i />
-        <div className="visual-text pc">
-          <p>
-            EXPERIENCE
-            <span className="subtext01">SCALABLE RESEARCH</span>
-          </p>
-          <p>X</p>
-          <p>
-            PERSONA
-            <span className="subtext02">
-              HUMAN CONTEXT AI
-              <br />
-              AI FEEDBACK
-              <br />
-              AI INTERVIEW LAB
-            </span>
-          </p>
-          <p>
-            AI-DRIVEN INSIGHTS
-            <span className="subtext03">ADAPTIVE PERSONA</span>
-          </p>
-          <p>R</p>
-          <p>T</p>
+        <div className="text">
+          <h2>새로운 고객　
+            <span />
+            와 연결되는<br />가장 빠른 방법</h2>
+          <p>내 비즈니스를 위한 가장 현명한 선택</p>
+          <button type="button" onClick={() => navigate("/Login")}>나의 X 만나기</button>
         </div>
 
-        <div className="visual-text mobile">
-          <p>
-            EXPERT
-            <br />
-            PERSONA
-            <span className="subtext01">SCALABLE RESEARCH</span>
-          </p>
-          <p>
-            EXPERIENCE
-            <br />
-            AI-DRIVEN
-            <br />
-            INSIGHT
-            <span className="subtext02">
-              HUMAN CONTEXT AI
-              <br />
-              AI FEEDBACK
-              <br />
-              AI INTERVIEW LAB
-            </span>
-          </p>
-        </div>
-
-        <div className="image-wrapper blur">
-          <img src={images.ServiceLandingImages2} alt="" />
-        </div>
-        <div className="image-wrapper">
-          <img src={images.ServiceLandingImages} alt="" />
-        </div>
-
-        <div className="scroll-down" />
+        <img src={Landingimages.ImgLanding} alt="" />
       </MainVisual>
 
       <Section01 id="section01">
-        <p>
-          "X의 가능성: 경험, 맥락, 그리고 확장"
-          <br />
-          eXperience
-          <br />
-          conteXt
-          <br />
-          eXpansion
-        </p>
+        <div className="title">
+          <span>어떻게 활용할까?</span>
+          <h3>InterviewX 이렇게 활용하세요!</h3>
+          <p>사용하기 편한 많은 활용법을 통해 걱정 없이<br />우리 입맛대로 할 수 있어요</p>
+        </div>
 
-        <h2>
-          EXPERIENCE
-          <br />
-          CONTE &nbsp;&nbsp;T
-        </h2>
+        <div className="content">
+          <div className="item01">
+            <img src={Landingimages.ImgLanding01} alt="" />
+            <div>
+              <strong>비즈니스 강점과 리스크<br />AI가 빠르고 정확하게 분석!</strong>
+              <p>간단한 정보 입력과 파일 업로드만으로<br />핵심 내용과 숨은 의미까지 분석해 한눈에 정리 </p>
+            </div>
+          </div>
 
-        <strong>
-          X를 통해 페르소나와 대화하고, 통찰을 얻고,
-          <br />
-          새로운 가능성을 발견해보세요.
-        </strong>
+          <div className="item02">
+            <img src={Landingimages.ImgLanding02} alt="" />
+            <div>
+              <strong>비즈니스 강점과 리스크<br />AI가 빠르고 정확하게 분석!</strong>
+              <p>간단한 정보 입력과 파일 업로드만으로<br />핵심 내용과 숨은 의미까지 분석해 한눈에 정리 </p>
+            </div>
+          </div>
 
-        <button type="button" onClick={() => navigate("/")}>
-          Start Now
-          <span />
-        </button>
-
-        <span>"1분 만에 타겟 페르소나를 생성하고 인터뷰를 시작하세요."</span>
-
-        <div className="bg-wrapper">
-          <i className="icon01" />
-          <i className="icon02" />
-          <i className="icon03" />
+          <div className="item03">
+            <img src={Landingimages.ImgLanding03} alt="" />
+            <div>
+              <strong>비즈니스 강점과 리스크<br />AI가 빠르고 정확하게 분석!</strong>
+              <p>간단한 정보 입력과 파일 업로드만으로<br />핵심 내용과 숨은 의미까지 분석해 한눈에 정리 </p>
+            </div>
+          </div>
         </div>
       </Section01>
 
       <Section02 id="section02">
-        <div className="title">
-          <h3>AI Persona</h3>
-          <p>신뢰할 수 있는 AI Persona, 현실감 있는 대화의 시작</p>
-        </div>
+        <div>
+          <div className="title">
+            <span>고객 서비스</span>
+            <h3>혹시,<br />내가 놓친 고객은<br />없을까?</h3>
+            <button type="button" onClick={() => navigate("/Login")}>나의 X 만나기</button>
+          </div>
 
-        <div className="content">
-          <img src={images.ServiceLandingSection02} alt="" />
+          <div className="content">
+            <div className="item01">
+              <div>
+                <strong>Macro User</strong>
+                <p>일반적으로 볼 수 있는 사용자 집단이에요</p>
+              </div>
 
-          <div className="text-wrapper">
-            <p>신뢰할 수 있는 AI Persona, 현실감 있는 대화의 시작</p>
+              <img src={Landingimages.ImgLanding04} alt="" />
+            </div>
 
-            <h3>
-              "신뢰할 수 있는 데이터 연구로 탄생한 AI Persona,
-              <br />
-              대화 속에서 경험을 공유합니다."
-            </h3>
+            <div className="item02">
+              <div>
+                <strong>Unique User</strong>
+                <p>차별점을 갖고 있는 사용자 집단이에요</p>
+              </div>
 
-            <div>
-              <ul>
-                <li>
-                  <p>공공 데이터 가공 기술</p>
-                  <p>(통계청, 학술 자료, 시장 조사 데이터 등 합성 기술)</p>
-                </li>
-                <li>
-                  <p>프로파일링 패터닝 기술</p>
-                  <p>(실존하는 연령, 직업, 관심사, 라이프스타일 등 패터닝)</p>
-                </li>
-                <li>
-                  <p>동적 인터뷰 기술</p>
-                  <p>(AI 모더레이팅을 통한 1:1 심층 인터뷰 및 1:N 퀵서베이)</p>
-                </li>
-              </ul>
+              <img src={Landingimages.ImgLanding05} alt="" />
+            </div>
+
+            <div className="item03">
+              <div>
+                <strong>Key Stakeholder</strong>
+                <p>제품/서비스에 중요한 핵심 이해관계자에요</p>
+              </div>
+
+              <img src={Landingimages.ImgLanding06} alt="" />
             </div>
           </div>
         </div>
@@ -363,326 +280,79 @@ const PageServiceLanding = () => {
 
       <Section03 id="section03">
         <div className="title">
-          <h3>AI - Powered New Research</h3>
-          <p>
-            interviewX.ai로 기존의 설문조사, 인터뷰 조사를 혁신하세요!
-            <br />
-            AI 하이퍼 페르소나 + AI 모더레이터 + AI 리서처로 빠르고 정교한
-            소비자 의견 조사
-          </p>
+          <span>누구나 편하게</span>
+          <h3>다양한 툴로<br />업무도 더 스마트하게게</h3>
         </div>
 
         <div className="content">
-          <div className="box-content">
-            <div className="content-text">
-              <h4>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="65"
-                  height="64"
-                  viewBox="0 0 65 64"
-                  fill="none"
-                >
-                  <path
-                    d="M35.2264 25.6667C40.3811 25.6667 44.5597 21.488 44.5597 16.3333C44.5597 11.1787 40.3811 7 35.2264 7C30.0717 7 25.8931 11.1787 25.8931 16.3333C25.8931 21.488 30.0717 25.6667 35.2264 25.6667Z"
-                    stroke="white"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M8.55957 56.3333C8.55957 44.5507 19.3049 35 32.5596 35"
-                    stroke="white"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M35.2261 56.6665L40.1381 41.9305C40.2614 41.5628 40.4971 41.243 40.812 41.0165C41.1268 40.79 41.5049 40.6681 41.8927 40.6681C42.2806 40.6681 42.6587 40.79 42.9735 41.0165C43.2884 41.243 43.5241 41.5628 43.6474 41.9305L48.5594 56.6665M56.5594 40.6665V56.6665M37.8927 51.3332H45.8927"
-                    stroke="white"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                AI HYPER PERSONA
-              </h4>
-              <p className={openContent === 0 ? "show" : ""}>
-                실제 소비자처럼 반응하는 맞춤형 AI 페르소나 인터뷰
-              </p>
-              <ul className={openContent === 0 ? "show" : ""}>
-                <li>
-                  한 줄 아이디어만 입력하면 AI가 최적의 타겟 페르소나 자동 생성
-                </li>
-                <li>
-                  실제 인구통계 및 라이프스타일 데이터를 반영한 200+ 프로파일을
-                  갖는 페르소나 기반 인터뷰
-                </li>
-                <li>
-                  20가지 소비자 유형 + 산업별 상위 10명 페르소나 추천으로 다양한
-                  관점 분석
-                </li>
-                <li>
-                  나만의 맞춤형 페르소나 커스터마이징 가능 (Pro 모드 지원)
-                </li>
-                <li>
-                  기업 맞춤형 대량 AI 페르소나 생성 및 분석 지원 (엔터프라이즈
-                  문의)
-                </li>
-              </ul>
-            </div>
-
-            <p className={openContent === 0 ? "show" : ""}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="25"
-                height="24"
-                viewBox="0 0 25 24"
-                fill="none"
-              >
-                <path
-                  d="M2.55957 20.5V9.5H5.55957V20.5H2.55957Z"
-                  stroke="white"
-                  stroke-width="1.2"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M5.55957 9.50004C9.1119 6.21504 11.1714 4.33171 11.7381 3.85004C12.5881 3.12704 13.5481 3.43054 13.5481 5.23954C13.5481 7.04854 10.9166 8.12204 10.9166 9.50004C10.9146 9.50871 14.2949 9.50921 21.0576 9.50154C21.2547 9.50128 21.4499 9.53987 21.6321 9.6151C21.8143 9.69033 21.9799 9.80074 22.1193 9.94C22.2588 10.0793 22.3695 10.2446 22.4451 10.4267C22.5206 10.6088 22.5595 10.8039 22.5596 11.001V11.0025C22.5596 11.1998 22.5208 11.3952 22.4454 11.5775C22.3699 11.7598 22.2593 11.9254 22.1198 12.0649C21.9803 12.2045 21.8147 12.3151 21.6325 12.3907C21.4502 12.4662 21.2549 12.505 21.0576 12.505H17.5511C16.9477 16.489 16.6149 18.6555 16.5526 19.0045C16.4586 19.527 15.9596 20.5 14.5256 20.5H5.55957V9.50004Z"
-                  stroke="white"
-                  stroke-width="1.2"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              기존 리서치보다 빠르고 정밀한 소비자 이해!
-            </p>
-
-            <div className="more" onClick={() => toggleContent(0)}>
-              <span>
-                {openContent === 0 ? "세부내용 접기" : "세부내용 펼쳐보기"}
-              </span>
-              <i className={openContent === 0 ? "open" : ""} />
+          <div className="item01">
+            <div>
+              <strong>이미지 감성 분석기</strong>
+              <p>이미지 속 감점 요소를 분석해<br />시각적 데이터를 해석하고 의미 도출 </p>
             </div>
           </div>
 
-          <div className="box-content">
-            <div className="content-text">
-              <h4>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="65"
-                  height="64"
-                  viewBox="0 0 65 64"
-                  fill="none"
-                >
-                  <path
-                    d="M57.8929 32.0002C57.2609 45.5522 45.5676 56.3548 31.2396 56.3548C29.5045 56.3566 27.7836 56.1984 26.0769 55.8802C24.8529 55.6482 24.2396 55.5335 23.8129 55.6002C23.3862 55.6642 22.7809 55.9868 21.5676 56.6295C18.1163 58.468 14.1448 59.0854 10.2982 58.3815C11.7669 56.5659 12.7628 54.4147 13.1969 52.1202C13.4636 50.7068 12.8049 49.3335 11.8129 48.3282C7.3169 43.7628 4.55957 37.6135 4.55957 30.8455C4.55957 16.7575 16.5062 5.3335 31.2396 5.3335C32.5942 5.3335 33.9231 5.42772 35.2262 5.61616M31.2156 32.0002H31.2369M41.8689 32.0002H41.8929M20.5596 32.0002H20.5836"
-                    stroke="white"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M39.2261 21L44.1381 6.264C44.2614 5.89625 44.4971 5.57654 44.812 5.35002C45.1268 5.12351 45.5049 5.00165 45.8927 5.00165C46.2806 5.00165 46.6587 5.12351 46.9735 5.35002C47.2884 5.57654 47.5241 5.89625 47.6474 6.264L52.5594 21M60.5594 5V21M41.8927 15.6667H49.8927"
-                    stroke="white"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                AI MODERATOR AUTO INTERVIEW
-              </h4>
-              <p className={openContent === 1 ? "show" : ""}>
-                실시간 AI 모더레이터로 1:1, 1:N, 퀵서베이 자동 진행
-              </p>
-              <ul className={openContent === 1 ? "show" : ""}>
-                <li>
-                  1:1 인뎁스 인터뷰 – 최대 3단계 심층 질문 & 추가 질문 가능
-                </li>
-                <li>1:N 인터뷰 – 최대 5명의 페르소나와 동시 인터뷰 진행</li>
-                <li>
-                  퀵서베이 – 50명 이상 대량 응답 분석으로 빠른 시장 조사 가능
-                </li>
-                <li>
-                  실시간 미러룸 방식 – AI 인터뷰를 실시간으로 관찰하고 추가 질문
-                  가능
-                </li>
-                <li>
-                  자동화된 대량 인터뷰로 연속적인 대규모 인사이트 확보
-                  (엔터프라이즈 지원)
-                </li>
-              </ul>
-            </div>
-
-            <p className={openContent === 1 ? "show" : ""}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="25"
-                height="24"
-                viewBox="0 0 25 24"
-                fill="none"
-              >
-                <path
-                  d="M2.55957 20.5V9.5H5.55957V20.5H2.55957Z"
-                  stroke="white"
-                  stroke-width="1.2"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M5.55957 9.50004C9.1119 6.21504 11.1714 4.33171 11.7381 3.85004C12.5881 3.12704 13.5481 3.43054 13.5481 5.23954C13.5481 7.04854 10.9166 8.12204 10.9166 9.50004C10.9146 9.50871 14.2949 9.50921 21.0576 9.50154C21.2547 9.50128 21.4499 9.53987 21.6321 9.6151C21.8143 9.69033 21.9799 9.80074 22.1193 9.94C22.2588 10.0793 22.3695 10.2446 22.4451 10.4267C22.5206 10.6088 22.5595 10.8039 22.5596 11.001V11.0025C22.5596 11.1998 22.5208 11.3952 22.4454 11.5775C22.3699 11.7598 22.2593 11.9254 22.1198 12.0649C21.9803 12.2045 21.8147 12.3151 21.6325 12.3907C21.4502 12.4662 21.2549 12.505 21.0576 12.505H17.5511C16.9477 16.489 16.6149 18.6555 16.5526 19.0045C16.4586 19.527 15.9596 20.5 14.5256 20.5H5.55957V9.50004Z"
-                  stroke="white"
-                  stroke-width="1.2"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              일반적 수준의 피드백은 비싼 패널 모집 없이, 즉각적 인터뷰 실행 &
-              실시간 인사이트 확보!
-            </p>
-
-            <div className="more" onClick={() => toggleContent(1)}>
-              <span>
-                {openContent === 1 ? "세부내용 접기" : "세부내용 펼쳐보기"}
-              </span>
-              <i className={openContent === 1 ? "open" : ""} />
+          <div className="item02">
+            <div>
+              <strong>AI 브레인스토밍 툴</strong>
+              <p>AI가 타겟 고객의 니즈를 바탕으로<br />창의적인 아이디어를 발산하여 기획 지원 </p>
             </div>
           </div>
 
-          <div className="box-content">
-            <div className="content-text">
-              <h4>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="65"
-                  height="64"
-                  viewBox="0 0 65 64"
-                  fill="none"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M3.05957 5C3.05957 4.17157 3.73114 3.5 4.55957 3.5H60.5596C61.388 3.5 62.0596 4.17157 62.0596 5C62.0596 5.82843 61.388 6.5 60.5596 6.5H56.5596V7V40C56.5596 42.2091 54.7687 44 52.5596 44H40.8586L47.8619 56.2558C48.2729 56.9751 48.0231 57.8913 47.3038 58.3024C46.5845 58.7134 45.6682 58.4635 45.2572 57.7442L37.4034 44H27.7158L19.8619 57.7442C19.4509 58.4635 18.5346 58.7134 17.8154 58.3024C17.0961 57.8913 16.8462 56.9751 17.2572 56.2558L24.2605 44H12.5596C10.3504 44 8.55957 42.2091 8.55957 40V7V6.5H4.55957C3.73114 6.5 3.05957 5.82843 3.05957 5ZM11.5596 7H53.5596V40C53.5596 40.5523 53.1119 41 52.5596 41H12.5596C12.0073 41 11.5596 40.5523 11.5596 40V7ZM24.0596 24C24.0596 23.1716 23.388 22.5 22.5596 22.5C21.7311 22.5 21.0596 23.1716 21.0596 24V30C21.0596 30.8284 21.7311 31.5 22.5596 31.5C23.388 31.5 24.0596 30.8284 24.0596 30V24ZM32.5596 18.5C33.388 18.5 34.0596 19.1716 34.0596 20V30C34.0596 30.8284 33.388 31.5 32.5596 31.5C31.7311 31.5 31.0596 30.8284 31.0596 30V20C31.0596 19.1716 31.7311 18.5 32.5596 18.5ZM44.0596 16C44.0596 15.1716 43.388 14.5 42.5596 14.5C41.7311 14.5 41.0596 15.1716 41.0596 16V30C41.0596 30.8284 41.7311 31.5 42.5596 31.5C43.388 31.5 44.0596 30.8284 44.0596 30V16Z"
-                    fill="white"
-                  />
-                </svg>
-                AI RESEARCHER AUTOMATIC ANALYSIS
-              </h4>
-              <p className={openContent === 2 ? "show" : ""}>
-                맞춤형 조사 설계 & 자동 분석으로 빠른 의사결정 지원
-              </p>
-              <ul className={openContent === 2 ? "show" : ""}>
-                <li>
-                  제품 개발 단계별 맞춤형 질문 자동 추천 (아이디어~시장 확장)
-                </li>
-                <li>AI 기반 실시간 데이터 분석 및 주요 인사이트 요약 제공</li>
-                <li>
-                  ChatGPT처럼 자연어로 질문하면 AI가 자동 조사 설계 및 문항 추천
-                </li>
-                <li>
-                  비즈니스 확장 및 시장 진출 전략 수립을 위한 대량 조사 지원
-                   (엔터프라이즈 맞춤 지원)
-                </li>
-                <li>기업 맞춤형 보고서 자동 생성 (엔터프라이즈 맞춤 지원)</li>
-              </ul>
+          <div className="item03">
+            <div>
+              <strong>고객 가치 우선순위 분석기</strong>
+              <p>AI가 고객의 관심 요소를 분석하고<br />가장 중요한 가치를 우선순위로 정리</p>
             </div>
+          </div>
 
-            <p className={openContent === 2 ? "show" : ""}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="25"
-                height="24"
-                viewBox="0 0 25 24"
-                fill="none"
-              >
-                <path
-                  d="M2.55957 20.5V9.5H5.55957V20.5H2.55957Z"
-                  stroke="white"
-                  stroke-width="1.2"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M5.55957 9.50004C9.1119 6.21504 11.1714 4.33171 11.7381 3.85004C12.5881 3.12704 13.5481 3.43054 13.5481 5.23954C13.5481 7.04854 10.9166 8.12204 10.9166 9.50004C10.9146 9.50871 14.2949 9.50921 21.0576 9.50154C21.2547 9.50128 21.4499 9.53987 21.6321 9.6151C21.8143 9.69033 21.9799 9.80074 22.1193 9.94C22.2588 10.0793 22.3695 10.2446 22.4451 10.4267C22.5206 10.6088 22.5595 10.8039 22.5596 11.001V11.0025C22.5596 11.1998 22.5208 11.3952 22.4454 11.5775C22.3699 11.7598 22.2593 11.9254 22.1198 12.0649C21.9803 12.2045 21.8147 12.3151 21.6325 12.3907C21.4502 12.4662 21.2549 12.505 21.0576 12.505H17.5511C16.9477 16.489 16.6149 18.6555 16.5526 19.0045C16.4586 19.527 15.9596 20.5 14.5256 20.5H5.55957V9.50004Z"
-                  stroke="white"
-                  stroke-width="1.2"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              데이터 기반으로 신속한 인사이트 확보 & 제품 전략 최적화!
-            </p>
-
-            <div className="more" onClick={() => toggleContent(2)}>
-              <span>
-                {openContent === 2 ? "세부내용 접기" : "세부내용 펼쳐보기"}
-              </span>
-              <i className={openContent === 2 ? "open" : ""} />
+          <div className="item04">
+            <div>
+              <strong>BM 모델 시뮬레이션</strong>
+              <p>AI가 비즈니스 모델을 분석하고<br />시장에 최적화된 모델 제안 </p>
             </div>
           </div>
         </div>
       </Section03>
 
-      <Section04 id="section04" currentSlide={currentSlide}>
+      <Section04 id="section04">
         <div className="title">
-          <h3>Innovating X’s Insight</h3>
-          <p>X는 데이터를 넘어선 인사이트의 시작입니다</p>
+          <span>이런 고민이 있다면?</span>
+          <h3>InterviewX가 필요한 순간</h3>
         </div>
 
-        <div className="carousel">
-          <div
-            className="carousel-container"
-            style={{
-              cursor: isDragging ? "grabbing" : "grab",
-            }}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onMouseMove={handleMouseMove}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            <div className="carousel-item">
-              <img src={images.CarouselImg01} alt="캐러셀 이미지 1" />
-            </div>
-            <div className="carousel-item">
-              <img src={images.CarouselImg02} alt="캐러셀 이미지 2" />
-            </div>
-            <div className="carousel-item">
-              <img src={images.CarouselImg03} alt="캐러셀 이미지 3" />
+        <div className="content">
+          <div className="item01">
+            <img src={Landingimages.ImgLanding11} alt="" />
+            <div>
+              <strong>(마케팅)타겟 고객이 명확하지 않나요?</strong>
+              <p>AI 분석을 통해 반응이 좋은 고객을<br />선별하고, 광고 성과를 극대화하세요.</p>
             </div>
           </div>
 
-          <div className="carousel-indicators">
-            {[...Array(totalSlides)].map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={currentSlide === index ? "active" : ""}
-              />
-            ))}
+          <div className="item02">
+            <img src={Landingimages.ImgLanding12} alt="" />
+            <div>
+              <strong>(제품 기획) 고객 요구 불확실, 어떻게 할까요?</strong>
+              <p>실제 고객과 인터뷰하여 보이지 않는 니즈를<br />발견하고, 성공 확률이 높은 제품을 기획하세요.</p>
+            </div>
+          </div>
+
+          <div className="item03">
+            <img src={Landingimages.ImgLanding13} alt="" />
+            <div>
+              <strong>(스타트업 창업)우리 BM이 정말 최적일까요?</strong>
+              <p>시장 데이터를 분석하여 비즈니스 모델을<br />정교화하고 투자 유치 가능성을 높이세요.</p>
+            </div>
           </div>
         </div>
       </Section04>
 
       <Section05 id="section05">
-        <div className="title">
-          <h3>
-            We are
-            <br />
-            InterviewX
-          </h3>
-
-          <button type="button" onClick={() => navigate("/")}>
-            지금 시작하세요
-            <span />
-          </button>
-        </div>
-
         <FaqWrap>
           <div>
             <h3>
-              FAQ<em>?</em>
-              <span onClick={() => navigate("/blog")}>
-                Blog로 이동
-                <i />
-              </span>
+              자주 묻는 질문
             </h3>
 
             <FaqList>
@@ -713,7 +383,8 @@ const PageServiceLanding = () => {
                   </p>
                 </div>
               </li>
-              <li>
+              
+              {/* <li>
                 <button
                   onClick={() => toggleFaq(1)}
                   className={`${openFaq === 1 ? "open" : ""}`}
@@ -737,7 +408,8 @@ const PageServiceLanding = () => {
                     피드백을 제공하는 강력한 AI 리서치 도구입니다.
                   </p>
                 </div>
-              </li>
+              </li> */}
+
               <li>
                 <button
                   onClick={() => toggleFaq(2)}
@@ -794,7 +466,8 @@ const PageServiceLanding = () => {
                   </p>
                 </div>
               </li>
-              <li>
+
+              {/* <li>
                 <button
                   onClick={() => toggleFaq(4)}
                   className={`${openFaq === 4 ? "open" : ""}`}
@@ -819,7 +492,8 @@ const PageServiceLanding = () => {
                     🚀
                   </p>
                 </div>
-              </li>
+              </li> */}
+
               <li>
                 <button
                   onClick={() => toggleFaq(5)}
@@ -915,7 +589,7 @@ const PageServiceLanding = () => {
       <Footer>
         <div>
           <div className="address">
-            <images.LogoType width="201" height="32" color={palette.white} />
+            <images.LogoType width="201" height="32" color={palette.black} />
             <strong>(주)유저커넥트</strong>
 
             <div>
@@ -960,17 +634,17 @@ export default PageServiceLanding;
 
 const Header = styled.div`
   position: fixed;
-  top: 32px;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: calc(100% - 88px);
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 100;
-  padding: 10px;
-  border-radius: 8px;
-  background: transparent;
+  padding: 15px 0;
+  border-bottom: 1px solid #E0E4EB;
+  background: #fff;
   transition: background 0.3s ease;
 
   ${media.mobile} {
@@ -991,6 +665,27 @@ const Header = styled.div`
     }};
   }
 
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    max-width: 1024px;
+    width: 100%;
+    margin: 0 auto;
+   }
+
+  .logo {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    font-size: 0.88rem;
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: -0.42px;
+    color: ${palette.gray800};
+  }
+
   .logo svg {
     ${media.mobile} {
       width: 155px;
@@ -1001,15 +696,14 @@ const Header = styled.div`
   .gnb {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 20px;
 
     a {
       position: relative;
-      font-size: 1.19rem;
+      font-size: 1rem;
       font-weight: 500;
-      color: ${(props) => props.textColor};
       line-height: 1.3;
-      letter-spacing: -0.57px;
+      letter-spacing: -0.48px;
       transition: color 0.3s ease;
 
       ${media.mobile} {
@@ -1017,6 +711,12 @@ const Header = styled.div`
       }
     }
   }
+`;
+
+const Nav = styled.nav`
+  display: flex;
+  align-items: center;
+  gap: 44px;
 `;
 
 const SectionButtonWrap = styled.div`
@@ -1056,230 +756,53 @@ const SectionButtonWrap = styled.div`
 const MainVisual = styled.div`
   position: relative;
   width: 100%;
-  height: 120vh;
-  background: radial-gradient(
-    114.49% 114.49% at 50% -14.49%,
-    #000 0%,
-    #000 88.09%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  padding-top: 68px;
   overflow: hidden;
 
-  ${media.mobile} {
-    height: 100vh;
-    background: radial-gradient(
-      144.72% 66.79% at 50% 33.21%,
-      #000 0%,
-      #000 88.09%,
-      rgba(0, 0, 0, 0) 100%
-    );
-  }
-
-  i {
-    position: absolute;
-    top: 0;
-    right: 15vw;
-    width: 762px;
-    height: 762px;
-    border-radius: 50%;
-    background: radial-gradient(
-      50% 50% at 50% 50%,
-      rgba(34, 111, 255, 0.45) 24%,
-      rgba(0, 0, 0, 0.45) 90%,
-      rgba(0, 0, 0, 0.45) 100%
-    );
-
-    ${media.mobile} {
-      width: 486px;
-      height: 486px;
-      top: 15%;
-      right: -80px;
-      opacity: 0.8;
-    }
-  }
-
-  .image-wrapper {
-    position: absolute;
-    top: 36%;
-    left: 61%;
-    transform: translate(-50%, -50%);
-    opacity: 0; // 초기에는 투명하게
-    animation: fadeIn 1s ease 1s forwards; // 1초 지연 후 1초 동안 페이드인
-
-    ${media.mobile} {
-      top: 50.5vh;
-      left: 57vw;
-    }
-
-    &.blur {
-      z-index: 0;
-      transform: translate(-48%, -48%);
-      opacity: 0;
-      animation: fadeIn 1s ease 0.5s forwards; // blur 이미지는 0.5초 지연 후 페이드인
-
-      img {
-        filter: blur(20px) brightness(0);
-      }
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-  }
-
-  .visual-text {
-    position: absolute;
-    top: 38%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;
-    display: inline-flex;
+  .text {
+    display: flex;  
     flex-direction: column;
     align-items: center;
+    margin-top: 145px; 
 
-    ${media.mobile} {
-      display: none;
-    }
+    h2 {
+      position: relative;
+      font-size: 3.13rem;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.5px;
 
-    &.mobile {
-      display: none;
-
-      ${media.mobile} {
-        display: flex;
-        top: 40%;
+      span {
+        position: absolute;
+        left: 220px;
+        top: 0;
+        width: 66.657px;
+        height: 71.058px;
+        display: inline-block;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='78' height='86' viewBox='0 0 78 86' fill='none'%3E%3CforeignObject x='14.882' y='-4.0317' width='30.113' height='38.6553'%3E%3Cdiv xmlns='http://www.w3.org/1999/xhtml' style='backdrop-filter:blur(2.66px);clip-path:url(%23bgblur_0_797_4856_clip_path);height:100%25;width:100%25'%3E%3C/div%3E%3C/foreignObject%3E%3Cg filter='url(%23filter0_i_797_4856)' data-figma-bg-blur-radius='5.32894'%3E%3Cpath d='M39.6656 25.5483L38.0444 26.6426L35.9176 29.2947L20.2109 1.29722L25.0962 1.76355C26.5179 1.89925 27.7772 2.73779 28.4506 3.99718L33.8073 14.0151L39.6656 25.5483Z' fill='url(%23paint0_linear_797_4856)' fill-opacity='0.1'/%3E%3C/g%3E%3CforeignObject x='14.882' y='-4.0317' width='30.113' height='38.6553'%3E%3Cdiv xmlns='http://www.w3.org/1999/xhtml' style='backdrop-filter:blur(2.66px);clip-path:url(%23bgblur_1_797_4856_clip_path);height:100%25;width:100%25'%3E%3C/div%3E%3C/foreignObject%3E%3Cg filter='url(%23filter1_i_797_4856)' data-figma-bg-blur-radius='5.32894'%3E%3Cpath d='M39.6656 25.5483L38.0444 26.6426L35.9176 29.2947L20.2109 1.29722L25.0962 1.76355C26.5179 1.89925 27.7772 2.73779 28.4506 3.99718L33.8073 14.0151L39.6656 25.5483Z' fill='url(%23paint1_linear_797_4856)' fill-opacity='0.1'/%3E%3C/g%3E%3CforeignObject x='7.34098' y='43.6205' width='33.3923' height='34.06'%3E%3Cdiv xmlns='http://www.w3.org/1999/xhtml' style='backdrop-filter:blur(2.66px);clip-path:url(%23bgblur_2_797_4856_clip_path);height:100%25;width:100%25'%3E%3C/div%3E%3C/foreignObject%3E%3Cg filter='url(%23filter2_i_797_4856)' data-figma-bg-blur-radius='5.32894'%3E%3Cpath d='M35.4048 53.3372L34.0199 51.9559L32.4332 48.9494L12.6695 71.8659L17.5549 72.3322C18.9766 72.4679 20.3717 71.8828 21.2712 70.7735L28.4265 61.9499L35.4048 53.3372Z' fill='url(%23paint2_linear_797_4856)' fill-opacity='0.2'/%3E%3C/g%3E%3CforeignObject x='7.34098' y='43.6205' width='33.3923' height='34.06'%3E%3Cdiv xmlns='http://www.w3.org/1999/xhtml' style='backdrop-filter:blur(2.66px);clip-path:url(%23bgblur_3_797_4856_clip_path);height:100%25;width:100%25'%3E%3C/div%3E%3C/foreignObject%3E%3Cg filter='url(%23filter3_i_797_4856)' data-figma-bg-blur-radius='5.32894'%3E%3Cpath d='M35.4048 53.3372L34.0199 51.9559L32.4332 48.9494L12.6695 71.8659L17.5549 72.3322C18.9766 72.4679 20.3717 71.8828 21.2712 70.7735L28.4265 61.9499L35.4048 53.3372Z' fill='url(%23paint3_linear_797_4856)' fill-opacity='0.2'/%3E%3C/g%3E%3CforeignObject x='36.4504' y='34.5153' width='32.9118' height='47.347'%3E%3Cdiv xmlns='http://www.w3.org/1999/xhtml' style='backdrop-filter:blur(2.66px);clip-path:url(%23bgblur_4_797_4856_clip_path);height:100%25;width:100%25'%3E%3C/div%3E%3C/foreignObject%3E%3Cg filter='url(%23filter4_i_797_4856)' data-figma-bg-blur-radius='5.32894'%3E%3Cpath d='M63.7897 73.1987C64.593 74.8207 63.3027 76.6943 61.5009 76.5223L56.6127 76.0557L41.7792 39.8442L47.5441 40.3945L63.7897 73.1987Z' fill='url(%23paint4_linear_797_4856)' fill-opacity='0.2'/%3E%3C/g%3E%3CforeignObject x='36.4504' y='34.5153' width='32.9118' height='47.347'%3E%3Cdiv xmlns='http://www.w3.org/1999/xhtml' style='backdrop-filter:blur(2.66px);clip-path:url(%23bgblur_5_797_4856_clip_path);height:100%25;width:100%25'%3E%3C/div%3E%3C/foreignObject%3E%3Cg filter='url(%23filter5_i_797_4856)' data-figma-bg-blur-radius='5.32894'%3E%3Cpath d='M63.7897 73.1987C64.5929 74.8207 63.3027 76.6943 61.5009 76.5223L56.6127 76.0557L41.7792 39.8442L47.5437 40.3944L63.7897 73.1987Z' fill='url(%23paint5_linear_797_4856)' fill-opacity='0.2'/%3E%3C/g%3E%3CforeignObject x='38.2804' y='-0.0100932' width='38.904' height='45.7306'%3E%3Cdiv xmlns='http://www.w3.org/1999/xhtml' style='backdrop-filter:blur(2.66px);clip-path:url(%23bgblur_6_797_4856_clip_path);height:100%25;width:100%25'%3E%3C/div%3E%3C/foreignObject%3E%3Cg filter='url(%23filter6_i_797_4856)' data-figma-bg-blur-radius='5.32894'%3E%3Cpath d='M71.3684 9.65002C72.4843 8.21205 71.5754 6.10851 69.7635 5.93555L63.3024 5.31881L68.0787 8.46099L57.8511 22.4002L43.609 40.0189L47.5126 40.3916L71.3684 9.65002Z' fill='url(%23paint6_linear_797_4856)' fill-opacity='0.5'/%3E%3C/g%3E%3CforeignObject x='38.5402' y='-0.0100932' width='38.6442' height='45.7306'%3E%3Cdiv xmlns='http://www.w3.org/1999/xhtml' style='backdrop-filter:blur(2.66px);clip-path:url(%23bgblur_7_797_4856_clip_path);height:100%25;width:100%25'%3E%3C/div%3E%3C/foreignObject%3E%3Cg filter='url(%23filter7_i_797_4856)' data-figma-bg-blur-radius='5.32894'%3E%3Cpath d='M71.3684 9.65002C72.4843 8.21205 71.5754 6.10851 69.7635 5.93555L63.3024 5.31881L67.5056 7.02912C68.0746 7.26067 68.3209 7.93175 68.0366 8.47637L66.4851 11.449L43.8683 40.0437L47.5126 40.3916L71.3684 9.65002Z' fill='url(%23paint7_linear_797_4856)' fill-opacity='0.5'/%3E%3C/g%3E%3CforeignObject x='-1.08778' y='-3.3716' width='73.4724' height='83.2023'%3E%3Cdiv xmlns='http://www.w3.org/1999/xhtml' style='backdrop-filter:blur(1.78px);clip-path:url(%23bgblur_8_797_4856_clip_path);height:100%25;width:100%25'%3E%3C/div%3E%3C/foreignObject%3E%3Cpath data-figma-bg-blur-radius='3.55263' d='M67.0281 5.67404C67.5987 5.7285 68.0549 5.97597 68.3966 6.41646C68.732 6.92431 68.8739 7.44768 68.8225 7.98658C68.8032 8.18867 68.7522 8.38774 68.6695 8.58377C68.5869 8.77981 68.5042 8.97585 68.4215 9.17188L44.2814 39.9043L60.8801 73.0979C61.0317 73.5202 61.0882 73.9334 61.0496 74.3376C60.9982 74.8765 60.763 75.3299 60.3441 75.6978C59.9187 76.133 59.4207 76.3234 58.8502 76.2689L47.154 75.1525C46.3299 75.0738 45.7185 74.7775 45.3197 74.2636C44.8576 73.7437 44.519 73.2695 44.304 72.8411L33.4812 51.517L18.7246 70.3995C18.4324 70.7794 18.0103 71.181 17.4581 71.6041C16.906 72.0273 16.2178 72.1995 15.3937 72.1208L4.26809 71.0588C3.76093 71.0104 3.33969 70.7323 3.00433 70.2244C2.59916 69.7779 2.4223 69.2852 2.47374 68.7463C2.51875 68.2747 2.68409 67.8827 2.96981 67.5701L25.5389 38.2172L7.56338 3.3627C7.45589 3.14851 7.41181 2.94038 7.4311 2.73829C7.387 2.53015 7.37457 2.32504 7.39386 2.12294C7.4453 1.58404 7.68372 1.09698 8.1091 0.661742C8.52804 0.293873 9.02277 0.137164 9.59331 0.191625L21.6698 1.34438C22.494 1.42305 23.1371 1.72235 23.5992 2.24231C23.998 2.7562 24.3081 3.19366 24.5295 3.55468L36.3873 26.0992L52.2009 6.19604C52.4232 5.87738 52.8105 5.50648 53.3626 5.08336C53.8514 4.65417 54.5395 4.48194 55.4271 4.56666L67.0281 5.67404Z' fill='url(%23paint8_linear_797_4856)' fill-opacity='0.2'/%3E%3CforeignObject x='-1.08778' y='-3.3716' width='73.4724' height='83.2023'%3E%3Cdiv xmlns='http://www.w3.org/1999/xhtml' style='backdrop-filter:blur(1.78px);clip-path:url(%23bgblur_9_797_4856_clip_path);height:100%25;width:100%25'%3E%3C/div%3E%3C/foreignObject%3E%3Cg filter='url(%23filter9_i_797_4856)' data-figma-bg-blur-radius='3.55263'%3E%3Cpath d='M67.0281 5.67404C67.5987 5.7285 68.0549 5.97597 68.3966 6.41646C68.732 6.92431 68.8739 7.44768 68.8225 7.98658C68.8032 8.18867 68.7522 8.38774 68.6695 8.58377C68.5869 8.77981 68.5042 8.97585 68.4215 9.17189L44.2814 39.9043L60.8801 73.0979C61.0317 73.5202 61.0882 73.9334 61.0496 74.3376C60.9982 74.8765 60.763 75.3299 60.3441 75.6978C59.9187 76.133 59.4207 76.3234 58.8502 76.2689L47.154 75.1525C46.3299 75.0738 45.7185 74.7775 45.3197 74.2636C44.8576 73.7437 44.519 73.2695 44.304 72.8411L33.4812 51.517L18.7246 70.3995C18.4324 70.7794 18.0103 71.181 17.4581 71.6041C16.906 72.0273 16.2178 72.1995 15.3937 72.1208L4.26809 71.0588C3.76093 71.0104 3.33969 70.7323 3.00433 70.2244C2.59916 69.7779 2.4223 69.2852 2.47374 68.7463C2.51875 68.2747 2.68409 67.8827 2.96981 67.5701L25.5389 38.2172L7.56338 3.36271C7.45589 3.14851 7.41181 2.94038 7.4311 2.73829C7.387 2.53015 7.37457 2.32504 7.39386 2.12294C7.4453 1.58404 7.68372 1.09698 8.1091 0.661742C8.52804 0.293873 9.02276 0.137163 9.59331 0.191625L21.6698 1.34438C22.494 1.42305 23.1371 1.72236 23.5992 2.24231C23.998 2.75621 24.3081 3.19366 24.5295 3.55468L36.3873 26.0992L52.2009 6.19604C52.4232 5.87738 52.8105 5.50649 53.3626 5.08336C53.8514 4.65418 54.5395 4.48194 55.4271 4.56666L67.0281 5.67404Z' fill='url(%23paint9_linear_797_4856)' fill-opacity='0.5'/%3E%3C/g%3E%3CforeignObject x='1.15262' y='-1.12228' width='76.1959' height='86.6363'%3E%3Cdiv xmlns='http://www.w3.org/1999/xhtml' style='backdrop-filter:blur(0.65px);clip-path:url(%23bgblur_10_797_4856_clip_path);height:100%25;width:100%25'%3E%3C/div%3E%3C/foreignObject%3E%3Cg filter='url(%23filter10_di_797_4856)' data-figma-bg-blur-radius='1.30246'%3E%3Cpath d='M67.0184 5.67318C67.5889 5.72764 68.0451 5.97512 68.3869 6.4156C68.7222 6.92345 68.8642 7.44682 68.8127 7.98573C68.7934 8.18782 68.7425 8.38689 68.6598 8.58292C68.5771 8.77896 68.4944 8.97499 68.4117 9.17103L44.2716 39.9034L60.8703 73.097C61.0219 73.5193 61.0785 73.9326 61.0399 74.3368C60.9884 74.8757 60.7532 75.3291 60.3343 75.6969C59.9089 76.1322 59.411 76.3225 58.8404 76.2681L47.1442 75.1516C46.3201 75.073 45.7087 74.7767 45.31 74.2628C44.8478 73.7428 44.5092 73.2687 44.2942 72.8403L33.4715 51.5162L18.7148 70.3986C18.4227 70.7786 18.0005 71.1801 17.4484 71.6033C16.8962 72.0264 16.208 72.1986 15.3839 72.12L4.25832 71.058C3.75117 71.0096 3.32992 70.7314 2.99457 70.2236C2.58939 69.7771 2.41254 69.2843 2.46398 68.7454C2.50899 68.2739 2.67432 67.8818 2.96005 67.5692L25.5291 38.2163L7.55362 3.36185C7.44612 3.14766 7.40205 2.93953 7.42134 2.73744C7.37724 2.5293 7.36481 2.32418 7.3841 2.12209C7.43554 1.58319 7.67396 1.09612 8.09933 0.660888C8.51827 0.293019 9.013 0.136309 9.58354 0.19077L21.6601 1.34353C22.4842 1.42219 23.1273 1.7215 23.5895 2.24145C23.9882 2.75535 24.2983 3.19281 24.5197 3.55383L36.3775 26.0984L52.1911 6.19519C52.4135 5.87652 52.8007 5.50564 53.3529 5.0825C53.8416 4.65332 54.5298 4.48109 55.4173 4.56581L67.0184 5.67318Z' fill='url(%23paint10_linear_797_4856)' fill-opacity='0.2' shape-rendering='crispEdges'/%3E%3C/g%3E%3Cg filter='url(%23filter11_i_797_4856)'%3E%3Cpath d='M67.0184 5.67318C67.5889 5.72764 68.0451 5.97512 68.3869 6.4156C68.7222 6.92345 68.8642 7.44682 68.8127 7.98573C68.7934 8.18782 68.7425 8.38689 68.6598 8.58292C68.5771 8.77896 68.4944 8.97499 68.4117 9.17103L44.2716 39.9034L60.8703 73.097C61.0219 73.5193 61.0785 73.9326 61.0399 74.3368C60.9884 74.8757 60.7532 75.3291 60.3343 75.6969C59.9089 76.1322 59.411 76.3225 58.8404 76.2681L47.1442 75.1516C46.3201 75.073 45.7087 74.7767 45.31 74.2628C44.8478 73.7428 44.5092 73.2687 44.2942 72.8403L33.4715 51.5162L18.7148 70.3986C18.4227 70.7786 18.0005 71.1801 17.4484 71.6033C16.8962 72.0264 16.208 72.1986 15.3839 72.12L4.25832 71.058C3.75117 71.0096 3.32992 70.7314 2.99457 70.2236C2.58939 69.7771 2.41253 69.2843 2.46398 68.7454C2.50899 68.2739 2.67432 67.8818 2.96005 67.5692L25.5291 38.2163L7.55361 3.36185C7.44612 3.14766 7.40205 2.93953 7.42134 2.73744C7.37723 2.5293 7.36481 2.32418 7.3841 2.12209C7.43554 1.58319 7.67396 1.09612 8.09933 0.660888C8.51827 0.293018 9.013 0.136309 9.58354 0.19077L21.6601 1.34353C22.4842 1.42219 23.1273 1.72151 23.5895 2.24145C23.9882 2.75535 24.2983 3.1928 24.5197 3.55383L36.3775 26.0984L52.1911 6.19519C52.4135 5.87652 52.8007 5.50564 53.3529 5.0825C53.8416 4.65333 54.5298 4.48109 55.4173 4.56581L67.0184 5.67318Z' fill='%235470FF' fill-opacity='0.3'/%3E%3C/g%3E%3Cdefs%3E%3Cfilter id='filter0_i_797_4856' x='14.882' y='-4.0317' width='30.113' height='38.6553' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3E%3CfeOffset/%3E%3CfeGaussianBlur stdDeviation='0.177631'/%3E%3CfeComposite in2='hardAlpha' operator='arithmetic' k2='-1' k3='1'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3CfeBlend mode='normal' in2='shape' result='effect1_innerShadow_797_4856'/%3E%3C/filter%3E%3CclipPath id='bgblur_0_797_4856_clip_path' transform='translate(-14.882 4.0317)'%3E%3Cpath d='M39.6656 25.5483L38.0444 26.6426L35.9176 29.2947L20.2109 1.29722L25.0962 1.76355C26.5179 1.89925 27.7772 2.73779 28.4506 3.99718L33.8073 14.0151L39.6656 25.5483Z'/%3E%3C/clipPath%3E%3Cfilter id='filter1_i_797_4856' x='14.882' y='-4.0317' width='30.113' height='38.6553' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3E%3CfeOffset/%3E%3CfeGaussianBlur stdDeviation='0.177631'/%3E%3CfeComposite in2='hardAlpha' operator='arithmetic' k2='-1' k3='1'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3CfeBlend mode='normal' in2='shape' result='effect1_innerShadow_797_4856'/%3E%3C/filter%3E%3CclipPath id='bgblur_1_797_4856_clip_path' transform='translate(-14.882 4.0317)'%3E%3Cpath d='M39.6656 25.5483L38.0444 26.6426L35.9176 29.2947L20.2109 1.29722L25.0962 1.76355C26.5179 1.89925 27.7772 2.73779 28.4506 3.99718L33.8073 14.0151L39.6656 25.5483Z'/%3E%3C/clipPath%3E%3Cfilter id='filter2_i_797_4856' x='7.34098' y='43.6205' width='33.3923' height='34.06' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3E%3CfeOffset/%3E%3CfeGaussianBlur stdDeviation='0.177631'/%3E%3CfeComposite in2='hardAlpha' operator='arithmetic' k2='-1' k3='1'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3CfeBlend mode='normal' in2='shape' result='effect1_innerShadow_797_4856'/%3E%3C/filter%3E%3CclipPath id='bgblur_2_797_4856_clip_path' transform='translate(-7.34098 -43.6205)'%3E%3Cpath d='M35.4048 53.3372L34.0199 51.9559L32.4332 48.9494L12.6695 71.8659L17.5549 72.3322C18.9766 72.4679 20.3717 71.8828 21.2712 70.7735L28.4265 61.9499L35.4048 53.3372Z'/%3E%3C/clipPath%3E%3Cfilter id='filter3_i_797_4856' x='7.34098' y='43.6205' width='33.3923' height='34.06' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3E%3CfeOffset/%3E%3CfeGaussianBlur stdDeviation='0.177631'/%3E%3CfeComposite in2='hardAlpha' operator='arithmetic' k2='-1' k3='1'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3CfeBlend mode='normal' in2='shape' result='effect1_innerShadow_797_4856'/%3E%3C/filter%3E%3CclipPath id='bgblur_3_797_4856_clip_path' transform='translate(-7.34098 -43.6205)'%3E%3Cpath d='M35.4048 53.3372L34.0199 51.9559L32.4332 48.9494L12.6695 71.8659L17.5549 72.3322C18.9766 72.4679 20.3717 71.8828 21.2712 70.7735L28.4265 61.9499L35.4048 53.3372Z'/%3E%3C/clipPath%3E%3Cfilter id='filter4_i_797_4856' x='36.4504' y='34.5153' width='32.9118' height='47.347' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3E%3CfeOffset/%3E%3CfeGaussianBlur stdDeviation='0.177631'/%3E%3CfeComposite in2='hardAlpha' operator='arithmetic' k2='-1' k3='1'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3CfeBlend mode='normal' in2='shape' result='effect1_innerShadow_797_4856'/%3E%3C/filter%3E%3CclipPath id='bgblur_4_797_4856_clip_path' transform='translate(-36.4504 -34.5153)'%3E%3Cpath d='M63.7897 73.1987C64.593 74.8207 63.3027 76.6943 61.5009 76.5223L56.6127 76.0557L41.7792 39.8442L47.5441 40.3945L63.7897 73.1987Z'/%3E%3C/clipPath%3E%3Cfilter id='filter5_i_797_4856' x='36.4504' y='34.5153' width='32.9118' height='47.347' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3E%3CfeOffset/%3E%3CfeGaussianBlur stdDeviation='0.177631'/%3E%3CfeComposite in2='hardAlpha' operator='arithmetic' k2='-1' k3='1'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3CfeBlend mode='normal' in2='shape' result='effect1_innerShadow_797_4856'/%3E%3C/filter%3E%3CclipPath id='bgblur_5_797_4856_clip_path' transform='translate(-36.4504 -34.5153)'%3E%3Cpath d='M63.7897 73.1987C64.5929 74.8207 63.3027 76.6943 61.5009 76.5223L56.6127 76.0557L41.7792 39.8442L47.5437 40.3944L63.7897 73.1987Z'/%3E%3C/clipPath%3E%3Cfilter id='filter6_i_797_4856' x='38.2804' y='-0.0100932' width='38.904' height='45.7306' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3E%3CfeOffset/%3E%3CfeGaussianBlur stdDeviation='0.177631'/%3E%3CfeComposite in2='hardAlpha' operator='arithmetic' k2='-1' k3='1'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3CfeBlend mode='normal' in2='shape' result='effect1_innerShadow_797_4856'/%3E%3C/filter%3E%3CclipPath id='bgblur_6_797_4856_clip_path' transform='translate(-38.2804 0.0100932)'%3E%3Cpath d='M71.3684 9.65002C72.4843 8.21205 71.5754 6.10851 69.7635 5.93555L63.3024 5.31881L68.0787 8.46099L57.8511 22.4002L43.609 40.0189L47.5126 40.3916L71.3684 9.65002Z'/%3E%3C/clipPath%3E%3Cfilter id='filter7_i_797_4856' x='38.5402' y='-0.0100932' width='38.6442' height='45.7306' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3E%3CfeOffset/%3E%3CfeGaussianBlur stdDeviation='0.177631'/%3E%3CfeComposite in2='hardAlpha' operator='arithmetic' k2='-1' k3='1'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3CfeBlend mode='normal' in2='shape' result='effect1_innerShadow_797_4856'/%3E%3C/filter%3E%3CclipPath id='bgblur_7_797_4856_clip_path' transform='translate(-38.5402 0.0100932)'%3E%3Cpath d='M71.3684 9.65002C72.4843 8.21205 71.5754 6.10851 69.7635 5.93555L63.3024 5.31881L67.5056 7.02912C68.0746 7.26067 68.3209 7.93175 68.0366 8.47637L66.4851 11.449L43.8683 40.0437L47.5126 40.3916L71.3684 9.65002Z'/%3E%3C/clipPath%3E%3CclipPath id='bgblur_8_797_4856_clip_path' transform='translate(1.08778 3.3716)'%3E%3Cpath d='M67.0281 5.67404C67.5987 5.7285 68.0549 5.97597 68.3966 6.41646C68.732 6.92431 68.8739 7.44768 68.8225 7.98658C68.8032 8.18867 68.7522 8.38774 68.6695 8.58377C68.5869 8.77981 68.5042 8.97585 68.4215 9.17188L44.2814 39.9043L60.8801 73.0979C61.0317 73.5202 61.0882 73.9334 61.0496 74.3376C60.9982 74.8765 60.763 75.3299 60.3441 75.6978C59.9187 76.133 59.4207 76.3234 58.8502 76.2689L47.154 75.1525C46.3299 75.0738 45.7185 74.7775 45.3197 74.2636C44.8576 73.7437 44.519 73.2695 44.304 72.8411L33.4812 51.517L18.7246 70.3995C18.4324 70.7794 18.0103 71.181 17.4581 71.6041C16.906 72.0273 16.2178 72.1995 15.3937 72.1208L4.26809 71.0588C3.76093 71.0104 3.33969 70.7323 3.00433 70.2244C2.59916 69.7779 2.4223 69.2852 2.47374 68.7463C2.51875 68.2747 2.68409 67.8827 2.96981 67.5701L25.5389 38.2172L7.56338 3.3627C7.45589 3.14851 7.41181 2.94038 7.4311 2.73829C7.387 2.53015 7.37457 2.32504 7.39386 2.12294C7.4453 1.58404 7.68372 1.09698 8.1091 0.661742C8.52804 0.293873 9.02277 0.137164 9.59331 0.191625L21.6698 1.34438C22.494 1.42305 23.1371 1.72235 23.5992 2.24231C23.998 2.7562 24.3081 3.19366 24.5295 3.55468L36.3873 26.0992L52.2009 6.19604C52.4232 5.87738 52.8105 5.50648 53.3626 5.08336C53.8514 4.65417 54.5395 4.48194 55.4271 4.56666L67.0281 5.67404Z'/%3E%3C/clipPath%3E%3Cfilter id='filter9_i_797_4856' x='-1.08778' y='-3.3716' width='73.4724' height='83.2023' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3E%3CfeOffset/%3E%3CfeGaussianBlur stdDeviation='0.355263'/%3E%3CfeComposite in2='hardAlpha' operator='arithmetic' k2='-1' k3='1'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3CfeBlend mode='normal' in2='shape' result='effect1_innerShadow_797_4856'/%3E%3C/filter%3E%3CclipPath id='bgblur_9_797_4856_clip_path' transform='translate(1.08778 3.3716)'%3E%3Cpath d='M67.0281 5.67404C67.5987 5.7285 68.0549 5.97597 68.3966 6.41646C68.732 6.92431 68.8739 7.44768 68.8225 7.98658C68.8032 8.18867 68.7522 8.38774 68.6695 8.58377C68.5869 8.77981 68.5042 8.97585 68.4215 9.17189L44.2814 39.9043L60.8801 73.0979C61.0317 73.5202 61.0882 73.9334 61.0496 74.3376C60.9982 74.8765 60.763 75.3299 60.3441 75.6978C59.9187 76.133 59.4207 76.3234 58.8502 76.2689L47.154 75.1525C46.3299 75.0738 45.7185 74.7775 45.3197 74.2636C44.8576 73.7437 44.519 73.2695 44.304 72.8411L33.4812 51.517L18.7246 70.3995C18.4324 70.7794 18.0103 71.181 17.4581 71.6041C16.906 72.0273 16.2178 72.1995 15.3937 72.1208L4.26809 71.0588C3.76093 71.0104 3.33969 70.7323 3.00433 70.2244C2.59916 69.7779 2.4223 69.2852 2.47374 68.7463C2.51875 68.2747 2.68409 67.8827 2.96981 67.5701L25.5389 38.2172L7.56338 3.36271C7.45589 3.14851 7.41181 2.94038 7.4311 2.73829C7.387 2.53015 7.37457 2.32504 7.39386 2.12294C7.4453 1.58404 7.68372 1.09698 8.1091 0.661742C8.52804 0.293873 9.02276 0.137163 9.59331 0.191625L21.6698 1.34438C22.494 1.42305 23.1371 1.72236 23.5992 2.24231C23.998 2.75621 24.3081 3.19366 24.5295 3.55468L36.3873 26.0992L52.2009 6.19604C52.4232 5.87738 52.8105 5.50649 53.3626 5.08336C53.8514 4.65418 54.5395 4.48194 55.4271 4.56666L67.0281 5.67404Z'/%3E%3C/clipPath%3E%3Cfilter id='filter10_di_797_4856' x='1.15262' y='-1.12228' width='76.1959' height='86.6363' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3E%3CfeOffset dx='4.97368' dy='5.6842'/%3E%3CfeGaussianBlur stdDeviation='1.77631'/%3E%3CfeComposite in2='hardAlpha' operator='out'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.133333 0 0 0 0 0.435294 0 0 0 0 1 0 0 0 0.16 0'/%3E%3CfeBlend mode='normal' in2='BackgroundImageFix' result='effect1_dropShadow_797_4856'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='effect1_dropShadow_797_4856' result='shape'/%3E%3CfeColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3E%3CfeOffset dx='0.355263'/%3E%3CfeGaussianBlur stdDeviation='0.177631'/%3E%3CfeComposite in2='hardAlpha' operator='arithmetic' k2='-1' k3='1'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.4 0'/%3E%3CfeBlend mode='normal' in2='shape' result='effect2_innerShadow_797_4856'/%3E%3C/filter%3E%3CclipPath id='bgblur_10_797_4856_clip_path' transform='translate(-1.15262 1.12228)'%3E%3Cpath d='M67.0184 5.67318C67.5889 5.72764 68.0451 5.97512 68.3869 6.4156C68.7222 6.92345 68.8642 7.44682 68.8127 7.98573C68.7934 8.18782 68.7425 8.38689 68.6598 8.58292C68.5771 8.77896 68.4944 8.97499 68.4117 9.17103L44.2716 39.9034L60.8703 73.097C61.0219 73.5193 61.0785 73.9326 61.0399 74.3368C60.9884 74.8757 60.7532 75.3291 60.3343 75.6969C59.9089 76.1322 59.411 76.3225 58.8404 76.2681L47.1442 75.1516C46.3201 75.073 45.7087 74.7767 45.31 74.2628C44.8478 73.7428 44.5092 73.2687 44.2942 72.8403L33.4715 51.5162L18.7148 70.3986C18.4227 70.7786 18.0005 71.1801 17.4484 71.6033C16.8962 72.0264 16.208 72.1986 15.3839 72.12L4.25832 71.058C3.75117 71.0096 3.32992 70.7314 2.99457 70.2236C2.58939 69.7771 2.41254 69.2843 2.46398 68.7454C2.50899 68.2739 2.67432 67.8818 2.96005 67.5692L25.5291 38.2163L7.55362 3.36185C7.44612 3.14766 7.40205 2.93953 7.42134 2.73744C7.37724 2.5293 7.36481 2.32418 7.3841 2.12209C7.43554 1.58319 7.67396 1.09612 8.09933 0.660888C8.51827 0.293019 9.013 0.136309 9.58354 0.19077L21.6601 1.34353C22.4842 1.42219 23.1273 1.7215 23.5895 2.24145C23.9882 2.75535 24.2983 3.19281 24.5197 3.55383L36.3775 26.0984L52.1911 6.19519C52.4135 5.87652 52.8007 5.50564 53.3529 5.0825C53.8416 4.65332 54.5298 4.48109 55.4173 4.56581L67.0184 5.67318Z'/%3E%3C/clipPath%3E%3Cfilter id='filter11_i_797_4856' x='-0.759145' y='-1.53408' width='69.5814' height='77.8113' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeFlood flood-opacity='0' result='BackgroundImageFix'/%3E%3CfeBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/%3E%3CfeColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3E%3CfeOffset dx='-3.4285' dy='-1.71425'/%3E%3CfeGaussianBlur stdDeviation='1.60711'/%3E%3CfeComposite in2='hardAlpha' operator='arithmetic' k2='-1' k3='1'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.4 0'/%3E%3CfeBlend mode='normal' in2='shape' result='effect1_innerShadow_797_4856'/%3E%3C/filter%3E%3ClinearGradient id='paint0_linear_797_4856' x1='36.7344' y1='26.2499' x2='21.5461' y2='1.42468' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%233F3F3F'/%3E%3Cstop offset='0.2' stop-color='%239D9D9D'/%3E%3Cstop offset='1' stop-color='%239D9D9D'/%3E%3C/linearGradient%3E%3ClinearGradient id='paint1_linear_797_4856' x1='36.7344' y1='26.2499' x2='21.5461' y2='1.42468' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%233F3F3F'/%3E%3Cstop offset='0.2' stop-color='%239D9D9D'/%3E%3Cstop offset='1' stop-color='%239D9D9D'/%3E%3C/linearGradient%3E%3ClinearGradient id='paint2_linear_797_4856' x1='33.6154' y1='50.4898' x2='14.0048' y2='71.9933' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%239D9D9D'/%3E%3Cstop offset='0.5' stop-color='%23003599'/%3E%3Cstop offset='1'/%3E%3C/linearGradient%3E%3ClinearGradient id='paint3_linear_797_4856' x1='33.6154' y1='50.4898' x2='14.0048' y2='71.9933' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%239D9D9D'/%3E%3Cstop offset='0.5' stop-color='%23003599'/%3E%3Cstop offset='1'/%3E%3C/linearGradient%3E%3ClinearGradient id='paint4_linear_797_4856' x1='59.5652' y1='76.3375' x2='47.8449' y2='40.4232' gradientUnits='userSpaceOnUse'%3E%3Cstop/%3E%3Cstop offset='0.5' stop-color='%23003599'/%3E%3Cstop offset='1' stop-color='%23737373'/%3E%3C/linearGradient%3E%3ClinearGradient id='paint5_linear_797_4856' x1='59.5652' y1='76.3375' x2='47.8449' y2='40.4232' gradientUnits='userSpaceOnUse'%3E%3Cstop/%3E%3Cstop offset='0.5' stop-color='%23003599'/%3E%3Cstop offset='1' stop-color='%23737373'/%3E%3C/linearGradient%3E%3ClinearGradient id='paint6_linear_797_4856' x1='66.2645' y1='5.60155' x2='46.5749' y2='39.7395' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23CECECE'/%3E%3Cstop offset='0.5' stop-color='%239D9D9D'/%3E%3Cstop offset='1' stop-color='%23737373'/%3E%3C/linearGradient%3E%3ClinearGradient id='paint7_linear_797_4856' x1='66.2645' y1='5.60155' x2='46.5749' y2='39.7395' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23CECECE'/%3E%3Cstop offset='0.5' stop-color='%239D9D9D'/%3E%3Cstop offset='1' stop-color='%23737373'/%3E%3C/linearGradient%3E%3ClinearGradient id='paint8_linear_797_4856' x1='39.9658' y1='74.4663' x2='29.025' y2='-2.23606' gradientUnits='userSpaceOnUse'%3E%3Cstop/%3E%3Cstop offset='0.14' stop-color='%23226FFF'/%3E%3Cstop offset='0.345' stop-color='%23226FFF'/%3E%3Cstop offset='0.54' stop-color='white'/%3E%3Cstop offset='1' stop-color='white'/%3E%3C/linearGradient%3E%3ClinearGradient id='paint9_linear_797_4856' x1='39.9658' y1='74.4663' x2='29.539' y2='-3.88217' gradientUnits='userSpaceOnUse'%3E%3Cstop/%3E%3Cstop offset='0.14' stop-color='%23226FFF'/%3E%3Cstop offset='0.345' stop-color='%23226FFF' stop-opacity='0.5'/%3E%3Cstop offset='0.54' stop-color='white' stop-opacity='0.2'/%3E%3Cstop offset='1' stop-color='white' stop-opacity='0'/%3E%3C/linearGradient%3E%3ClinearGradient id='paint10_linear_797_4856' x1='39.9561' y1='74.4655' x2='29.2262' y2='-4.44726' gradientUnits='userSpaceOnUse'%3E%3Cstop/%3E%3Cstop offset='0.14' stop-color='%23226FFF'/%3E%3Cstop offset='0.345' stop-color='%23226FFF' stop-opacity='0.5'/%3E%3Cstop offset='0.54' stop-color='white' stop-opacity='0.2'/%3E%3Cstop offset='1' stop-color='white' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E");
+        background-size: cover;
       }
     }
 
     p {
-      position: relative;
-      font-size: 7.13rem;
-      font-weight: 400;
-      color: ${palette.white};
-      letter-spacing: -3.42px;
-      line-height: 0.8;
-      text-shadow: 40px 40px 12px rgba(255, 255, 255, 0.1);
-
-      ${media.mobile} {
-        font-size: 3.75rem;
-        line-height: 1;
-        letter-spacing: -1.8px;
-        text-align: left;
-        text-shadow: 13px 13px 4px rgba(255, 255, 255, 0.06);
-      }
-
-      &:nth-child(1) {
-        ${media.mobile} {
-          margin-left: auto;
-        }
-      }
-
-      &:nth-child(2) {
-        margin-right: 170px;
-
-        ${media.mobile} {
-          margin-right: auto;
-        }
-      }
-
-      &:nth-child(3) {
-        margin-left: 245px;
-      }
-
-      &:nth-child(4) {
-        margin-left: 9px;
-      }
-
-      &:nth-child(5),
-      &:nth-child(6) {
-        margin-right: 168px;
-      }
+      font-size: 1.25rem;
+      font-weight: 500;
+      line-height: 1.4;
+      color: ${palette.gray800};
+      margin: 12px auto 40px;
     }
 
-    span {
-      position: absolute;
+    button {
+      font-family: 'Pretendard', 'Poppins';
       font-size: 1rem;
-      font-weight: 300;
-      color: ${palette.lightGray};
+      font-weight: 600;
+      line-height: 1.55;
       letter-spacing: -0.48px;
-      line-height: 1.25;
-      text-shadow: none;
-
-      ${media.mobile} {
-        font-size: 0.75rem;
-      }
-
-      &.subtext01 {
-        top: -40px;
-        right: 0;
-
-        ${media.mobile} {
-          right: 10vw;
-          width: 100%;
-        }
-      }
-
-      &.subtext02 {
-        top: -40px;
-        left: -200px;
-        text-align: right;
-
-        ${media.mobile} {
-          left: 40%;
-          top: auto;
-          bottom: -10vh;
-          width: 100%;
-          text-align: left;
-        }
-      }
-
-      &.subtext03 {
-        top: 170px;
-        left: 25px;
-      }
-    }
-  }
-
-  .scroll-down {
-    position: absolute;
-    bottom: 30vh;
-    left: 50%;
-    transform: translateX(-50%) rotate(-45deg);
-    width: 24px;
-    height: 24px;
-    border-left: 2px solid ${palette.white};
-    border-bottom: 2px solid ${palette.white};
-    transition: opacity 0.3s;
-    animation: sdb05 1.5s infinite;
-
-    ${media.mobile} {
-      bottom: 20vh;
-      width: 18px;
-      height: 18px;
-    }
-
-    @keyframes sdb05 {
-      0% {
-        transform: rotate(-45deg) translate(0, 0);
-        opacity: 0;
-      }
-      50% {
-        opacity: 1;
-      }
-      100% {
-        transform: rotate(-45deg) translate(-20px, 20px);
-        opacity: 0;
-      }
+      color: ${palette.white};
+      padding: 8px 32px;
+      border-radius: 8px;
+      border: 0;
+      background: ${palette.primary};
     }
   }
 `;
@@ -1287,252 +810,91 @@ const MainVisual = styled.div`
 const Section01 = styled.div`
   position: relative;
   width: 100%;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  margin-top: -10vh;
+  gap: 64px;
+  margin-top: 50px;
+  margin-bottom: 140px;
 
-  ${media.mobile} {
-    margin: 0 auto;
-  }
-
-  .bg-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-
-    i {
-      position: absolute;
-      display: block;
-      background: url(${images.ServiceLandingSectionBg}) no-repeat center center /
-        cover;
-
-      &.icon01 {
-        top: 25%;
-        left: -50px;
-        transform: rotate(-21deg);
-        width: 398px;
-        height: 410px;
-        animation: float1 6s ease-in-out infinite;
-
-        ${media.mobile} {
-          top: 8%;
-          left: -80px;
-          width: 202px;
-          height: 208px;
-        }
-      }
-
-      &.icon02 {
-        top: 17%;
-        left: 63%;
-        transform: rotate(-29deg);
-        width: 58px;
-        height: 60px;
-        animation: float2 4s ease-in-out infinite;
-
-        ${media.mobile} {
-          top: 7%;
-          left: 78%;
-          width: 28px;
-          height: 29px;
-        }
-      }
-
-      &.icon03 {
-        bottom: 16%;
-        right: 22%;
-        transform: rotate(30deg);
-        width: 112px;
-        height: 115px;
-        animation: float3 5s ease-in-out infinite;
-
-        ${media.mobile} {
-          bottom: 10vh;
-          right: -4%;
-          width: 82px;
-          height: 85px;
-        }
-      }
-    }
-
-    @keyframes float1 {
-      0% {
-        transform: rotate(-21deg) translateY(0px);
-      }
-      50% {
-        transform: rotate(-21deg) translateY(-60px);
-      }
-      100% {
-        transform: rotate(-21deg) translateY(0px);
-      }
-    }
-
-    @keyframes float2 {
-      0% {
-        transform: rotate(-29deg) translateY(0px);
-      }
-      50% {
-        transform: rotate(-29deg) translateY(-15px);
-      }
-      100% {
-        transform: rotate(-29deg) translateY(0px);
-      }
-    }
-
-    @keyframes float3 {
-      0% {
-        transform: rotate(30deg) translateY(0px);
-      }
-      50% {
-        transform: rotate(30deg) translateY(-25px);
-      }
-      100% {
-        transform: rotate(30deg) translateY(0px);
-      }
-    }
-  }
-
-  p {
-    font-size: 2.25rem;
-    font-weight: 500;
-    color: ${palette.lightGray};
-    line-height: 1.25;
-    letter-spacing: -1.08px;
-
-    ${media.mobile} {
-      font-size: 1.13rem;
-    }
-  }
-
-  h2 {
-    position: relative;
-    font-size: 5.75rem;
-    font-weight: 500;
-    color: #191919;
-    line-height: 1.25;
-    letter-spacing: -2.76px;
-
-    ${media.mobile} {
-      font-size: 3.75rem;
-    }
-
-    &::before {
-      position: absolute;
-      bottom: 8px;
-      right: 65px;
-      width: 111px;
-      height: 111px;
-      background: url(${images.ServiceLandingSection01}) no-repeat center center /
-        contain;
-      content: "";
-
-      ${media.mobile} {
-        width: 74px;
-        height: 74px;
-        bottom: 5px;
-        right: 35px;
-      }
-    }
-  }
-
-  strong {
-    font-size: 2.25rem;
-    font-weight: 500;
-    color: #191919;
-    line-height: 1.25;
-    letter-spacing: -1.08px;
-    display: block;
-    margin-top: 20px;
-
-    ${media.mobile} {
-      font-size: 1.25rem;
-    }
-  }
-
-  button {
-    font-family: Pretendard, "Poppins";
-    font-size: 1.75rem;
-    font-weight: 500;
-    color: #191919;
-    letter-spacing: -0.84px;
-    line-height: 1;
+  .title {
     display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 28px 42px;
-    margin: 48px auto 24px;
-    border-radius: 50px;
-    border: 2px solid ${palette.gray300};
-    background: ${palette.white};
-    transition: all 0.5s;
-
-    ${media.mobile} {
-      font-size: 1.13rem;
-      padding: 12px 20px;
-      margin: 20px auto 12px;
-    }
+    flex-direction: column;
 
     span {
-      position: relative;
-      width: 41px;
-      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: ${palette.primary};
 
-      ${media.mobile} {
-        width: 20px;
-        height: 8px;
-      }
-
-      &::before {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        border-radius: 4px;
-        background: #191919;
-        content: "";
-      }
-
-      &::after {
-        position: absolute;
-        bottom: 5px;
-        right: 0;
-        transform: rotate(40deg);
-        width: 16px;
-        height: 2px;
-        border-radius: 4px;
-        background: #191919;
-        content: "";
-
-        ${media.mobile} {
-          bottom: 4px;
-          width: 12px;
-        }
+      &:before {
+        width: 24px;
+        height: 24px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12Z' fill='%23226FFF'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M17.4516 15.908C17.4784 15.9584 17.4863 16.0166 17.4741 16.0723C17.4618 16.128 17.4301 16.1776 17.3846 16.212C15.831 17.3754 13.9415 18.0029 12.0006 18C10.0596 18.0029 8.17021 17.3754 6.61658 16.212C6.57111 16.1776 6.53939 16.128 6.52711 16.0723C6.51483 16.0166 6.5228 15.9584 6.54958 15.908C7.49958 14.192 9.58258 13 12.0006 13C14.4186 13 16.5016 14.191 17.4516 15.908Z' fill='%23226FFF'/%3E%3Cpath d='M17 4H17.502C18.713 4 19.319 4 19.783 4.232C20.2094 4.44497 20.555 4.79064 20.768 5.217C21 5.68 21 6.287 21 7.498V8M17 20H17.502C18.713 20 19.319 20 19.783 19.768C20.2094 19.555 20.555 19.2094 20.768 18.783C21 18.319 21 17.713 21 16.502V16M7 4H6.498C5.287 4 4.681 4 4.217 4.232C3.79064 4.44497 3.44497 4.79064 3.232 5.217C3 5.68 3 6.287 3 7.498V8M7 20H6.498C5.287 20 4.681 20 4.217 19.768C3.79064 19.555 3.44497 19.2094 3.232 18.783C3 18.32 3 17.713 3 16.502V16' stroke='%23226FFF' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-size: cover;
+        content: '';
       }
     }
 
-    &:hover {
-      border: 2px solid ${palette.gray300};
-      background: rgba(25, 25, 25, 0.05);
+    h3 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin: 7px auto 16px;
+    }
+
+    p {
+      font-size: 1.25rem;
+      font-weight: 300;
+      line-height: 1.4;
+      color: #525252;
     }
   }
 
-  span {
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: #969696;
-    letter-spacing: -0.6px;
-    line-height: 1.3;
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 1024px;
+    width: 100%;
 
-    ${media.mobile} {
-      font-size: 0.75rem;
+    > div {
+      display: flex;
+      align-items: flex-end;
+      gap: 40px;
+      padding: 0 0 0 44px;
+      border-radius: 30px;
+      background: ${palette.gray100};
+
+      &.item02 {
+        background: #EBF4FF;
+      }
+
+      > div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 25px;
+        padding: 85px; 0;
+      }
+
+      strong {
+        font-size: 1.88rem;
+        font-weight: 700;
+        line-height: 1.4;
+        text-align: left;
+      }
+
+      p {
+        font-size: 1.25rem;
+        line-height: 1.4;
+        color: #4D4D4D;
+        text-align: left;
+      }
     }
   }
 `;
@@ -1540,228 +902,99 @@ const Section01 = styled.div`
 const Section02 = styled.div`
   position: relative;
   width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 40px;
-  // padding-top: 20vh;
-  margin-top: -10vh;
-  background: radial-gradient(
-    114.49% 114.49% at 50% 114.49%,
-    #000 0%,
-    #000 88.09%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  padding: 80px 0 95px;
+  background: linear-gradient(94deg, rgba(45, 255, 132, 0.10) 1.63%, rgba(63, 130, 255, 0.10) 107.07%);
 
-  ${media.mobile} {
-    gap: 12px;
-    padding: 205px 20px 100px;
-    background: radial-gradient(
-      200.49% 200.49% at 50% 200.49%,
-      #000 0%,
-      #000 96.09%,
-      rgba(0, 0, 0, 0) 100%
-    );
+  > div {
+    display: flex;
+    justify-content: space-between;
+    max-width: 820px;
+    width: 100%;
+    margin: 0 auto;
   }
 
   .title {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    max-width: 1024px;
-    width: 100%;
-    margin: 0 auto;
-    z-index: 2;
+    align-items: flex-start;
 
-    ${media.mobile} {
-      padding-top: 70px;
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 4px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: ${palette.primary};
+
+      &:before {
+        width: 24px;
+        height: 24px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12Z' fill='%23226FFF'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M17.4516 15.908C17.4784 15.9584 17.4863 16.0166 17.4741 16.0723C17.4618 16.128 17.4301 16.1776 17.3846 16.212C15.831 17.3754 13.9415 18.0029 12.0006 18C10.0596 18.0029 8.17021 17.3754 6.61658 16.212C6.57111 16.1776 6.53939 16.128 6.52711 16.0723C6.51483 16.0166 6.5228 15.9584 6.54958 15.908C7.49958 14.192 9.58258 13 12.0006 13C14.4186 13 16.5016 14.191 17.4516 15.908Z' fill='%23226FFF'/%3E%3Cpath d='M17 4H17.502C18.713 4 19.319 4 19.783 4.232C20.2094 4.44497 20.555 4.79064 20.768 5.217C21 5.68 21 6.287 21 7.498V8M17 20H17.502C18.713 20 19.319 20 19.783 19.768C20.2094 19.555 20.555 19.2094 20.768 18.783C21 18.319 21 17.713 21 16.502V16M7 4H6.498C5.287 4 4.681 4 4.217 4.232C3.79064 4.44497 3.44497 4.79064 3.232 5.217C3 5.68 3 6.287 3 7.498V8M7 20H6.498C5.287 20 4.681 20 4.217 19.768C3.79064 19.555 3.44497 19.2094 3.232 18.783C3 18.32 3 17.713 3 16.502V16' stroke='%23226FFF' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-size: cover;
+        content: '';
+      }
     }
 
     h3 {
-      font-size: 4.5rem;
-      font-weight: 500;
-      color: ${palette.white};
-      line-height: 1.25;
-      letter-spacing: -2.16px;
-
-      ${media.mobile} {
-        width: 100%;
-        font-size: 2.5rem;
-      }
-    }
-
-    p {
-      font-size: 2rem;
+      font-size: 2.5rem;
       font-weight: 700;
-      color: ${palette.white};
-      line-height: 1.3;
-      letter-spacing: -0.96px;
-
-      ${media.mobile} {
-        font-size: 1rem;
-      }
+      line-height: 1.4;
+      text-align: left;
+      margin: 7px auto 16px;
     }
-  }
 
-  img {
-    position: relative;
-    z-index: 1;
-
-    ${media.mobile} {
-      width: 70%;
+    button {
+      font-size: 0.88rem;
+      font-weight: 600;
+      line-height: 1.55;
+      letter-spacing: -0.42px;
+      color: ${palette.white};
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 0;
+      background: ${palette.primary};
     }
   }
 
   .content {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    ${media.mobile} {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    &:after {
-      position: absolute;
-      bottom: -300px;
-      left: -230px;
-      width: 890px;
-      height: 890px;
-      border-radius: 898px;
-      background: radial-gradient(
-        50% 50% at 50% 50%,
-        rgba(34, 111, 255, 0.45) 0%,
-        rgba(0, 0, 0, 0.45) 76%
-      );
-      content: "";
-      z-index: 0;
-
-      ${media.mobile} {
-        bottom: 200px;
-        left: -50px;
-        width: 240px;
-        height: 240px;
-      }
-    }
-  }
-
-  .text-wrapper {
-    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    text-align: left;
-    z-index: 1;
-
-    ${media.mobile} {
-      gap: 16px;
-      text-align: center;
-    }
-
-    > p {
-      display: none;
-      font-size: 1rem;
-      font-weight: 500;
-      color: ${palette.white};
-      line-height: 1.3;
-      letter-spacing: -0.6px;
-      text-align: left;
-      display: none;
-
-      ${media.mobile} {
-      }
-    }
-
-    h3 {
-      font-size: 1.25rem;
-      font-weight: 500;
-      color: ${palette.white};
-      line-height: 1.3;
-      letter-spacing: -0.6px;
-      text-align: center;
-
-      ${media.mobile} {
-        font-size: 0.88rem;
-        font-weight: 400;
-        color: #bcbcbc;
-      }
-    }
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 330px;
+    width: 100%;
 
     > div {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(22, 22, 22, .1);
+      background: ${palette.white};
 
-      ${media.mobile} {
-        padding-top: 16px;
-        border-top: 1px solid rgba(255, 255, 255, 0.3);
+      div {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        flex-direction: column;
+        gap: 4px;
       }
 
-      > p:nth-child(1) {
-        margin-left: -60px;
-
-        ${media.mobile} {
-          margin-left: 0;
-        }
-      }
-
-      > p:nth-child(2) {
-        margin-left: -130px;
-
-        ${media.mobile} {
-          margin-left: 0;
-        }
-      }
-    }
-
-    ul {
-      display: flex;
-      flex-direction: column;
-      border-top: 1px solid rgba(255, 255, 255, 0.3);
-
-      ${media.mobile} {
-        border-top: none;
-        gap: 16px;
-      }
-
-      li {
+      strong {
         font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1.4;
+        color: ${palette.gray800};
+      }
+        
+      p {
+        font-size: 0.88rem;
         font-weight: 400;
-        color: ${palette.white};
         line-height: 1.5;
-        letter-spacing: -0.6px;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-
-        ${media.mobile} {
-          font-size: 1rem;
-          padding: 0;
-          border-bottom: none;
-          display: flex;
-          align-items: center;
-          flex-direction: column;
-          gap: 4px;
-        }
-
-        p {
-          ${media.mobile} {
-            font-size: 0.88rem;
-            line-height: 1.3;
-            letter-spacing: -0.54px;
-          }
-
-          &:nth-child(1) {
-            ${media.mobile} {
-              font-size: 1.13rem;
-              font-weight: 600;
-            }
-          }
-        }
+        color: #686868;
       }
     }
   }
@@ -1773,259 +1006,110 @@ const Section03 = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
-  padding: 220px 0 290px;
-  background: #010101;
-  overflow: hidden;
-
-  ${media.mobile} {
-    padding: 100px 20px;
-  }
-
-  &:before {
-    position: absolute;
-    top: 0;
-    right: -10%;
-    width: 900px;
-    height: 900px;
-    border-radius: 50%;
-    background: radial-gradient(
-      50% 50% at 50% 50%,
-      rgba(34, 111, 255, 0.45) 0%,
-      rgba(0, 0, 0, 0.45) 76%
-    );
-    content: "";
-    z-index: 0;
-
-    ${media.mobile} {
-      width: 380px;
-      height: 380px;
-      right: -120px;
-      top: 110px;
-    }
-  }
+  justify-content: center;
+  gap: 64px;
+  margin-top: 190px;
+  margin-bottom: 140px;
 
   .title {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-    max-width: 1024px;
-    width: 100%;
-    text-align: left;
-    margin: 0 auto;
-    z-index: 1;
 
-    h3 {
-      font-size: 4.5rem;
-      font-weight: 500;
-      color: ${palette.white};
-      line-height: 1.25;
-      letter-spacing: -2.16px;
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #00C7BE;
 
-      ${media.mobile} {
-        font-size: 2.75rem;
+      &:before {
+        width: 24px;
+        height: 24px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='24' viewBox='0 0 25 24' fill='none'%3E%3Cpath d='M12.5039 12C14.1608 12 15.5039 10.6569 15.5039 9C15.5039 7.34315 14.1608 6 12.5039 6C10.8471 6 9.50391 7.34315 9.50391 9C9.50391 10.6569 10.8471 12 12.5039 12Z' fill='%2300C7BE'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M17.9555 15.908C17.9823 15.9584 17.9902 16.0166 17.978 16.0723C17.9657 16.128 17.934 16.1776 17.8885 16.212C16.3349 17.3754 14.4454 18.0029 12.5045 18C10.5635 18.0029 8.67412 17.3754 7.12049 16.212C7.07501 16.1776 7.04329 16.128 7.03102 16.0723C7.01874 16.0166 7.0267 15.9584 7.05349 15.908C8.00349 14.192 10.0865 13 12.5045 13C14.9225 13 17.0055 14.191 17.9555 15.908Z' fill='%2300C7BE'/%3E%3Cpath d='M17.5039 4H18.0059C19.2169 4 19.8229 4 20.2869 4.232C20.7133 4.44497 21.0589 4.79064 21.2719 5.217C21.5039 5.68 21.5039 6.287 21.5039 7.498V8M17.5039 20H18.0059C19.2169 20 19.8229 20 20.2869 19.768C20.7133 19.555 21.0589 19.2094 21.2719 18.783C21.5039 18.319 21.5039 17.713 21.5039 16.502V16M7.50391 4H7.00191C5.79091 4 5.18491 4 4.72091 4.232C4.29455 4.44497 3.94888 4.79064 3.73591 5.217C3.50391 5.68 3.50391 6.287 3.50391 7.498V8M7.50391 20H7.00191C5.79091 20 5.18491 20 4.72091 19.768C4.29455 19.555 3.94888 19.2094 3.73591 18.783C3.50391 18.32 3.50391 17.713 3.50391 16.502V16' stroke='%2300C7BE' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-size: cover;
+        content: '';
       }
     }
 
-    p {
-      font-size: 2rem;
-      font-weight: 500;
-      color: ${palette.white};
-      line-height: 1.3;
-      letter-spacing: -0.96px;
-
-      ${media.mobile} {
-        font-size: 1.25rem;
-      }
+    h3 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin: 7px auto 16px;
     }
   }
 
   .content {
     display: flex;
-    flex-direction: column;
-    gap: 48px;
+    gap: 40px;
+    flex-wrap: wrap;
     max-width: 1024px;
     width: 100%;
-    z-index: 1;
 
-    ${media.mobile} {
-      gap: 20px;
-    }
-  }
-
-  .box-content {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-    padding: 20px;
-    border-radius: 15px;
-    border: 1px solid ${palette.white};
-    transition: all 0.5s;
-
-    ${media.mobile} {
-      padding: 20px 16px 12px;
-    }
-
-    &:hover {
-      border: 1px solid transparent;
-      background: linear-gradient(
-        180deg,
-        rgba(34, 111, 255, 0.3) 0%,
-        #020204 100%
-      );
-    }
-
-    > p {
+    > div {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 1.5rem;
-      font-weight: 500;
-      color: ${palette.white};
-      line-height: 1.5;
-      letter-spacing: -0.72px;
-      text-align: left;
-      margin-top: 12px;
+      gap: 40px;
+      flex: 1 1 auto;
+      max-width: 492px;
+      width: 100%;
+      border-radius: 30px;
+      background-color: ${palette.gray100};
 
-      ${media.mobile} {
-        font-size: 1rem;
-        display: none;
+      &.item03,
+      &.item04 {
+        background-color: #EBF4FF;
       }
 
-      svg {
-        flex-shrink: 0;
+      &.item01 {
+        background-image: url(${Landingimages.ImgLanding07});
+        background-size: auto;
+        background-position: right top 20px;
+        background-repeat: no-repeat;
       }
 
-      &.show {
+      &.item02 {
+        background-image: url(${Landingimages.ImgLanding08});
+        background-size: auto;
+        background-position: right -30px top;
+        background-repeat: no-repeat;
+      }
+
+      &.item03 {
+        background-image: url(${Landingimages.ImgLanding09});
+        background-size: auto;
+        background-position: right top;
+        background-repeat: no-repeat;
+      }
+
+      &.item04 {
+        background-image: url(${Landingimages.ImgLanding10});
+        background-size: auto;
+        background-position: right top 70px;
+        background-repeat: no-repeat;
+      }
+
+      > div {
         display: flex;
-      }
-    }
-
-    .more {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-
-      ${media.mobile} {
-        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 210px 50px 35px;
       }
 
-      span {
-        font-size: 1rem;
-        font-weight: 400;
-        color: ${palette.lightGray};
-        line-height: 1.5;
-        letter-spacing: -0.48px;
+      strong {
+        font-size: 1.25rem;
+        font-weight: 800;
+        line-height: 1.4;
+        text-align: left;
       }
 
-      i {
-        width: 8px;
-        height: 8px;
-        border-right: 2px solid ${palette.lightGray};
-        border-bottom: 2px solid ${palette.lightGray};
-        transform: rotate(45deg);
-      }
-    }
-  }
-
-  .content-text {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    text-align: left;
-
-    h4 {
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-      font-size: 2rem;
-      font-weight: 500;
-      color: ${palette.white};
-      line-height: 1.2;
-      letter-spacing: -0.96px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid ${palette.white};
-
-      ${media.mobile} {
-        gap: 20px;
-        font-size: 1.5rem;
-      }
-
-      svg {
-        ${media.mobile} {
-          width: 44px;
-        }
-      }
-    }
-
-    p {
-      font-size: 1.25rem;
-      font-weight: 500;
-      color: ${palette.white};
-      line-height: 1.5;
-      letter-spacing: -0.6px;
-
-      ${media.mobile} {
-        display: none;
-
-        &.show {
-          display: block;
-        }
-      }
-    }
-
-    ul {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-
-      ${media.mobile} {
-        display: none;
-
-        &.show {
-          display: flex;
-        }
-      }
-
-      li {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 1rem;
-        font-weight: 400;
-        color: ${palette.white};
-        line-height: 1.5;
-        letter-spacing: -0.48px;
-
-        ${media.mobile} {
-          align-items: flex-start;
-        }
-
-        &::before {
-          width: 20px;
-          height: 20px;
-          background: url(${images.IconCheck3}) no-repeat center center / 12px;
-          content: "";
-        }
-      }
-    }
-  }
-
-  .more {
-    cursor: pointer;
-
-    ${media.mobile} {
-      display: flex;
-    }
-    display: none;
-
-    i {
-      transition: transform 0.3s ease;
-
-      &.open {
-        transform: rotate(-135deg);
+      p {
+        font-size: 1.25rem;
+        line-height: 1.4;
+        color: #4D4D4D;
+        text-align: left;
       }
     }
   }
@@ -2034,183 +1118,89 @@ const Section03 = styled.div`
 const Section04 = styled.div`
   position: relative;
   width: 100%;
-  padding: 210px 0 130px;
-  background: #010101;
-  overflow: hidden;
-
-  ${media.mobile} {
-    padding: 100px 0;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 64px;
+  margin-top: 190px;
+  margin-bottom: 140px;
 
   .title {
-    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    max-width: 1024px;
-    width: 100%;
-    margin: 0 auto;
 
-    ${media.mobile} {
-      gap: 12px;
-    }
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #FF9500;
 
-    &::after {
-      position: absolute;
-      top: -100px;
-      left: -320px;
-      width: 890px;
-      height: 890px;
-      border-radius: 50%;
-      background: radial-gradient(
-        50% 50% at 50% 50%,
-        rgba(34, 111, 255, 0.45) 0%,
-        rgba(0, 0, 0, 0.45) 76%
-      );
-      content: "";
-      z-index: 0;
-
-      ${media.mobile} {
-        width: 240px;
-        height: 240px;
-        top: 80px;
-        left: 60%;
+      &:before {
+        width: 24px;
+        height: 24px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='24' viewBox='0 0 25 24' fill='none'%3E%3Cpath d='M12.5039 12C14.1608 12 15.5039 10.6569 15.5039 9C15.5039 7.34315 14.1608 6 12.5039 6C10.8471 6 9.50391 7.34315 9.50391 9C9.50391 10.6569 10.8471 12 12.5039 12Z' fill='%23FF9500'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M17.9555 15.908C17.9823 15.9584 17.9902 16.0166 17.978 16.0723C17.9657 16.128 17.934 16.1776 17.8885 16.212C16.3349 17.3754 14.4454 18.0029 12.5045 18C10.5635 18.0029 8.67412 17.3754 7.12049 16.212C7.07501 16.1776 7.04329 16.128 7.03102 16.0723C7.01874 16.0166 7.0267 15.9584 7.05349 15.908C8.00349 14.192 10.0865 13 12.5045 13C14.9225 13 17.0055 14.191 17.9555 15.908Z' fill='%23FF9500'/%3E%3Cpath d='M17.5039 4H18.0059C19.2169 4 19.8229 4 20.2869 4.232C20.7133 4.44497 21.0589 4.79064 21.2719 5.217C21.5039 5.68 21.5039 6.287 21.5039 7.498V8M17.5039 20H18.0059C19.2169 20 19.8229 20 20.2869 19.768C20.7133 19.555 21.0589 19.2094 21.2719 18.783C21.5039 18.319 21.5039 17.713 21.5039 16.502V16M7.50391 4H7.00191C5.79091 4 5.18491 4 4.72091 4.232C4.29455 4.44497 3.94888 4.79064 3.73591 5.217C3.50391 5.68 3.50391 6.287 3.50391 7.498V8M7.50391 20H7.00191C5.79091 20 5.18491 20 4.72091 19.768C4.29455 19.555 3.94888 19.2094 3.73591 18.783C3.50391 18.32 3.50391 17.713 3.50391 16.502V16' stroke='%23FF9500' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-size: cover;
+        content: '';
       }
     }
 
     h3 {
-      font-size: 4.5rem;
-      font-weight: 500;
-      color: ${palette.white};
-      line-height: 1.25;
-      letter-spacing: -2.16px;
-      z-index: 1;
-
-      ${media.mobile} {
-        font-size: 2.75rem;
-      }
-    }
-
-    p {
-      font-size: 2rem;
-      font-weight: 500;
-      color: ${palette.white};
-      line-height: 1.3;
-      letter-spacing: -0.96px;
-      z-index: 1;
-
-      ${media.mobile} {
-        font-size: 1rem;
-      }
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin: 7px auto 16px;
     }
   }
 
-  .carousel {
-    position: relative;
+  .content {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
     max-width: 1024px;
     width: 100%;
-    margin: 80px auto 0;
-    overflow: visible;
-    z-index: 1;
-    padding: 0;
 
-    ${media.mobile} {
-      overflow: hidden;
-      padding: 0;
-      margin: 40px auto 0;
-      width: 100vw; // 전체 뷰포트 너비로 설정
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%); // 가운데 정렬
-      padding: 0 20px;
-    }
-
-    .carousel-container {
+    > div {
       display: flex;
-      transition: transform 0.5s ease;
+      flex-direction: column;
       gap: 20px;
-      transform: translateX(
-        calc(
-          -${(props) => props.currentSlide * 100}% - ${(props) => props.currentSlide * 20}px
-        )
-      );
-
-      ${media.mobile} {
-        gap: 20px;
-        width: 100%;
-        transform: translateX(-${(props) => props.currentSlide * (100 + 6)}%);
-      }
-      user-select: none;
-      touch-action: pan-y pinch-zoom;
-    }
-
-    .carousel-item {
-      min-width: 1024px;
-      margin: 0 auto;
-      transform: scale(0.9);
-      transition: all 0.5s ease;
-      opacity: 0.5;
-
-      ${media.mobile} {
-        // min-width: calc(100% - 40px);
-        min-width: 100%;
-        padding: 0;
-        transform: scale(1);
-        opacity: 1;
-        display: flex;
-        justify-content: center;
-        margin: 0;
-      }
-
-      &:nth-child(${(props) => props.currentSlide + 1}) {
-        transform: scale(1);
-        opacity: 1;
-
-        ${media.mobile} {
-          transform: scale(1);
-        }
-      }
+      max-width: 330px;
+      width: 100%;
+      padding: 16px 16px 20px;
+      border-radius: 30px;
+      border: 1px solid rgba(22, 22, 22, 0.10);
+      background: ${palette.white};
 
       img {
         width: 100%;
+        height: 100%;
         object-fit: cover;
-        border-radius: 15px;
-
-        ${media.mobile} {
-          width: 100%;
-        }
-      }
-    }
-
-    .carousel-indicators {
-      position: absolute;
-      bottom: -30px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 8px;
-      z-index: 2;
-
-      ${media.mobile} {
-        display: none;
       }
 
-      button {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: ${palette.white};
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        opacity: 0.4;
-        transition: all 0.3s;
+      > div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
 
-        &.active {
-          background: ${palette.white};
-          border-radius: 10px;
-          opacity: 1;
-        }
+      strong {
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 1.2;
+        letter-spacing: -0.48px;
+        color: #222;
+        text-align: left;
+      }
+
+      p {
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #686868;
+        text-align: left;
       }
     }
   }
@@ -2219,8 +1209,7 @@ const Section04 = styled.div`
 const Section05 = styled.div`
   position: relative;
   width: 100%;
-  padding: 85px 0 0;
-  background: #010101;
+  margin-bottom: 180px;
   overflow: hidden;
 
   .title {
@@ -2230,11 +1219,6 @@ const Section05 = styled.div`
     align-items: center;
     gap: 80px;
     padding: 370px 0 280px;
-
-    ${media.mobile} {
-      gap: 48px;
-      padding: 200px 0 150px;
-    }
 
     &:before {
       position: absolute;
@@ -2363,110 +1347,42 @@ const FaqWrap = styled.div`
   gap: 285px;
   width: 100%;
   margin: 0 auto;
-  padding: 104px 0;
-  background: #191919;
   overflow: hidden;
-
-  ${media.mobile} {
-    padding: 20px;
-  }
 
   > div {
     display: flex;
-    gap: 285px;
+    flex-direction: column;
+    gap: 44px;
     max-width: 1024px;
     width: 100%;
     margin: 0 auto;
-
-    ${media.mobile} {
-      flex-direction: column;
-      gap: 32px;
-    }
   }
 
   h3 {
     font-size: 4rem;
     font-weight: 500;
-    color: ${palette.white};
     line-height: 1.25;
     letter-spacing: -1.92px;
     z-index: 1;
     display: flex;
-
-    ${media.mobile} {
-      font-size: 2rem;
-      text-align: left;
-    }
-
-    em {
-      font-style: normal;
-      display: none;
-
-      ${media.mobile} {
-        display: block;
-      }
-    }
-
-    span {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      font-size: 1.13rem;
-      font-weight: 500;
-      line-height: 1.3;
-      letter-spacing: -0.54px;
-      cursor: pointer;
-
-      ${media.mobile} {
-        display: flex;
-        margin-left: auto;
-      }
-
-      i {
-        position: relative;
-        width: 20px;
-        height: 8px;
-
-        &:before,
-        &:after {
-          position: absolute;
-          height: 2px;
-          border-radius: 4px;
-          background: ${palette.white};
-          content: "";
-        }
-
-        &:before {
-          bottom: 0;
-          width: 100%;
-        }
-
-        &:after {
-          right: 0;
-          bottom: 4px;
-          transform: rotate(45deg);
-          width: 10px;
-        }
-      }
-    }
   }
 `;
 
 const FaqList = styled.ul`
   display: flex;
   flex-direction: column;
-  border-top: 1px solid #585858;
+  border-top: 1px solid #C3C3C3;
   width: 100%;
 
   li {
-    border-bottom: 1px solid #585858;
+    border-bottom: 1px solid #C3C3C3;
 
     button {
       width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 0;
+      padding: 32px 0;
       text-align: left;
       background: transparent;
       border: none;
@@ -2480,7 +1396,6 @@ const FaqList = styled.ul`
         font-family: Pretendard, "Poppins";
         font-size: 1.25rem;
         font-weight: 500;
-        color: ${palette.white};
         line-height: 1.25;
         letter-spacing: -0.6px;
 
@@ -2499,7 +1414,7 @@ const FaqList = styled.ul`
         &::after {
           content: "";
           position: absolute;
-          background-color: ${palette.white};
+          background-color: ${palette.black};
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
@@ -2543,7 +1458,7 @@ const FaqList = styled.ul`
       p {
         font-size: 1rem;
         font-weight: 400;
-        color: ${palette.white};
+        color: ${palette.lightGray};
         line-height: 1.5;
         letter-spacing: -0.48px;
         text-align: left;
@@ -2589,7 +1504,7 @@ const Footer = styled.div`
   position: relative;
   width: 100%;
   padding: 155px 0 115px;
-  background: ${palette.black};
+  background: ${palette.gray100};
 
   ${media.mobile} {
     padding: 40px 20px;
@@ -2632,7 +1547,7 @@ const Footer = styled.div`
     strong {
       font-size: 1rem;
       font-weight: 600;
-      color: ${palette.white};
+      color: ${palette.black};
       line-height: 1.2;
       letter-spacing: -0.48px;
 
@@ -2656,7 +1571,7 @@ const Footer = styled.div`
         gap: 20px;
         font-size: 1rem;
         font-weight: 400;
-        color: ${palette.white};
+        color: ${palette.black};
         line-height: 1.2;
         letter-spacing: -0.48px;
 
@@ -2679,7 +1594,7 @@ const Footer = styled.div`
           &:before {
             width: 1px;
             height: 12px;
-            background: ${palette.white};
+            background: ${palette.black};
             content: "";
           }
         }
@@ -2690,7 +1605,7 @@ const Footer = styled.div`
   .copyright {
     font-size: 1rem;
     font-weight: 400;
-    color: #ececec;
+    color: ${palette.black};
     line-height: 1.2;
     letter-spacing: -0.48px;
     text-align: left;

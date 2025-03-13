@@ -34,6 +34,21 @@ import ImgMarketing01 from "../images/Landing/imgMarketing01.png";
 import ImgMarketing02 from "../images/Landing/imgMarketing02.png";
 import ImgMarketing03 from "../images/Landing/imgMarketing03.png";
 
+import ImgLanding from "../images/Landing/img_landing.png";
+import ImgLanding01 from "../images/Landing/img_landing01.png";
+import ImgLanding02 from "../images/Landing/img_landing02.png";
+import ImgLanding03 from "../images/Landing/img_landing03.png";
+import ImgLanding04 from "../images/Landing/img_landing04.png";
+import ImgLanding05 from "../images/Landing/img_landing05.png";
+import ImgLanding06 from "../images/Landing/img_landing06.png";
+import ImgLanding07 from "../images/Landing/img_landing07.png";
+import ImgLanding08 from "../images/Landing/img_landing08.png";
+import ImgLanding09 from "../images/Landing/img_landing09.png";
+import ImgLanding10 from "../images/Landing/img_landing10.png";
+import ImgLanding11 from "../images/Landing/img_landing11.png";
+import ImgLanding12 from "../images/Landing/img_landing12.png";
+import ImgLanding13 from "../images/Landing/img_landing13.png";
+
 const Landingimages = {
   Img01,
   Img02,
@@ -70,6 +85,21 @@ const Landingimages = {
   ImgMarketing01,
   ImgMarketing02,
   ImgMarketing03,
+
+  ImgLanding,
+  ImgLanding01,
+  ImgLanding02,
+  ImgLanding03,
+  ImgLanding04,
+  ImgLanding05,
+  ImgLanding06,
+  ImgLanding07,
+  ImgLanding08,
+  ImgLanding09,
+  ImgLanding10,
+  ImgLanding11,
+  ImgLanding12,
+  ImgLanding13,
 }
 
 export default Landingimages;
