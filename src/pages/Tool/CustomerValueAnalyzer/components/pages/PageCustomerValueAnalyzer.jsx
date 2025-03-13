@@ -1,70 +1,47 @@
 //고객 핵심 가치 분석기
-
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useAtom } from "jotai";
 import { palette } from "../../../../../assets/styles/Palette";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
 import {
-  ButtonGroup,
   Button,
-  IconButton,
 } from "../../../../../assets/styles/ButtonStyle";
-
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import MoleculeCustomerValueCard from "../molecules/MoleculeCustomerValueCard";
-
 import {
-  FormBox,
-  CustomTextarea,
-  CustomInput,
   SelectBox,
   SelectBoxItem,
   SelectBoxTitle,
   SelectBoxList,
-  CheckBoxButton,
-  GenderRadioButton,
 } from "../../../../../assets/styles/InputStyle";
 import PopupWrap from "../../../../../assets/styles/Popup";
 import {
   ContentsWrap,
   MainContent,
-  TabWrapType3,
-  TabButtonType3,
   TabWrapType5,
   TabButtonType5,
   TabContent5,
-  TabContent5Item,
   CardGroupWrap,
   BottomBar,
   BgBoxItem,
   BoxWrap,
-  ListBoxGroup,
   PersonaGroup,
-  ListBoxItem,
-  Badge,
   Persona,
-  PersonaInfo,
-  ListBox,
-  ListBoxWrap,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import personaImages from "../../../../../assets/styles/PersonaImages";
 import images from "../../../../../assets/styles/Images";
 import {
   H4,
   H3,
-  H5,
-  Sub2,
   Sub3,
   Body1,
   Body2,
   Body3,
   Caption2,
-  Helptext,
 } from "../../../../../assets/styles/Typography";
-
 import {
   IS_LOGGED_IN,
   TOOL_ID,
@@ -78,17 +55,12 @@ import {
   CUSTOMER_VALUE_ANALYZER_POSITIONING,
   CUSTOMER_VALUE_ANALYZER_FINAL_REPORT,
   TOOL_LOADING,
-  CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR,
-  SELECTED_INTERVIEW_PURPOSE_DATA,
-  CREDIT_INDEPTH_INTERVIEW,
   PROJECT_SAAS,
   PERSONA_LIST_SAAS,
 } from "../../../../AtomStates";
-
 import {
   createToolOnServer,
   updateToolOnServer,
-  getToolOnServer,
   InterviewXCustomerValueAnalyzerPersonaRequest,
   getToolListOnServer,
   InterviewXCustomerValueAnalyzerJourneyMapRequest,
@@ -97,17 +69,16 @@ import {
   InterviewXCustomerValueAnalyzerPositioningRequest,
   InterviewXCustomerValueAnalyzerFinalReportRequest,
 } from "../../../../../utils/indexedDB";
-
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
-import OrganismNoPersonaMessage from "../../../public/organisms/OrganismNoPersonaMessage"; // Organism 이름으로 변경
-import MoleculePersonaListItem from "../../../public/molecules/MoleculePersonaListItem";
 import OrganismPersonaList from "../../../public/organisms/OrganismPersonaList";
 
 const PageCustomerValueAnalyzer = () => {
+
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
-  const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
+
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [projectSaas, ] = useAtom(PROJECT_SAAS);
+  const [personaListSaas, ] = useAtom(PERSONA_LIST_SAAS);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -125,7 +96,7 @@ const PageCustomerValueAnalyzer = () => {
   const [customerValueAnalyzerFactor, setCustomerValueAnalyzerFactor] = useAtom(
     CUSTOMER_VALUE_ANALYZER_FACTOR
   );
-  const [customerValueAnalyzerClustering, setCustomerValueAnalyzerClustering] =
+  const [, setCustomerValueAnalyzerClustering] =
     useAtom(CUSTOMER_VALUE_ANALYZER_CLUSTERING);
   const [
     customerValueAnalyzerPositioning,
@@ -135,16 +106,9 @@ const PageCustomerValueAnalyzer = () => {
     customerValueAnalyzerFinalReport,
     setCustomerValueAnalyzerFinalReport,
   ] = useAtom(CUSTOMER_VALUE_ANALYZER_FINAL_REPORT);
-  const [
-    customerValueAnalyzerSelectedFactor,
-    setCustomerValueAnalyzerSelectedFactor,
-  ] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_FACTOR);
 
-  const [showPopup, setShowPopup] = useState(false);
-  const [showPopupMore, setShowPopupMore] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
-  const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [selectedPersonasSaas, setSelectedPersonasSaas] = useState([]);
@@ -152,53 +116,32 @@ const PageCustomerValueAnalyzer = () => {
     customerList: "",
     analysisScope: "",
   });
-  const [selectedInterviewType, setSelectedInterviewType] = useState(null);
-  const [selectedInterviewPurpose, setSelectedInterviewPurpose] =
+  const [, setSelectedInterviewType] = useState(null);
+  const [, setSelectedInterviewPurpose] =
     useState(null);
-  const [activeTab1, setActiveTab1] = useState("personaInfo");
-  const [contactForm, setContactForm] = useState({
+  const [, setContactForm] = useState({
     email: "",
     purpose: "",
     content: "",
   });
-  const [dropUp, setDropUp] = useState(false);
-  const selectBoxRef = useRef(null);
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
-  const [targetCustomers, setTargetCustomers] = useState([""]);
-  const [personaData, setPersonaData] = useState({
-    personaInfo: "",
-    personaScenario: "",
-  });
-
-  const [selectBoxStates, setSelectBoxStates] = useState({
+  const [, setTargetCustomers] = useState([""]);
+  const [, setSelectBoxStates] = useState({
     customerList: false,
     analysisScope: false,
   });
-
-  const [dropUpStates, setDropUpStates] = useState({
-    customerList: false,
-    analysisScope: false,
-  });
-
-  const customerListRef = useRef(null);
-  const analysisScopeRef = useRef(null);
-
   const [isLoading, setIsLoading] = useState(false);
-  const [targetDiscoveryList, setTargetDiscoveryList] = useState([]);
-
+  const [, setTargetDiscoveryList] = useState([]);
   const [cardStatuses, setCardStatuses] = useState({});
   const [cardStatusesFactor, setCardStatusesFactor] = useState({});
-
-  const [selectedBusiness, setSelectedBusiness] = useState("");
-
+  const [, setSelectedBusiness] = useState("");
   const [apiCallCompleted, setApiCallCompleted] = useState(false);
-  const [apiCallCompletedFactor, setApiCallCompletedFactor] = useState(false);
-  const [completedApiCalls, setCompletedApiCalls] = useState([]);
-
+  const [, setApiCallCompletedFactor] = useState(false);
   // 상태 관리를 위한 state 추가
   const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
+
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -244,8 +187,6 @@ const PageCustomerValueAnalyzer = () => {
             })
             .filter((id) => id !== null);
 
-          // 찾은 _id 값으로 selectedPersonasSaas 상태를 업데이트합니다
-          // setSelectedPersonasSaas(selectedPersonaIds);
 
           // 선택된 페르소나 버튼 상태도 업데이트합니다
           const newSelectedButtons = {};
@@ -322,11 +263,6 @@ const PageCustomerValueAnalyzer = () => {
           setCustomerValueAnalyzerJourneyMap(customerValueAnalyzerJourneyMap);
         }
 
-        // if (Array.isArray(customerValueAnalyzerFactor)) {
-        //   setCustomerValueAnalyzerFactor(customerValueAnalyzerFactor);
-        // }
-
-        // ... existing code ...
         if (
           Array.isArray(customerValueAnalyzerFactor) &&
           customerValueAnalyzerFactor.length > 0
@@ -372,7 +308,6 @@ const PageCustomerValueAnalyzer = () => {
         while (true) {
           const response = await getToolListOnServer(size, page, isLoggedIn);
 
-          // Check if response exists and has data
           if (!response || !response.data) {
             break;
           }
@@ -387,7 +322,6 @@ const PageCustomerValueAnalyzer = () => {
 
           allItems = [...allItems, ...newItems];
 
-          // Check if we've reached the end of the data
           if (!response.count || response.count <= page * size) {
             break;
           }
@@ -397,7 +331,7 @@ const PageCustomerValueAnalyzer = () => {
 
         setTargetDiscoveryList(allItems);
       } catch (error) {
-        setTargetDiscoveryList([]); // Set empty array on error
+        setTargetDiscoveryList([]); 
       }
     };
 
@@ -466,8 +400,6 @@ const PageCustomerValueAnalyzer = () => {
                 target: customerValueAnalyzerInfo.targetList[index],
               });
             }
-
-            // setCustomerValueAnalyzerJourneyMap(journeyMapData);
 
             setCustomerValueAnalyzerJourneyMap((prev) => {
               // prev가 undefined인 경우 빈 배열로 초기화
@@ -569,7 +501,7 @@ const PageCustomerValueAnalyzer = () => {
         analysis_scope: selectedPurposes.analysisScope,
         analysis_purpose: businessDescription,
       };
-      // console.log("businessData", businessData);
+
 
       const response = await InterviewXCustomerValueAnalyzerPersonaRequest(
         businessData,
@@ -618,14 +550,13 @@ const PageCustomerValueAnalyzer = () => {
       setToolId(responseToolId);
       setToolStep(1);
 
-      // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
       setCustomerValueAnalyzerPersona(
         (response.response.customer_value_persona || []).slice(
           0,
           selectedCustomers.length
         )
       );
-      // console.log("customerValueAnalyzerPersona", customerValueAnalyzerPersona);
+    
 
       setCustomerValueAnalyzerInfo(businessUpdateData);
 
@@ -654,31 +585,7 @@ const PageCustomerValueAnalyzer = () => {
     }
   };
 
-  const handleTargetDiscoveryClick = (business) => {
-    setBusinessDescription(business);
-  };
 
-  const calculateDropDirection = (ref, selectBoxId) => {
-    if (ref.current) {
-      const rect = ref.current.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - rect.bottom;
-      const spaceAbove = rect.top;
-      const dropDownHeight = 200;
-
-      setDropUpStates((prev) => ({
-        ...prev,
-        [selectBoxId]: spaceBelow < dropDownHeight && spaceAbove > spaceBelow,
-      }));
-    }
-  };
-
-  const handleSelectBoxClick = (selectBoxId, ref) => {
-    calculateDropDirection(ref, selectBoxId);
-    setSelectBoxStates((prev) => ({
-      ...prev,
-      [selectBoxId]: !prev[selectBoxId],
-    }));
-  };
 
   const handlePurposeSelect = (purpose, selectBoxId) => {
     setSelectedPurposes((prev) => ({
@@ -744,31 +651,7 @@ const PageCustomerValueAnalyzer = () => {
     setShowPopupError(false);
   };
 
-  // 필수 필드가 모두 입력되었는지 확인하는 함수
-  const isRequiredFieldsFilled = () => {
-    return (
-      businessDescription.trim() !== "" &&
-      targetCustomers.some((customer) => customer.trim() !== "") && // 최소 1개 이상의 고객 정보가 입력되었는지 확인
-      selectedPurposes.analysisScope !== ""
-    );
-  };
 
-  // 비즈니스 설명 입력 핸들러
-  const handleBusinessDescriptionChange = (e) => {
-    const input = e.target.value;
-    if (input.length <= 150) {
-      setBusinessDescription(input);
-    }
-  };
-
-  // 각 입력 필드의 변경을 처리하는 함수
-  const handleTargetCustomerChange = (index, value) => {
-    setTargetCustomers((prev) => {
-      const newTargetCustomers = [...prev];
-      newTargetCustomers[index] = value;
-      return newTargetCustomers;
-    });
-  };
 
   const handleSubmitPersonas = async () => {
     await updateToolOnServer(
@@ -878,7 +761,6 @@ const PageCustomerValueAnalyzer = () => {
         }
       }
 
-      // setCustomerValueAnalyzerFactor(results);
 
       await updateToolOnServer(
         toolId,
@@ -1088,7 +970,6 @@ const PageCustomerValueAnalyzer = () => {
 
   const cleanMermaidCode = mermaidCode.replace(/quadrant-\d\s+[^\n]+\n/g, "");
 
-  // const clusterList = customerValueAnalyzerPositioning?.cluster_list || [];
 
   const MermaidDiagram = ({ code }) => {
     const [imageUrl, setImageUrl] = useState("");
@@ -1194,14 +1075,6 @@ const PageCustomerValueAnalyzer = () => {
       </DiagramContainer>
     );
   };
-
-  const [creditIndepthInterview] = useAtom(CREDIT_INDEPTH_INTERVIEW);
-
-  const [isIndepthEnabled, setIsIndepthEnabled] = useState(false);
-
-  const [selectedInterviewPurposeData] = useAtom(
-    SELECTED_INTERVIEW_PURPOSE_DATA
-  );
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
@@ -1592,20 +1465,6 @@ const PageCustomerValueAnalyzer = () => {
                         }
                       />
                     </div>
-                    {/* <Button
-                      Other
-                      Primary
-                      Fill
-                      Round
-                      onClick={() => handleSubmitBusinessInfo()}
-                      disabled={
-                        selectedPurposes.analysisScope === "" ||
-                        getSelectedPersonaCount() === 0 ||
-                        toolStep >= 1
-                      }
-                    >
-                      다음
-                    </Button> */}
 
                     <BottomBar W100>
                       <Body2
@@ -1661,24 +1520,24 @@ const PageCustomerValueAnalyzer = () => {
                           <MoleculeCustomerValueCard
                             key={index}
                             id={index}
-                            title={target.personaName} // title에 문자열을 전달
-                            content={customerValueAnalyzerPersona[index]} // content에 문자열을 전달
+                            title={target.personaName}
+                            content={customerValueAnalyzerPersona[index]}
                             business={
                               customerValueAnalyzerInfo.business ||
                               "비즈니스 정보 없음"
-                            } // 기본값 설정
+                            }
                             status={
                               customerValueAnalyzerJourneyMap.length ===
                               customerValueAnalyzerInfo.targetList.length
                                 ? "completed"
-                                : cardStatuses[index] || "대기 중" // 기본값 설정
+                                : cardStatuses[index] || "대기 중"
                             }
                             isSelected={selectedPersonas.includes(index)}
                             onSelect={(id) => handleCheckboxChange(id)}
                             viewType="list"
                             journeyMapData={
                               customerValueAnalyzerJourneyMap[index] || {}
-                            } // 기본값으로 빈 객체 설정
+                            }
                           />
                         );
                       }
@@ -1701,10 +1560,6 @@ const PageCustomerValueAnalyzer = () => {
                       disabled={
                         selectedPersonas.length === 0 ||
                         toolStep >= 2 ||
-                        // Object.values(cardStatuses).some(
-                        //   (status) =>
-                        //     status === "loading" || status === "waiting"
-                        // )
                         customerValueAnalyzerJourneyMap.length !==
                           customerValueAnalyzerInfo.targetList.length
                       }
@@ -1740,8 +1595,8 @@ const PageCustomerValueAnalyzer = () => {
                           <MoleculeCustomerValueCard
                             key={index}
                             id={index}
-                            title={persona.target.personaName} // title에 문자열을 전달
-                            content={persona.content} // content에 문자열을 전달
+                            title={persona.target.personaName}
+                            content={persona.content}
                             status={
                               customerValueAnalyzerFactor.length ===
                               customerValueAnalyzerSelectedPersona.length
@@ -1751,8 +1606,8 @@ const PageCustomerValueAnalyzer = () => {
                             factor={customerValueAnalyzerFactor[index]}
                             business={
                               project.projectTitle || "비즈니스 정보 없음"
-                            } // 기본값 설정
-                            journeyMapData={persona.journeyMap || {}} // 기본값으로 빈 객체 설정
+                            }
+                            journeyMapData={persona.journeyMap || {}}
                             showOnlySelected={true}
                             hideCheckCircle={true}
                             activeTab={3}
@@ -1822,19 +1677,6 @@ const PageCustomerValueAnalyzer = () => {
                     </BgBoxItem>
 
                     <InsightAnalysis>
-                      {/* <div className="title">
-                        <div>
-                          <TabWrapType4>
-                            <TabButtonType4>종합 분석 결과</TabButtonType4>
-                            <TabButtonType4>
-                              클러스터링 항목 상세 보기
-                            </TabButtonType4>
-                          </TabWrapType4>
-                        </div>
-                        <Button Primary onClick={() => setShowPopupSave(true)}>
-                          리포트 저장하기
-                        </Button>
-                      </div> */}
 
                       <div className="content">
                         <H4
@@ -1886,40 +1728,10 @@ const PageCustomerValueAnalyzer = () => {
                       </div>
 
                       <ValueMap>
-                        {/* 
-                        <div className="title">
-                          <div>
-                            <span className="must-fix" />
-                            <Caption2 color="gray700">
-                              Must Fix : 최우선 해결 요소
-                            </Caption2>
-                          </div>
-                          <div>
-                            <span className="niche-pain" />
-                            <Caption2 color="gray700">
-                              Niche Pain : 니치 불편 요소
-                            </Caption2>
-                          </div>
-                          <div>
-                            <span className="key-strengths" />
-                            <Caption2 color="gray700">
-                              Key Strengths : 차별화 요소
-                            </Caption2>
-                          </div>
-                          <div>
-                            <span className="low-impact" />
-                            <Caption2 color="gray700">
-                              Low Impact : 저관여 요소
-                            </Caption2>
-                          </div>
-                        </div> 
-                        */}
 
                         <div className="content">
                           <div className="mermaid">
-                            {/* <MermaidDiagram code={customerValueAnalyzerPositioning?.mermaid} /> */}
                             <MermaidDiagram code={cleanMermaidCode} />
-                            {/* <MermaidDiagram code={mermaidCode} /> */}
 
                             <div className="mermaid-legend">
                               <ul
@@ -1988,15 +1800,7 @@ const PageCustomerValueAnalyzer = () => {
                           </div>
                         </div>
                       </ValueMap>
-                    </ValueMapWrap>
-
-                    {/* <Button
-                      Small
-                      Primary
-                      onClick={() => setShowPopupSave(true)}
-                    >
-                      리포트 저장하기
-                    </Button> */}
+                    </ValueMapWrap>      
                   </>
                 )}
               </TabContent5>
@@ -2046,71 +1850,6 @@ const ValueAnalyzerWrap = styled.div`
   flex-direction: column;
   gap: 100px;
   margin-top: 60px;
-`;
-
-const CustomerValueWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-
-  ${(props) =>
-    props.NoData &&
-    css`
-      gap: 20px;
-      align-items: center;
-      justify-content: center;
-      min-height: 300px;
-      border-radius: 10px;
-      border: 1px solid ${palette.outlineGray};
-      transition: all 0.2s ease-in-out;
-      &:hover {
-        border-color: ${palette.primary};
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        transform: translateY(-2px);
-      }
-    `}
-`;
-const ToolPublicPersonaWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-
-  ${(props) =>
-    props.NoData &&
-    css`
-      gap: 20px;
-      align-items: center;
-      justify-content: center;
-      min-height: 300px;
-      border-radius: 10px;
-      border: 1px solid ${palette.outlineGray};
-      transition: all 0.2s ease-in-out;
-      &:hover {
-        border-color: ${palette.primary};
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        transform: translateY(-2px);
-      }
-    `}
-`;
-const ListText = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-
-const ListTitle = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const ListSubtitle = styled.div``;
-
-const ListButton = styled.div``;
-
-const CustomButton = styled(Button)`
-  min-width: 92px;
 `;
 
 const InsightAnalysis = styled.div`

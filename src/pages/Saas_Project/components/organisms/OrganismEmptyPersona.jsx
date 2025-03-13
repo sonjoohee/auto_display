@@ -1,25 +1,19 @@
 //직압관리/프로젝트 리스트
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate, useLocation } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-import { Body2 } from "../../../../assets/styles/Typography";
 import { useAtom } from "jotai";
 import AtomPersonaLoader from "../../../Global/atoms/AtomPersonaLoader";
 import { Sub3 } from "../../../../assets/styles/Typography";
 import { css } from "styled-components";
 import {
   createPersonaOnServer,
-  updatePersonaOnServer,
-  getPersonaOnServer,
   getPersonaListOnServer,
-  deletePersonaOnServer,
   InterviewXPersonaMacroSegmentRequest,
   InterviewXPersonaUniqueUserRequest,
   InterviewXPersonaKeyStakeholderRequest,
-  InterviewXPersonaProfileRequest,
 } from "../../../../utils/indexedDB";
 
 import {
@@ -30,14 +24,13 @@ import {
 } from "../../../../pages/AtomStates";
 
 const OrganismEmptyPersona = () => {
-  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState(false);
 
-  const [projectPersonaList, setProjectPersonaList] =
-    useAtom(PROJECT_PERSONA_LIST);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [project, setProject] = useAtom(PROJECT_SAAS);
-  const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
+  const [, setProjectPersonaList] = useAtom(PROJECT_PERSONA_LIST);
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [project, ] = useAtom(PROJECT_SAAS);
+  const [, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const handleCreatePersona = async () => {
     setIsLoading(true);
 
@@ -323,30 +316,6 @@ const EmptyStateContent = styled.div`
   padding: 40px;
 `;
 
-const EmptyIcon = styled.div`
-  width: 40px;
-  height: 40px;
-  margin-bottom: 8px;
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-`;
-
-const EmptyText = styled.p`
-  font-size: 1rem;
-  color: ${palette.gray800};
-  line-height: 1.5;
-  margin: 0;
-`;
-
-const SubText = styled.span`
-  display: block;
-  font-size: 1rem;
-  color: ${palette.gray500};
-  margin-top: 4px;
-`;
 
 export default OrganismEmptyPersona;

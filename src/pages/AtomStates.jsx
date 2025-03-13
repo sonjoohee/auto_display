@@ -21,7 +21,8 @@ export const USER_MEMBERSHIP = atom("");
 
 // 사용자 데이터 상태
 export const CURRENT_USER_STATUS = atom(null);
-export const ERROR_STATUS = atom(""); // 에러 상태 추가
+export const ERROR_STATUS = atom(""); // 에러 상태 추가 
+export const SUCCESS_STATUS = atom(""); // 성공 상태 추가
 export const USER_CREDITS = atom({});
 
 // 패널 선택 상태

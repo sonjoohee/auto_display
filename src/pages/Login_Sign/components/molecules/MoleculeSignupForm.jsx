@@ -18,6 +18,7 @@ import {
   SIGN_UP_ROLE,
   SIGN_UP_STATUS,
   ERROR_STATUS,
+  SUCCESS_STATUS,
   CONVERSATION_ID
 } from '../../../AtomStates';
 import MoleculeSignupPopup from './MoleculeSignupPopup'; // 팝업 컴포넌트 임포트
@@ -37,6 +38,7 @@ const MoleculeSignupForm = () => {
   const [signUpRole, setSignUpRole] = useAtom(SIGN_UP_ROLE);
   const [signUpStatus, setSignUpStatus] = useAtom(SIGN_UP_STATUS);
   const [errorStatus, setErrorStatus] = useAtom(ERROR_STATUS);
+  const [successStatus, setSuccessStatus] = useAtom(SUCCESS_STATUS);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -52,6 +54,7 @@ const MoleculeSignupForm = () => {
   // 팝업 상태 atom의 setter 가져오기
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
   const [isSignupPopupOpen, setIsSignupPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN);
+
 
   const [isEmailValid, setIsEmailValid] = useState(false); // 이메일 유효성 상태 추가
   const [EmailError, setEmailError] = useState('');
@@ -193,7 +196,7 @@ const MoleculeSignupForm = () => {
       if (response.data.exists) {
         setErrorStatus('이미 사용 중인 이메일 주소입니다.');
       } else {
-        setErrorStatus('');
+        setSuccessStatus('사용 가능한 이메일 주소입니다.');
       }
     } catch (error) {
       setErrorStatus('중복 확인 중 오류가 발생했습니다.');
@@ -230,6 +233,7 @@ const MoleculeSignupForm = () => {
                 </div>
                 <Helptext color="gray600" align="left">공용 도메인(기업, 학교, 기관) 이메일만 사용 가능하며, 상용 이메일(gmail, naver, daum 등)은 사용할 수 없습니다.</Helptext>
                 {errorStatus && <ErrorMessage style={{ color: 'red' }}>{errorStatus}</ErrorMessage>}
+                {successStatus && <SuccessMessage >{successStatus}</SuccessMessage>}
               </div>
 
               <SignInfo>
@@ -499,6 +503,13 @@ const TogglePasswordButton = styled.button`
 const ErrorMessage = styled.p`
   font-size:0.75rem;
   color:${palette.red};
+  margin-top: 20px;
+  text-align: center;
+`;
+
+const SuccessMessage = styled.p`
+  font-size:0.75rem;
+  color:${palette.gray};
   margin-top: 20px;
   text-align: center;
 `;

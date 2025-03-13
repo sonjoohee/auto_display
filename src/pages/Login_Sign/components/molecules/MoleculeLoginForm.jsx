@@ -3,14 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
-// import styled from "styled-components";
 import styled, { css, ThemeProvider } from "styled-components";
 import theme from "../../../../assets/styles/Theme";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import AtomButton from "../atoms/AtomButton";
 import { isValidEmail } from "../atoms/AtomValidation";
 import { UserCreditInfo } from "../../../../utils/indexedDB";
-import { FormBox, CustomInput } from "../../../../assets/styles/InputStyle";
+import {  CustomInput } from "../../../../assets/styles/InputStyle";
 
 import images from "../../../../assets/styles/Images";
 import {
@@ -33,36 +31,36 @@ import {
   USER_MEMBERSHIP,
   IS_SIGNUP_POPUP_OPEN,
   USER_CREDITS,
-} from "../../../../pages/AtomStates"; // 아톰 임포트
+} from "../../../../pages/AtomStates"; 
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 
-import MoleculeSignPopup from "./MoleculeSignPopup";
 import MoleculeResetPasswordPopup from "./MoleculeResetPasswordPopup";
 
 const MoleculeLoginForm = ({ onClosePopup }) => {
-  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
-  const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
+
+  const [, setUserCredits] = useAtom(USER_CREDITS);
+  const [, setSignUpName] = useAtom(SIGN_UP_NAME);
   const [email, setEmail] = useAtom(EMAIL);
-  const [userMembership, setUserMembership] = useAtom(USER_MEMBERSHIP);
+  const [, setUserMembership] = useAtom(USER_MEMBERSHIP);
   const [, setSignupEmail] = useAtom(SIGN_UP_EMAIL);
   const [password, setPassword] = useState("");
   const [, setSignupPassword] = useAtom(SIGN_UP_PASSWORD);
-  const [confirmPassword, setConfirmPassword] = useAtom(CONFIRM_PASSWORD);
+  const [, setConfirmPassword] = useAtom(CONFIRM_PASSWORD);
   const [errorStatus, setErrorStatus] = useAtom(ERROR_STATUS);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
-  const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
-  const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
-  const [isLoginPopupOpen, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
-  const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
-  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
+  const [, setUserName] = useAtom(USER_NAME); 
+  const [, setUserEmail] = useAtom(USER_EMAIL); 
+  const [, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
+  const [isMarketing, ] = useAtom(IS_MARKETING);
+  const [conversationId, ] = useAtom(CONVERSATION_ID);
   const [showMobileWarning, setShowMobileWarning] = useState(false);
-  const [accessableExpert, setAccessableExpert] = useAtom(ACCESSABLE_EXPERT);
+  const [, setAccessableExpert] = useAtom(ACCESSABLE_EXPERT);
 
-  const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
+  const [, setIsExitPopupOpen] = useState(false);
 
   useEffect(() => {
     setErrorStatus("");
@@ -109,9 +107,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
     });
   };
 
-  // const handleMobileWarningConfirm = () => {
-  //   setShowMobileWarning(false);
-  // };
+ 
 
   const handleExitCancel = () => {
     setIsExitPopupOpen(false);
@@ -313,13 +309,6 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
                 placeholder="이메일을을 입력해주세요"
               />
 
-              {/* <StyledAtomInput
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="이메일 주소를 입력해주세요"
-              /> */}
             </div>
 
             <div>
@@ -336,14 +325,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
                 placeholder="비밀번호를 입력해주세요"
               />
 
-              {/* <StyledAtomInput
-                type={showPassword ? "text" : "password"}
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="비밀번호를 입력해주세요"
-                onKeyDown={handleKeyPress}
-              /> */}
+          
               <TogglePasswordButton onClick={togglePasswordVisibility}>
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </TogglePasswordButton>
@@ -363,11 +345,8 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
             {errorStatus && <ErrorMessage>{errorStatus}</ErrorMessage>}
 
             <JoinWrap>
-              {/* <p>InterviewX가 처음이에요</p> */}
               <p>아직 회원이 아니신가요?</p>
-              {/* <Link to="#" onClick={handleSignClick}> */}
               <Link to="/Signin">
-                {/* 가입하기 */}
                 회원가입하기
               </Link>
             </JoinWrap>
@@ -409,7 +388,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
 };
 export default MoleculeLoginForm;
 
-// CSS-in-JS 스타일링
+
 const LoginFormContainer = styled.div`
   width: 100%;
 

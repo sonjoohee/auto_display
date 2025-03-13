@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import MoleculeGoogleLoginForm from "./MoleculeGoogleLoginForm";
 import MoleculeSignupForm from "./MoleculeSignupForm";
-import MoleculeLoginForm from "./MoleculeLoginForm";
 import { LOGIN_SUCCESS } from "../../../../pages/AtomStates"; // 아톰 임포트
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -18,7 +17,6 @@ const MoleculeSign = ({ onClosePopup = () => {} }) => {
 
   useEffect(() => {
     if (loginSuccess) {
-      // navigate('/');    // 페이지 이동
       if (onClosePopup) onClosePopup(); // 팝업 닫기
       setLoginSuccess(null); // 상태 초기화
     }

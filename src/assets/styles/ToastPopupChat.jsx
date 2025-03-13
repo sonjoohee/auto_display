@@ -7,14 +7,13 @@ import images from "../styles/Images";
 import personaImages from "../styles/PersonaImages";
 import PopupWrap from "../styles/Popup";
 import { CustomInput } from "../styles/InputStyle";
-import { Body1, H3, H4, Helptext, Sub1, Sub2, Sub3, Body2, Body3 } from "../styles/Typography";
+import { Body1, H4, Helptext, Sub1, Sub2, Body2, Body3 } from "../styles/Typography";
 import { Persona } from "../styles/BusinessAnalysisStyle";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
-import axios from "axios";
+
 import {
   IS_LOGGED_IN,
-  PERSONA_STEP,
   SELECTED_INTERVIEW_PURPOSE,
   PERSONA_LIST,
   INTERVIEW_QUESTION_LIST,
@@ -37,32 +36,32 @@ import { InterviewXInterviewReportRequest } from "../../utils/indexedDB";
 import { InterviewXInterviewReportAdditionalRequest } from "../../utils/indexedDB";
 
 const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
-  const [selectedPersonaList, setSelectedPersonaList] = useAtom(
+
+  const [selectedPersonaList,] = useAtom(
     SELECTED_PERSONA_LIST
   );
-  const [reportId, setReportId] = useAtom(PROJECT_REPORT_ID);
-  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
+  const [, setReportId] = useAtom(PROJECT_REPORT_ID);
+  const [, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
-  const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
-  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(
+  const [, setInterviewReport] = useAtom(INTERVIEW_REPORT);
+  const [, setInterviewReportAdditional] = useAtom(
     INTERVIEW_REPORT_ADDITIONAL
   );
   const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [projectId, ] = useAtom(PROJECT_ID);
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
-  const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
-  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
+  const [selectedInterviewPurpose, ] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
   );
-  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
+  const [personaList, ] = useAtom(PERSONA_LIST);
   const [interviewQuestionList, setInterviewQuestionList] = useAtom(
     INTERVIEW_QUESTION_LIST
   );
-  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [businessAnalysis, ] = useAtom(BUSINESS_ANALYSIS);
 
   const navigate = useNavigate();
 
@@ -77,27 +76,17 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const [visibleAnswers, setVisibleAnswers] = useState({});
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isAnalysisComplete, setIsAnalysisComplete] = useState(false);
-
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-
   const [regenerateCount1, setRegenerateCount1] = useState(0);
   const [regenerateCount2, setRegenerateCount2] = useState(0);
-  const [regenerateCount3, setRegenerateCount3] = useState(0);
   const [showRegenerateButton1, setShowRegenerateButton1] = useState(false);
   const [showRegenerateButton2, setShowRegenerateButton2] = useState(false);
-  const [showRegenerateButton3, setShowRegenerateButton3] = useState(false);
+
 
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const [showAddQuestion, setShowAddQuestion] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
-  const axiosConfig = {
-    timeout: 100000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true, //크로스 도메인( 다른 도메인으로 http )요청 시 쿠키 전송 허용
-  };
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -193,11 +182,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             theory_name: selectedInterviewPurpose,
           };
 
-          // let response = await axios.post(
-          //   "https://wishresearch.kr/person/persona_interview",
-          //   data,
-          //   axiosConfig
-          // );
+        
           // 페르소나 인터뷰 생성 API  수정 예정
           let response = await InterviewXPersonaInterviewModeratorRequest(data, isLoggedIn);
 
@@ -209,12 +194,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             retryCount < maxRetries &&
             (!response || !response.response || response.response.length !== 5)
           ) {
-            // response = await axios.post(
-            //   //인터뷰 질문 생성 api
-            //   "https://wishresearch.kr/person/persona_interview",
-            //   data,
-            //   axiosConfig
-            // );
+       
             // 페르소나 인터뷰 생성 API  수정 예정
             let response = await InterviewXPersonaInterviewModeratorRequest(data, isLoggedIn);
             retryCount++;
@@ -301,12 +281,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       const maxRetries = 10;
 
       while (retryCount < maxRetries) {
-        // responseReport = await axios.post(
-        //   //인터뷰 보고서 생성 api (요약보고서) 
-        //   "https://wishresearch.kr/person/interview_reports",
-        //   finalData1,
-        //   axiosConfig
-        // );
+     
         // 인터뷰 결과 보고서 요청 API  수정 예정
          response = await InterviewXInterviewReportRequest(finalData1, isLoggedIn);
 
@@ -351,12 +326,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       retryCount = 0;
 
       while (retryCount < maxRetries) {
-        // responseReportAdditional = await axios.post(
-        //   //추가 보고서 생성 api (기본 보고서의 데이터 포함) (상세보고서 : 인사이트 부분 )
-        //   "https://wishresearch.kr/person/interview_report_additional",
-        //   finalData2,
-        //   axiosConfig
-        // );
+    
         //인터뷰 결과 추가 보고서 요청 수정 예정
         responseReportAdditional  = await InterviewXInterviewReportAdditionalRequest(finalData2, isLoggedIn);
 
@@ -489,12 +459,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               last_interview: lastInterview,
             };
 
-            // let response = await axios.post(
-            //    //페르소나 답변 생성하는 api
-            //   "https://wishresearch.kr/person/persona_interview_module",
-            //   data,
-            //   axiosConfig
-            // );
+     
             // 페르소나 인터뷰 수행(단건) API  수정 예정
             let response = await InterviewXPersonaBusinessInterviewModuleRequest(data, isLoggedIn);
 
@@ -509,12 +474,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 !response.response.hasOwnProperty("answer") ||
                 !response.response.answer)
             ) {
-              // response = await axios.post(
-              
-              //   "https://wishresearch.kr/person/persona_interview_module",
-              //   data,
-              //   axiosConfig
-              // );
+            
               // 페르소나 인터뷰 수행(단건) API  수정 예정
               response = await InterviewXPersonaBusinessInterviewModuleRequest(data, isLoggedIn);
               retryCount++;
@@ -1784,31 +1744,6 @@ const QuestionWrap = styled.div`
     `}
 `;
 
-const Number = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: ${(props) =>
-    props.status === "Ing"
-      ? palette.primary
-      : props.status === "Complete"
-      ? palette.green
-      : palette.gray300};
-  border-radius: 2px;
-  border: 1px solid
-    ${(props) =>
-      props.status === "Ing"
-        ? palette.primary
-        : props.status === "Complete"
-        ? palette.green
-        : palette.gray300};
-  background: ${palette.chatGray};
-`;
 
 const QuestionText = styled.div`
   font-size: 0.875rem;
@@ -1884,57 +1819,57 @@ const AnswerItem = styled.div`
   width: 100%;
 `;
 
-const ErrorAnswerItem = styled(AnswerItem)`
-  align-items: flex-start;
-  margin-top: 24px;
-  padding: 20px;
-  border-radius: 15px;
-  border: 1px solid ${palette.error};
-  background: rgba(255, 59, 48, 0.06);
+// const ErrorAnswerItem = styled(AnswerItem)`
+//   align-items: flex-start;
+//   margin-top: 24px;
+//   padding: 20px;
+//   border-radius: 15px;
+//   border: 1px solid ${palette.error};
+//   background: rgba(255, 59, 48, 0.06);
 
-  strong {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.5;
-    color: ${palette.error};
+//   strong {
+//     display: flex;
+//     align-items: center;
+//     gap: 8px;
+//     font-size: 0.875rem;
+//     font-weight: 500;
+//     line-height: 1.5;
+//     color: ${palette.error};
 
-    &:before {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-      background: url(${images.ExclamationCircleFill}) center no-repeat;
-      background-size: 100%;
-      content: "";
-    }
-  }
+//     &:before {
+//       display: flex;
+//       align-items: center;
+//       justify-content: center;
+//       width: 20px;
+//       height: 20px;
+//       background: url(${images.ExclamationCircleFill}) center no-repeat;
+//       background-size: 100%;
+//       content: "";
+//     }
+//   }
 
-  div {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    margin-left: 28px;
-  }
+//   div {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: flex-start;
+//     gap: 12px;
+//     margin-left: 28px;
+//   }
 
-  p {
-    font-size: 0.875rem;
-    font-weight: 300;
-    line-height: 1.5;
-    color: ${palette.gray700};
-  }
+//   p {
+//     font-size: 0.875rem;
+//     font-weight: 300;
+//     line-height: 1.5;
+//     color: ${palette.gray700};
+//   }
 
-  button {
-    font-size: 0.875rem;
-    color: ${palette.gray800};
-    border-radius: 8px;
-    border: 1px solid ${palette.gray500};
-  }
-`;
+//   button {
+//     font-size: 0.875rem;
+//     color: ${palette.gray800};
+//     border-radius: 8px;
+//     border: 1px solid ${palette.gray500};
+//   }
+// `;
 
 const TypeName = styled.div`
   display: flex;

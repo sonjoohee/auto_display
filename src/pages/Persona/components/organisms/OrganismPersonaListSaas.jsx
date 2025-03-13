@@ -8,7 +8,6 @@ import {
 import MoleculePersonaListItemSaas from "../molecules/MoleculePersonaListItemSaas";
 import OrganismNoPersonaMessage from "../../../Tool/public/organisms/OrganismNoPersonaMessage";
 import { palette } from "../../../../assets/styles/Palette";
-import MoleculePersonaSelectCard from "../../../Persona/components/molecules/MoleculePersonaSelectCard";
 import { useAtom } from "jotai";
 import { PERSONA_LIST } from "../../../AtomStates";
 
@@ -163,7 +162,6 @@ const OrganismPersonaListSaas = ({
           selected: [targetPersona],
           unselected: newUnselected,
         });
-        const personaListDummy = personaList;
        
         onPersonaSelect(persona);
       }
@@ -267,16 +265,7 @@ const OrganismPersonaListSaas = ({
                 })
                 .filter((persona) => persona.status === "complete")
                 .map((persona, index) => (
-                  // <MoleculePersonaSelectCard
-                  //   interviewType={selectedInterviewType}
-                  //   filteredPersonaList={filteredProjectList}
-                  //   businessPersonaList={allBusinessPersonas.filter(
-                  //     (persona) => persona?.status === "complete"
-                  //   )}
-                  //   customPersonaList={customPersonaList}
-                  //   selectedPersonas={selectedPersonas}
-                  //   onPersonaSelect={setSelectedPersonas}
-                  // />
+                 
                   <MoleculePersonaListItemSaas
                     key={persona?._id || `persona${index}`}
                     personaImage={

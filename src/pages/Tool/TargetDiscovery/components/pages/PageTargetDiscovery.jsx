@@ -8,48 +8,25 @@ import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
 import {
-  ButtonGroup,
   Button,
-  IconButton,
 } from "../../../../../assets/styles/ButtonStyle";
 import {
   FormBox,
   CustomTextarea,
   CustomInput,
-  SelectBox,
-  SelectBoxItem,
-  SelectBoxTitle,
-  SelectBoxList,
-  CheckBoxButton,
 } from "../../../../../assets/styles/InputStyle";
 import PopupWrap from "../../../../../assets/styles/Popup";
 import {
   ContentsWrap,
   MainContent,
-  Badge,
-  TabWrapType2,
-  TabButtonType2,
-  TabContent,
   TabWrapType5,
   TabButtonType5,
   TabContent5,
   TabContent5Item,
   CardGroupWrap,
-  ListText,
-  ListTitle,
-  ListSubtitle,
-  ListButton,
   BottomBar,
   BgBoxItem,
   ListBoxWrap,
-  ListBoxItem,
-  ListBoxTitle,
-  ListBoxContent,
-  Keyword,
-  InterviewPopup,
-  Status,
-  ListRowWrap,
-  ListRowItem,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
   IS_LOGGED_IN,
@@ -69,7 +46,6 @@ import {
   H4,
   H3,
   H5,
-  Sub3,
   Body1,
   Body2,
   Body3,
@@ -86,11 +62,13 @@ import {
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
 const PageTargetDiscovery = () => {
+
   const navigate = useNavigate();
+
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
   const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
     TARGET_DISCOVERY_INFO
   );
@@ -107,37 +85,23 @@ const PageTargetDiscovery = () => {
   );
   const [selectedTargetDiscoveryScenario, setSelectedTargetDiscoveryScenario] =
     useAtom(SELECTED_TARGET_DISCOVERY_SCENARIO);
-  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
+  const [projectSaas, ] = useAtom(PROJECT_SAAS);
 
-  const [showPopup, setShowPopup] = useState(false);
-  const [showPopupMore, setShowPopupMore] = useState(false);
+  const [, setShowPopup] = useState(false);
+  const [, setShowPopupMore] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [showPopupRetry, setShowPopupRetry] = useState(false);
   const [selectedPersonas, setSelectedPersonas] = useState([]);
-  const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [selectedPurpose, setSelectedPurpose] = useState("");
-  const [selectedInterviewType, setSelectedInterviewType] = useState(null);
-  const [selectedInterviewPurpose, setSelectedInterviewPurpose] =
-    useState(null);
-  const [activeTab1, setActiveTab1] = useState("personaInfo");
-  const [contactForm, setContactForm] = useState({
-    email: "",
-    purpose: "",
-    content: "",
-  });
-  const [dropUp, setDropUp] = useState(false);
+  const [, setDropUp] = useState(false);
   const selectBoxRef = useRef(null);
   const [activeTab, setActiveTab] = useState(1);
-  const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
+  const [completedSteps, setCompletedSteps] = useState([]); 
   const [businessDescription, setBusinessDescription] = useState("");
   const [targetCustomer, setTargetCustomer] = useState("");
-  const [personaData, setPersonaData] = useState({
-    personaInfo: "",
-    personaScenario: "",
-  });
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingScenario, setIsLoadingScenario] = useState(false); // 시나리오 단계용 로딩 상태 추가
+  const [isLoadingScenario, setIsLoadingScenario] = useState(false); 
   const [specificSituation, setSpecificSituation] = useState("");
   const [loadingPersonas, setLoadingPersonas] = useState({});
 
@@ -150,42 +114,17 @@ const PageTargetDiscovery = () => {
 
   const project = projectSaas;
 
-  const calculateDropDirection = () => {
-    if (selectBoxRef.current) {
-      const rect = selectBoxRef.current.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - rect.bottom;
-      const spaceAbove = rect.top;
-      const dropDownHeight = 200; // 예상되는 드롭다운 높이
+  // const calculateDropDirection = () => {
+  //   if (selectBoxRef.current) {
+  //     const rect = selectBoxRef.current.getBoundingClientRect();
+  //     const spaceBelow = window.innerHeight - rect.bottom;
+  //     const spaceAbove = rect.top;
+  //     const dropDownHeight = 200; // 예상되는 드롭다운 높이
 
-      setDropUp(spaceBelow < dropDownHeight && spaceAbove > spaceBelow);
-    }
-  };
+  //     setDropUp(spaceBelow < dropDownHeight && spaceAbove > spaceBelow);
+  //   }
+  // };
 
-  const handleSelectBoxClick = () => {
-    if (toolStep >= 1) return;
-    calculateDropDirection();
-    setIsSelectBoxOpen(!isSelectBoxOpen);
-  };
-
-  const handlePurposeSelect = (purpose) => {
-    setSelectedPurpose(purpose);
-    handleContactInputChange("purpose", purpose);
-    setIsSelectBoxOpen(false);
-  };
-
-  const handleContactInputChange = (field, value) => {
-    setContactForm((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const handleSelectPersona = () => {
-    if (selectedPersonas.length > 0) {
-      setSelectedInterviewType("multiple");
-      setSelectedInterviewPurpose("product_experience_new");
-    }
-  };
 
   //저장되었던 인터뷰 로드
   useEffect(() => {
@@ -334,18 +273,7 @@ const PageTargetDiscovery = () => {
     );
   };
 
-  // 비즈니스 설명 입력 핸들러
-  const handleBusinessDescriptionChange = (e) => {
-    const input = e.target.value;
-    if (input.length <= 150) {
-      setBusinessDescription(input);
-    }
-  };
 
-  // 타겟 고객 입력 핸들러
-  const handleTargetCustomerChange = (e) => {
-    setTargetCustomer(e.target.value);
-  };
 
   const handleSubmitBusinessInfo = async () => {
     try {
@@ -697,41 +625,7 @@ const PageTargetDiscovery = () => {
     return "대기중";
   };
 
-  // useEffect(() => {
-  //   // 새로고침 감지 함수
-  //   const detectRefresh = () => {
-  //     // 1. Performance API 확인
-  //     // if (performance.navigation && performance.navigation.type === 1) {
-  //     //   console.log("새로고침 감지: Performance API");
-  //     //   navigate("/");
-  //     //   return true;
-  //     // }
 
-  //     // 2. 현재 URL 확인
-  //     const currentUrl = window.location.href;
-  //     if (currentUrl.toLowerCase().includes("targetdiscovery")) {
-  //       // 세션 스토리지에서 마지막 URL 가져오기
-  //       const lastUrl = sessionStorage.getItem("lastUrl");
-
-  //       // 마지막 URL이 현재 URL과 같으면 새로고침
-  //       if (lastUrl && lastUrl === currentUrl) {
-  //         console.log("새로고침 감지: URL 비교");
-  //         navigate("/");
-  //         return true;
-  //       }
-
-  //       // 현재 URL 저장
-  //       sessionStorage.setItem("lastUrl", currentUrl);
-  //     }
-
-  //     return false;
-  //   };
-
-  //   // 함수 실행
-  //   detectRefresh();
-
-  //   // 컴포넌트 마운트 시 한 번만 실행
-  // }, [navigate]);
 
   useEffect(() => {
     // 새로고침 감지 함수
@@ -783,12 +677,11 @@ const PageTargetDiscovery = () => {
     detectRefresh();
 
     // 이벤트 리스너 등록
-    // window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("keydown", handleKeyDown);
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      // window.removeEventListener("beforeunload", handleBeforeUnload);
+
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
@@ -905,7 +798,7 @@ const PageTargetDiscovery = () => {
                       <TabContent5Item required>
                         <div className="title">
                           <Body1 color="gray700">비즈니스 설명</Body1>
-                          {/* <Body1 color="red">*</Body1> */}
+                  
                         </div>
                         <FormBox Large>
                           <CustomTextarea
@@ -922,15 +815,7 @@ const PageTargetDiscovery = () => {
                       <TabContent5Item required>
                         <div className="title">
                           <Body1 color="gray700">타겟 고객</Body1>
-                          {/* <Body1 color="red">*</Body1> */}
                         </div>
-                        {/* <CustomInput
-                          disabled={toolStep >= 1}
-                          type="text"
-                          placeholder="핵심 타겟 고객 군을 작성해주세요 (예: 20대 여성 등)"
-                          value={targetCustomer}
-                          onChange={handleTargetCustomerChange}
-                        /> */}
                         <FormBox Large>
                           <CustomTextarea
                             disabled={toolStep >= 1}
@@ -957,73 +842,7 @@ const PageTargetDiscovery = () => {
                         />
                       </TabContent5Item>
 
-                      {/* <TabContent5Item>
-                        <div className="title">
-                          <Body1 color="gray700">타겟 국가</Body1>
-                        </div>
-
-                        <SelectBox ref={selectBoxRef}>
-                          <SelectBoxTitle onClick={handleSelectBoxClick}>
-                            <Body2
-                              color={selectedPurpose ? "gray800" : "gray300"}
-                            >
-                              {selectedPurpose ||
-                                "특정 타겟 국가가 있는 경우 선택해주세요"}
-                            </Body2>
-                            <images.ChevronDown
-                              width="24px"
-                              height="24px"
-                              color={palette.gray500}
-                              style={{
-                                transform: isSelectBoxOpen
-                                  ? "rotate(180deg)"
-                                  : "rotate(0deg)",
-                                transition: "transform 0.3s ease",
-                              }}
-                            />
-                          </SelectBoxTitle>
-
-                          {isSelectBoxOpen && (
-                            <SelectBoxList dropUp={dropUp}>
-                              <SelectBoxItem
-                                onClick={() => handlePurposeSelect("대한민국")}
-                              >
-                                <Body2 color="gray700" align="left">
-                                  대한민국
-                                </Body2>
-                              </SelectBoxItem>
-                              <SelectBoxItem
-                                onClick={() => handlePurposeSelect("미국")}
-                              >
-                                <Body2 color="gray700" align="left">
-                                  미국
-                                </Body2>
-                              </SelectBoxItem>
-                              <SelectBoxItem
-                                onClick={() => handlePurposeSelect("중국")}
-                              >
-                                <Body2 color="gray700" align="left">
-                                  중국
-                                </Body2>
-                              </SelectBoxItem>
-                              <SelectBoxItem
-                                onClick={() => handlePurposeSelect("일본")}
-                              >
-                                <Body2 color="gray700" align="left">
-                                  일본
-                                </Body2>
-                              </SelectBoxItem>
-                              <SelectBoxItem
-                                onClick={() => handlePurposeSelect("베트남")}
-                              >
-                                <Body2 color="gray700" align="left">
-                                  베트남
-                                </Body2>
-                              </SelectBoxItem>
-                            </SelectBoxList>
-                          )}
-                        </SelectBox>
-                      </TabContent5Item> */}
+                   
                     </div>
 
                     <Button
@@ -1233,9 +1052,6 @@ const PageTargetDiscovery = () => {
                           {targetDiscoveryFinalReport?.potential_rank_1?.title}
                           입니다.
                         </H4>
-                        {/* <Button Primary onClick={() => setShowPopupSave(true)}>
-                          리포트 저장하기
-                        </Button> */}
                       </div>
 
                       <div className="content">
@@ -1297,14 +1113,6 @@ const PageTargetDiscovery = () => {
                           })}
                     </ListBoxWrap>
 
-                    {/* <Button
-                      Small
-                      Primary
-                      onClick={() => setShowPopupSave(true)}
-                      style={{ whiteSpace: "nowrap" }}
-                    >
-                      리포트 저장하기
-                    </Button> */}
                   </>
                 )}
               </TabContent5>
@@ -1368,9 +1176,6 @@ const TargetDiscoveryWrap = styled.div`
   margin-top: 60px;
 `;
 
-const CustomButton = styled(Button)`
-  min-width: 92px;
-`;
 
 const InsightAnalysis = styled.div`
   display: flex;
@@ -1390,349 +1195,6 @@ const InsightAnalysis = styled.div`
     flex-direction: column;
     gap: 12px;
     text-align: left;
-  }
-`;
-
-const MyDashboardHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-`;
-
-const MyDashboardTitle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-`;
-
-const MyDashboardContent = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-`;
-
-const MyProjectWrap = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 80px;
-  margin: 50px auto;
-`;
-
-const MyProjectList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
-
-const Title = styled(H5)`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  color: ${palette.gray800};
-  padding-bottom: 20px;
-  border-bottom: 1px solid ${palette.outlineGray};
-`;
-
-const ProjectList = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const ProjectHeader = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-
-  > p {
-    flex-grow: 1;
-    text-align: left;
-  }
-
-  > p:nth-child(1) {
-    max-width: 440px;
-    width: 100%;
-  }
-
-  > p:nth-child(2) {
-    max-width: 220px;
-    width: 100%;
-  }
-
-  > p:nth-child(3) {
-    max-width: 165px;
-    width: 100%;
-  }
-`;
-
-const ProjectContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const ProjectItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  // gap: 12px;
-  gap: ${(props) => (props.Nodata ? "16px" : "12px")};
-  // padding: 12px 24px;
-  padding: ${(props) => (props.Nodata ? "52px 24px 40px" : "12px 24px")};
-  border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
-  background-color: ${palette.white};
-  z-index: 1;
-  transition: box-shadow 0.3s ease-in-out;
-
-  ${({ $isOpen }) =>
-    $isOpen &&
-    `
-    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
-  `}
-
-  ${(props) =>
-    props.Nodata &&
-    css`
-      div {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-
-        p {
-          color: ${palette.gray500};
-          line-height: 1.5;
-        }
-      }
-    `}
-`;
-
-const ProjectInfo = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-`;
-
-const Name = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 4px;
-  max-width: 440px;
-  width: 100%;
-  font-weight: 400;
-  line-height: 1.5;
-  color: ${palette.gray800};
-
-  span {
-    font-size: 0.75rem;
-    font-weight: 300;
-    color: ${palette.gray500};
-  }
-`;
-
-const Persona = styled.div`
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  max-width: 230px;
-  width: 100%;
-  padding: 8px;
-
-  > div {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 5px 24px;
-    flex: 1;
-    text-align: left;
-
-    + div:before {
-      position: absolute;
-      top: 50%;
-      left: -12px;
-      transform: translateY(-50%);
-      width: 1px;
-      height: 19px;
-      background-color: ${palette.outlineGray};
-      content: "";
-    }
-
-    span {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 4px;
-      font-size: 0.75rem;
-      color: ${palette.gray300};
-    }
-
-    p {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 4px;
-      font-size: 0.875rem;
-      color: ${palette.gray700};
-    }
-  }
-`;
-
-const Recruit = styled.div`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 4px;
-  max-width: 155px;
-  width: 100%;
-
-  span {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    font-size: 0.75rem;
-    color: ${palette.gray300};
-  }
-
-  p {
-    font-size: 0.875rem;
-    color: ${palette.gray700};
-
-    &.ing {
-      color: ${palette.primary};
-    }
-
-    &.complete {
-      color: ${palette.green};
-    }
-  }
-`;
-
-const Report = styled.div`
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-
-  span {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    font-size: 0.75rem;
-    color: ${palette.gray300};
-  }
-
-  p {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    font-size: 0.875rem;
-    color: ${palette.gray700};
-  }
-
-  button {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    font-family: "Pretendard", poppins;
-    font-size: 0.75rem;
-    font-weight: 400;
-    color: ${palette.gray500};
-    padding: 6px 10px;
-    border-radius: 4px;
-    border: 1px solid ${palette.outlineGray};
-    background-color: ${palette.chatGray};
-  }
-`;
-
-const ProjectButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding-top: 12px;
-  border-top: 1px solid ${palette.outlineGray};
-
-  p {
-    font-size: 0.875rem;
-    color: ${palette.gray800};
-  }
-
-  button {
-    font-family: "Pretendard", poppins;
-    font-size: 0.75rem;
-    color: ${palette.white};
-    padding: 6px 10px;
-    border-radius: 4px;
-    border: none;
-    background-color: ${palette.primary};
-  }
-`;
-
-const ProjectView = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 16px;
-  width: 100%;
-  padding: 28px 20px 20px;
-  margin-top: -20px;
-  border-radius: 0 0 10px 10px;
-  border: 1px solid ${palette.outlineGray};
-  background-color: ${palette.chatGray};
-  animation: slideDown 0.3s ease-in-out;
-  transform-origin: top;
-  opacity: 1;
-
-  &.closing {
-    animation: slideUp 0.3s ease-in-out;
-  }
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes slideUp {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
   }
 `;
 

@@ -1,26 +1,20 @@
 //프로젝트 인사이트
 import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useAtom } from "jotai";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { palette } from "../../../assets/styles/Palette";
 import OrganismIncNavigation from "../../Global/organisms/OrganismIncNavigation";
-// import Header from "../../../Design_Page/IncHeader";
 import MoleculeHeader from "../../Global/molecules/MoleculeHeader";
-import MoleculeAccountPopup from "../../Login_Sign/components/molecules/MoleculeAccountPopup";
 import PopupWrap from "../../../assets/styles/Popup";
 import { Button } from "../../../assets/styles/ButtonStyle";
 import {
   ContentsWrap,
   MainContent,
-  TabWrapType4,
-  TabButtonType4,
 } from "../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../assets/styles/Images";
 import {
   H1,
-  Body1,
-  Body2,
   Body3,
   Sub1,
   Caption1,
@@ -35,7 +29,6 @@ import OrganismProjectItem from "../components/organisms/OrganismProjectItem";
 import {
   PROJECT_LIST,
   ACCESS_DASHBOARD,
-  PROJECT_ID,
   IS_LOGGED_IN,
 } from "../../AtomStates";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
@@ -43,17 +36,14 @@ import { useDynamicViewport } from "../../../assets/DynamicViewport";
 const PageProject = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const navigate = useNavigate();
-  const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
-
+  const [, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectList, setProjectList] = useAtom(PROJECT_LIST);
+
   const [isWarningPopupOpen, setIsWarningPopupOpen] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
-
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [deletedProjects, setDeletedProjects] = useState([]);
-
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isTrashModalOpen, setIsTrashModalOpen] = useState(false);
   const handleWarningClose = () => {
@@ -140,14 +130,9 @@ const PageProject = () => {
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
-      // 1. Performance API 확인
-      // if (performance.navigation && performance.navigation.type === 1) {
-      //   console.log("새로고침 감지: Performance API");
-      //   navigate("/");
-      //   return true;
-      // }
 
-      // 2. 현재 URL 확인
+
+      //  현재 URL 확인
       const currentUrl = window.location.href;
 
       // 현재 URL 저장
