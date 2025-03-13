@@ -47,8 +47,10 @@ import {
   getToolListOnServerSaas,
 } from "../../../utils/indexedDB";
 import OrganismDashboardToolList from "../components/organisms/OrganismDashboardToolList";
+import { useDynamicViewport } from "../../../assets/DynamicViewport";
 
 const PageDashBoard = () => {
+  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
   const [accessStateSaas, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
   const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
