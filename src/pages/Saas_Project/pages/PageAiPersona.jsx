@@ -53,6 +53,7 @@ import {
   UserCreditUse,
   createRequestPersonaOnServer,
   getProjectByIdFromIndexedDB,
+  getPersonaOnServer,
 } from "../../../utils/indexedDB";
 
 import OrganismPersonaCardList from "../components/organisms/OrganismPersonaCardList";
@@ -468,15 +469,21 @@ const PageAiPersona = () => {
           status: "profile",
         };
 
-        // 서버에 업데이트된 페르소나 저장
-        await updatePersonaOnServer(updatedPersona, true);
+        
+        const personaInfo = await getPersonaOnServer(persona._id, isLoggedIn);
 
-        // 페르소나 리스트 새로고침
-        await refreshPersonaList();
+        if (personaInfo.status === "default") {
+        
+          // 서버에 업데이트된 페르소나 저장
+          await updatePersonaOnServer(updatedPersona, true);
 
-        setCurrentPersona({ ...persona, ...updatedPersona });
-        // 활성 탭 설정
-        setActiveTab2("lifestyle");
+          // 페르소나 리스트 새로고침
+          await refreshPersonaList();
+          setCurrentPersona({ ...persona, ...updatedPersona });
+          // 활성 탭 설정
+          setActiveTab2("lifestyle");
+        }
+  
       }
     } catch (error) {
     } finally {
