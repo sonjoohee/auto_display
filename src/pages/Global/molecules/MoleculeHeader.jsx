@@ -106,8 +106,8 @@ const MoleculeHeader = () => {
   //   );
 
   // 첫 페이지 체크 (루트 경로 확인)
-  const isRootPage = location.pathname === "/";
-
+  // const isRootPage = location.pathname === "/";
+  const isRootPage = location.pathname === "/Project";
   // MyProject 경로 체크 추가
   const isMyProjectPage = location.pathname === "/MyProject";
 
@@ -430,12 +430,8 @@ const MoleculeHeader = () => {
         {isLoggedIn && (
           <div className="gnb">
             {isRootPage && (
-              <Sub2
-                style={{ cursor: "pointer" }}
-                onClick={() => navigate("/Blog")}
-              >
-                블로그
-                {/* 서비스 소개 */}
+              <Sub2 style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
+                서비스 소개
               </Sub2>
             )}
 
