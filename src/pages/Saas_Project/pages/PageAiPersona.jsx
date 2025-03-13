@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
-import styled, { css } from "styled-components";
+import React, { useEffect, useState} from "react";
+import styled from "styled-components";
 import { useAtom } from "jotai";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import {  useNavigate, useLocation } from "react-router-dom";
 import { palette } from "../../../assets/styles/Palette";
 import OrganismIncNavigation from "../../Global/organisms/OrganismIncNavigation";
-// import Header from "../../../Design_Page/IncHeader";
 import MoleculeHeader from "../../Global/molecules/MoleculeHeader";
-import MoleculeAccountPopup from "../../Login_Sign/components/molecules/MoleculeAccountPopup";
 import PopupWrap from "../../../assets/styles/Popup";
 import { Button, ButtonGroup } from "../../../assets/styles/ButtonStyle";
 import { CheckBox } from "../../../assets/styles/Input";
@@ -24,16 +22,10 @@ import {
   MainContent,
   TabWrapType3,
   TabButtonType3,
-  AiPersonaCardGroupWrap,
-  AiPersonaCardListItem,
-  AiPersonaCardButtonWrap,
-  UniqueTag,
   TabWrapType2,
   TabButtonType2,
   TabContent,
   InterviewPopup,
-  PopupTitle,
-  PopupTitle2,
   PopupContent,
   BgBoxItem,
   OCEANRangeWrap,
@@ -43,29 +35,17 @@ import {
 import images from "../../../assets/styles/Images";
 import {
   H1,
-  H2,
   H4,
   Body1,
   Body2,
   Body3,
-  Sub1,
-  Sub2,
   Sub3,
-  Caption1,
-  Caption2,
-  InputText,
 } from "../../../assets/styles/Typography";
 import OrganismEmptyPersona from "../components/organisms/OrganismEmptyPersona";
 
 import {
-  createPersonaOnServer,
   updatePersonaOnServer,
-  getPersonaOnServer,
   getPersonaListOnServer,
-  deletePersonaOnServer,
-  InterviewXPersonaMacroSegmentRequest,
-  InterviewXPersonaUniqueUserRequest,
-  InterviewXPersonaKeyStakeholderRequest,
   InterviewXPersonaProfileRequest,
   createRequestPersonOnServer,
   UserCreditCheck,
@@ -91,11 +71,11 @@ const PageAiPersona = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const navigate = useNavigate();
   const location = useLocation();
-  const [project, setProject] = useAtom(PROJECT_SAAS);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
+  const [project,] = useAtom(PROJECT_SAAS);
+  const [isLoggedIn,] = useAtom(IS_LOGGED_IN);
+  const [projectId,] = useAtom(PROJECT_ID);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
-  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [, setUserCredits] = useAtom(USER_CREDITS);
   const [creditRequestBusinessPersona] = useAtom(
     CREDIT_REQUEST_BUSINESS_PERSONA
   );
@@ -105,49 +85,33 @@ const PageAiPersona = () => {
   const [isCustomizePopupOpen, setIsCustomizePopupOpen] = useState(false);
   const [isPersonaConfirmPopupOpen, setIsPersonaConfirmPopupOpen] =
     useState(false);
-
   const [selectedPersona, setSelectedPersona] = useState(null);
-
   const [showRequestPopup, setShowRequestPopup] = useState(false);
-  const [isStarred, setIsStarred] = useState(false);
   const [activeTab2, setActiveTab2] = useState("lifestyle");
   const [showPopup, setShowPopup] = useState(false);
   const [isPersonaEditPopupOpen, setIsPersonaEditPopupOpen] = useState(false);
   const [currentPersona, setCurrentPersona] = useState({});
-
   const [isLoading, setIsLoading] = useState(false);
-
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [activeTabIndex1, setActiveTabIndex1] = useState(0);
-
-  const [genderRef, setGenderRef] = useState(null);
-  const [ageGroupRef, setAgeGroupRef] = useState(null);
-  const [businessRef, setBusinessRef] = useState(null);
-  const [uniqueUserRef, setUniqueUserRef] = useState(null);
-  const [keyStakeholderRef, setKeyStakeholderRef] = useState(null);
-  const [purpose, setPurpose] = useState(null);
-
   const [activeTab, setActiveTab] = useState(
     location.state?.activeTab || "macro_segment"
   );
-
-  const [personaStats, setPersonaStats] = useState({
+  const [, setPersonaStats] = useState({
     active: 0,
     inactive: 0,
     generating: 0,
   });
-
   const [customPersonaForm, setCustomPersonaForm] = useState({
     gender: "",
     ageGroups: [],
     purpose: "",
     additionalInfo: "",
   });
-
   const [showCreditPopup, setShowCreditPopup] = useState(false);
-  const [eventState, setEventState] = useState(false);
-  const [trialState, setTrialState] = useState(false);
-  const [eventTitle, setEventTitle] = useState("이벤트 제목");
+  const [eventState,] = useState(false);
+  const [trialState,] = useState(false);
+  const [eventTitle,] = useState("이벤트 제목");
 
   const handleEditClose = () => {
     setIsEditPopupOpen(false);
@@ -347,8 +311,6 @@ const PageAiPersona = () => {
       return (
         customPersonaForm.gender !== "" &&
         customPersonaForm.ageGroups.length > 0 &&
-        // customPersonaForm.purpose.trim() !== "" &&
-        // customPersonaForm.additionalInfo.trim() !== ""
         customPersonaForm.purpose.trim() !== ""
         // additionalInfo는 더 이상 필수 항목이 아님
       );
@@ -385,7 +347,6 @@ const PageAiPersona = () => {
       return (
         currentPersona?.gender?.trim() !== "" &&
         currentPersona?.age?.trim() !== "" &&
-        // currentPersona?.keywords?.trim() !== "" &&
         currentPersona?.personaCharacteristics?.trim() !== ""
       );
     } else if (activeTabIndex1 === 1) {
@@ -405,16 +366,16 @@ const PageAiPersona = () => {
   };
 
   const handlePrevTab = () => {
-    setActiveTabIndex1(activeTabIndex1 - 1); // activeTabIndex1을 감소시켜 이전 탭으로 이동
+    setActiveTabIndex1(activeTabIndex1 - 1); 
   };
 
   const handlePrevTab2 = () => {
-    setActiveTabIndex(activeTabIndex - 1); // activeTabIndex1을 감소시켜 이전 탭으로 이동
+    setActiveTabIndex(activeTabIndex - 1); 
   };
 
   const handleRequestClick = (persona) => {
     setSelectedPersona(persona); // 선택된 페르소나 설정
-    setShowRequestPopup(true); // 팝업 표시
+    setShowRequestPopup(true); 
   };
 
   useEffect(() => {
@@ -486,7 +447,7 @@ const PageAiPersona = () => {
 
         if (attempt >= max_attempt) {
           throw new Error("프로필 정보 생성에 실패했습니다.");
-          // 에러 팝업 추가
+         
         }
       }
 
@@ -534,7 +495,6 @@ const PageAiPersona = () => {
       (persona) => persona?.personaType === type
     );
 
-    // 총 개수
     const total = filteredPersonas.length;
 
     // 활성 페르소나 (status가 complete인 경우)
@@ -918,12 +878,10 @@ const PageAiPersona = () => {
     detectRefresh();
 
     // 이벤트 리스너 등록
-    // window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("keydown", handleKeyDown);
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      // window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
@@ -1671,9 +1629,9 @@ const PageAiPersona = () => {
           title={currentPersona.personaName || ""}
           buttonType="Fill"
           confirmText={
-            activeTabIndex1 === 4 // 마지막 탭(4)일 때만 "변경사항 저장하기"
+            activeTabIndex1 === 4 
               ? "변경사항 저장하기"
-              : "다음" // 나머지 탭(0~3)에서는 "다음"
+              : "다음" 
           }
           showPrevButton={activeTabIndex1 !== 0}
           prevText={activeTabIndex1 !== 0 ? "뒤로" : ""}
@@ -1683,9 +1641,9 @@ const PageAiPersona = () => {
           onCancel={handlePersonaEditClose}
           onConfirm={() => {
             if (activeTabIndex1 === 4) {
-              setIsPersonaConfirmPopupOpen(true); // 확인 팝업 열기
+              setIsPersonaConfirmPopupOpen(true); 
             } else {
-              handlePersonaEditContinue(); // 다음 탭으로 이동
+              handlePersonaEditContinue(); 
             }
           }}
           showTabs={true}
@@ -2197,8 +2155,8 @@ const PageAiPersona = () => {
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
             onConfirm={() => {
-              creditUse(selectedPersona); // Call creditUse function
-              setShowRequestPopup(false); // 팝업 닫기
+              creditUse(selectedPersona); 
+              setShowRequestPopup(false); 
             }}
           />
         ) : trialState ? (
@@ -2219,9 +2177,8 @@ const PageAiPersona = () => {
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
             onConfirm={() => {
-              // handleRequestPersona(selectedPersona); // 선택된 페르소나를 전달
               creditUse(selectedPersona);
-              setShowRequestPopup(false); // 팝업 닫기
+              setShowRequestPopup(false); 
             }}
           />
         ) : (
@@ -2240,7 +2197,6 @@ const PageAiPersona = () => {
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
             onConfirm={() => {
-              // handleRequestPersona(selectedPersona); // 선택된 페르소나를 전달
               creditUse(selectedPersona);
               setShowRequestPopup(false); // 팝업 닫기
               setShowPopup(false);

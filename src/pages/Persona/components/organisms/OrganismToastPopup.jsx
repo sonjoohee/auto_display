@@ -7,7 +7,6 @@ import images from "../../../../assets/styles/Images";
 import PopupWrap from "../../../../assets/styles/Popup";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
-import axios from "axios";
 import {
   IS_LOGGED_IN,
   PERSONA_STEP,
@@ -37,34 +36,35 @@ import { InterviewXInterviewReportRequest } from "../../../../utils/indexedDB";
 import { InterviewXInterviewReportAdditionalRequest } from "../../../../utils/indexedDB";
 
 const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
-  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
+  const [projectSaas, ] = useAtom(PROJECT_SAAS);
   const project = projectSaas;
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
-  const [reportId, setReportId] = useAtom(PROJECT_REPORT_ID);
-  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
+  const [, setReportId] = useAtom(PROJECT_REPORT_ID);
+  const [, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
-  const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
-  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(
+  const [, setInterviewReport] = useAtom(INTERVIEW_REPORT);
+  const [, setInterviewReportAdditional] = useAtom(
     INTERVIEW_REPORT_ADDITIONAL
   );
   const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [projectId, ] = useAtom(PROJECT_ID);
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
-  const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
-  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
+  const [selectedInterviewPurpose, ] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
   );
-  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
+  const [personaList, ] = useAtom(PERSONA_LIST);
   const [interviewQuestionList, setInterviewQuestionList] = useAtom(
     INTERVIEW_QUESTION_LIST
   );
-  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [projectTotalInfo, ] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, ] =
+    useAtom(PROJECT_CREATE_INFO);
 
   const navigate = useNavigate();
 
@@ -81,27 +81,12 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const [visibleAnswers, setVisibleAnswers] = useState({});
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isAnalysisComplete, setIsAnalysisComplete] = useState(false);
-
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-
   const [regenerateCount1, setRegenerateCount1] = useState(0);
   const [regenerateCount2, setRegenerateCount2] = useState(0);
-  const [regenerateCount3, setRegenerateCount3] = useState(0);
   const [showRegenerateButton1, setShowRegenerateButton1] = useState(false);
   const [showRegenerateButton2, setShowRegenerateButton2] = useState(false);
-  const [showRegenerateButton3, setShowRegenerateButton3] = useState(false);
 
-  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
-  const [projectCreateInfo, setProjectCreateInfo] =
-    useAtom(PROJECT_CREATE_INFO);
-
-  const axiosConfig = {
-    timeout: 100000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true, //크로스 도메인( 다른 도메인으로 http )요청 시 쿠키 전송 허용
-  };
 
   //저장되었던 인터뷰 로드
   useEffect(() => {
@@ -184,11 +169,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             theory_name: selectedInterviewPurpose,
           };
 
-          // let response = await axios.post(
-          //   "https://wishresearch.kr/person/persona_interview",
-          //   data,
-          //   axiosConfig
-          // );
           let response =
             await InterviewXPersonaMultipleInterviewGeneratorRequest(
               data,
@@ -206,12 +186,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               data,
               isLoggedIn
             );
-            // response = await axios.post(
-            //   //인터뷰 질문 생성 api
-            //   "https://wishresearch.kr/person/persona_interview",
-            //   data,
-            //   axiosConfig
-            // );
+
             retryCount++;
             questionList = response.response;
           }
@@ -296,12 +271,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       const maxRetries = 10;
 
       while (retryCount < maxRetries) {
-        // responseReport = await axios.post(
-        //   //인터뷰 보고서 생성 api (요약보고서)
-        //   "https://wishresearch.kr/person/interview_reports",
-        //   finalData1,
-        //   axiosConfig
-        // );
         // 인터뷰 결과 보고서 요청 API  수정 예정
         response = await InterviewXInterviewReportRequest(
           finalData1,
@@ -349,12 +318,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       retryCount = 0;
 
       while (retryCount < maxRetries) {
-        // responseReportAdditional = await axios.post(
-        //   //추가 보고서 생성 api (기본 보고서의 데이터 포함) (상세보고서 : 인사이트 부분 )
-        //   "https://wishresearch.kr/person/interview_report_additional",
-        //   finalData2,
-        //   axiosConfig
-        // );
+      
         //인터뷰 결과 추가 보고서 요청 수정 예정
         responseReportAdditional =
           await InterviewXInterviewReportAdditionalRequest(
@@ -475,21 +439,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               }
             }
 
-            // const personaInfo = {
-            //   id: personaList.selected[i].hasOwnProperty("request_persona_type")
-            //     ? `${personaList.selected[i].request_persona_type}_${personaList.selected[i].persona_id}`
-            //     : personaList.selected[i].persona_id.replace(/[^0-9]/g, ""),
-            //   name: personaList.selected[i].persona,
-            //   keyword: personaList.selected[i].hasOwnProperty(
-            //     "request_persona_type"
-            //   )
-            //     ? personaList.selected[i].keyword
-            //     : personaList.selected[i].persona_keyword,
-            //   hashtag: personaList.selected[i].lifestyle,
-            //   summary: personaList.selected[i].consumption_pattern,
-            //   request_persona_type:
-            //     personaList.selected[i].request_persona_type || "preset",
-            // };
 
             const personaInfo = {
               id: `saas_${personaList.selected[i]._id}`,
@@ -524,11 +473,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 !response.response.hasOwnProperty("answer") ||
                 !response.response.answer)
             ) {
-              // response = await axios.post(
-              //   "https://wishresearch.kr/person/persona_interview_module",
-              //   data,
-              //   axiosConfig
-              // );
+        
               response = await InterviewXPersonaMultipleInterviewRequest(
                 data,
                 isLoggedIn
@@ -856,7 +801,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     }
     setSelectedPersonaList(personaList.selected);
     navigate(`/Persona/4`, { replace: true });
-    //replace: true 현재 페이지를 대체하여 이동( 뒤로 가기 시 이전 인터뷰 화면으로 돌아감 방지)
+
   };
 
   return (

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, Link } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -25,27 +24,13 @@ import {
   TRIAL_STATE,
   USER_CREDITS,
 } from "../../../AtomStates";
-// import { SELECTED_INTERVIEW_TYPE } from "../../../../AtomStates";
+
 
 import {
   ContentsWrap,
   MainContent,
   MainSection,
   Title,
-  CardWrap,
-  CardGroupWrap,
-  ListBoxItem,
-  ListText,
-  ListTitle,
-  ListSubtitle,
-  ListButton,
-  BoxListWrap,
-  BgBoxList,
-  BgBoxItem,
-  TextBox,
-  TextInfo,
-  Badge,
-  BottomBar,
   TabWrapType5,
   TabButtonType5,
   TabContent5,
@@ -56,33 +41,20 @@ import {
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import {
   H3,
-  H4,
   Body1,
   Body2,
   Body3,
-  Sub1,
-  Caption1,
-  Caption2,
 } from "../../../../assets/styles/Typography";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import {
-  RadioButton,
-  CustomTextarea,
-  FormBox,
-} from "../../../../assets/styles/InputStyle";
-import {
   Button,
-  ButtonGroup,
-  IconButton,
+ 
 } from "../../../../assets/styles/ButtonStyle";
 import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
-import MoleculeInterviewCard from "../molecules/MoleculeInterviewCard";
 import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
-import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import PopupWrap from "../../../../assets/styles/Popup";
 import OrganismToastPopup from "../organisms/OrganismToastPopup";
 import MoleculeInterviewPurpose from "../molecules/MoleculeInterviewPurpose.jsx";
@@ -97,20 +69,20 @@ const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
 
 const PagePersona3Single = () => {
-  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
-  const [eventState, setEventState] = useAtom(EVENT_STATE);
-  const [eventTitle, setEventTitle] = useAtom(EVENT_TITLE);
-  const [trialState, setTrialState] = useAtom(TRIAL_STATE);
-  const [creditCustomTheory, setCreditCustomTheory] =
+  const [, setUserCredits] = useAtom(USER_CREDITS);
+  const [eventState, ] = useAtom(EVENT_STATE);
+  const [eventTitle, ] = useAtom(EVENT_TITLE);
+  const [trialState, ] = useAtom(TRIAL_STATE);
+  const [creditCustomTheory, ] =
     useAtom(CREDIT_CUSTOM_THEORY);
-  const [showPopup, setShowPopup] = useState(false);
+  const [, setShowPopup] = useState(false);
 
-  const [selectedRadio1, setSelectedRadio1] = useState();
-  const [selectedRadio2, setSelectedRadio2] = useState();
+
+
   const [showCustomButton, setShowCustomButton] = useState(true);
   const [customizations, setCustomizations] = useState([]);
-  const [showCustomization, setShowCustomization] = useState(false);
-  const [showMethodology, setShowMethodology] = useState(false);
+  const [, setShowCustomization] = useState(false);
+
 
   const [showQuestions, setShowQuestions] = useState({
     radio3: false,
@@ -138,24 +110,21 @@ const PagePersona3Single = () => {
     setCustomizations(newCustomizations);
   };
 
-  const [customTheoryData, setCustomTheoryData] = useAtom(CUSTOM_THEORY_DATA);
+  const [customTheoryData, ] = useAtom(CUSTOM_THEORY_DATA);
 
-  const [showNewListBox, setShowNewListBox] = useState(false);
+  const [, setShowNewListBox] = useState(false);
 
   const navigate = useNavigate();
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
-  const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
-    PROJECT_LOAD_BUTTON_STATE
-  );
-  const [personaButtonState3, setPersonaButtonState3] = useAtom(
+
+  const [, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
-  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
+  const [businessAnalysis, ] = useAtom(BUSINESS_ANALYSIS);
+  const [, setPersonaStep] = useAtom(PERSONA_STEP);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
   );
@@ -164,14 +133,13 @@ const PagePersona3Single = () => {
   const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
     useAtom(PURPOSE_ITEMS_SINGLE);
 
-  const [interviewPurpose, setInterviewPurpose] = useState("");
+  const [, setInterviewPurpose] = useState("");
   const [selectedInterviewType, setSelectedInterviewType] = useAtom(
     SELECTED_INTERVIEW_TYPE
   );
-  const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
+  const [, setSelectedInterviewPurposeData] =
     useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
-  const [activeCategory, setActiveCategory] = useState(1);
-  const [showInterview, setShowInterview] = useState(false);
+
   const [showInterviewReady, setShowInterviewReady] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [showEditPersona, setShowEditPersona] = useState(false);

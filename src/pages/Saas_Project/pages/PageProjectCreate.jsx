@@ -1,10 +1,9 @@
-//프로젝트 생성
+
 import React, { useEffect, useState, useRef } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useAtom } from "jotai";
 import { palette } from "../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../Global/atoms/AtomPersonaLoader";
-import OrganismIncNavigation from "../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../Global/molecules/MoleculeHeader";
 import { Button, IconButton } from "../../../assets/styles/ButtonStyle";
 import {
@@ -24,8 +23,6 @@ import {
   TabButtonType5,
   TabContent5,
   TabContent5Item,
-  BgBoxItem,
-  ListBoxWrap,
   StyledDropzone,
   DropzoneStyles,
   ListBoxGroup,
@@ -40,13 +37,9 @@ import {
 import images from "../../../assets/styles/Images";
 import {
   H2,
-  H4,
-  H3,
-  H5,
   Sub3,
   Body1,
   Body2,
-  Body3,
 } from "../../../assets/styles/Typography";
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
@@ -57,39 +50,40 @@ import {
   createProjectOnServerSaas,
   InterviewXProjectAnalysisMultimodalRequest,
   InterviewXProjectAnalysisRequest,
-  updateProjectOnServer,
 } from "../../../utils/indexedDB";
 
 const PageProjectCreate = () => {
+
   const navigate = useNavigate();
+
+  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [isLoggedIn,] = useAtom(IS_LOGGED_IN);
+  const [, setprojectId] = useAtom(PROJECT_ID);
+  const [projectCreateInfo, setProjectCreateInfo] =
+    useAtom(PROJECT_CREATE_INFO);
+
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [showPopupError, setShowPopupError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const selectBoxRef = useRef(null);
-  const [selectedPurpose, setSelectedPurpose] = useState("");
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [dropUp, setDropUp] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [descriptionLength, setDescriptionLength] = useState(0);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [fileNames, setFileNames] = useState([]);
-  const [showPopupFileSize, setShowPopupFileSize] = useState(false);
+  const [, setShowPopupFileSize] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingText, setEditingText] = useState("");
   const [isEditingTarget, setIsEditingTarget] = useState(false);
   const [editingTargetText, setEditingTargetText] = useState("");
   const targetTextareaRef = useRef(null);
-  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [projectId, setprojectId] = useAtom(PROJECT_ID);
-  const [projectCreateInfo, setProjectCreateInfo] =
-    useAtom(PROJECT_CREATE_INFO);
+ 
   // 각 셀렉트박스의 열림/닫힘 상태를 개별적으로 관리
   const [selectBoxStates, setSelectBoxStates] = useState({
-    business: false, // 사업 목적
-    industry: false, // 업종
-    country: false, // 타겟 국가
+    business: false, 
+    industry: false, 
+    country: false, 
   });
 
   // 각 셀렉트박스의 방향 상태 추가
@@ -124,7 +118,6 @@ const PageProjectCreate = () => {
   // textarea ref 추가
   const textareaRef = useRef(null);
 
-  let files_info = []; // files_info 변수를 초기화
 
   // textarea 높이 자동 조절 함수
   const adjustTextareaHeight = () => {
@@ -290,15 +283,6 @@ const PageProjectCreate = () => {
     }
   };
 
-  // 파일 업로드 상태를 체크하는 함수 추가
-  const isFileUploaded = () => {
-    files_info = uploadedFiles.map((file) => ({
-      name: file.name,
-      size: file.size,
-    })); // files_info에 파일 정보 저장
-    return uploadedFiles.length > 0;
-  };
-
   // handlePurposeSelect 함수 수정
   const handlePurposeSelect = (value, field) => {
     setSelectedValues((prev) => ({
@@ -340,12 +324,6 @@ const PageProjectCreate = () => {
     },
   ];
 
-  const targetDiscoveryFinalReport = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-  };
 
   // 파일 업로드 핸들러
   const handleChangeStatus = ({ meta, file, remove }, status) => {
@@ -498,14 +476,6 @@ const PageProjectCreate = () => {
 
   const handleSaveClick = async () => {
     setIsEditing(false);
-    // setProjectTotalInfo({
-    //   ...projectTotalInfo,
-    //   projectAnalysis: {
-    //     ...projectTotalInfo.projectAnalysis,
-    //     business_analysis: editingText.business_analysis,
-    //     target_customer: editingTargetText,
-    //   },
-    // });
 
     setProjectCreateInfo({
       business_analysis: editingText,
@@ -523,14 +493,7 @@ const PageProjectCreate = () => {
 
   const handleSaveTargetClick = async () => {
     setIsEditingTarget(false);
-    // setProjectTotalInfo({
-    //   ...projectTotalInfo,
-    //   projectAnalysis: {
-    //     ...projectTotalInfo.projectAnalysis,
-    //     business_analysis: editingText.business_analysis,
-    //     target_customer: editingTargetText,
-    //   },
-    // });
+  
 
     if (editingText.file_analysis) {
       setProjectCreateInfo({
@@ -627,12 +590,10 @@ const PageProjectCreate = () => {
     detectRefresh();
 
     // 이벤트 리스너 등록
-    // window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("keydown", handleKeyDown);
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      // window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
@@ -642,7 +603,6 @@ const PageProjectCreate = () => {
       <DropzoneStyles />
 
       <ContentsWrap>
-        {/* <OrganismIncNavigation /> */}
 
         <MoleculeHeader />
 

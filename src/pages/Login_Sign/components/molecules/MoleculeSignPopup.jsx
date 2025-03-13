@@ -7,12 +7,7 @@ import { palette } from "../../../../assets/styles/Palette";
 import theme from "../../../../assets/styles/Theme";
 
 const MoleculeSignPopup = ({ onClose = () => {} }) => {
-  // 기본값으로 빈 함수 설정
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
+
 
   return (
     // <LoginPopupOverlay onClick={handleOverlayClick}>
@@ -21,7 +16,7 @@ const MoleculeSignPopup = ({ onClose = () => {} }) => {
         <SignPopupOverlay>
           <PopupContent>
             <CloseButton onClick={onClose}>닫기</CloseButton>
-            <MoleculeSign onClosePopup={onClose} /> {/* 함수 전달 */}
+            <MoleculeSign onClosePopup={onClose} /> 
           </PopupContent>
         </SignPopupOverlay>
       </ThemeProvider>
@@ -31,7 +26,7 @@ const MoleculeSignPopup = ({ onClose = () => {} }) => {
 
 export default MoleculeSignPopup;
 
-// CSS-in-JS 스타일링
+
 const SignPopupOverlay = styled.div`
   position: fixed;
   top: 0;

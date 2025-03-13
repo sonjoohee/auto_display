@@ -8,32 +8,24 @@ import PopupWrap from "../../../../assets/styles/Popup";
 import { CustomInput } from "../../../../assets/styles/InputStyle";
 import {
   Body1,
-  H3,
   H4,
   Helptext,
   Sub1,
   Sub2,
-  Sub3,
   Body2,
   Body3,
 } from "../../../../assets/styles/Typography";
 import { Persona } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
-import axios from "axios";
 import {
   IS_LOGGED_IN,
-  PERSONA_STEP,
-  SELECTED_INTERVIEW_PURPOSE,
   PERSONA_LIST,
-  INTERVIEW_QUESTION_LIST,
   PERSONA_BUTTON_STATE_3,
   BUSINESS_ANALYSIS,
   PROJECT_ID,
   PROJECT_REPORT_ID,
   INTERVIEW_DATA,
-  INTERVIEW_REPORT,
-  INTERVIEW_REPORT_ADDITIONAL,
   IS_PERSONA_ACCESSIBLE,
   SELECTED_PERSONA_LIST,
   SELECTED_INTERVIEW_PURPOSE_DATA,
@@ -57,8 +49,6 @@ import {
 } from "../../../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../../../../pages/Persona/components/molecules/MoleculeRecreate";
-// import { InterviewXPersonaMultipleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
-
 import { InterviewXPersonaSingleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewRequest } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewRequestAddQuestion } from "../../../../utils/indexedDB";
@@ -67,7 +57,6 @@ import { InterviewXPersonaSingleInterviewReportTab2 } from "../../../../utils/in
 import { InterviewXPersonaSingleInterviewReportTab3 } from "../../../../utils/indexedDB";
 import { SkeletonLine } from "../../../../assets/styles/Skeleton";
 import { InterviewXPersonaSingleIndepthInterviewGeneratorRequest } from "../../../../utils/indexedDB";
-import { CreditUse } from "../../../../utils/indexedDB";
 
 const OrganismToastPopupSingleChat = ({
   isActive,
@@ -75,57 +64,48 @@ const OrganismToastPopupSingleChat = ({
   isComplete,
   isIndepth,
 }) => {
-  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
+  const [projectSaas, ] = useAtom(PROJECT_SAAS);
   const project = projectSaas;
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
-
-  const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
+  const [purposeItemsSingleAtom, ] =
     useAtom(PURPOSE_ITEMS_SINGLE);
-
-  const [reportId, setReportId] = useAtom(PROJECT_REPORT_ID);
-  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
+  const [, setReportId] = useAtom(PROJECT_REPORT_ID);
+  const [, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
-  const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
-  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(
-    INTERVIEW_REPORT_ADDITIONAL
-  );
   const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
-  const [singleInterviewReportTab1, setSingleInterviewReportTab1] = useAtom(
+  const [, setSingleInterviewReportTab1] = useAtom(
     SINGLE_INTERVIEW_REPORT_TAB1
   );
-  const [singleInterviewReportTab2, setSingleInterviewReportTab2] = useAtom(
+  const [, setSingleInterviewReportTab2] = useAtom(
     SINGLE_INTERVIEW_REPORT_TAB2
   );
-  const [singleInterviewReportTab3, setSingleInterviewReportTab3] = useAtom(
+  const [, setSingleInterviewReportTab3] = useAtom(
     SINGLE_INTERVIEW_REPORT_TAB3
   );
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [projectId, ] = useAtom(PROJECT_ID);
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
-  const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
-  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
-    SELECTED_INTERVIEW_PURPOSE
-  );
-  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
+  const [personaList, ] = useAtom(PERSONA_LIST);
   const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
     SINGLE_INTERVIEW_QUESTION_LIST
   );
-
-  const [trialState, setTrialState] = useAtom(TRIAL_STATE);
-  const [creditAdditionalQuestion, setCreditAdditionalQuestion] = useAtom(
+  const [trialState, ] = useAtom(TRIAL_STATE);
+  const [creditAdditionalQuestion, ] = useAtom(
     CREDIT_ADDITIONAL_QUESTION
   );
-  const [eventState, setEventState] = useAtom(EVENT_STATE);
-  const [eventTitle, setEventTitle] = useAtom(EVENT_TITLE);
-
-  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
+  const [eventState, ] = useAtom(EVENT_STATE);
+  const [eventTitle, ] = useAtom(EVENT_TITLE);
+  const [businessAnalysis, ] = useAtom(BUSINESS_ANALYSIS);
+  const [selectedInterviewPurposeData, ] =
     useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
+  const [projectTotalInfo, ] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, ] = useAtom(PROJECT_CREATE_INFO);
+
   const navigate = useNavigate();
 
   const [active, setActive] = useState(isActive);
@@ -139,58 +119,34 @@ const OrganismToastPopupSingleChat = ({
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [isGenerating, setIsGenerating] = useState(false);
-  const [visibleAnswers, setVisibleAnswers] = useState({});
+  const [, setVisibleAnswers] = useState({});
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isAnalysisComplete, setIsAnalysisComplete] = useState(false);
-
-  const [showErrorPopup, setShowErrorPopup] = useState(false);
-
+  const [showErrorPopup, setShowErrorPopup] = useState(false)
   const [regenerateCount1, setRegenerateCount1] = useState(0);
   const [regenerateCount2, setRegenerateCount2] = useState(0);
-  const [regenerateCount3, setRegenerateCount3] = useState(0);
   const [showRegenerateButton1, setShowRegenerateButton1] = useState(false);
   const [showRegenerateButton2, setShowRegenerateButton2] = useState(false);
-  const [showRegenerateButton3, setShowRegenerateButton3] = useState(false);
-
   const [interviewAdditionalQuestion, setInterviewAdditionalQuestion] =
     useState({});
   const [selectedQuestions, setSelectedQuestions] = useState([]);
-  const [selectedAdditionalQuestion, setSelectedAdditionalQuestion] = useState(
-    []
-  );
   const [showAddQuestion, setShowAddQuestion] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [allAnswersState, setAllAnswersState] = useState([]); // 상태로 관리
-
-  const [isInputEnabled, setIsInputEnabled] = useState(false); // New state for input enable/disable
-
+  const [isInputEnabled, setIsInputEnabled] = useState(false);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
-
   const [countAdditionalQuestion, setCountAdditionalQuestion] = useState(1);
   const [addQuestionLoading, setAddQuestionLoading] = useState(false);
-  const [currentAnswerData, setCurrentAnswerData] = useState("");
+  const [, setCurrentAnswerData] = useState("");
+  // 추가 질문 관련 상태 추가
+  const [isGeneratingIndepth, setIsGeneratingIndepth] = useState(false);
+  const [isGeneratingIndepthQuestion, setIsGeneratingIndepthQuestion] =
+    useState(false);
+  const [indepthInterviews, setIndepthInterviews] = useState({});
 
-  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
-  const [projectCreateInfo, setProjectCreateInfo] =
-    useAtom(PROJECT_CREATE_INFO);
-
-  // const [reportInterviewData, setReportInterviewData] = useState([]);
-  const axiosConfig = {
-    timeout: 100000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true, //크로스 도메인( 다른 도메인으로 http )요청 시 쿠키 전송 허용
-  };
-  let reportInterviewData = [];
+  
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
-    // if (e.target.value.length > 0) {
-    //   setShowAddQuestion(true);
-    // } else {
-    //   setShowAddQuestion(false);
-    // }
   };
 
   const handleAddQuestionGenerate = async () => {
@@ -390,13 +346,7 @@ const OrganismToastPopupSingleChat = ({
             business_analysis_data: projectCreateInfo,
             theory_name: selectedInterviewPurposeData?.title || "",
           };
-          {
-            /* <CardBadge text={item.badge.text}>
-                                      <span>{item.badge.icon}</span>
-                                      {item.badge.text}
-                                    </CardBadge> 
-                                    <CardTitle>{item.title}</CardTitle>*/
-          }
+      
           let response = await InterviewXPersonaSingleInterviewGeneratorRequest(
             data,
             isLoggedIn
@@ -444,7 +394,6 @@ const OrganismToastPopupSingleChat = ({
                 ...newQuestionData.specialQuestions,
               ];
               setInterviewQuestionListState(combinedQuestions);
-              // setInterviewQuestionListState(combinedQuestions[0]);
               setIsLoadingPrepare(false);
               setInterviewStatus(Array(combinedQuestions.length).fill("Pre"));
 
@@ -511,7 +460,7 @@ const OrganismToastPopupSingleChat = ({
         }
       }
 
-      // ... rest of the code
+
 
       // 데이터 동기화 확인 로직 개선
       let syncAttempts = 0;
@@ -679,18 +628,6 @@ const OrganismToastPopupSingleChat = ({
     }
   };
 
-  // 추가 질문 관련 상태 추가
-  const [isGeneratingIndepth, setIsGeneratingIndepth] = useState(false);
-  const [isGeneratingIndepthQuestion, setIsGeneratingIndepthQuestion] =
-    useState(false);
-  const [indepthInterviews, setIndepthInterviews] = useState({});
-
-  // 더미 데이터 - 실제 구현시 API로 대체
-  const dummyIndepthInterview = {
-    question_type: "IndepthInterview",
-    question: "이 서비스의 가장 큰 장점은 무엇이라고 생각하시나요?",
-  };
-
   // processInterview 함수 수정
   const processInterview = async () => {
     if (!isLoadingPrepare && interviewStatus[currentQuestionIndex] === "Pre") {
@@ -854,9 +791,6 @@ const OrganismToastPopupSingleChat = ({
         }
 
         // 현재 질문의 상태를 "Complete"로 업데이트
-        // const newStatusAfter = [...interviewStatus];
-        // newStatusAfter[currentQuestionIndex] = "Complete";
-        // setInterviewStatus(newStatusAfter);
         // 상태를 Complete로 변경하기 전에 답변이 저장되었는지 확인
         if (response?.response?.answer || allAnswers[0]) {
           newStatus[currentQuestionIndex] = "Complete";
@@ -1415,7 +1349,6 @@ const OrganismToastPopupSingleChat = ({
               {/* Dynamically displaying the interview questions */}
               {interviewQuestionListState.length > 0 ? (
                 interviewQuestionListState.map((item, index) => {
-                  // interviewQuestionListState.slice(0, 1).map((item, index) => {
                   const status = interviewStatus[index] || "Pre"; // 현재 질문의 상태를 가져옴
                   return (
                     <QuestionItem

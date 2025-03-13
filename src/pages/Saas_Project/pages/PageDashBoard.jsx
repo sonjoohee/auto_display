@@ -1,13 +1,11 @@
 //대시보드
 import React, { useEffect, useState, useRef } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useAtom } from "jotai";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { palette } from "../../../assets/styles/Palette";
 import OrganismIncNavigation from "../../Global/organisms/OrganismIncNavigation";
-// import Header from "../../../Design_Page/IncHeader";
 import MoleculeHeader from "../../Global/molecules/MoleculeHeader";
-import MoleculeAccountPopup from "../../Login_Sign/components/molecules/MoleculeAccountPopup";
 import PopupWrap from "../../../assets/styles/Popup";
 import { Button } from "../../../assets/styles/ButtonStyle";
 import {
@@ -15,10 +13,7 @@ import {
   MainContent,
   ProjectTag,
   ListBoxGroup,
-  TableHeader,
-  TableBody,
 } from "../../../assets/styles/BusinessAnalysisStyle";
-import { FormBox, CustomTextarea } from "../../../assets/styles/InputStyle";
 import images from "../../../assets/styles/Images";
 import {
   H1,
@@ -27,19 +22,15 @@ import {
   Body1,
   Body2,
   Body3,
-  Sub1,
   Sub2,
   Sub3,
   Caption1,
-  InputText,
 } from "../../../assets/styles/Typography";
 import * as d3 from "d3";
 import {
   PROJECT_SAAS,
   PERSONA_LIST_SAAS,
   ACCESS_STATE_SAAS,
-  ACCESS_DASHBOARD,
-  TOOL_LIST_SAAS,
   DASHBOARD_TOOL_LIST_SAAS,
 } from "../../../pages/AtomStates";
 import {
@@ -57,16 +48,20 @@ const PageDashBoard = () => {
   const project = projectSaas;
   const [showPopup, setShowPopup] = useState(false);
 
+  const [projectSaas,] = useAtom(PROJECT_SAAS);
+  const [, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [toolListSaas, setToolListSaas] = useAtom(DASHBOARD_TOOL_LIST_SAAS);
-
-  const navigate = useNavigate();
-
+ 
+  const [showPopup, setShowPopup] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
 
+  const navigate = useNavigate();
   const macroChartRef = useRef();
   const uniqueChartRef = useRef();
   const stakeholderChartRef = useRef();
+
+  const project = projectSaas;
 
   useEffect(() => {
     const loadPersonaList = async () => {
@@ -98,15 +93,9 @@ const PageDashBoard = () => {
           5,
           true
         );
-        // console.log(
-        //   "🚀 ~ loadToolList ~ savedToolListInfo:",
-        //   savedToolListInfo
-        // );
 
         if (savedToolListInfo) {
-          // const filteredList = savedToolListInfo.filter(
-          //   (tool) => !(tool.deleteState >= 1)
-          // );
+       
           const sortedList = [...savedToolListInfo].sort((a, b) => {
             const dateA = a.timestamp;
             const dateB = b.timestamp;
@@ -182,7 +171,6 @@ const PageDashBoard = () => {
       (persona) => persona?.personaType === type
     );
 
-    // 총 개수
     const total = filteredPersonas.length;
 
     // 활성 페르소나 (status가 complete인 경우)
@@ -347,12 +335,10 @@ const PageDashBoard = () => {
     detectRefresh();
 
     // 이벤트 리스너 등록
-    // window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("keydown", handleKeyDown);
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      // window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
