@@ -181,19 +181,19 @@ const PageServiceLanding = () => {
   useEffect(() => {
     const scrollContent = () => {
       if (!contentRef.current) return;
-      
+
       const items = contentRef.current.children;
       if (!items.length) return;
 
       setCurrentContentIndex((prevIndex) => {
         const nextIndex = (prevIndex + 1) % items.length;
         const targetItem = items[nextIndex];
-        
+
         contentRef.current.scrollTo({
           left: targetItem.offsetLeft - 20, // 왼쪽 여백 20px 고려
-          behavior: 'smooth'
+          behavior: "smooth",
         });
-        
+
         return nextIndex;
       });
     };
@@ -209,7 +209,7 @@ const PageServiceLanding = () => {
         <div>
           <h1 className="logo">
             <images.Logo2 color="black" />
-            <span>.beta</span>
+            <span> beta</span>
           </h1>
           <Nav>
             {/* <Link to="/blog">주요 기능</Link> */}
@@ -844,7 +844,7 @@ const MainVisual = styled.div`
     ${media.mobile} {
       margin-top: 110px;
     }
-  
+
     h2 {
       position: relative;
       font-size: 3.13rem;
@@ -855,7 +855,7 @@ const MainVisual = styled.div`
       ${media.mobile} {
         font-size: 2rem;
       }
-  
+
       span {
         position: absolute;
         left: 220px;
@@ -936,23 +936,23 @@ const MainVisual = styled.div`
       &:nth-child(2) {
         top: 90px;
         left: 10vw;
-        background: #AF52DE;
+        background: #af52de;
 
         ${media.tablet} {
           top: 70px;
           left: 13vw;
         }
- 
+
         ${media.mobile} {
           top: 30px;
           left: 30vw;
         }
       }
-      
+
       &:nth-child(3) {
         top: 255px;
         left: 13vw;
-        background: #00C7BE;
+        background: #00c7be;
 
         ${media.tablet} {
           top: 200px;
@@ -964,11 +964,11 @@ const MainVisual = styled.div`
           left: 28vw;
         }
       }
-      
+
       &:nth-child(4) {
         bottom: 300px;
         right: 8vw;
-        background: #FF9500;
+        background: #ff9500;
 
         ${media.tablet} {
           bottom: 240px;
@@ -1016,7 +1016,7 @@ const Section01 = styled.div`
       ${media.mobile} {
         font-size: 0.75rem;
       }
-    
+
       &:before {
         width: 24px;
         height: 24px;
@@ -1068,7 +1068,7 @@ const Section01 = styled.div`
       gap: 20px;
       width: calc(100% - 40px);
     }
-  
+
     > div {
       display: flex;
       align-items: flex-end;
@@ -1529,7 +1529,7 @@ const Section04 = styled.div`
       scrollbar-width: none;
       -ms-overflow-style: none;
       padding: 0;
-      
+
       &::-webkit-scrollbar {
         display: none;
       }
