@@ -898,14 +898,18 @@ const MainVisual = styled.div`
 
   .img {
     position: relative;
+    max-width: 1250px;
+    margin: 0 auto;
 
     ${media.mobile} {
       margin-top: 20px;
+      padding: 40px 0 20px;
     }
 
     img {
       ${media.tablet} {
         width: 100%;
+        scale: 1.4;
       }
     }
 
@@ -926,7 +930,7 @@ const MainVisual = styled.div`
 
       &:nth-child(2) {
         top: 90px;
-        left: 13vw;
+        left: 10vw;
         background: #AF52DE;
 
         ${media.tablet} {
@@ -935,14 +939,14 @@ const MainVisual = styled.div`
         }
  
         ${media.mobile} {
-          top: 30px
+          top: 30px;
           left: 30vw;
         }
       }
       
       &:nth-child(3) {
-        top: 260px;
-        left: 18vw;
+        top: 255px;
+        left: 13vw;
         background: #00C7BE;
 
         ${media.tablet} {
@@ -951,14 +955,14 @@ const MainVisual = styled.div`
         }
 
         ${media.mobile} {
-          top: 215px;
+          top: 280px;
           left: 28vw;
         }
       }
       
       &:nth-child(4) {
         bottom: 300px;
-        right: 4vw;
+        right: 8vw;
         background: #FF9500;
 
         ${media.tablet} {
