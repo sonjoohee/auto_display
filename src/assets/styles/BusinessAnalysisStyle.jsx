@@ -2807,13 +2807,17 @@ export const BoxWrap = styled.div`
       ? `1px solid ${palette.outlineGray}`
       : `1px solid ${palette.outlineGray}`};
 
-  transition: all 0.2s ease-in-out;
+  ${(props) =>
+    props.Hover &&
+    css`
+      transition: all 0.2s ease-in-out;
 
-  &:hover {
-    border-color: ${palette.primary};
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    transform: translateY(-2px);
-  }
+      &:hover {
+        border-color: ${palette.primary};
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        transform: translateY(-2px);
+      }
+    `}
 
   div,
   p,
