@@ -220,8 +220,11 @@ const PageServiceLanding = () => {
               블로그
             </Link>
             {/* {isLoggedIn ?? <Link to="/Login">로그인</Link>} */}
-            <Button Large Primary Fill onClick={() => navigate("/Project")}>
+            <Button Large Primary Fill onClick={() => navigate("/Project")} className="web">
               바로 시작하기
+            </Button>
+            <Button Large Primary Fill onClick={() => navigate("/Blog")} className="mobile">
+            블로그
             </Button>
           </div>
         </div>
@@ -818,6 +821,22 @@ const Header = styled.div`
 
       ${media.mobile} {
         display: none;
+      }
+    }
+
+    .web {
+      display: block;
+
+      ${media.mobile} {
+        display: none;
+      }
+    }
+
+    .mobile {
+      display: none;
+
+      ${media.mobile} {
+        display: block;
       }
     }
   }
