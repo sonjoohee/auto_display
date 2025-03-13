@@ -934,7 +934,6 @@ const PageIdeaGenerator = () => {
   const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
-  console.log("personaListSaas", personaListSaas);
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
@@ -962,7 +961,6 @@ const PageIdeaGenerator = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          console.log("새로고침 감지: URL 비교");
           navigate("/");
           return true;
         }
@@ -1409,10 +1407,7 @@ const PageIdeaGenerator = () => {
                     </li>
                     <li>
                       <Body2 color="gray500">페르소나 선택</Body2>
-                      {console.log(
-                        "selectedPersonasSaas",
-                        selectedPersonasSaas
-                      )}
+
                       {selectedPersonasSaas ? (
                         <PersonaGroup>
                           {Array.isArray(selectedPersonasSaas) ? (

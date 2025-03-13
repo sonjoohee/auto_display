@@ -583,6 +583,28 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
     }
     return "상세 내용 없음";
   };
+
+  // 툴 설명 가져오기 함수
+  const getToolStatus = (tool) => {
+    if (tool.type) {
+      switch (tool.type) {
+        case "ix_target_discovery_persona":
+          return tool.completedStep === 4 ? "완료" : "진행중";
+        case "ix_customer_value_persona":
+          return tool.completedStep === 4 ? "완료" : "진행중";
+        case "ix_idea_generator_persona":
+          return tool.completedStep === 4 ? "완료" : "진행중";
+        case "ix_design_emotion_analysis":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        default:
+          return "-";
+      }
+    }
+    if (tool.interviewType) return "완료";
+    if (tool.chat_data?.expert_index) return "-";
+    return "상세 내용 없음";
+  };
+
   // 날짜 포맷팅 함수 (년월일시분 표기)
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -1007,7 +1029,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
                 </td>
                 <td>
                   <Body2 color="gray700" align="center">
-                    {tool.status || "완료"}
+                    {getToolStatus(tool)}
                   </Body2>
                 </td>
                 <td>

@@ -413,7 +413,7 @@ function App() {
             }
           ></Route>
           <Route path="/" element={<PageMain />}></Route>
-          <Route
+          {/* <Route
             path="/Persona"
             element={
               <RequireToken>
@@ -428,15 +428,15 @@ function App() {
                 <PagePersona2 />
               </RequireToken>
             }
-          ></Route>
-          <Route
+          ></Route> */}
+          {/* <Route
             path="/Persona/3"
             element={
               <RequireToken>
                 <PagePersona3 />
               </RequireToken>
             }
-          ></Route>
+          ></Route> */}
           <Route
             path="/Persona/3/Select"
             element={
@@ -525,14 +525,14 @@ function App() {
             }
           ></Route>
 
-          <Route
+          {/* <Route
             path="/MyProject"
             element={
               <RequireToken>
                 <PageMyProject />
               </RequireToken>
             }
-          />
+          /> */}
 
           {/* SAAS 프로젝트 */}
 

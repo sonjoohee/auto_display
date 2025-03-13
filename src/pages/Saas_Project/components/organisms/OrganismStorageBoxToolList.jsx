@@ -141,7 +141,10 @@ import {
   PROJECT_SAAS,
 } from "../../../AtomStates";
 
-import { updateToolOnServer, updateProjectReportOnServer } from "../../../../utils/indexedDB";
+import {
+  updateToolOnServer,
+  updateProjectReportOnServer,
+} from "../../../../utils/indexedDB";
 
 const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
@@ -592,6 +595,27 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
     }
     return "상세 내용 없음";
   };
+  // 툴 설명 가져오기 함수
+  const getToolStatus = (tool) => {
+    if (tool.type) {
+      switch (tool.type) {
+        case "ix_target_discovery_persona":
+          return tool.completedStep === 4 ? "완료" : "진행중";
+        case "ix_customer_value_persona":
+          return tool.completedStep === 4 ? "완료" : "진행중";
+        case "ix_idea_generator_persona":
+          return tool.completedStep === 4 ? "완료" : "진행중";
+        case "ix_design_emotion_analysis":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        default:
+          return "-";
+      }
+    }
+    if (tool.interviewType) return "완료";
+    if (tool.chat_data?.expert_index) return "-";
+    return "상세 내용 없음";
+  };
+
   // 날짜 포맷팅 함수 (년월일시분 표기)
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -970,41 +994,43 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const handleDeleteConfirm = async () => {
     setIsDeletePopupOpen(false);
 
-    if (deleteToolType === "interviewSingle" || deleteToolType === "interviewGroup") {
+    if (
+      deleteToolType === "interviewSingle" ||
+      deleteToolType === "interviewGroup"
+    ) {
       await updateProjectReportOnServer(
         deleteToolId,
         {
           deleteState: 1,
         },
-        true,
+        true
       );
-    } 
-    else if (deleteToolType === "chat") {
+    } else if (deleteToolType === "chat") {
       // 서버에서 채팅 삭제 (deleteState를 1로 설정)
       try {
         const accessToken = sessionStorage.getItem("accessToken");
-        
-        await axios.put(`https://wishresearch.kr/panels/update_chat`, {
-          id: deleteToolId,
-          deleteState: 1
-        }, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
+
+        await axios.put(
+          `https://wishresearch.kr/panels/update_chat`,
+          {
+            id: deleteToolId,
+            deleteState: 1,
           },
-          withCredentials: true,
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
       } catch (error) {
         console.error("채팅 삭제 중 오류 발생:", error);
       }
-    }
-    else if (deleteToolType === "tool") {
-      await updateToolOnServer(
-        deleteToolId,
-        {
-          deleteState: 1,
-        }
-      );
+    } else if (deleteToolType === "tool") {
+      await updateToolOnServer(deleteToolId, {
+        deleteState: 1,
+      });
     }
     // 로컬 상태에서 삭제된 툴 제거
     setLocalToolList((prevList) =>
@@ -1078,7 +1104,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
                   </td>
                   <td>
                     <Body2 color="gray700" align="center">
-                      {tool.status || "완료"}
+                      {getToolStatus(tool)}
                     </Body2>
                   </td>
                   <td>
@@ -1102,7 +1128,10 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
                     </Button>
                   </td>
                   <td style={{ textAlign: "center" }}>
-                    <Button None onClick={() => hadleDeleteTool(tool._id, tool.toolType)}>
+                    <Button
+                      None
+                      onClick={() => hadleDeleteTool(tool._id, tool.toolType)}
+                    >
                       <img src={images.Trash} alt="" />
                     </Button>
                   </td>

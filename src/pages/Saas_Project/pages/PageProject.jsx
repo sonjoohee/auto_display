@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { palette } from "../../../assets/styles/Palette";
 import OrganismIncNavigation from "../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../Global/molecules/MoleculeHeader";
@@ -24,18 +24,39 @@ import {
   getProjectListSaasByIdFromIndexedDB,
   updateProjectOnServer,
   getProjectDeleteListOnServer,
+  CreditInfo,
 } from "../../../utils/indexedDB";
 import OrganismProjectItem from "../components/organisms/OrganismProjectItem";
 import {
   PROJECT_LIST,
   ACCESS_DASHBOARD,
   IS_LOGGED_IN,
+  CREDIT_REQUEST_CUSTOM_PERSONA,
+  CREDIT_REQUEST_BUSINESS_PERSONA,
+  CREDIT_CUSTOM_THEORY,
+  CREDIT_ADDITIONAL_QUESTION,
+  CREDIT_INDEPTH_INTERVIEW,
+  EVENT_TITLE,
+  EVENT_STATE,
+  TRIAL_STATE,
 } from "../../AtomStates";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 
 const PageProject = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const navigate = useNavigate();
+  const [, setCreditRequestCustomPersona] = useAtom(
+    CREDIT_REQUEST_CUSTOM_PERSONA
+  );
+  const [, setCreditRequestBusinessPersona] = useAtom(
+    CREDIT_REQUEST_BUSINESS_PERSONA
+  );
+  const [, setCreditCustomTheory] = useAtom(CREDIT_CUSTOM_THEORY);
+  const [, setCreditAdditionalQuestion] = useAtom(CREDIT_ADDITIONAL_QUESTION);
+  const [, setCreditIndepthInterview] = useAtom(CREDIT_INDEPTH_INTERVIEW);
+  const [, setEventTitle] = useAtom(EVENT_TITLE);
+  const [, setEventState] = useAtom(EVENT_STATE);
+  const [, setTrialState] = useAtom(TRIAL_STATE);
   const [, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectList, setProjectList] = useAtom(PROJECT_LIST);
@@ -50,6 +71,33 @@ const PageProject = () => {
     setIsWarningPopupOpen(false);
     setShowWarning(false);
   };
+
+  useEffect(() => {
+    const fetchCreditInfo = async () => {
+      try {
+        if (isLoggedIn) {
+          const response = await CreditInfo(isLoggedIn);
+
+          if (response) {
+            console.log("🚀 ~ fetchCreditInfo ~ response:", response);
+            setCreditRequestCustomPersona(response.request_custom_persona);
+            setCreditRequestBusinessPersona(response.request_business_persona);
+            setCreditCustomTheory(response.custom_theory);
+            setCreditAdditionalQuestion(response.additional_question);
+            setCreditIndepthInterview(response.indepth_interview);
+            setEventTitle(response.event_title);
+            setEventState(response.event_state);
+            setTrialState(response.trial_state);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch credit info:", error);
+      }
+    };
+
+    // Call the API every time PageMain is rendered (or when isLoggedIn changes)
+    fetchCreditInfo();
+  }, [isLoggedIn]);
 
   // 임시 삭제함 데이터 로드
   useEffect(() => {
@@ -130,8 +178,6 @@ const PageProject = () => {
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
-
-
       //  현재 URL 확인
       const currentUrl = window.location.href;
 

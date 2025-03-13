@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
@@ -35,12 +34,7 @@ import {
   PROJECT_TOTAL_INFO,
 } from "../../AtomStates";
 import images from "../../../assets/styles/Images";
-import {
-  H2,
-  Sub3,
-  Body1,
-  Body2,
-} from "../../../assets/styles/Typography";
+import { H2, Sub3, Body1, Body2 } from "../../../assets/styles/Typography";
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
 
@@ -53,11 +47,10 @@ import {
 } from "../../../utils/indexedDB";
 
 const PageProjectCreate = () => {
-
   const navigate = useNavigate();
 
   const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
-  const [isLoggedIn,] = useAtom(IS_LOGGED_IN);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [, setprojectId] = useAtom(PROJECT_ID);
   const [projectCreateInfo, setProjectCreateInfo] =
     useAtom(PROJECT_CREATE_INFO);
@@ -78,12 +71,12 @@ const PageProjectCreate = () => {
   const [isEditingTarget, setIsEditingTarget] = useState(false);
   const [editingTargetText, setEditingTargetText] = useState("");
   const targetTextareaRef = useRef(null);
- 
+
   // 각 셀렉트박스의 열림/닫힘 상태를 개별적으로 관리
   const [selectBoxStates, setSelectBoxStates] = useState({
-    business: false, 
-    industry: false, 
-    country: false, 
+    business: false,
+    industry: false,
+    country: false,
   });
 
   // 각 셀렉트박스의 방향 상태 추가
@@ -117,7 +110,6 @@ const PageProjectCreate = () => {
 
   // textarea ref 추가
   const textareaRef = useRef(null);
-
 
   // textarea 높이 자동 조절 함수
   const adjustTextareaHeight = () => {
@@ -324,7 +316,6 @@ const PageProjectCreate = () => {
     },
   ];
 
-
   // 파일 업로드 핸들러
   const handleChangeStatus = ({ meta, file, remove }, status) => {
     const maxSize = 20 * 1024 * 1024; // 20MB
@@ -493,7 +484,6 @@ const PageProjectCreate = () => {
 
   const handleSaveTargetClick = async () => {
     setIsEditingTarget(false);
-  
 
     if (editingText.file_analysis) {
       setProjectCreateInfo({
@@ -603,12 +593,11 @@ const PageProjectCreate = () => {
       <DropzoneStyles />
 
       <ContentsWrap>
-
         <MoleculeHeader />
 
         <MainContent>
           <ProjectCreateWrap>
-            <BackButton onClick={() => navigate("/")}>
+            <BackButton onClick={() => navigate("/Project")}>
               <images.ChevronRight width="20px" height="20px" />
               <Sub3 color="gray500">HOME</Sub3>
             </BackButton>
