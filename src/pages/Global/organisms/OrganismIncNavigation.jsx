@@ -1173,7 +1173,7 @@ const OrganismIncNavigation = () => {
 
     setPersonaStep(0);
 
-    window.location.href = "/";
+    window.location.href = "/Project";
   };
 
   const [showSubNav, setShowSubNav] = useState(false);
@@ -1234,7 +1234,9 @@ const OrganismIncNavigation = () => {
   const [isHomePopupOpen, setIsHomePopupOpen] = useState(false);
 
   const handleConfirmAndNavigate = () => {
-    handleNewProjectClick();
+    setPersonaStep(0);
+
+    window.location.href = "/";
     setIsHomePopupOpen(false);
   };
 
@@ -1282,7 +1284,7 @@ const OrganismIncNavigation = () => {
               />
             </svg>
 
-            <span>HOME</span>
+            <span>PROJECT</span>
           </li>
 
           {accessDashboard && (

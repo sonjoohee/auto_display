@@ -324,7 +324,7 @@ const PagePersona3Select = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          navigate("/");
+          navigate("/Project");
           return true;
         }
 
@@ -343,7 +343,7 @@ const PagePersona3Select = () => {
       event.returnValue = "";
 
       // 새로고침 시 루트 페이지로 이동
-      navigate("/");
+      navigate("/Project");
     };
 
     // F5 키 또는 Ctrl+R 감지
@@ -354,7 +354,7 @@ const PagePersona3Select = () => {
       ) {
         // F5 키 코드
         event.preventDefault();
-        navigate("/");
+        navigate("/Project");
       }
     };
 

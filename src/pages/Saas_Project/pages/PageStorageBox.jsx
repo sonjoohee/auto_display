@@ -90,7 +90,7 @@ const PageStorageBox = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          navigate("/");
+          navigate("/Project");
           return true;
         }
 
@@ -109,7 +109,7 @@ const PageStorageBox = () => {
       event.returnValue = "";
 
       // 새로고침 시 루트 페이지로 이동
-      navigate("/");
+      navigate("/Project");
     };
 
     // F5 키 또는 Ctrl+R 감지
@@ -120,7 +120,7 @@ const PageStorageBox = () => {
       ) {
         // F5 키 코드
         event.preventDefault();
-        navigate("/");
+        navigate("/Project");
       }
     };
 
@@ -489,7 +489,7 @@ const PageStorageBox = () => {
         <PopupWrap
           Wide455
           TitleFlex
-          title="임시 삭제함 (Tool)"
+          title="임시 삭제함 (리서치툴)"
           buttonType="Fill"
           isModal={true}
           onCancel={() => setIsTrashModalOpen(false)}

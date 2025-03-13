@@ -6,8 +6,11 @@ import { palette } from "../assets/styles/Palette";
 import Landingimages from "../assets/styles/Landingimages";
 import images from "../assets/styles/Images";
 import { media } from "../assets/styles/Breakpoints";
+import { useAtom } from "jotai";
+import { IS_LOGGED_IN } from "./AtomStates";
 
 const PageServiceLanding = () => {
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [logoColor, setLogoColor] = useState(palette.black);
@@ -178,15 +181,18 @@ const PageServiceLanding = () => {
         <div>
           <h1 className="logo">
             <images.Logo2 color="black" />
-            <span>.beta</span>
+            <span> beta</span>
           </h1>
           <Nav>
-            <Link to="/blog">주요 기능</Link>
-            <Link to="/blog">블로그</Link>
+            {/* <Link to="/blog">주요 기능</Link> */}
+            {/* <Link to="/Blog">블로그</Link> */}
           </Nav>
           <div className="gnb">
-            <Link to="/Login">로그인</Link>
-            <Button Large Primary Fill onClick={() => navigate("/")}>
+            <Link to="/Blog" style={{ marginTop: "3px" }}>
+              블로그
+            </Link>
+            {/* {isLoggedIn ?? <Link to="/Login">로그인</Link>} */}
+            <Button Large Primary Fill onClick={() => navigate("/Project")}>
               바로 시작하기
             </Button>
           </div>
@@ -195,11 +201,21 @@ const PageServiceLanding = () => {
 
       <MainVisual id="mainVisual">
         <div className="text">
-          <h2>새로운 고객　
+          <h2>
+            새로운 고객　
             <span />
-            와 연결되는<br />가장 빠른 방법</h2>
+            와 연결되는
+            <br />
+            가장 빠른 방법
+          </h2>
           <p>내 비즈니스를 위한 가장 현명한 선택</p>
-          <button type="button" onClick={() => navigate("/Login")}>나의 X 만나기</button>
+          <Button
+            // type="button"
+            style={{ paddingTop: "10px" }}
+            onClick={() => navigate("/Project")}
+          >
+            나의 X 만나기
+          </Button>
         </div>
 
         <img src={Landingimages.ImgLanding} alt="" />
@@ -209,31 +225,59 @@ const PageServiceLanding = () => {
         <div className="title">
           <span>어떻게 활용할까?</span>
           <h3>InterviewX 이렇게 활용하세요!</h3>
-          <p>사용하기 편한 많은 활용법을 통해 걱정 없이<br />우리 입맛대로 할 수 있어요</p>
+          <p>
+            사용하기 편한 많은 활용법을 통해 걱정 없이
+            <br />
+            우리 입맛대로 할 수 있어요
+          </p>
         </div>
 
         <div className="content">
           <div className="item01">
             <img src={Landingimages.ImgLanding01} alt="" />
             <div>
-              <strong>비즈니스 강점과 리스크<br />AI가 빠르고 정확하게 분석!</strong>
-              <p>간단한 정보 입력과 파일 업로드만으로<br />핵심 내용과 숨은 의미까지 분석해 한눈에 정리 </p>
+              <strong>
+                비즈니스 강점과 리스크
+                <br />
+                AI가 빠르고 정확하게 분석!
+              </strong>
+              <p>
+                간단한 정보 입력과 파일 업로드만으로
+                <br />
+                핵심 내용과 숨은 의미까지 분석해 한눈에 정리{" "}
+              </p>
             </div>
           </div>
 
           <div className="item02">
             <img src={Landingimages.ImgLanding02} alt="" />
             <div>
-              <strong>비즈니스 강점과 리스크<br />AI가 빠르고 정확하게 분석!</strong>
-              <p>간단한 정보 입력과 파일 업로드만으로<br />핵심 내용과 숨은 의미까지 분석해 한눈에 정리 </p>
+              <strong>
+                비즈니스 강점과 리스크
+                <br />
+                AI가 빠르고 정확하게 분석!
+              </strong>
+              <p>
+                간단한 정보 입력과 파일 업로드만으로
+                <br />
+                핵심 내용과 숨은 의미까지 분석해 한눈에 정리{" "}
+              </p>
             </div>
           </div>
 
           <div className="item03">
             <img src={Landingimages.ImgLanding03} alt="" />
             <div>
-              <strong>비즈니스 강점과 리스크<br />AI가 빠르고 정확하게 분석!</strong>
-              <p>간단한 정보 입력과 파일 업로드만으로<br />핵심 내용과 숨은 의미까지 분석해 한눈에 정리 </p>
+              <strong>
+                비즈니스 강점과 리스크
+                <br />
+                AI가 빠르고 정확하게 분석!
+              </strong>
+              <p>
+                간단한 정보 입력과 파일 업로드만으로
+                <br />
+                핵심 내용과 숨은 의미까지 분석해 한눈에 정리{" "}
+              </p>
             </div>
           </div>
         </div>
@@ -241,10 +285,22 @@ const PageServiceLanding = () => {
 
       <Section02 id="section02">
         <div>
-          <div className="title">
+          <div className="title" style={{ marginTop: "35px" }}>
             <span>고객 서비스</span>
-            <h3>혹시,<br />내가 놓친 고객은<br />없을까?</h3>
-            <button type="button" onClick={() => navigate("/Login")}>나의 X 만나기</button>
+            <h3>
+              혹시,
+              <br />
+              내가 놓친 고객은
+              <br />
+              없을까?
+            </h3>
+            <Button
+              // type="button"
+              style={{ paddingTop: "10px" }}
+              onClick={() => navigate("/Project")}
+            >
+              나의 X 만나기
+            </Button>
           </div>
 
           <div className="content">
@@ -281,35 +337,55 @@ const PageServiceLanding = () => {
       <Section03 id="section03">
         <div className="title">
           <span>누구나 편하게</span>
-          <h3>다양한 툴로<br />업무도 더 스마트하게게</h3>
+          <h3>
+            다양한 툴로
+            <br />
+            업무도 더 스마트하게게
+          </h3>
         </div>
 
         <div className="content">
           <div className="item01">
             <div>
               <strong>이미지 감성 분석기</strong>
-              <p>이미지 속 감점 요소를 분석해<br />시각적 데이터를 해석하고 의미 도출 </p>
+              <p>
+                이미지 속 감점 요소를 분석해
+                <br />
+                시각적 데이터를 해석하고 의미 도출{" "}
+              </p>
             </div>
           </div>
 
           <div className="item02">
             <div>
               <strong>AI 브레인스토밍 툴</strong>
-              <p>AI가 타겟 고객의 니즈를 바탕으로<br />창의적인 아이디어를 발산하여 기획 지원 </p>
+              <p>
+                AI가 타겟 고객의 니즈를 바탕으로
+                <br />
+                창의적인 아이디어를 발산하여 기획 지원{" "}
+              </p>
             </div>
           </div>
 
           <div className="item03">
             <div>
               <strong>고객 가치 우선순위 분석기</strong>
-              <p>AI가 고객의 관심 요소를 분석하고<br />가장 중요한 가치를 우선순위로 정리</p>
+              <p>
+                AI가 고객의 관심 요소를 분석하고
+                <br />
+                가장 중요한 가치를 우선순위로 정리
+              </p>
             </div>
           </div>
 
           <div className="item04">
             <div>
               <strong>BM 모델 시뮬레이션</strong>
-              <p>AI가 비즈니스 모델을 분석하고<br />시장에 최적화된 모델 제안 </p>
+              <p>
+                AI가 비즈니스 모델을 분석하고
+                <br />
+                시장에 최적화된 모델 제안{" "}
+              </p>
             </div>
           </div>
         </div>
@@ -326,7 +402,11 @@ const PageServiceLanding = () => {
             <img src={Landingimages.ImgLanding11} alt="" />
             <div>
               <strong>(마케팅)타겟 고객이 명확하지 않나요?</strong>
-              <p>AI 분석을 통해 반응이 좋은 고객을<br />선별하고, 광고 성과를 극대화하세요.</p>
+              <p>
+                AI 분석을 통해 반응이 좋은 고객을
+                <br />
+                선별하고, 광고 성과를 극대화하세요.
+              </p>
             </div>
           </div>
 
@@ -334,7 +414,11 @@ const PageServiceLanding = () => {
             <img src={Landingimages.ImgLanding12} alt="" />
             <div>
               <strong>(제품 기획) 고객 요구 불확실, 어떻게 할까요?</strong>
-              <p>실제 고객과 인터뷰하여 보이지 않는 니즈를<br />발견하고, 성공 확률이 높은 제품을 기획하세요.</p>
+              <p>
+                실제 고객과 인터뷰하여 보이지 않는 니즈를
+                <br />
+                발견하고, 성공 확률이 높은 제품을 기획하세요.
+              </p>
             </div>
           </div>
 
@@ -342,7 +426,11 @@ const PageServiceLanding = () => {
             <img src={Landingimages.ImgLanding13} alt="" />
             <div>
               <strong>(스타트업 창업)우리 BM이 정말 최적일까요?</strong>
-              <p>시장 데이터를 분석하여 비즈니스 모델을<br />정교화하고 투자 유치 가능성을 높이세요.</p>
+              <p>
+                시장 데이터를 분석하여 비즈니스 모델을
+                <br />
+                정교화하고 투자 유치 가능성을 높이세요.
+              </p>
             </div>
           </div>
         </div>
@@ -351,9 +439,7 @@ const PageServiceLanding = () => {
       <Section05 id="section05">
         <FaqWrap>
           <div>
-            <h3>
-              자주 묻는 질문
-            </h3>
+            <h3>자주 묻는 질문</h3>
 
             <FaqList>
               <li>
@@ -383,7 +469,7 @@ const PageServiceLanding = () => {
                   </p>
                 </div>
               </li>
-              
+
               {/* <li>
                 <button
                   onClick={() => toggleFaq(1)}
@@ -589,7 +675,7 @@ const PageServiceLanding = () => {
       <Footer>
         <div>
           <div className="address">
-            <images.LogoType width="201" height="32" color={palette.black} />
+            <images.Logo2 width="201" height="32" color={palette.black} />
             <strong>(주)유저커넥트</strong>
 
             <div>
@@ -643,7 +729,7 @@ const Header = styled.div`
   align-items: center;
   z-index: 100;
   padding: 15px 0;
-  border-bottom: 1px solid #E0E4EB;
+  border-bottom: 1px solid #e0e4eb;
   background: #fff;
   transition: background 0.3s ease;
 
@@ -673,7 +759,7 @@ const Header = styled.div`
     max-width: 1024px;
     width: 100%;
     margin: 0 auto;
-   }
+  }
 
   .logo {
     display: flex;
@@ -760,10 +846,10 @@ const MainVisual = styled.div`
   overflow: hidden;
 
   .text {
-    display: flex;  
+    display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 145px; 
+    margin-top: 145px;
 
     h2 {
       position: relative;
@@ -793,7 +879,7 @@ const MainVisual = styled.div`
     }
 
     button {
-      font-family: 'Pretendard', 'Poppins';
+      font-family: "Pretendard", "Poppins";
       font-size: 1rem;
       font-weight: 600;
       line-height: 1.55;
@@ -836,7 +922,7 @@ const Section01 = styled.div`
         height: 24px;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12Z' fill='%23226FFF'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M17.4516 15.908C17.4784 15.9584 17.4863 16.0166 17.4741 16.0723C17.4618 16.128 17.4301 16.1776 17.3846 16.212C15.831 17.3754 13.9415 18.0029 12.0006 18C10.0596 18.0029 8.17021 17.3754 6.61658 16.212C6.57111 16.1776 6.53939 16.128 6.52711 16.0723C6.51483 16.0166 6.5228 15.9584 6.54958 15.908C7.49958 14.192 9.58258 13 12.0006 13C14.4186 13 16.5016 14.191 17.4516 15.908Z' fill='%23226FFF'/%3E%3Cpath d='M17 4H17.502C18.713 4 19.319 4 19.783 4.232C20.2094 4.44497 20.555 4.79064 20.768 5.217C21 5.68 21 6.287 21 7.498V8M17 20H17.502C18.713 20 19.319 20 19.783 19.768C20.2094 19.555 20.555 19.2094 20.768 18.783C21 18.319 21 17.713 21 16.502V16M7 4H6.498C5.287 4 4.681 4 4.217 4.232C3.79064 4.44497 3.44497 4.79064 3.232 5.217C3 5.68 3 6.287 3 7.498V8M7 20H6.498C5.287 20 4.681 20 4.217 19.768C3.79064 19.555 3.44497 19.2094 3.232 18.783C3 18.32 3 17.713 3 16.502V16' stroke='%23226FFF' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
         background-size: cover;
-        content: '';
+        content: "";
       }
     }
 
@@ -871,7 +957,7 @@ const Section01 = styled.div`
       background: ${palette.gray100};
 
       &.item02 {
-        background: #EBF4FF;
+        background: #ebf4ff;
       }
 
       > div {
@@ -879,7 +965,7 @@ const Section01 = styled.div`
         flex-direction: column;
         align-items: flex-start;
         gap: 25px;
-        padding: 85px; 0;
+        padding: 85px;
       }
 
       strong {
@@ -892,7 +978,7 @@ const Section01 = styled.div`
       p {
         font-size: 1.25rem;
         line-height: 1.4;
-        color: #4D4D4D;
+        color: #4d4d4d;
         text-align: left;
       }
     }
@@ -903,7 +989,11 @@ const Section02 = styled.div`
   position: relative;
   width: 100%;
   padding: 80px 0 95px;
-  background: linear-gradient(94deg, rgba(45, 255, 132, 0.10) 1.63%, rgba(63, 130, 255, 0.10) 107.07%);
+  background: linear-gradient(
+    94deg,
+    rgba(45, 255, 132, 0.1) 1.63%,
+    rgba(63, 130, 255, 0.1) 107.07%
+  );
 
   > div {
     display: flex;
@@ -932,7 +1022,7 @@ const Section02 = styled.div`
         height: 24px;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12Z' fill='%23226FFF'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M17.4516 15.908C17.4784 15.9584 17.4863 16.0166 17.4741 16.0723C17.4618 16.128 17.4301 16.1776 17.3846 16.212C15.831 17.3754 13.9415 18.0029 12.0006 18C10.0596 18.0029 8.17021 17.3754 6.61658 16.212C6.57111 16.1776 6.53939 16.128 6.52711 16.0723C6.51483 16.0166 6.5228 15.9584 6.54958 15.908C7.49958 14.192 9.58258 13 12.0006 13C14.4186 13 16.5016 14.191 17.4516 15.908Z' fill='%23226FFF'/%3E%3Cpath d='M17 4H17.502C18.713 4 19.319 4 19.783 4.232C20.2094 4.44497 20.555 4.79064 20.768 5.217C21 5.68 21 6.287 21 7.498V8M17 20H17.502C18.713 20 19.319 20 19.783 19.768C20.2094 19.555 20.555 19.2094 20.768 18.783C21 18.319 21 17.713 21 16.502V16M7 4H6.498C5.287 4 4.681 4 4.217 4.232C3.79064 4.44497 3.44497 4.79064 3.232 5.217C3 5.68 3 6.287 3 7.498V8M7 20H6.498C5.287 20 4.681 20 4.217 19.768C3.79064 19.555 3.44497 19.2094 3.232 18.783C3 18.32 3 17.713 3 16.502V16' stroke='%23226FFF' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
         background-size: cover;
-        content: '';
+        content: "";
       }
     }
 
@@ -972,7 +1062,7 @@ const Section02 = styled.div`
       width: 100%;
       padding: 20px;
       border-radius: 20px;
-      border: 1px solid rgba(22, 22, 22, .1);
+      border: 1px solid rgba(22, 22, 22, 0.1);
       background: ${palette.white};
 
       div {
@@ -989,7 +1079,7 @@ const Section02 = styled.div`
         line-height: 1.4;
         color: ${palette.gray800};
       }
-        
+
       p {
         font-size: 0.88rem;
         font-weight: 400;
@@ -1022,14 +1112,14 @@ const Section03 = styled.div`
       gap: 4px;
       font-weight: 600;
       line-height: 1.4;
-      color: #00C7BE;
+      color: #00c7be;
 
       &:before {
         width: 24px;
         height: 24px;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='24' viewBox='0 0 25 24' fill='none'%3E%3Cpath d='M12.5039 12C14.1608 12 15.5039 10.6569 15.5039 9C15.5039 7.34315 14.1608 6 12.5039 6C10.8471 6 9.50391 7.34315 9.50391 9C9.50391 10.6569 10.8471 12 12.5039 12Z' fill='%2300C7BE'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M17.9555 15.908C17.9823 15.9584 17.9902 16.0166 17.978 16.0723C17.9657 16.128 17.934 16.1776 17.8885 16.212C16.3349 17.3754 14.4454 18.0029 12.5045 18C10.5635 18.0029 8.67412 17.3754 7.12049 16.212C7.07501 16.1776 7.04329 16.128 7.03102 16.0723C7.01874 16.0166 7.0267 15.9584 7.05349 15.908C8.00349 14.192 10.0865 13 12.5045 13C14.9225 13 17.0055 14.191 17.9555 15.908Z' fill='%2300C7BE'/%3E%3Cpath d='M17.5039 4H18.0059C19.2169 4 19.8229 4 20.2869 4.232C20.7133 4.44497 21.0589 4.79064 21.2719 5.217C21.5039 5.68 21.5039 6.287 21.5039 7.498V8M17.5039 20H18.0059C19.2169 20 19.8229 20 20.2869 19.768C20.7133 19.555 21.0589 19.2094 21.2719 18.783C21.5039 18.319 21.5039 17.713 21.5039 16.502V16M7.50391 4H7.00191C5.79091 4 5.18491 4 4.72091 4.232C4.29455 4.44497 3.94888 4.79064 3.73591 5.217C3.50391 5.68 3.50391 6.287 3.50391 7.498V8M7.50391 20H7.00191C5.79091 20 5.18491 20 4.72091 19.768C4.29455 19.555 3.94888 19.2094 3.73591 18.783C3.50391 18.32 3.50391 17.713 3.50391 16.502V16' stroke='%2300C7BE' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
         background-size: cover;
-        content: '';
+        content: "";
       }
     }
 
@@ -1059,7 +1149,7 @@ const Section03 = styled.div`
 
       &.item03,
       &.item04 {
-        background-color: #EBF4FF;
+        background-color: #ebf4ff;
       }
 
       &.item01 {
@@ -1108,7 +1198,7 @@ const Section03 = styled.div`
       p {
         font-size: 1.25rem;
         line-height: 1.4;
-        color: #4D4D4D;
+        color: #4d4d4d;
         text-align: left;
       }
     }
@@ -1137,14 +1227,14 @@ const Section04 = styled.div`
       gap: 4px;
       font-weight: 600;
       line-height: 1.4;
-      color: #FF9500;
+      color: #ff9500;
 
       &:before {
         width: 24px;
         height: 24px;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='24' viewBox='0 0 25 24' fill='none'%3E%3Cpath d='M12.5039 12C14.1608 12 15.5039 10.6569 15.5039 9C15.5039 7.34315 14.1608 6 12.5039 6C10.8471 6 9.50391 7.34315 9.50391 9C9.50391 10.6569 10.8471 12 12.5039 12Z' fill='%23FF9500'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M17.9555 15.908C17.9823 15.9584 17.9902 16.0166 17.978 16.0723C17.9657 16.128 17.934 16.1776 17.8885 16.212C16.3349 17.3754 14.4454 18.0029 12.5045 18C10.5635 18.0029 8.67412 17.3754 7.12049 16.212C7.07501 16.1776 7.04329 16.128 7.03102 16.0723C7.01874 16.0166 7.0267 15.9584 7.05349 15.908C8.00349 14.192 10.0865 13 12.5045 13C14.9225 13 17.0055 14.191 17.9555 15.908Z' fill='%23FF9500'/%3E%3Cpath d='M17.5039 4H18.0059C19.2169 4 19.8229 4 20.2869 4.232C20.7133 4.44497 21.0589 4.79064 21.2719 5.217C21.5039 5.68 21.5039 6.287 21.5039 7.498V8M17.5039 20H18.0059C19.2169 20 19.8229 20 20.2869 19.768C20.7133 19.555 21.0589 19.2094 21.2719 18.783C21.5039 18.319 21.5039 17.713 21.5039 16.502V16M7.50391 4H7.00191C5.79091 4 5.18491 4 4.72091 4.232C4.29455 4.44497 3.94888 4.79064 3.73591 5.217C3.50391 5.68 3.50391 6.287 3.50391 7.498V8M7.50391 20H7.00191C5.79091 20 5.18491 20 4.72091 19.768C4.29455 19.555 3.94888 19.2094 3.73591 18.783C3.50391 18.32 3.50391 17.713 3.50391 16.502V16' stroke='%23FF9500' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
         background-size: cover;
-        content: '';
+        content: "";
       }
     }
 
@@ -1171,7 +1261,7 @@ const Section04 = styled.div`
       width: 100%;
       padding: 16px 16px 20px;
       border-radius: 30px;
-      border: 1px solid rgba(22, 22, 22, 0.10);
+      border: 1px solid rgba(22, 22, 22, 0.1);
       background: ${palette.white};
 
       img {
@@ -1209,6 +1299,7 @@ const Section04 = styled.div`
 const Section05 = styled.div`
   position: relative;
   width: 100%;
+  margin-top: 220px;
   margin-bottom: 180px;
   overflow: hidden;
 
@@ -1371,11 +1462,11 @@ const FaqWrap = styled.div`
 const FaqList = styled.ul`
   display: flex;
   flex-direction: column;
-  border-top: 1px solid #C3C3C3;
+  border-top: 1px solid #c3c3c3;
   width: 100%;
 
   li {
-    border-bottom: 1px solid #C3C3C3;
+    border-bottom: 1px solid #c3c3c3;
 
     button {
       width: 100%;

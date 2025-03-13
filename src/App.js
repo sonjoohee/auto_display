@@ -304,13 +304,23 @@ function App() {
           <Route
             path="/"
             element={
-              <RequireToken>
-                <PageProject />
-              </RequireToken>
+              // <RequireToken>
+              <PageServiceLanding />
+              // </RequireToken>
             }
           />
           <Route
             path="*"
+            element={
+              // <RequireToken>
+              <PageServiceLanding />
+              // </RequireToken>
+            }
+          />
+
+          {/* <Route path="/ServiceLanding" element={<PageServiceLanding />} /> */}
+          <Route
+            path="/Project"
             element={
               <RequireToken>
                 <PageProject />
@@ -642,13 +652,12 @@ function App() {
           <Route path="/Terms" element={<PageTerms />} />
           <Route path="/Policy" element={<PagePolicy />} />
 
-          <Route path="/ServiceLanding" element={<PageServiceLanding />} />
           <Route
             path="/blog"
             element={
-              <RequireToken>
-                <PageBlog />
-              </RequireToken>
+              // <RequireToken>
+              <PageBlog />
+              // </RequireToken>
             }
           />
 
