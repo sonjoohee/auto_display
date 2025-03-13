@@ -253,14 +253,14 @@ const PageServiceLanding = () => {
             <img src={Landingimages.ImgLanding02} alt="" />
             <div>
               <strong>
-                비즈니스 강점과 리스크
+                AI가 고객이 되어
                 <br />
-                AI가 빠르고 정확하게 분석!
+                내가 궁금했던 질문에 답변까지
               </strong>
               <p>
-                간단한 정보 입력과 파일 업로드만으로
+                비즈니스에 꼭 필요한 고객 페르소나를 생성하고
                 <br />
-                핵심 내용과 숨은 의미까지 분석해 한눈에 정리{" "}
+                실제 고객처럼 인터뷰하여 숨은 니즈와 인사이트를 파악{" "}
               </p>
             </div>
           </div>
@@ -269,14 +269,14 @@ const PageServiceLanding = () => {
             <img src={Landingimages.ImgLanding03} alt="" />
             <div>
               <strong>
-                비즈니스 강점과 리스크
+                인터뷰 데이터는
                 <br />
-                AI가 빠르고 정확하게 분석!
+                AI가 분석하고 정리해 바로 활용
               </strong>
               <p>
-                간단한 정보 입력과 파일 업로드만으로
+                AI가 인터뷰 내용을 정리하고
                 <br />
-                핵심 내용과 숨은 의미까지 분석해 한눈에 정리{" "}
+                핵심 인사이트를 리포트로 자동 변환{" "}
               </p>
             </div>
           </div>
