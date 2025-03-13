@@ -709,6 +709,7 @@ const CreditToggle = styled.div`
 const HeaderWrap = styled.div`
   position: fixed;
   top: 0;
+  min-height: 50px;
   left: 0;
   width: 100%;
   display: flex;

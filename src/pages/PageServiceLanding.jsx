@@ -220,11 +220,23 @@ const PageServiceLanding = () => {
               블로그
             </Link>
             {/* {isLoggedIn ?? <Link to="/Login">로그인</Link>} */}
-            <Button Large Primary Fill onClick={() => navigate("/Project")} className="web">
+            <Button
+              Large
+              Primary
+              Fill
+              onClick={() => navigate("/Project")}
+              className="web"
+            >
               바로 시작하기
             </Button>
-            <Button Large Primary Fill onClick={() => navigate("/Blog")} className="mobile">
-            블로그
+            <Button
+              Large
+              Primary
+              Fill
+              onClick={() => navigate("/Blog")}
+              className="mobile"
+            >
+              블로그
             </Button>
           </div>
         </div>
@@ -262,9 +274,9 @@ const PageServiceLanding = () => {
           <span>어떻게 활용할까?</span>
           <h3>InterviewX 이렇게 활용하세요!</h3>
           <p>
-            사용하기 편한 많은 활용법을 통해 걱정 없이
+            다양한 기능과 직관적인 사용법으로,
             <br />
-            우리 입맛대로 할 수 있어요
+            원하는 분석을 빠르고 쉽게 수행할 수 있어요.
           </p>
         </div>
 

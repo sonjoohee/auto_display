@@ -992,7 +992,8 @@ const OrganismIncNavigation = () => {
   }, [reportRefreshTrigger, isLoggedIn]);
 
   const handleLoginClick = () => {
-    setIsLoginPopupOpen(true); // 로그인 팝업 열기
+    navigate("/Login");
+    // setIsLoginPopupOpen(true); // 로그인 팝업 열기
   };
 
   const closeLoginPopup = () => {

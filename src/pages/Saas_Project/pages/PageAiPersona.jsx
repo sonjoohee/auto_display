@@ -1,7 +1,7 @@
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
-import {  useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { palette } from "../../../assets/styles/Palette";
 import OrganismIncNavigation from "../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../Global/molecules/MoleculeHeader";
@@ -64,6 +64,9 @@ import {
   IS_LOGGED_IN,
   USER_CREDITS,
   CREDIT_REQUEST_BUSINESS_PERSONA,
+  EVENT_STATE,
+  TRIAL_STATE,
+  EVENT_TITLE,
 } from "../../../pages/AtomStates";
 import AtomPersonaLoader from "../../Global/atoms/AtomPersonaLoader";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
@@ -72,9 +75,9 @@ const PageAiPersona = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const navigate = useNavigate();
   const location = useLocation();
-  const [project,] = useAtom(PROJECT_SAAS);
-  const [isLoggedIn,] = useAtom(IS_LOGGED_IN);
-  const [projectId,] = useAtom(PROJECT_ID);
+  const [project] = useAtom(PROJECT_SAAS);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [projectId] = useAtom(PROJECT_ID);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [, setUserCredits] = useAtom(USER_CREDITS);
   const [creditRequestBusinessPersona] = useAtom(
@@ -110,9 +113,9 @@ const PageAiPersona = () => {
     additionalInfo: "",
   });
   const [showCreditPopup, setShowCreditPopup] = useState(false);
-  const [eventState,] = useState(false);
-  const [trialState,] = useState(false);
-  const [eventTitle,] = useState("이벤트 제목");
+  const [eventState] = useAtom(EVENT_STATE);
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
 
   const handleEditClose = () => {
     setIsEditPopupOpen(false);
@@ -367,16 +370,16 @@ const PageAiPersona = () => {
   };
 
   const handlePrevTab = () => {
-    setActiveTabIndex1(activeTabIndex1 - 1); 
+    setActiveTabIndex1(activeTabIndex1 - 1);
   };
 
   const handlePrevTab2 = () => {
-    setActiveTabIndex(activeTabIndex - 1); 
+    setActiveTabIndex(activeTabIndex - 1);
   };
 
   const handleRequestClick = (persona) => {
     setSelectedPersona(persona); // 선택된 페르소나 설정
-    setShowRequestPopup(true); 
+    setShowRequestPopup(true);
   };
 
   useEffect(() => {
@@ -448,7 +451,6 @@ const PageAiPersona = () => {
 
         if (attempt >= max_attempt) {
           throw new Error("프로필 정보 생성에 실패했습니다.");
-         
         }
       }
 
@@ -469,11 +471,9 @@ const PageAiPersona = () => {
           status: "profile",
         };
 
-        
         const personaInfo = await getPersonaOnServer(persona._id, isLoggedIn);
 
         if (personaInfo.status === "default") {
-        
           // 서버에 업데이트된 페르소나 저장
           await updatePersonaOnServer(updatedPersona, true);
 
@@ -483,7 +483,6 @@ const PageAiPersona = () => {
           // 활성 탭 설정
           setActiveTab2("lifestyle");
         }
-  
       }
     } catch (error) {
     } finally {
@@ -1635,11 +1634,7 @@ const PageAiPersona = () => {
           TitleFlex
           title={currentPersona.personaName || ""}
           buttonType="Fill"
-          confirmText={
-            activeTabIndex1 === 4 
-              ? "변경사항 저장하기"
-              : "다음" 
-          }
+          confirmText={activeTabIndex1 === 4 ? "변경사항 저장하기" : "다음"}
           showPrevButton={activeTabIndex1 !== 0}
           prevText={activeTabIndex1 !== 0 ? "뒤로" : ""}
           prevTextSmall
@@ -1648,9 +1643,9 @@ const PageAiPersona = () => {
           onCancel={handlePersonaEditClose}
           onConfirm={() => {
             if (activeTabIndex1 === 4) {
-              setIsPersonaConfirmPopupOpen(true); 
+              setIsPersonaConfirmPopupOpen(true);
             } else {
-              handlePersonaEditContinue(); 
+              handlePersonaEditContinue();
             }
           }}
           showTabs={true}
@@ -2162,8 +2157,8 @@ const PageAiPersona = () => {
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
             onConfirm={() => {
-              creditUse(selectedPersona); 
-              setShowRequestPopup(false); 
+              creditUse(selectedPersona);
+              setShowRequestPopup(false);
             }}
           />
         ) : trialState ? (
@@ -2185,7 +2180,7 @@ const PageAiPersona = () => {
             onCancel={() => setShowRequestPopup(false)}
             onConfirm={() => {
               creditUse(selectedPersona);
-              setShowRequestPopup(false); 
+              setShowRequestPopup(false);
             }}
           />
         ) : (

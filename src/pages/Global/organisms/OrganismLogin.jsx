@@ -20,7 +20,6 @@ import MoleculeLoginForm from "../../Login_Sign/components/molecules/MoleculeLog
 import images from "../../../assets/styles/Images";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 const OrganismIncLogin = () => {
-  console.log("🚀 ~ OrganismIncLogin ~ OrganismIncLogin");
   useDynamicViewport("width=800"); // 특정페이지에서만 pc화면처럼 보이기
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
   const [isSignupPopupOpen, setIsSignupPopupOpen] = useState(false);

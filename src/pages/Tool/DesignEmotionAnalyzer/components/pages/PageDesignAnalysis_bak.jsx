@@ -532,8 +532,6 @@ const PageDesignAnalysis = () => {
 
   // 파일 업로드 핸들러
   const handleChangeStatus = ({ meta, file }, status) => {
-    console.log(status, meta, file);
-
     // 파일 상태 업데이트
     if (status === "done" || status === "preparing" || status === "uploading") {
       setUploadedFiles((prev) => {
@@ -617,9 +615,6 @@ const PageDesignAnalysis = () => {
       if (!response.ok) {
         throw new Error("OCEAN 값 저장에 실패했습니다");
       }
-
-      // 성공 처리
-      console.log("OCEAN 값이 성공적으로 저장되었습니다");
     } catch (error) {
       console.error("OCEAN 값 저장 중 오류 발생:", error);
     }
