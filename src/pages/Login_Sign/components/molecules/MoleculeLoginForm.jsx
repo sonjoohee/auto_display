@@ -219,6 +219,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
             setShowMobileWarning(true); // 모바일 경고창 표시
             setLoginSuccess(false); // 로그인 성공 상태를 false로 유지
           } else {
+            console.log("🚀 ~ handleLogin ~ PC에서는 바로 로그인 성공 처리");
             setLoginSuccess(true); // PC에서는 바로 로그인 성공 처리
             navigate("/Project");
           }
@@ -245,7 +246,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
   const handleMobileWarningConfirm = () => {
     setShowMobileWarning(false);
     setLoginSuccess(true); // 확인 버튼 클릭 시 로그인 성공 처리
-    navigate("/");
+    navigate("/Project");
   };
 
   const [isSignupPopupOpen, setIsSignupPopupOpen] = useState(false);
