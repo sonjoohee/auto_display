@@ -266,7 +266,7 @@ const OrganismPersonaCardList = ({
       {/* activeTab이 'my_persona'이고 filteredPersonaData가 비어있을 때만 BoxWrap 표시 */}
       {activeTab === "my_persona" &&
       (!filteredPersonaData || filteredPersonaData.length === 0) ? (
-        <BoxWrap NoData Border onClick={() => navigate("/AiPersona")}>
+        <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
           <img src={images.PeopleStarFillPrimary} alt="" />
           <Body2 color="gray500" align="center !important">
             즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실 수
