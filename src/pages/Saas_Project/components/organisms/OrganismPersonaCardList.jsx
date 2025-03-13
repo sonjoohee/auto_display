@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Body1, Sub3 } from "../../../../assets/styles/Typography";
 import {
   AiPersonaCardGroupWrap,
@@ -38,6 +39,7 @@ const OrganismPersonaCardList = ({
   activeTab = "macro_segment", // 기본 탭은 macro_segment로 설정
   setPersonaStats = () => {}, // 페르소나 통계 정보를 부모 컴포넌트에 전달하는 함수
 }) => {
+  const navigate = useNavigate();
   // 활성화된 탭에 따라 필터링된 페르소나 데이터
   const [filteredPersonaData, setFilteredPersonaData] = useState([]);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
@@ -264,7 +266,7 @@ const OrganismPersonaCardList = ({
       {/* activeTab이 'my_persona'이고 filteredPersonaData가 비어있을 때만 BoxWrap 표시 */}
       {activeTab === "my_persona" &&
       (!filteredPersonaData || filteredPersonaData.length === 0) ? (
-        <BoxWrap NoData Border>
+        <BoxWrap NoData Border onClick={() => navigate("/AiPersona")}>
           <img src={images.PeopleStarFillPrimary} alt="" />
           <Body2 color="gray500" align="center !important">
             즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실 수
