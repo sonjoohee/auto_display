@@ -559,10 +559,11 @@ const PagePersona3 = () => {
                     인터뷰 방식
                   </Body2>
 
-
                   <CardGroupWrap column style={{ marginBottom: "0" }}>
-
-                    <ListBoxItem FlexStart active={selectedInterviewType === "multiple"}>
+                    <ListBoxItem
+                      FlexStart
+                      active={selectedInterviewType === "multiple"}
+                    >
                       <div>
                         <RadioButton
                           id="radio1"
@@ -598,7 +599,10 @@ const PagePersona3 = () => {
                       </ListText>
                     </ListBoxItem>
 
-                    <ListBoxItem FlexStart active={selectedInterviewType === "single"}>
+                    <ListBoxItem
+                      FlexStart
+                      active={selectedInterviewType === "single"}
+                    >
                       <div>
                         <RadioButton
                           id="radio2"

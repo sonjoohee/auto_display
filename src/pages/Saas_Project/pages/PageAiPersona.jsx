@@ -85,8 +85,10 @@ import {
   CREDIT_REQUEST_BUSINESS_PERSONA,
 } from "../../../pages/AtomStates";
 import AtomPersonaLoader from "../../Global/atoms/AtomPersonaLoader";
+import { useDynamicViewport } from "../../../assets/DynamicViewport";
 
 const PageAiPersona = () => {
+  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const navigate = useNavigate();
   const location = useLocation();
   const [project, setProject] = useAtom(PROJECT_SAAS);

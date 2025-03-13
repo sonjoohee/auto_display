@@ -1654,7 +1654,10 @@ const PagePersona2 = () => {
                       {activeTab === "daily" ? (
                         <ContentSection>
                           <>
-                            <CardGroupWrap column={viewType === "list"} style={{ marginBottom: "0" }}>
+                            <CardGroupWrap
+                              column={viewType === "list"}
+                              style={{ marginBottom: "0" }}
+                            >
                               {filteredProjectList.map((persona, index) => (
                                 <MoleculePersonaCard
                                   key={index}
@@ -1871,7 +1874,10 @@ const PagePersona2 = () => {
                             </TypeMore>
                           </CategoryView>
 
-                          <CardGroupWrap column={viewType === "list"} style={{ marginBottom: "0" }}>
+                          <CardGroupWrap
+                            column={viewType === "list"}
+                            style={{ marginBottom: "0" }}
+                          >
                             {customPersonaList.map((persona, index) => (
                               <MoleculeCustomPersonaCard
                                 key={index}
@@ -1908,24 +1914,23 @@ const PagePersona2 = () => {
                                 viewType={viewType}
                               />
                             ))}
-                           
                           </CardGroupWrap>
                           {isLoadingMore && isLoadingBusiness && (
-                              <div
-                                style={{
-                                  width: "100%",
-                                  display: "flex",
-                                  justifyContent: "center",
-                                }}
-                              >
-                                <AtomPersonaLoader
-                                  message={`${
-                                    currentLoadingType?.label ||
-                                    "비즈니스 페르소나"
-                                  }를 추천하기 위해 분석하고 있어요`}
-                                />
-                              </div>
-                            )}
+                            <div
+                              style={{
+                                width: "100%",
+                                display: "flex",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <AtomPersonaLoader
+                                message={`${
+                                  currentLoadingType?.label ||
+                                  "비즈니스 페르소나"
+                                }를 추천하기 위해 분석하고 있어요`}
+                              />
+                            </div>
+                          )}
                         </ContentSection>
                       )}
 

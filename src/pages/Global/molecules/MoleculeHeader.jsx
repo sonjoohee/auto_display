@@ -50,7 +50,9 @@ import {
   getPersonaListOnServer,
   getToolListOnServerSaas,
 } from "../../../utils/indexedDB";
+import { useDynamicViewport } from "../../../assets/DynamicViewport";
 const MoleculeHeader = () => {
+  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
   const location = useLocation();
