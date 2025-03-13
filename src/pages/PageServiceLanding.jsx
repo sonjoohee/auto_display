@@ -340,7 +340,7 @@ const PageServiceLanding = () => {
           <h3>
             다양한 툴로
             <br />
-            업무도 더 스마트하게게
+            업무도 더 스마트하게
           </h3>
         </div>
 
@@ -501,16 +501,13 @@ const PageServiceLanding = () => {
                   onClick={() => toggleFaq(2)}
                   className={`${openFaq === 2 ? "open" : ""}`}
                 >
-                  <p>
-                    InterviewX.ai의 AI 페르소나는 어떻게 신뢰성을 확보하나요?
-                  </p>
+                  <p>AI 페르소나는 어떻게 신뢰성을 확보하나요?</p>
                   <i />
                 </button>
                 <div className={`answer ${openFaq === 2 ? "open" : ""}`}>
                   <p className="gray">
-                    InterviewX.ai의 AI 페르소나는 단순한 챗봇이 아니라, 공공
-                    데이터, 학술 연구, 시장 조사 데이터를 기반으로 학습된 AI
-                    모델입니다.
+                    AI 페르소나는 단순한 챗봇이 아니라, 공공 데이터, 학술 연구,
+                    시장 조사 데이터를 기반으로 학습된 AI 모델입니다.
                   </p>
                   <p>
                     ✔ 200개 이상의 실제 프로파일 반영 – 연령, 직업, 관심사, 소비
@@ -675,7 +672,7 @@ const PageServiceLanding = () => {
       <Footer>
         <div>
           <div className="address">
-            <images.Logo2 width="201" height="32" color={palette.black} />
+            <images.Logo2 width="220" height="32" color={palette.black} />
             <strong>(주)유저커넥트</strong>
 
             <div>
@@ -1604,7 +1601,7 @@ const Footer = styled.div`
   > div {
     display: flex;
     flex-direction: column;
-    gap: 180px;
+    gap: 100px;
     max-width: 1024px;
     width: 100%;
     margin: 0 auto;
