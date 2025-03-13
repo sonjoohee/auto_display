@@ -215,14 +215,15 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           setIsLoggedIn(true);
 
           // 모바일 기기 체크 후 처리 수정
-          if (isMobileDevice()) {
-            setShowMobileWarning(true); // 모바일 경고창 표시
-            setLoginSuccess(false); // 로그인 성공 상태를 false로 유지
-          } else {
-            console.log("🚀 ~ handleLogin ~ PC에서는 바로 로그인 성공 처리");
-            setLoginSuccess(true); // PC에서는 바로 로그인 성공 처리
-            navigate("/Project");
-          }
+          // if (isMobileDevice()) {
+          //   console.log("🚀 ~ handleLogin ~ 모바일 기기 체크 후 처리 수정");
+          //   setShowMobileWarning(true); // 모바일 경고창 표시
+          //   setLoginSuccess(false); // 로그인 성공 상태를 false로 유지
+          // } else {
+          // console.log("🚀 ~ handleLogin ~ PC에서는 바로 로그인 성공 처리");
+          setLoginSuccess(true); // PC에서는 바로 로그인 성공 처리
+          navigate("/Project");
+          // }
         } else {
           setErrorStatus("유저 정보를 불러오는 중 오류가 발생했습니다.");
         }
@@ -244,6 +245,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
   };
 
   const handleMobileWarningConfirm = () => {
+    // console.log("🚀 ~ handleMobileWarningConfirm ~ handleMobileWarningConfirm");
     setShowMobileWarning(false);
     setLoginSuccess(true); // 확인 버튼 클릭 시 로그인 성공 처리
     navigate("/Project");
