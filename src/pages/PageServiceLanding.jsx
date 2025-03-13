@@ -480,7 +480,12 @@ const PageServiceLanding = () => {
                   onClick={() => toggleFaq(0)}
                   className={`${openFaq === 0 ? "open" : ""}`}
                 >
-                  <p>InterviewX.ai는 기존 시장조사 방식과 어떻게 다른가요?</p>
+                  <p className="web">
+                    InterviewX.ai는 기 시장조사 방식과 어떻게 다른가요?
+                  </p>
+                  <p className="mobile">
+                    기존 시장조사 방식과 어떻게 다른가요?
+                  </p>
                   <i />
                 </button>
                 <div className={`answer ${openFaq === 0 ? "open" : ""}`}>
@@ -1791,6 +1796,22 @@ const FaqList = styled.ul`
 
         ${media.mobile} {
           font-size: 1rem;
+        }
+
+        &.mobile {
+          display: none;
+
+          ${media.mobile} {
+            display: block;
+          }
+        }
+
+        &.web {
+          display: block;
+
+          ${media.mobile} {
+            display: none;
+          }
         }
       }
 
