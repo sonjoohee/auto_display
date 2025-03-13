@@ -962,7 +962,7 @@ const Section01 = styled.div`
         flex-direction: column;
         align-items: flex-start;
         gap: 25px;
-        padding: 85px;
+        padding: 85px 0 85px 55px;
       }
 
       strong {
