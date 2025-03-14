@@ -19,7 +19,6 @@ import {
   INTERVIEW_REPORT,
   INTERVIEW_REPORT_ADDITIONAL,
   INTERVIEW_QUESTION_LIST,
-  CATEGORY_COLOR,
   SELECTED_PERSONA_LIST,
   IS_SHOW_TOAST,
   SELECTED_INTERVIEW_TYPE,
@@ -50,20 +49,15 @@ import {
   Sub2_1,
   Sub3,
   Caption1,
-  Caption2,
 } from "../../../../assets/styles/Typography";
 import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import personaImages from "../../../../assets/styles/PersonaImages";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-// import Sidebar from "../../../Design_Page/IncSidebar";
 import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
-
-import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
-
 import { getProjectReportByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
@@ -80,20 +74,19 @@ const PagePersona4 = () => {
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
-  const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
-  const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
+  const [, setProjectLoadButtonState] = useAtom(
     PROJECT_LOAD_BUTTON_STATE
   );
-  const [reportList, setReportList] = useAtom(REPORT_LIST);
-  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [, setReportList] = useAtom(REPORT_LIST);
+  const [, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
-  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
+  const [personaList, ] = useAtom(PERSONA_LIST);
   const navigate = useNavigate();
-  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
+  const [interviewQuestionList, ] = useAtom(
     INTERVIEW_QUESTION_LIST
   );
-  const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
-  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(
+  const [, setInterviewReport] = useAtom(INTERVIEW_REPORT);
+  const [, setInterviewReportAdditional] = useAtom(
     INTERVIEW_REPORT_ADDITIONAL
   );
   const [singleInterviewReportTab1, setSingleInterviewReportTab1] = useAtom(
@@ -113,33 +106,25 @@ const PagePersona4 = () => {
   );
   const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
     useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
-  const [reportReady, setReportReady] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
-  const [reportId, setReportId] = useAtom(PROJECT_REPORT_ID);
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [projectId, ] = useAtom(PROJECT_ID);
+  const [reportId, ] = useAtom(PROJECT_REPORT_ID);
   const [reportLoadButtonState, setReportLoadButtonState] = useAtom(
-    REPORT_LOAD_BUTTON_STATE
-  );
+      REPORT_LOAD_BUTTON_STATE
+    );
   const [selectedInterviewType] = useAtom(SELECTED_INTERVIEW_TYPE);
+
+  const [, setReportReady] = useState(false);
   const [openAccordion, setOpenAccordion] = useState(null);
   const [openCard, setOpenCard] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const cardRef = useRef(null);
-  const [showInsightCards, setShowInsightCards] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
-
-  const [steps, setSteps] = useState([
-    { number: 1, label: "비즈니스 분석", active: true },
-    { number: 2, label: "맞춤 페르소나 추천", active: true },
-    { number: 3, label: "인터뷰 방법 선택", active: true },
-    { number: 4, label: "페르소나와 인터뷰", active: true },
-    { number: 5, label: "의견 분석", active: true },
-  ]);
 
   useEffect(() => {
     // 접근 가능 여부를 확인하여 차단 로직 수행
     if (!isPersonaAccessible) {
-      navigate("/"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
+      navigate("/Project"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
     }
 
     // 페이지를 나갈 때 접근 가능 여부 초기화

@@ -16,17 +16,13 @@ import { palette } from "../../../../assets/styles/Palette";
 import { useAtom } from "jotai";
 import {
   updatePersonaOnServer,
-  getPersonaListOnServer,
   UserCreditCheck,
   UserCreditInfo,
-  UserCreditUse,
   createRequestPersonaOnServer,
   getProjectByIdFromIndexedDB,
 } from "../../../../utils/indexedDB";
 import {
-  PROJECT_ID,
   IS_LOGGED_IN,
-  BUSINESS_ANALYSIS,
   USER_CREDITS,
   CREDIT_REQUEST_BUSINESS_PERSONA,
 } from "../../../../pages/AtomStates";
@@ -43,16 +39,15 @@ const OrganismPersonaCardList = ({
   // 활성화된 탭에 따라 필터링된 페르소나 데이터
   const [filteredPersonaData, setFilteredPersonaData] = useState([]);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
-  const eventState = true; // Set this based on your logic
-  const trialState = false; // Set this based on your logic
-  const eventTitle = "이벤트 제목"; // Replace with actual event title
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
+  const eventState = true; 
+  const trialState = false; 
+  const eventTitle = "이벤트 제목"; 
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
   const [creditRequestBusinessPersona] = useAtom(
     CREDIT_REQUEST_BUSINESS_PERSONA
   );
-  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
-  const [selectedPersona, setSelectedPersona] = useState(null); // selectedPersona 상태 추가
+  const [, setUserCredits] = useAtom(USER_CREDITS);
+  const [selectedPersona, setSelectedPersona] = useState(null); 
   const [showCreditPopup, setShowCreditPopup] = useState(false);
 
   // 탭이 변경될 때마다 데이터 필터링 및 통계 계산
@@ -206,19 +201,6 @@ const OrganismPersonaCardList = ({
         isLoggedIn
       );
 
-      // const currentRequestedPersona = currentProject?.businessPersonaList || [];
-
-      // console.log("currentRequestedPersona", currentRequestedPersona);
-
-      // // 현재 요청된 페르소나 목록에서 동일한 페르소나가 있는지 확인하고 status 업데이트
-      // let filteredPersona = [];
-      // currentRequestedPersona.forEach((p) => {
-      //   if (p.personaName === persona.personaName) {
-      //     p.status = "request";
-      //   }
-      //   filteredPersona.push(p);
-      // });
-
       // selectedPersona.status가 undefined일 때만 요청을 진행
       if (persona.status === "profile" || persona.status === "default") {
         // 새로운 requestedPersona 배열 생성
@@ -356,8 +338,8 @@ const OrganismPersonaCardList = ({
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
             onConfirm={() => {
-              creditUse(); // Call creditUse function
-              setShowRequestPopup(false); // 팝업 닫기
+              creditUse(); 
+              setShowRequestPopup(false); 
             }}
           />
         ) : trialState ? (
@@ -378,8 +360,8 @@ const OrganismPersonaCardList = ({
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
             onConfirm={() => {
-              handleRequestPersona(selectedPersona); // 선택된 페르소나를 전달
-              setShowRequestPopup(false); // 팝업 닫기
+              handleRequestPersona(selectedPersona); 
+              setShowRequestPopup(false); 
             }}
           />
         ) : (
@@ -398,8 +380,8 @@ const OrganismPersonaCardList = ({
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
             onConfirm={() => {
-              handleRequestPersona(selectedPersona); // 선택된 페르소나를 전달
-              setShowRequestPopup(false); // 팝업 닫기
+              handleRequestPersona(selectedPersona); 
+              setShowRequestPopup(false); 
             }}
           />
         ))}

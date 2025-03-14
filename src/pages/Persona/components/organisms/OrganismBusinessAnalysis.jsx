@@ -4,9 +4,7 @@ import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
 import { useEffect, useState, useRef } from "react";
-import axios from "axios";
 import { useAtom } from "jotai";
-import { useNavigate } from "react-router-dom";
 import {
   SkeletonTitle,
   SkeletonLine,
@@ -19,7 +17,6 @@ import {
 import {
   IS_LOADING,
   PERSONA_BUTTON_STATE_1,
-  INPUT_BUSINESS_INFO,
   BUSINESS_ANALYSIS,
   CATEGORY_COLOR,
   PROJECT_ID,
@@ -42,14 +39,13 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     IS_LOADING_BUSINESS_ANALYSIS
   );
   const [isProjectIdReady, setIsProjectIdReady] = useState(false);
-  const [projectId, setprojectId] = useAtom(PROJECT_ID);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const navigate = useNavigate();
+  const [projectId, ] = useAtom(PROJECT_ID);
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [personaButtonState1, setPersonaButtonState1] = useAtom(
     PERSONA_BUTTON_STATE_1
   );
-  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [, setIsLoading] = useAtom(IS_LOADING);
   const [loadingState, setLoadingState] = useState(false);
   const [showCardContent, setShowCardContent] = useState(personaStep <= 2);
   const [categoryColor, setCategoryColor] = useAtom(CATEGORY_COLOR);
@@ -144,7 +140,6 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     // 입력값 유효성 검사
     const regex = /^[가-힣a-zA-Z0-9\s.,'"?!()\/\-·:\\%~@#$^&*_+<>`]*$/;
     const specialChars = /^[.,'"?!()\/\-·:\\%~@#$^&*_+<>`]+$/;
-    // const consecutiveSpecialChars = /[.,'"?!()\/\-·:\\%]{2,}/; // 특수문자가 2번 이상 연속되는 패턴
 
     // 단독으로 특수 문자만 사용된 경우
     if (
@@ -154,15 +149,6 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
       setIsPopupRegex(true);
       return;
     }
-
-    // 연속된 특수문자 체크
-    // if (
-    //   consecutiveSpecialChars.test(inputs.field1.value) ||
-    //   consecutiveSpecialChars.test(inputs.field2.value)
-    // ) {
-    //   setIsPopupRegex(true);
-    //   return;
-    // }
 
     // 입력 값에 대한 정규식 체크
     if (!regex.test(inputs.field1.value) || !regex.test(inputs.field2.value)) {

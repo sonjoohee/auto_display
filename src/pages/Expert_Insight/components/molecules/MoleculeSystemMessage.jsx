@@ -3,8 +3,7 @@ import styled, { ThemeProvider } from "styled-components";
 import theme from "../../../../assets/styles/Theme";
 import { palette } from "../../../../assets/styles/Palette";
 import panelimages from "../../../../assets/styles/PanelImages";
-import { useAtom } from "jotai";
-import { SELECTED_EXPERT_INDEX } from "../../../AtomStates";
+
 
 const MoleculeSystemMessage = ({ item }) => {
   const [displayedText, setDisplayedText] = useState(""); // 현재까지 타이핑된 텍스트

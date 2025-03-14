@@ -305,15 +305,15 @@ const PageDashBoard = () => {
     };
 
     // beforeunload 이벤트 핸들러
-    const handleBeforeUnload = (event) => {
-      // 이벤트 취소 (표준에 따라)
-      event.preventDefault();
-      // Chrome은 returnValue 설정 필요
-      event.returnValue = "";
+    // const handleBeforeUnload = (event) => {
+    //   // 이벤트 취소 (표준에 따라)
+    //   event.preventDefault();
+    //   // Chrome은 returnValue 설정 필요
+    //   event.returnValue = "";
 
-      // 새로고침 시 루트 페이지로 이동
-      navigate("/Project");
-    };
+    //   // 새로고침 시 루트 페이지로 이동
+    //   navigate("/Project");
+    // };
 
     // F5 키 또는 Ctrl+R 감지
     const handleKeyDown = (event) => {
@@ -339,11 +339,6 @@ const PageDashBoard = () => {
     };
   }, [navigate]);
 
-  const [selectedValues, setSelectedValues] = useState({
-    business: "",
-    industry: "",
-    country: "",
-  });
 
   return (
     <>
@@ -979,15 +974,15 @@ const PersonaStatusWrap = styled.div`
   `}
 `;
 
-const RecentToolWrap = styled(PersonaStatusWrap)`
-  ${(props) =>
-    props.NoData &&
-    `
-    > div {
-      padding: 130px 0 155px;
-    }
-  `}
-`;
+// const RecentToolWrap = styled(PersonaStatusWrap)`
+//   ${(props) =>
+//     props.NoData &&
+//     `
+//     > div {
+//       padding: 130px 0 155px;
+//     }
+//   `}
+// `;
 
 const UlInfo = styled.ul`
   display: flex;

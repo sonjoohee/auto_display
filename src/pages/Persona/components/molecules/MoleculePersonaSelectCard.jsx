@@ -4,9 +4,8 @@ import { Body1, Sub2 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import { Badge } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { palette } from "../../../../assets/styles/Palette";
-import personaImages from "../../../../assets/styles/PersonaImages";
 import { useAtom } from "jotai";
-import { PERSONA_LIST, FILTERED_PROJECT_LIST } from "../../../AtomStates";
+import { PERSONA_LIST,  } from "../../../AtomStates";
 
 const MoleculePersonaSelectCard = ({
   interviewType,
@@ -100,14 +99,14 @@ const MoleculePersonaSelectCard = ({
     }
   };
 
-  const isSelected = (personaId) => {
-    if (interviewType === "single") {
-      return selectedPersonas === personaId;
-    }
-    return (
-      Array.isArray(selectedPersonas) && selectedPersonas.includes(personaId)
-    );
-  };
+  // const isSelected = (personaId) => {
+  //   if (interviewType === "single") {
+  //     return selectedPersonas === personaId;
+  //   }
+  //   return (
+  //     Array.isArray(selectedPersonas) && selectedPersonas.includes(personaId)
+  //   );
+  // };
 
   return (
     <CardGroupWrap>

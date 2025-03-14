@@ -3,12 +3,10 @@ import styled, { css, ThemeProvider } from "styled-components";
 import theme from "../../../../../assets/styles/Theme";
 import { palette } from "../../../../../assets/styles/Palette";
 import images from "../../../../../assets/styles/Images";
-import axios from "axios";
 import { useAtom } from "jotai";
 import {
   IS_LOADING,
   CONVERSATION,
-  SELECTED_EXPERT_INDEX,
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
@@ -17,31 +15,19 @@ import {
   MARKETING_RESEARCH_REPORT_DATA,
 } from "../../../../AtomStates";
 import { MarketingResearchReportRequest } from "../../../../../utils/indexedDB";
-import { isLoggedIn } from "../../../../../utils/indexedDB";
-
 import Loader from "../../atoms/AtomLoader";
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
 
 const OrganismMarketingResearchReport = () => {
+
   const { saveConversation } = useSaveConversation();
   const [conversation, setConversation] = useAtom(CONVERSATION);
-  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-  const [
-    mainFeaturesOfBusinessInformation,
-    setMainFeaturesOfBusinessInformation,
-  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [
-    mainCharacteristicOfBusinessInformation,
-    setMainCharacteristicOfBusinessInformation,
-  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [
-    businessInformationTargetCustomer,
-    setBusinessInformationTargetCustomer,
-  ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [mainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [mainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [businessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingMarketingResearchReport, setIsLoadingMarketingResearchReport] = useState(false);
-
   const [marketingStartButtonState, setMarketingStartButtonState] = useAtom(MARKETING_START_BUTTON_STATE);
   const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
 
@@ -55,13 +41,6 @@ const OrganismMarketingResearchReport = () => {
     document.body.style.overflow = isMenuOpen ? 'hidden' : 'auto';
   }, [isMenuOpen]);
 
-  const axiosConfig = {
-    timeout: 100000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true,
-  };
 
   useEffect(() => {
     const fetchMarketingResearchReport = async () => {
@@ -82,11 +61,6 @@ const OrganismMarketingResearchReport = () => {
             },
           };
 
-          // let response = await axios.post(
-          //   "https://wishresearch.kr/panels/marketing/research_report",
-          //   data,
-          //   axiosConfig
-          // );
           let response = await MarketingResearchReportRequest(data);
 
           let marketingResearchReport = response.response.marketing_research_report;
@@ -120,11 +94,7 @@ const OrganismMarketingResearchReport = () => {
             !marketingResearchReport[3].content.hasOwnProperty("company_cases")
           )) 
           {
-            // response = await axios.post(
-            //   "https://wishresearch.kr/panels/marketing/research_report",
-            //   data,
-            //   axiosConfig
-            // );
+            
             response = await MarketingResearchReportRequest(data);
             retryCount++;
 

@@ -61,11 +61,11 @@ const ZoomableSunburst = ({ data, width, height, colors }) => {
       .style("cursor", "pointer")
       .on("click", clicked);
 
-    // 툴팁 추가
-    const format = d3.format(",d");
-    path.append("title")
-      // .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\n${format(d.value)}`);
-      .text(d => `${d.data.name}`);
+    // // 툴팁 추가
+    // const format = d3.format(",d");
+    // path.append("title")
+    //   // .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\n${format(d.value)}`);
+    //   .text(d => `${d.data.name}`);
 
     // 레이블 추가
     const label = svg.append("g")

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useAtom } from "jotai";
 import {
   IS_PERSONA_ACCESSIBLE,
@@ -11,9 +10,6 @@ import {
   PERSONA_LIST,
   PERSONA_BUTTON_STATE_3,
   BUSINESS_ANALYSIS,
-  REQUEST_PERSONA_LIST,
-  PROJECT_LOAD_BUTTON_STATE,
-  PROJECT_ID,
   SELECTED_INTERVIEW_TYPE,
   SELECTED_INTERVIEW_PURPOSE_DATA,
   PURPOSE_ITEMS_SINGLE,
@@ -24,19 +20,14 @@ import {
   TRIAL_STATE,
   USER_CREDITS,
 } from "../../../AtomStates";
-
-
 import {
   ContentsWrap,
   MainContent,
-  MainSection,
   Title,
   TabWrapType5,
   TabButtonType5,
   TabContent5,
   TabContent5Item,
-  ListBoxGroup,
-  ListBoxWrap,
   BoxWrap,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import {
@@ -49,7 +40,6 @@ import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import {
   Button,
- 
 } from "../../../../assets/styles/ButtonStyle";
 import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
@@ -69,53 +59,13 @@ const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
 
 const PagePersona3Single = () => {
+
   const [, setUserCredits] = useAtom(USER_CREDITS);
   const [eventState, ] = useAtom(EVENT_STATE);
   const [eventTitle, ] = useAtom(EVENT_TITLE);
   const [trialState, ] = useAtom(TRIAL_STATE);
-  const [creditCustomTheory, ] =
-    useAtom(CREDIT_CUSTOM_THEORY);
-  const [, setShowPopup] = useState(false);
-
-
-
-  const [showCustomButton, setShowCustomButton] = useState(true);
-  const [customizations, setCustomizations] = useState([]);
-  const [, setShowCustomization] = useState(false);
-
-
-  const [showQuestions, setShowQuestions] = useState({
-    radio3: false,
-    radio4: false,
-    radio5: false,
-  });
-
-  const handleEditClick = (index) => {
-    const newCustomizations = [...customizations];
-    newCustomizations[index].isEditing = true;
-    newCustomizations[index].editedDefinition =
-      newCustomizations[index].definitionText;
-    newCustomizations[index].editedPurpose =
-      newCustomizations[index].purposeText;
-    setCustomizations(newCustomizations);
-  };
-
-  const handleEditComplete = (index) => {
-    const newCustomizations = [...customizations];
-    newCustomizations[index].definitionText =
-      newCustomizations[index].editedDefinition;
-    newCustomizations[index].purposeText =
-      newCustomizations[index].editedPurpose;
-    newCustomizations[index].isEditing = false;
-    setCustomizations(newCustomizations);
-  };
-
+  const [creditCustomTheory, ] =useAtom(CREDIT_CUSTOM_THEORY);
   const [customTheoryData, ] = useAtom(CUSTOM_THEORY_DATA);
-
-  const [, setShowNewListBox] = useState(false);
-
-  const navigate = useNavigate();
-
   const [, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
@@ -129,34 +79,33 @@ const PagePersona3Single = () => {
     SELECTED_INTERVIEW_PURPOSE
   );
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-
+  const [, setSelectedInterviewPurposeData] =useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
   const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
     useAtom(PURPOSE_ITEMS_SINGLE);
-
-  const [, setInterviewPurpose] = useState("");
   const [selectedInterviewType, setSelectedInterviewType] = useAtom(
-    SELECTED_INTERVIEW_TYPE
-  );
-  const [, setSelectedInterviewPurposeData] =
-    useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
+      SELECTED_INTERVIEW_TYPE
+    );
 
+  const [, setShowPopup] = useState(false);
+  const [showCustomButton, setShowCustomButton] = useState(true);
+  const [customizations, setCustomizations] = useState([]);
+  const [, setShowCustomization] = useState(false);
+  const [showQuestions, setShowQuestions] = useState({
+    radio3: false,
+    radio4: false,
+    radio5: false,
+  });
+  const [, setShowNewListBox] = useState(false);
+
+  const navigate = useNavigate();
+  
   const [showInterviewReady, setShowInterviewReady] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [showEditPersona, setShowEditPersona] = useState(false);
   const [personaListState, setPersonaListState] = useState(null);
   const [showInterviewTypeAlert, setShowInterviewTypeAlert] = useState(false);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
-
   const [showCreditPopup, setShowCreditPopup] = useState(false);
-
-  // 인터뷰 목적 선택 핸들러 수정
-  const handleInterviewPurposeSelect = (title) => {
-    if (!selectedInterviewType) {
-      setShowInterviewTypeAlert(true);
-      return;
-    }
-    setInterviewPurpose(title);
-  };
 
   const handlePopupClose = () => {
     setShowInterviewReady(false);
@@ -164,25 +113,12 @@ const PagePersona3Single = () => {
   };
   const handleSelectPersona = () => {
     // 선택된 페르소나들을 selected에 반영
-    // setPersonaList((prev) => ({
-    //   selected: [],
-    //   unselected: filteredProjectList,
-    // }));
-
     setSelectedInterviewType("single");
     setPersonaStep(3);
     setIsPersonaAccessible(true);
     navigate(`/Persona/3/Select`, { replace: true });
   };
-  // const [isLoadingPage, setIsLoadingPage] = useState(true);
 
-  const [steps, setSteps] = useState([
-    { number: 1, label: "비즈니스 분석", active: true },
-    { number: 2, label: "맞춤 페르소나 추천", active: true },
-    { number: 3, label: "인터뷰 방법 선택", active: true },
-    { number: 4, label: "페르소나와 인터뷰", active: false },
-    { number: 5, label: "의견 분석", active: false },
-  ]);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -266,12 +202,6 @@ const PagePersona3Single = () => {
     }
   };
 
-  // 편집 팝업 열기
-  const handleEditPersonaOpen = () => {
-    setPersonaListState(personaList); // 현재 상태 저장
-    setShowEditPersona(true);
-  };
-
   // 이전으로 되돌리기
   const handleRevertPersonaList = () => {
     setPersonaListState(personaList);
@@ -312,9 +242,7 @@ const PagePersona3Single = () => {
       (item) => item.id === purpose
     );
 
-    // console.log("🚀 ~ handlePurposeSelect ~ selectedPurpose:", selectedPurpose);
     setSelectedInterviewPurposeData(selectedPurpose);
-    // setSelectedInterviewPurpose(selectedPurpose?.view_title);
     setSelectedInterviewPurpose(purpose);
   };
 
@@ -395,16 +323,6 @@ const PagePersona3Single = () => {
       return false;
     };
 
-    // beforeunload 이벤트 핸들러
-    const handleBeforeUnload = (event) => {
-      // 이벤트 취소 (표준에 따라)
-      event.preventDefault();
-      // Chrome은 returnValue 설정 필요
-      event.returnValue = "";
-
-      // 새로고침 시 루트 페이지로 이동
-      navigate("/Project");
-    };
 
     // F5 키 또는 Ctrl+R 감지
     const handleKeyDown = (event) => {
@@ -422,12 +340,10 @@ const PagePersona3Single = () => {
     detectRefresh();
 
     // 이벤트 리스너 등록
-    // window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("keydown", handleKeyDown);
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      // window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
@@ -811,55 +727,6 @@ const PersonaSingleWrap = styled.div`
   margin-top: 60px;
 `;
 
-const InterviewWayTab = styled.div`
-  display: flex;
-  gap: 16px;
-  width: 100%;
-  margin-bottom: 20px;
-`;
-
-const InterviewWayTabItem = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  flex: 1;
-  color: ${(props) => (props.active ? palette.gray800 : palette.gray300)};
-  padding: 20px 24px;
-  border-radius: 15px;
-  background: ${(props) => (props.active ? palette.chatGray : palette.white)};
-
-  > span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    line-height: 1.5;
-    color: ${palette.white};
-    border-radius: 50%;
-    background: ${(props) =>
-      props.active ? palette.primary : palette.gray300};
-  }
-`;
-
-const InterviewWayContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  width: 100%;
-  text-align: left;
-  margin-bottom: 280px;
-
-  > div {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-  }
-`;
 
 const CustomizationWrap = styled.div`
   display: flex;
@@ -902,23 +769,7 @@ const CustomizationWrap = styled.div`
   }
 `;
 
-const CustomizationBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  width: 100%;
-  padding: 24px 24px 20px 20px;
-  border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
-`;
 
-const CustomTitle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-`;
 
 const PersonaCards = styled.div`
   display: flex;
@@ -931,51 +782,3 @@ const PersonaCards = styled.div`
   border: 1px solid ${palette.outlineGray};
 `;
 
-const InterviewSelect = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  height: 100%;
-  // margin-top: 30px;
-`;
-
-const TabWrap = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const TabButton = styled.button`
-  font-family: "Pretendard", "Poppins";
-  font-size: 0.875rem;
-  line-height: 1.5;
-  padding: 4px 16px;
-  border-radius: 50px;
-  cursor: pointer;
-
-  ${({ isActive }) =>
-    isActive
-      ? `
-    background: rgba(34, 111, 255, 0.1);
-    border: 1px solid ${palette.primary};
-    color: ${palette.primary};
-    font-weight: 500;
-  `
-      : `
-    background: ${palette.chatGray};
-    border: 1px solid ${palette.outlineGray};
-    color: ${palette.gray500};
-    font-weight: 300;
-  `}
-`;
-const TabContent = styled(PersonaCards)`
-  gap: 12px;
-  padding: 0;
-  border-radius: 0;
-  border: none;
-
-  > div {
-    padding: 14px 20px 12px;
-  }
-`;

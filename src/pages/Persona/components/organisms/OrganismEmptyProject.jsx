@@ -71,11 +71,11 @@ const EmptyText = styled.p`
   margin: 0;
 `;
 
-const SubText = styled.span`
-  display: block;
-  font-size: 1rem;
-  color: ${palette.gray500};
-  margin-top: 4px;
-`;
+// const SubText = styled.span`
+//   display: block;
+//   font-size: 1rem;
+//   color: ${palette.gray500};
+//   margin-top: 4px;
+// `;
 
 export default OrganismEmptyProject;

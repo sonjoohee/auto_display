@@ -3,47 +3,16 @@ import styled, { css, ThemeProvider } from "styled-components";
 import theme from "../../../../../assets/styles/Theme";
 import { palette } from "../../../../../assets/styles/Palette";
 import images from "../../../../../assets/styles/Images";
-import axios from "axios";
 import { useAtom } from "jotai";
 import {
-  IS_LOADING,
-  CONVERSATION,
-  SELECTED_EXPERT_INDEX,
-  TITLE_OF_BUSINESS_INFORMATION,
-  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
-  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
-  BUSINESS_INFORMATION_TARGET_CUSTOMER,
-  MARKETING_BM_BUTTON_STATE,
-  MARKETING_BM_REPORT_DATA,
-  MARKETING_RESEARCH_REPORT_DATA,
   MARKETING_SELECTED_CUSTOMER,
 } from "../../../../AtomStates";
 
-import { useSaveConversation } from "../../atoms/AtomSaveConversation";
 
 const OrganismMarketingSegmentReport = ({ marketingSegmentReportCount }) => {
-  const { saveConversation } = useSaveConversation();
-  const [conversation, setConversation] = useAtom(CONVERSATION);
-  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-  const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-  const [
-    mainFeaturesOfBusinessInformation,
-    setMainFeaturesOfBusinessInformation,
-  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [
-    mainCharacteristicOfBusinessInformation,
-    setMainCharacteristicOfBusinessInformation,
-  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [
-    businessInformationTargetCustomer,
-    setBusinessInformationTargetCustomer,
-  ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-  const [isLoadingMarketingBmReport, setIsLoadingMarketingBmReport] = useState(false);
-  const [marketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
-  const [marketingBmButtonState, setMarketingBmButtonState] = useAtom(MARKETING_BM_BUTTON_STATE);
-  const [marketingBmReportData, setMarketingBmReportData] = useAtom(MARKETING_BM_REPORT_DATA);
-  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(MARKETING_SELECTED_CUSTOMER);
+
+  
+  const [marketingSelectedCustomer, ] = useAtom(MARKETING_SELECTED_CUSTOMER);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 

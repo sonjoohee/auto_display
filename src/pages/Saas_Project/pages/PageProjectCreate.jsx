@@ -58,7 +58,7 @@ const PageProjectCreate = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [showPopupError, setShowPopupError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, ] = useState(false);
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [dropUp, setDropUp] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);

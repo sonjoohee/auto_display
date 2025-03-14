@@ -3,10 +3,8 @@ import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
-import { Button } from "../../../../assets/styles/ButtonStyle";
 import { useAtom } from "jotai";
 import {
-  BUSINESS_ANALYSIS,
   SELECTED_INTERVIEW_PURPOSE,
   INTERVIEW_QUESTION_LIST,
   PROJECT_ID,
@@ -15,11 +13,9 @@ import {
   PROJECT_CREATE_INFO,
 } from "../../../AtomStates";
 import {
-  SkeletonTitle,
   SkeletonLine,
 } from "../../../../assets/styles/Skeleton";
 import PopupWrap from "../../../../assets/styles/Popup";
-import axios from "axios";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "./MoleculeRecreate";
 import { InterviewXPersonaMultipleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
@@ -72,18 +68,10 @@ const MoleculeInterviewCard = ({
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
-  const [businessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
-    SELECTED_INTERVIEW_PURPOSE
-  );
-  const [interviewQuestionListState, setInterviewQuestionListState] = useState(
-    []
-  );
-  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
-    INTERVIEW_QUESTION_LIST
-  );
+  const [, setSelectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
+  const [, setInterviewQuestionListState] = useState  ([]);
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-
   const [state, setState] = useState({
     isExpanded: false,
     isChecked: false,
@@ -104,17 +92,10 @@ const MoleculeInterviewCard = ({
       additionalInfo: "",
     },
   });
-
   const [regenerateCount, setRegenerateCount] = useState(0);
   const [showRegenerateButton, setShowRegenerateButton] = useState(false);
 
-  const axiosConfig = {
-    timeout: 100000, // 100초
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
-  };
+  
 
   const loadInterviewQuestion = async () => {
     //재생성 버튼 숨기기
@@ -138,12 +119,7 @@ const MoleculeInterviewCard = ({
         theory_name: title,
       };
 
-      //첫번째 API 호출
-      // let response = await axios.post(
-      //   "https://wishresearch.kr/person/persona_interview",
-      //   data,
-      //   axiosConfig
-      // );
+  
       let response = await InterviewXPersonaMultipleInterviewGeneratorRequest(
         data,
         isLoggedIn
@@ -157,11 +133,7 @@ const MoleculeInterviewCard = ({
         retryCount < maxRetries &&
         (!response || !response.response || response.response.length !== 5)
       ) {
-        // response = await axios.post(
-        //   "https://wishresearch.kr/person/persona_interview",
-        //   data,
-        //   axiosConfig
-        // );
+      
         response = await InterviewXPersonaMultipleInterviewGeneratorRequest(
           data,
           isLoggedIn
@@ -430,49 +402,49 @@ const Title = styled.div`
   word-wrap: break-word;
 `;
 
-const Badge = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.75rem;
-  line-height: 1.2;
+// const Badge = styled.div`
+//   display: flex;
+//   align-items: center;
+//   gap: 4px;
+//   font-size: 0.75rem;
+//   line-height: 1.2;
 
-  color: ${(props) => {
-    if (props.Basic) return `#34C759`;
-    else if (props.Custom) return palette.gray500;
-    else return palette.gray500;
-  }};
-  padding: 4px 8px;
-  border-radius: 50px;
+//   color: ${(props) => {
+//     if (props.Basic) return `#34C759`;
+//     else if (props.Custom) return palette.gray500;
+//     else return palette.gray500;
+//   }};
+//   padding: 4px 8px;
+//   border-radius: 50px;
 
-  border: 1px solid
-    ${(props) => {
-      if (props.Basic) return `#34C759`;
-      else if (props.Custom) return palette.primary;
-      else return palette.outlineGray;
-    }};
-  background: ${(props) => {
-    if (props.Basic) return `rgba(52, 199, 89, 0.10)`;
-    else if (props.Custom) return palette.primary;
-    else return palette.gray50;
-  }};
-  cursor: pointer;
-`;
+//   border: 1px solid
+//     ${(props) => {
+//       if (props.Basic) return `#34C759`;
+//       else if (props.Custom) return palette.primary;
+//       else return palette.outlineGray;
+//     }};
+//   background: ${(props) => {
+//     if (props.Basic) return `rgba(52, 199, 89, 0.10)`;
+//     else if (props.Custom) return palette.primary;
+//     else return palette.gray50;
+//   }};
+//   cursor: pointer;
+// `;
 
-const ReadyIcon = styled.div`
-  width: 0px;
-  height: 0px;
-  border-style: solid;
-  border-width: 4px 0 4px 6px;
-  border-color: transparent transparent transparent #34c759;
-  transform: rotate(0deg);
-`;
+// const ReadyIcon = styled.div`
+//   width: 0px;
+//   height: 0px;
+//   border-style: solid;
+//   border-width: 4px 0 4px 6px;
+//   border-color: transparent transparent transparent #34c759;
+//   transform: rotate(0deg);
+// `;
 
-const KeywordGroup = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-`;
+// const KeywordGroup = styled.div`
+//   display: flex;
+//   align-items: center;
+//   gap: 4px;
+// `;
 
 const Description = styled.div`
   width: 100%;
@@ -485,14 +457,14 @@ const Description = styled.div`
   white-space: pre-wrap;
 `;
 
-const KeywordTag = styled.div`
-  padding: 4px 10px;
-  color: #666666;
-  font-size: 0.75rem;
-  line-height: 1.6;
-  border-radius: 20px;
-  background: ${palette.chatGray};
-`;
+// const KeywordTag = styled.div`
+//   padding: 4px 10px;
+//   color: #666666;
+//   font-size: 0.75rem;
+//   line-height: 1.6;
+//   border-radius: 20px;
+//   background: ${palette.chatGray};
+// `;
 
 const ToggleButton = styled.button`
   position: relative;

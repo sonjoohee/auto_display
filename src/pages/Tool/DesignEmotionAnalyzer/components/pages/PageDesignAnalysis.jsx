@@ -1,14 +1,12 @@
-//디자인 감성 분석기기
+//디자인 감성 분석기
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useAtom } from "jotai";
 import { palette } from "../../../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
-import MoleculeCustomerValueCard from "../../../../Tool/CustomerValueAnalyzer/components/molecules/MoleculeCustomerValueCard";
-
 import { Button } from "../../../../../assets/styles/ButtonStyle";
 import {
   FormBox,
@@ -31,20 +29,13 @@ import {
   DropzoneStyles,
   OCEANRangeWrap,
   RangeSlider,
-  ListBoxItem,
-  ListText,
-  ListTitle,
-  ListSubtitle,
-  PercentBadge,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
   IS_LOGGED_IN,
   TOOL_ID,
   TOOL_STEP,
-  SELECTED_TARGET_DISCOVERY_SCENARIO,
   TOOL_LOADING,
   DESIGN_ANALYSIS_BUSINESS_INFO,
-  DESIGN_ANALYSIS_UPLOADED_FILES,
   DESIGN_ANALYSIS_EMOTION_ANALYSIS,
   DESIGN_ANALYSIS_SELECTED_PERSONA,
   DESIGN_ANALYSIS_EMOTION_TARGET,
@@ -58,15 +49,10 @@ import images from "../../../../../assets/styles/Images";
 import {
   H4,
   H3,
-  H5,
-  Sub1,
-  Sub2,
   Sub3,
   Body1,
   Body2,
-  Body2_1,
   Body3,
-  Caption1,
 } from "../../../../../assets/styles/Typography";
 import {
   InterviewXDesignEmotionAnalysisRequest,
@@ -77,26 +63,23 @@ import {
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
-import AnalysisItem from "../molecules/MoleculeAnalysisItem"; // Import the new component
+import AnalysisItem from "../molecules/MoleculeAnalysisItem";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
 
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
 const PageDesignAnalysis = () => {
+
   const navigate = useNavigate();
+
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
-  const [designAnalysisBusinessTitle, setDesignAnalysisBusinessTitle] = useAtom(
-    DESIGN_ANALYSIS_BUSINESS_TITLE
-  );
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [projectSaas, ] = useAtom(PROJECT_SAAS);
+  const [, setDesignAnalysisBusinessTitle] = useAtom(DESIGN_ANALYSIS_BUSINESS_TITLE);
   const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(
     DESIGN_ANALYSIS_BUSINESS_INFO
-  );
-  const [designAnalysisUploadedFiles, setDesignAnalysisUploadedFiles] = useAtom(
-    DESIGN_ANALYSIS_UPLOADED_FILES
   );
   const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] =
     useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS);
@@ -110,77 +93,35 @@ const PageDesignAnalysis = () => {
   const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(
     DESIGN_ANALYSIS_EMOTION_SCALE
   );
-  const [designAnalysisFileNames, setDesignAnalysisFileNames] = useAtom(
-    DESIGN_ANALYSIS_FILE_NAMES
-  );
+  const [designAnalysisFileNames, ] = useAtom(DESIGN_ANALYSIS_FILE_NAMES);
   const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
     DESIGN_ANALYSIS_FILE_ID
   );
-  const [showPopup, setShowPopup] = useState(false);
-  const [showPopupMore, setShowPopupMore] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedPersonas, setSelectedPersonas] = useState([]);
-  const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
-  const [selectedPurpose, setSelectedPurpose] = useState("");
-  const [selectedInterviewType, setSelectedInterviewType] = useState(null);
-  const [selectedInterviewPurpose, setSelectedInterviewPurpose] =
-    useState(null);
-  const [activeTab1, setActiveTab1] = useState("personaInfo");
-  const [contactForm, setContactForm] = useState({
-    email: "",
-    purpose: "",
-    content: "",
-  });
-  const [dropUp, setDropUp] = useState(false);
-  const selectBoxRef = useRef(null);
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
-  const [businessDescriptionProject, setBusinessDescriptionProject] =
-    useState("");
-  const [targetCustomer, setTargetCustomer] = useState("");
-  const [personaData, setPersonaData] = useState({
-    personaInfo: "",
-    personaScenario: "",
-  });
+  const [, setTargetCustomer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingPersonas, setLoadingPersonas] = useState({});
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [fileNames, setFileNames] = useState([]);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [activeDesignTab, setActiveDesignTab] = useState("emotion"); // 'emotion' 또는 'scale'
+  const [activeDesignTab, setActiveDesignTab] = useState("emotion");
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   const [businessDescriptionTitle, setBusinessDescriptionTitle] = useState("");
-  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
-
-  const handleToggle = (key) => {
-    setState((prevState) => ({ ...prevState, [key]: !prevState[key] }));
-  };
-
-  const [state, setState] = useState({
+  const [state, ] = useState({
     isExpanded: false,
     showQuestions: false,
   });
-
-  const project = projectSaas;
-  // // OCEAN 값들을 관리하기 위한 상태
-  // const [oceanValues, setOceanValues] = useState({
-  //   Comfortable: 3,        // 편안한
-  //   Satisfying: 3,        // 만족스러운
-  //   Trustworthy: 3,       // 신뢰가는
-  //   Anticipated: 3,       // 기대되는
-  //   Attractive: 3,        // 매력적인
-  //   Practical: 3,         // 실용적인
-  //   Beautiful: 3,         // 아름다운
-  //   Efficient: 3,         // 효율적인
-  //   Easy: 3,             // 사용하기 쉬운
-  // });
-
-  // // OCEAN 무시 여부를 관리하는 상태
-  // const [ignoreOcean, setIgnoreOcean] = useState(false);
-
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
+
+  useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
+
+  // const handleToggle = (key) => {
+  //   setState((prevState) => ({ ...prevState, [key]: !prevState[key] }));
+  // };
+  const project = projectSaas;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -642,41 +583,7 @@ const PageDesignAnalysis = () => {
     }, 0);
   };
 
-  // 업로드 파라미터 설정
-  // const getUploadParams = () => {
-  //   return { url: 'https://wishresearch.kr/panels/tool/create_tool_temp_file' } // 실제 업로드 URL로 변경 필요
-  // }
-
-  // 파일 제출 핸들러
-  // const handleSubmit = (files) => {
-  //   const validFiles = files.filter(f => f.meta.status === 'done' && f.file.size <= 20 * 1024 * 1024);
-  //   setUploadedFiles(validFiles.map(f => f.file));
-  // }
-
-  // // OCEAN 값 변경을 처리하는 핸들러
-  // const handleOceanChange = (trait, value) => {
-  //   if (!ignoreOcean) {
-  //     const numValue = parseFloat(value);
-  //     // 값이 3에 가까울 때 자동으로 3으로 스냅
-  //     const snapValue = Math.abs(numValue - 3) < 0.2 ? 3 : numValue;
-
-  //     setOceanValues(prev => ({
-  //       ...prev,
-  //       [trait]: snapValue
-  //     }));
-  //   }
-  // };
-
-  // // OCEAN 값들을 초기화하는 함수
-  // const resetOceanValues = () => {
-  //   setOceanValues({
-  //     openness: 0.5,
-  //     conscientiousness: 0.5,
-  //     extraversion: 0.5,
-  //     agreeableness: 0.5,
-  //     neuroticism: 0.5
-  //   });
-  // };
+  
 
   useEffect(() => {
     // 새로고침 감지 함수
@@ -820,31 +727,9 @@ const PageDesignAnalysis = () => {
                     </div>
 
                     <div className="content">
-                      {/* <TabContent5Item required>
-                        <div className="title">
-                          <Body1 color="gray700">비즈니스 설명</Body1>
-                          <Body1 color="red">*</Body1>
-                        </div>
-                        <FormBox Large>
-                          <CustomTextarea
-                            disabled={toolStep >= 1}
-                            Edit
-                            rows={4}
-                            placeholder="비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
-                            onChange={handleBusinessDescriptionChange}
-                            value={businessDescription}
-                            maxLength={500}
-                            status="valid"
-                          />
-                          <Body2 color="gray300" align="right">
-                            {businessDescription.length} / 500
-                          </Body2>
-                        </FormBox>
-                      </TabContent5Item> */}
                       <TabContent5Item required>
                         <div className="title">
                           <Body1 color="gray700">비즈니스 설명</Body1>
-                          {/* <Body1 color="red">*</Body1> */}
                         </div>
                         <FormBox Large>
                           <CustomTextarea
@@ -930,7 +815,6 @@ const PageDesignAnalysis = () => {
                             </>
                           }
                           styles={StyledDropzone}
-                          // submitButtonContent="업로드"
                         />
                       </TabContent5Item>
                     </div>
@@ -1241,148 +1125,6 @@ const DesignAnalysisWrap = styled.div`
   margin-top: 60px;
 `;
 
-const CheckCircle = styled.div`
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  cursor: pointer;
-  background-image: ${(props) =>
-    props.$isChecked
-      ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
-      : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11.5' stroke='%23E0E4EB'/%3E%3C/svg%3E")`};
-  transition: background-image 0.3s ease-in-out;
-  cursor: pointer;
-`;
-
-const TitleSection = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const ToggleButton = styled.button`
-  position: relative;
-  width: 20px;
-  height: 20px;
-  padding: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-  margin-bottom: 6px;
-  border: none;
-  background: none;
-  cursor: pointer;
-
-  &:before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 10px;
-    height: 10px;
-    transform: ${(props) =>
-      props.$isExpanded
-        ? "translate(-50%, -50%) rotate(45deg)"
-        : "translate(-50%, -50%) rotate(-135deg)"};
-    margin-top: 2px;
-    border-top: 1px solid ${palette.gray500};
-    border-left: 1px solid ${palette.gray500};
-    transition: all 0.5s;
-  }
-`;
-
-const ContentWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 4px;
-`;
-
-const ToggleContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  padding-top: 16px;
-  border-top: 1px solid ${palette.outlineGray};
-
-  .bgContent {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-    padding: 20px;
-    border-radius: 10px;
-    background: ${palette.chatGray};
-
-    > div {
-      display: flex;
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 8px;
-
-      + div {
-        padding-top: 8px;
-        border-top: 1px solid ${palette.outlineGray};
-      }
-    }
-  }
-
-  li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-
-    &:before {
-      flex-shrink: 0;
-      width: 3px;
-      height: 3px;
-      margin-top: 10px;
-      border-radius: 50%;
-      background: ${palette.gray800};
-      content: "";
-    }
-  }
-`;
-
-const CardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 16px;
-  width: 100%;
-  padding: 24px 20px;
-  border-radius: 10px;
-  border: 1px solid
-    ${(props) => (props.$isSelected ? palette.primary : palette.outlineGray)};
-  background: ${(props) => {
-    if (props.NoBackground) {
-      return props.$isSelected ? "rgba(34, 111, 255, 0.10)" : palette.white;
-    }
-    return props.$isSelected && !props.$isExpanded
-      ? "rgba(34, 111, 255, 0.10)"
-      : palette.white;
-  }};
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-
-  ${(props) =>
-    props.TitleFlex &&
-    css`
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: space-between;
-    `}
-`;
-
-const CustomButton = styled(Button)`
-  min-width: 92px;
-`;
 
 const InsightAnalysis = styled.div`
   display: flex;
@@ -1405,348 +1147,6 @@ const InsightAnalysis = styled.div`
   }
 `;
 
-const MyDashboardHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-`;
-
-const MyDashboardTitle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-`;
-
-const MyDashboardContent = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-`;
-
-const MyProjectWrap = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 80px;
-  margin: 50px auto;
-`;
-
-const MyProjectList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
-
-const Title = styled(H5)`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  color: ${palette.gray800};
-  padding-bottom: 20px;
-  border-bottom: 1px solid ${palette.outlineGray};
-`;
-
-const ProjectList = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const ProjectHeader = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-
-  > p {
-    flex-grow: 1;
-    text-align: left;
-  }
-
-  > p:nth-child(1) {
-    max-width: 440px;
-    width: 100%;
-  }
-
-  > p:nth-child(2) {
-    max-width: 220px;
-    width: 100%;
-  }
-
-  > p:nth-child(3) {
-    max-width: 165px;
-    width: 100%;
-  }
-`;
-
-const ProjectContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const ProjectItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  // gap: 12px;
-  gap: ${(props) => (props.Nodata ? "16px" : "12px")};
-  // padding: 12px 24px;
-  padding: ${(props) => (props.Nodata ? "52px 24px 40px" : "12px 24px")};
-  border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
-  background-color: ${palette.white};
-  z-index: 1;
-  transition: box-shadow 0.3s ease-in-out;
-
-  ${({ $isOpen }) =>
-    $isOpen &&
-    `
-    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
-  `}
-
-  ${(props) =>
-    props.Nodata &&
-    css`
-      div {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-
-        p {
-          color: ${palette.gray500};
-          line-height: 1.5;
-        }
-      }
-    `}
-`;
-
-const ProjectInfo = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-`;
-
-const Name = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 4px;
-  max-width: 440px;
-  width: 100%;
-  font-weight: 400;
-  line-height: 1.5;
-  color: ${palette.gray800};
-
-  span {
-    font-size: 0.75rem;
-    font-weight: 300;
-    color: ${palette.gray500};
-  }
-`;
-
-const Persona = styled.div`
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  max-width: 230px;
-  width: 100%;
-  padding: 8px;
-
-  > div {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 5px 24px;
-    flex: 1;
-    text-align: left;
-
-    + div:before {
-      position: absolute;
-      top: 50%;
-      left: -12px;
-      transform: translateY(-50%);
-      width: 1px;
-      height: 19px;
-      background-color: ${palette.outlineGray};
-      content: "";
-    }
-
-    span {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 4px;
-      font-size: 0.75rem;
-      color: ${palette.gray300};
-    }
-
-    p {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 4px;
-      font-size: 0.875rem;
-      color: ${palette.gray700};
-    }
-  }
-`;
-
-const Recruit = styled.div`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 4px;
-  max-width: 155px;
-  width: 100%;
-
-  span {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    font-size: 0.75rem;
-    color: ${palette.gray300};
-  }
-
-  p {
-    font-size: 0.875rem;
-    color: ${palette.gray700};
-
-    &.ing {
-      color: ${palette.primary};
-    }
-
-    &.complete {
-      color: ${palette.green};
-    }
-  }
-`;
-
-const Report = styled.div`
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-
-  span {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    font-size: 0.75rem;
-    color: ${palette.gray300};
-  }
-
-  p {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    font-size: 0.875rem;
-    color: ${palette.gray700};
-  }
-
-  button {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 4px;
-    font-family: "Pretendard", poppins;
-    font-size: 0.75rem;
-    font-weight: 400;
-    color: ${palette.gray500};
-    padding: 6px 10px;
-    border-radius: 4px;
-    border: 1px solid ${palette.outlineGray};
-    background-color: ${palette.chatGray};
-  }
-`;
-
-const ProjectButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding-top: 12px;
-  border-top: 1px solid ${palette.outlineGray};
-
-  p {
-    font-size: 0.875rem;
-    color: ${palette.gray800};
-  }
-
-  button {
-    font-family: "Pretendard", poppins;
-    font-size: 0.75rem;
-    color: ${palette.white};
-    padding: 6px 10px;
-    border-radius: 4px;
-    border: none;
-    background-color: ${palette.primary};
-  }
-`;
-
-const ProjectView = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 16px;
-  width: 100%;
-  padding: 28px 20px 20px;
-  margin-top: -20px;
-  border-radius: 0 0 10px 10px;
-  border: 1px solid ${palette.outlineGray};
-  background-color: ${palette.chatGray};
-  animation: slideDown 0.3s ease-in-out;
-  transform-origin: top;
-  opacity: 1;
-
-  &.closing {
-    animation: slideUp 0.3s ease-in-out;
-  }
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes slideUp {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-  }
-`;
 
 const ViewInfo = styled.div`
   display: flex;

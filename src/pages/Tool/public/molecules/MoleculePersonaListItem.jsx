@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { Body1, Sub2 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import {
-  Badge,
   Persona,
   PersonaInfo,
   UniqueTag,
@@ -13,7 +12,6 @@ const MoleculePersonaListItem = ({
   personaImage,
   personaTitle,
   badgeType,
-  badgeText,
   personaId,
   personaInfo,
   isSelected,
@@ -33,7 +31,6 @@ const MoleculePersonaListItem = ({
       <ListText>
         <ListTitle>
           <Body1 color="gray800">{personaTitle}</Body1>
-          {/* <Badge {...{ [badgeType]: true }}>{badgeText}</Badge> */}
           <UniqueTag color={badgeType || "default"} />
         </ListTitle>
         <ListSubtitle>

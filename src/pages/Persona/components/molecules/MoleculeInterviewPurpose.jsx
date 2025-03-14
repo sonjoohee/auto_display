@@ -3,16 +3,9 @@ import { useAtom } from "jotai";
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
 import {
-  IS_PERSONA_ACCESSIBLE,
   IS_LOGGED_IN,
-  PERSONA_STEP,
   SELECTED_INTERVIEW_PURPOSE,
   SINGLE_INTERVIEW_QUESTION_LIST,
-  PERSONA_LIST,
-  PERSONA_BUTTON_STATE_3,
-  BUSINESS_ANALYSIS,
-  REQUEST_PERSONA_LIST,
-  PROJECT_LOAD_BUTTON_STATE,
   PROJECT_ID,
   PURPOSE_ITEMS_SINGLE,
   IS_LOADING_QUESTION,
@@ -27,7 +20,6 @@ import {
   ListSubtitle,
   ListButton,
   BoxListWrap,
-  Badge,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { SkeletonLine } from "../../../../assets/styles/Skeleton";
 import { Body1, Body3, Caption1 } from "../../../../assets/styles/Typography";
@@ -51,7 +43,7 @@ const MoleculeInterviewPurpose = ({
   regenerateCount,
   setRegenerateCount,
 }) => {
-  const [businessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId] = useAtom(PROJECT_ID);
   const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
@@ -59,21 +51,21 @@ const MoleculeInterviewPurpose = ({
   );
   const [isLoadingQuestion, setIsLoadingQuestion] =
     useAtom(IS_LOADING_QUESTION);
-  const [showRegenerateButton, setShowRegenerateButton] = useState(false);
+  const [, setShowRegenerateButton] = useState(false);
 
-  const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
+  const [purposeItemsSingleAtom, ] =
     useAtom(PURPOSE_ITEMS_SINGLE);
-  const [checkGenerateQuestion, setCheckGenerateQuestion] = useState("");
+  const [, setCheckGenerateQuestion] = useState("");
   const [loadingStates, setLoadingStates] = useState({});
 
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
   );
-  const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
+  const [, setSelectedInterviewPurposeData] =
     useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
 
-  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
-  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+  const [projectTotalInfo, ] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, ] = useAtom(PROJECT_CREATE_INFO);
 
   const loadInterviewQuestion = async (title) => {
     setShowRegenerateButton(false);

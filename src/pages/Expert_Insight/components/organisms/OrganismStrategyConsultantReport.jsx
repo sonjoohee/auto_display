@@ -3,19 +3,11 @@ import styled, { css, ThemeProvider } from "styled-components";
 import theme from "../../../../assets/styles/Theme";
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
-import axios from "axios";
 import { useAtom } from "jotai";
 import {
   IS_LOADING,
   CONVERSATION,
-  SELECTED_EXPERT_INDEX,
   TITLE_OF_BUSINESS_INFORMATION,
-  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
-  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
-  BUSINESS_INFORMATION_TARGET_CUSTOMER,
-  MARKETING_START_BUTTON_STATE,
-  MARKETING_RESEARCH_REPORT_DATA,
-  STRATEGY_BUTTON_STATE,
   STRATEGY_CONSULTANT_REPORT_DATA,
   APPROACH_PATH,
   IS_LOGGED_IN,
@@ -26,38 +18,19 @@ import {
 import Loader from "../atoms/AtomLoader"
 import { useSaveConversation } from "../../../Expert_Insight/components/atoms/AtomSaveConversation";
 import { MarketingResearchReportRequest } from "../../../../utils/indexedDB";
-import { isLoggedIn } from "../../../../utils/indexedDB";
 import {  InterviewXExpertReportRequest } from "../../../../utils/indexedDB";
 
 const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
   const { saveConversation } = useSaveConversation();
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [conversation, setConversation] = useAtom(CONVERSATION);
-  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-  const [
-    mainFeaturesOfBusinessInformation,
-    setMainFeaturesOfBusinessInformation,
-  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [
-    mainCharacteristicOfBusinessInformation,
-    setMainCharacteristicOfBusinessInformation,
-  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [
-    businessInformationTargetCustomer,
-    setBusinessInformationTargetCustomer,
-  ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingStrategyConsultantReport, setIsLoadingStrategyConsultantReport] = useState(false);
-
-  const [marketingStartButtonState, setMarketingStartButtonState] = useAtom(MARKETING_START_BUTTON_STATE);
-  const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
-  const [strategyButtonState, setStrategyButtonState] = useAtom(STRATEGY_BUTTON_STATE);
   const [strategyConsultantReportData, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
   const [approachPath] = useAtom(APPROACH_PATH);
-
-  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
-  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, ] = useAtom(PROJECT_CREATE_INFO);
+  const [projectTotalInfo, ] = useAtom(PROJECT_TOTAL_INFO);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -69,13 +42,6 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
     document.body.style.overflow = isMenuOpen ? 'hidden' : 'auto';
   }, [isMenuOpen]);
 
-  const axiosConfig = {
-    timeout: 100000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true,
-  };
 
   useEffect(() => {
     const fetchStrategyConsultantReport = async () => {
@@ -174,9 +140,7 @@ const OrganismStrategyConsultantReport = ({ strategyConsultantCount }) => {
             );
 
             setConversation(updatedConversation);
-            // console.log("strategyConsultantReportData", [...strategyConsultantReportData, strategyConsultantReport].length);
-            // console.log("strategyConsultantCount", strategyConsultantCount);
-            // setStrategyButtonState([...strategyConsultantReportData, strategyConsultantReport].length);
+  
 
             await saveConversation({ changingConversation: { conversation: updatedConversation, strategyConsultantReportData: [...strategyConsultantReportData, strategyConsultantReport] } });
           } else {

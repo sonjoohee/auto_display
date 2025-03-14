@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, Link } from "react-router-dom";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useAtom } from "jotai";
 import {
   IS_PERSONA_ACCESSIBLE,
@@ -12,9 +10,6 @@ import {
   PERSONA_LIST,
   PERSONA_BUTTON_STATE_3,
   BUSINESS_ANALYSIS,
-  REQUEST_PERSONA_LIST,
-  PROJECT_LOAD_BUTTON_STATE,
-  PROJECT_ID,
   SELECTED_INTERVIEW_TYPE,
   SELECTED_INTERVIEW_PURPOSE_DATA,
   PURPOSE_ITEMS_SINGLE,
@@ -25,68 +20,32 @@ import {
   TRIAL_STATE,
   USER_CREDITS,
 } from "../../../AtomStates";
-// import { SELECTED_INTERVIEW_TYPE } from "../../../../AtomStates";
-
 import {
   ContentsWrap,
   MainContent,
-  MainSection,
   Title,
-  CardWrap,
-  CardGroupWrap,
-  ListBoxItem,
-  ListText,
-  ListTitle,
-  ListSubtitle,
-  ListButton,
-  BoxListWrap,
-  BgBoxList,
-  BgBoxItem,
-  TextBox,
-  TextInfo,
-  Badge,
-  BottomBar,
   TabWrapType5,
   TabButtonType5,
   TabContent5,
   TabContent5Item,
-  ListBoxGroup,
-  ListBoxWrap,
-  BoxWrap,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import {
   H3,
-  H4,
   Body1,
-  Body2,
   Body3,
-  Sub1,
-  Caption1,
-  Caption2,
 } from "../../../../assets/styles/Typography";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import {
-  RadioButton,
-  CustomTextarea,
-  FormBox,
-} from "../../../../assets/styles/InputStyle";
-import {
   Button,
-  ButtonGroup,
-  IconButton,
 } from "../../../../assets/styles/ButtonStyle";
 import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
 import MoleculeInterviewCard from "../molecules/MoleculeInterviewCard";
 import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
-import OrganismBusinessAnalysis from "../organisms/OrganismBusinessAnalysis";
 import PopupWrap from "../../../../assets/styles/Popup";
 import OrganismToastPopup from "../organisms/OrganismToastPopup";
-import MoleculeInterviewPurpose from "../molecules/MoleculeInterviewPurpose.jsx";
-import OrganismCustomization from "../organisms/OrganismCustomization.jsx";
 import {
   UserCreditCheck,
   UserCreditUse,
@@ -97,96 +56,54 @@ const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
 
 const PagePersona3Multiple = () => {
-  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
-  const [eventState, setEventState] = useAtom(EVENT_STATE);
-  const [eventTitle, setEventTitle] = useAtom(EVENT_TITLE);
-  const [trialState, setTrialState] = useAtom(TRIAL_STATE);
-  const [creditCustomTheory, setCreditCustomTheory] =
-    useAtom(CREDIT_CUSTOM_THEORY);
-  const [showPopup, setShowPopup] = useState(false);
-
-  const [selectedRadio1, setSelectedRadio1] = useState();
-  const [selectedRadio2, setSelectedRadio2] = useState();
-  const [showCustomButton, setShowCustomButton] = useState(true);
-  const [customizations, setCustomizations] = useState([]);
-  const [showCustomization, setShowCustomization] = useState(false);
-  const [showMethodology, setShowMethodology] = useState(false);
-
-  const [showQuestions, setShowQuestions] = useState({
-    radio3: false,
-    radio4: false,
-    radio5: false,
-  });
-
-  const handleEditClick = (index) => {
-    const newCustomizations = [...customizations];
-    newCustomizations[index].isEditing = true;
-    newCustomizations[index].editedDefinition =
-      newCustomizations[index].definitionText;
-    newCustomizations[index].editedPurpose =
-      newCustomizations[index].purposeText;
-    setCustomizations(newCustomizations);
-  };
-
-  const handleEditComplete = (index) => {
-    const newCustomizations = [...customizations];
-    newCustomizations[index].definitionText =
-      newCustomizations[index].editedDefinition;
-    newCustomizations[index].purposeText =
-      newCustomizations[index].editedPurpose;
-    newCustomizations[index].isEditing = false;
-    setCustomizations(newCustomizations);
-  };
-
-  const [customTheoryData, setCustomTheoryData] = useAtom(CUSTOM_THEORY_DATA);
-
-  const [showNewListBox, setShowNewListBox] = useState(false);
 
   const navigate = useNavigate();
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
-  const [projectLoadButtonState, setProjectLoadButtonState] = useAtom(
-    PROJECT_LOAD_BUTTON_STATE
-  );
-  const [personaButtonState3, setPersonaButtonState3] = useAtom(
+
+  const [, setUserCredits] = useAtom(USER_CREDITS);
+  const [eventState, ] = useAtom(EVENT_STATE);
+  const [eventTitle, ] = useAtom(EVENT_TITLE);
+  const [trialState, ] = useAtom(TRIAL_STATE);
+  const [creditCustomTheory, ] =
+    useAtom(CREDIT_CUSTOM_THEORY);
+  const [customTheoryData, ] = useAtom(CUSTOM_THEORY_DATA);
+  const [, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
-  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
+  const [businessAnalysis, ] = useAtom(BUSINESS_ANALYSIS);
+  const [, setPersonaStep] = useAtom(PERSONA_STEP);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
   );
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-
   const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
     useAtom(PURPOSE_ITEMS_SINGLE);
-
-  const [interviewPurpose, setInterviewPurpose] = useState("");
-  const [selectedInterviewType, setSelectedInterviewType] = useAtom(
+    
+  const [, setSelectedInterviewType] = useAtom(
     SELECTED_INTERVIEW_TYPE
   );
-  const [selectedInterviewPurposeData, setSelectedInterviewPurposeData] =
+  const [, setSelectedInterviewPurposeData] =
     useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
+
+  const [, setShowCustomButton] = useState(true);
+  const [, setCustomizations] = useState([]);
+  const [interviewPurpose, setInterviewPurpose] = useState("");
   const [activeCategory, setActiveCategory] = useState(1);
-  const [showInterview, setShowInterview] = useState(false);
   const [showInterviewReady, setShowInterviewReady] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [showEditPersona, setShowEditPersona] = useState(false);
   const [personaListState, setPersonaListState] = useState(null);
   const [showInterviewTypeAlert, setShowInterviewTypeAlert] = useState(false);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
-
   const [showCreditPopup, setShowCreditPopup] = useState(false);
+  const [activeTab, ] = useState(1);
 
   // 인터뷰 목적 선택 핸들러 수정
   const handleInterviewPurposeSelect = (title) => {
-    // if (!selectedInterviewType) {
-    //   setShowInterviewTypeAlert(true);
-    //   return;
-    // }
+  
     setInterviewPurpose(title);
   };
 
@@ -195,26 +112,14 @@ const PagePersona3Multiple = () => {
     setShowToast(false);
   };
   const handleSelectPersona = () => {
-    // 선택된 페르소나들을 selected에 반영
-    // setPersonaList((prev) => ({
-    //   selected: [],
-    //   unselected: filteredProjectList,
-    // }));
-
+ 
     setSelectedInterviewType("multiple");
     setPersonaStep(3);
     setIsPersonaAccessible(true);
     navigate(`/Persona/3/Select`, { replace: true });
   };
-  // const [isLoadingPage, setIsLoadingPage] = useState(true);
 
-  const [steps, setSteps] = useState([
-    { number: 1, label: "비즈니스 분석", active: true },
-    { number: 2, label: "맞춤 페르소나 추천", active: true },
-    { number: 3, label: "인터뷰 방법 선택", active: true },
-    { number: 4, label: "페르소나와 인터뷰", active: false },
-    { number: 5, label: "의견 분석", active: false },
-  ]);
+
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -597,8 +502,8 @@ const PagePersona3Multiple = () => {
     };
   }, [navigate]);
 
-  const [activeTab, setActiveTab] = useState(1);
-  const completedSteps = [1, 2, 3, 4];
+
+
 
   return (
     <>

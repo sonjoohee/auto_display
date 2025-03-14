@@ -26,21 +26,19 @@ import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import PopupWrap from "../../../../assets/styles/Popup";
 
 const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
+
   const navigate = useNavigate();
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
-  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
-  const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
-  const [accessStateSaas, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
-  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
-  const [projectCreateInfo, setProjectCreateInfo] =
-    useAtom(PROJECT_CREATE_INFO);
-  const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
-    SINGLE_INTERVIEW_QUESTION_LIST
-  );
-  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
-    INTERVIEW_QUESTION_LIST
-  );
-  const [customTheoryData, setCustomTheoryData] = useAtom(CUSTOM_THEORY_DATA);
+
+  const [, setProjectId] = useAtom(PROJECT_ID);
+  const [, setProjectSaas] = useAtom(PROJECT_SAAS);
+  const [, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
+  const [, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
+  const [, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [, setProjectCreateInfo] =useAtom(PROJECT_CREATE_INFO);
+  const [, setSingleInterviewQuestionList] = useAtom(SINGLE_INTERVIEW_QUESTION_LIST);
+  const [, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
+  const [, setCustomTheoryData] = useAtom(CUSTOM_THEORY_DATA);
+
   const [showTooltip, setShowTooltip] = useState(false);
 
   const handleClick = async () => {
@@ -83,8 +81,8 @@ const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
   };
 
   const handleDeleteClick = (e) => {
-    e.stopPropagation(); // 상위 요소로의 이벤트 전파 방지
-    setShowTooltip(false); // 툴팁 닫기
+    e.stopPropagation(); 
+    setShowTooltip(false); 
     if (onDelete) {
       onDelete(project);
     }
