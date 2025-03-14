@@ -7,9 +7,7 @@ import { palette } from "../../../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
-import {
-  Button,
-} from "../../../../../assets/styles/ButtonStyle";
+import { Button } from "../../../../../assets/styles/ButtonStyle";
 import {
   FormBox,
   CustomTextarea,
@@ -62,13 +60,12 @@ import {
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
 const PageTargetDiscovery = () => {
-
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
-  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
     TARGET_DISCOVERY_INFO
   );
@@ -85,7 +82,7 @@ const PageTargetDiscovery = () => {
   );
   const [selectedTargetDiscoveryScenario, setSelectedTargetDiscoveryScenario] =
     useAtom(SELECTED_TARGET_DISCOVERY_SCENARIO);
-  const [projectSaas, ] = useAtom(PROJECT_SAAS);
+  const [projectSaas] = useAtom(PROJECT_SAAS);
 
   const [, setShowPopup] = useState(false);
   const [, setShowPopupMore] = useState(false);
@@ -97,11 +94,11 @@ const PageTargetDiscovery = () => {
   const [, setDropUp] = useState(false);
   const selectBoxRef = useRef(null);
   const [activeTab, setActiveTab] = useState(1);
-  const [completedSteps, setCompletedSteps] = useState([]); 
+  const [completedSteps, setCompletedSteps] = useState([]);
   const [businessDescription, setBusinessDescription] = useState("");
   const [targetCustomer, setTargetCustomer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingScenario, setIsLoadingScenario] = useState(false); 
+  const [isLoadingScenario, setIsLoadingScenario] = useState(false);
   const [specificSituation, setSpecificSituation] = useState("");
   const [loadingPersonas, setLoadingPersonas] = useState({});
 
@@ -124,7 +121,6 @@ const PageTargetDiscovery = () => {
   //     setDropUp(spaceBelow < dropDownHeight && spaceAbove > spaceBelow);
   //   }
   // };
-
 
   //저장되었던 인터뷰 로드
   useEffect(() => {
@@ -272,8 +268,6 @@ const PageTargetDiscovery = () => {
       specificSituation.trim() !== ""
     );
   };
-
-
 
   const handleSubmitBusinessInfo = async () => {
     try {
@@ -625,8 +619,6 @@ const PageTargetDiscovery = () => {
     return "대기중";
   };
 
-
-
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
@@ -681,7 +673,6 @@ const PageTargetDiscovery = () => {
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
@@ -798,7 +789,6 @@ const PageTargetDiscovery = () => {
                       <TabContent5Item required>
                         <div className="title">
                           <Body1 color="gray700">비즈니스 설명</Body1>
-                  
                         </div>
                         <FormBox Large>
                           <CustomTextarea
@@ -841,8 +831,6 @@ const PageTargetDiscovery = () => {
                           onChange={(e) => setSpecificSituation(e.target.value)}
                         />
                       </TabContent5Item>
-
-                   
                     </div>
 
                     <Button
@@ -1046,7 +1034,7 @@ const PageTargetDiscovery = () => {
                     </BgBoxItem>
 
                     <InsightAnalysis>
-                      <div className="title">
+                      <div className="title" style={{ textAlign: "left" }}>
                         <H4 color="gray800">
                           잠재력이 가장 높은 페르소나는{" "}
                           {targetDiscoveryFinalReport?.potential_rank_1?.title}
@@ -1112,7 +1100,6 @@ const PageTargetDiscovery = () => {
                             );
                           })}
                     </ListBoxWrap>
-
                   </>
                 )}
               </TabContent5>
@@ -1175,7 +1162,6 @@ const TargetDiscoveryWrap = styled.div`
   gap: 100px;
   margin-top: 60px;
 `;
-
 
 const InsightAnalysis = styled.div`
   display: flex;

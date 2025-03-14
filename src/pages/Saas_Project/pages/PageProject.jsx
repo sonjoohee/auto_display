@@ -296,7 +296,7 @@ const PageProject = () => {
         <PopupWrap
           Warning
           title="정말 삭제하시겠습니까?"
-          message="삭제된 항목은 복구가 불가합니다"
+          message="삭제된 프로젝트는 임시 삭제함에서 복구 가능합니다."
           buttonType="Outline"
           closeText="취소"
           confirmText="확인"
