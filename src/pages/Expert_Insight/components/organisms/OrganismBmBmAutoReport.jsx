@@ -2,16 +2,12 @@ import React, { useEffect, useState } from "react";
 import styled, { css, ThemeProvider } from "styled-components";
 import theme from "../../../../assets/styles/Theme";
 import { palette } from "../../../../assets/styles/Palette";
-import axios from "axios";
 import { useAtom } from "jotai";
 import {
   IS_LOADING,
   CONVERSATION,
   SELECTED_EXPERT_INDEX,
   TITLE_OF_BUSINESS_INFORMATION,
-  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
-  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
-  BUSINESS_INFORMATION_TARGET_CUSTOMER,
   IS_LOGGED_IN,
   CONVERSATION_STAGE,
   BM_BM_AUTO_REPORT_DATA,
@@ -26,35 +22,25 @@ import { useSaveConversation } from "../atoms/AtomSaveConversation";
 import Loader from "../atoms/AtomLoader";
 
 import images from "../../../../assets/styles/Images";
-import MoleculeReportController from "../molecules/MoleculeReportController";
+
 import {  InterviewXBmBmAutoReportRequest} from "../../../../utils/indexedDB";
 const OrganismBmBmAutoReport = () => {
   const { saveConversation } = useSaveConversation();
-  const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
+  const [bmQuestionList, ] = useAtom(BM_QUESTION_LIST);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-  const [
-    mainFeaturesOfBusinessInformation,
-    setMainFeaturesOfBusinessInformation,
-  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [
-    mainCharacteristicOfBusinessInformation,
-    setMainCharacteristicOfBusinessInformation,
-  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [
-    businessInformationTargetCustomer,
-    setBusinessInformationTargetCustomer,
-  ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+
+ 
+  const [, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [, setIsLoading] = useAtom(IS_LOADING);
   const [bmBmAutoButtonState, setBmBmAutoButtonState] = useAtom(BM_BM_AUTO_REPORT_BUTTON_STATE);
   const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
   const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
 
-  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
-  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+  const [projectTotalInfo, ] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, ] = useAtom(PROJECT_CREATE_INFO);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -62,13 +48,6 @@ const OrganismBmBmAutoReport = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const axiosConfig = {
-    timeout: 100000, // 100초
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
-  };
 
   useEffect(() => {
     const fetchBmBmAutoReport = async () => {

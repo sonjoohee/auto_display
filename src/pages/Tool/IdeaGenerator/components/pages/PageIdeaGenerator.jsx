@@ -1,18 +1,15 @@
 //아이디어 제너레이터
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useAtom } from "jotai";
 import { palette } from "../../../../../assets/styles/Palette";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
-import MoleculeIdeaGeneratorCard from "../molecules/MoleculeIdeaGeneratorCard";
 import MoleculeIdeaGeneratorCard2 from "../molecules/MoleculeIdeaGeneratorCard2";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import {
-  ButtonGroup,
   Button,
-  IconButton,
 } from "../../../../../assets/styles/ButtonStyle";
 import {
   FormBox,
@@ -22,28 +19,19 @@ import {
   SelectBoxItem,
   SelectBoxTitle,
   SelectBoxList,
-  CheckBoxButton,
-  RadioButton,
 } from "../../../../../assets/styles/InputStyle";
 import PopupWrap from "../../../../../assets/styles/Popup";
 import {
   ContentsWrap,
   MainContent,
   Badge,
-  TabWrapType4,
-  TabButtonType4,
   TabWrapType5,
   TabButtonType5,
   TabContent5,
   TabContent5Item,
   CardGroupWrap,
-  ListText,
-  ListTitle,
-  ListSubtitle,
-  ListButton,
   BottomBar,
   BgBoxItem,
-  ListBoxItem,
   TextWrap,
   ListBox,
   Table,
@@ -58,22 +46,17 @@ import personaImages from "../../../../../assets/styles/PersonaImages";
 import {
   H4,
   H3,
-  H5,
   Sub1,
-  Sub3,
   Body1,
   Body2,
   Body3,
   Caption1,
-  Caption2,
 } from "../../../../../assets/styles/Typography";
 import ZoomableSunburst from "../../../../../components/Charts/ZoomableSunburst";
 import OrganismPersonaList from "../../../public/organisms/OrganismPersonaList";
-
 import {
   IDEA_GENERATOR_INFO,
   IDEA_GENERATOR_KNOW_TARGET,
-  IDEA_GENERATOR_CUSTOM_TARGET,
   IDEA_GENERATOR_PERSONA,
   IDEA_GENERATOR_IDEA,
   IDEA_GENERATOR_CLUSTERING,
@@ -87,25 +70,45 @@ import {
   PERSONA_LIST_SAAS,
   PROJECT_SAAS,
 } from "../../../../AtomStates";
-
 import {
   createToolOnServer,
   updateToolOnServer,
-  getToolOnServer,
-  getToolListOnServer,
-  getToolListOnServerSaas,
   getFindToolListOnServerSaas,
   InterviewXIdeaGeneratorPersonaRequest,
   InterviewXIdeaGeneratorIdeaRequest,
   InterviewXIdeaGeneratorClusteringRequest,
   InterviewXIdeaGeneratorFinalReportRequest,
 } from "../../../../../utils/indexedDB";
-
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
 const PageIdeaGenerator = () => {
+
   const navigate = useNavigate();
-  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
+
+  const [projectSaas, ] = useAtom(PROJECT_SAAS);
+  const [ideaGeneratorPurpose, ] = useAtom(IDEA_GENERATOR_PURPOSE);
+  const [ideaGeneratorInfo, setIdeaGeneratorInfo] =
+    useAtom(IDEA_GENERATOR_INFO);
+  const [ideaGeneratorKnowTarget, setIdeaGeneratorKnowTarget] = useAtom(
+    IDEA_GENERATOR_KNOW_TARGET
+  );
+  const [ideaGeneratorPersona, setIdeaGeneratorPersona] = useAtom(
+    IDEA_GENERATOR_PERSONA
+  );
+  const [ideaGeneratorSelectedPersona, setIdeaGeneratorSelectedPersona] =
+    useAtom(IDEA_GENERATOR_SELECTED_PERSONA);
+  const [ideaGeneratorIdea, setIdeaGeneratorIdea] =
+    useAtom(IDEA_GENERATOR_IDEA);
+  const [, setIdeaGeneratorClustering] = useAtom(IDEA_GENERATOR_CLUSTERING);
+  const [ideaGeneratorFinalReport, setIdeaGeneratorFinalReport] = useAtom(
+    IDEA_GENERATOR_FINAL_REPORT
+  );
+  const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [toolStep, setToolStep] = useAtom(TOOL_STEP);
+  const [personaListSaas, ] = useAtom(PERSONA_LIST_SAAS);
+
   const [tableData, setTableData] = useState([]);
   const [chartData, setChartData] = useState({});
   const [seletedIdeaIndex, setSeletedIdeaIndex] = useState(null);
@@ -117,81 +120,34 @@ const PageIdeaGenerator = () => {
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
-  const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
-  const [ideaGeneratorPurpose, setIdeaGeneratorPurpose] = useAtom(
-    IDEA_GENERATOR_PURPOSE
-  );
   const [selectedPurposes, setSelectedPurposes] = useState("");
   const [selectedInterviewType, setSelectedInterviewType] = useState(null);
-  const [selectedInterviewPurpose, setSelectedInterviewPurpose] =
-    useState(null);
-  const [activeTab1, setActiveTab1] = useState("personaInfo");
-  const [contactForm, setContactForm] = useState({
+  const [, setContactForm] = useState({
     email: "",
     purpose: "",
     content: "",
   });
-  const [dropUp, setDropUp] = useState(false);
-  const selectBoxRef = useRef(null);
   const [activeTab, setActiveTab] = useState(1);
-  const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
+  const [completedSteps, setCompletedSteps] = useState([]); 
   const [businessDescription, setBusinessDescription] = useState("");
   const [targetCustomers, setTargetCustomers] = useState([]);
-  const [personaData, setPersonaData] = useState({
-    personaInfo: "",
-    personaScenario: "",
-  });
-
   const [selectBoxStates, setSelectBoxStates] = useState({
     customerList: false,
     analysisScope: false,
   });
-
   const [dropUpStates, setDropUpStates] = useState({
     customerList: false,
     analysisScope: false,
   });
-
   const customerListRef = useRef(null);
-  const analysisScopeRef = useRef(null);
-
   const [customerValueList, setCustomerValueList] = useState([]);
   const [selectedPersonasSaas, setSelectedPersonasSaas] = useState([]);
-
-  const [ideaGeneratorInfo, setIdeaGeneratorInfo] =
-    useAtom(IDEA_GENERATOR_INFO);
-  const [ideaGeneratorKnowTarget, setIdeaGeneratorKnowTarget] = useAtom(
-    IDEA_GENERATOR_KNOW_TARGET
-  );
-  const [ideaGeneratorCustomTarget, setIdeaGeneratorCustomTarget] = useAtom(
-    IDEA_GENERATOR_CUSTOM_TARGET
-  );
-  const [ideaGeneratorPersona, setIdeaGeneratorPersona] = useAtom(
-    IDEA_GENERATOR_PERSONA
-  );
-  const [ideaGeneratorSelectedPersona, setIdeaGeneratorSelectedPersona] =
-    useAtom(IDEA_GENERATOR_SELECTED_PERSONA);
-  const [ideaGeneratorIdea, setIdeaGeneratorIdea] =
-    useAtom(IDEA_GENERATOR_IDEA);
-  const [ideaGeneratorClustering, setIdeaGeneratorClustering] = useAtom(
-    IDEA_GENERATOR_CLUSTERING
-  );
-  const [ideaGeneratorFinalReport, setIdeaGeneratorFinalReport] = useAtom(
-    IDEA_GENERATOR_FINAL_REPORT
-  );
-  const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [toolId, setToolId] = useAtom(TOOL_ID);
-  const [toolStep, setToolStep] = useAtom(TOOL_STEP);
-
-  const [selectedPersona, setSelectedPersona] = useState(null); // 아직 잘 모르겠습니다
-  const [selectedCustomPersona, setSelectedCustomPersona] = useState(null); // 제가 원하는 타겟 고객이 있습니다
-
+  const [selectedPersona, setSelectedPersona] = useState(null); 
+  const [selectedCustomPersona, setSelectedCustomPersona] = useState(null); 
   const [selectedDetailPersona, setSelectedDetailPersona] = useState(null);
+  const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
 
-  // DeleteFormWrap 삭제를 위한 state 추가
-  const [forms, setForms] = useState([]);
-
+  
   // DeleteButton 클릭 핸들러 추가
   const handleDelete = (index) => {
     setTargetCustomers((prev) => prev.filter((_, i) => i !== index));
@@ -208,8 +164,7 @@ const PageIdeaGenerator = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       if (toolLoading) {
-        // console.log("🚀 ~ interviewLoading ~ toolStep:", toolStep);
-        // 활성 탭 설정 (기본값 1)
+     
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
 
         // 비즈니스 정보 설정 (Step 1)
@@ -236,10 +191,7 @@ const PageIdeaGenerator = () => {
 
         // 페르소나 설정 (Step 2)
         if (ideaGeneratorSelectedPersona && personaListSaas?.length > 0) {
-          // console.log(
-          //   "ideaGeneratorSelectedPersona",
-          //   ideaGeneratorSelectedPersona
-          // );
+        
           setSelectedPersonasSaas(ideaGeneratorSelectedPersona);
           // 저장된 페르소나의 personaName과 일치하는 personaListSaas의 페르소나를 찾아 _id 값을 가져옵니다
           const savedPersonaNames = Array.isArray(ideaGeneratorSelectedPersona)
@@ -605,7 +557,7 @@ const PageIdeaGenerator = () => {
       updateToolOnServer(
         toolId,
         {
-          completedStep: 3,
+          completedStep: 4,
           ideaGeneratorClustering: clusteringData || [],
           ideaGeneratorFinalReport: finalReportData || {},
         },
@@ -896,9 +848,7 @@ const PageIdeaGenerator = () => {
     setShowPopupMore(true);
   };
 
-  const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
-  const [selectedPersonas, setSelectedPersonas] = useState([]);
-  const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
+
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
@@ -944,8 +894,10 @@ const PageIdeaGenerator = () => {
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
+   
       // 현재 URL 확인
       const currentUrl = window.location.href;
+ 
       if (currentUrl.toLowerCase().includes("ideagenerator")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         const lastUrl = sessionStorage.getItem("lastUrl");

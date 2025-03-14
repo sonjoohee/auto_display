@@ -9,14 +9,9 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { isValidEmail } from "../atoms/AtomValidation";
 import { UserCreditInfo } from "../../../../utils/indexedDB";
 import {  CustomInput } from "../../../../assets/styles/InputStyle";
-
 import images from "../../../../assets/styles/Images";
 import {
-  SIGN_UP_NAME,
   EMAIL,
-  SIGN_UP_EMAIL,
-  SIGN_UP_PASSWORD,
-  CONFIRM_PASSWORD,
   ERROR_STATUS,
   ACCESSABLE_EXPERT,
 } from "../../../AtomStates";
@@ -25,7 +20,6 @@ import {
   LOGIN_SUCCESS,
   USER_NAME,
   USER_EMAIL,
-  IS_LOGIN_POPUP_OPEN,
   IS_MARKETING,
   CONVERSATION_ID,
   USER_MEMBERSHIP,
@@ -40,13 +34,9 @@ import MoleculeResetPasswordPopup from "./MoleculeResetPasswordPopup";
 const MoleculeLoginForm = ({ onClosePopup }) => {
 
   const [, setUserCredits] = useAtom(USER_CREDITS);
-  const [, setSignUpName] = useAtom(SIGN_UP_NAME);
   const [email, setEmail] = useAtom(EMAIL);
   const [, setUserMembership] = useAtom(USER_MEMBERSHIP);
-  const [, setSignupEmail] = useAtom(SIGN_UP_EMAIL);
   const [password, setPassword] = useState("");
-  const [, setSignupPassword] = useAtom(SIGN_UP_PASSWORD);
-  const [, setConfirmPassword] = useAtom(CONFIRM_PASSWORD);
   const [errorStatus, setErrorStatus] = useAtom(ERROR_STATUS);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -54,13 +44,14 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
   const [, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
   const [, setUserName] = useAtom(USER_NAME); 
   const [, setUserEmail] = useAtom(USER_EMAIL); 
-  const [, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
   const [isMarketing, ] = useAtom(IS_MARKETING);
   const [conversationId, ] = useAtom(CONVERSATION_ID);
   const [showMobileWarning, setShowMobileWarning] = useState(false);
   const [, setAccessableExpert] = useAtom(ACCESSABLE_EXPERT);
-
+  const [isSignPopupOpen, ] = useAtom(IS_SIGNUP_POPUP_OPEN); // 회원가입 팝업 상태 관리
+  const [isPasswordRestPopupOpen, setIsPasswordRestPopupOpen] = useState(false); // 비밀번호 리셋 팝업 상태 관리
   const [, setIsExitPopupOpen] = useState(false);
+
 
   useEffect(() => {
     setErrorStatus("");
@@ -78,34 +69,34 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
     return true;
   };
 
-  const isIOSDevice = () => {
-    const isIOS =
-      /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    const isAppleDevice = navigator.userAgent.includes("Macintosh");
-    const isTouchScreen = navigator.maxTouchPoints >= 1; // iOS 13 이상 체크
+  // const isIOSDevice = () => {
+  //   const isIOS =
+  //     /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  //   const isAppleDevice = navigator.userAgent.includes("Macintosh");
+  //   const isTouchScreen = navigator.maxTouchPoints >= 1; // iOS 13 이상 체크
 
-    return isIOS || (isAppleDevice && isTouchScreen);
-  };
+  //   return isIOS || (isAppleDevice && isTouchScreen);
+  // };
 
   // 모바일 감지 함수 추가
-  const isMobileDevice = () => {
-    if (isIOSDevice()) {
-      return true;
-    }
-    const toMatch = [
-      /Android/i,
-      /webOS/i,
-      /iPhone/i,
-      /iPad/i,
-      /iPod/i,
-      /BlackBerry/i,
-      /Windows Phone/i,
-    ];
+  // const isMobileDevice = () => {
+  //   if (isIOSDevice()) {
+  //     return true;
+  //   }
+  //   const toMatch = [
+  //     /Android/i,
+  //     /webOS/i,
+  //     /iPhone/i,
+  //     /iPad/i,
+  //     /iPod/i,
+  //     /BlackBerry/i,
+  //     /Windows Phone/i,
+  //   ];
 
-    return toMatch.some((toMatchItem) => {
-      return navigator.userAgent.match(toMatchItem);
-    });
-  };
+  //   return toMatch.some((toMatchItem) => {
+  //     return navigator.userAgent.match(toMatchItem);
+  //   });
+  // };
 
  
 
@@ -247,35 +238,34 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
     navigate("/Project");
   };
 
-  const [isSignupPopupOpen, setIsSignupPopupOpen] = useState(false);
+  
 
-  const handleSignupClick = (e) => {
-    e.preventDefault();
-    setIsSignupPopupOpen(true);
-  };
+  // const handleSignupClick = (e) => {
+  //   e.preventDefault();
+  //   setIsSignupPopupOpen(true);
+  // };
 
-  const handleClosePopup = () => {
-    setIsSignupPopupOpen(false);
-  };
+  // const handleClosePopup = () => {
+  //   setIsSignupPopupOpen(false);
+  // };
 
-  const [isSignPopupOpen, setIsSignPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN); // 회원가입 팝업 상태 관리
-  const handleSignClick = () => {
-    setIsSignPopupOpen(true); // 회원가입 팝업 열기
-    setIsLoginPopupOpen(false);
-    onClosePopup();
-  };
-  const closeSignPopup = () => {
-    setIsSignPopupOpen(false); // 회원가입 팝업 닫기
-    setErrorStatus("");
-    setSignUpName("");
-    setEmail("");
-    setSignupEmail("");
-    setPassword("");
-    setSignupPassword("");
-    setConfirmPassword("");
-  };
+  // const handleSignClick = () => {
+  //   setIsSignPopupOpen(true); // 회원가입 팝업 열기
+  //   setIsLoginPopupOpen(false);
+  //   onClosePopup();
+  // };
+  // const closeSignPopup = () => {
+  //   setIsSignPopupOpen(false); // 회원가입 팝업 닫기
+  //   setErrorStatus("");
+  //   setSignUpName("");
+  //   setEmail("");
+  //   setSignupEmail("");
+  //   setPassword("");
+  //   setSignupPassword("");
+  //   setConfirmPassword("");
+  // };
 
-  const [isPasswordRestPopupOpen, setIsPasswordRestPopupOpen] = useState(false); // 비밀번호 리셋 팝업 상태 관리
+
   const handlePasswordRestClick = () => {
     setIsPasswordRestPopupOpen(true); // 비밀번호 리셋 팝업 열기
   };
@@ -416,20 +406,20 @@ const LoginFormContainer = styled.div`
   }
 `;
 
-const StyledAtomInput = styled.input`
-  width: 100%;
-  font-family: "Pretendard", "Poppins", sans-serif;
-  // font-size: 1rem;
-  font-size: 0.75rem;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid ${palette.lineGray};
-  box-sizing: border-box;
+// const StyledAtomInput = styled.input`
+//   width: 100%;
+//   font-family: "Pretendard", "Poppins", sans-serif;
+//   // font-size: 1rem;
+//   font-size: 0.75rem;
+//   padding: 12px 16px;
+//   border-radius: 8px;
+//   border: 1px solid ${palette.lineGray};
+//   box-sizing: border-box;
 
-  &::placeholder {
-    font-size: 0.75rem;
-  }
-`;
+//   &::placeholder {
+//     font-size: 0.75rem;
+//   }
+// `;
 
 const TogglePasswordButton = styled.button`
   position: absolute;

@@ -2,23 +2,13 @@ import React, { useEffect, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import theme from "../../../../../assets/styles/Theme";
 import { palette } from "../../../../../assets/styles/Palette";
-import axios from "axios";
 import { useAtom } from "jotai";
 import {
-  BUTTON_STATE,
-  EXPERT_BUTTON_STATE,
   IS_LOADING,
-  APPROACH_PATH,
   CONVERSATION,
-  SELECTED_EXPERT_INDEX,
   TITLE_OF_BUSINESS_INFORMATION,
   MAIN_FEATURES_OF_BUSINESS_INFORMATION,
   MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
-  BUSINESS_INFORMATION_TARGET_CUSTOMER,
-  SURVEY_GOAL_SUGGESTION_LIST,
-  SURVEY_USER_GOAL_INPUT,
-  SURVEY_GOAL_FIXED,
-  CONVERSATION_STAGE,
   MARKETING_RESEARCH_REPORT_DATA,
   MARKETING_BM_REPORT_DATA,
   MARKETING_CUSTOMER_DATA,
@@ -29,43 +19,24 @@ import {
 import Loader from "../../atoms/AtomLoader";
 import { useSaveConversation } from "../../atoms/AtomSaveConversation";
 import { MarketingCustomerRecommendationRequest } from "../../../../../utils/indexedDB";
-import { isLoggedIn } from "../../../../../utils/indexedDB";
 
 const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
-  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+  
   const { saveConversation } = useSaveConversation();
-  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [conversation, setConversation] = useAtom(CONVERSATION);
-  const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-  const [
-    mainFeaturesOfBusinessInformation,
-    setMainFeaturesOfBusinessInformation,
-  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [mainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [
     mainCharacteristicOfBusinessInformation,
-    setMainCharacteristicOfBusinessInformation,
+    ,
   ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [
-    businessInformationTargetCustomer,
-    setBusinessInformationTargetCustomer,
-  ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [expertButtonState, setExpertButtonState] =
-    useAtom(EXPERT_BUTTON_STATE);
+
   const [marketingCustomerButtonState, setMarketingCustomerButtonState] =
     useAtom(MARKETING_CUSTOMER_BUTTON_STATE);
-  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-  const [surveyGoalFixedState, setSurveyGoalFixedState] = useState({}); // 현재 선택한 상태를 저장
-  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [, setIsLoading] = useAtom(IS_LOADING);
   const [isLoadingMarketingCustomer, setIsLoadingMarketingCustomer] =
     useState(false);
-  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(
-    SURVEY_GOAL_SUGGESTION_LIST
-  );
-  const [surveyUserGoalInput, setSurveyUserGoalInput] = useAtom(
-    SURVEY_USER_GOAL_INPUT
-  );
-  const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
+
   const [marketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
   const [marketingBmReportData] = useAtom(MARKETING_BM_REPORT_DATA);
   const [marketingCustomerData, setMarketingCustomerData] = useAtom(
@@ -115,13 +86,6 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
     }
   };
 
-  const axiosConfig = {
-    timeout: 100000, // 100초
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
-  };
 
   useEffect(() => {
     const fetchMarketingCustomer = async () => {
@@ -142,11 +106,6 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
           marketing_bm_report: marketingBmReportData,
         };
 
-        // let response = await axios.post(
-        //   "https://wishresearch.kr/panels/marketing/customer_recommendation",
-        //   data,
-        //   axiosConfig
-        // );
         let response = await MarketingCustomerRecommendationRequest(data);
         let marketingCustomer =
           response.response.marketing_customer_recommendation;
@@ -183,12 +142,7 @@ const MoleculeMarketingCustomer = ({ marketingCustomerCount }) => {
                 !item.competence.hasOwnProperty("description")
             ))
         ) {
-          // console.log(response);
-          // response = await axios.post(
-          //   "https://wishresearch.kr/panels/marketing/customer_recommendation",
-          //   data,
-          //   axiosConfig
-          // );
+         
           response = await MarketingCustomerRecommendationRequest(data);
           retryCount++;
 

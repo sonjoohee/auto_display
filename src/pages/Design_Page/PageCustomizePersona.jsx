@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { palette } from "../../assets/styles/Palette";
 import { Button } from "../../assets/styles/ButtonStyle";
-import images from "../../assets/styles/Images";
 import { 
   ContentsWrap, 
   ContentSection,
@@ -14,7 +13,7 @@ import {
   CustomizePersona,
 } from "../../assets/styles/BusinessAnalysisStyle";
 
-import OrganismLeftSideBar from "../Expert_Insight/components/organisms/OrganismLeftSideBar";
+
 import Header from "./IncHeader";
 import PersonaCard from "./PersonaCard";
 import AnalysisInfo from "./PageAnalysisInfo";
@@ -22,19 +21,13 @@ import Sidebar from "./IncSidebar";
 import IncNavigation from "./IncNavigation";
 
 import PopupWrap from "../../assets/styles/Popup";
-import { CustomTextarea } from "../../assets/styles/InputStyle";
 import { useNavigate } from 'react-router-dom';
 
 const PageCustomizePersona = () => {
   const navigate = useNavigate();
   const [checkedPersonas, setCheckedPersonas] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
-  const [formState, setFormState] = useState({
-    purpose: '',
-    personaCount: '',
-  });
-  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
-  const [showCustomPopup, setShowCustomPopup] = useState(false);
+ 
 
   const handlePersonaCheck = (isChecked, isCustom) => {
     if (isCustom) {
@@ -48,20 +41,6 @@ const PageCustomizePersona = () => {
     setShowPopup(false);
   };
 
-  const isFormValid = () => {
-    return formState.purpose.trim() !== '' && formState.personaCount !== '';
-  };
-
-  const handleInputChange = (field, value) => {
-    setFormState(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handleRecruitClick = () => {
-    setShowCustomPopup(true);
-  };
 
   const handleStartInterview = () => {
     if (checkedPersonas > 0) {

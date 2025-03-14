@@ -5,22 +5,19 @@ import {
   Body1,
   Body2,
   Sub2,
-  Caption1,
 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import {
-  Badge,
   Persona,
   UniqueTag,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { palette } from "../../../../assets/styles/Palette";
 import personaImages from "../../../../assets/styles/PersonaImages";
 import { useAtom } from "jotai";
-import { PERSONA_LIST, FILTERED_PROJECT_LIST } from "../../../AtomStates";
+import { PERSONA_LIST } from "../../../AtomStates";
 import {
   TabWrapType3,
   TabButtonType3,
-  ListBoxWrap,
   BoxWrap,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
@@ -32,7 +29,7 @@ const MoleculePersonaSelectCardSaas = ({
   customPersonaList,
   selectedPersonas,
   onPersonaSelect,
-  activeTab,
+
 }) => {
   const navigate = useNavigate();
 
@@ -225,8 +222,7 @@ const MoleculePersonaSelectCardSaas = ({
                   anySelected={personaList.selected.length > 0}
                   interviewType={interviewType}
                 >
-                  {/* 카드 내용 렌더링 */}
-                  {/* <Persona color="Linen" size="Large" Round> */}
+              
                   <Persona
                     size="Large"
                     icon={persona.favorite ? "OrangeTopLeftStarFill" : null}
@@ -247,7 +243,7 @@ const MoleculePersonaSelectCardSaas = ({
                         {persona.persona_view || persona.personaName}
                       </Body1>{" "}
                       <UniqueTag color={persona.type || "default"} />
-                      {/* {persona.isNew && <Badge New>비즈니스</Badge>} */}
+              
                     </ListTitle>
                     <ListSubtitle>
                       <PersonaInfo>

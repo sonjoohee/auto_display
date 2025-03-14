@@ -2,7 +2,6 @@
 
 import React from "react";
 import styled from "styled-components";
-import MoleculeSign from "./MoleculeSign";
 import { palette } from "../../../../assets/styles/Palette";
 import MoleculeResetPassword from "./MoleculeResetPassword";
 

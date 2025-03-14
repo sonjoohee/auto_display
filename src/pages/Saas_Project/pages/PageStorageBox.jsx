@@ -1,4 +1,4 @@
-//대시보드
+//보관함
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";

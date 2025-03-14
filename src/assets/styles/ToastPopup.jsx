@@ -5,7 +5,6 @@ import images from "./Images";
 import PopupWrap from "./Popup";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
-import axios from "axios";
 import {
   IS_LOGGED_IN,
   PERSONA_STEP,
@@ -25,21 +24,17 @@ import { InterviewXPersonaInterviewModeratorRequest } from "../../utils/indexedD
 import { InterviewXInterviewReportRequest } from "../../utils/indexedDB";
 import { InterviewXInterviewReportAdditionalRequest } from "../../utils/indexedDB";
 const ToastPopupWrap = ({ isActive, onClose }) => {
-  const [interviewReport, setInterviewReport] = useAtom(INTERVIEW_REPORT);
-  const [interviewReportAdditional, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
+
+  const [, setInterviewReport] = useAtom(INTERVIEW_REPORT);
+  const [, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
   const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [projectId, ] = useAtom(PROJECT_ID);
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
   const [personaButtonState3, setPersonaButtonState3] = useAtom(PERSONA_BUTTON_STATE_3);
-  const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
-  const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
-    SELECTED_INTERVIEW_PURPOSE
-  );
-  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
-    INTERVIEW_QUESTION_LIST
-  );
-  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [selectedInterviewPurpose, ] = useAtom(SELECTED_INTERVIEW_PURPOSE);
+  const [personaList, ] = useAtom(PERSONA_LIST);
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
+  const [businessAnalysis, ] = useAtom(BUSINESS_ANALYSIS);
   
   const navigate = useNavigate();
 
@@ -52,17 +47,8 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
   const [answers, setAnswers] = useState({});
   const [isGenerating, setIsGenerating] = useState(false);
   const [visibleAnswers, setVisibleAnswers] = useState({});
-  const [personaInfo, setPersonaInfo] = useState([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isAnalysisComplete, setIsAnalysisComplete] = useState(false);
-
-  const axiosConfig = {
-    timeout: 100000,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true,
-  };
 
   useEffect(() => {
     const interviewLoading = async () => {
@@ -86,11 +72,6 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
               theory_name: selectedInterviewPurpose,
             };
 
-            // let response = await axios.post(
-            //   "https://wishresearch.kr/person/persona_interview",
-            //   data,
-            //   axiosConfig
-            // );
              // 페르소나 인터뷰 생성 API  수정 예정
             let response = await InterviewXPersonaInterviewModeratorRequest(data, isLoggedIn);
       
@@ -102,11 +83,7 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
               retryCount < maxRetries &&
               (!response || !response.response || response.response.length !== 5)
             ) {
-              // response = await axios.post(
-              //   "https://wishresearch.kr/person/persona_interview",
-              //   data,
-              //   axiosConfig
-              // );
+            
                //페르소나 인터뷰 생성 API  수정 예정
                let response = await InterviewXPersonaInterviewModeratorRequest(data, isLoggedIn);
               retryCount++;
@@ -198,11 +175,6 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
               last_interview: lastInterview
             };
 
-            // const response = await axios.post(
-            //   "https://wishresearch.kr/person/persona_interview_module",
-            //   data,
-            //   axiosConfig
-            // );
             // 페르소나 인터뷰 수행(단건) API  수정 예정
             let response = await InterviewXPersonaBusinessInterviewModuleRequest(data, isLoggedIn);
 
@@ -269,11 +241,6 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
                     theory_type: selectedInterviewPurpose
                   };
 
-                  // const responseReport = await axios.post(
-                  //   "https://wishresearch.kr/person/interview_reports",
-                  //   finalData1,
-                  //   axiosConfig
-                  // );
                   // 인터뷰 결과 보고서 요청 API  수정 예정
                   const response = await InterviewXInterviewReportRequest(data, isLoggedIn);
 
@@ -293,11 +260,6 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
                     theory_type: selectedInterviewPurpose
                   };
 
-                  // const responseReportAdditional = await axios.post(
-                  //   "https://wishresearch.kr/person/interview_report_additional",
-                  //   finalData2,
-                  //   axiosConfig
-                  // );
                   //인터뷰 결과 추가 보고서 요청 수정 예정
                   const responseReportAdditional = await InterviewXInterviewReportAdditionalRequest(data, isLoggedIn);
 
@@ -420,7 +382,6 @@ const ToastPopupWrap = ({ isActive, onClose }) => {
             : interviewStatus[index] === 'Complete' ? '완료' 
             : '준비 중'}
           </Status>
-          {/* <Number status={interviewStatus[index] || 'Pre'}>{index + 1}</Number> */}
           <QuestionText>Q{index + 1}. {item.question}</QuestionText>
         </QuestionWrap>
         {visibleAnswers[index] && (interviewStatus[index] === 'Ing' || interviewStatus[index] === 'Complete') && (
@@ -793,26 +754,26 @@ const QuestionWrap = styled.div`
   `}
 `;
 
-const Number = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: ${props => 
-    props.status === 'Ing' ? palette.primary 
-    : props.status === 'Complete' ? palette.green 
-    : palette.gray300};
-  border-radius: 2px;
-  border: 1px solid ${props => 
-    props.status === 'Ing' ? palette.primary 
-    : props.status === 'Complete' ? palette.green
-    : palette.gray300};
-  background: ${palette.chatGray};
-`;
+// const Number = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   flex-shrink: 0;
+//   width: 30px;
+//   height: 30px;
+//   font-size: 0.875rem;
+//   line-height: 1.5;
+//   color: ${props => 
+//     props.status === 'Ing' ? palette.primary 
+//     : props.status === 'Complete' ? palette.green 
+//     : palette.gray300};
+//   border-radius: 2px;
+//   border: 1px solid ${props => 
+//     props.status === 'Ing' ? palette.primary 
+//     : props.status === 'Complete' ? palette.green
+//     : palette.gray300};
+//   background: ${palette.chatGray};
+// `;
 
 const QuestionText = styled.div`
   font-size: 0.875rem;

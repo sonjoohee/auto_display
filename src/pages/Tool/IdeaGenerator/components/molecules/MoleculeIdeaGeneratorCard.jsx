@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../../assets/styles/Palette";
 import { Button } from "../../../../../assets/styles/ButtonStyle";
@@ -17,30 +17,6 @@ import {
   Body1,
 } from "../../../../../assets/styles/Typography";
 
-import { useAtom } from "jotai";
-import {
-    CUSTOMER_VALUE_ANALYZER_INFO,
-    CUSTOMER_VALUE_ANALYZER_PERSONA,
-    CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP,
-    CUSTOMER_VALUE_ANALYZER_FACTOR,
-    CUSTOMER_VALUE_ANALYZER_CLUSTERING,
-    CUSTOMER_VALUE_ANALYZER_POSITIONING,
-    CUSTOMER_VALUE_ANALYZER_FINAL_REPORT,
-    TOOL_ID,
-} from "../../../../../pages/AtomStates";
-
-import {
-    createToolOnServer,
-    updateToolOnServer,
-    getToolOnServer,
-    InterviewXCustomerValueAnalyzerPersonaRequest,
-    getToolListOnServer,
-    InterviewXCustomerValueAnalyzerJourneyMapRequest,
-    InterviewXCustomerValueAnalyzerFactorRequest,
-    InterviewXCustomerValueAnalyzerClusteringRequest,
-    InterviewXCustomerValueAnalyzerPositioningRequest,
-    InterviewXCustomerValueAnalyzerFinalReportRequest,
-  } from "../../../../../utils/indexedDB";
 
 const MoleculeIdeaGeneratorCard = ({
   persona,
@@ -50,15 +26,7 @@ const MoleculeIdeaGeneratorCard = ({
   onShowDetail,
   disabled,
 }) => {
-  const [toolId, setToolId] = useAtom(TOOL_ID);
-  const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(CUSTOMER_VALUE_ANALYZER_INFO);
-  const [customerValueAnalyzerPersona, setCustomerValueAnalyzerPersona] = useAtom(CUSTOMER_VALUE_ANALYZER_PERSONA);
-  const [customerValueAnalyzerJourneyMap, setCustomerValueAnalyzerJourneyMap] = useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
-  const [customerValueAnalyzerFactor, setCustomerValueAnalyzerFactor] = useAtom(CUSTOMER_VALUE_ANALYZER_FACTOR);
-  const [customerValueAnalyzerClustering, setCustomerValueAnalyzerClustering] = useAtom(CUSTOMER_VALUE_ANALYZER_CLUSTERING);
-  const [customerValueAnalyzerPositioning, setCustomerValueAnalyzerPositioning] = useAtom(CUSTOMER_VALUE_ANALYZER_POSITIONING);
-  const [customerValueAnalyzerFinalReport, setCustomerValueAnalyzerFinalReport] = useAtom(CUSTOMER_VALUE_ANALYZER_FINAL_REPORT);
-
+  
   return (
     <>
         <ListBoxItem

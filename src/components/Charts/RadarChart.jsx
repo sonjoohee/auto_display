@@ -70,10 +70,10 @@ const RadarChart = ({ data, width = 500, height = 500 }) => {
         };
       });
       
-      // 오각형 경로 생성
-      const lineGenerator = d3.lineRadial()
-        .radius(() => levelRadius)
-        .angle((_, i) => i * angleSlice);
+      // // 오각형 경로 생성
+      // const lineGenerator = d3.lineRadial()
+      //   .radius(() => levelRadius)
+      //   .angle((_, i) => i * angleSlice);
 
       // 오각형 그리기
       svg.append('path')
@@ -93,9 +93,9 @@ const RadarChart = ({ data, width = 500, height = 500 }) => {
     }
 
     // 데이터 포인트 생성
-    const dataPoints = features.map(feature => ({
-      value: data[feature] || 0
-    }));
+    // const dataPoints = features.map(feature => ({
+    //   value: data[feature] || 0
+    // }));
 
     // 데이터 경로 생성 및 그리기
     const points = features.map((feature, i) => {

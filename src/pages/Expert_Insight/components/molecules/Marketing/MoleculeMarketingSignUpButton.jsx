@@ -3,14 +3,7 @@ import styled, { css, ThemeProvider } from "styled-components";
 import theme from "../../../../../assets/styles/Theme";
 import { useAtom } from "jotai";
 import {
-  IS_LOADING,
   CONVERSATION,
-  MARKETING_BM_BUTTON_STATE,
-  TITLE_OF_BUSINESS_INFORMATION,
-  MARKETING_CUSTOMER_BUTTON_STATE,
-  MARKETING_SELECTED_CUSTOMER,
-  MARKETING_FINAL_CUSTOMER,
-  MARKETING_FINAL_REPORT_BUTTON_STATE,
   ERROR_STATUS,
   SIGN_UP_NAME,
   EMAIL,
@@ -30,28 +23,18 @@ import { palette } from "../../../../../assets/styles/Palette";
 import images from "../../../../../assets/styles/Images";
 
 const MoleculeMarketingSignUpButton = () => {
+
   const navigate = useNavigate();
   const { saveConversation } = useSaveConversation();
-  const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
+
   const [conversation, setConversation] = useAtom(CONVERSATION);
-  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
-  const [marketingCustomerButtonState, setMarketingCustomerButtonState] =
-    useAtom(MARKETING_CUSTOMER_BUTTON_STATE);
-  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(
-    MARKETING_SELECTED_CUSTOMER
-  );
-  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(
-    MARKETING_FINAL_CUSTOMER
-  );
-  const [marketingFinalReportButtonState, setMarketingFinalReportButtonState] =
-    useAtom(MARKETING_FINAL_REPORT_BUTTON_STATE);
-  const [errorStatus, setErrorStatus] = useAtom(ERROR_STATUS);
-  const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
-  const [email, setEmail] = useAtom(EMAIL);
-  const [signupEmail, setSignupEmail] = useAtom(SIGN_UP_EMAIL);
-  const [password, setPassword] = useState("");
-  const [signupPassword, setSignupPassword] = useAtom(SIGN_UP_PASSWORD);
-  const [confirmPassword, setConfirmPassword] = useAtom(CONFIRM_PASSWORD);
+  const [, setErrorStatus] = useAtom(ERROR_STATUS);
+  const [, setSignUpName] = useAtom(SIGN_UP_NAME);
+  const [, setEmail] = useAtom(EMAIL);
+  const [, setSignupEmail] = useAtom(SIGN_UP_EMAIL);
+  const [, setPassword] = useState("");
+  const [, setSignupPassword] = useAtom(SIGN_UP_PASSWORD);
+  const [, setConfirmPassword] = useAtom(CONFIRM_PASSWORD);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
 
   const [isSignPopupOpen, setIsSignPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN);

@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
-import axios from "axios";
 import { useAtom } from "jotai";
 import {
   IS_LOADING,
@@ -28,27 +27,27 @@ import { InterviewXPriceScrapReportRequest, InterviewXPriceAnalysisReportRequest
 import Loader from "../atoms/AtomLoader";
 
 const OrganismPriceReport = () => {
-  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+  const [, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [priceProduct, ] = useAtom(PRICE_PRODUCT);
   const { saveConversation } = useSaveConversation();
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [
     mainFeaturesOfBusinessInformation,
-    setMainFeaturesOfBusinessInformation,
+    ,
   ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
   const [
     mainCharacteristicOfBusinessInformation,
-    setMainCharacteristicOfBusinessInformation,
+    ,
   ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
   const [
     businessInformationTargetCustomer,
-    setBusinessInformationTargetCustomer,
+    ,
   ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
 
-  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [, setIsLoading] = useAtom(IS_LOADING);
 
   const [isLoadingPrice, setIsLoadingPrice] = useState(false);
   const [priceStartButtonState, setPriceStartButtonState] = useAtom(
@@ -58,16 +57,10 @@ const OrganismPriceReport = () => {
   const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
 
-  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
-  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+  const [projectTotalInfo, ] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, ] = useAtom(PROJECT_CREATE_INFO);
 
-  const axiosConfig = {
-    timeout: 100000, // 100초
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
-  };
+ 
 
   const [isMoreView, setIsMoreView] = useState(false);
   const onClickImageMoreViewButton = () => {
@@ -77,10 +70,10 @@ const OrganismPriceReport = () => {
   const sliderRef = useRef(null);
 
   const [productPrices, setProductPrices] = useState([]);
-  const [bins, setBins] = useState([]);
+  const [, setBins] = useState([]);
 
   const [range, setRange] = useState([0, 0]);
-  const [width, setWidth] = useState(500);
+  const [width, ] = useState(500);
 
   useEffect(() => {
     const fetchPriceReport = async () => {

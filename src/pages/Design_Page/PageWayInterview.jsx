@@ -3,8 +3,6 @@ import styled from "styled-components";
 
 import { palette } from "../../assets/styles/Palette";
 import images from "../../assets/styles/Images";
-import { Button } from "../../assets/styles/ButtonStyle";
-import { CustomTextarea } from "../../assets/styles/InputStyle";
 import PopupWrap from "../../assets/styles/Popup";
 
 import { 
@@ -16,13 +14,9 @@ import {
   Title,
   CardWrap,
   CustomizePersona,
-  AccordionSection,
-  // AccordionHeader,  // 제거
-  // AccordionIcon,    // 제거
-  // AccordionContent, // 제거
 } from "../../assets/styles/BusinessAnalysisStyle";
 
-import OrganismLeftSideBar from "../Expert_Insight/components/organisms/OrganismLeftSideBar";
+
 import Header from "./IncHeader";
 import PersonaCard from "./PersonaCard";
 import AnalysisInfo from "./PageAnalysisInfo";
@@ -33,12 +27,8 @@ import IncNavigation from "./IncNavigation";
 const PageWayInterview = () => {
   const [selectedType, setSelectedType] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [formState, setFormState] = useState({
-    purpose: '', // 목적 텍스트에리어
-    personaCount: '', // 페르소나 수 라디오
-  });
-  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
-  const [showCustomModal, setShowCustomModal] = useState(false);
+
+  const [, setShowCustomModal] = useState(false);
 
   const handleTypeSelect = (type) => {
     if (type === 'single') return;
@@ -47,17 +37,6 @@ const PageWayInterview = () => {
 
   const handleEditClick = () => {
     setShowPopup(true);
-  };
-
-  const handleInputChange = (field, value) => {
-    setFormState(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const isFormValid = () => {
-    return formState.purpose.trim() !== '' && formState.personaCount !== '';
   };
 
   // 인터뷰 목적 데이터 정의
@@ -94,9 +73,7 @@ const PageWayInterview = () => {
     }
   ];
 
-  const handlePopupClose = () => {
-    setShowPopup(false);
-  };
+ 
 
   const handleConfirm = () => {
     setShowPopup(false);

@@ -3,16 +3,12 @@ import styled, { css } from "styled-components";
 import { Document, Packer, Paragraph, TextRun } from "docx";
 import { saveAs } from "file-saver";
 import { palette } from "../../../../assets/styles/Palette";
-import axios from "axios";
 import { useAtom } from "jotai";
 import {
   IS_LOADING,
   CONVERSATION,
   SELECTED_EXPERT_INDEX,
   TITLE_OF_BUSINESS_INFORMATION,
-  MAIN_FEATURES_OF_BUSINESS_INFORMATION,
-  MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION,
-  BUSINESS_INFORMATION_TARGET_CUSTOMER,
   BUTTON_STATE,
   BM_BM_AUTO_REPORT_DATA,
   BM_BM_CUSTOM_REPORT_BUTTON_STATE,
@@ -23,47 +19,31 @@ import {
   PROJECT_TOTAL_INFO,
   PROJECT_CREATE_INFO,
 } from "../../../AtomStates";
-
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
-
 import Loader from "../atoms/AtomLoader";
-
 import images from "../../../../assets/styles/Images";
-import MoleculeReportController from "../molecules/MoleculeReportController";
 import {InterviewXBmBmCustomReportRequest } from "../../../../utils/indexedDB";
+
 const OrganismBmBmCustomReport = () => {
+
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
+  const [, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const { saveConversation } = useSaveConversation();
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [selectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
-  const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-  const [
-    mainFeaturesOfBusinessInformation,
-    setMainFeaturesOfBusinessInformation,
-  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [
-    mainCharacteristicOfBusinessInformation,
-    setMainCharacteristicOfBusinessInformation,
-  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [
-    businessInformationTargetCustomer,
-    setBusinessInformationTargetCustomer,
-  ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
-  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+  const [] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
+  const [, setIsLoading] = useAtom(IS_LOADING);
   const [bmBmCustomButtonState, setBmBmCustomButtonState] = useAtom(BM_BM_CUSTOM_REPORT_BUTTON_STATE);
-  const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
-  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
+  const [bmBmAutoReportData, ] = useAtom(BM_BM_AUTO_REPORT_DATA);
   const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
-  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
+  const [bmSelectedProblemOptions, ] = useAtom(BM_SELECTED_PROBLEM_OPTIONS); // 문제 선택 아톰
+  const [projectTotalInfo, ] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo, ] = useAtom(PROJECT_CREATE_INFO);
 
-  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
-  const [projectCreateInfo, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
-
-  
-  const [isModalOpen, setIsModalOpen] = useState({});
-  const [selectedFormat, setSelectedFormat] = useState("Word");
+    const [isLoadingIdeaPriority, setIsLoadingIdeaPriority] = useState(false);
+  const [isModalOpen, ] = useState({});
+  const [selectedFormat, ] = useState("Word");
   const [selectedLanguage, setSelectedLanguage] = useState("한글");
   const [isPopupOpenDownload, setIsPopupOpenDownload] = useState(false);
   const popupRef = useRef(null);
@@ -75,13 +55,6 @@ const OrganismBmBmCustomReport = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const axiosConfig = {
-    timeout: 100000, // 100초
-    headers: {
-      "Content-Type": "application/json",
-    },
-    withCredentials: true, // 쿠키 포함 요청 (필요한 경우)
-  };
   const togglePopupDownload = () => {
     setIsPopupOpenDownload(!isPopupOpenDownload);
   };
@@ -121,11 +94,11 @@ const OrganismBmBmCustomReport = () => {
     try {
       // Markdown 스타일 제거 (정규식 사용)
       const cleanedContent = bmBmCustomReportData
-        .replace(/##/g, "") // 제목 표시 '##' 제거
-        .replace(/\*\*/g, "") // 굵은 글씨 '**' 제거
-        .replace(/\*/g, "") // 이탤릭체 '*' 제거
-        .replace(/-\s/g, "• ") // 리스트 '-'를 '•'로 변환
-        .replace(/\n/g, "<br/>"); // 줄바꿈을 <br>로 변환
+        .replace(/##/g, "") 
+        .replace(/\*\*/g, "") 
+        .replace(/\*/g, "") 
+        .replace(/-\s/g, "• ")  
+        .replace(/\n/g, "<br/>"); 
 
       // 저장 후 DOCX 생성 함수 호출
       generateDocx(cleanedContent, fileName);
@@ -277,19 +250,7 @@ const OrganismBmBmCustomReport = () => {
         setIsLoadingIdeaPriority(false);
 
         const updatedConversation = [...conversation];
-        // updatedConversation.push(
-        //   {
-        //     type: "system",
-        //     message: `${bmSelectedProblemOptions.problemOptions}을 기반으로 비즈니스 모델 캔버스를 세분화하였습니다.`,
-        //     expertIndex: selectedExpertIndex,
-        //   },
-        //   {
-        //     type: "system",
-        //     message: "추가적으로 세분화 작업을 진행 하실 수 있습니다.",
-        //     expertIndex: -1,
-        //   },
-        //   { type: `bmBmAdsContinueButton`}
-        // );
+     
         updatedConversation.push(
           {
             type: "system",

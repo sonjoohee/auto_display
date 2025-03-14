@@ -3,7 +3,6 @@ import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette.jsx";
 import images from "../../../../assets/styles/Images.jsx";
 import { Button } from "../../../../assets/styles/ButtonStyle.jsx";
-import PopupWrap from "../../../../assets/styles/Popup.jsx";
 import {
   H4,
   Body1,
@@ -28,41 +27,19 @@ import {
   TabButtonType2,
   TabContent,
 } from "../../../../assets/styles/BusinessAnalysisStyle.jsx";
-import axios from "axios";
-import { updateProjectOnServer } from "../../../../utils/indexedDB.js";
-import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB.js";
-import { createRequestPersonaOnServer } from "../../../../utils/indexedDB.js";
-import { UserCreditInfo } from "../../../../utils/indexedDB.js";
-import { useAtom } from "jotai";
-import {
-  PROJECT_ID,
-  IS_LOGGED_IN,
-  BUSINESS_ANALYSIS,
-  USER_CREDITS,
-} from "../../../AtomStates.jsx";
-import { UserCreditCheck, UserCreditUse } from "../../../../utils/indexedDB.js";
+
 const MoleculeCustomPersonaCard = ({
   title,
   keywords = [],
-  isRequest = true,
   checked = null,
   viewType = "list",
   personaData = {},
 }) => {
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
 
   const [isChecked, setIsChecked] = useState(false);
-  const [requestStatus, setRequestStatus] = useState(isRequest);
-  const [showRequestPopup, setShowRequestPopup] = useState(false);
-
-  const [selectedPersonaForPopup, setSelectedPersonaForPopup] = useState(null);
   const [activeTab1, setActiveTab1] = useState("lifestyle");
   const [showPopup, setShowPopup] = useState(false);
-  const [showCreditPopup, setShowCreditPopup] = useState(false);
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
 
   const [localPersonaData, setLocalPersonaData] = useState(personaData);
 
@@ -74,10 +51,7 @@ const MoleculeCustomPersonaCard = ({
     setLocalPersonaData(personaData);
   }, [personaData]);
 
-  // const handleCloseRequestPopup = () => {
-  //   setShowRequestPopup(false);
-  //   setRequestStatus(false);
-  // };
+
 
   const handleDetailClick = () => {
     setShowPopup(true);

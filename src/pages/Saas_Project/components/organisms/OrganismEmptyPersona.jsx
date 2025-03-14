@@ -1,4 +1,4 @@
-//직압관리/프로젝트 리스트
+//페르소나가 없을때
 import React, { useState } from "react";
 import styled from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
@@ -15,7 +15,6 @@ import {
   InterviewXPersonaUniqueUserRequest,
   InterviewXPersonaKeyStakeholderRequest,
 } from "../../../../utils/indexedDB";
-
 import {
   PROJECT_PERSONA_LIST,
   IS_LOGGED_IN,
@@ -25,12 +24,13 @@ import {
 
 const OrganismEmptyPersona = () => {
 
-  const [isLoading, setIsLoading] = useState(false);
-
   const [, setProjectPersonaList] = useAtom(PROJECT_PERSONA_LIST);
   const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
   const [project, ] = useAtom(PROJECT_SAAS);
   const [, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleCreatePersona = async () => {
     setIsLoading(true);
 

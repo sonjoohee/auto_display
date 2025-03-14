@@ -4,7 +4,7 @@ import { palette } from "../../../assets/styles/Palette";
 
 const AtomPersonaLoader = ({ message = "비즈니스를 분석하고 있어요" }) => {
   const [seconds, setSeconds] = useState(0);
-  const [dots, setDots] = useState("."); // 점(.) 상태 추가
+  const [, setDots] = useState("."); // 점(.) 상태 추가
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -49,12 +49,12 @@ const LoaderWrap = styled.div`
   }
 `;
 
-const TimeText = styled.span`
-  display: block;
-  margin-top: 8px;
-  font-size: 14px;
-  color: ${palette.gray500};
-`;
+// const TimeText = styled.span`
+//   display: block;
+//   margin-top: 8px;
+//   font-size: 14px;
+//   color: ${palette.gray500};
+// `;
 
 const LoaderContainer = styled.div`
   position: relative;

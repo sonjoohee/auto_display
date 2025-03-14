@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { palette } from "../../../../assets/styles/Palette";
-import images from "../../../../assets/styles/Images";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import PopupWrap from "../../../../assets/styles/Popup";
 import {
@@ -49,14 +48,9 @@ import {
 const MoleculePersonaCard = ({
   title,
   keywords = [],
-  gender,
-  age,
-  job,
   isBasic = false,
   isCustom = false,
-  isComplete = false,
   isRequest = true,
-  hideCheckCircle = false,
   TitleFlex = false,
   NoLine = false,
   onSelect,
@@ -68,53 +62,31 @@ const MoleculePersonaCard = ({
   personaData = {},
   isExist = false,
 }) => {
-  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [, setUserCredits] = useAtom(USER_CREDITS);
+  const [projectId, ] = useAtom(PROJECT_ID);
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [businessAnalysis, ] = useAtom(BUSINESS_ANALYSIS);
   const [creditRequestBusinessPersona] = useAtom(
     CREDIT_REQUEST_BUSINESS_PERSONA
   );
-  const [eventState] = useAtom(EVENT_STATE);
-  const [eventTitle] = useAtom(EVENT_TITLE);
-  const [trialState] = useAtom(TRIAL_STATE);
 
   const [isChecked, setIsChecked] = useState(false);
-  const [requestStatus, setRequestStatus] = useState(isRequest);
+  const [, setRequestStatus] = useState(isRequest);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
 
-  const [selectedPersonaForPopup, setSelectedPersonaForPopup] = useState(null);
+  const [, setSelectedPersonaForPopup] = useState(null);
   const [activeTab1, setActiveTab1] = useState("lifestyle");
   const [showPopup, setShowPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
 
   useEffect(() => {
     setIsChecked(checked);
   }, [checked]);
 
-  const handleCheck = () => {
-    if (isCustom) {
-      onClick && onClick(); // 팝업 표시를 위한 콜백 실행
-      return;
-    }
-    onSelect && onSelect();
 
-    // 이미 선택된 상태면 항상 해제 가능
-    if (isChecked && checked === null) {
-      setIsChecked(false);
-      onSelect(false);
-    }
-    // 새로 선택하는 경우, 최대 선택 개수 확인
-    else if (currentSelection < 5 && checked === null) {
-      setIsChecked(true);
-      onSelect(true);
-    }
-  };
 
-  const handleRequestClick = () => {
-    setShowRequestPopup(true);
-  };
+
 
   const handleRequestPersona = async () => {
     setSelectedPersonaForPopup(null);
@@ -172,10 +144,7 @@ const MoleculePersonaCard = ({
     }
   };
 
-  // const handleCloseRequestPopup = () => {
-  //   setShowRequestPopup(false);
-  //   setRequestStatus(false);
-  // };
+
 
   const handleDetailClick = () => {
     setShowPopup(true);

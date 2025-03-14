@@ -72,6 +72,34 @@ import {
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 import OrganismPersonaList from "../../../public/organisms/OrganismPersonaList";
 
+  // formatMermaidData 함수를 여기로 이동
+  const formatMermaidData = (mermaidString) => {
+    if (!mermaidString) return '';
+    
+    const lines = mermaidString.trim().split('\n');
+    let formattedLines = [];
+    
+    formattedLines.push('journey');
+    
+    lines.forEach(line => {
+      const trimmedLine = line.trim();
+      if (!trimmedLine || trimmedLine.startsWith('journey')) return;
+      
+      if (trimmedLine.startsWith('section')) {
+        formattedLines.push(`    ${trimmedLine}`);
+      }
+      else if (trimmedLine.startsWith('title')) {
+        formattedLines.push(`    ${trimmedLine}`);
+      }
+      else {
+        formattedLines.push(`        ${trimmedLine}`);
+      }
+    });
+    
+    return formattedLines.join('\n');
+  };
+
+
 const PageCustomerValueAnalyzer = () => {
 
   const navigate = useNavigate();
@@ -260,9 +288,26 @@ const PageCustomerValueAnalyzer = () => {
         }
         // 고객 여정 맵 설정 (Step 3)
         if (Array.isArray(customerValueAnalyzerJourneyMap)) {
-          setCustomerValueAnalyzerJourneyMap(customerValueAnalyzerJourneyMap);
+          console.log('원본 데이터:', customerValueAnalyzerJourneyMap);
+          
+          const formattedJourneyMaps = customerValueAnalyzerJourneyMap.map(journeyMap => {
+            if (journeyMap.mermaid) {
+              console.log('포맷 전 mermaid:', journeyMap.mermaid);
+              const formatted = formatMermaidData(journeyMap.mermaid);
+              console.log('포맷 후 mermaid:', formatted);
+              
+              return {
+                ...journeyMap,
+                mermaid: formatted
+              };
+            }
+            return journeyMap;
+          });
+          
+          console.log('최종 포맷된 데이터:', formattedJourneyMaps);
+          setCustomerValueAnalyzerJourneyMap(formattedJourneyMaps);
         }
-
+        console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
         if (
           Array.isArray(customerValueAnalyzerFactor) &&
           customerValueAnalyzerFactor.length > 0
@@ -406,10 +451,11 @@ const PageCustomerValueAnalyzer = () => {
               const currentJourneyMaps = Array.isArray(prev) ? prev : [];
               // 새로운 journey map이 존재하는 경우에만 추가
               if (response?.response?.customer_value_journey_map) {
-                return [
-                  ...currentJourneyMaps,
-                  response.response.customer_value_journey_map,
-                ];
+                const journeyMap = response.response.customer_value_journey_map;
+                if (journeyMap.mermaid) {
+                  journeyMap.mermaid = formatMermaidData(journeyMap.mermaid);
+                }
+                return [...currentJourneyMaps, journeyMap];
               }
               return currentJourneyMaps;
             });
@@ -422,17 +468,27 @@ const PageCustomerValueAnalyzer = () => {
               }));
             }
 
-            // 모든 시나리오를 한번에 저장
-            await updateToolOnServer(
-              toolId,
-              {
-                projectId: project._id,
-                customerValueJourneyMap: journeyMapData,
-              },
-              isLoggedIn
-            );
+            // // 모든 시나리오를 한번에 저장
+            // await updateToolOnServer(
+            //   toolId,
+            //   {
+            //     projectId: project._id,
+            //     customerValueJourneyMap: journeyMapData,
+            //   },
+            //   isLoggedIn
+            // );
           } catch (error) {}
         }
+
+         // 모든 시나리오를 한번에 저장
+         await updateToolOnServer(
+          toolId,
+          {
+            projectId: project._id,
+            customerValueJourneyMap: journeyMapData,
+          },
+          isLoggedIn
+        );
         setApiCallCompleted(true); // API 호출 완료 상태로 설정
       };
       processSequentially();
@@ -1157,6 +1213,7 @@ const PageCustomerValueAnalyzer = () => {
     };
   }, [navigate]);
 
+
   return (
     <>
       <ContentsWrap>
@@ -1515,6 +1572,7 @@ const PageCustomerValueAnalyzer = () => {
                 <div className="content" style={{ marginBottom: "320px" }}>
                   <CardGroupWrap column>
                     {customerValueAnalyzerInfo.targetList.map(
+                
                       (target, index) => {
                         return (
                           <MoleculeCustomerValueCard
@@ -1628,7 +1686,7 @@ const PageCustomerValueAnalyzer = () => {
                       Primary
                       Round
                       Fill
-                      disabled={
+                      disabled={toolStep >= 3 ||
                         !Array.isArray(customerValueAnalyzerFactor) ||
                         customerValueAnalyzerFactor.length === 0 ||
                         customerValueAnalyzerFactor.length !==

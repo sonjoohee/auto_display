@@ -5,9 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 import theme from "../../../../assets/styles/Theme";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import AtomInput from "../atoms/AtomInput";
-import AtomButton from "../atoms/AtomButton";
-import { FormBox, CustomInput } from "../../../../assets/styles/InputStyle";
+import { CustomInput } from "../../../../assets/styles/InputStyle";
 import { isValidEmail, isValidPassword } from "../atoms/AtomValidation";
 import axios from "axios";
 import {
@@ -20,21 +18,18 @@ import {
   ERROR_STATUS,
   SUCCESS_STATUS,
   CONVERSATION_ID,
-} from "../../../AtomStates";
-import MoleculeSignupPopup from "./MoleculeSignupPopup"; // 팝업 컴포넌트 임포트
-
-import {
   IS_LOGIN_POPUP_OPEN,
   IS_SIGNUP_POPUP_OPEN,
   IS_MARKETING,
-} from "../../../AtomStates"; // 팝업 상태 atom 임포트
+} from "../../../AtomStates";
+import MoleculeSignupPopup from "./MoleculeSignupPopup"; 
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import { Body3, Helptext } from "../../../../assets/styles/Typography";
-import MoleculeLoginPopup from "./MoleculeLoginPopup";
 
 const MoleculeSignupForm = () => {
+  
   const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
   const [signUpEmail, setSignUpEmail] = useAtom(SIGN_UP_EMAIL);
   const [signUpPassword, setSignUpPassword] = useAtom(SIGN_UP_PASSWORD);
@@ -46,18 +41,18 @@ const MoleculeSignupForm = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSignupSuccessful, setSignupSuccessful] = useState(false); // 회원가입 성공 상태
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
-  const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
-  const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
+  const [isSignupSuccessful, setSignupSuccessful] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
+  const [isMarketing, ] = useAtom(IS_MARKETING);
+  const [conversationId, ] = useAtom(CONVERSATION_ID);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneError, setPhoneError] = useState("");
 
   const navigate = useNavigate();
 
   // 팝업 상태 atom의 setter 가져오기
-  const [isLoginPopupOpen, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
-  const [isSignupPopupOpen, setIsSignupPopupOpen] =
+  const [, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
+  const [, setIsSignupPopupOpen] =
     useAtom(IS_SIGNUP_POPUP_OPEN);
 
   const [isEmailValid, setIsEmailValid] = useState(false); // 이메일 유효성 상태 추가
@@ -295,14 +290,6 @@ const MoleculeSignupForm = () => {
                   기관은 1:1 문의를 통해 가입 문의해 주세요.
                 </Body3>
               </SignInfo>
-
-              {/* <StyledAtomInput
-                id="email"
-                type="email"
-                value={signUpEmail}
-                onChange={(e) => setSignUpEmail(e.target.value)}
-                placeholder="이메일 주소를 입력해주세요"
-              /> */}
             </div>
 
             <div>
@@ -320,21 +307,14 @@ const MoleculeSignupForm = () => {
                     if (!isValidPassword(e.target.value)) {
                       setEmailError(
                         "비밀번호는 8-16자 길이여야 하며, 문자, 숫자, 특수문자 중 최소 두 가지를 포함해야 합니다."
-                      ); // Use EmailError for password validation
+                      ); 
                     } else {
-                      setEmailError(""); // Clear error if valid
+                      setEmailError(""); 
                     }
                   }}
                   placeholder="비밀번호를 입력해주세요"
                 />
 
-                {/* <StyledAtomInput
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  value={signUpPassword}
-                  onChange={(e) => setSignUpPassword(e.target.value)}
-                  placeholder="비밀번호를 입력해주세요"
-                /> */}
                 <TogglePasswordButton onClick={togglePasswordVisibility}>
                   {showPassword ? <FaEye /> : <FaEyeSlash />}
                 </TogglePasswordButton>
@@ -347,23 +327,16 @@ const MoleculeSignupForm = () => {
                   value={confirmPassword}
                   onChange={(e) => {
                     setConfirmPassword(e.target.value);
-                    // 비밀번호 일치 여부 확인
+           
                     if (e.target.value !== signUpPassword) {
-                      setEmailError("비밀번호가 일치하지 않습니다."); // 에러 메시지 설정
+                      setEmailError("비밀번호가 일치하지 않습니다."); 
                     } else {
-                      setEmailError(""); // 에러 메시지 초기화
+                      setEmailError(""); 
                     }
                   }}
                   placeholder="비밀번호를 다시 입력해 주세요"
                 />
 
-                {/* <StyledAtomInput
-                  type={showConfirmPassword ? "text" : "password"}
-                  id="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="비밀번호 다시 입력해주세요"
-                /> */}
                 <TogglePasswordButton onClick={toggleConfirmPasswordVisibility}>
                   {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                 </TogglePasswordButton>
@@ -376,7 +349,7 @@ const MoleculeSignupForm = () => {
                   {EmailError}
                 </ErrorMessage>
               )}{" "}
-              {/* Display EmailError */}
+      
             </div>
 
             <div>
@@ -391,14 +364,6 @@ const MoleculeSignupForm = () => {
                 onChange={(e) => setSignUpName(e.target.value)}
                 placeholder="이름을 입력해주세요"
               />
-
-              {/* <StyledAtomInput
-                id="signUpName"
-                type="text"
-                value={signUpName}
-                onChange={(e) => setSignUpName(e.target.value)}
-                placeholder="이름을 입력해주세요"
-              /> */}
             </div>
 
             <div>
@@ -422,7 +387,6 @@ const MoleculeSignupForm = () => {
             </div>
           </ScrollWrap>
 
-          {/* {errorStatus && <ErrorMessage style={{ color: 'red' }}>{errorStatus}</ErrorMessage>} */}
 
           <TermsAndConditions>
             <input
@@ -461,10 +425,6 @@ const MoleculeSignupForm = () => {
 
           <JoinWrap>
             <p>이미 가입하셨나요?</p>
-            {/* <Link to="#" onClick={() => {
-              setIsSignupPopupOpen(false);
-              setIsLoginPopupOpen(true);
-            }}> */}
             <Link to="/login">로그인하기</Link>
           </JoinWrap>
         </SignupFormContainer>
@@ -478,7 +438,7 @@ const MoleculeSignupForm = () => {
 
 export default MoleculeSignupForm;
 
-// CSS-in-JS 스타일링
+
 const SignupFormContainer = styled.div`
   > div {
     position: relative;
@@ -561,15 +521,15 @@ const InputWrap = styled.div`
   position: relative;
 `;
 
-const StyledAtomInput = styled.input`
-  width: 100%;
-  font-family: "Pretendard", "Poppins";
-  font-size: 0.75rem;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid ${palette.lineGray};
-  box-sizing: border-box;
-`;
+// const StyledAtomInput = styled.input`
+//   width: 100%;
+//   font-family: "Pretendard", "Poppins";
+//   font-size: 0.75rem;
+//   padding: 12px 16px;
+//   border-radius: 8px;
+//   border: 1px solid ${palette.lineGray};
+//   box-sizing: border-box;
+// `;
 
 const TogglePasswordButton = styled.button`
   position: absolute;
