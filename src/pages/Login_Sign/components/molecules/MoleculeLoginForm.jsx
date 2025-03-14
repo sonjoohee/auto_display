@@ -8,7 +8,9 @@ import theme from "../../../../assets/styles/Theme";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { isValidEmail } from "../atoms/AtomValidation";
 import { UserCreditInfo } from "../../../../utils/indexedDB";
-import {  CustomInput } from "../../../../assets/styles/InputStyle";
+
+import { CustomInput } from "../../../../assets/styles/InputStyle";
+
 import images from "../../../../assets/styles/Images";
 import {
   EMAIL,
@@ -25,14 +27,13 @@ import {
   USER_MEMBERSHIP,
   IS_SIGNUP_POPUP_OPEN,
   USER_CREDITS,
-} from "../../../../pages/AtomStates"; 
+} from "../../../../pages/AtomStates";
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 
 import MoleculeResetPasswordPopup from "./MoleculeResetPasswordPopup";
 
 const MoleculeLoginForm = ({ onClosePopup }) => {
-
   const [, setUserCredits] = useAtom(USER_CREDITS);
   const [email, setEmail] = useAtom(EMAIL);
   const [, setUserMembership] = useAtom(USER_MEMBERSHIP);
@@ -42,10 +43,12 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
   const navigate = useNavigate();
   const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
+
   const [, setUserName] = useAtom(USER_NAME); 
   const [, setUserEmail] = useAtom(USER_EMAIL); 
   const [isMarketing, ] = useAtom(IS_MARKETING);
   const [conversationId, ] = useAtom(CONVERSATION_ID);
+
   const [showMobileWarning, setShowMobileWarning] = useState(false);
   const [, setAccessableExpert] = useAtom(ACCESSABLE_EXPERT);
   const [isSignPopupOpen, ] = useAtom(IS_SIGNUP_POPUP_OPEN); // 회원가입 팝업 상태 관리
@@ -97,8 +100,6 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
   //     return navigator.userAgent.match(toMatchItem);
   //   });
   // };
-
- 
 
   const handleExitCancel = () => {
     setIsExitPopupOpen(false);
@@ -296,9 +297,8 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="이메일을을 입력해주세요"
+                placeholder="이메일을 입력해주세요"
               />
-
             </div>
 
             <div>
@@ -315,7 +315,6 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
                 placeholder="비밀번호를 입력해주세요"
               />
 
-          
               <TogglePasswordButton onClick={togglePasswordVisibility}>
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </TogglePasswordButton>
@@ -336,9 +335,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
 
             <JoinWrap>
               <p>아직 회원이 아니신가요?</p>
-              <Link to="/Signin">
-                회원가입하기
-              </Link>
+              <Link to="/Signin">회원가입하기</Link>
             </JoinWrap>
           </LoginFormContainer>
         )}
@@ -377,7 +374,6 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
   );
 };
 export default MoleculeLoginForm;
-
 
 const LoginFormContainer = styled.div`
   width: 100%;
