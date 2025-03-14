@@ -296,7 +296,10 @@ const MoleculePersonaSelectCardSaas = ({
             );
           })}{" "}
       {activeTabState === "my_persona" &&
-        !filteredPersonaList.some((persona) => persona.favorite === true) && (
+        !filteredPersonaList.some(
+          (persona) =>
+            persona.favorite === true && persona.status === "complete"
+        ) && (
           <>
             <div style={{ height: "16px" }}></div>
             <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
