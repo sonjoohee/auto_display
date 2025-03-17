@@ -35,6 +35,7 @@ import {
   CREDIT_REQUEST_BUSINESS_PERSONA,
   PROJECT_SAAS,
   PERSONA_LIST_SAAS,
+  CREDIT_CREATE_PERSONA_DEFAULT,
 } from "../../../../pages/AtomStates";
 import PopupWrap from "../../../../assets/styles/Popup.jsx";
 
@@ -52,6 +53,8 @@ const OrganismPersonaCardList = ({
   const [creditRequestBusinessPersona] = useAtom(
     CREDIT_REQUEST_BUSINESS_PERSONA
   );
+  const [creditCreatePersonaDefault] = useAtom(CREDIT_CREATE_PERSONA_DEFAULT);
+  const creditPersonaCreate = creditCreatePersonaDefault;
   const [, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [, setProjectPersonaList] = useAtom(PROJECT_PERSONA_LIST);
   const [, setUserCredits] = useAtom(USER_CREDITS);
@@ -448,7 +451,7 @@ const OrganismPersonaCardList = ({
     // 크레딧 사용전 사용 확인
     const creditPayload = {
       // 기존 10 대신 additionalQuestionMount 사용
-      mount: 100,
+      mount: creditPersonaCreate,
     };
     const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
 
@@ -595,7 +598,9 @@ const OrganismPersonaCardList = ({
                 ) : (
                   <div className="more" onClick={handleCreditCheck}>
                     <Body3 color="gray500" align="center">
-                      + 더보기 (100 credit)
+
+                      + 더보기 ({creditPersonaCreate} credit)
+
                     </Body3>
                   </div>
                 )}
@@ -690,7 +695,7 @@ const OrganismPersonaCardList = ({
       {showCreatePersonaPopup && (
         <PopupWrap
           Check
-          title="페르소나 생성"
+          title="페르소나 더보기"
           closeText="취소"
           confirmText="시작하기"
           buttonType="Outline"
@@ -701,7 +706,9 @@ const OrganismPersonaCardList = ({
             <>
               해당 서비스 사용시 크레딧이 소진됩니다.
               <br />
-              100 크레딧
+
+              {creditPersonaCreate} 크레딧
+
             </>
           }
         />
