@@ -7,7 +7,7 @@ import { palette } from "../../../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
-import { Button } from "../../../../../assets/styles/ButtonStyle";
+import { Button , IconButton } from "../../../../../assets/styles/ButtonStyle";
 import {
   FormBox,
   CustomTextarea,
@@ -29,6 +29,8 @@ import {
   DropzoneStyles,
   OCEANRangeWrap,
   RangeSlider,
+  Title,
+  ListBoxGroup
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
   IS_LOGGED_IN,
@@ -103,7 +105,6 @@ const PageDesignAnalysis = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
-  const [, setTargetCustomer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [fileNames, setFileNames] = useState([]);
@@ -115,59 +116,21 @@ const PageDesignAnalysis = () => {
     showQuestions: false,
   });
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
+  const [isEditingBusiness, setIsEditingBusiness] = useState(false);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
-  // const handleToggle = (key) => {
-  //   setState((prevState) => ({ ...prevState, [key]: !prevState[key] }));
-  // };
   const project = projectSaas;
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // const calculateDropDirection = () => {
-  //   if (selectBoxRef.current) {
-  //     const rect = selectBoxRef.current.getBoundingClientRect();
-  //     const spaceBelow = window.innerHeight - rect.bottom;
-  //     const spaceAbove = rect.top;
-  //     const dropDownHeight = 200; // 예상되는 드롭다운 높이
-
-  //     setDropUp(spaceBelow < dropDownHeight && spaceAbove > spaceBelow);
-  //   }
-  // };
-
-  // const handleSelectBoxClick = () => {
-  //   if (toolStep >= 1) return;
-  //   calculateDropDirection();
-  //   setIsSelectBoxOpen(!isSelectBoxOpen);
-  // };
-
-  // const handlePurposeSelect = (purpose) => {
-  //   setSelectedPurpose(purpose);
-  //   handleContactInputChange("purpose", purpose);
-  //   setIsSelectBoxOpen(false);
-  // };
-
-  // const handleContactInputChange = (field, value) => {
-  //   setContactForm((prev) => ({
-  //     ...prev,
-  //     [field]: value,
-  //   }));
-  // };
-
-  // const handleSelectPersona = () => {
-  //   if (selectedPersonas.length > 0) {
-  //     setSelectedInterviewType("multiple");
-  //     setSelectedInterviewPurpose("product_experience_new");
-  //   }
-  // };
-
-  //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
+   
+    if (designAnalysisBusinessInfo.length === 0) {
       const projectAnalysis =
         (project?.projectAnalysis.business_analysis
           ? project?.projectAnalysis.business_analysis
@@ -180,30 +143,19 @@ const PageDesignAnalysis = () => {
           ? project?.projectAnalysis.file_analysis
           : "");
       const projectTitle = project?.projectTitle;
+
       if (project) {
         setBusinessDescriptionTitle(projectTitle);
         setBusinessDescription(projectAnalysis);
-        setTargetCustomer(project?.projectAnalysis.target_customer ?? "");
       }
+    }
+   
       if (toolLoading) {
-        const projectAnalysis =
-          (project?.projectAnalysis.business_analysis
-            ? project?.projectAnalysis.business_analysis
-            : "") +
-          (project?.projectAnalysis.business_analysis &&
-          project?.projectAnalysis.file_analysis
-            ? "\n"
-            : "") +
-          (project?.projectAnalysis.file_analysis
-            ? project?.projectAnalysis.file_analysis
-            : "");
+  
         const projectTitle = project?.projectTitle;
-
         // 비즈니스 정보 설정 (Step 1)
         if (project) {
           setBusinessDescriptionTitle(projectTitle);
-          setBusinessDescription(projectAnalysis);
-          setTargetCustomer(project?.projectAnalysis.target_customer ?? "");
         }
 
         // 활성 탭 설정 (기본값 1)
@@ -211,7 +163,7 @@ const PageDesignAnalysis = () => {
 
         // 비즈니스 정보 설정 (Step 1)
         if (designAnalysisBusinessInfo) {
-          // setBusinessDescription(designAnalysisBusinessInfo ?? "");
+          setBusinessDescription(designAnalysisBusinessInfo ?? "");
           setFileNames(designAnalysisFileNames);
         }
 
@@ -583,7 +535,31 @@ const PageDesignAnalysis = () => {
     }, 0);
   };
 
-  
+
+
+  const handleEditBusinessClick = () => {
+    setIsEditingBusiness(true);
+  };
+
+  const handleSaveBusinessClick = () => {
+    setIsEditingBusiness(false);
+  };
+
+  const handleUndoBusinessClick = () => {
+    const originalText = (project?.projectAnalysis.business_analysis
+      ? project?.projectAnalysis.business_analysis
+    : "") +
+  (project?.projectAnalysis.business_analysis &&
+  project?.projectAnalysis.file_analysis
+    ? "\n"
+    : "") +
+  (project?.projectAnalysis.file_analysis
+    ? project?.projectAnalysis.file_analysis
+    : "");
+
+
+    setBusinessDescription(originalText);
+  };
 
   useEffect(() => {
     // 새로고침 감지 함수
@@ -728,19 +704,46 @@ const PageDesignAnalysis = () => {
 
                     <div className="content">
                       <TabContent5Item required>
-                        <div className="title">
+                        <Title>
                           <Body1 color="gray700">비즈니스 설명</Body1>
-                        </div>
-                        <FormBox Large>
-                          <CustomTextarea
-                            disabled={toolStep >= 1}
-                            Edit
-                            rows={6}
-                            placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
-                            value={businessDescription}
-                            status="valid"
-                          />
-                        </FormBox>
+                          {!isEditingBusiness ? (
+                            <IconButton onClick={handleEditBusinessClick} disabled={toolStep >= 1}>
+                              <img src={images.PencilSquare} alt="" />
+                              <span>수정하기</span>
+                            </IconButton>
+                          ) : (
+                            <IconButton onClick={handleSaveBusinessClick}>
+                              <img src={images.FolderArrowDown} alt="" />
+                              <span>저장하기</span>
+                            </IconButton>
+                          )}
+                        </Title>
+                        
+                        {!isEditingBusiness ? (
+                          <ListBoxGroup>
+                            <Body2 color="gray800" align="left">
+                              {businessDescription}
+                            </Body2>
+                          </ListBoxGroup>
+                        ) : (
+                          <FormBox Large>
+                            <CustomTextarea
+                              Edit
+                              rows={6}
+                              placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
+                              value={businessDescription}
+                              onChange={(e) => setBusinessDescription(e.target.value)}
+                              status="valid"
+                              disabled={toolStep >= 1}
+                            />
+                            <EditButtonGroup>
+                              <IconButton onClick={handleUndoBusinessClick}>
+                                <img src={images.ClockCounterclockwise} alt="" />
+                                <span>이전으로 되돌리기</span>
+                              </IconButton>
+                            </EditButtonGroup>
+                          </FormBox>
+                        )}
                       </TabContent5Item>
                       <TabContent5Item required>
                         <div className="title">
@@ -749,8 +752,6 @@ const PageDesignAnalysis = () => {
                         </div>
                         <Dropzone
                           onChangeStatus={handleChangeStatus}
-                          // onSubmit={handleSubmit}
-                          // getUploadParams={getUploadParams}
                           maxFiles={1}
                           multiple={true}
                           canRemove={true}
@@ -1235,41 +1236,11 @@ const ViewInfo = styled.div`
   }
 `;
 
-const ViewInfoNodata = styled(ViewInfo)`
-  justify-content: center;
-  padding: 24px 0 16px;
-
-  > div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-
-    > div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      line-height: 1.5;
-      color: ${palette.gray500};
-
-      span {
-        font-size: 0.875rem;
-        font-weight: 300;
-        line-height: 1.5;
-        color: ${palette.primary};
-        padding: 6px 10px;
-        border-radius: 6px;
-        border: 1px solid ${palette.primary};
-        background-color: #e9f1ff;
-        cursor: pointer;
-      }
-    }
-  }
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 12px;
 `;
 
-const PageWrap = styled.div`
-  width: 100%;
+const EditButtonGroup = styled(ButtonGroup)`
+  justify-content: end;
 `;

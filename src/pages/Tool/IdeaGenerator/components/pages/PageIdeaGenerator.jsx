@@ -10,6 +10,7 @@ import MoleculeIdeaGeneratorCard2 from "../molecules/MoleculeIdeaGeneratorCard2"
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import {
   Button,
+  IconButton 
 } from "../../../../../assets/styles/ButtonStyle";
 import {
   FormBox,
@@ -40,6 +41,7 @@ import {
   ListBoxGroup,
   PersonaGroup,
   Persona,
+  Title,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../../assets/styles/Images";
 import personaImages from "../../../../../assets/styles/PersonaImages";
@@ -69,6 +71,7 @@ import {
   IDEA_GENERATOR_SELECTED_PERSONA,
   PERSONA_LIST_SAAS,
   PROJECT_SAAS,
+  IDEA_GENERATOR_EDITING_BUSINESS_TEXT,
 } from "../../../../AtomStates";
 import {
   createToolOnServer,
@@ -102,6 +105,9 @@ const PageIdeaGenerator = () => {
   const [, setIdeaGeneratorClustering] = useAtom(IDEA_GENERATOR_CLUSTERING);
   const [ideaGeneratorFinalReport, setIdeaGeneratorFinalReport] = useAtom(
     IDEA_GENERATOR_FINAL_REPORT
+  );
+  const [ideaGeneratorEditingBusinessText, setIdeaGeneratorEditingBusinessText] = useAtom(
+    IDEA_GENERATOR_EDITING_BUSINESS_TEXT
   );
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
@@ -147,12 +153,7 @@ const PageIdeaGenerator = () => {
   const [selectedDetailPersona, setSelectedDetailPersona] = useState(null);
   const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
   const [activeAnalysisTab, ] = useState("summary");
-
-  
-  // DeleteButton 클릭 핸들러 추가
-  const handleDelete = (index) => {
-    setTargetCustomers((prev) => prev.filter((_, i) => i !== index));
-  };
+  const [isEditingBusiness, setIsEditingBusiness] = useState(false);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -175,6 +176,9 @@ const PageIdeaGenerator = () => {
         }
         if (ideaGeneratorPurpose) {
           setSelectedPurposes(ideaGeneratorPurpose);
+        }
+        if (ideaGeneratorEditingBusinessText) {
+          setIdeaGeneratorEditingBusinessText(ideaGeneratorEditingBusinessText);
         }
 
         // 완료된 단계 설정
@@ -685,6 +689,7 @@ const PageIdeaGenerator = () => {
           type: "ix_idea_generator_persona",
           completedStep: 1,
           business: projectSaas?.projectTitle || "",
+          businessDescription: ideaGeneratorEditingBusinessText,
           coreValue: (targetCustomers || []).filter((value) => value !== ""),
           purpose: selectedPurposes,
         },
@@ -954,6 +959,61 @@ const PageIdeaGenerator = () => {
     };
   }, [navigate]);
 
+
+  const getBusinessText = () => {
+    const analysis = projectSaas?.projectAnalysis;
+    const businessText = [];
+    
+    if (ideaGeneratorEditingBusinessText?.length > 0) {
+      businessText.push(ideaGeneratorEditingBusinessText);
+    } else {
+      if (analysis?.business_analysis) {
+        businessText.push(analysis.business_analysis);
+      }
+      if (analysis?.file_analysis) {
+        businessText.push(analysis.file_analysis);
+      }
+    }
+    
+    return businessText.join('\n');
+  };
+
+  // useEffect로 초기값 설정
+  useEffect(() => {
+    setIdeaGeneratorEditingBusinessText(getBusinessText());
+  }, [projectSaas]); // projectSaas가 변경될 때마다 업데이트
+
+
+  // 핸들러 함수들
+  const handleEditBusinessClick = () => {
+    setIsEditingBusiness(true);
+  };
+
+  const handleSaveBusinessClick = () => {
+    setIsEditingBusiness(false);
+    // 여기에 저장 로직 추가
+  };
+
+  const handleUndoBusinessClick = () => {
+    const originalText = (projectSaas?.projectAnalysis.business_analysis
+      ? projectSaas?.projectAnalysis.business_analysis
+      : "") +
+      (projectSaas?.projectAnalysis.business_analysis &&
+      projectSaas?.projectAnalysis.file_analysis
+        ? "\n"
+        : "") +
+      (projectSaas?.projectAnalysis.file_analysis
+        ? projectSaas?.projectAnalysis.file_analysis
+        : "");
+        
+    setIdeaGeneratorEditingBusinessText(originalText);
+  };
+
+  // DeleteButton 클릭 핸들러 추가
+  const handleDelete = (index) => {
+    setTargetCustomers((prev) => prev.filter((_, i) => i !== index));
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -1150,30 +1210,45 @@ const PageIdeaGenerator = () => {
                   </TabContent5Item>
 
                   <TabContent5Item required>
-                    <div className="title">
+                    <Title>
                       <Body1 color="gray700">비즈니스 설명</Body1>
-                      <Body1 color="red">*</Body1>
-                    </div>
-                    <FormBox Large>
-                      <CustomTextarea
-                        disabled={toolStep >= 1}
-                        Edit
-                        rows={6}
-                        value={
-                          (projectSaas?.projectAnalysis.business_analysis
-                            ? projectSaas?.projectAnalysis.business_analysis
-                            : "") +
-                          (projectSaas?.projectAnalysis.business_analysis &&
-                          projectSaas?.projectAnalysis.file_analysis
-                            ? "\n"
-                            : "") +
-                          (projectSaas?.projectAnalysis.file_analysis
-                            ? projectSaas?.projectAnalysis.file_analysis
-                            : "")
-                        }
-                        status="valid"
-                      />
-                    </FormBox>
+                      {!isEditingBusiness ? (
+                        <IconButton onClick={handleEditBusinessClick} disabled={toolStep >= 1}>
+                          <img src={images.PencilSquare} alt="" />
+                          <span>수정하기</span>
+                          </IconButton>
+                      ) : (
+                        <IconButton onClick={handleSaveBusinessClick}>
+                          <img src={images.FolderArrowDown} alt="" />
+                          <span>저장하기</span>
+                        </IconButton>
+                      )}
+                    </Title>
+                    
+                    {!isEditingBusiness ? (
+                      <ListBoxGroup>
+                        <Body2 color="gray800" align="left">
+                          {ideaGeneratorEditingBusinessText}
+                        </Body2>
+                      </ListBoxGroup>
+                    ) : (
+                      <FormBox>
+                        <CustomTextarea
+                          Edit
+                          rows={6}
+                          value={ideaGeneratorEditingBusinessText}
+                          onChange={(e) => setIdeaGeneratorEditingBusinessText(e.target.value)}
+                          status="valid"
+                          disabled={toolStep >= 1 }
+                        />
+                        <EditButtonGroup>
+                          <IconButton onClick={handleUndoBusinessClick}>
+                            <img src={images.ClockCounterclockwise} alt="" />
+                            <span>이전으로 되돌리기</span>
+                          </IconButton>
+                        </EditButtonGroup>
+                      </FormBox>
+                    )}
                   </TabContent5Item>
 
                   <TabContent5Item required>
@@ -1192,21 +1267,9 @@ const PageIdeaGenerator = () => {
                             handleTargetCustomerChange(index, e.target.value)
                           }
                         />
-                        <DeleteButton onClick={() => handleDelete(index)} />
+                        <DeleteButton onClick={() => handleDelete(index)} disabled={toolStep >= 1} />
                       </DeleteFormWrap>
                     ))}
-                    {/* <Button
-                      DbExLarge
-                      More
-                      onClick={() => {
-                        if (targetCustomers.length < 10) {
-                          setTargetCustomers((prev) => [...prev, ""]);
-                        }
-                      }}
-                      disabled={targetCustomers.length >= 10 || toolStep >= 1}
-                    >
-                      <Body2 color="gray300">+ 추가하기</Body2>
-                    </Button> */}
                      {targetCustomers.length < 10 && toolStep < 1 && (
                       <Button
                         DbExLarge
@@ -1247,170 +1310,6 @@ const PageIdeaGenerator = () => {
                     도출을 진행해보세요
                   </Body3>
                 </div>
-
-                {/* <SegmentContent>
-                  <div>
-                    <Body2 color="gray800" align="left">
-                      아이디어 도출하고 싶은 고객이 있으신가요?
-                    </Body2>
-
-                    <CardGroupWrap rowW50>
-                      <ListBoxItem
-                        active={selectedInterviewType === "yesTarget"}
-                      >
-                        <ListText>
-                          <ListTitle>
-                            <Body1
-                              color={
-                                selectedInterviewType === "yesTarget"
-                                  ? "primary"
-                                  : "gray800"
-                              }
-                            >
-                              제가 원하는 타겟 고객이 있습니다.
-                            </Body1>
-                          </ListTitle>
-                        </ListText>
-                        <div>
-                          <RadioButton
-                            id="radio1"
-                            name="radioGroup1"
-                            checked={selectedInterviewType === "yesTarget"}
-                            disabled={toolStep >= 2}
-                            onChange={() =>
-                              handleInterviewTypeSelect("yesTarget")
-                            }
-                          />
-                        </div>
-                      </ListBoxItem>
-
-                      <ListBoxItem
-                        active={selectedInterviewType === "noTarget"}
-                      >
-                        <ListText>
-                          <ListTitle>
-                            <Body1
-                              color={
-                                selectedInterviewType === "noTarget"
-                                  ? "primary"
-                                  : "gray800"
-                              }
-                            >
-                              아직 잘 모르겠습니다. 타겟 고객을 알려주세요
-                            </Body1>
-                          </ListTitle>
-                        </ListText>
-                        <div>
-                          <RadioButton
-                            id="radio1"
-                            name="radioGroup1"
-                            checked={selectedInterviewType === "noTarget"}
-                            disabled={toolStep >= 2}
-                            onChange={() =>
-                              handleInterviewTypeSelect("noTarget")
-                            }
-                          />
-                        </div>
-                      </ListBoxItem>
-                    </CardGroupWrap>
-                  </div>
-                </SegmentContent> */}
-
-                {/* <div className="content">
-                  {selectedInterviewType === "yesTarget" ? (
-                    <>
-                      <TabContent5Item style={{ marginBottom: "140px" }}>
-                        <div className="title">
-                          <Body1 color="gray700">
-                            어떤 고객을 중심으로 아이디어를 도출하시겠습니까?
-                          </Body1>
-                        </div>
-
-                        <FormBox Large>
-                          <CustomTextarea
-                            Edit
-                            rows={4}
-                            placeholder="한명만 작성 가능 (예시 : 작성필요)"
-                            status="valid"
-                            disabled={toolStep >= 2}
-                            value={
-                              ideaGeneratorSelectedPersona?.[0]?.name ||
-                              selectedCustomPersona?.[0]?.name ||
-                              ""
-                            }
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              setSelectedCustomPersona([
-                                {
-                                  name: value,
-                                  description: "",
-                                  keywords: [],
-                                },
-                              ]);
-                            }}
-                          />
-                        </FormBox>
-                      </TabContent5Item>
-                    </>
-                  ) : selectedInterviewType === "noTarget" ? (
-                    <>
-                      {isLoading ? (
-                        <div
-                          style={{
-                            width: "100%",
-                            display: "flex",
-                            justifyContent: "center",
-                            minHeight: "200px",
-                            alignItems: "center",
-                          }}
-                        >
-                          <AtomPersonaLoader message="잠재 고객을 분석하고 있어요" />
-                        </div>
-                      ) : (
-                        <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                          {ideaGeneratorPersona.map((persona, index) => (
-                            <MoleculeIdeaGeneratorCard
-                              key={index}
-                              id={index}
-                              persona={persona}
-                              isSelected={selectedPersona === index}
-                              disabled={toolStep >= 2 ? true : false}
-                              onSelect={() => handleCheckboxChange(index)}
-                              onShowDetail={() => handleShowDetail(persona)}
-                            />
-                          ))}
-                        </CardGroupWrap>
-                      )}
-                    </>
-                  ) : (
-                    <></>
-                  )}
-
-                  <BottomBar W100>
-                    <Body2 color="gray800">
-                      시나리오 분석을 원하는 페르소나를 선택해주세요
-                    </Body2>
-                    <Button
-                      Large
-                      Primary
-                      Round
-                      Fill
-                      disabled={
-                        (selectedPersona === null &&
-                          selectedCustomPersona === null) ||
-                        toolStep >= 2
-                      }
-                      onClick={() => handleNextStep(2)}
-                    >
-                      다음
-                      <images.ChevronRight
-                        width="20"
-                        height="20"
-                        color={palette.white}
-                      />
-                    </Button>
-                  </BottomBar>
-                </div> */}
 
                 <div className="content">
                   <ListBoxGroup style={{ marginBottom: "24px" }}>
@@ -2215,3 +2114,14 @@ const SunburstChart = styled.div`
   max-width: 700px;
   margin: 0 auto;
 `;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
+const EditButtonGroup = styled(ButtonGroup)`
+  justify-content: end;
+`;
+
+

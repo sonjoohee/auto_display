@@ -1,7 +1,7 @@
 //헤더 컴포넌트
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState,useEffect } from "react";
 import styled, { css } from "styled-components";
-import { Link, useLocation } from "react-router-dom";
+import {  useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import images from "../../../assets/styles/Images";
 import { palette } from "../../../assets/styles/Palette";
@@ -19,29 +19,11 @@ import {
 } from "../../../assets/styles/BusinessAnalysisStyle";
 import { useAtom } from "jotai";
 import {
-  BUSINESS_ANALYSIS,
   PERSONA_STEP,
   USER_CREDITS,
   IS_LOGGED_IN,
-  TARGET_DISCOVERY_INFO,
-  IDEA_GENERATOR_INFO,
-  CUSTOMER_VALUE_ANALYZER_INFO,
-  DESIGN_ANALYSIS_BUSINESS_INFO,
   PROJECT_SAAS,
-  DESIGN_ANALYSIS_BUSINESS_TITLE,
-  ACCESS_DASHBOARD,
-  ACCESS_STATE_SAAS,
-  PROJECT_TOTAL_INFO,
-  PROJECT_CREATE_INFO,
-  SINGLE_INTERVIEW_QUESTION_LIST,
-  INTERVIEW_QUESTION_LIST,
-  CUSTOM_THEORY_DATA,
-  PROJECT_ID,
-  PERSONA_LIST_SAAS,
-  TOOL_LIST_SAAS,
-  DASHBOARD_TOOL_LIST_SAAS,
 } from "../../../pages/AtomStates";
-import OrganismBusinessAnalysis from "../../../pages/Persona/components/organisms/OrganismBusinessAnalysis";
 import { UserCreditInfo } from "../../../utils/indexedDB";
 // import { AlarmCreate } from '../../../utils/indexedDB';
 import { AlarmList } from "../../../utils/indexedDB";
