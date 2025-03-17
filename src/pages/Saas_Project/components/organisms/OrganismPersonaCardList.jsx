@@ -45,17 +45,18 @@ const OrganismPersonaCardList = ({
   activeTab = "macro_segment", // 기본 탭은 macro_segment로 설정
   setPersonaStats = () => {}, // 페르소나 통계 정보를 부모 컴포넌트에 전달하는 함수
 }) => {
-
   const navigate = useNavigate();
-  
+
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [project, ] = useAtom(PROJECT_SAAS);
-  const [creditRequestBusinessPersona] = useAtom(CREDIT_REQUEST_BUSINESS_PERSONA);
+  const [project] = useAtom(PROJECT_SAAS);
+  const [creditRequestBusinessPersona] = useAtom(
+    CREDIT_REQUEST_BUSINESS_PERSONA
+  );
   const [, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [, setProjectPersonaList] = useAtom(PROJECT_PERSONA_LIST);
   const [, setUserCredits] = useAtom(USER_CREDITS);
 
-  const [selectedPersona, ] = useState(null);
+  const [selectedPersona] = useState(null);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [filteredPersonaData, setFilteredPersonaData] = useState([]);
@@ -150,7 +151,6 @@ const OrganismPersonaCardList = ({
       );
     } catch (error) {}
   };
-
 
   // const handleRequestClick = (persona) => {
   //   setSelectedPersona(persona); // 선택된 페르소나 설정
@@ -258,16 +258,17 @@ const OrganismPersonaCardList = ({
     setIsLoading(true);
 
     // 현재 탭의 페르소나 리스트 필터링
-    const currentTabPersonas = personaData.filter(p => p.personaType === personaType);
-    
+    const currentTabPersonas = personaData.filter(
+      (p) => p.personaType === personaType
+    );
+
     // last_persona 객체 배열 생성
-    const lastPersonaInfo = currentTabPersonas.map(persona => ({
+    const lastPersonaInfo = currentTabPersonas.map((persona) => ({
       persona_name: persona.personaName,
       keywords: persona.keywords,
       gender: persona.gender,
-      age: persona.age
+      age: persona.age,
     }));
-
 
     const data = {
       business_description:
@@ -279,7 +280,7 @@ const OrganismPersonaCardList = ({
       business_model: project.businessModel,
       industry_type: project.industryType,
       target_country: project.targetCountry,
-      last_persona: lastPersonaInfo  
+      last_persona: lastPersonaInfo,
     };
 
     try {
@@ -289,27 +290,33 @@ const OrganismPersonaCardList = ({
       let attempt = 0;
 
       switch (personaType) {
-        case 'macro_segment':
-          response = await InterviewXPersonaMacroSegmentRequest(data, isLoggedIn);
+        case "macro_segment":
+          response = await InterviewXPersonaMacroSegmentRequest(
+            data,
+            isLoggedIn
+          );
           while (
             !response ||
             !response.response ||
             !response.response.persona_macro_segment ||
             response.response.persona_macro_segment.length === 0
           ) {
-            response = await InterviewXPersonaMacroSegmentRequest(data, isLoggedIn);
+            response = await InterviewXPersonaMacroSegmentRequest(
+              data,
+              isLoggedIn
+            );
             attempt++;
             if (attempt >= max_attempt) {
               throw new Error("Macro Segment 페르소나 생성에 실패했습니다.");
             }
           }
-          personas = response.response.persona_macro_segment.map(persona => ({
+          personas = response.response.persona_macro_segment.map((persona) => ({
             ...mapPersonaData(persona),
-            personaType: "macro_segment"
+            personaType: "macro_segment",
           }));
           break;
 
-        case 'unique_user':
+        case "unique_user":
           response = await InterviewXPersonaUniqueUserRequest(data, isLoggedIn);
           while (
             !response ||
@@ -317,36 +324,47 @@ const OrganismPersonaCardList = ({
             !response.response.persona_unique_user ||
             response.response.persona_unique_user.length === 0
           ) {
-            response = await InterviewXPersonaUniqueUserRequest(data, isLoggedIn);
+            response = await InterviewXPersonaUniqueUserRequest(
+              data,
+              isLoggedIn
+            );
             attempt++;
             if (attempt >= max_attempt) {
               throw new Error("Unique User 페르소나 생성에 실패했습니다.");
             }
           }
-          personas = response.response.persona_unique_user.map(persona => ({
+          personas = response.response.persona_unique_user.map((persona) => ({
             ...mapPersonaData(persona),
-            personaType: "unique_user"
+            personaType: "unique_user",
           }));
           break;
 
-        case 'key_stakeholder':
-          response = await InterviewXPersonaKeyStakeholderRequest(data, isLoggedIn);
+        case "key_stakeholder":
+          response = await InterviewXPersonaKeyStakeholderRequest(
+            data,
+            isLoggedIn
+          );
           while (
             !response ||
             !response.response ||
             !response.response.persona_key_stakeholder ||
             response.response.persona_key_stakeholder.length === 0
           ) {
-            response = await InterviewXPersonaKeyStakeholderRequest(data, isLoggedIn);
+            response = await InterviewXPersonaKeyStakeholderRequest(
+              data,
+              isLoggedIn
+            );
             attempt++;
             if (attempt >= max_attempt) {
               throw new Error("Key Stakeholder 페르소나 생성에 실패했습니다.");
             }
           }
-          personas = response.response.persona_key_stakeholder.map(persona => ({
-            ...mapPersonaData(persona),
-            personaType: "key_stakeholder"
-          }));
+          personas = response.response.persona_key_stakeholder.map(
+            (persona) => ({
+              ...mapPersonaData(persona),
+              personaType: "key_stakeholder",
+            })
+          );
           break;
       }
 
@@ -366,24 +384,30 @@ const OrganismPersonaCardList = ({
       }
 
       // 서버에서 최신 데이터 가져오기
-      const savedPersonaListInfo = await getPersonaListOnServer(project?._id, true);
+      const savedPersonaListInfo = await getPersonaListOnServer(
+        project?._id,
+        true
+      );
       if (savedPersonaListInfo) {
         const sortedList = savedPersonaListInfo
-          .filter(persona => persona.personaType === personaType)
+          .filter((persona) => persona.personaType === personaType)
           .sort((a, b) => b.timestamp - a.timestamp);
-        
-        setProjectPersonaList(prev => {
-          const filteredPrev = prev.filter(p => p.personaType !== personaType);
+
+        setProjectPersonaList((prev) => {
+          const filteredPrev = prev.filter(
+            (p) => p.personaType !== personaType
+          );
           return [...filteredPrev, ...sortedList];
         });
 
         // personaListSaas도 같은 방식으로 업데이트
-        setPersonaListSaas(prev => {
-          const filteredPrev = prev.filter(p => p.personaType !== personaType);
+        setPersonaListSaas((prev) => {
+          const filteredPrev = prev.filter(
+            (p) => p.personaType !== personaType
+          );
           return [...filteredPrev, ...sortedList];
         });
       }
-
     } catch (error) {
       console.error(error);
       // 에러 처리
@@ -409,13 +433,13 @@ const OrganismPersonaCardList = ({
 
   // 크레딧 확인 핸들러 추가
   const handleCreditCheck = () => {
-      setShowCreatePersonaPopup(true);
+    setShowCreatePersonaPopup(true);
   };
 
   // 크레딧 확인 팝업에서 확인 클릭 시 핸들러
   const handleConfirmCredit = async () => {
     setShowCreatePersonaPopup(false);
-    
+
     let accessToken = sessionStorage.getItem("accessToken");
     if (!accessToken) {
       return;
@@ -427,7 +451,6 @@ const OrganismPersonaCardList = ({
       mount: 100,
     };
     const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
-
 
     if (creditResponse?.state !== "use") {
       setShowCreditPopup(true);
@@ -451,13 +474,14 @@ const OrganismPersonaCardList = ({
       const userCreditValue = await UserCreditInfo(isLoggedIn);
       // 전역 상태의 크레딧 정보 업데이트
       setUserCredits(userCreditValue);
-      
     }
     handleCreatePersona(activeTab);
   };
 
   // 현재 탭의 페르소나 개수 계산
-  const currentTabPersonaCount = personaData.filter(p => p.personaType === activeTab).length;
+  const currentTabPersonaCount = personaData.filter(
+    (p) => p.personaType === activeTab
+  ).length;
 
   return (
     <>
@@ -513,8 +537,7 @@ const OrganismPersonaCardList = ({
                 <div style={{ flex: "1" }}>
                   <StyledButton
                     Medium
-                    Primary
-                    Fill
+                    Outline
                     onClick={() => setShowPopup(persona)}
                     // style={{
                     //   background:
@@ -526,11 +549,19 @@ const OrganismPersonaCardList = ({
                     //       : palette.chatGray,
                     // }}
                   >
+                    프로필
+                  </StyledButton>
+                  <StyledButton
+                    Medium
+                    Primary
+                    Fill
+                    onClick={() => setShowPopup(persona)}
+                  >
                     {persona?.status === "ing" || persona?.status === "request"
-                      ? "페르소나 생성중"
+                      ? "생성중"
                       : persona?.status === "complete"
-                      ? "활성 페르소나"
-                      : "비활성 페르소나"}
+                      ? "활성"
+                      : "비활성"}
                   </StyledButton>
                   {/* {!["request", "ing", "complete"].includes(
                     persona?.status
@@ -541,7 +572,12 @@ const OrganismPersonaCardList = ({
                       Fill
                       onClick={() => setShowPopup(persona)}
                     >
-                      페르소나 생성
+                      {persona?.status === "ing" ||
+                      persona?.status === "request"
+                        ? "생성중"
+                        : persona?.status === "complete"
+                        ? "활성"
+                        : "비활성"}
                     </StyledButton>
                   )} */}
                 </div>
@@ -549,21 +585,22 @@ const OrganismPersonaCardList = ({
             </AiPersonaCardListItem>
           ))}
 
-          {activeTab !== 'my_favorite' && currentTabPersonaCount < 24 && (  // 24개 미만일 때만 표시
-            <>
-              {isLoading ? (
-                <div className="more">
-                  <AtomPersonaLoader message="페르소나를 생성하고 있습니다." />
-                </div>
-              ) : (
-                <div className="more" onClick={handleCreditCheck}>
-                  <Body3 color="gray500" align="center">
-                    + 더보기 (100 credit)
-                  </Body3>
-                </div>
-              )}
-            </>
-          )}
+          {activeTab !== "my_favorite" &&
+            currentTabPersonaCount < 24 && ( // 24개 미만일 때만 표시
+              <>
+                {isLoading ? (
+                  <div className="more">
+                    <AtomPersonaLoader message="페르소나를 생성하고 있습니다." />
+                  </div>
+                ) : (
+                  <div className="more" onClick={handleCreditCheck}>
+                    <Body3 color="gray500" align="center">
+                      + 더보기 (100 credit)
+                    </Body3>
+                  </div>
+                )}
+              </>
+            )}
         </AiPersonaCardGroupWrap>
       )}
 
@@ -632,24 +669,24 @@ const OrganismPersonaCardList = ({
           />
         ))}
 
-{showCreditPopup && (
-              <PopupWrap
-                Warning
-                title="크레딧이 모두 소진되었습니다"
-                message={
-                  <>
-                    보유한 크레딧이 부족합니다.
-                    <br />
-                    크레딧을 충전한 후 다시 시도해주세요.
-                  </>
-                }
-                buttonType="Outline"
-                closeText="확인"
-                isModal={false}
-                onCancel={() => setShowCreditPopup(false)}
-                onConfirm={() => setShowCreditPopup(false)}
-              />
-            )}
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => setShowCreditPopup(false)}
+          onConfirm={() => setShowCreditPopup(false)}
+        />
+      )}
       {showCreatePersonaPopup && (
         <PopupWrap
           Check
@@ -663,10 +700,10 @@ const OrganismPersonaCardList = ({
           message={
             <>
               해당 서비스 사용시 크레딧이 소진됩니다.
-              <br />100 크레딧
+              <br />
+              100 크레딧
             </>
           }
-       
         />
       )}
     </>
