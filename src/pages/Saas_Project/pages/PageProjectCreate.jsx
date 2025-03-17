@@ -1016,9 +1016,9 @@ const PageProjectCreate = () => {
                                       ? images.ProjectKorea
                                       : selectedValues.country === "미국"
                                       ? images.ProjectUsa
-                                      : selectedValues.country === "중국"
-                                      ? images.ProjectChina
-                                      : selectedValues.country === "일본"
+                                      : // : selectedValues.country === "중국"
+                                      // ? images.ProjectChina
+                                      selectedValues.country === "일본"
                                       ? images.ProjectJapan
                                       : selectedValues.country === "베트남"
                                       ? images.ProjectVietnam
@@ -1064,7 +1064,7 @@ const PageProjectCreate = () => {
                                   미국
                                 </Body2>
                               </SelectBoxItem>
-                              <SelectBoxItem
+                              {/* <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect("중국", "country")
                                 }
@@ -1073,7 +1073,7 @@ const PageProjectCreate = () => {
                                   <img src={images.ProjectChina} alt="" />
                                   중국
                                 </Body2>
-                              </SelectBoxItem>
+                              </SelectBoxItem> */}
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect("일본", "country")
