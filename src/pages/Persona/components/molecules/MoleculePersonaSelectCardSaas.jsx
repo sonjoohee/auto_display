@@ -34,7 +34,7 @@ const MoleculePersonaSelectCardSaas = ({
   const navigate = useNavigate();
 
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [activeTabState, setActiveTabState] = useState("my_persona");
+  const [activeTabState, setActiveTabState] = useState("my_favorite");
 
   // 컴포넌트 마운트 시 초기 unselected 리스트 설정
   useEffect(() => {
@@ -131,16 +131,16 @@ const MoleculePersonaSelectCardSaas = ({
     <CardGroupWrap>
       <TabWrapType3 Border>
         <TabButtonType3
-          className={activeTabState === "my_persona" ? "active" : ""}
-          onClick={() => handleTabClick("my_persona")}
-          isActive={activeTabState === "my_persona"}
+          className={activeTabState === "my_favorite" ? "active" : ""}
+          onClick={() => handleTabClick("my_favorite")}
+          isActive={activeTabState === "my_favorite"}
           style={
-            activeTabState === "my_persona"
+            activeTabState === "my_favorite"
               ? { color: "#333333" }
               : { color: "#999999" }
           }
         >
-          My Persona
+          Favorite
         </TabButtonType3>
         <TabButtonType3
           className={activeTabState === "macro_segment" ? "active" : ""}
@@ -184,7 +184,7 @@ const MoleculePersonaSelectCardSaas = ({
           // 활성 탭에 따라 페르소나 필터링
           .filter((persona) => persona.status === "complete")
           .filter((persona) => {
-            if (activeTabState === "my_persona") {
+            if (activeTabState === "my_favorite") {
               return persona?.favorite === true;
             }
             // 다른 탭에서는 personaType에 따라 필터링하고, favorite이 false인 경우 제외
@@ -291,7 +291,7 @@ const MoleculePersonaSelectCardSaas = ({
               </>
             );
           })}{" "}
-      {activeTabState === "my_persona" &&
+      {activeTabState === "my_favorite" &&
         !filteredPersonaList.some(
           (persona) =>
             persona.favorite === true && persona.status === "complete"

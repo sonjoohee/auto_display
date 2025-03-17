@@ -226,9 +226,9 @@ const PageCustomerValueAnalyzer = () => {
               const buttonId = `${matchedPersona.personaType}_${id}`;
               newSelectedButtons[buttonId] = true;
 
-              // favorite가 true인 경우 my_persona 탭에서도 선택 상태로 설정
+              // favorite가 true인 경우 my_favorite 탭에서도 선택 상태로 설정
               if (matchedPersona.favorite) {
-                newSelectedButtons[`my_persona_${id}`] = true;
+                newSelectedButtons[`my_favorite_${id}`] = true;
               }
             }
           });
