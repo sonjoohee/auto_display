@@ -58,7 +58,7 @@ const PageProjectCreate = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [showPopupError, setShowPopupError] = useState(false);
-  const [isLoading, ] = useState(false);
+  const [isLoading] = useState(false);
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [dropUp, setDropUp] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -599,7 +599,7 @@ const PageProjectCreate = () => {
           <ProjectCreateWrap>
             <BackButton onClick={() => navigate("/Project")}>
               <images.ChevronRight width="20px" height="20px" />
-              <Sub3 color="gray500">HOME</Sub3>
+              <Sub3 color="gray500">뒤로</Sub3>
             </BackButton>
 
             <TabWrapType5>

@@ -22,14 +22,13 @@ import {
   IS_SIGNUP_POPUP_OPEN,
   IS_MARKETING,
 } from "../../../AtomStates";
-import MoleculeSignupPopup from "./MoleculeSignupPopup"; 
+import MoleculeSignupPopup from "./MoleculeSignupPopup";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-import { Body3, Helptext } from "../../../../assets/styles/Typography";
+import { Body3, Helptext, Body4 } from "../../../../assets/styles/Typography";
 
 const MoleculeSignupForm = () => {
-  
   const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
   const [signUpEmail, setSignUpEmail] = useAtom(SIGN_UP_EMAIL);
   const [signUpPassword, setSignUpPassword] = useAtom(SIGN_UP_PASSWORD);
@@ -42,9 +41,9 @@ const MoleculeSignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSignupSuccessful, setSignupSuccessful] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); 
-  const [isMarketing, ] = useAtom(IS_MARKETING);
-  const [conversationId, ] = useAtom(CONVERSATION_ID);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isMarketing] = useAtom(IS_MARKETING);
+  const [conversationId] = useAtom(CONVERSATION_ID);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneError, setPhoneError] = useState("");
 
@@ -52,8 +51,7 @@ const MoleculeSignupForm = () => {
 
   // 팝업 상태 atom의 setter 가져오기
   const [, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN);
-  const [, setIsSignupPopupOpen] =
-    useAtom(IS_SIGNUP_POPUP_OPEN);
+  const [, setIsSignupPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN);
 
   const [isEmailValid, setIsEmailValid] = useState(false); // 이메일 유효성 상태 추가
   const [EmailError, setEmailError] = useState("");
@@ -269,17 +267,23 @@ const MoleculeSignupForm = () => {
                     중복확인
                   </Button>
                 </div>
-                <Helptext color="gray600" align="left">
-                  공용 도메인(기업, 학교, 기관) 이메일만 사용 가능하며, 상용
-                  이메일(gmail, naver, daum 등)은 사용할 수 없습니다.
-                </Helptext>
+                {
+                  <Helptext color="gray600" align="left">
+                    공용 도메인(기업, 학교, 기관) 이메일만 사용 가능하며, 상용
+                    이메일(gmail, naver, daum 등)은 사용할 수 없습니다.
+                  </Helptext>
+                }
                 {errorStatus && (
-                  <ErrorMessage style={{ color: "red" }}>
+                  <ErrorMessage style={{ color: "red", fontSize: "0.8rem" }}>
                     {errorStatus}
                   </ErrorMessage>
                 )}
                 {successStatus && (
-                  <SuccessMessage>{successStatus}</SuccessMessage>
+                  <SuccessMessage
+                    style={{ color: "green", fontSize: "0.8rem" }}
+                  >
+                    {successStatus}
+                  </SuccessMessage>
                 )}
               </div>
 
@@ -287,7 +291,7 @@ const MoleculeSignupForm = () => {
                 <img src={images.ExclamationCircle} alt="info" />
                 <Body3 color="gray500">
                   사내 메일 인증이 불가능한 경우나 기업 메일이 없는 사업장 및
-                  기관은 1:1 문의를 통해 가입 문의해 주세요.
+                  기관은 info@userconnect.kr 메일을 통해 가입 문의해 주세요.
                 </Body3>
               </SignInfo>
             </div>
@@ -307,9 +311,9 @@ const MoleculeSignupForm = () => {
                     if (!isValidPassword(e.target.value)) {
                       setEmailError(
                         "비밀번호는 8-16자 길이여야 하며, 문자, 숫자, 특수문자 중 최소 두 가지를 포함해야 합니다."
-                      ); 
+                      );
                     } else {
-                      setEmailError(""); 
+                      setEmailError("");
                     }
                   }}
                   placeholder="비밀번호를 입력해주세요"
@@ -327,11 +331,11 @@ const MoleculeSignupForm = () => {
                   value={confirmPassword}
                   onChange={(e) => {
                     setConfirmPassword(e.target.value);
-           
+
                     if (e.target.value !== signUpPassword) {
-                      setEmailError("비밀번호가 일치하지 않습니다."); 
+                      setEmailError("비밀번호가 일치하지 않습니다.");
                     } else {
-                      setEmailError(""); 
+                      setEmailError("");
                     }
                   }}
                   placeholder="비밀번호를 다시 입력해 주세요"
@@ -349,7 +353,6 @@ const MoleculeSignupForm = () => {
                   {EmailError}
                 </ErrorMessage>
               )}{" "}
-      
             </div>
 
             <div>
@@ -386,7 +389,6 @@ const MoleculeSignupForm = () => {
               )}
             </div>
           </ScrollWrap>
-
 
           <TermsAndConditions>
             <input
@@ -437,7 +439,6 @@ const MoleculeSignupForm = () => {
 };
 
 export default MoleculeSignupForm;
-
 
 const SignupFormContainer = styled.div`
   > div {
@@ -497,7 +498,7 @@ const SignInfo = styled.div`
   background-color: ${palette.chatGray};
 
   p {
-    font-size: 1rem !important;
+    font-size: 0.9rem !important;
     color: ${palette.gray500} !important;
   }
 
@@ -549,16 +550,16 @@ const TogglePasswordButton = styled.button`
 `;
 
 const ErrorMessage = styled.p`
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: ${palette.red};
-  margin-top: 20px;
+  margin-top: 8px;
   text-align: center;
 `;
 
 const SuccessMessage = styled.p`
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: ${palette.green};
-  margin-top: 20px;
+  margin-top: 8px;
   text-align: center;
 `;
 

@@ -100,6 +100,15 @@ export const Body3 = styled.p`
   text-align: ${(props) => props.align || "inherit"};
   letter-spacing: -0.48px;
 `;
+// Body4
+export const Body4 = styled.p`
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "inherit"};
+  letter-spacing: -0.48px;
+`;
 
 // Sub1
 export const Sub1 = styled.div`
@@ -173,13 +182,10 @@ export const InputText = styled.div`
 
 // Helptext
 export const Helptext = styled.div`
-  font-size: 0.63rem;
+  font-size: 0.8rem;
   font-weight: 400;
   line-height: 1.2;
   color: ${(props) => palette[props.color] || "inherit"};
   text-align: ${(props) => props.align || "inherit"};
   letter-spacing: -0.3px;
 `;
-
-
-
