@@ -2267,8 +2267,8 @@ const AiPersonaInfo = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    // width: 24px;
-    // height: 24px;
+    width: 28px;
+    height: 28px;
     padding: 4px 12px;
     border-radius: 5px;
 

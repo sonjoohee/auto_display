@@ -189,3 +189,13 @@ export const Helptext = styled.div`
   text-align: ${(props) => props.align || "inherit"};
   letter-spacing: -0.3px;
 `;
+
+// ModerText
+export const ModerText = styled.div`
+  font-size: 0.63rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "inherit"};
+  letter-spacing: -0.3px;
+`;

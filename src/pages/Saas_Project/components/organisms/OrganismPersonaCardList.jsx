@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Body1, Sub3 } from "../../../../assets/styles/Typography";
+
 import {
   AiPersonaCardGroupWrap,
   AiPersonaCardListItem,
@@ -300,15 +301,20 @@ const OrganismPersonaCardList = ({
                     Primary
                     Fill
                     onClick={() => setShowPopup(persona)}
+                    // style={{
+                    //   background:
+                    //     persona?.status === "ing" ||
+                    //     persona?.status === "request"
+                    //       ? `rgba(50, 173, 230, 0.16)`
+                    //       : persona?.status === "complete"
+                    //       ? `rgba(34, 111, 255, 0.16)`
+                    //       : palette.chatGray,
+                    // }}
                   >
-                    {persona?.status === "ing"
+                    {persona?.status === "ing" || persona?.status === "request"
                       ? "페르소나 생성중"
                       : persona?.status === "complete"
                       ? "활성 페르소나"
-                      : persona?.status === "request"
-                      ? "페르소나 생성중"
-                      : persona?.status === "profile"
-                      ? "비활성 페르소나"
                       : "비활성 페르소나"}
                   </StyledButton>
                   {/* {!["request", "ing", "complete"].includes(

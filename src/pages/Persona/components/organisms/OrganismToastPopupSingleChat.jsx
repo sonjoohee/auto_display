@@ -9,11 +9,11 @@ import { CustomInput } from "../../../../assets/styles/InputStyle";
 import {
   Body1,
   H4,
-  Helptext,
   Sub1,
   Sub2,
   Body2,
   Body3,
+  ModerText,
 } from "../../../../assets/styles/Typography";
 import { Persona } from "../../../../assets/styles/BusinessAnalysisStyle";
 import { useNavigate } from "react-router-dom";
@@ -64,17 +64,14 @@ const OrganismToastPopupSingleChat = ({
   isComplete,
   isIndepth,
 }) => {
-  const [projectSaas, ] = useAtom(PROJECT_SAAS);
+  const [projectSaas] = useAtom(PROJECT_SAAS);
   const project = projectSaas;
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
-  const [purposeItemsSingleAtom, ] =
-    useAtom(PURPOSE_ITEMS_SINGLE);
+  const [purposeItemsSingleAtom] = useAtom(PURPOSE_ITEMS_SINGLE);
   const [, setReportId] = useAtom(PROJECT_REPORT_ID);
-  const [, setIsPersonaAccessible] = useAtom(
-    IS_PERSONA_ACCESSIBLE
-  );
+  const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
   const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
   const [, setSingleInterviewReportTab1] = useAtom(
     SINGLE_INTERVIEW_REPORT_TAB1
@@ -85,26 +82,25 @@ const OrganismToastPopupSingleChat = ({
   const [, setSingleInterviewReportTab3] = useAtom(
     SINGLE_INTERVIEW_REPORT_TAB3
   );
-  const [projectId, ] = useAtom(PROJECT_ID);
-  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [projectId] = useAtom(PROJECT_ID);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
-  const [personaList, ] = useAtom(PERSONA_LIST);
+  const [personaList] = useAtom(PERSONA_LIST);
   const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
     SINGLE_INTERVIEW_QUESTION_LIST
   );
-  const [trialState, ] = useAtom(TRIAL_STATE);
-  const [creditAdditionalQuestion, ] = useAtom(
-    CREDIT_ADDITIONAL_QUESTION
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [creditAdditionalQuestion] = useAtom(CREDIT_ADDITIONAL_QUESTION);
+  const [eventState] = useAtom(EVENT_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
+  const [businessAnalysis] = useAtom(BUSINESS_ANALYSIS);
+  const [selectedInterviewPurposeData] = useAtom(
+    SELECTED_INTERVIEW_PURPOSE_DATA
   );
-  const [eventState, ] = useAtom(EVENT_STATE);
-  const [eventTitle, ] = useAtom(EVENT_TITLE);
-  const [businessAnalysis, ] = useAtom(BUSINESS_ANALYSIS);
-  const [selectedInterviewPurposeData, ] =
-    useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
-  const [projectTotalInfo, ] = useAtom(PROJECT_TOTAL_INFO);
-  const [projectCreateInfo, ] = useAtom(PROJECT_CREATE_INFO);
+  const [projectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
 
   const navigate = useNavigate();
 
@@ -122,7 +118,7 @@ const OrganismToastPopupSingleChat = ({
   const [, setVisibleAnswers] = useState({});
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isAnalysisComplete, setIsAnalysisComplete] = useState(false);
-  const [showErrorPopup, setShowErrorPopup] = useState(false)
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [regenerateCount1, setRegenerateCount1] = useState(0);
   const [regenerateCount2, setRegenerateCount2] = useState(0);
   const [showRegenerateButton1, setShowRegenerateButton1] = useState(false);
@@ -144,7 +140,6 @@ const OrganismToastPopupSingleChat = ({
     useState(false);
   const [indepthInterviews, setIndepthInterviews] = useState({});
 
-  
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
@@ -245,7 +240,6 @@ const OrganismToastPopupSingleChat = ({
             setShowErrorPopup(true);
             break;
         }
- 
       }
     } finally {
       setAddQuestionLoading(false);
@@ -346,7 +340,7 @@ const OrganismToastPopupSingleChat = ({
             business_analysis_data: projectCreateInfo,
             theory_name: selectedInterviewPurposeData?.title || "",
           };
-      
+
           let response = await InterviewXPersonaSingleInterviewGeneratorRequest(
             data,
             isLoggedIn
@@ -430,7 +424,6 @@ const OrganismToastPopupSingleChat = ({
             setShowErrorPopup(true);
             break;
         }
-       
       }
     }
   };
@@ -459,8 +452,6 @@ const OrganismToastPopupSingleChat = ({
           reportInterviewData.push(newData);
         }
       }
-
-
 
       // 데이터 동기화 확인 로직 개선
       let syncAttempts = 0;
@@ -509,9 +500,7 @@ const OrganismToastPopupSingleChat = ({
           ) {
             break;
           }
-        } catch (error) {
-
-        }
+        } catch (error) {}
 
         retryCount++;
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -549,9 +538,7 @@ const OrganismToastPopupSingleChat = ({
           ) {
             break;
           }
-        } catch (error) {
-
-        }
+        } catch (error) {}
 
         retryCount++;
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -583,9 +570,7 @@ const OrganismToastPopupSingleChat = ({
           ) {
             break;
           }
-        } catch (error) {
-  
-        }
+        } catch (error) {}
 
         retryCount++;
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -685,7 +670,6 @@ const OrganismToastPopupSingleChat = ({
           },
           last_interview: lastInterview,
         };
-
 
         let response = await InterviewXPersonaSingleInterviewRequest(
           data,
@@ -927,7 +911,7 @@ const OrganismToastPopupSingleChat = ({
                 <img src={personaImages.persona_moderator} alt="모더" />
                 <span>
                   <img src={images.PatchCheckFill} alt="" />
-                  <Helptext color="primary">모더</Helptext>
+                  <ModerText color="primary">모더</ModerText>
                 </span>
               </Persona>
               <ChatBox Moder>
@@ -995,7 +979,7 @@ const OrganismToastPopupSingleChat = ({
                         <img src={personaImages.persona_moderator} alt="모더" />
                         <span>
                           <img src={images.PatchCheckFill} alt="" />
-                          <Helptext color="primary">모더</Helptext>
+                          <ModerText color="primary">모더</ModerText>
                         </span>
                       </Persona>
                       <ChatBox Moder>
@@ -1015,7 +999,7 @@ const OrganismToastPopupSingleChat = ({
                           />
                           <span>
                             <img src={images.PatchCheckFill} alt="" />
-                            <Helptext color="primary">모더</Helptext>
+                            <ModerText color="primary">모더</ModerText>
                           </span>
                         </Persona>
                         <ChatBox Moder>
@@ -1606,7 +1590,7 @@ const OrganismToastPopupSingleChat = ({
                         `}
                       >
                         <Body3 color="gray800" align="left">
-                          Q{index + 1}. {value}
+                          Q. {value}
                         </Body3>
                         <div style={{ width: "46px" }}>
                           <Body2 color="gray800" />
@@ -2380,8 +2364,6 @@ const ErrorInterviewItem = styled(InterviewItem)`
   }
 `;
 
-
-
 const Thumb = styled.div`
   flex-shrink: 0;
   width: 32px;
@@ -2396,8 +2378,6 @@ const Thumb = styled.div`
     object-fit: cover;
   }
 `;
-
-
 
 const flash = keyframes`
   0% {

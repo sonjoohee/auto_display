@@ -10,7 +10,7 @@ import {
   Body1,
   H3,
   H4,
-  Helptext,
+  ModerText,
   Sub1,
   Sub2,
   Sub3,
@@ -161,7 +161,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                 <img src={personaImages.persona_moderator} alt="모더" />
                 <span>
                   <img src={images.PatchCheckFill} alt="" />
-                  <Helptext color="primary">모더</Helptext>
+                  <ModerText color="primary">모더</ModerText>
                 </span>
               </Persona>
               <ChatBox Moder>
@@ -196,7 +196,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                     <img src={personaImages.persona_moderator} alt="모더" />
                     <span>
                       <img src={images.PatchCheckFill} alt="" />
-                      <Helptext color="primary">모더</Helptext>
+                      <ModerText color="primary">모더</ModerText>
                     </span>
                   </Persona>
                   <ChatBox Moder>
