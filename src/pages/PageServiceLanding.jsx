@@ -251,7 +251,7 @@ const PageServiceLanding = () => {
             <br />
             가장 빠른 방법
           </h2>
-          <p>내 비즈니스를 위한 가장 현명한 선택</p>
+          <p>AI와 함께 새로운 시장 기회를 탐색하세요</p>
           <Button
             // type="button"
             style={{ paddingTop: "10px" }}
