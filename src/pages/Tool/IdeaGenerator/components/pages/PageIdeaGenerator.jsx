@@ -143,9 +143,10 @@ const PageIdeaGenerator = () => {
   const [customerValueList, setCustomerValueList] = useState([]);
   const [selectedPersonasSaas, setSelectedPersonasSaas] = useState([]);
   const [selectedPersona, setSelectedPersona] = useState(null); 
-  const [selectedCustomPersona, setSelectedCustomPersona] = useState(null); 
+  const [selectedCustomPersona, ] = useState(null); 
   const [selectedDetailPersona, setSelectedDetailPersona] = useState(null);
   const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
+  const [activeAnalysisTab, ] = useState("summary");
 
   
   // DeleteButton 클릭 핸들러 추가
@@ -759,30 +760,30 @@ const PageIdeaGenerator = () => {
     setTargetCustomers((prev) => {
       const newTargetCustomers = [...(prev || [])]; // 빈 배열로 초기화
       newTargetCustomers[index] = value || "";
-      return newTargetCustomers.filter((customer) => customer.trim() !== ""); // 빈 값 필터링
+      return newTargetCustomers;
     });
   };
 
-  const handleInterviewTypeSelect = (type) => {
-    if (!ideaGeneratorPersona || ideaGeneratorPersona.length === 0) {
-      setIsLoading(true);
-    }
-    setSelectedInterviewType(type);
-    setSelectedCustomPersona(null);
-    setSelectedPersona(null);
+  // const handleInterviewTypeSelect = (type) => {
+  //   if (!ideaGeneratorPersona || ideaGeneratorPersona.length === 0) {
+  //     setIsLoading(true);
+  //   }
+  //   setSelectedInterviewType(type);
+  //   setSelectedCustomPersona(null);
+  //   setSelectedPersona(null);
 
-    if (type === "noTarget") {
-      fetchIdeaGeneratorPersona();
-    }
-  };
+  //   if (type === "noTarget") {
+  //     fetchIdeaGeneratorPersona();
+  //   }
+  // };
 
-  const [activeAnalysisTab, setActiveAnalysisTab] = useState("summary");
 
-  // 팝업을 보여주는 함수
-  const handleShowDetail = (persona) => {
-    setSelectedDetailPersona(persona || {});
-    setShowPopup(true);
-  };
+
+  // // 팝업을 보여주는 함수
+  // const handleShowDetail = (persona) => {
+  //   setSelectedDetailPersona(persona || {});
+  //   setShowPopup(true);
+  // };
 
   const handleShowDetailMore = (index) => {
     setChartData({
@@ -1184,7 +1185,6 @@ const PageIdeaGenerator = () => {
                       <DeleteFormWrap key={index}>
                         <CustomInput
                           disabled={toolStep >= 1}
-                          // key={index}
                           type="text"
                           placeholder="핵심 가치를 작성해주세요 (예: 안전한 송금 등)"
                           value={customer}
@@ -1195,7 +1195,7 @@ const PageIdeaGenerator = () => {
                         <DeleteButton onClick={() => handleDelete(index)} />
                       </DeleteFormWrap>
                     ))}
-                    <Button
+                    {/* <Button
                       DbExLarge
                       More
                       onClick={() => {
@@ -1206,7 +1206,18 @@ const PageIdeaGenerator = () => {
                       disabled={targetCustomers.length >= 10 || toolStep >= 1}
                     >
                       <Body2 color="gray300">+ 추가하기</Body2>
-                    </Button>
+                    </Button> */}
+                     {targetCustomers.length < 10 && toolStep < 1 && (
+                      <Button
+                        DbExLarge
+                        More
+                        onClick={() => {
+                          setTargetCustomers((prev) => [...(prev || []), ""]);
+                        }}
+                      >
+                        <Body2 color="gray300">+ 추가하기</Body2>
+                      </Button>
+                    )}
                   </TabContent5Item>
                 </div>
 
@@ -1217,7 +1228,6 @@ const PageIdeaGenerator = () => {
                   Round
                   onClick={() => handleNextStep(1)}
                   disabled={
-                    businessDescription.trim() === "" ||
                     targetCustomers.filter((customer) => customer.trim() !== "")
                       .length === 0 ||
                     toolStep >= 1
@@ -1468,27 +1478,10 @@ const PageIdeaGenerator = () => {
                     onPersonaSelect={(_id) => handlePersonaSelectionChange(_id)}
                   />
                 </div>
-                {/* 
-                <Button
-                  Other
-                  Primary
-                  Fill
-                  Round
-                  onClick={() => handleNextStep(2)}
-                  disabled={
-                    businessDescription.trim() === "" ||
-                    targetCustomers.filter((customer) => customer.trim() !== "")
-                      .length === 0 ||
-                    toolStep >= 2
-                  }
-                >
-                  다음
-                </Button> */}
 
                 <BottomBar W100>
                   <Body2 color="gray800">
                     아이디어 도출을 원하는 페르소나를 선택해주세요
-                    {/* ({selectedPersonasSaas.length}/5) */}
                   </Body2>
                   <Button
                     Large
@@ -1496,7 +1489,6 @@ const PageIdeaGenerator = () => {
                     Round
                     Fill
                     disabled={
-                      businessDescription.trim() === "" ||
                       selectedPersonasSaas.length === 0 ||
                       toolStep >= 2
                     }

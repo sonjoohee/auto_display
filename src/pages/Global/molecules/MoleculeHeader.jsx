@@ -45,61 +45,25 @@ import OrganismBusinessAnalysis from "../../../pages/Persona/components/organism
 import { UserCreditInfo } from "../../../utils/indexedDB";
 // import { AlarmCreate } from '../../../utils/indexedDB';
 import { AlarmList } from "../../../utils/indexedDB";
-import {
-  getProjectByIdFromIndexedDB,
-  getPersonaListOnServer,
-  getToolListOnServerSaas,
-} from "../../../utils/indexedDB";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 const MoleculeHeader = () => {
+
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
-  const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
-  const [personaStep, setPersonaStep] = useAtom(PERSONA_STEP);
+  const navigate = useNavigate();
+
+  const [personaStep, ] = useAtom(PERSONA_STEP);
   const location = useLocation();
   const [showAlert, setShowAlert] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [showRedDot, setShowRedDot] = useState(false);
-  const [showBusinessAnalysis, setShowBusinessAnalysis] = useState(false);
   const [showCreditToggle, setShowCreditToggle] = useState(false);
   const [isClosingCreditToggle, setIsClosingCreditToggle] = useState(false);
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [isLoggedInState, setIsLoggedInState] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
   const [alarms, setAlarms] = useState([]);
-  const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
-    TARGET_DISCOVERY_INFO
-  );
-  const [projectId, setProjectId] = useAtom(PROJECT_ID);
-  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
-  const [accessDashboard, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
-  const [accessStateSaas, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
-  const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
-  const [projectCreateInfo, setProjectCreateInfo] =
-    useAtom(PROJECT_CREATE_INFO);
-  const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
-    SINGLE_INTERVIEW_QUESTION_LIST
-  );
-  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
-    INTERVIEW_QUESTION_LIST
-  );
-  const [customTheoryData, setCustomTheoryData] = useAtom(CUSTOM_THEORY_DATA);
-  const [ideaGeneratorInfo, setIdeaGeneratorInfo] =
-    useAtom(IDEA_GENERATOR_INFO);
-  const [customerValueAnalyzerInfo, setCustomerValueAnalyzerInfo] = useAtom(
-    CUSTOMER_VALUE_ANALYZER_INFO
-  );
-  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(
-    DESIGN_ANALYSIS_BUSINESS_INFO
-  );
-  const [designAnalysisBusinessTitle, setDesignAnalysisBusinessTitle] = useAtom(
-    DESIGN_ANALYSIS_BUSINESS_TITLE
-  );
-  const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
-  const [toolListSaas, setToolListSaas] = useAtom(TOOL_LIST_SAAS);
-  const [dashboardToolListSaas, setDashboardToolListSaas] = useAtom(
-    DASHBOARD_TOOL_LIST_SAAS
-  );
-  const navigate = useNavigate();
+  const [projectSaas, ] = useAtom(PROJECT_SAAS);
+
 
   // Persona/3 경로 체크를 위한 조건 수정
   // const isPersona3Page =
@@ -179,9 +143,9 @@ const MoleculeHeader = () => {
     // }
   };
 
-  const handleBusinessAnalysisToggle = () => {
-    setShowBusinessAnalysis(!showBusinessAnalysis);
-  };
+  // const handleBusinessAnalysisToggle = () => {
+  //   setShowBusinessAnalysis(!showBusinessAnalysis);
+  // };
 
   const handleCreditToggle = () => {
     if (showCreditToggle) {
@@ -255,7 +219,7 @@ const MoleculeHeader = () => {
 
   const handleLinkNavigation = async (item) => {
     const link = item.link;
-    const projectId = item.projectId;
+      // const projectId = item.projectId;
     if (!link) return;
     try {
       // const url = new URL(link);
@@ -568,9 +532,6 @@ const MoleculeHeader = () => {
               <img src={images.IconBell} alt="" />
             </Notify>
 
-            {/* <div className="userInfo">
-            유저프로필
-          </div> */}
           </div>
         )}
       </HeaderWrap>
