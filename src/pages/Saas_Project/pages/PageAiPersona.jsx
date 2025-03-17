@@ -832,7 +832,10 @@ const PageAiPersona = () => {
         }));
       } else {
       }
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setShowPopup(false);
+    }
   };
 
   useEffect(() => {
