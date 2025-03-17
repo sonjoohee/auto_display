@@ -6,10 +6,10 @@ import styled, { css } from "styled-components";
 import { palette } from "../../../assets/styles/Palette";
 import images from "../../../assets/styles/Images";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import {  useAtom } from "jotai";
+import { useAtom } from "jotai";
 import axios from "axios";
 import PopupWrap from "../../../assets/styles/Popup";
-import {  Caption2 } from "../../../assets/styles/Typography";
+import { Caption2 } from "../../../assets/styles/Typography";
 import {
   IS_LOGGED_IN,
   USER_NAME,
@@ -48,33 +48,34 @@ import {
 import {
   getAllConversationsFromIndexedDB,
   getToolListOnServer,
-} from "../../../utils/indexedDB"; 
-import MoleculeLoginPopup from "../../../pages/Login_Sign/components/molecules/MoleculeLoginPopup"; 
-import MoleculeAccountPopup from "../../../pages/Login_Sign/components/molecules/MoleculeAccountPopup"; 
-import MoleculeSignPopup from "../../../pages/Login_Sign/components/molecules/MoleculeSignPopup"; 
+} from "../../../utils/indexedDB";
+import MoleculeLoginPopup from "../../../pages/Login_Sign/components/molecules/MoleculeLoginPopup";
+import MoleculeAccountPopup from "../../../pages/Login_Sign/components/molecules/MoleculeAccountPopup";
+import MoleculeSignPopup from "../../../pages/Login_Sign/components/molecules/MoleculeSignPopup";
 
 const OrganismIncNavigation = () => {
-
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [accessDashboard, ] = useAtom(ACCESS_DASHBOARD);
-  const [, setCustomPersonaList] =useAtom(CUSTOM_PERSONA_LIST);
+  const [accessDashboard] = useAtom(ACCESS_DASHBOARD);
+  const [, setCustomPersonaList] = useAtom(CUSTOM_PERSONA_LIST);
   const [, setRefreshTrigger] = useAtom(PROJECT_REFRESH_TRIGGER);
   const [, setProjectLoadButtonState] = useAtom(PROJECT_LOAD_BUTTON_STATE);
   const [, setProjectId] = useAtom(PROJECT_ID);
   const [, setProjectReportId] = useAtom(PROJECT_REPORT_ID);
   const [, setProjectList] = useAtom(PROJECT_LIST);
-  const [, setProjectReportList] =useAtom(PROJECT_REPORT_LIST);
+  const [, setProjectReportList] = useAtom(PROJECT_REPORT_LIST);
   const [, setReportList] = useAtom(REPORT_LIST);
   const [, setPersonaList] = useAtom(PERSONA_LIST);
   const [, setSelectedPersonaList] = useAtom(SELECTED_PERSONA_LIST);
   const [, setCustomizePersonaList] = useAtom(CUSTOMIZE_PERSONA_LIST);
   const [, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
-  const [, setSelectedInterviewPurpose] = useAtom( SELECTED_INTERVIEW_PURPOSE );
+  const [, setSelectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
   const [, setCategoryColor] = useAtom(CATEGORY_COLOR);
   const [, setReportLoadButtonState] = useAtom(REPORT_LOAD_BUTTON_STATE);
-  const [, setReportDescriptionLoadButtonState] = useAtom(REPORT_DESCRIPTION_LOAD_BUTTON_STATE);
+  const [, setReportDescriptionLoadButtonState] = useAtom(
+    REPORT_DESCRIPTION_LOAD_BUTTON_STATE
+  );
   const [, setInterviewData] = useAtom(INTERVIEW_DATA);
   const [, setInterviewReport] = useAtom(INTERVIEW_REPORT);
   const [, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
@@ -87,14 +88,18 @@ const OrganismIncNavigation = () => {
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태 관리
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useAtom(IS_LOGIN_POPUP_OPEN); // 로그인 팝업 상태 관리
   const [reports, setReports] = useState([]); // 서버에서 가져온 보고서 리스트 상태
-  const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(REPORT_REFRESH_TRIGGER); // 리프레시 트리거 상태 구독
-  const [chatRefreshTrigger, setChatRefreshTrigger] =useAtom(CHAT_REFRESH_TRIGGER); // 리프레시 트리거 상태 구독
+  const [reportRefreshTrigger, setReportRefreshTrigger] = useAtom(
+    REPORT_REFRESH_TRIGGER
+  ); // 리프레시 트리거 상태 구독
+  const [chatRefreshTrigger, setChatRefreshTrigger] =
+    useAtom(CHAT_REFRESH_TRIGGER); // 리프레시 트리거 상태 구독
 
   const [chatList, setChatList] = useState([]); // 서버에서 가져온 대화 리스트
 
   const [isAccountPopupOpen, setAccountPopupOpen] = useState(false); // 계정설정 팝업
   const [, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 상태 읽기
-  const [isSignupPopupOpen, setIsSignupPopupOpen] =useAtom(IS_SIGNUP_POPUP_OPEN); // 회원가입 팝업 상태 관리
+  const [isSignupPopupOpen, setIsSignupPopupOpen] =
+    useAtom(IS_SIGNUP_POPUP_OPEN); // 회원가입 팝업 상태 관리
   const [isLogoutPopup, setIsLogoutPopup] = useState(false); // 로그아웃 팝업 상태 관리
   const [, setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
   const [, setUserEmail] = useAtom(USER_EMAIL); // 아톰에서 유저 이메일 불러오기
@@ -105,7 +110,7 @@ const OrganismIncNavigation = () => {
   const [reportIdToDelete, setReportIdToDelete] = useState(null); // 삭제하려는 reportId 저장
   const [chatIdToDelete, setChatIdToDelete] = useState(null); // 삭제하려는 reportId 저장
 
-  const [conversationId, ] = useAtom(CONVERSATION_ID);
+  const [conversationId] = useAtom(CONVERSATION_ID);
 
   const insightEditBoxRef = useRef(null);
   const historyEditBoxRef = useRef(null);
@@ -166,7 +171,7 @@ const OrganismIncNavigation = () => {
           withCredentials: true,
         }
       );
-      
+
       setReportRefreshTrigger((prev) => !prev);
       setIsReportChangePopupOpen(false);
       setReportIdToChangeName(null);
@@ -185,7 +190,7 @@ const OrganismIncNavigation = () => {
       };
       await axios.put(`https://wishresearch.kr/panels/update_chat`, PUT_DATA, {
         headers: {
-          Authorization: `Bearer ${accessToken}`, 
+          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
         withCredentials: true,
@@ -210,7 +215,6 @@ const OrganismIncNavigation = () => {
     setNewChatName("");
   };
 
-
   //아코디언 생성 코드   //아코디언 :  클릭하면 펼처지고 다시 클릭하면 접히는 형태의 인터페이스
   //1. 높이 제한
   // 사이드바의 최대 높이 설정
@@ -220,7 +224,7 @@ const OrganismIncNavigation = () => {
 
   // 2. 첫 번째 아코디언(보고서)와 두 번째 아코디언(대화 내역)의 높이를 계산하는 함수
   const calculateAccordionHeight = () => {
-    const reportHeight = reports.length * ITEM_HEIGHT; 
+    const reportHeight = reports.length * ITEM_HEIGHT;
     const chatHeight = chatList.length * ITEM_HEIGHT;
 
     return { reportHeight, chatHeight };
@@ -383,7 +387,6 @@ const OrganismIncNavigation = () => {
   //   setChatIdToDelete(ChatId); // 삭제할 reportId 저장
   //   setChatIsDeletePopupOpen(true); // 팝업 열기
   // };
- 
 
   // // 인사이트 보관함용 EditBox 열기/닫기 함수
   // const insightEditBoxToggle = (index, event) => {
@@ -650,7 +653,6 @@ const OrganismIncNavigation = () => {
 
   //새작업 버튼 클릭 시 호출되는 함수
   const handleNewProjectClick = () => {
-
     setPersonaStep(0);
 
     window.location.href = "/Project";
@@ -725,7 +727,6 @@ const OrganismIncNavigation = () => {
   };
 
   const handleClickHome = () => {
-
     if (location.pathname !== "/") {
       setIsHomePopupOpen(true);
     }
@@ -763,7 +764,7 @@ const OrganismIncNavigation = () => {
               />
             </svg>
 
-            <span>PROJECT</span>
+            <span>프로젝트</span>
           </li>
 
           {accessDashboard && (

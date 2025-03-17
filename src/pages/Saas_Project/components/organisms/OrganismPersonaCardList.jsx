@@ -39,15 +39,15 @@ const OrganismPersonaCardList = ({
   // 활성화된 탭에 따라 필터링된 페르소나 데이터
   const [filteredPersonaData, setFilteredPersonaData] = useState([]);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
-  const eventState = true; 
-  const trialState = false; 
-  const eventTitle = "이벤트 제목"; 
-  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const eventState = true;
+  const trialState = false;
+  const eventTitle = "이벤트 제목";
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [creditRequestBusinessPersona] = useAtom(
     CREDIT_REQUEST_BUSINESS_PERSONA
   );
   const [, setUserCredits] = useAtom(USER_CREDITS);
-  const [selectedPersona, setSelectedPersona] = useState(null); 
+  const [selectedPersona, setSelectedPersona] = useState(null);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
 
   // 탭이 변경될 때마다 데이터 필터링 및 통계 계산
@@ -297,12 +297,21 @@ const OrganismPersonaCardList = ({
                 <div style={{ flex: "1" }}>
                   <StyledButton
                     Medium
-                    Outline
+                    Primary
+                    Fill
                     onClick={() => setShowPopup(persona)}
                   >
-                    프로필
+                    {persona?.status === "ing"
+                      ? "페르소나 생성중"
+                      : persona?.status === "complete"
+                      ? "활성 페르소나"
+                      : persona?.status === "request"
+                      ? "페르소나 생성중"
+                      : persona?.status === "profile"
+                      ? "비활성 페르소나"
+                      : "비활성 페르소나"}
                   </StyledButton>
-                  {!["request", "ing", "complete"].includes(
+                  {/* {!["request", "ing", "complete"].includes(
                     persona?.status
                   ) && (
                     <StyledButton
@@ -313,7 +322,7 @@ const OrganismPersonaCardList = ({
                     >
                       페르소나 생성
                     </StyledButton>
-                  )}
+                  )} */}
                 </div>
               </AiPersonaCardButtonWrap>
             </AiPersonaCardListItem>
@@ -338,8 +347,8 @@ const OrganismPersonaCardList = ({
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
             onConfirm={() => {
-              creditUse(); 
-              setShowRequestPopup(false); 
+              creditUse();
+              setShowRequestPopup(false);
             }}
           />
         ) : trialState ? (
@@ -360,8 +369,8 @@ const OrganismPersonaCardList = ({
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
             onConfirm={() => {
-              handleRequestPersona(selectedPersona); 
-              setShowRequestPopup(false); 
+              handleRequestPersona(selectedPersona);
+              setShowRequestPopup(false);
             }}
           />
         ) : (
@@ -380,8 +389,8 @@ const OrganismPersonaCardList = ({
             isModal={false}
             onCancel={() => setShowRequestPopup(false)}
             onConfirm={() => {
-              handleRequestPersona(selectedPersona); 
-              setShowRequestPopup(false); 
+              handleRequestPersona(selectedPersona);
+              setShowRequestPopup(false);
             }}
           />
         ))}
