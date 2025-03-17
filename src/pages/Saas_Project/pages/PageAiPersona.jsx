@@ -43,7 +43,6 @@ import {
   Sub3,
 } from "../../../assets/styles/Typography";
 import OrganismEmptyPersona from "../components/organisms/OrganismEmptyPersona";
-
 import {
   updatePersonaOnServer,
   getPersonaListOnServer,
@@ -56,7 +55,6 @@ import {
   getProjectByIdFromIndexedDB,
   getPersonaOnServer,
 } from "../../../utils/indexedDB";
-
 import OrganismPersonaCardList from "../components/organisms/OrganismPersonaCardList";
 import {
   PROJECT_ID,
@@ -73,23 +71,22 @@ import AtomPersonaLoader from "../../Global/atoms/AtomPersonaLoader";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 
 const PageAiPersona = () => {
+
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const navigate = useNavigate();
   const location = useLocation();
+
   const [project] = useAtom(PROJECT_SAAS);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId] = useAtom(PROJECT_ID);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [, setUserCredits] = useAtom(USER_CREDITS);
-  const [creditRequestBusinessPersona] = useAtom(
-    CREDIT_REQUEST_BUSINESS_PERSONA
-  );
+  const [creditRequestBusinessPersona] = useAtom(CREDIT_REQUEST_BUSINESS_PERSONA);
 
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
   const [isCustomizePopupOpen, setIsCustomizePopupOpen] = useState(false);
-  const [isPersonaConfirmPopupOpen, setIsPersonaConfirmPopupOpen] =
-    useState(false);
+  const [isPersonaConfirmPopupOpen, setIsPersonaConfirmPopupOpen] =useState(false);
   const [selectedPersona, setSelectedPersona] = useState(null);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [activeTab2, setActiveTab2] = useState("lifestyle");
@@ -546,7 +543,7 @@ const PageAiPersona = () => {
         return uniqueUserStats;
       case "key_stakeholder":
         return keyStakeholderStats;
-      case "my_persona":
+      case "my_favorite":
         // 즐겨찾기된 페르소나만 필터링 (다양한 형태의 isStarred 값 처리)
         const starredPersonas = personaListSaas.filter(
           (persona) => persona?.favorite === true
@@ -968,16 +965,16 @@ const PageAiPersona = () => {
                     Key Stakeholder
                   </TabButtonType3>
                   <TabButtonType3
-                    className={activeTab === "my_persona" ? "active" : ""}
-                    onClick={() => handleTabClick("my_persona")}
-                    isActive={activeTab === "my_persona"}
+                    className={activeTab === "my_favorite" ? "active" : ""}
+                    onClick={() => handleTabClick("my_favorite")}
+                    isActive={activeTab === "my_favorite"}
                     style={
-                      activeTab === "my_persona"
+                      activeTab === "my_favorite"
                         ? { color: "#333333" }
                         : { color: "#999999" }
                     }
                   >
-                    My Persona
+                    Favorite
                   </TabButtonType3>
                 </TabWrapType3>
 
@@ -2289,20 +2286,7 @@ const AiPersonaInfo = styled.div`
   }
 `;
 
-const StarButton = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px;
-  border-radius: 4px;
-  border: 1px solid
-    ${(props) =>
-      props.isStarred ? `rgba(255, 149, 0, 0.10)` : palette.gray200};
-  background: ${(props) =>
-    props.isStarred ? `rgba(255, 149, 0, 0.10)` : palette.white};
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-`;
+
 
 const PersonaStatusWrap = styled.div`
   display: flex;

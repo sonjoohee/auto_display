@@ -23,7 +23,7 @@ const OrganismPersonaListSaas = ({
 }) => {
 
 
-  const [activeTab, setActiveTab] = useState("my_persona");
+  const [activeTab, setActiveTab] = useState("my_favorite");
 
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
   const handleTabClick = (tabName) => {
@@ -42,8 +42,8 @@ const OrganismPersonaListSaas = ({
     // 현재 선택 상태 토글
     const isCurrentlySelected = !selectedPersonaButtons[buttonId];
 
-    if (tab === "my_persona" && isCurrentlySelected) {
-      // my_persona에서 선택한 경우, 해당 personaType 탭에서도 선택
+    if (tab === "my_favorite" && isCurrentlySelected) {
+      // my_favorite에서 선택한 경우, 해당 personaType 탭에서도 선택
       const originalTypeButtonId = `${persona.personaType}_${id}`;
       handlePersonaButtonClick(buttonId); // 현재 버튼 상태 변경
 
@@ -52,33 +52,33 @@ const OrganismPersonaListSaas = ({
         handlePersonaButtonClick(originalTypeButtonId);
       }
     } else if (
-      tab !== "my_persona" &&
+      tab !== "my_favorite" &&
       persona.favorite &&
       isCurrentlySelected
     ) {
-      // 다른 탭에서 favorite이 true인 페르소나를 선택한 경우, my_persona 탭에서도 선택
-      const myPersonaButtonId = `my_persona_${id}`;
+      // 다른 탭에서 favorite이 true인 페르소나를 선택한 경우, my_favorite 탭에서도 선택
+      const myPersonaButtonId = `my_favorite_${id}`;
       handlePersonaButtonClick(buttonId); // 현재 버튼 상태 변경
 
-      // my_persona 탭에서도 선택되도록 함
+      // my_favorite 탭에서도 선택되도록 함
       if (!selectedPersonaButtons[myPersonaButtonId]) {
         handlePersonaButtonClick(myPersonaButtonId);
       }
     } else if (
-      tab !== "my_persona" &&
+      tab !== "my_favorite" &&
       persona.favorite &&
       !isCurrentlySelected
     ) {
-      // 다른 탭에서 favorite이 true인 페르소나 선택 해제 시, my_persona 탭에서도 선택 해제
-      const myPersonaButtonId = `my_persona_${id}`;
+      // 다른 탭에서 favorite이 true인 페르소나 선택 해제 시, my_favorite 탭에서도 선택 해제
+      const myPersonaButtonId = `my_favorite_${id}`;
       handlePersonaButtonClick(buttonId); // 현재 버튼 상태 변경
 
-      // my_persona 탭에서도 선택 해제되도록 함
+      // my_favorite 탭에서도 선택 해제되도록 함
       if (selectedPersonaButtons[myPersonaButtonId]) {
         handlePersonaButtonClick(myPersonaButtonId);
       }
-    } else if (tab === "my_persona" && !isCurrentlySelected) {
-      // my_persona에서 선택 해제한 경우, 해당 personaType 탭에서도 선택 해제
+    } else if (tab === "my_favorite" && !isCurrentlySelected) {
+      // my_favorite에서 선택 해제한 경우, 해당 personaType 탭에서도 선택 해제
       const originalTypeButtonId = `${persona.personaType}_${id}`;
       handlePersonaButtonClick(buttonId); // 현재 버튼 상태 변경
 
@@ -101,15 +101,15 @@ const OrganismPersonaListSaas = ({
       return true;
     }
 
-    // my_persona 탭이 아닌 경우, my_persona 탭에서도 확인
-    if (activeTab !== "my_persona" && persona.favorite) {
-      if (selectedPersonaButtons[`my_persona_${personaId}`]) {
+    // my_favorite 탭이 아닌 경우, my_favorite 탭에서도 확인
+    if (activeTab !== "my_favorite" && persona.favorite) {
+      if (selectedPersonaButtons[`my_favorite_${personaId}`]) {
         return true;
       }
     }
 
-    // my_persona 탭인 경우, 원래 타입의 탭에서도 확인
-    if (activeTab === "my_persona") {
+    // my_favorite 탭인 경우, 원래 타입의 탭에서도 확인
+    if (activeTab === "my_favorite") {
       if (selectedPersonaButtons[`${persona.personaType}_${personaId}`]) {
         return true;
       }
@@ -122,8 +122,8 @@ const OrganismPersonaListSaas = ({
   const getCorrectTabIdForSelection = (persona, index, currentTab) => {
     const personaId = persona.id || `persona${index}`;
 
-    // my_persona 탭인 경우, 원래 타입의 ID를 반환
-    if (currentTab === "my_persona") {
+    // my_favorite 탭인 경우, 원래 타입의 ID를 반환
+    if (currentTab === "my_favorite") {
       return `${persona.personaType}_${personaId}`;
     }
 
@@ -204,16 +204,16 @@ const OrganismPersonaListSaas = ({
           <AiPersonaContent>
             <TabWrapType3 Border>
               <TabButtonType3
-                className={activeTab === "my_persona" ? "active" : ""}
-                onClick={() => handleTabClick("my_persona")}
-                isActive={activeTab === "my_persona"}
+                className={activeTab === "my_favorite" ? "active" : ""}
+                onClick={() => handleTabClick("my_favorite")}
+                isActive={activeTab === "my_favorite"}
                 style={
-                  activeTab === "my_persona"
+                  activeTab === "my_favorite"
                     ? { color: "#333333" }
                     : { color: "#999999" }
                 }
               >
-                My Persona
+                Favorite
               </TabButtonType3>
               <TabButtonType3
                 className={activeTab === "macro_segment" ? "active" : ""}
@@ -255,7 +255,7 @@ const OrganismPersonaListSaas = ({
             <ListBoxWrap Border>
               {personaListSaas
                 .filter((persona) => {
-                  if (activeTab === "my_persona") {
+                  if (activeTab === "my_favorite") {
                     return persona?.favorite === true;
                   } // favorite가 true인 페르소나는 마이페르소나 탭에만 표시
                   if (persona?.favorite === true) {
