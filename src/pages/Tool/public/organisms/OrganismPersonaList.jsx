@@ -129,7 +129,7 @@ const OrganismPersonaList = ({
                     : { color: "#999999" }
                 }
               >
-                My Persona
+                Favorite
               </TabButtonType3>
               <TabButtonType3
                 className={activeTab === "macro_segment" ? "active" : ""}
@@ -208,7 +208,7 @@ const OrganismPersonaList = ({
                 ))}
             </ListBoxWrap>
 
-            {/* My Persona 탭에서 데이터가 없을 때만 표시 */}
+            {/* Favorite 탭에서 데이터가 없을 때만 표시 */}
             {activeTab === "my_favorite" &&
               !personaListSaas.some((persona) => persona.favorite === true) && (
                 <BoxWrap

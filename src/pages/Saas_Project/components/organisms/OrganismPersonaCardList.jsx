@@ -56,10 +56,10 @@ const OrganismPersonaCardList = ({
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [filteredPersonaData, setFilteredPersonaData] = useState([]);
-  const [loadingTabs, setLoadingTabs] = useState  ({
+  const [loadingTabs, setLoadingTabs] = useState({
     macro_segment: false,
     unique_user: false,
-    key_stakeholder: false
+    key_stakeholder: false,
   });
   const eventState = true;
   const trialState = false;
@@ -151,13 +151,11 @@ const OrganismPersonaCardList = ({
     } catch (error) {}
   };
 
-  
-
   const handleCreatePersona = async (personaType) => {
     // 해당 탭만 로딩 상태로 변경
-    setLoadingTabs(prev => ({
+    setLoadingTabs((prev) => ({
       ...prev,
-      [personaType]: true
+      [personaType]: true,
     }));
 
     try {
@@ -316,9 +314,9 @@ const OrganismPersonaCardList = ({
       // 에러 처리
     } finally {
       // 해당 탭의 로딩 상태만 해제
-      setLoadingTabs(prev => ({
+      setLoadingTabs((prev) => ({
         ...prev,
-        [personaType]: false
+        [personaType]: false,
       }));
     }
   };
@@ -466,24 +464,21 @@ const OrganismPersonaCardList = ({
             </AiPersonaCardListItem>
           ))}
 
-          {activeTab !== "my_favorite" &&
-            currentTabPersonaCount < 24 && (
-              <>
-                {loadingTabs[activeTab] ? (
-                  <div className="more">
-                    <AtomPersonaLoader message="페르소나를 생성하고 있습니다." />
-                  </div>
-                ) : (
-                  <div className="more" onClick={handleCreditCheck}>
-                    <Body3 color="gray500" align="center">
-
-                      + 더보기 ({creditPersonaCreate} credit)
-
-                    </Body3>
-                  </div>
-                )}
-              </>
-            )}
+          {activeTab !== "my_favorite" && currentTabPersonaCount < 24 && (
+            <>
+              {loadingTabs[activeTab] ? (
+                <div className="more">
+                  <AtomPersonaLoader message="페르소나를 생성하고 있습니다." />
+                </div>
+              ) : (
+                <div className="more" onClick={handleCreditCheck}>
+                  <Body3 color="gray500" align="center">
+                    + 더보기 ({creditPersonaCreate} credit)
+                  </Body3>
+                </div>
+              )}
+            </>
+          )}
         </AiPersonaCardGroupWrap>
       )}
 
@@ -491,7 +486,7 @@ const OrganismPersonaCardList = ({
         (eventState ? (
           <PopupWrap
             Event
-            title="페르소나 생성"
+            title="페르소나 더보기"
             message={
               <>
                 현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
@@ -508,7 +503,7 @@ const OrganismPersonaCardList = ({
         ) : trialState ? (
           <PopupWrap
             Check
-            title="페르소나 생성"
+            title="페르소나 더보기"
             message={
               <>
                 해당 서비스 사용시 크레딧이 소진됩니다.
@@ -527,7 +522,7 @@ const OrganismPersonaCardList = ({
         ) : (
           <PopupWrap
             Check
-            title="페르소나 생성"
+            title="페르소나 더보기"
             message={
               <>
                 해당 서비스 사용시 크레딧이 소진됩니다.
@@ -562,7 +557,7 @@ const OrganismPersonaCardList = ({
         />
       )}
 
-      {showCreatePersonaPopup && (
+      {/* {showCreatePersonaPopup && (
         <PopupWrap
           Check
           title="페르소나 더보기"
@@ -580,7 +575,7 @@ const OrganismPersonaCardList = ({
             </>
           }
         />
-      )}
+      )} */}
     </>
   );
 };
