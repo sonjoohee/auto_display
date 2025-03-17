@@ -122,6 +122,7 @@ import {
   IDEA_GENERATOR_FINAL_REPORT,
   IDEA_GENERATOR_SELECTED_PERSONA,
   IDEA_GENERATOR_KNOW_TARGET,
+  IDEA_GENERATOR_EDITING_BUSINESS_TEXT,
   DESIGN_ANALYSIS_EMOTION_ANALYSIS,
   DESIGN_ANALYSIS_BUSINESS_INFO,
   DESIGN_ANALYSIS_UPLOADED_FILES,
@@ -263,6 +264,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setIdeaGeneratorSelectedPersona] =useAtom(IDEA_GENERATOR_SELECTED_PERSONA);
   const [, setIdeaGeneratorKnowTarget] = useAtom(IDEA_GENERATOR_KNOW_TARGET);
   const [, setIdeaGeneratorPurpose] = useAtom(IDEA_GENERATOR_PURPOSE );
+  const [, setIdeaGeneratorEditingBusinessText] = useAtom(IDEA_GENERATOR_EDITING_BUSINESS_TEXT);
   const [, setReportLoadButtonState] = useAtom(REPORT_LOAD_BUTTON_STATE);
   const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
   const [, setReportId] = useAtom(PROJECT_REPORT_ID);
@@ -718,6 +720,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setIdeaGeneratorFinalReport({});
         setIdeaGeneratorSelectedPersona([]);
         setIdeaGeneratorKnowTarget(null);
+        setIdeaGeneratorEditingBusinessText("");
         setIdeaGeneratorPurpose("");
 
         setIdeaGeneratorInfo({
@@ -734,6 +737,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         );
         setIdeaGeneratorKnowTarget(chatData?.ideaGeneratorKnowTarget);
         setIdeaGeneratorPurpose(chatData?.purpose);
+        setIdeaGeneratorEditingBusinessText(chatData?.businessDescription);
 
         setDesignAnalysisEmotionAnalysis([]);
         setDesignAnalysisBusinessInfo("");

@@ -7,7 +7,7 @@ import { palette } from "../../../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
-import { Button } from "../../../../../assets/styles/ButtonStyle";
+import { Button ,IconButton } from "../../../../../assets/styles/ButtonStyle";
 import {
   FormBox,
   CustomTextarea,
@@ -25,6 +25,8 @@ import {
   BottomBar,
   BgBoxItem,
   ListBoxWrap,
+  Title,
+  ListBoxGroup
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
   IS_LOGGED_IN,
@@ -43,7 +45,6 @@ import images from "../../../../../assets/styles/Images";
 import {
   H4,
   H3,
-  H5,
   Body1,
   Body2,
   Body3,
@@ -101,6 +102,8 @@ const PageTargetDiscovery = () => {
   const [isLoadingScenario, setIsLoadingScenario] = useState(false);
   const [specificSituation, setSpecificSituation] = useState("");
   const [loadingPersonas, setLoadingPersonas] = useState({});
+  const [isEditingBusiness, setIsEditingBusiness] = useState(false);
+  const [isEditingTarget, setIsEditingTarget] = useState(false);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -125,9 +128,11 @@ const PageTargetDiscovery = () => {
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
-      const projectAnalysis =
-        (project?.projectAnalysis.business_analysis
-          ? project?.projectAnalysis.business_analysis
+      console.log("targetDiscoveryInfos", targetDiscoveryInfo)
+      if (Object.keys(targetDiscoveryInfo).length === 0) {
+        const projectAnalysis =
+          (project?.projectAnalysis.business_analysis
+            ? project?.projectAnalysis.business_analysis
           : "") +
         (project?.projectAnalysis.business_analysis &&
         project?.projectAnalysis.file_analysis
@@ -137,32 +142,23 @@ const PageTargetDiscovery = () => {
           ? project?.projectAnalysis.file_analysis
           : "");
       // 비즈니스 정보 설정 (Step 1)
+   
       if (project) {
         setBusinessDescription(projectAnalysis);
         setTargetCustomer(project?.projectAnalysis.target_customer ?? "");
         setSpecificSituation(targetDiscoveryInfo?.specificSituation ?? "");
         setSelectedPurpose(project?.targetCountry ?? "");
       }
+    }
 
       if (toolLoading) {
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
-
-        const projectAnalysis =
-          (project?.projectAnalysis.business_analysis
-            ? project?.projectAnalysis.business_analysis
-            : "") +
-          (project?.projectAnalysis.business_analysis &&
-          project?.projectAnalysis.file_analysis
-            ? "\n"
-            : "") +
-          (project?.projectAnalysis.file_analysis
-            ? project?.projectAnalysis.file_analysis
-            : "");
         // 비즈니스 정보 설정 (Step 1)
+
         if (project) {
-          setBusinessDescription(projectAnalysis);
-          setTargetCustomer(project?.projectAnalysis.target_customer ?? "");
+          setBusinessDescription(targetDiscoveryInfo?.business ?? "");
+          setTargetCustomer(targetDiscoveryInfo?.target ?? "");
           setSpecificSituation(targetDiscoveryInfo?.specificSituation ?? "");
           setSelectedPurpose(project?.targetCountry ?? "");
         }
@@ -677,6 +673,41 @@ const PageTargetDiscovery = () => {
     };
   }, [navigate]);
 
+  const handleEditBusinessClick = () => {
+    setIsEditingBusiness(true);
+  };
+
+  const handleSaveBusinessClick = () => {
+    setIsEditingBusiness(false);
+  };
+
+  const handleUndoBusinessClick = () => {
+
+    const originalText = (project?.projectAnalysis.business_analysis
+      ? project?.projectAnalysis.business_analysis
+    : "") +
+  (project?.projectAnalysis.business_analysis &&
+  project?.projectAnalysis.file_analysis
+    ? "\n"
+    : "") +
+  (project?.projectAnalysis.file_analysis
+    ? project?.projectAnalysis.file_analysis
+    : "");
+        
+    setBusinessDescription(originalText);
+  };
+  const handleEditTargetClick = () => {
+    setIsEditingTarget(true);
+  };
+
+  const handleSaveTargetClick = () => {
+    setIsEditingTarget(false);
+  };
+
+  const handleUndoTargetClick = () => {
+    setTargetCustomer(project?.projectAnalysis.target_customer ?? ""); // 원래 텍스트로 되돌리는 함수 필요
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -787,35 +818,89 @@ const PageTargetDiscovery = () => {
 
                     <div className="content">
                       <TabContent5Item required>
-                        <div className="title">
+                        <Title>
                           <Body1 color="gray700">비즈니스 설명</Body1>
-                        </div>
-                        <FormBox Large>
-                          <CustomTextarea
-                            disabled={toolStep >= 1}
-                            Edit
-                            rows={6}
-                            placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
-                            value={businessDescription}
-                            status="valid"
-                          />
-                        </FormBox>
+                          {!isEditingBusiness ? (
+                            <IconButton onClick={handleEditBusinessClick} disabled={toolStep >= 1}>
+                              <img src={images.PencilSquare} alt="" />
+                              <span>수정하기</span>
+                            </IconButton>
+                          ) : (
+                            <IconButton onClick={handleSaveBusinessClick}>
+                              <img src={images.FolderArrowDown} alt="" />
+                              <span>저장하기</span>
+                            </IconButton>
+                          )}
+                        </Title>
+                        
+                        {!isEditingBusiness ? (
+                          <ListBoxGroup>
+                            <Body2 color="gray800" align="left">
+                              {businessDescription}
+                            </Body2>
+                          </ListBoxGroup>
+                        ) : (
+                          <FormBox Large>
+                            <CustomTextarea
+                              Edit
+                              rows={6}
+                              placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
+                              value={businessDescription}
+                              onChange={(e) => setBusinessDescription(e.target.value)}
+                              status="valid"
+                              disabled={toolStep >= 1}
+                            />
+                            <EditButtonGroup>
+                              <IconButton onClick={handleUndoBusinessClick}>
+                                <img src={images.ClockCounterclockwise} alt="" />
+                                <span>이전으로 되돌리기</span>
+                              </IconButton>
+                            </EditButtonGroup>
+                          </FormBox>
+                        )}
                       </TabContent5Item>
 
                       <TabContent5Item required>
-                        <div className="title">
+                        <Title>
                           <Body1 color="gray700">타겟 고객</Body1>
-                        </div>
-                        <FormBox Large>
-                          <CustomTextarea
-                            disabled={toolStep >= 1}
-                            Edit
-                            rows={5}
-                            placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
-                            value={targetCustomer}
-                            status="valid"
-                          />
-                        </FormBox>
+                          {!isEditingTarget ? (
+                            <IconButton onClick={handleEditTargetClick} disabled={toolStep >= 1}>
+                              <img src={images.PencilSquare} alt="" />
+                              <span>수정하기</span>
+                            </IconButton>
+                          ) : (
+                            <IconButton onClick={handleSaveTargetClick}>
+                              <img src={images.FolderArrowDown} alt="" />
+                              <span>저장하기</span>
+                            </IconButton>
+                          )}
+                        </Title>
+                        
+                        {!isEditingTarget ? (
+                          <ListBoxGroup>
+                            <Body2 color="gray800" align="left">
+                              {targetCustomer}
+                            </Body2>
+                          </ListBoxGroup>
+                        ) : (
+                          <FormBox Large>
+                            <CustomTextarea
+                              Edit
+                              rows={5}
+                              placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
+                              value={targetCustomer}
+                              onChange={(e) => setTargetCustomer(e.target.value)}
+                              status="valid"
+                              disabled={toolStep >= 1}
+                            />
+                            <EditButtonGroup>
+                              <IconButton onClick={handleUndoTargetClick}>
+                                <img src={images.ClockCounterclockwise} alt="" />
+                                <span>이전으로 되돌리기</span>
+                              </IconButton>
+                            </EditButtonGroup>
+                          </FormBox>
+                        )}
                       </TabContent5Item>
 
                       <TabContent5Item>
@@ -1271,41 +1356,47 @@ const ViewInfo = styled.div`
   }
 `;
 
-const ViewInfoNodata = styled(ViewInfo)`
-  justify-content: center;
-  padding: 24px 0 16px;
+// const ViewInfoNodata = styled(ViewInfo)`
+//   justify-content: center;
+//   padding: 24px 0 16px;
 
-  > div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
+//   > div {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     justify-content: center;
+//     gap: 16px;
 
-    > div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      line-height: 1.5;
-      color: ${palette.gray500};
+//     > div {
+//       display: flex;
+//       flex-direction: column;
+//       align-items: center;
+//       justify-content: center;
+//       gap: 20px;
+//       line-height: 1.5;
+//       color: ${palette.gray500};
 
-      span {
-        font-size: 0.875rem;
-        font-weight: 300;
-        line-height: 1.5;
-        color: ${palette.primary};
-        padding: 6px 10px;
-        border-radius: 6px;
-        border: 1px solid ${palette.primary};
-        background-color: #e9f1ff;
-        cursor: pointer;
-      }
-    }
-  }
+//       span {
+//         font-size: 0.875rem;
+//         font-weight: 300;
+//         line-height: 1.5;
+//         color: ${palette.primary};
+//         padding: 6px 10px;
+//         border-radius: 6px;
+//         border: 1px solid ${palette.primary};
+//         background-color: #e9f1ff;
+//         cursor: pointer;
+//       }
+//     }
+//   }
+// `;
+
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 12px;
 `;
 
-const PageWrap = styled.div`
-  width: 100%;
+const EditButtonGroup = styled(ButtonGroup)`
+  justify-content: end;
 `;

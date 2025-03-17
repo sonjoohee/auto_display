@@ -78,7 +78,6 @@ import {
   STRATEGY_CONSULTANT_REPORT_DATA,
   PROJECT_SAAS,
 } from "../../../AtomStates";
-
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import { createChatOnServer } from "../../../../utils/indexedDB"; // 서버와 대화 ID 생성 함수
 import MoleculeStrategyButton from "../molecules/MoleculeStrategyButton";
@@ -86,7 +85,6 @@ import OrganismStrategyConsultantReport from "../organisms/OrganismStrategyConsu
 // import OrganismLeftSideBar from "../organisms/OrganismLeftSideBar";
 import OrganismLeftSideBar from "../../../Global/organisms/OrganismIncNavigation";
 import Header from "../../../Global/molecules/MoleculeHeader";
-
 import OrganismRightSideBar from "../organisms/OrganismRightSideBar";
 import OrganismBizAnalysisSection from "../organisms/OrganismBizAnalysisSection";
 import OrganismStrategyReportSection from "../organisms/OrganismStrategyReportSection";
@@ -130,21 +128,18 @@ import MoleculeSurveyStartButton from "../molecules/MoleculeSurveyStartButton";
 import MoleculeSurveyGoalSuggestion from "../molecules/MoleculeSurveyGoalSuggestion";
 import MoleculeCheckSurveyOption from "../molecules/MoleculeCheckSurveyOption";
 import OrganismSurveyGuidelineReport from "../organisms/OrganismSurveyGuidelineReport";
-
 import MoleculeBmStartButton from "../molecules/MoleculeBmStartButton";
 import MoleculeCheckBmOption from "../molecules/MoleculeCheckBmOption";
 import MoleculeBmModelSuggestion from "../molecules/MoleculeBmModelSuggestion";
 import MoleculeBmSelectModelButton from "../molecules/MoleculeBmSelectModelButton";
 import MoleculeBmBmAdsContinueButton from "../molecules/MoleculeBmBmAdsContinueButton";
 import MoleculeBmLeanAdsContinueButton from "../molecules/MoleculeBmLeanAdsContinueButton";
-
 import OrganismBmLeanAutoReport from "../organisms/OrganismBmLeanAutoReport";
 import OrganismBmLeanAdsReport from "../organisms/OrganismBmLeanAdsReport";
 import OrganismBmLeanCustomReport from "../organisms/OrganismBmLeanCustomReport";
 import OrganismBmBmAutoReport from "../organisms/OrganismBmBmAutoReport";
 import OrganismBmBmAdsReport from "../organisms/OrganismBmBmAdsReport";
 import OrganismBmBmCustomReport from "../organisms/OrganismBmBmCustomReport";
-
 import MoleculeMarketingStartButton from "../molecules/Marketing/MoleculeMarketingStartButton";
 import OrganismMarketingResearchReport from "../organisms/Marketing/OrganismMarketingResearchReport";
 import MoleculeMarketingBmButton from "../molecules/Marketing/MoleculeMarketingBmButton";
@@ -160,183 +155,89 @@ import images from "../../../../assets/styles/Images";
 
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 
-const PageExpertInsight = () => {
-  const [projectSaas, setProjectSaas] = useAtom(PROJECT_SAAS);
-  const [strategyConsultantReportData, setStrategyConsultantReportData] =
-    useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
-  const [growthHackerSelectedSolution, setGrowthHackerSelectedSolution] =
-    useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
-  const [growthHackerRecommendedSolution, setGrowthHackerRecommendedSolution] =
-    useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
-  const [bmModelSuggestionReportData, setBmModelSuggestionReportData] = useAtom(
-    BM_MODEL_SUGGESTION_REPORT_DATA
-  );
-  const [bmQuestionList, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
-  const [bmOrLean, setBmOrLean] = useAtom(BM_OR_LEAN);
-  const [bmBmAutoReportData, setBmBmAutoReportData] = useAtom(
-    BM_BM_AUTO_REPORT_DATA
-  );
-  const [bmLeanAutoReportData, setBmLeanAutoReportData] = useAtom(
-    BM_LEAN_AUTO_REPORT_DATA
-  );
-  const [bmBmAdsReportData, setBmBmAdsReportData] = useAtom(
-    BM_BM_ADS_REPORT_DATA
-  );
-  const [bmSelectedProblemOptions, setBmSelectedProblemOptions] = useAtom(
-    BM_SELECTED_PROBLEM_OPTIONS
-  );
-  const [bmLeanAdsReportData, setBmLeanAdsReportData] = useAtom(
-    BM_LEAN_ADS_REPORT_DATA
-  );
-  const [bmBmCustomReportData, setBmBmCustomReportData] = useAtom(
-    BM_BM_CUSTOM_REPORT_DATA
-  );
-  const [bmLeanCustomReportData, setBmLeanCustomReportData] = useAtom(
-    BM_LEAN_CUSTOM_REPORT_DATA
-  );
-  const [surveyGuidelineDetailReportData, setSurveyGuidelineDetailReportData] =
-    useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
-  const [surveyGuidelineReportData, setSurveyGuidelineReportData] = useAtom(
-    SURVEY_GUIDELINE_REPORT_DATA
-  );
-  const [surveyGoalSuggestionList, setSurveyGoalSuggestionList] = useAtom(
-    SURVEY_GOAL_SUGGESTION_LIST
-  );
-  const [surveyGoalFixed, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
-  const [surveyQuestionList, setSurveyQuestionList] =
-    useAtom(SURVEY_QUESTION_LIST);
-
-  const [priceScrapData, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
-  const [priceReportData, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
-  const [priceProduct, setPriceProduct] = useAtom(PRICE_PRODUCT);
-  const [
-    priceSelectedProductSegmentation,
-    setPriceSelectedProductSegmentation,
-  ] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
-  const [priceProductSegmentation, setPriceProductSegmentation] = useAtom(
-    PRICE_PRODUCT_SEGMENTATION
-  );
-  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
-  const [pocPersonaList, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
-  const [selectedPocTarget, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
-  const [isLoadingPage, setIsLoadingPage] = useState(true); // 로딩 상태 추가
-  const [isLoading, setIsLoading] = useAtom(IS_LOADING);
+const PageExpertInsight = () => { 
 
   const navigate = useNavigate();
+
+  const [projectSaas, ] = useAtom(PROJECT_SAAS);
+  const [strategyConsultantReportData, setStrategyConsultantReportData] =useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
+  const [, setGrowthHackerSelectedSolution] =useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
+  const [, setGrowthHackerRecommendedSolution] =useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
+  const [, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
+  const [, setBmOrLean] = useAtom(BM_OR_LEAN);
+  const [, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
+  const [, setBmLeanAutoReportData] = useAtom(BM_LEAN_AUTO_REPORT_DATA);
+  const [, setBmBmAdsReportData] = useAtom(BM_BM_ADS_REPORT_DATA);
+  const [, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
+  const [, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
+  const [, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
+  const [, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
+  const [, setSurveyGuidelineDetailReportData] =useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
+  const [, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
+  const [, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
+  const [, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
+  const [, setSurveyQuestionList] =useAtom(SURVEY_QUESTION_LIST);
+  const [, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
+  const [, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
+  const [, setPriceProduct] = useAtom(PRICE_PRODUCT);
+  const [, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
+  const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
+  const [, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
+  const [, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
+  const [isLoadingPage, setIsLoadingPage] = useState(true); // 로딩 상태 추가
+  const [isLoading, ] = useAtom(IS_LOADING);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(
     IS_EXPERT_INSIGHT_ACCESSIBLE
   );
-
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
-  const [inputBusinessInfo, setInputBusinessInfo] =
-    useAtom(INPUT_BUSINESS_INFO);
+  const [, setInputBusinessInfo] =useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
     TITLE_OF_BUSINESS_INFORMATION
   );
-  const [
-    mainFeaturesOfBusinessInformation,
-    setMainFeaturesOfBusinessInformation,
-  ] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [
-    mainCharacteristicOfBusinessInformation,
-    setMainCharacteristicOfBusinessInformation,
-  ] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [
-    businessInformationTargetCustomer,
-    setBusinessInformationTargetCustomer,
-  ] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [, setMainFeaturesOfBusinessInformation] =useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
+  const [, setMainCharacteristicOfBusinessInformation] =useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
+  const [, setBusinessInformationTargetCustomer] =useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
     SELECTED_EXPERT_INDEX
   );
-  const [sections, setSections] = useState([]);
-
-  const [selectedAdditionalKeyword, setSelectedAdditionalKeyword] = useAtom(
-    SELECTED_ADDITIONAL_KEYWORD
-  );
-
-  const [
-    selectedCustomerAdditionalKeyword,
-    setSelectedCustomerAdditionalKeyword,
-  ] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
-
-  const [customerAdditionalReportData, setCustomerAdditionalReportData] =
-    useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
-
-  const [approachPath, setApproachPath] = useAtom(APPROACH_PATH);
-
-  const [additionalReportData, setAdditionalReportData] = useAtom(
-    ADDITIONAL_REPORT_DATA
-  ); // Use the new list-based atom
-
-  const [strategyReportData, setStrategyReportData] =
-    useAtom(STRATEGY_REPORT_DATA); // 변경된 부분
-
+  const [, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
+  const [, setSelectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
+  const [, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
+  const [approachPath, ] = useAtom(APPROACH_PATH);
+  const [, setAdditionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
+  const [, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태 확인
-  const [advise, setAdvise] = useState(""); // 새로운 advise 상태 추가
-
-  const [selectedExpertList, setSelectedExpertList] =
-    useAtom(SELECTED_EXPERT_LIST);
-
-  const [savedTimestamp, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
-
-  const [selectedPocOptions, setSelectedPocOptions] =
-    useAtom(SELECTED_POC_OPTIONS);
-  const [recommendedTargetData, setRecommendedTargetData] = useAtom(
-    RECOMMENDED_TARGET_DATA
-  );
-
-  const [pocDetailReportData, setpocDetailReportData] = useAtom(
-    POC_DETAIL_REPORT_DATA
-  );
-
-  const [ideaFeatureData, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
-  const [ideaRequirementData, setIdeaRequirementData] = useAtom(
-    IDEA_REQUIREMENT_DATA
-  );
-  const [ideaFeatureDataTemp, setIdeaFeatureDataTemp] = useAtom(
-    IDEA_FEATURE_DATA_TEMP
-  );
-  const [ideaRequirementDataTemp, setIdeaRequirementDataTemp] = useAtom(
-    IDEA_REQUIREMENT_DATA_TEMP
-  );
-  const [ideaList, setIdeaList] = useAtom(IDEA_LIST);
-  const [ideaGroup, setIdeaGroup] = useAtom(IDEA_GROUP);
+  const [, setSelectedPocOptions] =useAtom(SELECTED_POC_OPTIONS);
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
+  const [, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
+  const [, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
+  const [, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA );
+  const [, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
+  const [, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
+  const [, setIdeaList] = useAtom(IDEA_LIST);
+  const [, setIdeaGroup] = useAtom(IDEA_GROUP);
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
-  const [ideaMiroState, setIdeaMiroState] = useAtom(IDEA_MIRO_STATE);
-  const [growthHackerReportData, setGrowthHackerReportData] = useAtom(
-    GROWTH_HACKER_REPORT_DATA
-  );
-  const [growthHackerDetailReportData, setGrowthHackerDetailReportData] =
-    useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
-  const [KpiQuestionList, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
-
-  const [caseReportData, setCaseReportData] = useAtom(CASE_REPORT_DATA);
-  const [caseHashTag, setCaseHashTag] = useAtom(CASE_HASH_TAG);
-
+  const [, setIdeaMiroState] = useAtom(IDEA_MIRO_STATE);
+  const [, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
+  const [, setGrowthHackerDetailReportData] =useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
+  const [, setCaseReportData] = useAtom(CASE_REPORT_DATA);
+  const [, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
-  const [marketingMbtiResult, setMarketingMbtiResult] = useAtom(
-    MARKETING_MBTI_RESULT
-  );
-  const [marketingResearchReportData, setMarketingResearchReportData] = useAtom(
-    MARKETING_RESEARCH_REPORT_DATA
-  );
-  const [marketingBmReportData, setMarketingBmReportData] = useAtom(
-    MARKETING_BM_REPORT_DATA
-  );
-  const [marketingCustomerData, setMarketingCustomerData] = useAtom(
-    MARKETING_CUSTOMER_DATA
-  );
-  const [marketingSelectedCustomer, setMarketingSelectedCustomer] = useAtom(
-    MARKETING_SELECTED_CUSTOMER
-  );
-  const [marketingFinalCustomer, setMarketingFinalCustomer] = useAtom(
-    MARKETING_FINAL_CUSTOMER
-  );
-  const [marketingFinalReportData, setMarketingFinalReportData] = useAtom(
-    MARKETING_FINAL_REPORT_DATA
-  );
+  const [, setMarketingMbtiResult] = useAtom(MARKETING_MBTI_RESULT);
+  const [, setMarketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
+  const [, setMarketingBmReportData] = useAtom(MARKETING_BM_REPORT_DATA);
+  const [, setMarketingCustomerData] = useAtom(MARKETING_CUSTOMER_DATA);
+  const [, setMarketingSelectedCustomer] = useAtom(MARKETING_SELECTED_CUSTOMER);
+  const [, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
+  const [, setMarketingFinalReportData] = useAtom(MARKETING_FINAL_REPORT_DATA);
+
+  const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
@@ -346,9 +247,7 @@ const PageExpertInsight = () => {
   let growthHackerReportCount = 0;
   let strategyConsultantCount = 0;
 
-  const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
 
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
   const togglePopup = () => {
     setIsPopupVisible((prev) => !prev);
   };

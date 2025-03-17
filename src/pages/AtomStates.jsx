@@ -545,6 +545,7 @@ export const IDEA_GENERATOR_IDEA = atom([]);
 export const IDEA_GENERATOR_CLUSTERING = atom([]);
 export const IDEA_GENERATOR_FINAL_REPORT = atom({});
 export const IDEA_GENERATOR_SELECTED_PERSONA = atom([]);
+export const IDEA_GENERATOR_EDITING_BUSINESS_TEXT = atom("");
 
 export const DESIGN_ANALYSIS_EMOTION_ANALYSIS = atom([]);
 export const DESIGN_ANALYSIS_BUSINESS_TITLE = atom("");
@@ -555,6 +556,7 @@ export const DESIGN_ANALYSIS_EMOTION_TARGET = atom({});
 export const DESIGN_ANALYSIS_EMOTION_SCALE = atom([]);
 export const DESIGN_ANALYSIS_FILE_NAMES = atom([]);
 export const DESIGN_ANALYSIS_FILE_ID = atom([]);
+
 
 //!saas
 // 프로젝트 생성 페이지
