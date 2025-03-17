@@ -1,50 +1,13 @@
 //회원가입
-import React, { useEffect, useState } from "react";
-import styled, { css } from "styled-components";
-import { useAtom } from "jotai";
-import { palette } from "../../../assets/styles/Palette";
-import OrganismIncNavigation from "./OrganismIncNavigation";
-
-// import Header from "../../../Design_Page/IncHeader";
-import MoleculeHeader from "../molecules/MoleculeHeader";
-
+import React from "react";
+import styled from "styled-components";
 import {
   ContentsWrap,
   MainContent,
-  Badge,
-  DashboardCard,
-  DashboardCardTitle,
-  DashboardAmount,
-  TabWrapType3,
-  TabButtonType3,
-  ToggleBox,
-  ToggleList,
-  CreditTotal,
-  CreditDashBoardWrap,
-  CreditDashBoard,
-  CreditDashBoardItem,
-  CreditDashBoardList,
-  CreditDashBoardListHeader,
-  CreditDashBoardListContent,
-  CreditListItem,
-  CreditBadge,
-  PaginationWrap,
-  NumbersWrapper,
-  ArrowButton,
-  Dots,
-  Dot,
-  NoData,
-  InterviewPopup,
-  Status,
-  TabWrapType2,
-  TabButtonType2,
-  TabContent,
 } from "../../../assets/styles/BusinessAnalysisStyle";
-
 import {
   H1,
 } from "../../../assets/styles/Typography";
-
 import MoleculeSignupForm from "../../Login_Sign/components/molecules/MoleculeSignupForm";
 
 const OrganismSignin = () => {
@@ -82,89 +45,89 @@ const LoginWrap = styled.div`
   }
 `;
 
-const ViewInfo = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: $space-between;
-  gap: 4px;
-  width: 100%;
-  font-size: 0.875rem;
-  color: ${palette.gray800};
+// const ViewInfo = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: $space-between;
+//   gap: 4px;
+//   width: 100%;
+//   font-size: 0.875rem;
+//   color: ${palette.gray800};
 
-  + div {
-    padding-top: 16px;
-    border-top: 1px solid ${palette.outlineGray};
-  }
+//   + div {
+//     padding-top: 16px;
+//     border-top: 1px solid ${palette.outlineGray};
+//   }
 
-  .title {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
-    gap: 8px;
-    font-size: 0.875rem;
-    color: ${palette.black};
+//   .title {
+//     display: flex;
+//     align-items: flex-end;
+//     justify-content: flex-start;
+//     gap: 8px;
+//     font-size: 0.875rem;
+//     color: ${palette.black};
 
-    span {
-      font-size: 0.75rem;
-      font-weight: 300;
-      color: ${palette.gray500};
-    }
-  }
+//     span {
+//       font-size: 0.75rem;
+//       font-weight: 300;
+//       color: ${palette.gray500};
+//     }
+//   }
 
-  .info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
+//   .info {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     gap: 32px;
 
-    div {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 7px;
-      font-size: 0.875rem;
-      font-weight: 300;
-      color: ${palette.gray500};
-      line-height: 1.5;
+//     div {
+//       position: relative;
+//       display: flex;
+//       align-items: center;
+//       justify-content: flex-start;
+//       gap: 7px;
+//       font-size: 0.875rem;
+//       font-weight: 300;
+//       color: ${palette.gray500};
+//       line-height: 1.5;
 
-      + div:before {
-        position: absolute;
-        top: 50%;
-        left: -16px;
-        transform: translateY(-50%);
-        width: 1px;
-        height: 12px;
-        background-color: ${palette.outlineGray};
-        content: "";
-      }
-    }
-  }
+//       + div:before {
+//         position: absolute;
+//         top: 50%;
+//         left: -16px;
+//         transform: translateY(-50%);
+//         width: 1px;
+//         height: 12px;
+//         background-color: ${palette.outlineGray};
+//         content: "";
+//       }
+//     }
+//   }
 
-  .button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+//   .button {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     gap: 8px;
 
-    button {
-      font-family: "Pretendard", poppins;
-      font-size: 0.75rem;
-      font-weight: 300;
-      padding: 6px 10px;
-      border-radius: 6px;
+//     button {
+//       font-family: "Pretendard", poppins;
+//       font-size: 0.75rem;
+//       font-weight: 300;
+//       padding: 6px 10px;
+//       border-radius: 6px;
 
-      &.view {
-        color: ${palette.black};
-        border: 1px solid ${palette.outlineGray};
-        background: ${palette.chatGray};
-      }
+//       &.view {
+//         color: ${palette.black};
+//         border: 1px solid ${palette.outlineGray};
+//         background: ${palette.chatGray};
+//       }
 
-      &.analysis {
-        color: ${palette.primary};
-        border: 1px solid ${palette.primary};
-        background: #e9f1ff;
-      }
-    }
-  }
-`;
+//       &.analysis {
+//         color: ${palette.primary};
+//         border: 1px solid ${palette.primary};
+//         background: #e9f1ff;
+//       }
+//     }
+//   }
+// `;
