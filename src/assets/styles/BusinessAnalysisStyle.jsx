@@ -2476,6 +2476,19 @@ export const CardGroupWrap = styled.div`
 
 export const AiPersonaCardGroupWrap = styled(CardGroupWrap)`
   gap: 32px 15px !important;
+
+  .more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    max-width: 100%;
+    margin-top: 24px;
+
+    ${Body3} {
+      cursor: pointer;
+    }
+  }
 `;
 
 export const ListBoxItem = styled.div`

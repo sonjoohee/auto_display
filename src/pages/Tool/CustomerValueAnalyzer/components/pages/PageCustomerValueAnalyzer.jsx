@@ -1352,7 +1352,7 @@ const PageCustomerValueAnalyzer = () => {
                               가능)
                             </Body2>
                           ) : (
-                            <PersonaGroup>
+                            <PersonaGroup style={{ paddingLeft: "20px" }}>
                               {Array.isArray(selectedPersonasSaas) &&
                               selectedPersonasSaas.length > 0 ? (
                                 <>

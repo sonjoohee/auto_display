@@ -24,10 +24,10 @@ const AtomPersonaLoader = ({ message = "비즈니스를 분석하고 있어요" 
     <LoaderWrap>
       <LoaderContainer>
         <Loader />
-        <CenterTime>{seconds}초</CenterTime>
       </LoaderContainer>
       <p>
         {message}
+        <CenterTime>{seconds}초</CenterTime>
         {/* {dots} */}
       </p>
     </LoaderWrap>
@@ -40,12 +40,18 @@ const LoaderWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 50px;
+  gap: 30px;
   padding: 70px 0 50px;
+
   p {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
     text-align: center;
     line-height: 1.5;
-    color: ${palette.gray700};
+    color: ${palette.gray800};
   }
 `;
 
@@ -58,40 +64,71 @@ const LoaderWrap = styled.div`
 
 const LoaderContainer = styled.div`
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 68px;
+  height: 68px;
 `;
 
 const CenterTime = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 14px;
+  font-size: 0.88rem;
   color: ${palette.gray500};
 `;
 
 const Loader = styled.span`
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 68px;
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  background: radial-gradient(farthest-side, #009dff 94%, #0000) top/14.1px
-      14.1px no-repeat,
-    conic-gradient(#0000 30%, #009dff);
-  -webkit-mask: radial-gradient(
-    farthest-side,
-    #0000 calc(100% - 14.1px),
-    #000 0
-  );
-  animation: spinner 1.2s infinite linear;
+  background-image:
+    radial-gradient(circle, ${palette.primary} 10px, transparent 0),
+    radial-gradient(circle, ${palette.primary} 10px, transparent 0),
+    radial-gradient(circle, ${palette.primary} 10px, transparent 0),
+    radial-gradient(circle, ${palette.primary} 10px, transparent 0);
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  animation: moveCircles 1s linear infinite;
 
-  @keyframes spinner {
+  @keyframes moveCircles {
+    0% {
+      background-position: 
+        calc(50% - 5px) calc(50% - 5px),
+        calc(50% - 5px) calc(50% + 5px),
+        calc(50% + 5px) calc(50% - 5px),
+        calc(50% + 5px) calc(50% + 5px);
+      transform: rotate(0deg);
+    }
+    25% {
+      background-position: 
+        calc(50% - 15px) calc(50% - 15px),
+        calc(50% - 15px) calc(50% + 15px),
+        calc(50% + 15px) calc(50% - 15px),
+        calc(50% + 15px) calc(50% + 15px);
+      transform: rotate(90deg);
+    }
+    50% {
+      background-position: 
+        calc(50% - 25px) calc(50% - 25px),
+        calc(50% - 25px) calc(50% + 25px),
+        calc(50% + 25px) calc(50% - 25px),
+        calc(50% + 25px) calc(50% + 25px);
+      transform: rotate(180deg);
+    }
+    75% {
+      background-position: 
+        calc(50% - 15px) calc(50% - 15px),
+        calc(50% - 15px) calc(50% + 15px),
+        calc(50% + 15px) calc(50% - 15px),
+        calc(50% + 15px) calc(50% + 15px);
+      transform: rotate(270deg);
+    }
     100% {
-      transform: rotate(1turn);
+      background-position: 
+        calc(50% - 5px) calc(50% - 5px),
+        calc(50% - 5px) calc(50% + 5px),
+        calc(50% + 5px) calc(50% - 5px),
+        calc(50% + 5px) calc(50% + 5px);
+      transform: rotate(360deg);
     }
   }
 `;
