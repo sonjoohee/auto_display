@@ -39,6 +39,7 @@ import {
   Body1,
   Body2,
   Body3,
+  Sub2,
   Sub3,
 } from "../../../assets/styles/Typography";
 import OrganismEmptyPersona from "../components/organisms/OrganismEmptyPersona";
@@ -415,7 +416,7 @@ const PageAiPersona = () => {
             project.projectAnalysis.business_analysis +
             (project.projectAnalysis.file_analysis || ""),
           persona_info,
-          persona_type: persona.personaType
+          persona_type: persona.personaType,
         },
         isLoggedIn
       );
@@ -442,7 +443,7 @@ const PageAiPersona = () => {
               project.projectAnalysis.business_analysis +
               (project.projectAnalysis.file_analysis || ""),
             persona_info,
-            persona_type: persona.personaType
+            persona_type: persona.personaType,
           },
           isLoggedIn
         );
@@ -913,7 +914,7 @@ const PageAiPersona = () => {
                 </Body3>
               </div>
 
-              {/* <Button
+              <Button
                 ExLarge
                 PrimaryLightest
                 Fill
@@ -924,7 +925,7 @@ const PageAiPersona = () => {
               >
                 <img src={images.PlusPrimary} width="14" height="14" />
                 <Sub2 color="primary">나만의 AI Persona 요청</Sub2>
-              </Button> */}
+              </Button>
             </AiPersonaTitle>
 
             {personaListSaas && personaListSaas.length > 0 ? (
