@@ -540,8 +540,7 @@ const OrganismPersonaCardList = ({
                 <div style={{ flex: "1" }}>
                   <StyledButton
                     Medium
-                    Primary
-                    Fill
+                    Outline
                     onClick={() => setShowPopup(persona)}
                     // style={{
                     //   background:
@@ -553,11 +552,19 @@ const OrganismPersonaCardList = ({
                     //       : palette.chatGray,
                     // }}
                   >
+                    프로필
+                  </StyledButton>
+                  <StyledButton
+                    Medium
+                    Primary
+                    Fill
+                    onClick={() => setShowPopup(persona)}
+                  >
                     {persona?.status === "ing" || persona?.status === "request"
-                      ? "페르소나 생성중"
+                      ? "생성중"
                       : persona?.status === "complete"
-                      ? "활성 페르소나"
-                      : "비활성 페르소나"}
+                      ? "활성"
+                      : "비활성"}
                   </StyledButton>
                   {/* {!["request", "ing", "complete"].includes(
                     persona?.status
@@ -568,7 +575,12 @@ const OrganismPersonaCardList = ({
                       Fill
                       onClick={() => setShowPopup(persona)}
                     >
-                      페르소나 생성
+                      {persona?.status === "ing" ||
+                      persona?.status === "request"
+                        ? "생성중"
+                        : persona?.status === "complete"
+                        ? "활성"
+                        : "비활성"}
                     </StyledButton>
                   )} */}
                 </div>
@@ -586,7 +598,9 @@ const OrganismPersonaCardList = ({
                 ) : (
                   <div className="more" onClick={handleCreditCheck}>
                     <Body3 color="gray500" align="center">
+
                       + 더보기 ({creditPersonaCreate} credit)
+
                     </Body3>
                   </div>
                 )}
@@ -692,7 +706,9 @@ const OrganismPersonaCardList = ({
             <>
               해당 서비스 사용시 크레딧이 소진됩니다.
               <br />
+
               {creditPersonaCreate} 크레딧
+
             </>
           }
         />
