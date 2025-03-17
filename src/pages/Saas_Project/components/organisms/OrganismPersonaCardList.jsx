@@ -542,15 +542,6 @@ const OrganismPersonaCardList = ({
                     Medium
                     Outline
                     onClick={() => setShowPopup(persona)}
-                    // style={{
-                    //   background:
-                    //     persona?.status === "ing" ||
-                    //     persona?.status === "request"
-                    //       ? `rgba(50, 173, 230, 0.16)`
-                    //       : persona?.status === "complete"
-                    //       ? `rgba(34, 111, 255, 0.16)`
-                    //       : palette.chatGray,
-                    // }}
                   >
                     프로필
                   </StyledButton>
@@ -566,23 +557,6 @@ const OrganismPersonaCardList = ({
                       ? "활성"
                       : "비활성"}
                   </StyledButton>
-                  {/* {!["request", "ing", "complete"].includes(
-                    persona?.status
-                  ) && (
-                    <StyledButton
-                      Medium
-                      Primary
-                      Fill
-                      onClick={() => setShowPopup(persona)}
-                    >
-                      {persona?.status === "ing" ||
-                      persona?.status === "request"
-                        ? "생성중"
-                        : persona?.status === "complete"
-                        ? "활성"
-                        : "비활성"}
-                    </StyledButton>
-                  )} */}
                 </div>
               </AiPersonaCardButtonWrap>
             </AiPersonaCardListItem>
@@ -598,9 +572,7 @@ const OrganismPersonaCardList = ({
                 ) : (
                   <div className="more" onClick={handleCreditCheck}>
                     <Body3 color="gray500" align="center">
-
                       + 더보기 ({creditPersonaCreate} credit)
-
                     </Body3>
                   </div>
                 )}
@@ -706,9 +678,7 @@ const OrganismPersonaCardList = ({
             <>
               해당 서비스 사용시 크레딧이 소진됩니다.
               <br />
-
               {creditPersonaCreate} 크레딧
-
             </>
           }
         />

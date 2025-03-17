@@ -43,12 +43,11 @@ import { useDynamicViewport } from "../../../assets/DynamicViewport";
 const PageDashBoard = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
-
-  const [projectSaas,] = useAtom(PROJECT_SAAS);
+  const [projectSaas] = useAtom(PROJECT_SAAS);
   const [, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [toolListSaas, setToolListSaas] = useAtom(DASHBOARD_TOOL_LIST_SAAS);
- 
+
   const [showPopup, setShowPopup] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -56,6 +55,7 @@ const PageDashBoard = () => {
   const macroChartRef = useRef();
   const uniqueChartRef = useRef();
   const stakeholderChartRef = useRef();
+  const myPersonaChartRef = useRef();
 
   const project = projectSaas;
 
@@ -91,7 +91,6 @@ const PageDashBoard = () => {
         );
 
         if (savedToolListInfo) {
-       
           const sortedList = [...savedToolListInfo].sort((a, b) => {
             const dateA = a.timestamp;
             const dateB = b.timestamp;
@@ -203,6 +202,10 @@ const PageDashBoard = () => {
     personaListSaas,
     "key_stakeholder"
   );
+  const myPersonaStats = countPersonasByTypeAndStatus(
+    personaListSaas,
+    "my_persona"
+  );
 
   useEffect(() => {
     // 페르소나 데이터가 있을 때만 차트 생성
@@ -264,16 +267,37 @@ const PageDashBoard = () => {
         },
       ];
 
+      // My Persona 데이터
+      const myPersonaData = [
+        {
+          label: "비활성 페르소나",
+          value: myPersonaStats.inactive || 0,
+          color: palette.outlineGray,
+        },
+        {
+          label: "생성 중",
+          value: myPersonaStats.generating || 0,
+          color: "#32ADE6",
+        },
+        {
+          label: "활성 페르소나",
+          value: myPersonaStats.active || 0,
+          color: palette.primary,
+        },
+      ];
+
       // 각각의 차트 생성
       createPieChart(macroChartRef, macroData);
       createPieChart(uniqueChartRef, uniqueData);
       createPieChart(stakeholderChartRef, stakeholderData);
+      // createPieChart(myPersonaChartRef, myPersonaData);
     }
   }, [
     personaListSaas,
     macroSegmentStats,
     uniqueUserStats,
     keyStakeholderStats,
+    myPersonaStats,
   ]);
 
   // 페르소나 카드 클릭 시 AI 페르소나 페이지의 특정 탭으로 이동하는 함수 추가
@@ -305,15 +329,15 @@ const PageDashBoard = () => {
     };
 
     // beforeunload 이벤트 핸들러
-    // const handleBeforeUnload = (event) => {
-    //   // 이벤트 취소 (표준에 따라)
-    //   event.preventDefault();
-    //   // Chrome은 returnValue 설정 필요
-    //   event.returnValue = "";
+    const handleBeforeUnload = (event) => {
+      // 이벤트 취소 (표준에 따라)
+      event.preventDefault();
+      // Chrome은 returnValue 설정 필요
+      event.returnValue = "";
 
-    //   // 새로고침 시 루트 페이지로 이동
-    //   navigate("/Project");
-    // };
+      // 새로고침 시 루트 페이지로 이동
+      navigate("/Project");
+    };
 
     // F5 키 또는 Ctrl+R 감지
     const handleKeyDown = (event) => {
@@ -339,6 +363,11 @@ const PageDashBoard = () => {
     };
   }, [navigate]);
 
+  const [selectedValues, setSelectedValues] = useState({
+    business: "",
+    industry: "",
+    country: "",
+  });
 
   return (
     <>
@@ -459,8 +488,6 @@ const PageDashBoard = () => {
                     <div className="title">
                       <Body1 color="gray700" align="left">
                         Macro Segment
-                        <br />
-                        추천 페르소나
                       </Body1>
                       <Body1 color="gray700" align="right">
                         총 {macroSegmentStats.total}명
@@ -470,7 +497,7 @@ const PageDashBoard = () => {
                       <div ref={macroChartRef}></div>
                       <UlInfo>
                         <li className="start">
-                          <Sub3 color="gray500">비활성 페르소나</Sub3>
+                          <Sub3 color="gray500">비활성</Sub3>
                           <Sub2 color="gray700">
                             {macroSegmentStats.inactive}명
                           </Sub2>
@@ -482,7 +509,7 @@ const PageDashBoard = () => {
                           </Sub2>
                         </li>
                         <li className="complete">
-                          <Sub3 color="gray500">활성 페르소나</Sub3>
+                          <Sub3 color="gray500">활성</Sub3>
                           <Sub2 color="gray700">
                             {macroSegmentStats.active}명
                           </Sub2>
@@ -490,7 +517,6 @@ const PageDashBoard = () => {
                       </UlInfo>
                     </div>
                   </div>
-
                   <div
                     onClick={() => navigateToAiPersonaTab("unique_user")}
                     style={{ cursor: "pointer" }}
@@ -498,8 +524,6 @@ const PageDashBoard = () => {
                     <div className="title">
                       <Body1 color="gray700" align="left">
                         Unique User
-                        <br />
-                        추천 페르소나
                       </Body1>
                       <Body1 color="gray700" align="right">
                         총 {uniqueUserStats.total}명
@@ -509,7 +533,7 @@ const PageDashBoard = () => {
                       <div ref={uniqueChartRef}></div>
                       <UlInfo>
                         <li className="start">
-                          <Sub3 color="gray500">비활성 페르소나</Sub3>
+                          <Sub3 color="gray500">비활성</Sub3>
                           <Sub2 color="gray700">
                             {uniqueUserStats.inactive}명
                           </Sub2>
@@ -521,7 +545,7 @@ const PageDashBoard = () => {
                           </Sub2>
                         </li>
                         <li className="complete">
-                          <Sub3 color="gray500">활성 페르소나</Sub3>
+                          <Sub3 color="gray500">활성</Sub3>
                           <Sub2 color="gray700">
                             {uniqueUserStats.active}명
                           </Sub2>
@@ -529,7 +553,6 @@ const PageDashBoard = () => {
                       </UlInfo>
                     </div>
                   </div>
-
                   <div
                     onClick={() => navigateToAiPersonaTab("key_stakeholder")}
                     style={{ cursor: "pointer" }}
@@ -537,8 +560,6 @@ const PageDashBoard = () => {
                     <div className="title">
                       <Body1 color="gray700" align="left">
                         Key Stakeholder
-                        <br />
-                        추천 페르소나
                       </Body1>
                       <Body1 color="gray700" align="right">
                         총 {keyStakeholderStats.total}명
@@ -548,7 +569,7 @@ const PageDashBoard = () => {
                       <div ref={stakeholderChartRef}></div>
                       <UlInfo>
                         <li className="start">
-                          <Sub3 color="gray500">비활성 페르소나</Sub3>
+                          <Sub3 color="gray500">비활성</Sub3>
                           <Sub2 color="gray700">
                             {keyStakeholderStats.inactive}명
                           </Sub2>
@@ -560,14 +581,50 @@ const PageDashBoard = () => {
                           </Sub2>
                         </li>
                         <li className="complete">
-                          <Sub3 color="gray500">활성 페르소나</Sub3>
+                          <Sub3 color="gray500">활성</Sub3>
                           <Sub2 color="gray700">
                             {keyStakeholderStats.active}명
                           </Sub2>
                         </li>
                       </UlInfo>
                     </div>
-                  </div>
+                  </div>{" "}
+                  {/* <div
+                    onClick={() => navigateToAiPersonaTab("my_persona")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div className="title">
+                      <Body1 color="gray700" align="left">
+                        My Persona
+                      </Body1>
+                      <Body1 color="gray700" align="right">
+                        총 {myPersonaStats.total}명
+                      </Body1>
+                    </div>
+                    <div className="content">
+                      <div ref={myPersonaChartRef}></div>
+                      <UlInfo>
+                        <li className="start">
+                          <Sub3 color="gray500">비활성</Sub3>
+                          <Sub2 color="gray700">
+                            {myPersonaStats.inactive}명
+                          </Sub2>
+                        </li>
+                        <li className="ing">
+                          <Sub3 color="gray500">생성 중</Sub3>
+                          <Sub2 color="gray700">
+                            {myPersonaStats.generating}명
+                          </Sub2>
+                        </li>
+                        <li className="complete">
+                          <Sub3 color="gray500">활성</Sub3>
+                          <Sub2 color="gray700">
+                            {myPersonaStats.active}명
+                          </Sub2>
+                        </li>
+                      </UlInfo>
+                    </div>
+                  </div> */}
                 </PersonaStatusWrap>
               ) : (
                 <PersonaStatusWrap
@@ -974,15 +1031,15 @@ const PersonaStatusWrap = styled.div`
   `}
 `;
 
-// const RecentToolWrap = styled(PersonaStatusWrap)`
-//   ${(props) =>
-//     props.NoData &&
-//     `
-//     > div {
-//       padding: 130px 0 155px;
-//     }
-//   `}
-// `;
+const RecentToolWrap = styled(PersonaStatusWrap)`
+  ${(props) =>
+    props.NoData &&
+    `
+    > div {
+      padding: 130px 0 155px;
+    }
+  `}
+`;
 
 const UlInfo = styled.ul`
   display: flex;
