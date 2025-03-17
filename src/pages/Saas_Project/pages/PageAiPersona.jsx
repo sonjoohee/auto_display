@@ -74,7 +74,6 @@ import { useDynamicViewport } from "../../../assets/DynamicViewport";
 import { InterviewXMyPersonaGeneratorRequest } from "../../../utils/indexedDB";
 
 const PageAiPersona = () => {
-
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const navigate = useNavigate();
   const location = useLocation();
@@ -84,12 +83,15 @@ const PageAiPersona = () => {
   const [projectId] = useAtom(PROJECT_ID);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [, setUserCredits] = useAtom(USER_CREDITS);
-  const [creditRequestBusinessPersona] = useAtom(CREDIT_REQUEST_BUSINESS_PERSONA);
+  const [creditRequestBusinessPersona] = useAtom(
+    CREDIT_REQUEST_BUSINESS_PERSONA
+  );
 
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
   const [isCustomizePopupOpen, setIsCustomizePopupOpen] = useState(false);
-  const [isPersonaConfirmPopupOpen, setIsPersonaConfirmPopupOpen] =useState(false);
+  const [isPersonaConfirmPopupOpen, setIsPersonaConfirmPopupOpen] =
+    useState(false);
   const [selectedPersona, setSelectedPersona] = useState(null);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [activeTab2, setActiveTab2] = useState("lifestyle");
@@ -247,7 +249,7 @@ const PageAiPersona = () => {
 
   const handleRandomOcean = (e) => {
     setIgnoreOcean(e.target.checked);
-    
+
     // 체크박스가 선택되면 모든 OCEAN 값을 랜덤으로 설정
     if (e.target.checked) {
       setOceanValues({
@@ -358,7 +360,9 @@ const PageAiPersona = () => {
     } else if (activeTabIndex === 1) {
       // OCEAN 정보 탭에서는 값이 하나라도 0.5인 경우 비활성화
       if (!ignoreOcean) {
-        const hasDefaultValue = Object.values(oceanValues).some(value => value === 0.5);
+        const hasDefaultValue = Object.values(oceanValues).some(
+          (value) => value === 0.5
+        );
         return !hasDefaultValue;
       }
       return true; // ignoreOcean이 true인 경우 항상 유효
@@ -668,22 +672,22 @@ const PageAiPersona = () => {
   const mapExperienceDepth = (level) => {
     // Key Stakeholder인 경우 다른 설명 사용
     if (currentPersona?.personaType === "key_stakeholder") {
-    switch (level) {
-      case "1":
-      case "1단계":
-      case 1:
+      switch (level) {
+        case "1":
+        case "1단계":
+        case 1:
           return "조언 제공 가능하나 최종 결정권 없음";
-      case "2":
-      case "2단계":
-      case 2:
+        case "2":
+        case "2단계":
+        case 2:
           return "제한된 영역에서 피드백 및 일부 결정권 보유";
-      case "3":
-      case "3단계":
-      case 3:
+        case "3":
+        case "3단계":
+        case 3:
           return "특정 분야 운영 및 성장 방향 결정 가능";
-      case "4":
-      case "4단계":
-      case 4:
+        case "4":
+        case "4단계":
+        case 4:
           return "기업 전략 수립 및 장기적 방향 설정";
         case "5":
         case "5단계":
@@ -777,24 +781,24 @@ const PageAiPersona = () => {
     console.log(customPersonaForm);
     try {
       const requestData = {
-          business_description:
-            project.projectAnalysis.business_analysis +
-            (project.projectAnalysis.file_analysis || ""),
-          persona_gender: customPersonaForm.gender === "male" ? "남성" : "여성",
-          persona_age: customPersonaForm.ageGroups.map(age => age.trim()).join(", "),
-          persona_reason: customPersonaForm.purpose,
-          persona_additional_info: customPersonaForm.additionalInfo,
-          persona_ocean: {
-              type_o: oceanValues.openness === 0 ? "보수적" : "개방적",
-              type_c: oceanValues.conscientiousness === 0 ? "즉흥적" : "성실함",
-              type_e: oceanValues.extraversion === 0 ? "내향적" : "외향적",
-              type_a: oceanValues.agreeableness === 0 ? "독립적" : "우호적",
-              type_n: oceanValues.neuroticism === 0 ? "무던함" : "신경적"
-          }
-      }
-      const response = await InterviewXMyPersonaGeneratorRequest(
-        requestData
-      );
+        business_description:
+          project.projectAnalysis.business_analysis +
+          (project.projectAnalysis.file_analysis || ""),
+        persona_gender: customPersonaForm.gender === "male" ? "남성" : "여성",
+        persona_age: customPersonaForm.ageGroups
+          .map((age) => age.trim())
+          .join(", "),
+        persona_reason: customPersonaForm.purpose,
+        persona_additional_info: customPersonaForm.additionalInfo,
+        persona_ocean: {
+          type_o: oceanValues.openness === 0 ? "보수적" : "개방적",
+          type_c: oceanValues.conscientiousness === 0 ? "즉흥적" : "성실함",
+          type_e: oceanValues.extraversion === 0 ? "내향적" : "외향적",
+          type_a: oceanValues.agreeableness === 0 ? "독립적" : "우호적",
+          type_n: oceanValues.neuroticism === 0 ? "무던함" : "신경적",
+        },
+      };
+      const response = await InterviewXMyPersonaGeneratorRequest(requestData);
 
       console.log(response);
 
@@ -803,7 +807,6 @@ const PageAiPersona = () => {
       }
 
       setIsCustomizePopupOpen(false);
-
     } catch (error) {
       console.error(error);
     }
@@ -995,7 +998,7 @@ const PageAiPersona = () => {
                 </Body3>
               </div>
 
-              <Button
+              {/* <Button
                 ExLarge
                 PrimaryLightest
                 Fill
@@ -1006,7 +1009,7 @@ const PageAiPersona = () => {
               >
                 <img src={images.PlusPrimary} width="14" height="14" />
                 <Sub2 color="primary">나만의 AI Persona 요청</Sub2>
-              </Button>
+              </Button> */}
             </AiPersonaTitle>
 
             {personaListSaas && personaListSaas.length > 0 ? (
@@ -1065,21 +1068,32 @@ const PageAiPersona = () => {
                 <AiPersonaInfo>
                   <div>
                     <span className="inactive" />
-                    <InputText color="gray500">비활성 페르소나 <strong>({currentTabStats.inactive})</strong></InputText>
+                    <InputText color="gray500">
+                      비활성 페르소나{" "}
+                      <strong>({currentTabStats.inactive})</strong>
+                    </InputText>
                   </div>
                   <div>
                     <span className="generating">
                       {/* <Sub3 color="gray800">{currentTabStats.generating}</Sub3> */}
-                      <images.ArrowClockwise2 width="14" height="14" color={palette.primary} />
+                      <images.ArrowClockwise2
+                        width="14"
+                        height="14"
+                        color={palette.primary}
+                      />
                     </span>
-                    <InputText color="gray700">생성 중 <strong>({currentTabStats.generating})</strong></InputText>
+                    <InputText color="gray700">
+                      생성 중 <strong>({currentTabStats.generating})</strong>
+                    </InputText>
                   </div>
                   <div>
                     <span className="active">
                       {/* <Sub3 color="gray800">{currentTabStats.active}</Sub3> */}
                       <img src={images.IconCheck3} width="8" />
                     </span>
-                    <InputText color="gray700">활성 페르소나 <strong>({currentTabStats.active})</strong></InputText>
+                    <InputText color="gray700">
+                      활성 페르소나 <strong>({currentTabStats.active})</strong>
+                    </InputText>
                   </div>
                 </AiPersonaInfo>
 
@@ -1229,22 +1243,14 @@ const PageAiPersona = () => {
               {!isLoading && (
                 <ButtonGroup>
                   {["request", "ing"].includes(currentPersona.status) ? (
-                    <Button
-                      DbExLarge
-                      Disabled
-                      Fill
-                      W100
-                    >
+                    <Button DbExLarge Disabled Fill W100>
                       <Sub1 color="gray700">생성 중인 페르소나 입니다.</Sub1>
                     </Button>
                   ) : currentPersona.status === "complete" ? (
-                    <Button
-                      DbExLarge
-                      Disabled
-                      Fill
-                      W100
-                    >
-                      <Sub1 color="gray700">인터뷰 가능한 활성 페르소나 입니다.</Sub1>
+                    <Button DbExLarge Disabled Fill W100>
+                      <Sub1 color="gray700">
+                        인터뷰 가능한 활성 페르소나 입니다.
+                      </Sub1>
                     </Button>
                   ) : (
                     <>
@@ -1702,24 +1708,58 @@ const PageAiPersona = () => {
                     </Body3>
                     <div className="box-list">
                       <div>
-                        <Body2 color="gray800">{oceanValues.openness === 0 ? "보수적" : "개방적"}</Body2>
-                        <Sub3 color="gray300">{oceanValues.openness === 0 ? "conservative" : "open mind"}</Sub3>
+                        <Body2 color="gray800">
+                          {oceanValues.openness === 0 ? "보수적" : "개방적"}
+                        </Body2>
+                        <Sub3 color="gray300">
+                          {oceanValues.openness === 0
+                            ? "conservative"
+                            : "open mind"}
+                        </Sub3>
                       </div>
                       <div>
-                        <Body2 color="gray800">{oceanValues.conscientiousness === 0 ? "즉흥적" : "성실함"}</Body2>
-                        <Sub3 color="gray300">{oceanValues.conscientiousness === 0 ? "impromptu" : "conscientious"}</Sub3>
+                        <Body2 color="gray800">
+                          {oceanValues.conscientiousness === 0
+                            ? "즉흥적"
+                            : "성실함"}
+                        </Body2>
+                        <Sub3 color="gray300">
+                          {oceanValues.conscientiousness === 0
+                            ? "impromptu"
+                            : "conscientious"}
+                        </Sub3>
                       </div>
                       <div>
-                        <Body2 color="gray800">{oceanValues.extraversion === 0 ? "내향적" : "외향적"}</Body2>
-                        <Sub3 color="gray300">{oceanValues.extraversion === 0 ? "introvert" : "extrovert"}</Sub3>
+                        <Body2 color="gray800">
+                          {oceanValues.extraversion === 0 ? "내향적" : "외향적"}
+                        </Body2>
+                        <Sub3 color="gray300">
+                          {oceanValues.extraversion === 0
+                            ? "introvert"
+                            : "extrovert"}
+                        </Sub3>
                       </div>
                       <div>
-                        <Body2 color="gray800">{oceanValues.agreeableness === 0 ? "독립적" : "우호적"}</Body2>
-                        <Sub3 color="gray300">{oceanValues.agreeableness === 0 ? "independent" : "friendly"}</Sub3>
+                        <Body2 color="gray800">
+                          {oceanValues.agreeableness === 0
+                            ? "독립적"
+                            : "우호적"}
+                        </Body2>
+                        <Sub3 color="gray300">
+                          {oceanValues.agreeableness === 0
+                            ? "independent"
+                            : "friendly"}
+                        </Sub3>
                       </div>
                       <div>
-                        <Body2 color="gray800">{oceanValues.neuroticism === 0 ? "무던함" : "신경적"}</Body2>
-                        <Sub3 color="gray300">{oceanValues.neuroticism === 0 ? "simple" : "neurotic"}</Sub3>
+                        <Body2 color="gray800">
+                          {oceanValues.neuroticism === 0 ? "무던함" : "신경적"}
+                        </Body2>
+                        <Sub3 color="gray300">
+                          {oceanValues.neuroticism === 0
+                            ? "simple"
+                            : "neurotic"}
+                        </Sub3>
                       </div>
                     </div>
                   </div>
@@ -2386,7 +2426,7 @@ const AiPersonaInfo = styled.div`
 
     &.generating {
       border: 1px solid ${palette.white};
-      background: #F0F4FF;
+      background: #f0f4ff;
     }
 
     &.inactive {
@@ -2409,13 +2449,9 @@ const AiPersonaInfo = styled.div`
       &:before {
         transform: translate(-50%, -50%) rotate(90deg);
       }
-      
-      
     }
   }
 `;
-
-
 
 const PersonaStatusWrap = styled.div`
   display: flex;

@@ -440,14 +440,6 @@ const OrganismPersonaCardList = ({
                 </div>
 
                 <div style={{ flex: "1" }}>
-                <StyledButton
-                    Medium
-                    Outline
-                    onClick={() => setShowPopup(persona)}
-                  >
-                    프로필
-                  </StyledButton>
-                  
                   <StyledButton
                     Medium
                     Outline
@@ -455,12 +447,12 @@ const OrganismPersonaCardList = ({
                   >
                     프로필
                   </StyledButton>
+
                   <StyledButton
                     Medium
                     Primary
                     Fill
                     onClick={() => setShowPopup(persona)}
-<<<<<<< HEAD
                     style={{
                       background:
                         persona?.status === "complete"
@@ -478,30 +470,48 @@ const OrganismPersonaCardList = ({
                           : palette.primary,
                     }}
                   >
-                    {persona?.status === "ing" || persona?.status === "request" ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: palette.primary }}>
-                        <images.ArrowClockwise2 width="14" height="14" color={palette.primary} />
+                    {persona?.status === "ing" ||
+                    persona?.status === "request" ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px",
+                          color: palette.primary,
+                        }}
+                      >
+                        <images.ArrowClockwise2
+                          width="14"
+                          height="14"
+                          color={palette.primary}
+                        />
                         생성중
                       </div>
                     ) : persona?.status === "complete" ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: palette.white }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px",
+                          color: palette.white,
+                        }}
+                      >
                         <img src={images.IconCheck3} width="8" />
                         활성화
                       </div>
                     ) : (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: palette.primary }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px",
+                          color: palette.primary,
+                        }}
+                      >
                         <img src={images.PlusPrimary} width="8" height="8" />
                         생성 요청
                       </div>
                     )}
-=======
-                  >
-                    {persona?.status === "ing" || persona?.status === "request"
-                      ? "생성중"
-                      : persona?.status === "complete"
-                      ? "활성"
-                      : "비활성"}
->>>>>>> 1b6a69893cef478ee4396650763bb756180a198d
                   </StyledButton>
                 </div>
               </AiPersonaCardButtonWrap>
