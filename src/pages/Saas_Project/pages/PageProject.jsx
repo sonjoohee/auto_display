@@ -39,6 +39,12 @@ import {
   EVENT_TITLE,
   EVENT_STATE,
   TRIAL_STATE,
+  CREDIT_CREATE_PERSONA_DEFAULT,
+  CREDIT_CREATE_TOOL,
+  CREDIT_CREATE_EXPERT,
+  CREDIT_CREATE_MULTIMODAL,
+  CREDIT_CREATE_INTERVIEW,
+  CREDIT_CREATE_PROJECT,
 } from "../../AtomStates";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 
@@ -54,6 +60,14 @@ const PageProject = () => {
   const [, setCreditCustomTheory] = useAtom(CREDIT_CUSTOM_THEORY);
   const [, setCreditAdditionalQuestion] = useAtom(CREDIT_ADDITIONAL_QUESTION);
   const [, setCreditIndepthInterview] = useAtom(CREDIT_INDEPTH_INTERVIEW);
+  const [, setCreditCreatePersonaDefault] = useAtom(
+    CREDIT_CREATE_PERSONA_DEFAULT
+  );
+  const [, setCreditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
+  const [, setCreditCreateExpert] = useAtom(CREDIT_CREATE_EXPERT);
+  const [, setCreditCreateMultimodal] = useAtom(CREDIT_CREATE_MULTIMODAL);
+  const [, setCreditCreateInterview] = useAtom(CREDIT_CREATE_INTERVIEW);
+  const [, setCreditCreateProject] = useAtom(CREDIT_CREATE_PROJECT);
   const [, setEventTitle] = useAtom(EVENT_TITLE);
   const [, setEventState] = useAtom(EVENT_STATE);
   const [, setTrialState] = useAtom(TRIAL_STATE);
@@ -79,7 +93,7 @@ const PageProject = () => {
           const response = await CreditInfo(isLoggedIn);
 
           if (response) {
-            // console.log("🚀 ~ fetchCreditInfo ~ response:", response);
+            console.log("🚀 ~ fetchCreditInfo ~ response:", response);
             setCreditRequestCustomPersona(response.request_custom_persona);
             setCreditRequestBusinessPersona(response.request_business_persona);
             setCreditCustomTheory(response.custom_theory);
@@ -88,6 +102,12 @@ const PageProject = () => {
             setEventTitle(response.event_title);
             setEventState(response.event_state);
             setTrialState(response.trial_state);
+            setCreditCreatePersonaDefault(response.create_persona_default);
+            setCreditCreateTool(response.create_tool);
+            setCreditCreateExpert(response.create_expert);
+            setCreditCreateMultimodal(response.create_multimodal);
+            setCreditCreateInterview(response.create_interview);
+            setCreditCreateProject(response.create_project);
           }
         }
       } catch (error) {

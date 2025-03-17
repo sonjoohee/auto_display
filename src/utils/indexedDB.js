@@ -4055,3 +4055,38 @@ export const getToolDeleteListOnServer = async (
     }
   }
 };
+
+// 나만의 페르소나 생성
+export const InterviewXMyPersonaGeneratorRequest = async (data) => {
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/project/temporary/myPersonaGenerator",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

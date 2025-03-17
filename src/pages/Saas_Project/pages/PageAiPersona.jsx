@@ -40,11 +40,11 @@ import {
   Body2,
   Body3,
   Sub1,
+  Sub2,
   Sub3,
   InputText,
 } from "../../../assets/styles/Typography";
 import OrganismEmptyPersona from "../components/organisms/OrganismEmptyPersona";
-
 import {
   updatePersonaOnServer,
   getPersonaListOnServer,
@@ -57,7 +57,6 @@ import {
   getProjectByIdFromIndexedDB,
   getPersonaOnServer,
 } from "../../../utils/indexedDB";
-
 import OrganismPersonaCardList from "../components/organisms/OrganismPersonaCardList";
 import {
   PROJECT_ID,
@@ -72,25 +71,25 @@ import {
 } from "../../../pages/AtomStates";
 import AtomPersonaLoader from "../../Global/atoms/AtomPersonaLoader";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
+import { InterviewXMyPersonaGeneratorRequest } from "../../../utils/indexedDB";
 
 const PageAiPersona = () => {
+
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const navigate = useNavigate();
   const location = useLocation();
+
   const [project] = useAtom(PROJECT_SAAS);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId] = useAtom(PROJECT_ID);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [, setUserCredits] = useAtom(USER_CREDITS);
-  const [creditRequestBusinessPersona] = useAtom(
-    CREDIT_REQUEST_BUSINESS_PERSONA
-  );
+  const [creditRequestBusinessPersona] = useAtom(CREDIT_REQUEST_BUSINESS_PERSONA);
 
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
   const [isCustomizePopupOpen, setIsCustomizePopupOpen] = useState(false);
-  const [isPersonaConfirmPopupOpen, setIsPersonaConfirmPopupOpen] =
-    useState(false);
+  const [isPersonaConfirmPopupOpen, setIsPersonaConfirmPopupOpen] =useState(false);
   const [selectedPersona, setSelectedPersona] = useState(null);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [activeTab2, setActiveTab2] = useState("lifestyle");
@@ -145,6 +144,31 @@ const PageAiPersona = () => {
   const handleCustomizePopupClose = () => {
     setIsCustomizePopupOpen(false);
     setActiveTabIndex(0);
+    // OCEAN 값 초기화
+    setOceanValues({
+      openness: 0.5,
+      conscientiousness: 0.5,
+      extraversion: 0.5,
+      agreeableness: 0.5,
+      neuroticism: 0.5,
+    });
+    // ignoreOcean 초기화
+    setIgnoreOcean(false);
+    // customPersonaForm 초기화
+    setCustomPersonaForm({
+      gender: "",
+      ageGroups: [],
+      purpose: "",
+      additionalInfo: "",
+    });
+    // selectedValues 초기화
+    setSelectedValues({
+      gender: "",
+      ageGroup: "",
+      business: "",
+      uniqueUser: "",
+      keyStakeholder: "",
+    });
   };
 
   const handleCustomizePopupConfirm = () => {
@@ -221,8 +245,19 @@ const PageAiPersona = () => {
 
   const [ignoreOcean, setIgnoreOcean] = useState(false);
 
-  const handleIgnoreOcean = (e) => {
+  const handleRandomOcean = (e) => {
     setIgnoreOcean(e.target.checked);
+    
+    // 체크박스가 선택되면 모든 OCEAN 값을 랜덤으로 설정
+    if (e.target.checked) {
+      setOceanValues({
+        openness: Math.random() < 0.5 ? 0 : 1,
+        conscientiousness: Math.random() < 0.5 ? 0 : 1,
+        extraversion: Math.random() < 0.5 ? 0 : 1,
+        agreeableness: Math.random() < 0.5 ? 0 : 1,
+        neuroticism: Math.random() < 0.5 ? 0 : 1,
+      });
+    }
   };
 
   const [selectBoxStates, setSelectBoxStates] = useState({
@@ -321,7 +356,12 @@ const PageAiPersona = () => {
         // additionalInfo는 더 이상 필수 항목이 아님
       );
     } else if (activeTabIndex === 1) {
-      return true; // OCEAN 정보는 선택사항
+      // OCEAN 정보 탭에서는 값이 하나라도 0.5인 경우 비활성화
+      if (!ignoreOcean) {
+        const hasDefaultValue = Object.values(oceanValues).some(value => value === 0.5);
+        return !hasDefaultValue;
+      }
+      return true; // ignoreOcean이 true인 경우 항상 유효
     }
     return true;
   };
@@ -417,7 +457,7 @@ const PageAiPersona = () => {
             project.projectAnalysis.business_analysis +
             (project.projectAnalysis.file_analysis || ""),
           persona_info,
-          persona_type: persona.personaType
+          persona_type: persona.personaType,
         },
         isLoggedIn
       );
@@ -444,7 +484,7 @@ const PageAiPersona = () => {
               project.projectAnalysis.business_analysis +
               (project.projectAnalysis.file_analysis || ""),
             persona_info,
-            persona_type: persona.personaType
+            persona_type: persona.personaType,
           },
           isLoggedIn
         );
@@ -547,7 +587,7 @@ const PageAiPersona = () => {
         return uniqueUserStats;
       case "key_stakeholder":
         return keyStakeholderStats;
-      case "my_persona":
+      case "my_favorite":
         // 즐겨찾기된 페르소나만 필터링 (다양한 형태의 isStarred 값 처리)
         const starredPersonas = personaListSaas.filter(
           (persona) => persona?.favorite === true
@@ -626,107 +666,147 @@ const PageAiPersona = () => {
   };
 
   const mapExperienceDepth = (level) => {
+    // Key Stakeholder인 경우 다른 설명 사용
+    if (currentPersona?.personaType === "key_stakeholder") {
     switch (level) {
       case "1":
       case "1단계":
       case 1:
-        return "이 제품/서비스를 들어본 적도 없음";
+          return "조언 제공 가능하나 최종 결정권 없음";
       case "2":
       case "2단계":
       case 2:
-        return "들어본 적은 있지만, 사용해본 적은 없음";
+          return "제한된 영역에서 피드백 및 일부 결정권 보유";
       case "3":
       case "3단계":
       case 3:
-        return "사용해본 적은 있지만, 한두 번 경험한 수준";
+          return "특정 분야 운영 및 성장 방향 결정 가능";
       case "4":
       case "4단계":
       case 4:
-        return "몇 번 사용해봤고, 기능을 어느 정도 이해하고 있음";
-      case "5":
-      case "5단계":
-      case 5:
-        return "정기적으로 사용하고 있고, 익숙한 사용자";
-      default:
-        return "선택해주세요";
+          return "기업 전략 수립 및 장기적 방향 설정";
+        case "5":
+        case "5단계":
+        case 5:
+          return "기업 전략, 투자, 정책 수립을 직접 결정";
+        default:
+          return "선택해주세요";
+      }
+    } else {
+      // 기존 코드 유지
+      switch (level) {
+        case "1":
+        case "1단계":
+        case 1:
+          return "이 제품/서비스를 들어본 적도 없음";
+        case "2":
+        case "2단계":
+        case 2:
+          return "들어본 적은 있지만, 사용해본 적은 없음";
+        case "3":
+        case "3단계":
+        case 3:
+          return "사용해본 적은 있지만, 한두 번 경험한 수준";
+        case "4":
+        case "4단계":
+        case 4:
+          return "몇 번 사용해봤고, 기능을 어느 정도 이해하고 있음";
+        case "5":
+        case "5단계":
+        case 5:
+          return "정기적으로 사용하고 있고, 익숙한 사용자";
+        default:
+          return "선택해주세요";
+      }
     }
   };
 
   const mapUsageDepth = (level) => {
-    switch (level) {
-      case "1":
-      case "1단계":
-      case 1:
-        return "기본적인 기능도 잘 모름";
-      case "2":
-      case "2단계":
-      case 2:
-        return "몇 가지 주요 기능만 사용";
-      case "3":
-      case "3단계":
-      case 3:
-        return "대부분의 기능을 사용해 봤지만, 특정 기능은 모름";
-      case "4":
-      case "4단계":
-      case 4:
-        return "거의 모든 기능을 능숙하게 사용";
-      default:
-        return "선택해주세요";
+    // Key Stakeholder인 경우 다른 설명 사용
+    if (currentPersona?.personaType === "key_stakeholder") {
+      switch (level) {
+        case "1":
+        case "1단계":
+        case 1:
+          return "기본 개념 이해, 보조적 역할 수행";
+        case "2":
+        case "2단계":
+        case 2:
+          return "실무 경험 보유, 특정 업무 수행 가능";
+        case "3":
+        case "3단계":
+        case 3:
+          return "시장 트렌드 이해, 주요 의견 제시 가능";
+        case "4":
+        case "4단계":
+        case 4:
+          return "연구 및 혁신 주도, 신기술 개발 영향";
+        case "5":
+        case "5단계":
+        case 5:
+          return "업계 방향 설정, 산업 정책 수립 주도";
+        default:
+          return "선택해주세요";
+      }
+    } else {
+      // 기존 코드 유지
+      switch (level) {
+        case "1":
+        case "1단계":
+        case 1:
+          return "기본적인 기능도 잘 모름";
+        case "2":
+        case "2단계":
+        case 2:
+          return "몇 가지 주요 기능만 사용";
+        case "3":
+        case "3단계":
+        case 3:
+          return "대부분의 기능을 사용해 봤지만, 특정 기능은 모름";
+        case "4":
+        case "4단계":
+        case 4:
+          return "거의 모든 기능을 능숙하게 사용";
+        default:
+          return "선택해주세요";
+      }
     }
   };
 
   const handleCustomPersonaRequest = async () => {
+    console.log(customPersonaForm);
     try {
       const requestData = {
-        projectId: projectId,
-        businessAnalysis: {
-          businessModel: project.businessModel,
-          projectAnalysis: project.projectAnalysis,
-          projectDescription: project.projectDescription,
-          projectTitle: project.projectTitle,
-          targetCountry: project.targetCountry,
-        },
-        projectType: project.projectType,
-        requestDate: new Date().toLocaleString("ko-KR", {
-          timeZone: "Asia/Seoul",
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        }),
-        requestTimeStamp: Date.now(),
-        personaRequest: {
-          preferences: {
-            gender: customPersonaForm.gender,
-            ageGroups: customPersonaForm.ageGroups,
-          },
-          additionalInfo: customPersonaForm.additionalInfo,
-          ocean: {
-            openness: oceanValues.openness,
-            conscientiousness: oceanValues.conscientiousness,
-            extraversion: oceanValues.extraversion,
-            agreeableness: oceanValues.agreeableness,
-            neuroticism: oceanValues.neuroticism,
-          },
-          ignoreOcean: ignoreOcean,
-          status: "request",
-        },
-      };
-      // API 호출 예시
-      const response = await createRequestPersonOnServer(
-        requestData,
-        isLoggedIn
+          business_description:
+            project.projectAnalysis.business_analysis +
+            (project.projectAnalysis.file_analysis || ""),
+          persona_gender: customPersonaForm.gender === "male" ? "남성" : "여성",
+          persona_age: customPersonaForm.ageGroups.map(age => age.trim()).join(", "),
+          persona_reason: customPersonaForm.purpose,
+          persona_additional_info: customPersonaForm.additionalInfo,
+          persona_ocean: {
+              type_o: oceanValues.openness === 0 ? "보수적" : "개방적",
+              type_c: oceanValues.conscientiousness === 0 ? "즉흥적" : "성실함",
+              type_e: oceanValues.extraversion === 0 ? "내향적" : "외향적",
+              type_a: oceanValues.agreeableness === 0 ? "독립적" : "우호적",
+              type_n: oceanValues.neuroticism === 0 ? "무던함" : "신경적"
+          }
+      }
+      const response = await InterviewXMyPersonaGeneratorRequest(
+        requestData
       );
+
+      console.log(response);
 
       if (!response) {
         throw new Error("페르소나 요청에 실패했습니다.");
       }
 
       setIsCustomizePopupOpen(false);
-      // 추가적인 성공 처리 로직
-    } catch (error) {}
+
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // 크레딧 사용 함수
@@ -915,7 +995,7 @@ const PageAiPersona = () => {
                 </Body3>
               </div>
 
-              {/* <Button
+              <Button
                 ExLarge
                 PrimaryLightest
                 Fill
@@ -926,7 +1006,7 @@ const PageAiPersona = () => {
               >
                 <img src={images.PlusPrimary} width="14" height="14" />
                 <Sub2 color="primary">나만의 AI Persona 요청</Sub2>
-              </Button> */}
+              </Button>
             </AiPersonaTitle>
 
             {personaListSaas && personaListSaas.length > 0 ? (
@@ -969,16 +1049,16 @@ const PageAiPersona = () => {
                     Key Stakeholder
                   </TabButtonType3>
                   <TabButtonType3
-                    className={activeTab === "my_persona" ? "active" : ""}
-                    onClick={() => handleTabClick("my_persona")}
-                    isActive={activeTab === "my_persona"}
+                    className={activeTab === "my_favorite" ? "active" : ""}
+                    onClick={() => handleTabClick("my_favorite")}
+                    isActive={activeTab === "my_favorite"}
                     style={
-                      activeTab === "my_persona"
+                      activeTab === "my_favorite"
                         ? { color: "#333333" }
                         : { color: "#999999" }
                     }
                   >
-                    My Persona
+                    Favorite
                   </TabButtonType3>
                 </TabWrapType3>
 
@@ -1550,7 +1630,7 @@ const PageAiPersona = () => {
                         type="checkbox"
                         id="chk1"
                         checked={ignoreOcean}
-                        onChange={handleIgnoreOcean}
+                        onChange={handleRandomOcean}
                         style={{ display: "block" }}
                       />
                       <label htmlFor="chk1">
@@ -1622,24 +1702,24 @@ const PageAiPersona = () => {
                     </Body3>
                     <div className="box-list">
                       <div>
-                        <Body2 color="gray800">개방적</Body2>
-                        <Sub3 color="gray300">open mind</Sub3>
+                        <Body2 color="gray800">{oceanValues.openness === 0 ? "보수적" : "개방적"}</Body2>
+                        <Sub3 color="gray300">{oceanValues.openness === 0 ? "conservative" : "open mind"}</Sub3>
                       </div>
                       <div>
-                        <Body2 color="gray800">즉흥적</Body2>
-                        <Sub3 color="gray300">impromptu</Sub3>
+                        <Body2 color="gray800">{oceanValues.conscientiousness === 0 ? "즉흥적" : "성실함"}</Body2>
+                        <Sub3 color="gray300">{oceanValues.conscientiousness === 0 ? "impromptu" : "conscientious"}</Sub3>
                       </div>
                       <div>
-                        <Body2 color="gray800">내향적</Body2>
-                        <Sub3 color="gray300">introvert</Sub3>
+                        <Body2 color="gray800">{oceanValues.extraversion === 0 ? "내향적" : "외향적"}</Body2>
+                        <Sub3 color="gray300">{oceanValues.extraversion === 0 ? "introvert" : "extrovert"}</Sub3>
                       </div>
                       <div>
-                        <Body2 color="gray800">우호적</Body2>
-                        <Sub3 color="gray300">friendly</Sub3>
+                        <Body2 color="gray800">{oceanValues.agreeableness === 0 ? "독립적" : "우호적"}</Body2>
+                        <Sub3 color="gray300">{oceanValues.agreeableness === 0 ? "independent" : "friendly"}</Sub3>
                       </div>
                       <div>
-                        <Body2 color="gray800">무던함</Body2>
-                        <Sub3 color="gray300">simple</Sub3>
+                        <Body2 color="gray800">{oceanValues.neuroticism === 0 ? "무던함" : "신경적"}</Body2>
+                        <Sub3 color="gray300">{oceanValues.neuroticism === 0 ? "simple" : "neurotic"}</Sub3>
                       </div>
                     </div>
                   </div>
@@ -2335,20 +2415,7 @@ const AiPersonaInfo = styled.div`
   }
 `;
 
-const StarButton = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px;
-  border-radius: 4px;
-  border: 1px solid
-    ${(props) =>
-      props.isStarred ? `rgba(255, 149, 0, 0.10)` : palette.gray200};
-  background: ${(props) =>
-    props.isStarred ? `rgba(255, 149, 0, 0.10)` : palette.white};
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-`;
+
 
 const PersonaStatusWrap = styled.div`
   display: flex;

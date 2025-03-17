@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Body1, Sub3 } from "../../../../assets/styles/Typography";
-
+import AtomPersonaLoader from "../../../Global/atoms/AtomPersonaLoader";
 import {
   AiPersonaCardGroupWrap,
   AiPersonaCardListItem,
@@ -19,13 +19,21 @@ import {
   updatePersonaOnServer,
   UserCreditCheck,
   UserCreditInfo,
-  createRequestPersonaOnServer,
-  getProjectByIdFromIndexedDB,
+  createPersonaOnServer,
+  getPersonaListOnServer,
+  InterviewXPersonaMacroSegmentRequest,
+  InterviewXPersonaUniqueUserRequest,
+  InterviewXPersonaKeyStakeholderRequest,
+  UserCreditUse,
 } from "../../../../utils/indexedDB";
 import {
+  PROJECT_PERSONA_LIST,
   IS_LOGGED_IN,
   USER_CREDITS,
   CREDIT_REQUEST_BUSINESS_PERSONA,
+  PROJECT_SAAS,
+  PERSONA_LIST_SAAS,
+  CREDIT_CREATE_PERSONA_DEFAULT,
 } from "../../../../pages/AtomStates";
 import PopupWrap from "../../../../assets/styles/Popup.jsx";
 
@@ -37,19 +45,25 @@ const OrganismPersonaCardList = ({
   setPersonaStats = () => {}, // 페르소나 통계 정보를 부모 컴포넌트에 전달하는 함수
 }) => {
   const navigate = useNavigate();
-  // 활성화된 탭에 따라 필터링된 페르소나 데이터
+
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [project] = useAtom(PROJECT_SAAS);
+  const [creditCreatePersonaDefault] = useAtom(CREDIT_CREATE_PERSONA_DEFAULT);
+  const creditPersonaCreate = creditCreatePersonaDefault;
+  const [, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
+  const [, setProjectPersonaList] = useAtom(PROJECT_PERSONA_LIST);
+  const [, setUserCredits] = useAtom(USER_CREDITS);
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
+  const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [filteredPersonaData, setFilteredPersonaData] = useState([]);
-  const [showRequestPopup, setShowRequestPopup] = useState(false);
+  const [loadingTabs, setLoadingTabs] = useState  ({
+    macro_segment: false,
+    unique_user: false,
+    key_stakeholder: false
+  });
   const eventState = true;
   const trialState = false;
   const eventTitle = "이벤트 제목";
-  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [creditRequestBusinessPersona] = useAtom(
-    CREDIT_REQUEST_BUSINESS_PERSONA
-  );
-  const [, setUserCredits] = useAtom(USER_CREDITS);
-  const [selectedPersona, setSelectedPersona] = useState(null);
-  const [showCreditPopup, setShowCreditPopup] = useState(false);
 
   // 탭이 변경될 때마다 데이터 필터링 및 통계 계산
   useEffect(() => {
@@ -61,8 +75,8 @@ const OrganismPersonaCardList = ({
 
     let filtered = [];
 
-    // 'my_persona' 탭인 경우 favorite이 true인 항목만 표시
-    if (activeTab === "my_persona") {
+    // 'favorite 탭인 경우 favorite이 true인 항목만 표시
+    if (activeTab === "my_favorite") {
       filtered = personaData.filter((persona) => persona?.favorite === true);
     } else {
       // 선택된 탭에 맞는 personaType을 가진 데이터만 필터링
@@ -137,19 +151,201 @@ const OrganismPersonaCardList = ({
     } catch (error) {}
   };
 
-  // // 데이터가 없는 경우 빈 상태 컴포넌트 표시
-  // if (!filteredPersonaData || filteredPersonaData.length === 0) {
-  //   return <OrganismEmptyPersona />;
-  // }
+  
 
-  const handleRequestClick = (persona) => {
-    setSelectedPersona(persona); // 선택된 페르소나 설정
-    setShowRequestPopup(true); // 팝업 표시
+  const handleCreatePersona = async (personaType) => {
+    // 해당 탭만 로딩 상태로 변경
+    setLoadingTabs(prev => ({
+      ...prev,
+      [personaType]: true
+    }));
+
+    try {
+      // 현재 탭의 페르소나 리스트 필터링
+      const currentTabPersonas = personaData.filter(
+        (p) => p.personaType === personaType
+      );
+
+      // last_persona 객체 배열 생성
+      const lastPersonaInfo = currentTabPersonas.map((persona) => ({
+        persona_name: persona.personaName,
+        keywords: persona.keywords,
+        gender: persona.gender,
+        age: persona.age,
+      }));
+
+      const data = {
+        business_description:
+          project.projectAnalysis.business_analysis +
+          (project.projectAnalysis.file_analysis
+            ? project.projectAnalysis.file_analysis
+            : ""),
+        target_customer: project.projectAnalysis.target_customer,
+        business_model: project.businessModel,
+        industry_type: project.industryType,
+        target_country: project.targetCountry,
+        last_persona: lastPersonaInfo,
+      };
+
+      let response;
+      let personas;
+      const max_attempt = 10;
+      let attempt = 0;
+
+      switch (personaType) {
+        case "macro_segment":
+          response = await InterviewXPersonaMacroSegmentRequest(
+            data,
+            isLoggedIn
+          );
+          while (
+            !response ||
+            !response.response ||
+            !response.response.persona_macro_segment ||
+            response.response.persona_macro_segment.length === 0
+          ) {
+            response = await InterviewXPersonaMacroSegmentRequest(
+              data,
+              isLoggedIn
+            );
+            attempt++;
+            if (attempt >= max_attempt) {
+              throw new Error("Macro Segment 페르소나 생성에 실패했습니다.");
+            }
+          }
+          personas = response.response.persona_macro_segment.map((persona) => ({
+            ...mapPersonaData(persona),
+            personaType: "macro_segment",
+          }));
+          break;
+
+        case "unique_user":
+          response = await InterviewXPersonaUniqueUserRequest(data, isLoggedIn);
+          while (
+            !response ||
+            !response.response ||
+            !response.response.persona_unique_user ||
+            response.response.persona_unique_user.length === 0
+          ) {
+            response = await InterviewXPersonaUniqueUserRequest(
+              data,
+              isLoggedIn
+            );
+            attempt++;
+            if (attempt >= max_attempt) {
+              throw new Error("Unique User 페르소나 생성에 실패했습니다.");
+            }
+          }
+          personas = response.response.persona_unique_user.map((persona) => ({
+            ...mapPersonaData(persona),
+            personaType: "unique_user",
+          }));
+          break;
+
+        case "key_stakeholder":
+          response = await InterviewXPersonaKeyStakeholderRequest(
+            data,
+            isLoggedIn
+          );
+          while (
+            !response ||
+            !response.response ||
+            !response.response.persona_key_stakeholder ||
+            response.response.persona_key_stakeholder.length === 0
+          ) {
+            response = await InterviewXPersonaKeyStakeholderRequest(
+              data,
+              isLoggedIn
+            );
+            attempt++;
+            if (attempt >= max_attempt) {
+              throw new Error("Key Stakeholder 페르소나 생성에 실패했습니다.");
+            }
+          }
+          personas = response.response.persona_key_stakeholder.map(
+            (persona) => ({
+              ...mapPersonaData(persona),
+              personaType: "key_stakeholder",
+            })
+          );
+          break;
+      }
+
+      // DB에 저장
+      const updatedPersonas = [];
+      for (const persona of personas) {
+        try {
+          const insertedId = await createPersonaOnServer(persona, isLoggedIn);
+          if (insertedId) {
+            updatedPersonas.push({ ...persona, _id: insertedId });
+          } else {
+            updatedPersonas.push(persona);
+          }
+        } catch (error) {
+          updatedPersonas.push(persona);
+        }
+      }
+
+      // 서버에서 최신 데이터 가져오기
+      const savedPersonaListInfo = await getPersonaListOnServer(
+        project?._id,
+        true
+      );
+      if (savedPersonaListInfo) {
+        const sortedList = savedPersonaListInfo
+          .filter((persona) => persona.personaType === personaType)
+          .sort((a, b) => b.timestamp - a.timestamp);
+
+        setProjectPersonaList((prev) => {
+          const filteredPrev = prev.filter(
+            (p) => p.personaType !== personaType
+          );
+          return [...filteredPrev, ...sortedList];
+        });
+
+        // personaListSaas도 같은 방식으로 업데이트
+        setPersonaListSaas((prev) => {
+          const filteredPrev = prev.filter(
+            (p) => p.personaType !== personaType
+          );
+          return [...filteredPrev, ...sortedList];
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      // 에러 처리
+    } finally {
+      // 해당 탭의 로딩 상태만 해제
+      setLoadingTabs(prev => ({
+        ...prev,
+        [personaType]: false
+      }));
+    }
   };
 
-  const creditUse = async () => {
-    // 팝업 닫기
-    setShowRequestPopup(false);
+  // 페르소나 데이터 매핑 헬퍼 함수
+  const mapPersonaData = (persona) => ({
+    personaName: persona.persona_name,
+    personaCharacteristics: persona.persona_characteristics,
+    type: persona.type,
+    age: persona.age,
+    gender: persona.gender,
+    job: persona.job,
+    keywords: persona.keywords,
+    projectId: project._id,
+    imageKey: `persona_${persona.gender === "남성" ? "m" : "f"}_${
+      Math.floor(parseInt(persona.age.replace("세", "")) / 10) * 10
+    }_${String(Math.floor(Math.random() * 10) + 1).padStart(2, "0")}`,
+  });
+
+  // 크레딧 확인 핸들러 추가
+  const handleCreditCheck = () => {
+    setShowCreatePersonaPopup(true);
+  };
+
+  // 크레딧 확인 팝업에서 확인 클릭 시 핸들러
+  const handleConfirmCredit = async () => {
+    setShowCreatePersonaPopup(false);
 
     let accessToken = sessionStorage.getItem("accessToken");
     if (!accessToken) {
@@ -159,7 +355,7 @@ const OrganismPersonaCardList = ({
     // 크레딧 사용전 사용 확인
     const creditPayload = {
       // 기존 10 대신 additionalQuestionMount 사용
-      mount: creditRequestBusinessPersona,
+      mount: creditPersonaCreate,
     };
     const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
 
@@ -170,84 +366,34 @@ const OrganismPersonaCardList = ({
 
     // 크레딧이 사용 가능한 상태면 사용 API 호출
     const creditUsePayload = {
-      title: selectedPersona.title,
-      service_type: " 페르소나 모집 요청",
+      title: project.projectTitle,
+      service_type: "페르소나 생성",
       target: "",
       state: "use",
-      mount: creditRequestBusinessPersona,
+      mount: creditPersonaCreate,
     };
+
+    await UserCreditUse(creditUsePayload, isLoggedIn);
 
     // 크레딧 사용 후 사용자 정보 새로고침
     accessToken = sessionStorage.getItem("accessToken");
     if (accessToken) {
       const userCreditValue = await UserCreditInfo(isLoggedIn);
-
       // 전역 상태의 크레딧 정보 업데이트
       setUserCredits(userCreditValue);
     }
-
-    handleRequestPersona(selectedPersona);
+    handleCreatePersona(activeTab);
   };
 
-  const handleRequestPersona = async (persona) => {
-    if (!persona) {
-      return;
-    }
-
-    try {
-      const projectId =
-        persona.projectId || localStorage.getItem("currentProjectId");
-      const currentProject = await getProjectByIdFromIndexedDB(
-        projectId,
-        isLoggedIn
-      );
-
-      // selectedPersona.status가 undefined일 때만 요청을 진행
-      if (persona.status === "profile" || persona.status === "default") {
-        // 새로운 requestedPersona 배열 생성
-        const newRequestedPersona = {
-          id: persona._id,
-          ...Object.fromEntries(
-            Object.entries(persona).filter(([key]) => key !== "_id")
-          ),
-          status: "request",
-        };
-
-        await updatePersonaOnServer(newRequestedPersona, true);
-
-        const requestData = {
-          projectId: projectId,
-          requestDate: new Date().toLocaleString("ko-KR", {
-            timeZone: "Asia/Seoul",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-          }),
-          requestTimeStamp: Date.now(),
-          businessAnalysis: {
-            businessModel: currentProject.businessModel,
-            projectAnalysis: currentProject.projectAnalysis,
-            projectDescription: currentProject.projectDescription,
-            projectTitle: currentProject.projectTitle,
-            targetCountry: currentProject.targetCountry,
-          },
-          projectType: currentProject.projectType,
-          status: "request",
-          personaRequest: { ...persona },
-        };
-        createRequestPersonaOnServer(requestData, isLoggedIn);
-      } else {
-      }
-    } catch (error) {}
-  };
+  // 현재 탭의 페르소나 개수 계산
+  const currentTabPersonaCount = personaData.filter(
+    (p) => p.personaType === activeTab
+  ).length;
 
   return (
     <>
-      {/* activeTab이 'my_persona'이고 filteredPersonaData가 비어있을 때만 BoxWrap 표시 */}
-      {activeTab === "my_persona" &&
+      {/* activeTab이 'favorite'이고 filteredPersonaData가 비어있을 때만 BoxWrap 표시 */}
+      {activeTab === "my_favorite" &&
       (!filteredPersonaData || filteredPersonaData.length === 0) ? (
         <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
           <img src={images.PeopleStarFillPrimary} alt="" />
@@ -306,9 +452,17 @@ const OrganismPersonaCardList = ({
                   
                   <StyledButton
                     Medium
+                    Outline
+                    onClick={() => setShowPopup(persona)}
+                  >
+                    프로필
+                  </StyledButton>
+                  <StyledButton
+                    Medium
                     Primary
                     Fill
                     onClick={() => setShowPopup(persona)}
+<<<<<<< HEAD
                     style={{
                       background:
                         persona?.status === "complete"
@@ -342,61 +496,67 @@ const OrganismPersonaCardList = ({
                         생성 요청
                       </div>
                     )}
+=======
+                  >
+                    {persona?.status === "ing" || persona?.status === "request"
+                      ? "생성중"
+                      : persona?.status === "complete"
+                      ? "활성"
+                      : "비활성"}
+>>>>>>> 1b6a69893cef478ee4396650763bb756180a198d
                   </StyledButton>
-                  {/* {!["request", "ing", "complete"].includes(
-                    persona?.status
-                  ) && (
-                    <StyledButton
-                      Medium
-                      Primary
-                      Fill
-                      onClick={() => setShowPopup(persona)}
-                    >
-                      페르소나 생성
-                    </StyledButton>
-                  )} */}
                 </div>
               </AiPersonaCardButtonWrap>
             </AiPersonaCardListItem>
           ))}
 
-          <div className="more">
-            <Body3 color="gray500" align="center">
-              + 더보기 (100 credit)
-            </Body3>
-          </div>
+          {activeTab !== "my_favorite" &&
+            currentTabPersonaCount < 24 && (
+              <>
+                {loadingTabs[activeTab] ? (
+                  <div className="more">
+                    <AtomPersonaLoader message="페르소나를 생성하고 있습니다." />
+                  </div>
+                ) : (
+                  <div className="more" onClick={handleCreditCheck}>
+                    <Body3 color="gray500" align="center">
+
+                      + 더보기 ({creditPersonaCreate} credit)
+
+                    </Body3>
+                  </div>
+                )}
+              </>
+            )}
         </AiPersonaCardGroupWrap>
       )}
 
-      {showRequestPopup &&
+      {showCreatePersonaPopup &&
         (eventState ? (
           <PopupWrap
             Event
-            title="페르소나 모집 요청"
+            title="페르소나 생성"
             message={
               <>
                 현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
-                <br />({creditRequestBusinessPersona.toLocaleString()} 크레딧)
+                <br />({creditPersonaCreate} 크레딧)
               </>
             }
             buttonType="Outline"
             closeText="취소"
             confirmText="시작하기"
             isModal={false}
-            onCancel={() => setShowRequestPopup(false)}
-            onConfirm={() => {
-              creditUse();
-              setShowRequestPopup(false);
-            }}
+            onCancel={() => setShowCreatePersonaPopup(false)}
+            onConfirm={handleConfirmCredit}
           />
         ) : trialState ? (
           <PopupWrap
             Check
-            title="페르소나 모집 요청"
+            title="페르소나 생성"
             message={
               <>
                 해당 서비스 사용시 크레딧이 소진됩니다.
-                <br />({creditRequestBusinessPersona.toLocaleString()} 크레딧)
+                <br />({creditPersonaCreate} 크레딧)
                 <br />
                 신규 가입 2주간 무료로 사용 가능합니다.
               </>
@@ -405,33 +565,28 @@ const OrganismPersonaCardList = ({
             closeText="취소"
             confirmText="시작하기"
             isModal={false}
-            onCancel={() => setShowRequestPopup(false)}
-            onConfirm={() => {
-              handleRequestPersona(selectedPersona);
-              setShowRequestPopup(false);
-            }}
+            onCancel={() => setShowCreatePersonaPopup(false)}
+            onConfirm={handleConfirmCredit}
           />
         ) : (
           <PopupWrap
             Check
-            title="페르소나 모집 요청"
+            title="페르소나 생성"
             message={
               <>
                 해당 서비스 사용시 크레딧이 소진됩니다.
-                <br />({creditRequestBusinessPersona.toLocaleString()} 크레딧)
+                <br />({creditPersonaCreate} 크레딧)
               </>
             }
             buttonType="Outline"
             closeText="취소"
             confirmText="시작하기"
             isModal={false}
-            onCancel={() => setShowRequestPopup(false)}
-            onConfirm={() => {
-              handleRequestPersona(selectedPersona);
-              setShowRequestPopup(false);
-            }}
+            onCancel={() => setShowCreatePersonaPopup(false)}
+            onConfirm={handleConfirmCredit}
           />
         ))}
+
       {showCreditPopup && (
         <PopupWrap
           Warning
@@ -447,6 +602,27 @@ const OrganismPersonaCardList = ({
           closeText="확인"
           isModal={false}
           onCancel={() => setShowCreditPopup(false)}
+          onConfirm={() => setShowCreditPopup(false)}
+        />
+      )}
+
+      {showCreatePersonaPopup && (
+        <PopupWrap
+          Check
+          title="페르소나 더보기"
+          closeText="취소"
+          confirmText="시작하기"
+          buttonType="Outline"
+          isModal={false}
+          onConfirm={handleConfirmCredit}
+          onCancel={() => setShowCreditPopup(false)}
+          message={
+            <>
+              해당 서비스 사용시 크레딧이 소진됩니다.
+              <br />
+              {creditPersonaCreate} 크레딧
+            </>
+          }
         />
       )}
     </>

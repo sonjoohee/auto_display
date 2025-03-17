@@ -261,7 +261,7 @@ const PageAiPersona = () => {
                 <TabButtonType3>Macro Segment</TabButtonType3>
                 <TabButtonType3>Unique User</TabButtonType3>
                 <TabButtonType3>Key Stakeholder</TabButtonType3>
-                <TabButtonType3>My Persona</TabButtonType3>
+                <TabButtonType3>Favorite</TabButtonType3>
               </TabWrapType3>
 
               <AiPersonaInfo>

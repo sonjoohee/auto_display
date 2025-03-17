@@ -22,7 +22,7 @@ const OrganismPersonaList = ({
   onPersonaSelect,
 }) => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("my_persona");
+  const [activeTab, setActiveTab] = useState("my_favorite");
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
@@ -49,8 +49,8 @@ const OrganismPersonaList = ({
       return;
     }
 
-    if (tab === "my_persona") {
-      // my_persona에서 선택/해제한 경우, 해당 personaType 탭에서도 선택/해제
+    if (tab === "my_favorite") {
+      // my_favorite에서 선택/해제한 경우, 해당 personaType 탭에서도 선택/해제
       const originalTypeButtonId = `${persona.personaType}_${id}`;
 
       // 원래 타입의 탭에서 상태가 다르면 동기화
@@ -83,8 +83,8 @@ const OrganismPersonaList = ({
       return false;
     }
 
-    // 현재 탭이 my_persona이고 원래 타입의 탭에서 선택되었는지 확인
-    if (activeTab === "my_persona") {
+    // 현재 탭이 my_favorite이고 원래 타입의 탭에서 선택되었는지 확인
+    if (activeTab === "my_favorite") {
       const originalTypeButtonId = `${persona.personaType}_${personaId}`;
       if (selectedPersonaButtons[originalTypeButtonId]) {
         return true;
@@ -104,8 +104,8 @@ const OrganismPersonaList = ({
       return `${currentTab}_${personaId}`;
     }
 
-    // my_persona 탭인 경우, 원래 타입의 ID를 반환
-    if (currentTab === "my_persona") {
+    // my_favorite 탭인 경우, 원래 타입의 ID를 반환
+    if (currentTab === "my_favorite") {
       return `${persona.personaType}_${personaId}`;
     }
 
@@ -120,11 +120,11 @@ const OrganismPersonaList = ({
           <AiPersonaContent>
             <TabWrapType3 Border>
               <TabButtonType3
-                className={activeTab === "my_persona" ? "active" : ""}
-                onClick={() => handleTabClick("my_persona")}
-                isActive={activeTab === "my_persona"}
+                className={activeTab === "my_favorite" ? "active" : ""}
+                onClick={() => handleTabClick("my_favorite")}
+                isActive={activeTab === "my_favorite"}
                 style={
-                  activeTab === "my_persona"
+                  activeTab === "my_favorite"
                     ? { color: "#333333" }
                     : { color: "#999999" }
                 }
@@ -171,7 +171,7 @@ const OrganismPersonaList = ({
             <ListBoxWrap Border>
               {personaListSaas
                 .filter((persona) => {
-                  if (activeTab === "my_persona") {
+                  if (activeTab === "my_favorite") {
                     return persona.favorite === true;
                   }
                   // favorite가 true인 페르소나는 마이페르소나 탭에만 표시
@@ -209,7 +209,7 @@ const OrganismPersonaList = ({
             </ListBoxWrap>
 
             {/* My Persona 탭에서 데이터가 없을 때만 표시 */}
-            {activeTab === "my_persona" &&
+            {activeTab === "my_favorite" &&
               !personaListSaas.some((persona) => persona.favorite === true) && (
                 <BoxWrap
                   Hover
