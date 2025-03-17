@@ -415,7 +415,7 @@ const PageAiPersona = () => {
             project.projectAnalysis.business_analysis +
             (project.projectAnalysis.file_analysis || ""),
           persona_info,
-          // 필요한 추가 데이터가 있다면 여기에 추가
+          persona_type: persona.personaType
         },
         isLoggedIn
       );
@@ -434,8 +434,7 @@ const PageAiPersona = () => {
         !profileData.response.persona_profile.user_experience ||
         !profileData.response.persona_profile.interests ||
         !profileData.response.persona_profile.consumption_pattern ||
-        !profileData.response.persona_profile.usage_depth ||
-        !profileData.response.persona_profile.family
+        !profileData.response.persona_profile.usage_depth
       ) {
         profileData = await InterviewXPersonaProfileRequest(
           {
@@ -443,7 +442,7 @@ const PageAiPersona = () => {
               project.projectAnalysis.business_analysis +
               (project.projectAnalysis.file_analysis || ""),
             persona_info,
-            // 필요한 추가 데이터가 있다면 여기에 추가
+            persona_type: persona.personaType
           },
           isLoggedIn
         );
