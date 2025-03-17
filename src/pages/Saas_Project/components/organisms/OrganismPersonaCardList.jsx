@@ -9,7 +9,7 @@ import {
   UniqueTag,
   BoxWrap,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
-import { Body2 } from "../../../../assets/styles/Typography";
+import { Body2, Body3 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import images from "../../../../assets/styles/Images";
 import styled from "styled-components";
@@ -333,6 +333,12 @@ const OrganismPersonaCardList = ({
               </AiPersonaCardButtonWrap>
             </AiPersonaCardListItem>
           ))}
+
+          <div className="more">
+            <Body3 color="gray500" align="center">
+              + 더보기 (100 credit)
+            </Body3>
+          </div>
         </AiPersonaCardGroupWrap>
       )}
 

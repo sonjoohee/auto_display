@@ -136,6 +136,10 @@ const PageStyleGuide  = () => {
       </Header>
 
       <ContentsWrap>
+        <div id="loader">
+          <AtomPersonaLoader />
+        </div>
+
         <div id="font">
           <h2>Font</h2>
           <Note>
