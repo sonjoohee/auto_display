@@ -128,7 +128,7 @@ const PageTargetDiscovery = () => {
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
-      console.log("targetDiscoveryInfos", targetDiscoveryInfo)
+
       if (Object.keys(targetDiscoveryInfo).length === 0) {
         const projectAnalysis =
           (project?.projectAnalysis.business_analysis
