@@ -21,7 +21,7 @@ export const USER_MEMBERSHIP = atom("");
 
 // 사용자 데이터 상태
 export const CURRENT_USER_STATUS = atom(null);
-export const ERROR_STATUS = atom(""); // 에러 상태 추가 
+export const ERROR_STATUS = atom(""); // 에러 상태 추가
 export const SUCCESS_STATUS = atom(""); // 성공 상태 추가
 export const USER_CREDITS = atom({});
 
@@ -505,6 +505,13 @@ export const CREDIT_ADDITIONAL_QUESTION = atom(0);
 export const CREDIT_INDEPTH_INTERVIEW = atom(0);
 export const CREDIT_REQUEST_CUSTOM_PERSONA = atom(0);
 export const CREDIT_REQUEST_BUSINESS_PERSONA = atom(0);
+export const CREDIT_CREATE_PERSONA_DEFAULT = atom(0);
+export const CREDIT_CREATE_TOOL = atom(0);
+export const CREDIT_CREATE_EXPERT = atom(0);
+export const CREDIT_CREATE_MULTIMODAL = atom(0);
+export const CREDIT_CREATE_INTERVIEW = atom(0);
+export const CREDIT_CREATE_PROJECT = atom(0);
+
 export const EVENT_STATE = atom(false);
 export const EVENT_TITLE = atom("");
 export const TRIAL_STATE = atom(false);
@@ -556,7 +563,6 @@ export const DESIGN_ANALYSIS_EMOTION_TARGET = atom({});
 export const DESIGN_ANALYSIS_EMOTION_SCALE = atom([]);
 export const DESIGN_ANALYSIS_FILE_NAMES = atom([]);
 export const DESIGN_ANALYSIS_FILE_ID = atom([]);
-
 
 //!saas
 // 프로젝트 생성 페이지
