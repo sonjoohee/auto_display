@@ -39,7 +39,9 @@ import {
   Body1,
   Body2,
   Body3,
+  Sub1,
   Sub3,
+  InputText,
 } from "../../../assets/styles/Typography";
 import OrganismEmptyPersona from "../components/organisms/OrganismEmptyPersona";
 
@@ -982,22 +984,22 @@ const PageAiPersona = () => {
 
                 <AiPersonaInfo>
                   <div>
-                    <span className="inactive">
-                      <Sub3 color="gray700">{currentTabStats.inactive}</Sub3>
-                    </span>
-                    <Sub3 color="gray700">비활성 페르소나</Sub3>
+                    <span className="inactive" />
+                    <InputText color="gray500">비활성 페르소나 <strong>({currentTabStats.inactive})</strong></InputText>
                   </div>
                   <div>
                     <span className="generating">
-                      <Sub3 color="gray800">{currentTabStats.generating}</Sub3>
+                      {/* <Sub3 color="gray800">{currentTabStats.generating}</Sub3> */}
+                      <images.ArrowClockwise2 width="14" height="14" color={palette.primary} />
                     </span>
-                    <Sub3 color="gray700">생성 중</Sub3>
+                    <InputText color="gray700">생성 중 <strong>({currentTabStats.generating})</strong></InputText>
                   </div>
                   <div>
                     <span className="active">
-                      <Sub3 color="gray800">{currentTabStats.active}</Sub3>
+                      {/* <Sub3 color="gray800">{currentTabStats.active}</Sub3> */}
+                      <img src={images.IconCheck3} width="8" />
                     </span>
-                    <Sub3 color="gray700">활성 페르소나</Sub3>
+                    <InputText color="gray700">활성 페르소나 <strong>({currentTabStats.active})</strong></InputText>
                   </div>
                 </AiPersonaInfo>
 
@@ -1144,11 +1146,27 @@ const PageAiPersona = () => {
                 )}
               </div>
 
-              {!isLoading &&
-                !["request", "ing", "complete"].includes(
-                  currentPersona.status
-                ) && (
-                  <ButtonGroup>
+              {!isLoading && (
+                <ButtonGroup>
+                  {["request", "ing"].includes(currentPersona.status) ? (
+                    <Button
+                      DbExLarge
+                      Disabled
+                      Fill
+                      W100
+                    >
+                      <Sub1 color="gray700">생성 중인 페르소나 입니다.</Sub1>
+                    </Button>
+                  ) : currentPersona.status === "complete" ? (
+                    <Button
+                      DbExLarge
+                      Disabled
+                      Fill
+                      W100
+                    >
+                      <Sub1 color="gray700">인터뷰 가능한 활성 페르소나 입니다.</Sub1>
+                    </Button>
+                  ) : (
                     <>
                       <Button
                         DbExLarge
@@ -1169,8 +1187,9 @@ const PageAiPersona = () => {
                         페르소나 생성
                       </Button>
                     </>
-                  </ButtonGroup>
-                )}
+                  )}
+                </ButtonGroup>
+              )}
             </div>
           </InterviewPopup>
         </>
@@ -2260,6 +2279,13 @@ const AiPersonaInfo = styled.div`
     display: flex;
     align-items: center;
     gap: 6px;
+
+    ${InputText} {
+      strong {
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+    }
   }
 
   span {
@@ -2268,22 +2294,43 @@ const AiPersonaInfo = styled.div`
     justify-content: center;
     width: 28px;
     height: 28px;
-    padding: 4px 12px;
+    padding: 4px;
     border-radius: 5px;
 
     &.active {
-      border: 1px solid ${palette.white};
-      background: rgba(34, 111, 255, 0.16);
+      width: 22px;
+      height: 22px;
+      // border: 1px solid ${palette.white};
+      background: ${palette.primary};
     }
 
     &.generating {
       border: 1px solid ${palette.white};
-      background: rgba(50, 173, 230, 0.16);
+      background: #F0F4FF;
     }
 
     &.inactive {
-      border: 1px solid ${palette.white};
-      background: ${palette.chatGray};
+      position: relative;
+      background: ${palette.gray100};
+
+      &:before,
+      &:after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        content: "";
+        display: block;
+        width: 10px;
+        height: 2px;
+        background: ${palette.gray500};
+      }
+
+      &:before {
+        transform: translate(-50%, -50%) rotate(90deg);
+      }
+      
+      
     }
   }
 `;

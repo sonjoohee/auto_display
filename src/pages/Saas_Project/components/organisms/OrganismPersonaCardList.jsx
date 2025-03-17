@@ -296,26 +296,52 @@ const OrganismPersonaCardList = ({
                 </div>
 
                 <div style={{ flex: "1" }}>
+                <StyledButton
+                    Medium
+                    Outline
+                    onClick={() => setShowPopup(persona)}
+                  >
+                    프로필
+                  </StyledButton>
+                  
                   <StyledButton
                     Medium
                     Primary
                     Fill
                     onClick={() => setShowPopup(persona)}
-                    // style={{
-                    //   background:
-                    //     persona?.status === "ing" ||
-                    //     persona?.status === "request"
-                    //       ? `rgba(50, 173, 230, 0.16)`
-                    //       : persona?.status === "complete"
-                    //       ? `rgba(34, 111, 255, 0.16)`
-                    //       : palette.chatGray,
-                    // }}
+                    style={{
+                      background:
+                        persona?.status === "complete"
+                          ? palette.primary
+                          : persona?.status === "ing" ||
+                            persona?.status === "request" ||
+                            persona?.status === "default" ||
+                            !persona?.status ||
+                            persona?.status === "profile"
+                          ? `#F0F4FF`
+                          : palette.chatGray,
+                      color:
+                        persona?.status === "complete"
+                          ? palette.white
+                          : palette.primary,
+                    }}
                   >
-                    {persona?.status === "ing" || persona?.status === "request"
-                      ? "페르소나 생성중"
-                      : persona?.status === "complete"
-                      ? "활성 페르소나"
-                      : "비활성 페르소나"}
+                    {persona?.status === "ing" || persona?.status === "request" ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: palette.primary }}>
+                        <images.ArrowClockwise2 width="14" height="14" color={palette.primary} />
+                        생성중
+                      </div>
+                    ) : persona?.status === "complete" ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: palette.white }}>
+                        <img src={images.IconCheck3} width="8" />
+                        활성화
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: palette.primary }}>
+                        <img src={images.PlusPrimary} width="8" height="8" />
+                        생성 요청
+                      </div>
+                    )}
                   </StyledButton>
                   {/* {!["request", "ing", "complete"].includes(
                     persona?.status

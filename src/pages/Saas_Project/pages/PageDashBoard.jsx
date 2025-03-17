@@ -212,12 +212,12 @@ const PageDashBoard = () => {
         {
           label: "비활성 페르소나",
           value: macroSegmentStats.inactive || 0,
-          color: palette.outlineGray,
+          color: "#E0E4EB",
         },
         {
           label: "생성 중",
           value: macroSegmentStats.generating || 0,
-          color: "#32ADE6",
+          color: "#A8BFFF",
         },
         {
           label: "활성 페르소나",
@@ -231,12 +231,12 @@ const PageDashBoard = () => {
         {
           label: "비활성 페르소나",
           value: uniqueUserStats.inactive || 0,
-          color: palette.outlineGray,
+          color: "#E0E4EB",
         },
         {
           label: "생성 중",
           value: uniqueUserStats.generating || 0,
-          color: "#32ADE6",
+          color: "#A8BFFF",
         },
         {
           label: "활성 페르소나",
@@ -250,12 +250,12 @@ const PageDashBoard = () => {
         {
           label: "비활성 페르소나",
           value: keyStakeholderStats.inactive || 0,
-          color: palette.outlineGray,
+          color: "#E0E4EB",
         },
         {
           label: "생성 중",
           value: keyStakeholderStats.generating || 0,
-          color: "#32ADE6",
+          color: "#A8BFFF",
         },
         {
           label: "활성 페르소나",
@@ -1012,11 +1012,11 @@ const UlInfo = styled.ul`
     }
 
     &.start:before {
-      background: ${palette.outlineGray};
+      background: #E0E4EB;
     }
 
     &.ing:before {
-      background: #32ade6;
+      background: #A8BFFF;
     }
 
     &.complete:before {
