@@ -204,6 +204,7 @@ import Gear from "../images/gear.svg"
 import ArrowBarLeft from "../images/arrow-bar-left.svg"
 import ArrowReturn from "../images/arrow-return.svg"
 import ArrowClockwise from "../images/arrow-clockwise.svg"
+import ArrowClockwise2 from "../icons/ArrowClockwise";
 import NoteArrowUp from "../images/note-arrow-up.svg"
 import CheckGreen from "../images/check-green.svg"
 import FileText from "../images/file-text.svg"
@@ -569,6 +570,7 @@ const images = {
   ArrowBarLeft,
   ArrowReturn,
   ArrowClockwise,
+  ArrowClockwise2,
   NoteArrowUp,
   CheckGreen,
   FileText,
