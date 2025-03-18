@@ -56,6 +56,7 @@ import {
   createRequestPersonaOnServer,
   getProjectByIdFromIndexedDB,
   getPersonaOnServer,
+  createPersonaOnServer
 } from "../../../utils/indexedDB";
 import OrganismPersonaCardList from "../components/organisms/OrganismPersonaCardList";
 import {
@@ -68,6 +69,7 @@ import {
   EVENT_STATE,
   TRIAL_STATE,
   EVENT_TITLE,
+  PROJECT_PERSONA_LIST
 } from "../../../pages/AtomStates";
 import AtomPersonaLoader from "../../Global/atoms/AtomPersonaLoader";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
@@ -83,15 +85,16 @@ const PageAiPersona = () => {
   const [projectId] = useAtom(PROJECT_ID);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [, setUserCredits] = useAtom(USER_CREDITS);
-  const [creditRequestBusinessPersona] = useAtom(
-    CREDIT_REQUEST_BUSINESS_PERSONA
-  );
+  const [creditRequestBusinessPersona] = useAtom(CREDIT_REQUEST_BUSINESS_PERSONA);
+  const [, setProjectPersonaList] = useAtom(PROJECT_PERSONA_LIST);
+  const [eventState] = useAtom(EVENT_STATE);
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
 
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
   const [isCustomizePopupOpen, setIsCustomizePopupOpen] = useState(false);
-  const [isPersonaConfirmPopupOpen, setIsPersonaConfirmPopupOpen] =
-    useState(false);
+  const [isPersonaConfirmPopupOpen, setIsPersonaConfirmPopupOpen] =useState(false);
   const [selectedPersona, setSelectedPersona] = useState(null);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [activeTab2, setActiveTab2] = useState("lifestyle");
@@ -116,9 +119,39 @@ const PageAiPersona = () => {
     additionalInfo: "",
   });
   const [showCreditPopup, setShowCreditPopup] = useState(false);
-  const [eventState] = useAtom(EVENT_STATE);
-  const [trialState] = useAtom(TRIAL_STATE);
-  const [eventTitle] = useAtom(EVENT_TITLE);
+  const [loadingTabs, setLoadingTabs] = useState({
+    macro_segment: false,
+    unique_user: false,
+    key_stakeholder: false,
+    my_persona: false
+  });
+  const [oceanValues, setOceanValues] = useState({
+    openness: 0.5,
+    conscientiousness: 0.5,
+    extraversion: 0.5,
+    agreeableness: 0.5,
+    neuroticism: 0.5,
+  });
+  const [ignoreOcean, setIgnoreOcean] = useState(false);
+  const [selectBoxStates, setSelectBoxStates] = useState({
+    gender: false,
+    ageGroup: false,
+    business: false,
+    uniqueUser: false,
+    keyStakeholder: false,
+  });
+  const [selectBoxStates1, setSelectBoxStates1] = useState({
+    experienceDepth: false,
+    usageDepth: false,
+    consumptionPattern: false,
+  });
+  const [selectedValues, setSelectedValues] = useState({
+    gender: "",
+    ageGroup: "",
+    business: "",
+    uniqueUser: "",
+    keyStakeholder: "",
+  });
 
   const handleEditClose = () => {
     setIsEditPopupOpen(false);
@@ -227,13 +260,7 @@ const PageAiPersona = () => {
     }
   };
 
-  const [oceanValues, setOceanValues] = useState({
-    openness: 0.5,
-    conscientiousness: 0.5,
-    extraversion: 0.5,
-    agreeableness: 0.5,
-    neuroticism: 0.5,
-  });
+
 
   const handleOceanChange = (trait, value) => {
     // 값을 0 또는 1로 스냅
@@ -245,7 +272,7 @@ const PageAiPersona = () => {
     }));
   };
 
-  const [ignoreOcean, setIgnoreOcean] = useState(false);
+
 
   const handleRandomOcean = (e) => {
     setIgnoreOcean(e.target.checked);
@@ -262,27 +289,6 @@ const PageAiPersona = () => {
     }
   };
 
-  const [selectBoxStates, setSelectBoxStates] = useState({
-    gender: false,
-    ageGroup: false,
-    business: false,
-    uniqueUser: false,
-    keyStakeholder: false,
-  });
-
-  const [selectBoxStates1, setSelectBoxStates1] = useState({
-    experienceDepth: false,
-    usageDepth: false,
-    consumptionPattern: false,
-  });
-
-  const [selectedValues, setSelectedValues] = useState({
-    gender: "",
-    ageGroup: "",
-    business: "",
-    uniqueUser: "",
-    keyStakeholder: "",
-  });
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
@@ -581,6 +587,11 @@ const PageAiPersona = () => {
     personaListSaas,
     "key_stakeholder"
   );
+  const myPersonaStats = countPersonasByTypeAndStatus(
+    personaListSaas,
+    "my_persona"
+  );
+
 
   // 현재 선택된 탭에 따라 표시할 통계 정보 결정
   const getCurrentTabStats = () => {
@@ -591,6 +602,8 @@ const PageAiPersona = () => {
         return uniqueUserStats;
       case "key_stakeholder":
         return keyStakeholderStats;
+      case "my_persona":
+        return myPersonaStats;
       case "my_favorite":
         // 즐겨찾기된 페르소나만 필터링 (다양한 형태의 isStarred 값 처리)
         const starredPersonas = personaListSaas.filter(
@@ -640,9 +653,8 @@ const PageAiPersona = () => {
           const dateB = b.timestamp;
           return dateB - dateA; // 최신 날짜가 위로
         });
-
+        console.log(sortedList,"sortedList")
         setPersonaListSaas(sortedList);
-
         // 전체 페르소나 통계 업데이트
         const activeCount = sortedList.filter(
           (persona) => persona?.status === "complete"
@@ -698,29 +710,29 @@ const PageAiPersona = () => {
       }
     } else {
       // 기존 코드 유지
-      switch (level) {
-        case "1":
-        case "1단계":
-        case 1:
-          return "이 제품/서비스를 들어본 적도 없음";
-        case "2":
-        case "2단계":
-        case 2:
-          return "들어본 적은 있지만, 사용해본 적은 없음";
-        case "3":
-        case "3단계":
-        case 3:
-          return "사용해본 적은 있지만, 한두 번 경험한 수준";
-        case "4":
-        case "4단계":
-        case 4:
-          return "몇 번 사용해봤고, 기능을 어느 정도 이해하고 있음";
-        case "5":
-        case "5단계":
-        case 5:
-          return "정기적으로 사용하고 있고, 익숙한 사용자";
-        default:
-          return "선택해주세요";
+    switch (level) {
+      case "1":
+      case "1단계":
+      case 1:
+        return "이 제품/서비스를 들어본 적도 없음";
+      case "2":
+      case "2단계":
+      case 2:
+        return "들어본 적은 있지만, 사용해본 적은 없음";
+      case "3":
+      case "3단계":
+      case 3:
+        return "사용해본 적은 있지만, 한두 번 경험한 수준";
+      case "4":
+      case "4단계":
+      case 4:
+        return "몇 번 사용해봤고, 기능을 어느 정도 이해하고 있음";
+      case "5":
+      case "5단계":
+      case 5:
+        return "정기적으로 사용하고 있고, 익숙한 사용자";
+      default:
+        return "선택해주세요";
       }
     }
   };
@@ -754,31 +766,37 @@ const PageAiPersona = () => {
       }
     } else {
       // 기존 코드 유지
-      switch (level) {
-        case "1":
-        case "1단계":
-        case 1:
-          return "기본적인 기능도 잘 모름";
-        case "2":
-        case "2단계":
-        case 2:
-          return "몇 가지 주요 기능만 사용";
-        case "3":
-        case "3단계":
-        case 3:
-          return "대부분의 기능을 사용해 봤지만, 특정 기능은 모름";
-        case "4":
-        case "4단계":
-        case 4:
-          return "거의 모든 기능을 능숙하게 사용";
-        default:
-          return "선택해주세요";
+    switch (level) {
+      case "1":
+      case "1단계":
+      case 1:
+        return "기본적인 기능도 잘 모름";
+      case "2":
+      case "2단계":
+      case 2:
+        return "몇 가지 주요 기능만 사용";
+      case "3":
+      case "3단계":
+      case 3:
+        return "대부분의 기능을 사용해 봤지만, 특정 기능은 모름";
+      case "4":
+      case "4단계":
+      case 4:
+        return "거의 모든 기능을 능숙하게 사용";
+      default:
+        return "선택해주세요";
       }
     }
   };
 
   const handleCustomPersonaRequest = async () => {
-    console.log(customPersonaForm);
+    setIsCustomizePopupOpen(false);
+    // 로딩 상태 시작
+    setLoadingTabs(prev => ({
+      ...prev,
+      my_persona: true
+    }));
+
     try {
       const requestData = {
         business_description:
@@ -800,15 +818,97 @@ const PageAiPersona = () => {
       };
       const response = await InterviewXMyPersonaGeneratorRequest(requestData);
 
-      console.log(response);
+     // 매핑 함수 정의
+     const mapPersonaData = (persona) => ({
+      projectId: project?._id,
+       _id: persona._id,
+       personaName: persona.name,
+       personaCharacteristics: `${customPersonaForm.purpose || ""}${customPersonaForm.additionalInfo ? " " + customPersonaForm.additionalInfo : ""}` || "",
+       type: persona.type,
+       age: persona.age,
+       gender: persona.gender,
+       job: persona.job,
+       keywords: persona.keywords,
+       personaType: "my_persona",
+       favorite: persona.favorite,
+       customData: {  // customData 추가
+        persona_gender: customPersonaForm.gender === "male" ? "남성" : "여성",
+        persona_age: customPersonaForm.ageGroups
+          .map((age) => age.trim())
+          .join(", "),
+        persona_reason: customPersonaForm.purpose,
+        persona_additional_info: customPersonaForm.additionalInfo,
+        persona_ocean: {
+          type_o: oceanValues.openness === 0 ? "보수적" : "개방적",
+          type_c: oceanValues.conscientiousness === 0 ? "즉흥적" : "성실함",
+          type_e: oceanValues.extraversion === 0 ? "내향적" : "외향적",
+          type_a: oceanValues.agreeableness === 0 ? "독립적" : "우호적",
+          type_n: oceanValues.neuroticism === 0 ? "무던함" : "신경적",
+        },
+      },
+       family: persona.family,
+       experienceDepth: persona.experience_depth,
+       lifestyle: persona.lifestyle,
+       monthlyIncome: persona.monthly_income,
+       residence: persona.residence,
+       userExperience: persona.user_experience,
+       interests: persona.interests,
+       consumptionPattern: persona.consumption_pattern,
+       usageDepth: persona.usage_depth,
+       status: 'profile'  // status를 'profile'로 설정
+     });
+
+     let personas = response.response.my_persona_generator.map(mapPersonaData);
+
+     const updatedPersonas = [];
+      for (const persona of personas) {
+        try {
+          const insertedId = await createPersonaOnServer(persona, isLoggedIn);
+          if (insertedId) {
+            updatedPersonas.push({ ...persona, _id: insertedId });
+          } else {
+            updatedPersonas.push(persona);
+          }
+        } catch (error) {
+          updatedPersonas.push(persona);
+        }
+      }
+    
+    // 서버에서 최신 데이터 가져오기
+    const savedPersonaListInfo = await getPersonaListOnServer(project?._id, true);
+    if (savedPersonaListInfo) {
+      const sortedList = savedPersonaListInfo
+        .filter(persona => persona.personaType === "my_persona")
+        .sort((a, b) => b.timestamp - a.timestamp);
+
+      if (sortedList.length > 0) {
+        setProjectPersonaList(prev => {
+          const filteredPrev = prev.filter(p => p.personaType !== "my_persona");
+          return [...filteredPrev, ...sortedList];
+        });
+
+        setPersonaListSaas(prev => {
+          const filteredPrev = prev.filter(p => p.personaType !== "my_persona");
+          return [...filteredPrev, ...sortedList];
+        });
+  
+      } else {
+        console.log("No my_persona data found in sortedList");
+      }
+    }
 
       if (!response) {
         throw new Error("페르소나 요청에 실패했습니다.");
       }
 
-      setIsCustomizePopupOpen(false);
     } catch (error) {
       console.error(error);
+    } finally {
+      // 로딩 상태 종료
+      setLoadingTabs(prev => ({
+        ...prev,
+        my_persona: false
+      }));
     }
   };
 
@@ -979,6 +1079,12 @@ const PageAiPersona = () => {
     };
   }, [navigate]);
 
+  // 자식 컴포넌트에 전달할 핸들러 함수
+  const handleCustomizePopup = () => {
+    setActiveTabIndex(0);
+    setIsCustomizePopupOpen(true);
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -997,8 +1103,8 @@ const PageAiPersona = () => {
                   AI Persona를 탐색하고, 비즈니스에 맞는 인사이트를 찾아보세요
                 </Body3>
               </div>
-
-              {/* <Button
+{/* 
+              <Button
                 ExLarge
                 PrimaryLightest
                 Fill
@@ -1052,6 +1158,18 @@ const PageAiPersona = () => {
                     Key Stakeholder
                   </TabButtonType3>
                   <TabButtonType3
+                    className={activeTab === "my_persona" ? "active" : ""}
+                    onClick={() => handleTabClick("my_persona")}
+                    isActive={activeTab === "my_persona"}
+                    style={
+                      activeTab === "my_persona"
+                        ? { color: "#333333" }
+                        : { color: "#999999" }
+                    }
+                  >
+                    My Persona
+                  </TabButtonType3>
+                  <TabButtonType3
                     className={activeTab === "my_favorite" ? "active" : ""}
                     onClick={() => handleTabClick("my_favorite")}
                     isActive={activeTab === "my_favorite"}
@@ -1075,7 +1193,6 @@ const PageAiPersona = () => {
                   </div>
                   <div>
                     <span className="generating">
-                      {/* <Sub3 color="gray800">{currentTabStats.generating}</Sub3> */}
                       <images.ArrowClockwise2
                         width="14"
                         height="14"
@@ -1088,22 +1205,45 @@ const PageAiPersona = () => {
                   </div>
                   <div>
                     <span className="active">
-                      {/* <Sub3 color="gray800">{currentTabStats.active}</Sub3> */}
                       <img src={images.IconCheck3} width="8" />
                     </span>
                     <InputText color="gray700">
                       활성 페르소나 <strong>({currentTabStats.active})</strong>
                     </InputText>
                   </div>
+                  {activeTab === "my_persona" && (
+                    <Button
+                      ExLarge
+                      PrimaryLightest
+                      Fill
+                      onClick={() => {
+                        setActiveTabIndex(0);
+                        setIsCustomizePopupOpen(true);
+                      }}
+                    >
+                      <img src={images.PlusPrimary} width="14" height="14" />
+                      <Sub2 color="primary">My Persona 요청</Sub2>
+                    </Button>
+                  )}
                 </AiPersonaInfo>
 
+                <div style={{ position: 'relative' }}>
                 <OrganismPersonaCardList
                   personaData={personaListSaas}
                   setIsStarred={updatePersonaList}
                   setShowPopup={openPersonaPopup}
                   activeTab={activeTab}
                   setPersonaStats={setPersonaStats}
-                />
+                    onCustomizeRequest={handleCustomizePopup}
+                    loadingTabs={loadingTabs}
+                    setLoadingTabs={setLoadingTabs}
+                  />
+                  {activeTab === "my_persona" && loadingTabs.my_persona && (
+                    <div className="more">
+                      <AtomPersonaLoader message="페르소나를 생성하고 있습니다." />
+                    </div>
+                  )}
+                </div>
               </AiPersonaContent>
             ) : (
               <OrganismEmptyPersona />
@@ -1241,7 +1381,7 @@ const PageAiPersona = () => {
               </div>
 
               {!isLoading && (
-                <ButtonGroup>
+                  <ButtonGroup>
                   {["request", "ing"].includes(currentPersona.status) ? (
                     <Button DbExLarge Disabled Fill W100>
                       <Sub1 color="gray700">생성 중인 페르소나 입니다.</Sub1>
@@ -1274,8 +1414,8 @@ const PageAiPersona = () => {
                       </Button>
                     </>
                   )}
-                </ButtonGroup>
-              )}
+                  </ButtonGroup>
+                )}
             </div>
           </InterviewPopup>
         </>
@@ -1316,14 +1456,14 @@ const PageAiPersona = () => {
       {isCustomizePopupOpen && (
         <PopupWrap
           TitleFlex
-          title="📝 나만의 AI Person 요청하기"
+          title="📝 My Persona"
           buttonType="Fill"
           confirmText={
             activeTabIndex === 0
               ? "다음"
               : activeTabIndex === 1
               ? "다음"
-              : "맞춤 페르소나 모집하기"
+              : "마이 페르소나 요청하기"
           }
           showPrevButton={activeTabIndex === 2} // 마지막 탭에서만 이전 버튼 표시
           prevText="이전"
@@ -1505,7 +1645,7 @@ const PageAiPersona = () => {
                       <CustomTextarea
                         width="100%"
                         rows={5}
-                        placeholder="이유와 목적을 알려주시면 상황에 걸맞은 최적의 페르소나를 생성해 드려요!"
+                        placeholder="이유와 목적을 알려주시면 상황에 걸맞은 최적의 페르소나를 생성해 드려요!(현재는 B2C 페르소나만 요청 가능합니다)"
                         value={customPersonaForm.purpose}
                         onChange={(e) =>
                           handleFormChange("purpose", e.target.value)
@@ -1516,7 +1656,7 @@ const PageAiPersona = () => {
 
                   <div className="column">
                     <Body2 color="gray700" align="left">
-                      필수적으로 필요한 정보가 있다면, 알려주세요{" "}
+                    필수로 고려해야할 정보가 있다면 작성해주세요.{" "}
                       {/* <span style={{ color: "red" }}>*</span> */}
                     </Body2>
                     <PopupContent>

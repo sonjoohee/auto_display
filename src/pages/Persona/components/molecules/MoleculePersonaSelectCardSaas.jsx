@@ -34,7 +34,7 @@ const MoleculePersonaSelectCardSaas = ({
   const navigate = useNavigate();
 
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [activeTabState, setActiveTabState] = useState("my_favorite");
+  const [activeTabState, setActiveTabState] = useState("my_persona");
 
   // 컴포넌트 마운트 시 초기 unselected 리스트 설정
   useEffect(() => {
@@ -130,6 +130,18 @@ const MoleculePersonaSelectCardSaas = ({
   return (
     <CardGroupWrap>
       <TabWrapType3 Border>
+      <TabButtonType3
+          className={activeTabState === "my_persona" ? "active" : ""}
+          onClick={() => handleTabClick("my_persona")}
+          isActive={activeTabState === "my_persona"}
+          style={
+            activeTabState === "my_persona"
+              ? { color: "#333333" }
+              : { color: "#999999" }
+          }
+        >
+          My Persona
+        </TabButtonType3>
         <TabButtonType3
           className={activeTabState === "my_favorite" ? "active" : ""}
           onClick={() => handleTabClick("my_favorite")}
@@ -206,8 +218,15 @@ const MoleculePersonaSelectCardSaas = ({
                 persona?.favorite === false
               );
             }
+            if (activeTabState === "my_persona") {
+              return (
+                persona?.personaType === "my_persona" &&
+                persona?.favorite === false
+              );
+            }
             return true; // 기본적으로 false를 반환하여 다른 탭에서는 아무것도 표시되지 않도록 함
           })
+          
           .map((persona) => {
             // 현재 persona가 선태된 상태인지 확인 (personaList.selected 에서 조회)
             const isSelected = personaList.selected.some(

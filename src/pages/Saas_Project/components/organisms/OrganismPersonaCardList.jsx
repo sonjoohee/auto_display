@@ -9,7 +9,7 @@ import {
   UniqueTag,
   BoxWrap,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
-import { Body2, Body3 } from "../../../../assets/styles/Typography";
+import { Body2, Body3,Sub2 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import images from "../../../../assets/styles/Images";
 import styled from "styled-components";
@@ -30,7 +30,6 @@ import {
   PROJECT_PERSONA_LIST,
   IS_LOGGED_IN,
   USER_CREDITS,
-  CREDIT_REQUEST_BUSINESS_PERSONA,
   PROJECT_SAAS,
   PERSONA_LIST_SAAS,
   CREDIT_CREATE_PERSONA_DEFAULT,
@@ -43,6 +42,9 @@ const OrganismPersonaCardList = ({
   setShowPopup = () => {},
   activeTab = "macro_segment", // 기본 탭은 macro_segment로 설정
   setPersonaStats = () => {}, // 페르소나 통계 정보를 부모 컴포넌트에 전달하는 함수
+  onCustomizeRequest,
+  loadingTabs,
+  setLoadingTabs,
 }) => {
   const navigate = useNavigate();
 
@@ -56,11 +58,6 @@ const OrganismPersonaCardList = ({
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [filteredPersonaData, setFilteredPersonaData] = useState([]);
-  const [loadingTabs, setLoadingTabs] = useState({
-    macro_segment: false,
-    unique_user: false,
-    key_stakeholder: false,
-  });
   const eventState = true;
   const trialState = false;
   const eventTitle = "이벤트 제목";
@@ -391,14 +388,37 @@ const OrganismPersonaCardList = ({
   return (
     <>
       {/* activeTab이 'favorite'이고 filteredPersonaData가 비어있을 때만 BoxWrap 표시 */}
-      {activeTab === "my_favorite" &&
-      (!filteredPersonaData || filteredPersonaData.length === 0) ? (
+      {(activeTab === "my_favorite" || 
+        (activeTab === "my_persona" && !personaData.some(p => p.personaType === "my_persona"))) &&
+      (!filteredPersonaData || filteredPersonaData.length === 0) &&
+      !loadingTabs.my_persona ? (
         <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
-          <img src={images.PeopleStarFillPrimary} alt="" />
+          <>
+            <img 
+              src={activeTab === "my_favorite" ? images.PeopleStarFillPrimary : images.PeopleFillPrimary2} 
+              alt="" 
+            />
           <Body2 color="gray500" align="center !important">
-            즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실 수
-            있습니다.
+              {activeTab === "my_favorite" 
+                ? "즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실 수 있습니다."
+                : "나만의 페르소나를 생성하시면 해당 페이지에서 확인하실 수 있습니다."}
           </Body2>
+            {activeTab === "my_persona" && (
+              <Button
+                ExLarge
+                PrimaryLightest
+                Fill
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onCustomizeRequest();
+                }}
+                style={{ marginTop: "16px" }}
+              >
+                <img src={images.PlusPrimary} width="14" height="14" alt="" />
+                <Sub2 color="primary">나만의 AI Persona 요청</Sub2>
+              </Button>
+            )}
+          </>
         </BoxWrap>
       ) : (
         <AiPersonaCardGroupWrap>
@@ -421,7 +441,17 @@ const OrganismPersonaCardList = ({
 
               <div className="content">
                 <Sub3 color="gray700">
-                  {persona?.personaCharacteristics || "설명 없음"}
+                  {persona?.personaType === "my_persona" ? (
+                    <>
+                      {persona?.customData?.persona_reason || ""}
+                      {persona?.customData?.persona_additional_info && (
+                        <>{" " + persona.customData.persona_additional_info}</>
+                      )}
+                    </>
+                  ) : (
+                    persona?.personaCharacteristics || "설명 없음"
+                  )}
+              
                 </Sub3>
               </div>
 
@@ -444,95 +474,95 @@ const OrganismPersonaCardList = ({
                     Medium
                     Outline
                     onClick={() => setShowPopup(persona)}
-                  >
-                    프로필
+                      >
+                        프로필
                   </StyledButton>
 
-                  <StyledButton
-                    Medium
-                    Primary
-                    Fill
-                    onClick={() => setShowPopup(persona)}
-                    style={{
-                      background:
-                        persona?.status === "complete"
-                          ? palette.primary
-                          : persona?.status === "ing" ||
-                            persona?.status === "request" ||
-                            persona?.status === "default" ||
-                            !persona?.status ||
-                            persona?.status === "profile"
-                          ? `#F0F4FF`
-                          : palette.chatGray,
-                      color:
-                        persona?.status === "complete"
-                          ? palette.white
-                          : palette.primary,
-                    }}
-                  >
-                    {persona?.status === "ing" ||
-                    persona?.status === "request" ? (
-                      <div
+                    <StyledButton
+                      Medium
+                      Primary
+                      Fill
+                      onClick={() => setShowPopup(persona)}
                         style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "4px",
-                          color: palette.primary,
+                          background:
+                            persona?.status === "complete"
+                              ? palette.primary
+                              : persona?.status === "ing" ||
+                                persona?.status === "request" ||
+                                persona?.status === "default" ||
+                                !persona?.status ||
+                                persona?.status === "profile"
+                              ? `#F0F4FF`
+                              : palette.chatGray,
+                          color:
+                            persona?.status === "complete"
+                              ? palette.white
+                              : palette.primary,
                         }}
                       >
-                        <images.ArrowClockwise2
-                          width="14"
-                          height="14"
-                          color={palette.primary}
-                        />
-                        생성중
-                      </div>
-                    ) : persona?.status === "complete" ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "4px",
-                          color: palette.white,
-                        }}
-                      >
-                        <img src={images.IconCheck3} width="8" />
-                        활성화
-                      </div>
-                    ) : (
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "4px",
-                          color: palette.primary,
-                        }}
-                      >
-                        <img src={images.PlusPrimary} width="8" height="8" />
-                        생성 요청
-                      </div>
-                    )}
-                  </StyledButton>
+                        {persona?.status === "ing" ||
+                        persona?.status === "request" ? (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "4px",
+                              color: palette.primary,
+                            }}
+                          >
+                            <images.ArrowClockwise2
+                              width="14"
+                              height="14"
+                              color={palette.primary}
+                            />
+                            생성중
+                          </div>
+                        ) : persona?.status === "complete" ? (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "4px",
+                              color: palette.white,
+                            }}
+                          >
+                            <img src={images.IconCheck3} width="8" />
+                            활성화
+                          </div>
+                        ) : (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "4px",
+                              color: palette.primary,
+                            }}
+                          >
+                            <img src={images.PlusPrimary} width="8" height="8" />
+                            생성 요청
+                          </div>
+                        )}
+                    </StyledButton>
                 </div>
               </AiPersonaCardButtonWrap>
             </AiPersonaCardListItem>
           ))}
 
-          {activeTab !== "my_favorite" && currentTabPersonaCount < 24 && (
-            <>
-              {loadingTabs[activeTab] ? (
-                <div className="more">
-                  <AtomPersonaLoader message="페르소나를 생성하고 있습니다." />
-                </div>
-              ) : (
-                <div className="more" onClick={handleCreditCheck}>
-                  <Body3 color="gray500" align="center">
-                    + 더보기 ({creditPersonaCreate} credit)
-                  </Body3>
-                </div>
+              {activeTab !== "my_favorite" && activeTab !== "my_persona" && currentTabPersonaCount < 24 && (
+                <>
+                  {loadingTabs[activeTab] ? (
+          <div className="more">
+                      <AtomPersonaLoader message="페르소나를 생성하고 있습니다." />
+                    </div>
+                  ) : (
+                    <div className="more" onClick={handleCreditCheck}>
+            <Body3 color="gray500" align="center">
+                        + 더보기 ({creditPersonaCreate} credit)
+            </Body3>
+          </div>
+                  )}
+                </>
               )}
-            </>
-          )}
         </AiPersonaCardGroupWrap>
       )}
 
@@ -610,26 +640,6 @@ const OrganismPersonaCardList = ({
           onConfirm={() => setShowCreditPopup(false)}
         />
       )}
-
-      {/* {showCreatePersonaPopup && (
-        <PopupWrap
-          Check
-          title="페르소나 더보기"
-          closeText="취소"
-          confirmText="시작하기"
-          buttonType="Outline"
-          isModal={false}
-          onConfirm={handleConfirmCredit}
-          onCancel={() => setShowCreditPopup(false)}
-          message={
-            <>
-              해당 서비스 사용시 크레딧이 소진됩니다.
-              <br />
-              {creditPersonaCreate} 크레딧
-            </>
-          }
-        />
-      )} */}
     </>
   );
 };
@@ -640,8 +650,7 @@ const StyledButton = styled(Button)`
   flex-grow: 1;
 `;
 
-const StarButtonStyled = styled.button`
-  display: flex;
+const StarButtonStyled = styled.button`  display: flex;
   align-items: center;
   justify-content: center;
   padding: 6px;
@@ -654,3 +663,4 @@ const StarButtonStyled = styled.button`
   cursor: pointer;
   transition: background-color 0.3s ease;
 `;
+
