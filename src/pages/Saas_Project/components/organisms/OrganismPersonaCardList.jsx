@@ -9,7 +9,7 @@ import {
   UniqueTag,
   BoxWrap,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
-import { Body2, Body3,Sub2 } from "../../../../assets/styles/Typography";
+import { Body2, Body3,Sub2,Sub4 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import images from "../../../../assets/styles/Images";
 import styled from "styled-components";
@@ -415,7 +415,7 @@ const OrganismPersonaCardList = ({
                 style={{ marginTop: "16px" }}
               >
                 <img src={images.PlusPrimary} width="14" height="14" alt="" />
-                <Sub2 color="primary">나만의 AI Persona 요청</Sub2>
+                <Sub2 color="primary"> My Persona 요청</Sub2>
               </Button>
             )}
           </>
@@ -430,16 +430,16 @@ const OrganismPersonaCardList = ({
                   <Body1 color="gray800">
                     {persona?.personaName || "제목 없음"}
                   </Body1>
-                  <div style={{ height: "44px" }}>
-                    <Sub3 color="gray700">#{persona?.gender || ""}</Sub3>
-                    <Sub3 color="gray700">#{persona?.age || ""}</Sub3>
-                    <Sub3 color="gray700">#{persona?.keywords[0] || ""}</Sub3>
-                    <Sub3 color="gray700">#{persona?.keywords[1] || ""}</Sub3>
+                  <div style={{ height: "44px" , marginBottom:"10px"}}>
+                    <Sub4 color="gray700">#{persona?.gender || ""}</Sub4>
+                    <Sub4 color="gray700">#{persona?.age || ""}</Sub4>
+                    <Sub4 color="gray700">#{persona?.keywords[0] || ""}</Sub4>
+                    <Sub4 color="gray700">#{persona?.keywords[1] || ""}</Sub4>
                   </div>
                 </div>
               </div>
 
-              <div className="content">
+              <div className="content" style={{minHeight: "114px"}}>
                 <Sub3 color="gray700">
                   {persona?.personaType === "my_persona" ? (
                     <>
