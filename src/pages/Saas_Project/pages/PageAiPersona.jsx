@@ -1184,11 +1184,13 @@ const PageAiPersona = () => {
                 </TabWrapType3>
 
                 <AiPersonaInfo>
+                  <div >
                   <div>
                     <span className="inactive" />
                     <InputText color="gray500">
                       비활성 페르소나{" "}
                       <strong>({currentTabStats.inactive})</strong>
+                      <div style={{width: "6px"}}></div>
                     </InputText>
                   </div>
                   <div>
@@ -1202,6 +1204,7 @@ const PageAiPersona = () => {
                     <InputText color="gray700">
                       생성 중 <strong>({currentTabStats.generating})</strong>
                     </InputText>
+                    <div style={{width: "6px"}}></div>
                   </div>
                   <div>
                     <span className="active">
@@ -1210,6 +1213,8 @@ const PageAiPersona = () => {
                     <InputText color="gray700">
                       활성 페르소나 <strong>({currentTabStats.active})</strong>
                     </InputText>
+                    <div style={{width: "6px"}}></div>
+                  </div>
                   </div>
                   {activeTab === "my_persona" && (
                     <Button
@@ -2589,9 +2594,11 @@ const AiPersonaContent = styled.div`
 const AiPersonaInfo = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between; 
   gap: 20px;
+  height: 28px;
 
-  > div {
+  div {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -2616,7 +2623,6 @@ const AiPersonaInfo = styled.div`
     &.active {
       width: 22px;
       height: 22px;
-      // border: 1px solid ${palette.white};
       background: ${palette.primary};
     }
 

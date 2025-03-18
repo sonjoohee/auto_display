@@ -2547,6 +2547,7 @@ export const AiPersonaCardListItem = styled(ListBoxItem)`
     align-items: flex-start;
     gap: 12px;
     width: 100%;
+    border-bottom: 1px solid ${palette.outlineGray};
   }
 
   .title {
@@ -2565,14 +2566,16 @@ export const AiPersonaCardListItem = styled(ListBoxItem)`
   }
 
   .content {
+    min-height: 50px;
     word-break: break-all;
     text-overflow: ellipsis;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
-    padding-top: 20px;
-    border-top: 1px solid ${palette.outlineGray};
+    padding-top: 5px;
+    // padding-top: 20px;
+    // border-top: 1px solid ${palette.outlineGray};
   }
 `;
 

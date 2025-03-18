@@ -149,7 +149,15 @@ export const Sub3 = styled.div`
   text-align: ${(props) => props.align || "inherit"};
   letter-spacing: -0.42px;
 `;
-
+// Sub4
+export const Sub4= styled.div`
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.55;
+  color: ${(props) => palette[props.color] || "inherit"};
+  text-align: ${(props) => props.align || "inherit"};
+  letter-spacing: -0.42px;
+`;
 // Caption1
 export const Caption1 = styled.div`
   font-size: 0.75rem;
