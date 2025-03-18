@@ -1143,25 +1143,33 @@ const PageAiPersona = () => {
                         isActive={activeTab2 === "lifestyle"}
                         onClick={() => setActiveTab2("lifestyle")}
                       >
-                        라이프스타일
+                        {currentPersona.personaType === "key_stakeholder"
+                          ? "역할 및 기여"
+                          : "라이프스타일"}
                       </TabButtonType2>
                       <TabButtonType2
                         isActive={activeTab2 === "interests"}
                         onClick={() => setActiveTab2("interests")}
                       >
-                        관심사
+                        {currentPersona.personaType === "key_stakeholder"
+                          ? "전문 분야"
+                          : "관심사"}
                       </TabButtonType2>
                       <TabButtonType2
                         isActive={activeTab2 === "consumption"}
                         onClick={() => setActiveTab2("consumption")}
                       >
-                        소비성향
+                        {currentPersona.personaType === "key_stakeholder"
+                          ? "의사결정권"
+                          : "소비성향"}
                       </TabButtonType2>
                       <TabButtonType2
                         isActive={activeTab2 === "experience"}
                         onClick={() => setActiveTab2("experience")}
                       >
-                        사용경험
+                        {currentPersona.personaType === "key_stakeholder"
+                          ? "관련경험"
+                          : "사용경험"}
                       </TabButtonType2>
                     </TabWrapType2>
 
@@ -1195,7 +1203,14 @@ const PageAiPersona = () => {
                           <SelectBox>
                             <SelectBoxTitle None>
                               <div style={{ display: "flex", gap: "10px" }}>
-                                <Body2 color="gray300">경험여부</Body2>
+                                <div style={{ width: "60px" }}>
+                                  <Body2 color="gray300">
+                                    {currentPersona.personaType ===
+                                    "key_stakeholder"
+                                      ? "영향력"
+                                      : "경험여부"}
+                                  </Body2>
+                                </div>
                                 <Body2
                                   color={
                                     currentPersona.experienceDepth
@@ -1214,7 +1229,14 @@ const PageAiPersona = () => {
                           <SelectBox>
                             <SelectBoxTitle None>
                               <div style={{ display: "flex", gap: "10px" }}>
-                                <Body2 color="gray300">사용수준</Body2>
+                                <div style={{ width: "60px" }}>
+                                  <Body2 color="gray300">
+                                    {currentPersona.personaType ===
+                                    "key_stakeholder"
+                                      ? "이해수준"
+                                      : "사용수준"}
+                                  </Body2>
+                                </div>
                                 <Body2
                                   color={
                                     currentPersona.usageDepth
@@ -1790,7 +1812,17 @@ const PageAiPersona = () => {
             }
           }}
           showTabs={true}
-          tabs={["기본정보", "라이프스타일", "관심사", "소비성향", "사용경험"]}
+          tabs={
+            currentPersona.personaType === "key_stakeholder"
+              ? [
+                  "기본정보",
+                  "역할 및 기여",
+                  "전문 분야",
+                  "의사결정권",
+                  "관련경험",
+                ]
+              : ["기본정보", "라이프스타일", "관심사", "소비성향", "사용경험"]
+          }
           onTabChange={handleTabChange}
           activeTab={activeTabIndex1}
           eventState={false}
@@ -1798,7 +1830,7 @@ const PageAiPersona = () => {
           isFormValid={isPersonaEditFormValid()}
           bottomText={
             activeTabIndex1 === 4
-              ? "AI Person의 제품 경험은 경험여부와 사용수준에 따라 달라질 수 있습니다"
+              ? "AI Persona의 제품 경험은 경험여부와 사용수준에 따라 달라질 수 있습니다"
               : null
           }
           body={
@@ -1937,7 +1969,11 @@ const PageAiPersona = () => {
                         <CustomTextarea
                           Edit
                           rows={16}
-                          placeholder="라이프스타일"
+                          placeholder={
+                            currentPersona.personaType === "key_stakeholder"
+                              ? "역할 및 기여"
+                              : "라이프스타일"
+                          }
                           value={currentPersona.lifestyle || ""}
                           onChange={(e) =>
                             handleCurrentPersonaChange(
@@ -1961,7 +1997,11 @@ const PageAiPersona = () => {
                         <CustomTextarea
                           Edit
                           rows={16}
-                          placeholder="관심사"
+                          placeholder={
+                            currentPersona.personaType === "key_stakeholder"
+                              ? "전문 분야"
+                              : "관심사"
+                          }
                           value={currentPersona.interests || ""}
                           onChange={(e) =>
                             handleCurrentPersonaChange(
@@ -1985,7 +2025,11 @@ const PageAiPersona = () => {
                         <CustomTextarea
                           Edit
                           rows={16}
-                          placeholder="소비성향"
+                          placeholder={
+                            currentPersona.personaType === "key_stakeholder"
+                              ? "의사결정권"
+                              : "소비성향"
+                          }
                           value={currentPersona.consumptionPattern || ""}
                           onChange={(e) =>
                             handleCurrentPersonaChange(
@@ -2005,8 +2049,14 @@ const PageAiPersona = () => {
                 <>
                   <BoxWrap Column NoneV>
                     <div className="selectBoxWrap">
-                      <Body2 color="gray300">경험여부</Body2>
-                      <SelectBox style={{ paddingRight: "20px" }}>
+                      <div style={{ width: "90px", paddingLeft: "20px" }}>
+                        <Body2 color="gray300">
+                          {currentPersona.personaType === "key_stakeholder"
+                            ? "영향력"
+                            : "경험여부"}
+                        </Body2>
+                      </div>
+                      <SelectBox style={{ paddingRight: "10px" }}>
                         <SelectBoxTitle
                           None
                           onClick={() => {
@@ -2130,8 +2180,14 @@ const PageAiPersona = () => {
                     </div>
 
                     <div className="selectBoxWrap">
-                      <Body2 color="gray300">사용수준</Body2>
-                      <SelectBox style={{ paddingRight: "20px" }}>
+                      <div style={{ width: "90px", paddingLeft: "20px" }}>
+                        <Body2 color="gray300">
+                          {currentPersona.personaType === "key_stakeholder"
+                            ? "이해수준"
+                            : "사용수준"}
+                        </Body2>
+                      </div>
+                      <SelectBox style={{ paddingRight: "10px" }}>
                         <SelectBoxTitle
                           None
                           onClick={() => {
