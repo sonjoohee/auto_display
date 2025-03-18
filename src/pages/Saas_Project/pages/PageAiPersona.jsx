@@ -1104,7 +1104,7 @@ const PageAiPersona = () => {
                 </Body3>
               </div>
 
-              <Button
+              {/* <Button
                 ExLarge
                 PrimaryLightest
                 Fill
@@ -1115,7 +1115,7 @@ const PageAiPersona = () => {
               >
                 <img src={images.PlusPrimary} width="14" height="14" />
                 <Sub2 color="primary">나만의 AI Persona 요청</Sub2>
-              </Button>
+              </Button> */}
             </AiPersonaTitle>
 
             {personaListSaas && personaListSaas.length > 0 ? (
