@@ -2559,7 +2559,7 @@ export const AiPersonaCardListItem = styled(ListBoxItem)`
       display: flex;
       flex-direction: row;
       align-items: flex-start;
-      gap: 0 12px;
+      gap: 0 6px;
       flex-wrap: wrap;
     }
   }
