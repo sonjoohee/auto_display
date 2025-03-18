@@ -1103,8 +1103,8 @@ const PageAiPersona = () => {
                   AI Persona를 탐색하고, 비즈니스에 맞는 인사이트를 찾아보세요
                 </Body3>
               </div>
-{/* 
-              <Button
+
+              {/* <Button
                 ExLarge
                 PrimaryLightest
                 Fill
@@ -1287,6 +1287,7 @@ const PageAiPersona = () => {
                       <TabButtonType2
                         isActive={activeTab2 === "lifestyle"}
                         onClick={() => setActiveTab2("lifestyle")}
+                        style={{padding: "4px 10px"}}
                       >
                         {currentPersona.personaType === "key_stakeholder"
                           ? "역할 및 기여"
@@ -1295,6 +1296,7 @@ const PageAiPersona = () => {
                       <TabButtonType2
                         isActive={activeTab2 === "interests"}
                         onClick={() => setActiveTab2("interests")}
+                        style={{padding: "4px 10px"}}
                       >
                         {currentPersona.personaType === "key_stakeholder"
                           ? "전문 분야"
@@ -1303,6 +1305,7 @@ const PageAiPersona = () => {
                       <TabButtonType2
                         isActive={activeTab2 === "consumption"}
                         onClick={() => setActiveTab2("consumption")}
+                        style={{padding: "4px 10px"}}
                       >
                         {currentPersona.personaType === "key_stakeholder"
                           ? "의사결정권"
@@ -1311,10 +1314,20 @@ const PageAiPersona = () => {
                       <TabButtonType2
                         isActive={activeTab2 === "experience"}
                         onClick={() => setActiveTab2("experience")}
+                        style={{padding: "4px 10px"}}
                       >
                         {currentPersona.personaType === "key_stakeholder"
                           ? "관련경험"
                           : "사용경험"}
+                      </TabButtonType2>
+                      <TabButtonType2
+                        isActive={activeTab2 === "requestinfo"}
+                        onClick={() => setActiveTab2("requestinfo")}
+                        style={{padding: "4px 10px"}}
+                      >
+                        {currentPersona.personaType === "key_stakeholder"
+                          ? "요청정보"
+                          : "요청정보"}
                       </TabButtonType2>
                     </TabWrapType2>
 
@@ -1402,6 +1415,111 @@ const PageAiPersona = () => {
                           </Body3>
                         </TabContent>
                       </>
+                    )}
+                    {activeTab2 === "requestinfo" && (
+                      <TabContent style={{ height: "470px" }}>
+                        <ListWrap>
+                          <div className="flex">
+                            <div>
+                              <Body3 color="gray500" align="left">
+                                성별
+                              </Body3>
+                              <Body2 color="gray800" align="left">
+                                남자
+                              </Body2>
+                            </div>
+
+                            <div>
+                              <Body3 color="gray500" align="left">
+                                연령
+                              </Body3>
+                              <Body2 color="gray800" align="left">
+                                20대
+                              </Body2>
+                            </div>
+                          </div>
+
+                          <div>
+                            <Body3 color="gray500" align="left">
+                              이유, 목적
+                            </Body3>
+                            <Body2 color="gray800" align="left">
+                              {customPersonaForm.purpose || "*해당정보 없음"}
+                            </Body2>
+                          </div>
+
+                          <div>
+                            <Body3 color="gray500" align="left">
+                              기본정보
+                            </Body3>
+                            <Body2 color="gray800" align="left">
+                              {customPersonaForm.additionalInfo || "*해당정보 없음"}
+                            </Body2>
+                          </div>
+
+                          <div style={{gap: "12px"}}>
+                            <Body3 color="gray500" align="left">
+                              성격(OCEAN)
+                            </Body3>
+                            <div className="box-list">
+                              <div>
+                                <Body2 color="gray800" align="center">
+                                  {oceanValues.openness === 0 ? "보수적" : "개방적"}
+                                </Body2>
+                                <Sub3 color="gray300" align="center">
+                                  {oceanValues.openness === 0
+                                    ? "conservative"
+                                    : "open mind"}
+                                </Sub3>
+                              </div>
+                              <div>
+                                <Body2 color="gray800" align="center">
+                                  {oceanValues.conscientiousness === 0
+                                    ? "즉흥적"
+                                    : "성실함"}
+                                </Body2>
+                                <Sub3 color="gray300" align="center">
+                                  {oceanValues.conscientiousness === 0
+                                    ? "impromptu"
+                                    : "conscientious"}
+                                </Sub3>
+                              </div>
+                              <div>
+                                <Body2 color="gray800" align="center">
+                                  {oceanValues.extraversion === 0 ? "내향적" : "외향적"}
+                                </Body2>
+                                <Sub3 color="gray300" align="center">
+                                  {oceanValues.extraversion === 0
+                                    ? "introvert"
+                                    : "extrovert"}
+                                </Sub3>
+                              </div>
+                              <div>
+                                <Body2 color="gray800" align="center">
+                                  {oceanValues.agreeableness === 0
+                                    ? "독립적"
+                                    : "우호적"}
+                                </Body2>
+                                <Sub3 color="gray300" align="center">
+                                  {oceanValues.agreeableness === 0
+                                    ? "independent"
+                                    : "friendly"}
+                                </Sub3>
+                              </div>
+                              <div>
+                                <Body2 color="gray800" align="center">
+                                  {oceanValues.neuroticism === 0 ? "무던함" : "신경적"}
+                                </Body2>
+                                <Sub3 color="gray300" align="center">
+                                  {oceanValues.neuroticism === 0
+                                    ? "simple"
+                                    : "neurotic"}
+                                </Sub3>
+                              </div>
+                            </div>
+                          </div>
+                        </ListWrap>
+                      </TabContent>
                     )}
                   </>
                 )}
@@ -2569,6 +2687,49 @@ const PageAiPersona = () => {
 };
 
 export default PageAiPersona;
+
+const ListWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+
+  > div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .flex {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+
+    > div {
+      width: 100%;
+    }
+  }
+
+  .box-list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+
+    > div {
+      max-width: 97px;
+      width: 100%;
+      padding: 8px 0;
+      border-radius: 5px;
+      border: 1px solid ${palette.outlineGray};
+    }
+  }
+`;
 
 const AiPersonaWrap = styled.div`
   width: 100%;
