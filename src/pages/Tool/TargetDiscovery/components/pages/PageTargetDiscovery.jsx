@@ -1,4 +1,4 @@
-//타겟 탐색기리
+//타겟 탐색기
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
