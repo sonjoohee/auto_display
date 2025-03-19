@@ -858,7 +858,8 @@ const PageAiPersona = () => {
         interests: persona.interests,
         consumptionPattern: persona.consumption_pattern,
         usageDepth: persona.usage_depth,
-        status: "profile", imageKey: `persona_${persona.gender === "남성" ? "m" : "f"}_${
+        status: "profile", 
+        imageKey: `persona_${persona.gender === "남성" ? "m" : "f"}_${
           Math.floor(parseInt(persona.age.replace("세", "")) / 10) * 10
         }_${String(Math.floor(Math.random() * 10) + 1).padStart(2, "0")}`
       });
@@ -1193,7 +1194,7 @@ const PageAiPersona = () => {
                   >
                     Key Stakeholder
                   </TabButtonType3>
-                  <TabButtonType3
+                  {/* <TabButtonType3
                     className={activeTab === "my_persona" ? "active" : ""}
                     onClick={() => handleTabClick("my_persona")}
                     isActive={activeTab === "my_persona"}
@@ -1204,7 +1205,7 @@ const PageAiPersona = () => {
                     }
                   >
                     My Persona
-                  </TabButtonType3>
+                  </TabButtonType3> */}
                   <TabButtonType3
                     className={activeTab === "my_favorite" ? "active" : ""}
                     onClick={() => handleTabClick("my_favorite")}

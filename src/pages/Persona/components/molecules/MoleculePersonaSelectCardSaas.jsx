@@ -178,7 +178,7 @@ const MoleculePersonaSelectCardSaas = ({
         >
           Key Stakeholder
         </TabButtonType3>
-        <TabButtonType3
+        {/* <TabButtonType3
           className={activeTabState === "my_persona" ? "active" : ""}
           onClick={() => handleTabClick("my_persona")}
           isActive={activeTabState === "my_persona"}
@@ -189,7 +189,7 @@ const MoleculePersonaSelectCardSaas = ({
           }
         >
           My Persona
-        </TabButtonType3>
+        </TabButtonType3> */}
       </TabWrapType3>
       {filteredPersonaList &&
         [...customPersonaList, ...businessPersonaList, ...filteredPersonaList]
