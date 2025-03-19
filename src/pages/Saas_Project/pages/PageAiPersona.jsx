@@ -917,6 +917,32 @@ const PageAiPersona = () => {
         ...prev,
         my_persona: false,
       }));
+      setActiveTabIndex(0);
+      // OCEAN 값 초기화
+      setOceanValues({
+        openness: 0.5,
+        conscientiousness: 0.5,
+        extraversion: 0.5,
+        agreeableness: 0.5,
+        neuroticism: 0.5,
+      });
+      // ignoreOcean 초기화
+      setIgnoreOcean(false);
+      // customPersonaForm 초기화
+      setCustomPersonaForm({
+        gender: "",
+        ageGroups: [],
+        purpose: "",
+        additionalInfo: "",
+      });
+      // selectedValues 초기화
+      setSelectedValues({
+        gender: "",
+        ageGroup: "",
+        business: "",
+        uniqueUser: "",
+        keyStakeholder: "",
+      });
     }
   };
 
