@@ -2397,7 +2397,9 @@ const PageAiPersona = () => {
                               }}
                             >
                               <Body2 color="gray700" align="left">
-                                이 제품/서비스를 들어본 적도 없음
+                                {currentPersona.personaType === "key_stakeholder"
+                                  ? "조언 제공 가능하나 최종 결정권 없음"
+                                  : "이 제품/서비스를 들어본 적도 없음"}
                               </Body2>
                             </SelectBoxItem>
                             <SelectBoxItem
@@ -2413,7 +2415,9 @@ const PageAiPersona = () => {
                               }}
                             >
                               <Body2 color="gray700" align="left">
-                                들어본 적은 있지만, 사용해본 적은 없음
+                                {currentPersona.personaType === "key_stakeholder"
+                                  ? "제한된 영역에서 피드백 및 일부 결정권 보유"
+                                  : "들어본 적은 있지만, 사용해본 적은 없음"}
                               </Body2>
                             </SelectBoxItem>
                             <SelectBoxItem
@@ -2429,7 +2433,9 @@ const PageAiPersona = () => {
                               }}
                             >
                               <Body2 color="gray700" align="left">
-                                사용해본 적은 있지만, 한두 번 경험한 수준
+                                {currentPersona.personaType === "key_stakeholder"
+                                  ? "특정 분야 운영 및 성장 방향 결정 가능"
+                                  : "사용해본 적은 있지만, 한두 번 경험한 수준"}
                               </Body2>
                             </SelectBoxItem>
                             <SelectBoxItem
@@ -2445,7 +2451,9 @@ const PageAiPersona = () => {
                               }}
                             >
                               <Body2 color="gray700" align="left">
-                                몇 번 사용해봤고, 기능을 어느 정도 이해하고 있음
+                                {currentPersona.personaType === "key_stakeholder"
+                                  ? "기업 전략 수립 및 장기적 방향 설정"
+                                  : "몇 번 사용해봤고, 기능을 어느 정도 이해하고 있음"}
                               </Body2>
                             </SelectBoxItem>
                             <SelectBoxItem
@@ -2461,7 +2469,9 @@ const PageAiPersona = () => {
                               }}
                             >
                               <Body2 color="gray700" align="left">
-                                정기적으로 사용하고 있고, 익숙한 사용자
+                                {currentPersona.personaType === "key_stakeholder"
+                                  ? "기업 전략, 투자, 정책 수립을 직접 결정"
+                                  : "정기적으로 사용하고 있고, 익숙한 사용자"}
                               </Body2>
                             </SelectBoxItem>
                           </SelectBoxList>
@@ -2526,7 +2536,9 @@ const PageAiPersona = () => {
                               }}
                             >
                               <Body2 color="gray700" align="left">
-                                기본적인 기능도 잘 모름
+                                {currentPersona.personaType === "key_stakeholder"
+                                  ? "기본 개념 이해, 보조적 역할 수행"
+                                  : "기본적인 기능도 잘 모름"}
                               </Body2>
                             </SelectBoxItem>
                             <SelectBoxItem
@@ -2542,7 +2554,9 @@ const PageAiPersona = () => {
                               }}
                             >
                               <Body2 color="gray700" align="left">
-                                몇 가지 주요 기능만 사용
+                                {currentPersona.personaType === "key_stakeholder"
+                                  ? "실무 경험 보유, 특정 업무 수행 가능"
+                                  : "몇 가지 주요 기능만 사용"}
                               </Body2>
                             </SelectBoxItem>
                             <SelectBoxItem
@@ -2558,7 +2572,9 @@ const PageAiPersona = () => {
                               }}
                             >
                               <Body2 color="gray700" align="left">
-                                대부분의 기능을 사용해 봤지만, 특정 기능은 모름
+                                {currentPersona.personaType === "key_stakeholder"
+                                  ? "시장 트렌드 이해, 주요 의견 제시 가능"
+                                  : "대부분의 기능을 사용해 봤지만, 특정 기능은 모름"}
                               </Body2>
                             </SelectBoxItem>
                             <SelectBoxItem
@@ -2574,9 +2590,29 @@ const PageAiPersona = () => {
                               }}
                             >
                               <Body2 color="gray700" align="left">
-                                거의 모든 기능을 능숙하게 사용
+                                {currentPersona.personaType === "key_stakeholder"
+                                  ? "연구 및 혁신 주도, 신기술 개발 영향"
+                                  : "거의 모든 기능을 능숙하게 사용"}
                               </Body2>
                             </SelectBoxItem>
+                            {currentPersona.personaType === "key_stakeholder" && (
+                              <SelectBoxItem
+                                onClick={() => {
+                                  handleCurrentPersonaChange(
+                                    "usageDepth",
+                                    "5단계"
+                                  );
+                                  setSelectBoxStates1((prev) => ({
+                                    ...prev,
+                                    usageDepth: false,
+                                  }));
+                                }}
+                              >
+                                <Body2 color="gray700" align="left">
+                                  업계 방향 설정, 산업 정책 수립 주도
+                                </Body2>
+                              </SelectBoxItem>
+                            )}
                           </SelectBoxList>
                         )}
                       </SelectBox>
