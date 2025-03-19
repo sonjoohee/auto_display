@@ -290,7 +290,7 @@ const PageDashBoard = () => {
       createPieChart(macroChartRef, macroData);
       createPieChart(uniqueChartRef, uniqueData);
       createPieChart(stakeholderChartRef, stakeholderData);
-      // createPieChart(myPersonaChartRef, myPersonaData);
+      createPieChart(myPersonaChartRef, myPersonaData);
     }
   }, [
     personaListSaas,
@@ -499,19 +499,19 @@ const PageDashBoard = () => {
                         <li className="start">
                           <Sub3 color="gray500">비활성</Sub3>
                           <Sub2 color="gray700">
-                            {macroSegmentStats.inactive}명
+                            {macroSegmentStats.inactive}
                           </Sub2>
                         </li>
                         <li className="ing">
                           <Sub3 color="gray500">생성 중</Sub3>
                           <Sub2 color="gray700">
-                            {macroSegmentStats.generating}명
+                            {macroSegmentStats.generating}
                           </Sub2>
                         </li>
                         <li className="complete">
                           <Sub3 color="gray500">활성</Sub3>
                           <Sub2 color="gray700">
-                            {macroSegmentStats.active}명
+                            {macroSegmentStats.active}
                           </Sub2>
                         </li>
                       </UlInfo>
@@ -535,20 +535,18 @@ const PageDashBoard = () => {
                         <li className="start">
                           <Sub3 color="gray500">비활성</Sub3>
                           <Sub2 color="gray700">
-                            {uniqueUserStats.inactive}명
+                            {uniqueUserStats.inactive}
                           </Sub2>
                         </li>
                         <li className="ing">
                           <Sub3 color="gray500">생성 중</Sub3>
                           <Sub2 color="gray700">
-                            {uniqueUserStats.generating}명
+                            {uniqueUserStats.generating}
                           </Sub2>
                         </li>
                         <li className="complete">
                           <Sub3 color="gray500">활성</Sub3>
-                          <Sub2 color="gray700">
-                            {uniqueUserStats.active}명
-                          </Sub2>
+                          <Sub2 color="gray700">{uniqueUserStats.active}</Sub2>
                         </li>
                       </UlInfo>
                     </div>
@@ -571,25 +569,25 @@ const PageDashBoard = () => {
                         <li className="start">
                           <Sub3 color="gray500">비활성</Sub3>
                           <Sub2 color="gray700">
-                            {keyStakeholderStats.inactive}명
+                            {keyStakeholderStats.inactive}
                           </Sub2>
                         </li>
                         <li className="ing">
                           <Sub3 color="gray500">생성 중</Sub3>
                           <Sub2 color="gray700">
-                            {keyStakeholderStats.generating}명
+                            {keyStakeholderStats.generating}
                           </Sub2>
                         </li>
                         <li className="complete">
                           <Sub3 color="gray500">활성</Sub3>
                           <Sub2 color="gray700">
-                            {keyStakeholderStats.active}명
+                            {keyStakeholderStats.active}
                           </Sub2>
                         </li>
                       </UlInfo>
                     </div>
                   </div>{" "}
-                  {/* <div
+                  <div
                     onClick={() => navigateToAiPersonaTab("my_persona")}
                     style={{ cursor: "pointer" }}
                   >
@@ -606,25 +604,21 @@ const PageDashBoard = () => {
                       <UlInfo>
                         <li className="start">
                           <Sub3 color="gray500">비활성</Sub3>
-                          <Sub2 color="gray700">
-                            {myPersonaStats.inactive}명
-                          </Sub2>
+                          <Sub2 color="gray700">{myPersonaStats.inactive}</Sub2>
                         </li>
                         <li className="ing">
                           <Sub3 color="gray500">생성 중</Sub3>
                           <Sub2 color="gray700">
-                            {myPersonaStats.generating}명
+                            {myPersonaStats.generating}
                           </Sub2>
                         </li>
                         <li className="complete">
                           <Sub3 color="gray500">활성</Sub3>
-                          <Sub2 color="gray700">
-                            {myPersonaStats.active}명
-                          </Sub2>
+                          <Sub2 color="gray700">{myPersonaStats.active}</Sub2>
                         </li>
                       </UlInfo>
                     </div>
-                  </div> */}
+                  </div>
                 </PersonaStatusWrap>
               ) : (
                 <PersonaStatusWrap
@@ -1069,11 +1063,11 @@ const UlInfo = styled.ul`
     }
 
     &.start:before {
-      background: #E0E4EB;
+      background: #e0e4eb;
     }
 
     &.ing:before {
-      background: #A8BFFF;
+      background: #a8bfff;
     }
 
     &.complete:before {
