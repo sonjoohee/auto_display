@@ -654,7 +654,10 @@ const OrganismToastPopupSingleChat = ({
             });
           }
         }
-
+        console.log(
+          "personaList.selected[0] 정보 보기",
+          personaList.selected[0]
+        );
         const data = {
           business_analysis_data: projectCreateInfo,
           question: interviewQuestionListState[currentQuestionIndex],
@@ -666,6 +669,8 @@ const OrganismToastPopupSingleChat = ({
             lifestyle: personaList.selected[0].lifestyle,
             characteristics: personaList.selected[0].personaCharacteristics,
             consumption_pattern: personaList.selected[0].consumptionPattern,
+            personaType: personaList.selected[0].personaType,
+            typeIndex: personaList.selected[0].type,
             request_persona_type: "saas",
           },
           last_interview: lastInterview,
@@ -1181,6 +1186,8 @@ const OrganismToastPopupSingleChat = ({
           lifestyle: personaList.selected[0].lifestyle,
           characteristics: personaList.selected[0].personaCharacteristics,
           consumption_pattern: personaList.selected[0].consumptionPattern,
+          personaType: personaList.selected[0].personaType,
+          typeIndex: personaList.selected[0].type,
           request_persona_type: "saas",
         },
         last_interview: indepthLastInterview,
@@ -1208,6 +1215,8 @@ const OrganismToastPopupSingleChat = ({
             lifestyle: personaList.selected[0].lifestyle,
             characteristics: personaList.selected[0].personaCharacteristics,
             consumption_pattern: personaList.selected[0].consumptionPattern,
+            personaType: personaList.selected[0].personaType,
+            typeIndex: personaList.selected[0].type,
             request_persona_type: "saas",
           },
           last_interview: indepthLastInterview,

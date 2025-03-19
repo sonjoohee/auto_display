@@ -15,7 +15,7 @@ const PageBlog = () => {
         <BlogContainer>
           <iframe
             src="https://www.notioniframe.com/notion/2cduo7gbv65"
-            // src="https://www.notioniframe.com/notion/1mevbyj6h8z"
+            // src="https://snsmen.tistory.com/23"
             title="Blog Content"
             style={{
               width: "100%",
@@ -40,4 +40,5 @@ const BlogContainer = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  padding: 50px 0px 0 69px;
 `;
