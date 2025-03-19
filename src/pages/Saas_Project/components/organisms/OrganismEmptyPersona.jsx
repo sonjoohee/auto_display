@@ -240,7 +240,7 @@ const OrganismEmptyPersona = () => {
           const sortedList = [...savedPersonaListInfo].sort((a, b) => {
             const dateA = a.timestamp;
             const dateB = b.timestamp;
-            return dateB - dateA; // 최신 날짜가 위로
+            return dateA - dateB; 
           });
 
           setPersonaListSaas(sortedList);
