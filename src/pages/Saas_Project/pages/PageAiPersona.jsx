@@ -887,7 +887,7 @@ const PageAiPersona = () => {
       if (savedPersonaListInfo) {
         const sortedList = savedPersonaListInfo
           .filter((persona) => persona.personaType === "my_persona")
-          .sort((a, b) => b.timestamp - a.timestamp);
+          .sort((a, b) => a.timestamp - b.timestamp);
 
         if (sortedList.length > 0) {
           setProjectPersonaList((prev) => {
