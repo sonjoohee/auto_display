@@ -30,6 +30,7 @@ import {
   USER_CREDITS,
   PROJECT_TOTAL_INFO,
   PROJECT_CREATE_INFO,
+  CUSTOM_THEORY_DATA,
 } from "../../../AtomStates";
 
 const OrganismCustomization = ({
@@ -70,7 +71,7 @@ const OrganismCustomization = ({
   const [showOrganismCustomization, setShowOrganismCustomization] =
     useState(true);
   const [selectedTheory, setSelectedTheory] = useState(null);
-  const [customTheoryData, setCustomTheoryData] = useState(null);
+  const [customTheoryData, setCustomTheoryData] = useAtom(CUSTOM_THEORY_DATA);
 
   const handleEditComplete = (index) => {
     const newCustomizations = [...customizations];
@@ -88,22 +89,18 @@ const OrganismCustomization = ({
       let result = await InterviewXPersonaSingleInterviewTheoryCustom(
         { input_data: custom.purposeText },
         isLoggedIn
-      ); // Adjust parameters as needed
+      );
+
       let retryCount = 0;
       const maxRetries = 10;
-      if (result.response.check_validity.check_index === 0) {
-        setShowCustomErrorPopup(true);
-        // 이전 상태로 되돌리기
-        const newCustomizations = [...customizations];
-        newCustomizations[index].showMethodology = false;
-        setCustomizations(newCustomizations);
-        return;
-      }
+
       while (
         retryCount < maxRetries &&
-        (!result ||
+        (
+          !result ||
           !result.response ||
-          result.response.custom_theory_data.characteristic.length !== 4)
+          !result.response.check_validity
+        )
       ) {
         result = await InterviewXPersonaSingleInterviewTheoryCustom(
           { input_data: custom.purposeText },
@@ -112,6 +109,16 @@ const OrganismCustomization = ({
 
         retryCount++;
       }
+
+      if (result.response.check_validity.check_index === 0) {
+        setShowCustomErrorPopup(true);
+        // 이전 상태로 되돌리기
+        const newCustomizations = [...customizations];
+        newCustomizations[index].showMethodology = false;
+        setCustomizations(newCustomizations);
+        return;
+      }
+
       setApiResponse(result);
       setCustomTheoryData(result?.response?.custom_theory_data);
 
@@ -130,8 +137,7 @@ const OrganismCustomization = ({
       //     custom_theory_data: result?.response?.custom_theory_data || "",
       //     question_list: result?.response?.custom_theory_data?.question_list || [],
       //   };
-      //   // 카드 생성은 나중에 "질문 생성하기" 버튼에서 진행하므로 여기서는 주석 처리
-      //   // setPurposeItemsSingleAtom((prev) => [...prev, generatedQuestions]);
+      //   setPurposeItemsSingleAtom((prev) => [...prev, generatedQuestions]);
       // }
 
       await updateProjectOnServer(
@@ -317,7 +323,7 @@ const OrganismCustomization = ({
                 </CustomizationBox>
               ) : (
                 <CustomizationBox>
-                  {isLoadingQuestion && customTheoryData === null ? (
+                  {isLoadingQuestion ? (
                     <AtomPersonaLoader message="입력하신 데이터를 분석하고 있어요" />
                   ) : (
                     <>

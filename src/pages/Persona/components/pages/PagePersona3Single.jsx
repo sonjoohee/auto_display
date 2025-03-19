@@ -153,21 +153,21 @@ const PagePersona3Single = () => {
   ];
 
   useEffect(() => {
-    setPurposeItemsSingleAtom(purposeItemsSingle);
-    if (customTheoryData?.theory_title) {
-      const generatedQuestions = {
-        id: 4,
-        title: customTheoryData?.theory_title || "",
-        theory_title: customTheoryData?.theory_title || "",
-        view_title: customTheoryData?.theory_title || "",
-        definition: customTheoryData?.definition || "",
-        objective: customTheoryData?.objective || "",
-        characteristic: customTheoryData?.characteristic || [],
-        description: "사용자 커스텀 방법론" || "",
-        custom_theory_data: customTheoryData || "",
-      };
-      setPurposeItemsSingleAtom((prev) => [...prev, generatedQuestions]);
-    }
+      setPurposeItemsSingleAtom(purposeItemsSingle);
+      if (customTheoryData?.theory_title) {
+        const generatedQuestions = {
+          id: 4,
+          title: customTheoryData?.theory_title || "",
+          theory_title: customTheoryData?.theory_title || "",
+          view_title: customTheoryData?.theory_title || "",
+          definition: customTheoryData?.definition || "",
+          objective: customTheoryData?.objective || "",
+          characteristic: customTheoryData?.characteristic || [],
+          description: "사용자 커스텀 방법론" || "",
+          custom_theory_data: customTheoryData || "",
+        };
+        setPurposeItemsSingleAtom((prev) => [...prev, generatedQuestions]);
+      }
   }, [setPurposeItemsSingleAtom]);
 
   const handleEnterInterviewRoom = () => {
