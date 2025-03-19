@@ -34,7 +34,7 @@ const MoleculePersonaSelectCardSaas = ({
   const navigate = useNavigate();
 
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [activeTabState, setActiveTabState] = useState("my_persona");
+  const [activeTabState, setActiveTabState] = useState("my_favorite");
 
   // 컴포넌트 마운트 시 초기 unselected 리스트 설정
   useEffect(() => {
@@ -130,18 +130,6 @@ const MoleculePersonaSelectCardSaas = ({
   return (
     <CardGroupWrap>
       <TabWrapType3 Border>
-      <TabButtonType3
-          className={activeTabState === "my_persona" ? "active" : ""}
-          onClick={() => handleTabClick("my_persona")}
-          isActive={activeTabState === "my_persona"}
-          style={
-            activeTabState === "my_persona"
-              ? { color: "#333333" }
-              : { color: "#999999" }
-          }
-        >
-          My Persona
-        </TabButtonType3>
         <TabButtonType3
           className={activeTabState === "my_favorite" ? "active" : ""}
           onClick={() => handleTabClick("my_favorite")}
@@ -189,6 +177,18 @@ const MoleculePersonaSelectCardSaas = ({
           }
         >
           Key Stakeholder
+        </TabButtonType3>
+        <TabButtonType3
+          className={activeTabState === "my_persona" ? "active" : ""}
+          onClick={() => handleTabClick("my_persona")}
+          isActive={activeTabState === "my_persona"}
+          style={
+            activeTabState === "my_persona"
+              ? { color: "#333333" }
+              : { color: "#999999" }
+          }
+        >
+          My Persona
         </TabButtonType3>
       </TabWrapType3>
       {filteredPersonaList &&
