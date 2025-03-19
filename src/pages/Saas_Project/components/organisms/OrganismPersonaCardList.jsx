@@ -296,7 +296,7 @@ const OrganismPersonaCardList = ({
       if (savedPersonaListInfo) {
         const sortedList = savedPersonaListInfo
           .filter((persona) => persona.personaType === personaType)
-          .sort((a, b) => b.timestamp - a.timestamp);
+          .sort((a, b) => a.timestamp - b.timestamp);
 
         setProjectPersonaList((prev) => {
           const filteredPrev = prev.filter(
