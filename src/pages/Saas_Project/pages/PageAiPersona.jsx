@@ -858,7 +858,9 @@ const PageAiPersona = () => {
         interests: persona.interests,
         consumptionPattern: persona.consumption_pattern,
         usageDepth: persona.usage_depth,
-        status: "profile", // status를 'profile'로 설정
+        status: "profile", imageKey: `persona_${persona.gender === "남성" ? "m" : "f"}_${
+          Math.floor(parseInt(persona.age.replace("세", "")) / 10) * 10
+        }_${String(Math.floor(Math.random() * 10) + 1).padStart(2, "0")}`
       });
 
       let personas = response.response.my_persona_generator.map(mapPersonaData);
