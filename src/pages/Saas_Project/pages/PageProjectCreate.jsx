@@ -1150,7 +1150,7 @@ const PageProjectCreate = () => {
                           canRemove={true}
                           canRestart={false}
                           disabled={toolStep >= 1}
-                          accept="image/*, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/msword, application/vnd.ms-powerpoint"
+                          accept="image/*, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/msword, application/vnd.ms-powerpoint, application/vnd.ms-excel, text/csv, text/plain, text/html"
                           maxSizeBytes={20 * 1024 * 1024}
                           inputWithFilesContent={
                             <>

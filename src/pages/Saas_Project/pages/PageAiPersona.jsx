@@ -56,7 +56,7 @@ import {
   createRequestPersonaOnServer,
   getProjectByIdFromIndexedDB,
   getPersonaOnServer,
-  createPersonaOnServer
+  createPersonaOnServer,
 } from "../../../utils/indexedDB";
 import OrganismPersonaCardList from "../components/organisms/OrganismPersonaCardList";
 import {
@@ -69,7 +69,7 @@ import {
   EVENT_STATE,
   TRIAL_STATE,
   EVENT_TITLE,
-  PROJECT_PERSONA_LIST
+  PROJECT_PERSONA_LIST,
 } from "../../../pages/AtomStates";
 import AtomPersonaLoader from "../../Global/atoms/AtomPersonaLoader";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
@@ -85,7 +85,9 @@ const PageAiPersona = () => {
   const [projectId] = useAtom(PROJECT_ID);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [, setUserCredits] = useAtom(USER_CREDITS);
-  const [creditRequestBusinessPersona] = useAtom(CREDIT_REQUEST_BUSINESS_PERSONA);
+  const [creditRequestBusinessPersona] = useAtom(
+    CREDIT_REQUEST_BUSINESS_PERSONA
+  );
   const [, setProjectPersonaList] = useAtom(PROJECT_PERSONA_LIST);
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
@@ -94,7 +96,8 @@ const PageAiPersona = () => {
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [isCreatePopupOpen, setIsCreatePopupOpen] = useState(false);
   const [isCustomizePopupOpen, setIsCustomizePopupOpen] = useState(false);
-  const [isPersonaConfirmPopupOpen, setIsPersonaConfirmPopupOpen] =useState(false);
+  const [isPersonaConfirmPopupOpen, setIsPersonaConfirmPopupOpen] =
+    useState(false);
   const [selectedPersona, setSelectedPersona] = useState(null);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [activeTab2, setActiveTab2] = useState("lifestyle");
@@ -123,7 +126,7 @@ const PageAiPersona = () => {
     macro_segment: false,
     unique_user: false,
     key_stakeholder: false,
-    my_persona: false
+    my_persona: false,
   });
   const [oceanValues, setOceanValues] = useState({
     openness: 0.5,
@@ -260,8 +263,6 @@ const PageAiPersona = () => {
     }
   };
 
-
-
   const handleOceanChange = (trait, value) => {
     // 값을 0 또는 1로 스냅
     const snappedValue = Number(value) <= 0.5 ? 0 : 1;
@@ -271,8 +272,6 @@ const PageAiPersona = () => {
       [trait]: snappedValue,
     }));
   };
-
-
 
   const handleRandomOcean = (e) => {
     setIgnoreOcean(e.target.checked);
@@ -288,7 +287,6 @@ const PageAiPersona = () => {
       });
     }
   };
-
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
@@ -592,7 +590,6 @@ const PageAiPersona = () => {
     "my_persona"
   );
 
-
   // 현재 선택된 탭에 따라 표시할 통계 정보 결정
   const getCurrentTabStats = () => {
     switch (activeTab) {
@@ -653,7 +650,7 @@ const PageAiPersona = () => {
           const dateB = b.timestamp;
           return dateB - dateA; // 최신 날짜가 위로
         });
-        console.log(sortedList,"sortedList")
+        console.log(sortedList, "sortedList");
         setPersonaListSaas(sortedList);
         // 전체 페르소나 통계 업데이트
         const activeCount = sortedList.filter(
@@ -710,29 +707,29 @@ const PageAiPersona = () => {
       }
     } else {
       // 기존 코드 유지
-    switch (level) {
-      case "1":
-      case "1단계":
-      case 1:
-        return "이 제품/서비스를 들어본 적도 없음";
-      case "2":
-      case "2단계":
-      case 2:
-        return "들어본 적은 있지만, 사용해본 적은 없음";
-      case "3":
-      case "3단계":
-      case 3:
-        return "사용해본 적은 있지만, 한두 번 경험한 수준";
-      case "4":
-      case "4단계":
-      case 4:
-        return "몇 번 사용해봤고, 기능을 어느 정도 이해하고 있음";
-      case "5":
-      case "5단계":
-      case 5:
-        return "정기적으로 사용하고 있고, 익숙한 사용자";
-      default:
-        return "선택해주세요";
+      switch (level) {
+        case "1":
+        case "1단계":
+        case 1:
+          return "이 제품/서비스를 들어본 적도 없음";
+        case "2":
+        case "2단계":
+        case 2:
+          return "들어본 적은 있지만, 사용해본 적은 없음";
+        case "3":
+        case "3단계":
+        case 3:
+          return "사용해본 적은 있지만, 한두 번 경험한 수준";
+        case "4":
+        case "4단계":
+        case 4:
+          return "몇 번 사용해봤고, 기능을 어느 정도 이해하고 있음";
+        case "5":
+        case "5단계":
+        case 5:
+          return "정기적으로 사용하고 있고, 익숙한 사용자";
+        default:
+          return "선택해주세요";
       }
     }
   };
@@ -766,25 +763,25 @@ const PageAiPersona = () => {
       }
     } else {
       // 기존 코드 유지
-    switch (level) {
-      case "1":
-      case "1단계":
-      case 1:
-        return "기본적인 기능도 잘 모름";
-      case "2":
-      case "2단계":
-      case 2:
-        return "몇 가지 주요 기능만 사용";
-      case "3":
-      case "3단계":
-      case 3:
-        return "대부분의 기능을 사용해 봤지만, 특정 기능은 모름";
-      case "4":
-      case "4단계":
-      case 4:
-        return "거의 모든 기능을 능숙하게 사용";
-      default:
-        return "선택해주세요";
+      switch (level) {
+        case "1":
+        case "1단계":
+        case 1:
+          return "기본적인 기능도 잘 모름";
+        case "2":
+        case "2단계":
+        case 2:
+          return "몇 가지 주요 기능만 사용";
+        case "3":
+        case "3단계":
+        case 3:
+          return "대부분의 기능을 사용해 봤지만, 특정 기능은 모름";
+        case "4":
+        case "4단계":
+        case 4:
+          return "거의 모든 기능을 능숙하게 사용";
+        default:
+          return "선택해주세요";
       }
     }
   };
@@ -792,9 +789,9 @@ const PageAiPersona = () => {
   const handleCustomPersonaRequest = async () => {
     setIsCustomizePopupOpen(false);
     // 로딩 상태 시작
-    setLoadingTabs(prev => ({
+    setLoadingTabs((prev) => ({
       ...prev,
-      my_persona: true
+      my_persona: true,
     }));
 
     try {
@@ -818,49 +815,55 @@ const PageAiPersona = () => {
       };
       const response = await InterviewXMyPersonaGeneratorRequest(requestData);
 
-     // 매핑 함수 정의
-     const mapPersonaData = (persona) => ({
-      projectId: project?._id,
-       _id: persona._id,
-       personaName: persona.name,
-       personaCharacteristics: `${customPersonaForm.purpose || ""}${customPersonaForm.additionalInfo ? " " + customPersonaForm.additionalInfo : ""}` || "",
-       type: persona.type,
-       age: persona.age,
-       gender: persona.gender,
-       job: persona.job,
-       keywords: persona.keywords,
-       personaType: "my_persona",
-       favorite: persona.favorite,
-       customData: {  // customData 추가
-        persona_gender: customPersonaForm.gender === "male" ? "남성" : "여성",
-        persona_age: customPersonaForm.ageGroups
-          .map((age) => age.trim())
-          .join(", "),
-        persona_reason: customPersonaForm.purpose,
-        persona_additional_info: customPersonaForm.additionalInfo,
-        persona_ocean: {
-          type_o: oceanValues.openness === 0 ? "보수적" : "개방적",
-          type_c: oceanValues.conscientiousness === 0 ? "즉흥적" : "성실함",
-          type_e: oceanValues.extraversion === 0 ? "내향적" : "외향적",
-          type_a: oceanValues.agreeableness === 0 ? "독립적" : "우호적",
-          type_n: oceanValues.neuroticism === 0 ? "무던함" : "신경적",
+      // 매핑 함수 정의
+      const mapPersonaData = (persona) => ({
+        projectId: project?._id,
+        _id: persona._id,
+        personaName: persona.name,
+        personaCharacteristics:
+          `${customPersonaForm.purpose || ""}${
+            customPersonaForm.additionalInfo
+              ? " " + customPersonaForm.additionalInfo
+              : ""
+          }` || "",
+        type: persona.type,
+        age: persona.age,
+        gender: persona.gender,
+        job: persona.job,
+        keywords: persona.keywords,
+        personaType: "my_persona",
+        favorite: persona.favorite,
+        customData: {
+          // customData 추가
+          persona_gender: customPersonaForm.gender === "male" ? "남성" : "여성",
+          persona_age: customPersonaForm.ageGroups
+            .map((age) => age.trim())
+            .join(", "),
+          persona_reason: customPersonaForm.purpose,
+          persona_additional_info: customPersonaForm.additionalInfo,
+          persona_ocean: {
+            type_o: oceanValues.openness === 0 ? "보수적" : "개방적",
+            type_c: oceanValues.conscientiousness === 0 ? "즉흥적" : "성실함",
+            type_e: oceanValues.extraversion === 0 ? "내향적" : "외향적",
+            type_a: oceanValues.agreeableness === 0 ? "독립적" : "우호적",
+            type_n: oceanValues.neuroticism === 0 ? "무던함" : "신경적",
+          },
         },
-      },
-       family: persona.family,
-       experienceDepth: persona.experience_depth,
-       lifestyle: persona.lifestyle,
-       monthlyIncome: persona.monthly_income,
-       residence: persona.residence,
-       userExperience: persona.user_experience,
-       interests: persona.interests,
-       consumptionPattern: persona.consumption_pattern,
-       usageDepth: persona.usage_depth,
-       status: 'profile'  // status를 'profile'로 설정
-     });
+        family: persona.family,
+        experienceDepth: persona.experience_depth,
+        lifestyle: persona.lifestyle,
+        monthlyIncome: persona.monthly_income,
+        residence: persona.residence,
+        userExperience: persona.user_experience,
+        interests: persona.interests,
+        consumptionPattern: persona.consumption_pattern,
+        usageDepth: persona.usage_depth,
+        status: "profile", // status를 'profile'로 설정
+      });
 
-     let personas = response.response.my_persona_generator.map(mapPersonaData);
+      let personas = response.response.my_persona_generator.map(mapPersonaData);
 
-     const updatedPersonas = [];
+      const updatedPersonas = [];
       for (const persona of personas) {
         try {
           const insertedId = await createPersonaOnServer(persona, isLoggedIn);
@@ -873,41 +876,46 @@ const PageAiPersona = () => {
           updatedPersonas.push(persona);
         }
       }
-    
-    // 서버에서 최신 데이터 가져오기
-    const savedPersonaListInfo = await getPersonaListOnServer(project?._id, true);
-    if (savedPersonaListInfo) {
-      const sortedList = savedPersonaListInfo
-        .filter(persona => persona.personaType === "my_persona")
-        .sort((a, b) => b.timestamp - a.timestamp);
 
-      if (sortedList.length > 0) {
-        setProjectPersonaList(prev => {
-          const filteredPrev = prev.filter(p => p.personaType !== "my_persona");
-          return [...filteredPrev, ...sortedList];
-        });
+      // 서버에서 최신 데이터 가져오기
+      const savedPersonaListInfo = await getPersonaListOnServer(
+        project?._id,
+        true
+      );
+      if (savedPersonaListInfo) {
+        const sortedList = savedPersonaListInfo
+          .filter((persona) => persona.personaType === "my_persona")
+          .sort((a, b) => b.timestamp - a.timestamp);
 
-        setPersonaListSaas(prev => {
-          const filteredPrev = prev.filter(p => p.personaType !== "my_persona");
-          return [...filteredPrev, ...sortedList];
-        });
-  
-      } else {
-        console.log("No my_persona data found in sortedList");
+        if (sortedList.length > 0) {
+          setProjectPersonaList((prev) => {
+            const filteredPrev = prev.filter(
+              (p) => p.personaType !== "my_persona"
+            );
+            return [...filteredPrev, ...sortedList];
+          });
+
+          setPersonaListSaas((prev) => {
+            const filteredPrev = prev.filter(
+              (p) => p.personaType !== "my_persona"
+            );
+            return [...filteredPrev, ...sortedList];
+          });
+        } else {
+          console.log("No my_persona data found in sortedList");
+        }
       }
-    }
 
       if (!response) {
         throw new Error("페르소나 요청에 실패했습니다.");
       }
-
     } catch (error) {
       console.error(error);
     } finally {
       // 로딩 상태 종료
-      setLoadingTabs(prev => ({
+      setLoadingTabs((prev) => ({
         ...prev,
-        my_persona: false
+        my_persona: false,
       }));
     }
   };
@@ -1184,37 +1192,38 @@ const PageAiPersona = () => {
                 </TabWrapType3>
 
                 <AiPersonaInfo>
-                  <div >
                   <div>
-                    <span className="inactive" />
-                    <InputText color="gray500">
-                      비활성 페르소나{" "}
-                      <strong>({currentTabStats.inactive})</strong>
-                      <div style={{width: "6px"}}></div>
-                    </InputText>
-                  </div>
-                  <div>
-                    <span className="generating">
-                      <images.ArrowClockwise2
-                        width="14"
-                        height="14"
-                        color={palette.primary}
-                      />
-                    </span>
-                    <InputText color="gray700">
-                      생성 중 <strong>({currentTabStats.generating})</strong>
-                    </InputText>
-                    <div style={{width: "6px"}}></div>
-                  </div>
-                  <div>
-                    <span className="active">
-                      <img src={images.IconCheck3} width="8" />
-                    </span>
-                    <InputText color="gray700">
-                      활성 페르소나 <strong>({currentTabStats.active})</strong>
-                    </InputText>
-                    <div style={{width: "6px"}}></div>
-                  </div>
+                    <div>
+                      <span className="inactive" />
+                      <InputText color="gray500">
+                        비활성 페르소나{" "}
+                        <strong>({currentTabStats.inactive})</strong>
+                        <div style={{ width: "6px" }}></div>
+                      </InputText>
+                    </div>
+                    <div>
+                      <span className="generating">
+                        <images.ArrowClockwise2
+                          width="14"
+                          height="14"
+                          color={palette.primary}
+                        />
+                      </span>
+                      <InputText color="gray700">
+                        생성 중 <strong>({currentTabStats.generating})</strong>
+                      </InputText>
+                      <div style={{ width: "6px" }}></div>
+                    </div>
+                    <div>
+                      <span className="active">
+                        <img src={images.IconCheck3} width="8" />
+                      </span>
+                      <InputText color="gray700">
+                        활성 페르소나{" "}
+                        <strong>({currentTabStats.active})</strong>
+                      </InputText>
+                      <div style={{ width: "6px" }}></div>
+                    </div>
                   </div>
                   {activeTab === "my_persona" && (
                     <Button
@@ -1232,13 +1241,13 @@ const PageAiPersona = () => {
                   )}
                 </AiPersonaInfo>
 
-                <div style={{ position: 'relative' }}>
-                <OrganismPersonaCardList
-                  personaData={personaListSaas}
-                  setIsStarred={updatePersonaList}
-                  setShowPopup={openPersonaPopup}
-                  activeTab={activeTab}
-                  setPersonaStats={setPersonaStats}
+                <div style={{ position: "relative" }}>
+                  <OrganismPersonaCardList
+                    personaData={personaListSaas}
+                    setIsStarred={updatePersonaList}
+                    setShowPopup={openPersonaPopup}
+                    activeTab={activeTab}
+                    setPersonaStats={setPersonaStats}
                     onCustomizeRequest={handleCustomizePopup}
                     loadingTabs={loadingTabs}
                     setLoadingTabs={setLoadingTabs}
@@ -1287,7 +1296,7 @@ const PageAiPersona = () => {
                       <TabButtonType2
                         isActive={activeTab2 === "lifestyle"}
                         onClick={() => setActiveTab2("lifestyle")}
-                        style={{padding: "4px 10px"}}
+                        style={{ padding: "4px 10px" }}
                       >
                         {currentPersona.personaType === "key_stakeholder"
                           ? "역할 및 기여"
@@ -1296,7 +1305,7 @@ const PageAiPersona = () => {
                       <TabButtonType2
                         isActive={activeTab2 === "interests"}
                         onClick={() => setActiveTab2("interests")}
-                        style={{padding: "4px 10px"}}
+                        style={{ padding: "4px 10px" }}
                       >
                         {currentPersona.personaType === "key_stakeholder"
                           ? "전문 분야"
@@ -1305,7 +1314,7 @@ const PageAiPersona = () => {
                       <TabButtonType2
                         isActive={activeTab2 === "consumption"}
                         onClick={() => setActiveTab2("consumption")}
-                        style={{padding: "4px 10px"}}
+                        style={{ padding: "4px 10px" }}
                       >
                         {currentPersona.personaType === "key_stakeholder"
                           ? "의사결정권"
@@ -1314,21 +1323,21 @@ const PageAiPersona = () => {
                       <TabButtonType2
                         isActive={activeTab2 === "experience"}
                         onClick={() => setActiveTab2("experience")}
-                        style={{padding: "4px 10px"}}
+                        style={{ padding: "4px 10px" }}
                       >
                         {currentPersona.personaType === "key_stakeholder"
                           ? "관련경험"
                           : "사용경험"}
                       </TabButtonType2>
-                      <TabButtonType2
-                        isActive={activeTab2 === "requestinfo"}
-                        onClick={() => setActiveTab2("requestinfo")}
-                        style={{padding: "4px 10px"}}
-                      >
-                        {currentPersona.personaType === "key_stakeholder"
-                          ? "요청정보"
-                          : "요청정보"}
-                      </TabButtonType2>
+                      {currentPersona.personaType === "my_persona" && (
+                        <TabButtonType2
+                          isActive={activeTab2 === "requestinfo"}
+                          onClick={() => setActiveTab2("requestinfo")}
+                          style={{ padding: "4px 10px" }}
+                        >
+                          요청정보
+                        </TabButtonType2>
+                      )}
                     </TabWrapType2>
 
                     {activeTab2 === "lifestyle" && (
@@ -1425,7 +1434,7 @@ const PageAiPersona = () => {
                                 성별
                               </Body3>
                               <Body2 color="gray800" align="left">
-                                남자
+                                {currentPersona.customData.persona_gender}
                               </Body2>
                             </div>
 
@@ -1434,7 +1443,7 @@ const PageAiPersona = () => {
                                 연령
                               </Body3>
                               <Body2 color="gray800" align="left">
-                                20대
+                                {currentPersona.customData.persona_age}
                               </Body2>
                             </div>
                           </div>
@@ -1444,7 +1453,8 @@ const PageAiPersona = () => {
                               이유, 목적
                             </Body3>
                             <Body2 color="gray800" align="left">
-                              {customPersonaForm.purpose || "*해당정보 없음"}
+                              {currentPersona.customData.persona_reason ||
+                                "*해당정보 없음"}
                             </Body2>
                           </div>
 
@@ -1453,65 +1463,82 @@ const PageAiPersona = () => {
                               기본정보
                             </Body3>
                             <Body2 color="gray800" align="left">
-                              {customPersonaForm.additionalInfo || "*해당정보 없음"}
+                              {currentPersona.customData
+                                .persona_additionalInfo || "*해당정보 없음"}
                             </Body2>
                           </div>
 
-                          <div style={{gap: "12px"}}>
+                          <div style={{ gap: "12px" }}>
                             <Body3 color="gray500" align="left">
                               성격(OCEAN)
                             </Body3>
                             <div className="box-list">
                               <div>
                                 <Body2 color="gray800" align="center">
-                                  {oceanValues.openness === 0 ? "보수적" : "개방적"}
+                                  {
+                                    currentPersona.customData.persona_ocean
+                                      .type_o
+                                  }
                                 </Body2>
                                 <Sub3 color="gray300" align="center">
-                                  {oceanValues.openness === 0
+                                  {currentPersona.customData.persona_ocean
+                                    .type_o === "보수적"
                                     ? "conservative"
                                     : "open mind"}
                                 </Sub3>
                               </div>
                               <div>
                                 <Body2 color="gray800" align="center">
-                                  {oceanValues.conscientiousness === 0
-                                    ? "즉흥적"
-                                    : "성실함"}
+                                  {
+                                    currentPersona.customData.persona_ocean
+                                      .type_c
+                                  }
                                 </Body2>
                                 <Sub3 color="gray300" align="center">
-                                  {oceanValues.conscientiousness === 0
+                                  {currentPersona.customData.persona_ocean
+                                    .type_c === "즉흥적"
                                     ? "impromptu"
                                     : "conscientious"}
                                 </Sub3>
                               </div>
                               <div>
                                 <Body2 color="gray800" align="center">
-                                  {oceanValues.extraversion === 0 ? "내향적" : "외향적"}
+                                  {
+                                    currentPersona.customData.persona_ocean
+                                      .type_e
+                                  }
                                 </Body2>
                                 <Sub3 color="gray300" align="center">
-                                  {oceanValues.extraversion === 0
+                                  {currentPersona.customData.persona_ocean
+                                    .type_e === "내향적"
                                     ? "introvert"
                                     : "extrovert"}
                                 </Sub3>
                               </div>
                               <div>
                                 <Body2 color="gray800" align="center">
-                                  {oceanValues.agreeableness === 0
-                                    ? "독립적"
-                                    : "우호적"}
+                                  {
+                                    currentPersona.customData.persona_ocean
+                                      .type_a
+                                  }
                                 </Body2>
                                 <Sub3 color="gray300" align="center">
-                                  {oceanValues.agreeableness === 0
+                                  {currentPersona.customData.persona_ocean
+                                    .type_a === "독립적"
                                     ? "independent"
                                     : "friendly"}
                                 </Sub3>
                               </div>
                               <div>
                                 <Body2 color="gray800" align="center">
-                                  {oceanValues.neuroticism === 0 ? "무던함" : "신경적"}
+                                  {
+                                    currentPersona.customData.persona_ocean
+                                      .type_n
+                                  }
                                 </Body2>
                                 <Sub3 color="gray300" align="center">
-                                  {oceanValues.neuroticism === 0
+                                  {currentPersona.customData.persona_ocean
+                                    .type_n === "무던함"
                                     ? "simple"
                                     : "neurotic"}
                                 </Sub3>
@@ -1526,7 +1553,7 @@ const PageAiPersona = () => {
               </div>
 
               {!isLoading && (
-                  <ButtonGroup>
+                <ButtonGroup>
                   {["request", "ing"].includes(currentPersona.status) ? (
                     <Button DbExLarge Disabled Fill W100>
                       <Sub1 color="gray700">생성 중인 페르소나 입니다.</Sub1>
@@ -1559,8 +1586,8 @@ const PageAiPersona = () => {
                       </Button>
                     </>
                   )}
-                  </ButtonGroup>
-                )}
+                </ButtonGroup>
+              )}
             </div>
           </InterviewPopup>
         </>
@@ -1801,7 +1828,7 @@ const PageAiPersona = () => {
 
                   <div className="column">
                     <Body2 color="gray700" align="left">
-                    필수로 고려해야할 정보가 있다면 작성해주세요.{" "}
+                      필수로 고려해야할 정보가 있다면 작성해주세요.{" "}
                       {/* <span style={{ color: "red" }}>*</span> */}
                     </Body2>
                     <PopupContent>
@@ -2755,7 +2782,7 @@ const AiPersonaContent = styled.div`
 const AiPersonaInfo = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between; 
+  justify-content: space-between;
   gap: 20px;
   height: 28px;
 
