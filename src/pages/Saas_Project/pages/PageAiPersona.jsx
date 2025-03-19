@@ -246,8 +246,11 @@ const PageAiPersona = () => {
     if (currentPersona) {
       const updatedPersona = {
         id: currentPersona._id,
+        imageKey: `persona_${currentPersona.gender === "남성" ? "m" : "f"}_${
+          Math.floor(parseInt(currentPersona.age.replace("세", "")) / 10) * 10
+        }_${String(Math.floor(Math.random() * 10) + 1).padStart(2, "0")}`,
         ...Object.fromEntries(
-          Object.entries(currentPersona).filter(([key]) => key !== "_id")
+          Object.entries(currentPersona).filter(([key]) => key !== "_id" && key !== "imageKey")
         ),
       };
 
@@ -650,7 +653,6 @@ const PageAiPersona = () => {
           const dateB = b.timestamp;
           return dateB - dateA; // 최신 날짜가 위로
         });
-        console.log(sortedList, "sortedList");
         setPersonaListSaas(sortedList);
         // 전체 페르소나 통계 업데이트
         const activeCount = sortedList.filter(
