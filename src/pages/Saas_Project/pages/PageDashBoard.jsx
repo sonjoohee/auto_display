@@ -587,7 +587,7 @@ const PageDashBoard = () => {
                       </UlInfo>
                     </div>
                   </div>{" "}
-                  <div
+                  {/* <div
                     onClick={() => navigateToAiPersonaTab("my_persona")}
                     style={{ cursor: "pointer" }}
                   >
@@ -618,7 +618,7 @@ const PageDashBoard = () => {
                         </li>
                       </UlInfo>
                     </div>
-                  </div>
+                  </div> */}
                 </PersonaStatusWrap>
               ) : (
                 <PersonaStatusWrap
