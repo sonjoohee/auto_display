@@ -168,7 +168,7 @@ const OrganismPersonaList = ({
               >
                 Key Stakeholder
               </TabButtonType3>
-              <TabButtonType3
+              {/* <TabButtonType3
                 className={activeTab === "my_persona" ? "active" : ""}
                 onClick={() => handleTabClick("my_persona")}
                 isActive={activeTab === "my_persona"}
@@ -179,7 +179,7 @@ const OrganismPersonaList = ({
                 }
               >
                 My Persona
-            </TabButtonType3>
+            </TabButtonType3> */}
             </TabWrapType3>
             <ListBoxWrap Border>
               {personaListSaas
