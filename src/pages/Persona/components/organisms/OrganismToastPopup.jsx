@@ -36,35 +36,28 @@ import { InterviewXInterviewReportRequest } from "../../../../utils/indexedDB";
 import { InterviewXInterviewReportAdditionalRequest } from "../../../../utils/indexedDB";
 
 const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
-  const [projectSaas, ] = useAtom(PROJECT_SAAS);
+  const [projectSaas] = useAtom(PROJECT_SAAS);
   const project = projectSaas;
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
   const [, setReportId] = useAtom(PROJECT_REPORT_ID);
-  const [, setIsPersonaAccessible] = useAtom(
-    IS_PERSONA_ACCESSIBLE
-  );
+  const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
   const [, setInterviewReport] = useAtom(INTERVIEW_REPORT);
-  const [, setInterviewReportAdditional] = useAtom(
-    INTERVIEW_REPORT_ADDITIONAL
-  );
+  const [, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
   const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
-  const [projectId, ] = useAtom(PROJECT_ID);
-  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [projectId] = useAtom(PROJECT_ID);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
-  const [selectedInterviewPurpose, ] = useAtom(
-    SELECTED_INTERVIEW_PURPOSE
-  );
-  const [personaList, ] = useAtom(PERSONA_LIST);
+  const [selectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
+  const [personaList] = useAtom(PERSONA_LIST);
   const [interviewQuestionList, setInterviewQuestionList] = useAtom(
     INTERVIEW_QUESTION_LIST
   );
-  const [projectTotalInfo, ] = useAtom(PROJECT_TOTAL_INFO);
-  const [projectCreateInfo, ] =
-    useAtom(PROJECT_CREATE_INFO);
+  const [projectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [projectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
 
   const navigate = useNavigate();
 
@@ -86,7 +79,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const [regenerateCount2, setRegenerateCount2] = useState(0);
   const [showRegenerateButton1, setShowRegenerateButton1] = useState(false);
   const [showRegenerateButton2, setShowRegenerateButton2] = useState(false);
-
 
   //저장되었던 인터뷰 로드
   useEffect(() => {
@@ -318,7 +310,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       retryCount = 0;
 
       while (retryCount < maxRetries) {
-      
         //인터뷰 결과 추가 보고서 요청 수정 예정
         responseReportAdditional =
           await InterviewXInterviewReportAdditionalRequest(
@@ -439,7 +430,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               }
             }
 
-
             const personaInfo = {
               id: `saas_${personaList.selected[i]._id}`,
               name: personaList.selected[i].personaName,
@@ -447,6 +437,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               lifestyle: personaList.selected[i].lifestyle,
               characteristics: personaList.selected[i].personaCharacteristics,
               consumption_pattern: personaList.selected[i].consumptionPattern,
+              personaType: personaList.selected[i].personaType,
+              typeIndex: personaList.selected[i].type,
               request_persona_type: "saas",
             };
 
@@ -473,7 +465,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 !response.response.hasOwnProperty("answer") ||
                 !response.response.answer)
             ) {
-        
               response = await InterviewXPersonaMultipleInterviewRequest(
                 data,
                 isLoggedIn
@@ -801,7 +792,6 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     }
     setSelectedPersonaList(personaList.selected);
     navigate(`/Persona/4`, { replace: true });
-
   };
 
   return (
