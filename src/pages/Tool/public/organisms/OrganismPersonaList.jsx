@@ -22,7 +22,7 @@ const OrganismPersonaList = ({
   onPersonaSelect,
 }) => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("my_persona");
+  const [activeTab, setActiveTab] = useState("my_favorite");
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
@@ -119,18 +119,6 @@ const OrganismPersonaList = ({
         <ToolPublicPersonaWrap>
           <AiPersonaContent>
           <TabWrapType3 Border>
-              <TabButtonType3
-                className={activeTab === "my_persona" ? "active" : ""}
-                onClick={() => handleTabClick("my_persona")}
-                isActive={activeTab === "my_persona"}
-                style={
-                  activeTab === "my_persona"
-                    ? { color: "#333333" }
-                    : { color: "#999999" }
-                }
-              >
-                My Persona
-            </TabButtonType3>
           
               <TabButtonType3
                 className={activeTab === "my_favorite" ? "active" : ""}
@@ -180,6 +168,18 @@ const OrganismPersonaList = ({
               >
                 Key Stakeholder
               </TabButtonType3>
+              <TabButtonType3
+                className={activeTab === "my_persona" ? "active" : ""}
+                onClick={() => handleTabClick("my_persona")}
+                isActive={activeTab === "my_persona"}
+                style={
+                  activeTab === "my_persona"
+                    ? { color: "#333333" }
+                    : { color: "#999999" }
+                }
+              >
+                My Persona
+            </TabButtonType3>
             </TabWrapType3>
             <ListBoxWrap Border>
               {personaListSaas
