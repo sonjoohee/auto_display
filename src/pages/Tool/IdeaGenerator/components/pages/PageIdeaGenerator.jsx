@@ -154,6 +154,7 @@ const PageIdeaGenerator = () => {
   const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
   const [activeAnalysisTab, ] = useState("summary");
   const [isEditingBusiness, setIsEditingBusiness] = useState(false);
+  const [toolSteps, setToolSteps] = useState(0);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -168,6 +169,7 @@ const PageIdeaGenerator = () => {
       if (toolLoading) {
      
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
+        setToolSteps(toolStep ?? 1);
 
         // 비즈니스 정보 설정 (Step 1)
         if (ideaGeneratorInfo) {
@@ -246,8 +248,9 @@ const PageIdeaGenerator = () => {
             }))
           );
         }
-
+        setToolStep(0);
         return;
+
       }
     };
     interviewLoading();
@@ -556,7 +559,7 @@ const PageIdeaGenerator = () => {
 
       setIdeaGeneratorFinalReport(finalReportData);
 
-      setToolStep(4);
+      setToolSteps(4);
 
       // 클러스터링과 결과 보고서 저장
       updateToolOnServer(
@@ -620,8 +623,8 @@ const PageIdeaGenerator = () => {
   };
 
   const handleSelectBoxClick = (selectBoxId, ref) => {
-    // Don't open dropdown if toolStep >= 1 for customerList
-    if (toolStep >= 1) {
+    // Don't open dropdown if toolSteps >= 1 for customerList
+    if (toolSteps >= 1) {
       return;
     }
 
@@ -667,7 +670,7 @@ const PageIdeaGenerator = () => {
   };
 
   const handlePersonaSelectionChange = (_id) => {
-    if (toolStep >= 2) return;
+    if (toolSteps >= 2) return;
     setSelectedPersonasSaas(
       (prev) => (prev.includes(_id) ? [] : [_id]) // 이미 선택된 경우 해제, 그렇지 않으면 새로 선택
     );
@@ -681,8 +684,7 @@ const PageIdeaGenerator = () => {
         coreValue: (targetCustomers || []).filter((value) => value !== ""),
       });
 
-      setToolStep(1);
-
+      setToolSteps(1);
       const responseToolId = await createToolOnServer(
         {
           projectId: projectSaas?._id || "",
@@ -723,7 +725,7 @@ const PageIdeaGenerator = () => {
         );
       }
 
-      setToolStep(2);
+      setToolSteps(2);
       setIdeaGeneratorKnowTarget(selectedInterviewType);
       updateToolOnServer(
         toolId,
@@ -736,7 +738,7 @@ const PageIdeaGenerator = () => {
       );
       fetchIdeaGeneratorIdea();
     } else if (currentStep === 3) {
-      setToolStep(3);
+      setToolSteps(3);
       // updateToolOnServer(
       //   toolId,
       //   {
@@ -858,7 +860,7 @@ const PageIdeaGenerator = () => {
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
-    if (toolStep >= 2) return;
+    if (toolSteps >= 2) return;
     setSelectedPersonaButtons((prev) => {
       const newSelected = { ...prev, [personaId]: !prev[personaId] };
       if (newSelected[personaId]) {
@@ -1128,7 +1130,7 @@ const PageIdeaGenerator = () => {
                           handleSelectBoxClick("customerList", customerListRef)
                         }
                         style={{
-                          cursor: toolStep >= 1 ? "not-allowed" : "pointer",
+                          cursor: toolSteps >= 1 ? "not-allowed" : "pointer",
                         }}
                       >
                         <Body2
@@ -1158,7 +1160,7 @@ const PageIdeaGenerator = () => {
                         <SelectBoxList dropUp={dropUpStates.customerList}>
                           {customerValueList.length === 0 ? (
                             <SelectBoxItem
-                              disabled={toolStep >= 1}
+                              disabled={toolSteps >= 1}
                               // onClick={() =>
                               //   handlePurposeSelect(
                               //     "진행된 프로젝트가 없습니다. 고객 핵심 가치 분석을 먼저 진행해주세요",
@@ -1174,7 +1176,7 @@ const PageIdeaGenerator = () => {
                           ) : (
                             customerValueList.map((item, index) => (
                               <SelectBoxItem
-                                disabled={toolStep >= 1}
+                                disabled={toolSteps >= 1}
                                 key={index}
                                 onClick={() => {
                                   handlePurposeSelect(
@@ -1213,7 +1215,7 @@ const PageIdeaGenerator = () => {
                     <Title>
                       <Body1 color="gray700">비즈니스 설명</Body1>
                       {!isEditingBusiness ? (
-                        <IconButton onClick={handleEditBusinessClick} disabled={toolStep >= 1}>
+                        <IconButton onClick={handleEditBusinessClick} disabled={toolSteps >= 1}>
                           <img src={images.PencilSquare} alt="" />
                           <span>수정하기</span>
                           </IconButton>
@@ -1239,7 +1241,7 @@ const PageIdeaGenerator = () => {
                           value={ideaGeneratorEditingBusinessText}
                           onChange={(e) => setIdeaGeneratorEditingBusinessText(e.target.value)}
                           status="valid"
-                          disabled={toolStep >= 1 }
+                          disabled={toolSteps >= 1 }
                         />
                         <EditButtonGroup>
                           <IconButton onClick={handleUndoBusinessClick}>
@@ -1259,7 +1261,7 @@ const PageIdeaGenerator = () => {
                     {targetCustomers.map((customer, index) => (
                       <DeleteFormWrap key={index}>
                         <CustomInput
-                          disabled={toolStep >= 1}
+                          disabled={toolSteps >= 1}
                           type="text"
                           placeholder="핵심 가치를 작성해주세요 (예: 안전한 송금 등)"
                           value={customer}
@@ -1267,10 +1269,10 @@ const PageIdeaGenerator = () => {
                             handleTargetCustomerChange(index, e.target.value)
                           }
                         />
-                        <DeleteButton onClick={() => handleDelete(index)} disabled={toolStep >= 1} />
+                        <DeleteButton onClick={() => handleDelete(index)} disabled={toolSteps >= 1} />
                       </DeleteFormWrap>
                     ))}
-                     {targetCustomers.length < 10 && toolStep < 1 && (
+                     {targetCustomers.length < 10 && toolSteps < 1 && (
                       <Button
                         DbExLarge
                         More
@@ -1293,7 +1295,7 @@ const PageIdeaGenerator = () => {
                   disabled={
                     targetCustomers.filter((customer) => customer.trim() !== "")
                       .length === 0 ||
-                    toolStep >= 1
+                    toolSteps >= 1
                   }
                 >
                   다음
@@ -1389,7 +1391,7 @@ const PageIdeaGenerator = () => {
                     Fill
                     disabled={
                       selectedPersonasSaas.length === 0 ||
-                      toolStep >= 2
+                      toolSteps >= 2
                     }
                     onClick={() => handleNextStep(2)}
                   >
@@ -1449,7 +1451,7 @@ const PageIdeaGenerator = () => {
                       Round
                       Fill
                       disabled={
-                        toolStep >= 3 ||
+                        toolSteps >= 3 ||
                         ideaGeneratorIdea.length <
                           ideaGeneratorInfo.coreValue.length
                       }

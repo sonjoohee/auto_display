@@ -169,6 +169,7 @@ const PageCustomerValueAnalyzer = () => {
   const [, setApiCallCompletedFactor] = useState(false);
   // 상태 관리를 위한 state 추가
   const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
+  const [toolSteps, setToolSteps] = useState(0);
 
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -184,6 +185,7 @@ const PageCustomerValueAnalyzer = () => {
       if (toolLoading) {
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
+        setToolSteps(toolStep ?? 1);
 
         // 비즈니스 정보 설정 (Step 1)
         if (customerValueAnalyzerInfo) {
@@ -288,14 +290,11 @@ const PageCustomerValueAnalyzer = () => {
         }
         // 고객 여정 맵 설정 (Step 3)
         if (Array.isArray(customerValueAnalyzerJourneyMap)) {
-          console.log('원본 데이터:', customerValueAnalyzerJourneyMap);
+
           
           const formattedJourneyMaps = customerValueAnalyzerJourneyMap.map(journeyMap => {
             if (journeyMap.mermaid) {
-              console.log('포맷 전 mermaid:', journeyMap.mermaid);
               const formatted = formatMermaidData(journeyMap.mermaid);
-              console.log('포맷 후 mermaid:', formatted);
-              
               return {
                 ...journeyMap,
                 mermaid: formatted
@@ -304,10 +303,8 @@ const PageCustomerValueAnalyzer = () => {
             return journeyMap;
           });
           
-          console.log('최종 포맷된 데이터:', formattedJourneyMaps);
           setCustomerValueAnalyzerJourneyMap(formattedJourneyMaps);
         }
-        console.log("customerValueAnalyzerJourneyMap", customerValueAnalyzerJourneyMap);
         if (
           Array.isArray(customerValueAnalyzerFactor) &&
           customerValueAnalyzerFactor.length > 0
@@ -328,6 +325,7 @@ const PageCustomerValueAnalyzer = () => {
             customerValueAnalyzerFinalReport ?? {}
           );
         }
+        setToolStep(0);
 
         return;
       }
@@ -388,11 +386,11 @@ const PageCustomerValueAnalyzer = () => {
     if (
       activeTab === 2 &&
       customerValueAnalyzerPersona.length > 0 &&
-      toolStep < 2 &&
+      toolSteps < 2 &&
       !apiCallCompleted &&
       (customerValueAnalyzerJourneyMap?.length || 0) === 0
     ) {
-      // toolStep이 2보다 작을 때만 API 호출
+      // toolSteps이 2보다 작을 때만 API 호출
       const initialLoadingStates = customerValueAnalyzerPersona.reduce(
         (acc, _, index) => {
           acc[index] = "waiting";
@@ -492,7 +490,7 @@ const PageCustomerValueAnalyzer = () => {
         setApiCallCompleted(true); // API 호출 완료 상태로 설정
       };
       processSequentially();
-    } else if (activeTab === 2 && toolStep >= 2) {
+    } else if (activeTab === 2 && toolSteps >= 2) {
       // 이미 완료된 단계인 경우 카드 상태만 completed로 설정
       const completedStates = customerValueAnalyzerPersona.reduce(
         (acc, _, index) => {
@@ -604,7 +602,7 @@ const PageCustomerValueAnalyzer = () => {
         isLoggedIn
       );
       setToolId(responseToolId);
-      setToolStep(1);
+      setToolSteps(1);
 
       setCustomerValueAnalyzerPersona(
         (response.response.customer_value_persona || []).slice(
@@ -675,11 +673,10 @@ const PageCustomerValueAnalyzer = () => {
   };
 
   const handlePersonaSelectionChange = (_id) => {
-    if (toolStep >= 1) return;
-    // console.log("🚀 ~ handlePersonaSelectionChange ~ _id:", _id);
-    // if (toolStep >= 2) return;
+    if (toolSteps >= 1) return;
+
     setSelectedPersonasSaas((prev) => {
-      // console.log("🚀 ~ setSelectedPersonasSaas ~ prev:", prev);
+      
       if (prev.includes(_id)) {
         return prev.filter((id) => id !== _id);
       } else {
@@ -690,7 +687,7 @@ const PageCustomerValueAnalyzer = () => {
   };
 
   const handleCheckboxChange = (index) => {
-    if (toolStep >= 2) return;
+    if (toolSteps >= 2) return;
     setSelectedPersonas((prev) => {
       if (prev.includes(index)) {
         return prev.filter((id) => id !== index);
@@ -717,7 +714,7 @@ const PageCustomerValueAnalyzer = () => {
       },
       isLoggedIn
     );
-    setToolStep(2);
+    setToolSteps(2);
     handleNextStep(2);
     setApiCallCompletedFactor(false);
     try {
@@ -862,7 +859,7 @@ const PageCustomerValueAnalyzer = () => {
         },
         isLoggedIn
       );
-      setToolStep(3);
+      setToolSteps(3);
       setIsLoading(true);
       handleNextStep(3);
 
@@ -985,7 +982,7 @@ const PageCustomerValueAnalyzer = () => {
         finalReportResponse.response.customer_value_final_report
       );
 
-      setToolStep(4);
+      setToolSteps(4);
       await updateToolOnServer(
         toolId,
         {
@@ -1134,7 +1131,7 @@ const PageCustomerValueAnalyzer = () => {
 
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
-    if (toolStep >= 1) return;
+    if (toolSteps >= 1) return;
     if (
       selectedPersonasSaas.length >= 5 &&
       !selectedPersonaButtons[personaId]
@@ -1393,14 +1390,14 @@ const PageCustomerValueAnalyzer = () => {
                           <SelectBox style={{ paddingRight: "20px" }}>
                             <SelectBoxTitle
                               onClick={() =>
-                                toolStep >= 1
+                                toolSteps >= 1
                                   ? null
                                   : setIsSelectBoxOpen(!isSelectBoxOpen)
                               }
                               None
                               style={{
                                 cursor:
-                                  toolStep >= 1 ? "not-allowed" : "pointer",
+                                  toolSteps >= 1 ? "not-allowed" : "pointer",
                               }}
                             >
                               {selectedPurposes?.analysisScope ? (
@@ -1440,7 +1437,7 @@ const PageCustomerValueAnalyzer = () => {
                                 width="24px"
                                 height="24px"
                                 color={
-                                  toolStep >= 1
+                                  toolSteps >= 1
                                     ? palette.gray300
                                     : palette.gray500
                                 }
@@ -1542,7 +1539,7 @@ const PageCustomerValueAnalyzer = () => {
                         disabled={
                           selectedPurposes.analysisScope === "" ||
                           getSelectedPersonaCount() === 0 ||
-                          toolStep >= 1
+                          toolSteps >= 1
                         }
                         onClick={() => handleSubmitBusinessInfo()}
                       >
@@ -1617,7 +1614,7 @@ const PageCustomerValueAnalyzer = () => {
                       Fill
                       disabled={
                         selectedPersonas.length === 0 ||
-                        toolStep >= 2 ||
+                        toolSteps >= 2 ||
                         customerValueAnalyzerJourneyMap.length !==
                           customerValueAnalyzerInfo.targetList.length
                       }
@@ -1686,7 +1683,7 @@ const PageCustomerValueAnalyzer = () => {
                       Primary
                       Round
                       Fill
-                      disabled={toolStep >= 3 ||
+                      disabled={toolSteps >= 3 ||
                         !Array.isArray(customerValueAnalyzerFactor) ||
                         customerValueAnalyzerFactor.length === 0 ||
                         customerValueAnalyzerFactor.length !==

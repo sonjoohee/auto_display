@@ -117,6 +117,7 @@ const PageDesignAnalysis = () => {
   });
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [isEditingBusiness, setIsEditingBusiness] = useState(false);
+  const [toolSteps, setToolSteps] = useState(0);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -160,6 +161,7 @@ const PageDesignAnalysis = () => {
 
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
+        setToolSteps(toolStep ?? 1);
 
         // 비즈니스 정보 설정 (Step 1)
         if (designAnalysisBusinessInfo) {
@@ -209,7 +211,7 @@ const PageDesignAnalysis = () => {
         ) {
           // designAnalysisEmotionTarget이 빈 객체이고, designAnalysisEmotionScale이 빈 배열인 경우
           setActiveTab(2);
-          setToolStep(1);
+          setToolSteps(1);
           setCompletedSteps(completedStepsArray.slice(0, -1));
         } else {
           if (designAnalysisEmotionTarget) {
@@ -220,6 +222,7 @@ const PageDesignAnalysis = () => {
             setDesignAnalysisEmotionScale(designAnalysisEmotionScale ?? {});
           }
         }
+        setToolStep(0);
 
         return;
       }
@@ -229,7 +232,7 @@ const PageDesignAnalysis = () => {
   }, [toolLoading]);
 
   const handleCheckboxChange = (personaId) => {
-    if (toolStep >= 2) return;
+    if (toolSteps >= 2) return;
     setSelectedPersonas((prev) => {
       // 하나만 선택되도록 변경, 다른 항목 선택 시 해당 항목으로 변경
       if (prev.includes(personaId)) {
@@ -297,7 +300,7 @@ const PageDesignAnalysis = () => {
       );
 
       setToolId(responseToolId);
-      setToolStep(1);
+      setToolSteps(1);
 
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
       setDesignAnalysisEmotionAnalysis(
@@ -347,7 +350,7 @@ const PageDesignAnalysis = () => {
 
   const handleSubmitPersonas = async () => {
     handleNextStep(2);
-    setToolStep(2);
+    setToolSteps(2);
     try {
       const selectedPersonaData = designAnalysisEmotionAnalysis.filter(
         (persona, index) => selectedPersonas.includes(index)
@@ -636,6 +639,7 @@ const PageDesignAnalysis = () => {
                 Num3
                 isActive={activeTab >= 1}
                 onClick={() => setActiveTab(1)}
+                disabled={isLoading || isLoadingReport}
               >
                 <span>01</span>
                 <div className="text">
@@ -648,7 +652,7 @@ const PageDesignAnalysis = () => {
                 Num3
                 isActive={activeTab >= 2}
                 onClick={() => completedSteps.includes(1) && setActiveTab(2)}
-                disabled={!completedSteps.includes(1)}
+                disabled={!completedSteps.includes(1) ||  isLoading || isLoadingReport }
               >
                 <span>02</span>
                 <div className="text">
@@ -664,7 +668,7 @@ const PageDesignAnalysis = () => {
                 Num3
                 isActive={activeTab >= 3}
                 onClick={() => completedSteps.includes(2) && setActiveTab(3)}
-                disabled={!completedSteps.includes(2)}
+                disabled={!completedSteps.includes(2) ||  isLoading || isLoadingReport }
               >
                 <span>03</span>
                 <div className="text">
@@ -707,7 +711,7 @@ const PageDesignAnalysis = () => {
                         <Title>
                           <Body1 color="gray700">비즈니스 설명</Body1>
                           {!isEditingBusiness ? (
-                            <IconButton onClick={handleEditBusinessClick} disabled={toolStep >= 1}>
+                            <IconButton onClick={handleEditBusinessClick} disabled={toolSteps >= 1}>
                               <img src={images.PencilSquare} alt="" />
                               <span>수정하기</span>
                             </IconButton>
@@ -734,7 +738,7 @@ const PageDesignAnalysis = () => {
                               value={businessDescription}
                               onChange={(e) => setBusinessDescription(e.target.value)}
                               status="valid"
-                              disabled={toolStep >= 1}
+                              disabled={toolSteps >= 1}
                             />
                             <EditButtonGroup>
                               <IconButton onClick={handleUndoBusinessClick}>
@@ -756,7 +760,7 @@ const PageDesignAnalysis = () => {
                           multiple={true}
                           canRemove={true}
                           canRestart={false}
-                          disabled={toolStep >= 1}
+                          disabled={toolSteps >= 1}
                           accept="image/*"
                           maxSizeBytes={20 * 1024 * 1024}
                           inputWithFilesContent={
@@ -826,7 +830,7 @@ const PageDesignAnalysis = () => {
                       Fill
                       Round
                       onClick={handleSubmitBusinessInfo}
-                      disabled={!isRequiredFieldsFilled() || toolStep >= 1}
+                      disabled={!isRequiredFieldsFilled() || toolSteps >= 1}
                     >
                       다음
                     </Button>
@@ -873,7 +877,7 @@ const PageDesignAnalysis = () => {
                                   subtitle={persona.reason}
                                   isSelected={selectedPersonas.includes(index)}
                                   onSelect={() => handleCheckboxChange(index)}
-                                  disabled={toolStep >= 2 ? true : false}
+                                  disabled={toolSteps >= 2 ? true : false}
                                 />
                               );
                             }
@@ -899,7 +903,7 @@ const PageDesignAnalysis = () => {
                           Round
                           Fill
                           disabled={
-                            toolStep >= 2 || selectedPersonas.length === 0
+                            toolSteps >= 2 || selectedPersonas.length === 0
                           }
                           onClick={handleSubmitPersonas}
                         >
