@@ -195,13 +195,37 @@ const MoleculeSignupForm = () => {
     // 상용 이메일 체크 로직 추가
     const commonEmailDomains = [
       "gmail.com",
-      "naver.com",
-      "daum.net",
       "yahoo.com",
       "hotmail.com",
       "outlook.com",
+      "aol.com",
+      "zoho.com",
+      "mail.com",
+      "gmx.com",
+      "yandex.com",
+      "protonmail.com",
       "icloud.com",
-    ]; // 상용 이메일 도메인 예시
+      "fastmail.com",
+      "hushmail.com",
+      "inbox.com",
+      "lycos.com",
+      "rediffmail.com",
+      "mail.ru",
+      "qq.com",
+      "163.com",
+      "126.com",
+      "sina.com",
+      "sohu.com",
+      "yeah.net",
+      "21cn.com",
+      "tom.com",
+      "foxmail.com",
+      "live.com",
+      "msn.com",
+      "naver.com",  // 한국에서 널리 사용되는 이메일 도메인
+      "daum.net",   // 한국에서 널리 사용되는 이메일 도메인
+      "nate.com"    // 한국에서 널리 사용되는 이메일 도메인
+    ];
     const emailDomain = email.split("@")[1];
     if (commonEmailDomains.includes(emailDomain)) {
       setErrorStatus("상용 이메일은 사용할 수 없습니다.");

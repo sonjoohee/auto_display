@@ -25,7 +25,6 @@ import {
   PROJECT_SAAS,
 } from "../../../pages/AtomStates";
 import { UserCreditInfo } from "../../../utils/indexedDB";
-// import { AlarmCreate } from '../../../utils/indexedDB';
 import { AlarmList } from "../../../utils/indexedDB";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 const MoleculeHeader = () => {
@@ -57,13 +56,13 @@ const MoleculeHeader = () => {
   // const isRootPage = location.pathname === "/";
   const isRootPage = location.pathname === "/Project";
   // MyProject 경로 체크 추가
-  const isMyProjectPage = location.pathname === "/MyProject";
+  // const isMyProjectPage = location.pathname === "/MyProject";
 
-  // MyProfile 경로 체크 추가
-  const isMyProfilePage = location.pathname === "/MyProfile";
+  // // MyProfile 경로 체크 추가
+  // const isMyProfilePage = location.pathname === "/MyProfile";
 
-  // Payment 경로 체크 추가
-  const isPaymentPage = location.pathname === "/Payment";
+  // // Payment 경로 체크 추가
+  // const isPaymentPage = location.pathname === "/Payment";
 
   // TargetDiscovery 경로 체크 추가
   const isTargetDiscoveryPage = location.pathname === "/TargetDiscovery";
@@ -74,24 +73,24 @@ const MoleculeHeader = () => {
 
   const isDesignAnalysisPage = location.pathname === "/DesignAnalysis";
   
-  const toolList = location.pathname === "/Tool";
+  const isDashBoardPage = location.pathname === "/DashBoard";
 
   // IdeaGenerator 경로 체크 추가
   const isIdeaGeneratorPage = location.pathname === "/IdeaGenerator";
 
-  const isPersona2Page = location.pathname === "/Persona/2";
+  // const isPersona2Page = location.pathname === "/Persona/2";
 
-  const isPersona3Page = location.pathname === "/Persona/3";
+  // const isPersona3Page = location.pathname === "/Persona/3";
 
-  const isPersona3PageSelect = location.pathname === "/Persona/3/Select";
+  // const isPersona3PageSelect = location.pathname === "/Persona/3/Select";
 
-  const isPersona3SinglePage = location.pathname === "/Persona3Single";
+  // const isPersona3SinglePage = location.pathname === "/Persona3Single";
 
-  const isPersona3MultiplePage = location.pathname === "/Persona3Multiple";
+  // const isPersona3MultiplePage = location.pathname === "/Persona3Multiple";
 
-  const isPersona4PageSingle = location.pathname === "/Persona/4/Single";
+  // const isPersona4PageSingle = location.pathname === "/Persona/4/Single";
 
-  const isPersona4Page = location.pathname === "/Persona/4";
+  // const isPersona4Page = location.pathname === "/Persona/4";
 
   const isProjectCreatePage = location.pathname === "/ProjectCreate";
 
@@ -115,16 +114,6 @@ const MoleculeHeader = () => {
       setShowRedDot(false);
     }
 
-    // if (showAlert) {
-    //   setIsClosing(true);
-    //   setTimeout(() => {
-    //     setShowAlert(false);
-    //     setIsClosing(false);
-    //   }, 300);
-    // } else {
-    //   setShowAlert(true);
-    //   setShowCreditToggle(false);
-    // }
   };
 
   // const handleBusinessAnalysisToggle = () => {
@@ -149,6 +138,7 @@ const MoleculeHeader = () => {
       try {
         if (isLoggedIn) {
           const credits = await UserCreditInfo(true);
+
           if (credits) {
             setUserCredits(credits);
             setIsLoggedInState(true);
@@ -181,16 +171,30 @@ const MoleculeHeader = () => {
     }
     try {
       const response = await AlarmList(isLoggedIn); // AlarmCreate API 호출
-      // console.log(response);
+ 
+      const userInfo = await UserCreditInfo(true);
+
+      const readTimeStamp = userInfo?.read_timestamp;
 
       if (response && response.status === "success") {
-        const hasNewAlerts = response.alarms.some((alarm) => alarm.isNew); // isNew가 true인 알림이 있는지 확인
-        setShowRedDot(hasNewAlerts); // 빨간 점 상태 업데이트
         setAlarms(response.alarms); // Store alarms in state
-        // console.log(alarms);
-      } else {
-        setShowRedDot(false);
+        const createTimeStamp = response?.alarms[0]?.createTimeStamp;
+
+        if (readTimeStamp < createTimeStamp) {
+          setShowRedDot(true);
+    
+        } else {
+          setShowRedDot(false);
+        }
       }
+      // if (response && response.status === "success") {
+      //   const hasNewAlerts = response.alarms.some((alarm) => alarm.isNew); // isNew가 true인 알림이 있는지 확인
+      //   setShowRedDot(hasNewAlerts); // 빨간 점 상태 업데이트
+      //   setAlarms(response.alarms); // Store alarms in state
+      //   // console.log(alarms);
+      // } else {
+      //   setShowRedDot(false);
+      // }
     } catch (error) {
       // console.error("알림 조회 오류 발생:", error);
       setShowRedDot(false);
@@ -298,56 +302,26 @@ const MoleculeHeader = () => {
   return (
     <>
       <HeaderWrap>
-        {(personaStep > 0 ||
-          isMyProjectPage ||
-          isMyProfilePage ||
-          isPaymentPage ||
-          isTargetDiscoveryPage ||
-          isIdeaGeneratorPage ||
-          isCustomerValueAnalyzerPage ||
-          isDesignAnalysisPage ||
-          isProjectCreatePage) && (
+        {!isRootPage && !isDashBoardPage && (
           <>
             <Title>
-              {isMyProjectPage
-                ? "작업관리"
-                : isMyProfilePage
-                ? "계정관리"
-                : isPaymentPage
-                ? "크레딧"
-                : isPersona2Page && projectSaas.projectTitle
-                ? projectSaas.projectTitle
-                : isPersona3Page && projectSaas.projectTitle
-                ? projectSaas.projectTitle
-                : isPersona3PageSelect && projectSaas.projectTitle
-                ? projectSaas.projectTitle
-                : isPersona3SinglePage && projectSaas.projectTitle
-                ? projectSaas.projectTitle
-                : isPersona3MultiplePage && projectSaas.projectTitle
-                ? projectSaas.projectTitle
-                : isPersona4Page && projectSaas.projectTitle
-                ? projectSaas.projectTitle
-                : isPersona4PageSingle && projectSaas.projectTitle
-                ? projectSaas.projectTitle
-                : isTargetDiscoveryPage
-                ? `타겟 탐색기 - ${projectSaas.projectTitle}`
-                : isTargetDiscoveryPage && projectSaas.projectTitle
-                ? `타겟 탐색기 - ${projectSaas.projectTitle}`
-                : isIdeaGeneratorPage && projectSaas.projectTitle
-                ? `아이디어 생성기 - ${projectSaas.projectTitle}`
-                : isIdeaGeneratorPage && !projectSaas.projectTitle
-                ? "아이디어 생성기"
-                : isCustomerValueAnalyzerPage && projectSaas.projectTitle
-                ? `고객 핵심 가치 분석기 - ${projectSaas.projectTitle}`
-                : isCustomerValueAnalyzerPage && !projectSaas.projectTitle
-                ? "고객 핵심 가치 분석기"
-                : isDesignAnalysisPage && projectSaas.projectTitle
-                ? `디자인 감정 분석기 - ${projectSaas.projectTitle}`
-                : isDesignAnalysisPage && !projectSaas.projectTitle
-                ? "디자인 감정 분석기"
-                : isProjectCreatePage
-                ? "새 프로젝트 생성"
-                : projectSaas.projectTitle}
+            {isTargetDiscoveryPage && projectSaas.projectTitle
+              ? `타겟 탐색기 - ${projectSaas.projectTitle}`
+              : isIdeaGeneratorPage && projectSaas.projectTitle
+              ? `아이디어 생성기 - ${projectSaas.projectTitle}`
+              : isIdeaGeneratorPage
+              ? "아이디어 생성기"
+              : isCustomerValueAnalyzerPage && projectSaas.projectTitle
+              ? `고객 핵심 가치 분석기 - ${projectSaas.projectTitle}`
+              : isCustomerValueAnalyzerPage
+              ? "고객 핵심 가치 분석기"
+              : isDesignAnalysisPage && projectSaas.projectTitle
+              ? `디자인 감정 분석기 - ${projectSaas.projectTitle}`
+              : isDesignAnalysisPage
+              ? "디자인 감정 분석기"
+              : isProjectCreatePage
+              ? "새 프로젝트 생성"
+              : projectSaas.projectTitle}
               {/* {(isPersona3Page ||
                 isPersona3SinglePage ||
                 isPersona3MultiplePage ||
@@ -506,11 +480,6 @@ const MoleculeHeader = () => {
                 </CreditToggle>
               )}
             </TotalCreditToggle>
-
-            {/*   
-            <Notify Alarm  onClick={handleAlertToggle}>
-              <img src={images.IconBell} alt="" />
-            </Notify> */}
 
             <Notify Alarm={showRedDot} onClick={handleAlertToggle}>
               <img src={images.IconBell} alt="" />
@@ -873,7 +842,7 @@ const AlertContent = styled.div`
   align-items: flex-start;
   width: 100%;
   overflow-y: auto;
-  max-height: 500px;
+  max-height: 460px;
 `;
 
 const Messageox = styled.div`

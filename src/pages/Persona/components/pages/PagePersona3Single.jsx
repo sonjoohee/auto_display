@@ -60,19 +60,17 @@ const FULL_DEFINITION_TEXT =
 
 const PagePersona3Single = () => {
 
+  const navigate = useNavigate();
+
   const [, setUserCredits] = useAtom(USER_CREDITS);
   const [eventState, ] = useAtom(EVENT_STATE);
   const [eventTitle, ] = useAtom(EVENT_TITLE);
   const [trialState, ] = useAtom(TRIAL_STATE);
   const [creditCustomTheory, ] =useAtom(CREDIT_CUSTOM_THEORY);
   const [customTheoryData, ] = useAtom(CUSTOM_THEORY_DATA);
-  const [, setPersonaButtonState3] = useAtom(
-    PERSONA_BUTTON_STATE_3
-  );
+  const [, setPersonaButtonState3] = useAtom(PERSONA_BUTTON_STATE_3);
   const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
-  const [, setIsPersonaAccessible] = useAtom(
-    IS_PERSONA_ACCESSIBLE
-  );
+  const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
   const [businessAnalysis, ] = useAtom(BUSINESS_ANALYSIS);
   const [, setPersonaStep] = useAtom(PERSONA_STEP);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
@@ -96,9 +94,6 @@ const PagePersona3Single = () => {
     radio5: false,
   });
   const [, setShowNewListBox] = useState(false);
-
-  const navigate = useNavigate();
-  
   const [showInterviewReady, setShowInterviewReady] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [showEditPersona, setShowEditPersona] = useState(false);
@@ -106,6 +101,8 @@ const PagePersona3Single = () => {
   const [showInterviewTypeAlert, setShowInterviewTypeAlert] = useState(false);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
+  const [activeTab, ] = useState(1);
+
 
   const handlePopupClose = () => {
     setShowInterviewReady(false);
@@ -269,10 +266,8 @@ const PagePersona3Single = () => {
         mount: creditCustomTheory,
       };
 
-      const creditUseResponse = await UserCreditUse(
-        creditUsePayload,
-        isLoggedIn
-      );
+      await UserCreditUse(creditUsePayload, isLoggedIn);
+
       setShowRequestPopup(false);
       setShowCustomButton(false);
       setCustomizations((prev) => [
@@ -347,8 +342,7 @@ const PagePersona3Single = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
-  const [activeTab, setActiveTab] = useState(1);
-  const completedSteps = [1, 2, 3, 4];
+
 
   return (
     <>
