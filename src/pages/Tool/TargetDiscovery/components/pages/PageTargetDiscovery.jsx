@@ -104,6 +104,7 @@ const PageTargetDiscovery = () => {
   const [loadingPersonas, setLoadingPersonas] = useState({});
   const [isEditingBusiness, setIsEditingBusiness] = useState(false);
   const [isEditingTarget, setIsEditingTarget] = useState(false);
+  const [toolSteps, setToolSteps] = useState(0);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -154,6 +155,7 @@ const PageTargetDiscovery = () => {
       if (toolLoading) {
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
+        setToolSteps(toolStep ?? 1);
         // 비즈니스 정보 설정 (Step 1)
 
         if (project) {
@@ -169,6 +171,7 @@ const PageTargetDiscovery = () => {
           completedStepsArray.push(i);
         }
         setCompletedSteps(completedStepsArray);
+
 
         // 페르소나 설정 (Step 2)
         if (
@@ -229,6 +232,8 @@ const PageTargetDiscovery = () => {
           setTargetDiscoveryFinalReport(targetDiscoveryFinalReport ?? {});
         }
 
+        setToolStep(0);
+
         return;
       }
     };
@@ -237,7 +242,7 @@ const PageTargetDiscovery = () => {
   }, [toolLoading]);
 
   const handleCheckboxChange = (personaId) => {
-    if (toolStep >= 2) return;
+    if (toolSteps >= 2) return;
     setSelectedPersonas((prev) => {
       if (prev.includes(personaId)) {
         return prev.filter((id) => id !== personaId);
@@ -325,7 +330,7 @@ const PageTargetDiscovery = () => {
         isLoggedIn
       );
       setToolId(responseToolId);
-      setToolStep(1);
+      setToolSteps(1);
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
       setTargetDiscoveryPersona(
         response.response.target_discovery_persona || []
@@ -488,7 +493,7 @@ const PageTargetDiscovery = () => {
         isLoggedIn
       );
 
-      setToolStep(2);
+      setToolSteps(2);
     } catch (error) {
       // 에러 발생 시 모든 로딩 상태 초기화
       setLoadingPersonas({});
@@ -580,7 +585,7 @@ const PageTargetDiscovery = () => {
         },
         isLoggedIn
       );
-      setToolStep(3);
+      setToolSteps(3);
 
       setIsLoadingScenario(false);
       handleNextStep(3);
@@ -821,7 +826,7 @@ const PageTargetDiscovery = () => {
                         <Title>
                           <Body1 color="gray700">비즈니스 설명</Body1>
                           {!isEditingBusiness ? (
-                            <IconButton onClick={handleEditBusinessClick} disabled={toolStep >= 1}>
+                            <IconButton onClick={handleEditBusinessClick} disabled={toolSteps >= 1}>
                               <img src={images.PencilSquare} alt="" />
                               <span>수정하기</span>
                             </IconButton>
@@ -848,7 +853,7 @@ const PageTargetDiscovery = () => {
                               value={businessDescription}
                               onChange={(e) => setBusinessDescription(e.target.value)}
                               status="valid"
-                              disabled={toolStep >= 1}
+                              disabled={toolSteps >= 1}
                             />
                             <EditButtonGroup>
                               <IconButton onClick={handleUndoBusinessClick}>
@@ -864,7 +869,7 @@ const PageTargetDiscovery = () => {
                         <Title>
                           <Body1 color="gray700">타겟 고객</Body1>
                           {!isEditingTarget ? (
-                            <IconButton onClick={handleEditTargetClick} disabled={toolStep >= 1}>
+                            <IconButton onClick={handleEditTargetClick} disabled={toolSteps >= 1}>
                               <img src={images.PencilSquare} alt="" />
                               <span>수정하기</span>
                             </IconButton>
@@ -891,7 +896,7 @@ const PageTargetDiscovery = () => {
                               value={targetCustomer}
                               onChange={(e) => setTargetCustomer(e.target.value)}
                               status="valid"
-                              disabled={toolStep >= 1}
+                              disabled={toolSteps >= 1}
                             />
                             <EditButtonGroup>
                               <IconButton onClick={handleUndoTargetClick}>
@@ -909,7 +914,7 @@ const PageTargetDiscovery = () => {
                           <Body1 color="red">*</Body1>
                         </div>
                         <CustomInput
-                          disabled={toolStep >= 1}
+                          disabled={toolSteps >= 1}
                           type="text"
                           placeholder="특별히 분석하고자 하는 상황을 입력해주세요 (예: 전기자전거의 배터리가 없는 상황 등)"
                           value={specificSituation}
@@ -925,7 +930,7 @@ const PageTargetDiscovery = () => {
                       Round
                       onClick={handleSubmitBusinessInfo}
                       disabled={
-                        !isRequiredFieldsFilled() || toolStep >= 1 || isLoading
+                        !isRequiredFieldsFilled() || toolSteps >= 1 || isLoading
                       }
                     >
                       다음
@@ -996,7 +1001,7 @@ const PageTargetDiscovery = () => {
                           Fill
                           disabled={
                             selectedPersonas.length === 0 ||
-                            toolStep >= 2 ||
+                            toolSteps >= 2 ||
                             isLoading ||
                             isLoadingScenario
                           }
@@ -1075,7 +1080,7 @@ const PageTargetDiscovery = () => {
                       disabled={
                         isLoading ||
                         isLoadingScenario ||
-                        toolStep >= 3 ||
+                        toolSteps >= 3 ||
                         !targetDiscoveryScenario ||
                         targetDiscoveryScenario.length !==
                           selectedTargetDiscoveryPersona.length

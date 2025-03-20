@@ -73,6 +73,8 @@ const MoleculeHeader = () => {
     location.pathname === "/CustomerValueAnalyzer";
 
   const isDesignAnalysisPage = location.pathname === "/DesignAnalysis";
+  
+  const toolList = location.pathname === "/Tool";
 
   // IdeaGenerator 경로 체크 추가
   const isIdeaGeneratorPage = location.pathname === "/IdeaGenerator";
@@ -328,7 +330,7 @@ const MoleculeHeader = () => {
                 : isPersona4PageSingle && projectSaas.projectTitle
                 ? projectSaas.projectTitle
                 : isTargetDiscoveryPage
-                ? "타겟 탐색기"
+                ? `타겟 탐색기 - ${projectSaas.projectTitle}`
                 : isTargetDiscoveryPage && projectSaas.projectTitle
                 ? `타겟 탐색기 - ${projectSaas.projectTitle}`
                 : isIdeaGeneratorPage && projectSaas.projectTitle
