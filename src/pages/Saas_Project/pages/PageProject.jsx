@@ -327,7 +327,7 @@ const PageProject = () => {
       )}
       {isWarningPopupOpen && (
         <PopupWrap
-          Warning
+          Check
           title="새 프로젝트를 시작 하시겠습니까?"
           message="프로젝트 도중 이탈 시 결과값에 문제가 발생할 수 있습니다."
           buttonType="Outline"
