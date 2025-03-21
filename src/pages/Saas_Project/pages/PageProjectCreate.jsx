@@ -71,6 +71,7 @@ const PageProjectCreate = () => {
   const [isEditingTarget, setIsEditingTarget] = useState(false);
   const [editingTargetText, setEditingTargetText] = useState("");
   const targetTextareaRef = useRef(null);
+  const [isSkipped, setIsSkipped] = useState(false);
 
   // 각 셀렉트박스의 열림/닫힘 상태를 개별적으로 관리
   const [selectBoxStates, setSelectBoxStates] = useState({
@@ -148,7 +149,7 @@ const PageProjectCreate = () => {
 
   // 셀렉트박스 토글 함수 수정
   const toggleSelectBox = (boxName, event) => {
-    if (completedSteps.length >= 2) return;
+    if (completedSteps.includes(2)) return;
     const selectBox = event.currentTarget;
     const rect = selectBox.getBoundingClientRect();
     const spaceBelow = window.innerHeight - rect.bottom;
@@ -200,14 +201,14 @@ const PageProjectCreate = () => {
   // handleSubmitBusinessInfo 함수 수정
   const handleSubmitBusinessInfo = async () => {
     if (activeTab === 1) {
-      setCompletedSteps((prev) => [...prev, 1]);
+      // setCompletedSteps((prev) => [...prev, 1]);
       setActiveTab(2);
     } else if (activeTab === 2) {
       setCompletedSteps((prev) => [...prev, 2]);
       setActiveTab(3);
       setIsLoadingScenario(true);
 
-      // API 전송 및 이미지 업로드 처리
+      // API 전송 및 이미지 업로드 처리s
       try {
         const timeStamp = new Date().getTime();
 
@@ -235,12 +236,12 @@ const PageProjectCreate = () => {
           return;
         }
 
-        setFileNames(
-          uploadedFiles.map((file, index) => ({
-            id: "file_" + timeStamp + "_" + (index + 1),
-            name: file.name,
-          }))
-        );
+        // setFileNames(
+        //   uploadedFiles.map((file, index) => ({
+        //     id: "file_" + timeStamp + "_" + (index + 1),
+        //     name: file.name,
+        //   }))
+        // );
 
         setProjectCreateInfo(response.response.project_analysis_multimodal);
 
@@ -302,19 +303,20 @@ const PageProjectCreate = () => {
     }
     // 탭 2의 경우 파일 업로드 여부 확인
     else if (activeTab === 2) {
-      return uploadedFiles.length > 0;
+
+      return fileNames.length > 0;
     }
     // 다른 탭의 경우
     return true;
   };
 
-  const toolStep = [
-    {
-      title: "프로젝트 정보 입력",
-      description: "프로젝트 정보를 입력하세요",
-      isRequired: true,
-    },
-  ];
+  // const toolStep = [
+  //   {
+  //     title: "프로젝트 정보 입력",
+  //     description: "프로젝트 정보를 입력하세요",
+  //     isRequired: true,
+  //   },
+  // ];
 
   // 파일 업로드 핸들러
   const handleChangeStatus = ({ meta, file, remove }, status) => {
@@ -334,10 +336,12 @@ const PageProjectCreate = () => {
         }
         return prev;
       });
+    
     } else if (status === "removed") {
       setUploadedFiles((prev) => prev.filter((f) => f.name !== file.name));
       setFileNames((prev) => prev.filter((name) => name !== file.name));
     }
+
 
     // 파일 크기를 KB 또는 MB 단위로 변환
     const size = file.size;
@@ -376,7 +380,9 @@ const PageProjectCreate = () => {
   const handleSkip = async () => {
     if (activeTab === 2) {
       setCompletedSteps((prev) => [...prev, 2]);
+      setIsSkipped(true);
       setActiveTab(3);
+      setFileNames([]);
       setIsLoadingScenario(true);
 
       // API 전송 및 이미지 업로드 처리
@@ -606,7 +612,11 @@ const PageProjectCreate = () => {
               <TabButtonType5
                 Num3
                 isActive={activeTab >= 1}
-                onClick={() => setActiveTab(1)}
+                onClick={() => {
+                  setActiveTab(1);
+                  setFileNames([]); // 파일 목록 초기화
+                }}
+                disabled={isLoadingScenario}
               >
                 <span>01</span>
                 <div className="text">
@@ -618,8 +628,8 @@ const PageProjectCreate = () => {
               <TabButtonType5
                 Num3
                 isActive={activeTab >= 2}
-                onClick={() => completedSteps.includes(1) && setActiveTab(2)}
-                disabled={!completedSteps.includes(1)}
+                onClick={() => completedSteps.includes(2) && setActiveTab(2)}
+                disabled={isLoadingScenario}
               >
                 <span>02</span>
                 <div className="text">
@@ -676,7 +686,7 @@ const PageProjectCreate = () => {
                           onChange={(e) =>
                             handleInputChange("projectName", e.target.value)
                           }
-                          disabled={completedSteps.length >= 2}
+                          disabled={completedSteps.includes(2)}
                         />
                       </TabContent5Item>
 
@@ -699,7 +709,7 @@ const PageProjectCreate = () => {
                               );
                               setDescriptionLength(e.target.value.length);
                             }}
-                            disabled={completedSteps.length >= 2}
+                            disabled={completedSteps.includes(2)}
                           />
                           <Body2 color="gray300" align="right">
                             {descriptionLength} / 150
@@ -1107,7 +1117,7 @@ const PageProjectCreate = () => {
                       style={{ minWidth: "190px" }}
                       onClick={handleSubmitBusinessInfo}
                       disabled={
-                        !isRequiredFieldsFilled() || completedSteps.length >= 2
+                        !isRequiredFieldsFilled() || completedSteps.includes(2)
                       }
                     >
                       다음
@@ -1117,21 +1127,9 @@ const PageProjectCreate = () => {
               </TabContent5>
             )}
 
-            {activeTab === 2 && completedSteps.includes(1) && (
+            {activeTab === 2  && (
               <TabContent5>
-                {isLoading ? (
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      minHeight: "200px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <AtomPersonaLoader message="맞춤 페르소나를 찾고 있어요..." />
-                  </div>
-                ) : (
+             
                   <>
                     <div className="content">
                       <H2 color="gray800" align="left">
@@ -1149,9 +1147,8 @@ const PageProjectCreate = () => {
                           multiple={true}
                           canRemove={true}
                           canRestart={false}
-                          disabled={toolStep >= 1}
+                          disabled={completedSteps.includes(2)} 
                           accept="image/*, application/pdf"
-                          // accept="image/*, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/msword, application/vnd.ms-powerpoint, application/vnd.ms-excel, text/csv, text/plain, text/html"
                           maxSizeBytes={20 * 1024 * 1024}
                           inputWithFilesContent={
                             <>
@@ -1182,7 +1179,7 @@ const PageProjectCreate = () => {
                               {fileNames.length > 0 && (
                                 <div>
                                   {fileNames.map((name, index) => (
-                                    <Body2 key={index} color="gray700">
+                                   <Body2 key={index} color="gray700">
                                       {name}
                                     </Body2>
                                   ))}
@@ -1219,7 +1216,7 @@ const PageProjectCreate = () => {
                               {fileNames.length > 0 && (
                                 <div>
                                   {fileNames.map((name, index) => (
-                                    <Body2 key={index} color="gray700">
+                                      <Body2 key={index} color="gray700">
                                       {name}
                                     </Body2>
                                   ))}
@@ -1235,7 +1232,7 @@ const PageProjectCreate = () => {
                     <ButtonWrap>
                       <Body1
                         color="gray500"
-                        onClick={completedSteps.length < 2 ? handleSkip : null}
+                        onClick={!completedSteps.includes(2) ? handleSkip : null}
                         // disabled={completedSteps.length >= 2}
                       >
                         건너뛰기
@@ -1249,14 +1246,14 @@ const PageProjectCreate = () => {
                         onClick={handleSubmitBusinessInfo}
                         disabled={
                           !isRequiredFieldsFilled() ||
-                          completedSteps.length >= 2
+                          completedSteps.includes(2)
                         }
                       >
                         다음
                       </Button>
                     </ButtonWrap>
                   </>
-                )}
+                
               </TabContent5>
             )}
 
@@ -1307,13 +1304,23 @@ const PageProjectCreate = () => {
                           </li>
                           <li>
                             <Body2 color="gray500">업로드 파일</Body2>
-                            <Body2 color="gray800">
+                            {/* <Body2 color="gray800">
                               {uploadedFiles.length === 0
                                 ? "-"
                                 : uploadedFiles.map((file) => (
                                     <div key={file.id}>{file.name}</div>
                                   ))}
+                            </Body2> */}
+                            <Body2 color="gray800">
+                              {isSkipped ? "-" : (
+                                uploadedFiles.length === 0
+                                  ? "-"
+                                  :  uploadedFiles.map((file) => (
+                                    <div key={file.id}>{file.name}</div>
+                                    ))
+                              )}
                             </Body2>
+                         
                           </li>
                         </ListBoxGroup>
                       </SummaryWrap>
