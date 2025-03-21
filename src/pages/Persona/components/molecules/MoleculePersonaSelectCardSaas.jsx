@@ -29,7 +29,7 @@ const MoleculePersonaSelectCardSaas = ({
   const navigate = useNavigate();
 
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [activeTabState, setActiveTabState] = useState("my_favorite");
+  const [activeTabState, setActiveTabState] = useState("macro_segment");
 
   // 컴포넌트 마운트 시 초기 unselected 리스트 설정
   useEffect(() => {
@@ -125,7 +125,7 @@ const MoleculePersonaSelectCardSaas = ({
   return (
     <CardGroupWrap>
       <TabWrapType3 Border>
-        <TabButtonType3
+        {/* <TabButtonType3
           className={activeTabState === "my_favorite" ? "active" : ""}
           onClick={() => handleTabClick("my_favorite")}
           isActive={activeTabState === "my_favorite"}
@@ -136,7 +136,7 @@ const MoleculePersonaSelectCardSaas = ({
           }
         >
           Favorite
-        </TabButtonType3>
+        </TabButtonType3> */}
         <TabButtonType3
           className={activeTabState === "macro_segment" ? "active" : ""}
           onClick={() => handleTabClick("macro_segment")}
