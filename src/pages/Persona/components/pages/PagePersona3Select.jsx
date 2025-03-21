@@ -7,9 +7,7 @@ import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
 import PopupWrap from "../../../../assets/styles/Popup";
 import OrganismToastPopup from "../../../Persona/components/organisms/OrganismToastPopup";
 import OrganismToastPopupSingleChat from "../../../Persona/components/organisms/OrganismToastPopupSingleChat";
-import {
-  Button,
-} from "../../../../assets/styles/ButtonStyle";
+import { Button } from "../../../../assets/styles/ButtonStyle";
 import images from "../../../../assets/styles/Images";
 import personaImages from "../../../../assets/styles/PersonaImages";
 import MoleculePersonaSelectCardSaas from "../../../Persona/components/molecules/MoleculePersonaSelectCardSaas";
@@ -61,14 +59,15 @@ import {
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 
 const PagePersona3Select = () => {
-
-  const [customPersonaList, ] =useAtom(CUSTOM_PERSONA_LIST);
-  const [allBusinessPersonas, ] = useAtom(All_BUSINESS_PERSONA_LIST);
+  const [customPersonaList] = useAtom(CUSTOM_PERSONA_LIST);
+  const [allBusinessPersonas] = useAtom(All_BUSINESS_PERSONA_LIST);
   const [, setUserCredits] = useAtom(USER_CREDITS);
-  const [personaListSaas, ] = useAtom(PERSONA_LIST_SAAS);
+  const [personaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [selectedInterviewType] = useAtom(SELECTED_INTERVIEW_TYPE);
   const [selectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
-  const [selectedInterviewPurposeData] = useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
+  const [selectedInterviewPurposeData] = useAtom(
+    SELECTED_INTERVIEW_PURPOSE_DATA
+  );
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
@@ -80,19 +79,18 @@ const PagePersona3Select = () => {
 
   const navigate = useNavigate();
 
-  const [purposeText, ] = useState("");
+  const [purposeText] = useState("");
   const [, setShowMethodology] = useState(false);
   const [selectedPersonas, setSelectedPersonas] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
-  const [isLoggedIn, ] = useState(true);
-  const [businessAnalysis, ] = useState({
+  const [isLoggedIn] = useState(true);
+  const [businessAnalysis] = useState({
     title: "맞춤 페르소나 인터뷰",
   });
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [isIndepthEnabled, setIsIndepthEnabled] = useState(false);
-
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -204,12 +202,10 @@ const PagePersona3Select = () => {
     }
   };
 
-
   const getSelectedCount = () => {
     if (!selectedPersonas) return 0;
     return Array.isArray(selectedPersonas) ? selectedPersonas.length : 1;
   };
-
 
   useEffect(() => {
     // 새로고침 감지 함수
@@ -330,7 +326,6 @@ const PagePersona3Select = () => {
                   </Body2>
 
                   <ListBoxGroup>
-             
                     <li>
                       <Body2 color="gray500">인터뷰 목적</Body2>
                       {selectedInterviewType === "multiple" ? (
@@ -465,7 +460,6 @@ const PagePersona3Select = () => {
                     </Button>
                   </BoxWrap>
                 )}
-
               </div>
               <BottomBar W100>
                 <Body2 color="gray800">
