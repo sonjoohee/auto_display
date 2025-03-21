@@ -1,7 +1,7 @@
 //헤더 컴포넌트
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
-import {  useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import images from "../../../assets/styles/Images";
 import { palette } from "../../../assets/styles/Palette";
@@ -28,11 +28,10 @@ import { UserCreditInfo } from "../../../utils/indexedDB";
 import { AlarmList } from "../../../utils/indexedDB";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 const MoleculeHeader = () => {
-
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const navigate = useNavigate();
 
-  const [personaStep, ] = useAtom(PERSONA_STEP);
+  const [personaStep] = useAtom(PERSONA_STEP);
   const location = useLocation();
   const [showAlert, setShowAlert] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -41,10 +40,9 @@ const MoleculeHeader = () => {
   const [isClosingCreditToggle, setIsClosingCreditToggle] = useState(false);
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [isLoggedInState, setIsLoggedInState] = useState(false);
-  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [alarms, setAlarms] = useState([]);
-  const [projectSaas, ] = useAtom(PROJECT_SAAS);
-
+  const [projectSaas] = useAtom(PROJECT_SAAS);
 
   // Persona/3 경로 체크를 위한 조건 수정
   // const isPersona3Page =
@@ -55,6 +53,8 @@ const MoleculeHeader = () => {
   // 첫 페이지 체크 (루트 경로 확인)
   // const isRootPage = location.pathname === "/";
   const isRootPage = location.pathname === "/Project";
+
+  const isBlogPage = location.pathname === "/Blog";
   // MyProject 경로 체크 추가
   // const isMyProjectPage = location.pathname === "/MyProject";
 
@@ -72,7 +72,7 @@ const MoleculeHeader = () => {
     location.pathname === "/CustomerValueAnalyzer";
 
   const isDesignAnalysisPage = location.pathname === "/DesignAnalysis";
-  
+
   const isDashBoardPage = location.pathname === "/DashBoard";
 
   // IdeaGenerator 경로 체크 추가
@@ -113,7 +113,6 @@ const MoleculeHeader = () => {
       setShowCreditToggle(false);
       setShowRedDot(false);
     }
-
   };
 
   // const handleBusinessAnalysisToggle = () => {
@@ -171,7 +170,7 @@ const MoleculeHeader = () => {
     }
     try {
       const response = await AlarmList(isLoggedIn); // AlarmCreate API 호출
- 
+
       const userInfo = await UserCreditInfo(true);
 
       const readTimeStamp = userInfo?.read_timestamp;
@@ -182,7 +181,6 @@ const MoleculeHeader = () => {
 
         if (readTimeStamp < createTimeStamp) {
           setShowRedDot(true);
-    
         } else {
           setShowRedDot(false);
         }
@@ -207,7 +205,7 @@ const MoleculeHeader = () => {
 
   const handleLinkNavigation = async (item) => {
     const link = item.link;
-      // const projectId = item.projectId;
+    // const projectId = item.projectId;
     if (!link) return;
     try {
       // const url = new URL(link);
@@ -305,23 +303,23 @@ const MoleculeHeader = () => {
         {!isRootPage && !isDashBoardPage && (
           <>
             <Title>
-            {isTargetDiscoveryPage && projectSaas.projectTitle
-              ? `타겟 탐색기 - ${projectSaas.projectTitle}`
-              : isIdeaGeneratorPage && projectSaas.projectTitle
-              ? `아이디어 생성기 - ${projectSaas.projectTitle}`
-              : isIdeaGeneratorPage
-              ? "아이디어 생성기"
-              : isCustomerValueAnalyzerPage && projectSaas.projectTitle
-              ? `고객 핵심 가치 분석기 - ${projectSaas.projectTitle}`
-              : isCustomerValueAnalyzerPage
-              ? "고객 핵심 가치 분석기"
-              : isDesignAnalysisPage && projectSaas.projectTitle
-              ? `디자인 감정 분석기 - ${projectSaas.projectTitle}`
-              : isDesignAnalysisPage
-              ? "디자인 감정 분석기"
-              : isProjectCreatePage
-              ? "새 프로젝트 생성"
-              : projectSaas.projectTitle}
+              {isTargetDiscoveryPage && projectSaas.projectTitle
+                ? `타겟 탐색기 - ${projectSaas.projectTitle}`
+                : isIdeaGeneratorPage && projectSaas.projectTitle
+                ? `아이디어 생성기 - ${projectSaas.projectTitle}`
+                : isIdeaGeneratorPage
+                ? "아이디어 생성기"
+                : isCustomerValueAnalyzerPage && projectSaas.projectTitle
+                ? `고객 핵심 가치 분석기 - ${projectSaas.projectTitle}`
+                : isCustomerValueAnalyzerPage
+                ? "고객 핵심 가치 분석기"
+                : isDesignAnalysisPage && projectSaas.projectTitle
+                ? `디자인 감정 분석기 - ${projectSaas.projectTitle}`
+                : isDesignAnalysisPage
+                ? "디자인 감정 분석기"
+                : isProjectCreatePage
+                ? "새 프로젝트 생성"
+                : projectSaas.projectTitle}
               {/* {(isPersona3Page ||
                 isPersona3SinglePage ||
                 isPersona3MultiplePage ||
@@ -353,7 +351,7 @@ const MoleculeHeader = () => {
 
         {isLoggedIn && (
           <div className="gnb">
-            {isRootPage && (
+            {(isRootPage || isBlogPage) && (
               <Sub2 style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
                 서비스 소개
               </Sub2>
@@ -484,7 +482,6 @@ const MoleculeHeader = () => {
             <Notify Alarm={showRedDot} onClick={handleAlertToggle}>
               <img src={images.IconBell} alt="" />
             </Notify>
-
           </div>
         )}
       </HeaderWrap>
