@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import {
-  Body1,
-  Body2,
-  Sub2,
-} from "../../../../assets/styles/Typography";
+import { Body1, Body2, Sub2 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import {
   Persona,
@@ -29,7 +25,6 @@ const MoleculePersonaSelectCardSaas = ({
   customPersonaList,
   selectedPersonas,
   onPersonaSelect,
-
 }) => {
   const navigate = useNavigate();
 
@@ -178,7 +173,7 @@ const MoleculePersonaSelectCardSaas = ({
         >
           Key Stakeholder
         </TabButtonType3>
-        {/* <TabButtonType3
+        <TabButtonType3
           className={activeTabState === "my_persona" ? "active" : ""}
           onClick={() => handleTabClick("my_persona")}
           isActive={activeTabState === "my_persona"}
@@ -189,7 +184,7 @@ const MoleculePersonaSelectCardSaas = ({
           }
         >
           My Persona
-        </TabButtonType3> */}
+        </TabButtonType3>
       </TabWrapType3>
       {filteredPersonaList &&
         [...customPersonaList, ...businessPersonaList, ...filteredPersonaList]
@@ -226,7 +221,7 @@ const MoleculePersonaSelectCardSaas = ({
             }
             return true; // 기본적으로 false를 반환하여 다른 탭에서는 아무것도 표시되지 않도록 함
           })
-          
+
           .map((persona) => {
             // 현재 persona가 선태된 상태인지 확인 (personaList.selected 에서 조회)
             const isSelected = personaList.selected.some(
@@ -241,7 +236,6 @@ const MoleculePersonaSelectCardSaas = ({
                   anySelected={personaList.selected.length > 0}
                   interviewType={interviewType}
                 >
-              
                   <Persona
                     size="Large"
                     icon={persona.favorite ? "OrangeTopLeftStarFill" : null}
@@ -262,7 +256,6 @@ const MoleculePersonaSelectCardSaas = ({
                         {persona.persona_view || persona.personaName}
                       </Body1>{" "}
                       <UniqueTag color={persona.type || "default"} />
-              
                     </ListTitle>
                     <ListSubtitle>
                       <PersonaInfo>
