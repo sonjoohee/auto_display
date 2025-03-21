@@ -316,7 +316,7 @@ const PageAiPersona = () => {
           const sortedList = [...savedPersonaListInfo].sort((a, b) => {
             const dateA = a.timestamp;
             const dateB = b.timestamp;
-            return dateB - dateA; // 최신 날짜가 위로
+            return dateA - dateB; 
           });
 
           setPersonaListSaas(sortedList);
@@ -393,7 +393,7 @@ const PageAiPersona = () => {
         const sortedList = [...refreshedData].sort((a, b) => {
           const dateA = a.timestamp;
           const dateB = b.timestamp;
-          return dateB - dateA; // 최신 날짜가 위로
+          return dateA - dateB; // 최신 날짜가 위로
         });
 
         setPersonaListSaas(sortedList);
@@ -653,7 +653,7 @@ const PageAiPersona = () => {
         const sortedList = [...refreshedData].sort((a, b) => {
           const dateA = a.timestamp;
           const dateB = b.timestamp;
-          return dateB - dateA; // 최신 날짜가 위로
+          return dateA - dateB; // 최신 날짜가 위로
         });
         setPersonaListSaas(sortedList);
         // 전체 페르소나 통계 업데이트
