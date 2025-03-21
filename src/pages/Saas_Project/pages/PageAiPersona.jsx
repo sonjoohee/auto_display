@@ -1510,7 +1510,7 @@ const PageAiPersona = () => {
                             </Body3>
                             <Body2 color="gray800" align="left">
                               {currentPersona.customData
-                                .persona_additionalInfo || "*해당정보 없음"}
+                                .persona_additional_info || "*해당정보 없음"}
                             </Body2>
                           </div>
 
