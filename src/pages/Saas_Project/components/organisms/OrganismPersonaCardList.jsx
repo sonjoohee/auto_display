@@ -174,6 +174,7 @@ const OrganismPersonaCardList = ({
         keywords: persona.keywords,
         gender: persona.gender,
         age: persona.age,
+        characteristics: persona.personaCharacteristics,
       }));
 
       const data = {
@@ -287,7 +288,7 @@ const OrganismPersonaCardList = ({
           updatedPersonas.push(persona);
         }
       }
-   
+
       // 서버에서 최신 데이터 가져오기
       const savedPersonaListInfo = await getPersonaListOnServer(
         project?._id,
@@ -297,7 +298,7 @@ const OrganismPersonaCardList = ({
         const sortedList = savedPersonaListInfo
           .filter((persona) => persona.personaType === personaType)
           .sort((a, b) => a.timestamp - b.timestamp);
-    
+
         setProjectPersonaList((prev) => {
           const filteredPrev = prev.filter(
             (p) => p.personaType !== personaType
@@ -310,7 +311,7 @@ const OrganismPersonaCardList = ({
           const filteredPrev = prev.filter(
             (p) => p.personaType !== personaType
           );
-          return [ ...filteredPrev,...sortedList];
+          return [...filteredPrev, ...sortedList];
         });
       }
     } catch (error) {
