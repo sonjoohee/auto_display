@@ -240,6 +240,7 @@ const PageAiPersona = () => {
 
   const handleTabChange = (index) => {
     setActiveTabIndex1(index);
+ 
   };
 
   const handlePersonaEditUpdate = async () => {
