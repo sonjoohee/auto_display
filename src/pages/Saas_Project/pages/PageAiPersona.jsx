@@ -804,9 +804,22 @@ const PageAiPersona = () => {
           project.projectAnalysis.business_analysis +
           (project.projectAnalysis.file_analysis || ""),
         persona_gender: customPersonaForm.gender === "male" ? "남성" : "여성",
-        persona_age: customPersonaForm.ageGroups
-          .map((age) => age.trim())
-          .join(", "),
+        persona_age:
+          customPersonaForm.ageGroups[0] === "10대"
+            ? "10~19세"
+            : customPersonaForm.ageGroups[0] === "20대"
+            ? "20~29세"
+            : customPersonaForm.ageGroups[0] === "30대"
+            ? "30~39세"
+            : customPersonaForm.ageGroups[0] === "40대"
+            ? "40~49세"
+            : customPersonaForm.ageGroups[0] === "50대"
+            ? "50~59세"
+            : customPersonaForm.ageGroups[0] === "60대"
+            ? "60~69세"
+            : customPersonaForm.ageGroups[0] === "70대"
+            ? "70세 이상"
+            : customPersonaForm.ageGroups[0],
         persona_reason: customPersonaForm.purpose,
         persona_additional_info: customPersonaForm.additionalInfo,
         persona_ocean: {
@@ -1814,20 +1827,9 @@ const PageAiPersona = () => {
                               <SelectBoxItem
                                 key={ageGroup}
                                 onClick={() => {
-                                  const newAgeGroups = [
-                                    ...customPersonaForm.ageGroups,
-                                  ];
-                                  const index = newAgeGroups.indexOf(ageGroup);
-                                  if (index === -1) {
-                                    newAgeGroups.push(ageGroup);
-                                  } else {
-                                    newAgeGroups.splice(index, 1);
-                                  }
+                                  const newAgeGroups = [ageGroup]; // 선택한 항목만 배열에 포함
                                   handleFormChange("ageGroups", newAgeGroups);
-                                  handlePurposeSelect(
-                                    newAgeGroups.join(", "),
-                                    "age"
-                                  );
+                                  handlePurposeSelect(ageGroup, "age"); // 단일 값만 전달
                                 }}
                               >
                                 <Body2 color="gray700" align="left">
@@ -2015,7 +2017,7 @@ const PageAiPersona = () => {
                         성별
                       </Body3>
                       <Body2 color="gray800" align="left">
-                        남자
+                        {customPersonaForm.gender === "male" ? "남성" : "여성"}
                       </Body2>
                     </div>
 
@@ -2024,7 +2026,7 @@ const PageAiPersona = () => {
                         연령
                       </Body3>
                       <Body2 color="gray800" align="left">
-                        20대
+                        {customPersonaForm.ageGroups}
                       </Body2>
                     </div>
                   </div>
