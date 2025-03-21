@@ -14,8 +14,8 @@ const PageBlog = () => {
 
         <BlogContainer>
           <iframe
-            src="https://www.notioniframe.com/notion/2cduo7gbv65"
-            // src="https://snsmen.tistory.com/23"
+            // src="https://www.notioniframe.com/notion/2cduo7gbv65"
+            src="https://interviewx.tistory.com/"
             title="Blog Content"
             style={{
               width: "100%",
