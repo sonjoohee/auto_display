@@ -70,6 +70,7 @@ export const SelectBoxItem = styled.div`
   transition: all 0.5s;
   padding: 13px 20px;
 
+
   /* Body1과 Body2를 가로로 배치하기 위한 스타일 */
   > div {
     display: flex;
@@ -95,8 +96,10 @@ export const SelectBoxTitle = styled.div`
   align-items: center;
   padding: ${(props) =>
     props.None ? "0" : props.Small ? "8px 12px" : "16px 20px"};
+  padding: ${(props) => (props.edit ? "15px" : "")};
   border-radius: 5px;
   border: ${(props) => (props.None ? "0" : `1px solid ${palette.outlineGray}`)};
+  border-radius: ${(props) => (props.edit ? "10px" : " 5px")};
   cursor: pointer;
   z-index: 1;
   background-color: ${palette.white};
