@@ -436,13 +436,57 @@ const PageCustomerValueAnalyzer = () => {
                 isLoggedIn
               );
 
-            if (response?.response?.customer_value_journey_map) {
-              journeyMapData.push({
+            const maxAttempts = 10;
+            let attempts = 0;
+      
+
+            while (
+              attempts < maxAttempts && (
+                !response ||
+                !response?.response ||
+                !response?.response?.customer_value_journey_map ||
+                !response?.response?.customer_value_journey_map?.step1 ||
+                !response?.response?.customer_value_journey_map?.conclusion ||
+                !response?.response?.customer_value_journey_map?.mermaid ||
+                !response?.response?.customer_value_journey_map?.section1
+              )
+            ) {
+
+              response = await InterviewXCustomerValueAnalyzerJourneyMapRequest(
+                data,
+                isLoggedIn
+              );  
+              attempts++;
+               }
+          
+                if (attempts >= maxAttempts) {
+                    setShowPopupError(true);
+                    return;
+                }
+              
+            
+            journeyMapData.push({
                 ...response.response.customer_value_journey_map,
                 business: customerValueAnalyzerInfo.business,
                 target: customerValueAnalyzerInfo.targetList[index],
-              });
-            }
+            });
+            // setCustomerValueAnalyzerJourneyMap((prev) => {
+            //   const currentJourneyMaps = Array.isArray(prev) ? prev : [];
+            //   const journeyMap = response.response.customer_value_journey_map;
+              
+            //   // mermaid 데이터 포맷팅
+            //   if (journeyMap.mermaid) {
+            //     journeyMap.mermaid = formatMermaidData(journeyMap.mermaid);
+            //   }
+              
+            //   return [...currentJourneyMaps, journeyMap];
+            // });
+
+            // // 카드 상태 업데이트
+            // setCardStatuses((prev) => ({
+            //   ...prev,
+            //   [index]: "completed",
+            // }));
 
             setCustomerValueAnalyzerJourneyMap((prev) => {
               // prev가 undefined인 경우 빈 배열로 초기화
@@ -769,25 +813,26 @@ const PageCustomerValueAnalyzer = () => {
           const maxAttempts = 10;
           let attempts = 0;
 
-          // while (
-          //   !response ||
-          //   !response?.response ||
-          //   !response?.response?.customer_value_factor ||
-          //   !Array.isArray(response.response.customer_value_factor) ||
-          //   response.response.customer_value_factor.length === 0 ||
-          //   response?.response?.customer_value_factor.some(factor => !factor.key_buying_factors || !factor.conclusion)
-          // ) {
-          //   if (attempts >= maxAttempts) {
-          //     setShowPopupError(true);
-          //     return;
-          //   }
-          //   attempts++;
-
-          //   response = await InterviewXCustomerValueAnalyzerFactorRequest(
-          //     requestData,
-          //     isLoggedIn
-          //   );
-          // }
+          while (
+            attempts < maxAttempts && (
+            !response ||
+            !response?.response ||
+            !response?.response?.customer_value_factor ||
+            !response?.response?.customer_value_factor?.key_buying_factors ||
+            !response?.response?.customer_value_factor?.conclusion ) 
+          ) {
+            response = await InterviewXCustomerValueAnalyzerFactorRequest(
+              requestData,
+              isLoggedIn
+            );
+          
+            attempts++;
+          }
+           
+          if (attempts >= maxAttempts) {
+            setShowPopupError(true);
+            return;
+          }
 
           // API 호출 성공 시 카드 상태를 'completed'로 설정
           if (response?.response?.customer_value_factor) {

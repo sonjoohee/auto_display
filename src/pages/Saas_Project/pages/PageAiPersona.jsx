@@ -238,8 +238,30 @@ const PageAiPersona = () => {
     }
   };
 
+  // const handleTabChange = (index) => {
+  //   setActiveTabIndex1(index);
+  //   setActiveTabIndex(index);
+ 
+  // };
   const handleTabChange = (index) => {
+
     setActiveTabIndex1(index);
+
+    const isRequiredFieldsFilled = 
+      customPersonaForm.gender !== "" &&
+      customPersonaForm.ageGroups.length > 0 &&
+      customPersonaForm.purpose.trim() !== ""
+
+    // 필수 정보가 모두 입력되었거나, 이전 탭으로 이동하는 경우에만 탭 변경 허용
+    if ((isRequiredFieldsFilled || index < activeTabIndex) && index !== 2) {
+      setActiveTabIndex(index);
+    } 
+    if (index === 2) {
+      if (oceanValues.openness !== 0.5 || oceanValues.conscientiousness !== 0.5 || oceanValues.extraversion !== 0.5 || oceanValues.agreeableness !== 0.5 || oceanValues.neuroticism !== 0.5) {
+        setActiveTabIndex(index);
+      }
+    }
+
   };
 
   const handlePersonaEditUpdate = async () => {
@@ -797,6 +819,32 @@ const PageAiPersona = () => {
       ...prev,
       my_persona: true,
     }));
+    setActiveTabIndex(0);
+      // OCEAN 값 초기화
+      setOceanValues({
+        openness: 0.5,
+        conscientiousness: 0.5,
+        extraversion: 0.5,
+        agreeableness: 0.5,
+        neuroticism: 0.5,
+      });
+      // ignoreOcean 초기화
+      setIgnoreOcean(false);
+      // customPersonaForm 초기화
+      setCustomPersonaForm({
+        gender: "",
+        ageGroups: [],
+        purpose: "",
+        additionalInfo: "",
+      });
+      // selectedValues 초기화
+      setSelectedValues({
+        gender: "",
+        ageGroup: "",
+        business: "",
+        uniqueUser: "",
+        keyStakeholder: "",
+      });
 
     try {
       const requestData = {
@@ -937,32 +985,6 @@ const PageAiPersona = () => {
         ...prev,
         my_persona: false,
       }));
-      setActiveTabIndex(0);
-      // OCEAN 값 초기화
-      setOceanValues({
-        openness: 0.5,
-        conscientiousness: 0.5,
-        extraversion: 0.5,
-        agreeableness: 0.5,
-        neuroticism: 0.5,
-      });
-      // ignoreOcean 초기화
-      setIgnoreOcean(false);
-      // customPersonaForm 초기화
-      setCustomPersonaForm({
-        gender: "",
-        ageGroups: [],
-        purpose: "",
-        additionalInfo: "",
-      });
-      // selectedValues 초기화
-      setSelectedValues({
-        gender: "",
-        ageGroup: "",
-        business: "",
-        uniqueUser: "",
-        keyStakeholder: "",
-      });
     }
   };
 

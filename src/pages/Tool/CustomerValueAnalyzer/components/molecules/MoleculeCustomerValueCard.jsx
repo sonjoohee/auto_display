@@ -40,7 +40,7 @@ const MoleculeCustomerValueCard = ({
   business, 
   hideButton, 
 }) => {
-  console.log("Molec", journeyMapData);
+
 
   const [showDetailPopup, setShowDetailPopup] = useState(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
