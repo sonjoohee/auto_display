@@ -216,7 +216,10 @@ const PageServiceLanding = () => {
             {/* <Link to="/Blog">블로그</Link> */}
           </Nav>
           <div className="gnb">
-            <Link to="/Blog" style={{ marginTop: "3px" }}>
+            <Link
+              to="https://interviewx.tistory.com"
+              style={{ marginTop: "3px" }}
+            >
               블로그
             </Link>
             {/* {isLoggedIn ?? <Link to="/Login">로그인</Link>} */}
@@ -233,7 +236,9 @@ const PageServiceLanding = () => {
               Large
               Primary
               Fill
-              onClick={() => navigate("/Blog")}
+              onClick={() =>
+                (window.location.href = "https://interviewx.tistory.com")
+              }
               className="mobile"
             >
               블로그

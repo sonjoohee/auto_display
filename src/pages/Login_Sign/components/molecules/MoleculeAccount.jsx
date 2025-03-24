@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 import MoleculeAccountForm from "./MoleculeAccountForm";
 import { LOGIN_SUCCESS } from "../../../../pages/AtomStates"; // 아톰 임포트
 import { palette } from "../../../../assets/styles/Palette";
-import images from "../../../../assets/styles/Images";
+// import images from "../../../../assets/styles/Images";
 
 const MoleculeAccount = ({ onOpenPopup = () => {} }) => {
   const [loginSuccess, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
