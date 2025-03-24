@@ -9,12 +9,10 @@ import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import {
   IS_LOGGED_IN,
-  PERSONA_STEP,
   SELECTED_INTERVIEW_PURPOSE,
   PERSONA_LIST,
   INTERVIEW_QUESTION_LIST,
   PERSONA_BUTTON_STATE_3,
-  BUSINESS_ANALYSIS,
   PROJECT_ID,
   PROJECT_REPORT_ID,
   INTERVIEW_DATA,
