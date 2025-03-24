@@ -191,32 +191,35 @@ const MoleculePersonaSelectCardSaas = ({
           // 활성 탭에 따라 페르소나 필터링
           .filter((persona) => persona.status === "complete")
           .filter((persona) => {
-            if (activeTabState === "my_favorite") {
-              return persona?.favorite === true;
-            }
+            // if (activeTabState === "my_favorite") {
+            //   return persona?.favorite === true;
+            // }
             // 다른 탭에서는 personaType에 따라 필터링하고, favorite이 false인 경우 제외
             if (activeTabState === "macro_segment") {
               return (
-                persona?.personaType === "macro_segment" &&
-                persona?.favorite === false
+                persona?.personaType === "macro_segment"
+                // &&
+                // persona?.favorite === false
               );
             }
             if (activeTabState === "unique_user") {
               return (
-                persona?.personaType === "unique_user" &&
-                persona?.favorite === false
+                persona?.personaType === "unique_user"
+                // &&
+                // persona?.favorite === false
               );
             }
             if (activeTabState === "key_stakeholder") {
               return (
-                persona?.personaType === "key_stakeholder" &&
-                persona?.favorite === false
+                persona?.personaType === "key_stakeholder"
+                // &&
+                // persona?.favorite === false
               );
             }
             if (activeTabState === "my_persona") {
               return (
-                persona?.personaType === "my_persona" &&
-                persona?.favorite === false
+                persona?.personaType === "my_persona"
+                // && persona?.favorite === false
               );
             }
             return true; // 기본적으로 false를 반환하여 다른 탭에서는 아무것도 표시되지 않도록 함
