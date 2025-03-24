@@ -240,7 +240,6 @@ const PageAiPersona = () => {
 
   const handleTabChange = (index) => {
     setActiveTabIndex1(index);
- 
   };
 
   const handlePersonaEditUpdate = async () => {
@@ -317,7 +316,7 @@ const PageAiPersona = () => {
           const sortedList = [...savedPersonaListInfo].sort((a, b) => {
             const dateA = a.timestamp;
             const dateB = b.timestamp;
-            return dateA - dateB; 
+            return dateA - dateB;
           });
 
           setPersonaListSaas(sortedList);
@@ -1507,7 +1506,7 @@ const PageAiPersona = () => {
 
                           <div>
                             <Body3 color="gray500" align="left">
-                              기본정보
+                              추가정보
                             </Body3>
                             <Body2 color="gray800" align="left">
                               {currentPersona.customData
@@ -1864,14 +1863,14 @@ const PageAiPersona = () => {
 
                   <div className="column">
                     <Body2 color="gray700" align="left">
-                      필수로 고려해야할 정보가 있다면 작성해주세요.{" "}
+                      추가로 고려해야할 정보가 있다면 작성해주세요.{" "}
                       {/* <span style={{ color: "red" }}>*</span> */}
                     </Body2>
                     <PopupContent>
                       <CustomTextarea
                         width="100%"
                         rows={5}
-                        placeholder="필수로 고려해야할 정보가 있다면 작성해주세요."
+                        placeholder="추가로 고려해야할 정보가 있다면 작성해주세요."
                         value={customPersonaForm.additionalInfo}
                         onChange={(e) =>
                           handleFormChange("additionalInfo", e.target.value)
@@ -2043,7 +2042,7 @@ const PageAiPersona = () => {
 
                   <div>
                     <Body3 color="gray500" align="left">
-                      기본정보
+                      추가정보
                     </Body3>
                     <Body2 color="gray800" align="left">
                       {customPersonaForm.additionalInfo || "*해당정보 없음"}
@@ -2168,68 +2167,68 @@ const PageAiPersona = () => {
                       성별
                     </Body1>
                     <PopupContent>
-                        <SelectBox  >
-                          <SelectBoxTitle
-                            edit
-                            onClick={() => toggleSelectBox("gender")}
+                      <SelectBox>
+                        <SelectBoxTitle
+                          edit
+                          onClick={() => toggleSelectBox("gender")}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "4px",
+                            }}
                           >
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "4px",
+                            <Body2
+                              color={
+                                currentPersona.gender ? "gray700" : "gray300"
+                              }
+                            >
+                              {currentPersona.gender === "남성"
+                                ? "남성"
+                                : currentPersona.gender === "여성"
+                                ? "여성"
+                                : "성별"}
+                            </Body2>
+                          </div>
+                          <images.ChevronDown
+                            width="24px"
+                            height="24px"
+                            color={palette.gray500}
+                            style={{
+                              transform: selectBoxStates.gender
+                                ? "rotate(180deg)"
+                                : "rotate(0deg)",
+                              transition: "transform 0.3s ease",
+                            }}
+                          />
+                        </SelectBoxTitle>
+
+                        {selectBoxStates.gender && (
+                          <SelectBoxList>
+                            <SelectBoxItem
+                              onClick={() => {
+                                handleCurrentPersonaChange("gender", "남성");
+                                toggleSelectBox("gender");
                               }}
                             >
-                              <Body2
-                                color={
-                                  currentPersona.gender ? "gray700" : "gray300"
-                                }
-                              >
-                                {currentPersona.gender === "남성"
-                                  ? "남성"
-                                  : currentPersona.gender === "여성"
-                                  ? "여성"
-                                  : "성별"}
+                              <Body2 color="gray700" align="left">
+                                남성
                               </Body2>
-                            </div>
-                            <images.ChevronDown
-                              width="24px"
-                              height="24px"
-                              color={palette.gray500}
-                              style={{
-                                transform: selectBoxStates.gender
-                                  ? "rotate(180deg)"
-                                  : "rotate(0deg)",
-                                transition: "transform 0.3s ease",
+                            </SelectBoxItem>
+                            <SelectBoxItem
+                              onClick={() => {
+                                handleCurrentPersonaChange("gender", "여성");
+                                toggleSelectBox("gender");
                               }}
-                            />
-                          </SelectBoxTitle>
-
-                          {selectBoxStates.gender && (
-                            <SelectBoxList>
-                              <SelectBoxItem 
-                                onClick={() => {
-                                  handleCurrentPersonaChange("gender", "남성");
-                                  toggleSelectBox("gender");
-                                }}
-                              >
-                                <Body2 color="gray700" align="left">
-                                  남성
-                                </Body2>
-                              </SelectBoxItem>
-                              <SelectBoxItem
-                                onClick={() => {
-                                  handleCurrentPersonaChange("gender", "여성");
-                                  toggleSelectBox("gender");
-                                }}
-                              >
-                                <Body2 color="gray700" align="left">
-                                  여성
-                                </Body2>
-                              </SelectBoxItem>
-                            </SelectBoxList>
-                          )}
-                        </SelectBox>
+                            >
+                              <Body2 color="gray700" align="left">
+                                여성
+                              </Body2>
+                            </SelectBoxItem>
+                          </SelectBoxList>
+                        )}
+                      </SelectBox>
                     </PopupContent>
                   </div>
 
