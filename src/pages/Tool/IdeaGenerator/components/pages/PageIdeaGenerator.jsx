@@ -485,13 +485,15 @@ const PageIdeaGenerator = () => {
         data1,
         isLoggedIn
       );
-      const clusteringData =
+      let clusteringData;
+      clusteringData =
         response1?.response?.idea_generator_clustering || [];
 
       const maxAttempts = 10;
       let attempts = 0;
 
       while (
+        attempts < maxAttempts && (
         !response1 ||
         !response1?.response ||
         !response1?.response.idea_generator_clustering ||
@@ -504,20 +506,21 @@ const PageIdeaGenerator = () => {
             !Array.isArray(cluster.ideas) ||
             cluster.ideas.length === 0
         )
+      )
       ) {
-        if (attempts >= maxAttempts) {
-          setShowPopupError(true);
-          return;
-        }
-        attempts++;
-
         response1 = await InterviewXIdeaGeneratorClusteringRequest(
           data1,
           isLoggedIn
         );
+        attempts++;
       }
+        if (attempts >= maxAttempts) {
+          setShowPopupError(true);
+          return;
+        }
 
       setIdeaGeneratorClustering(clusteringData);
+
 
       // 결과 보고서
       const data2 = {

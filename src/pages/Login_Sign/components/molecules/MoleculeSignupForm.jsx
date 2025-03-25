@@ -240,7 +240,6 @@ const MoleculeSignupForm = () => {
       "naver.com",
       "daum.net",
       "nate.com",
-      "kakao.com",
       "orgio.net",
       "wail.co.kr",
       "lycos.co.kr",

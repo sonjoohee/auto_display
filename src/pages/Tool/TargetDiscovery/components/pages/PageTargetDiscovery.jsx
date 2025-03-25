@@ -393,7 +393,7 @@ const PageTargetDiscovery = () => {
               country: targetDiscoveryInfo.country,
             };
 
-            const response = await InterviewXTargetDiscoveryScenarioRequest(
+           let response = await InterviewXTargetDiscoveryScenarioRequest(
               apiRequestData,
               isLoggedIn
             );
@@ -402,7 +402,8 @@ const PageTargetDiscovery = () => {
             let attempts = 0;
 
             while (
-              !response ||
+              attempts < maxAttempts && (
+              !response||
               !response?.response ||
               !response?.response?.target_discovery_scenario ||
               !response?.response?.target_discovery_scenario
@@ -420,17 +421,17 @@ const PageTargetDiscovery = () => {
                 ?.description ||
               !response?.response?.target_discovery_scenario?.usage_scenario
                 ?.key_sentence
+              )
             ) {
-              if (attempts >= maxAttempts) {
-                setShowPopupError(true);
-                return;
-              }
-              attempts++;
-
               response = await InterviewXTargetDiscoveryScenarioRequest(
                 apiRequestData,
                 isLoggedIn
               );
+              attempts++;
+            }
+            if (attempts >= maxAttempts) {
+              setShowPopupError(true);
+              return;
             }
 
             // 개별 시나리오 데이터 업데이트
@@ -528,7 +529,8 @@ const PageTargetDiscovery = () => {
         target_discovery_scenario: targetDiscoveryScenario,
       };
 
-      const response = await InterviewXTargetDiscoveryFinalReportRequest(
+      let response;
+      response = await InterviewXTargetDiscoveryFinalReportRequest(
         scenarioData,
         isLoggedIn
       );
@@ -537,6 +539,7 @@ const PageTargetDiscovery = () => {
       let attempts = 0;
 
       while (
+        attempts < maxAttempts && (
         !response ||
         !response?.response?.target_discovery_final_report?.potential_rank_1
           ?.title ||
@@ -548,17 +551,17 @@ const PageTargetDiscovery = () => {
           ?.rank_reason ||
         !response?.response?.target_discovery_final_report?.potential_rank_1
           ?.keywords
+      ) 
       ) {
-        if (attempts >= maxAttempts) {
-          setShowPopupError(true);
-          return;
-        }
-        attempts++;
-
         response = await InterviewXTargetDiscoveryFinalReportRequest(
           scenarioData,
           isLoggedIn
         );
+        attempts++;
+      }
+      if (attempts >= maxAttempts) {
+        setShowPopupError(true);
+        return;
       }
 
       setTargetDiscoveryFinalReport(

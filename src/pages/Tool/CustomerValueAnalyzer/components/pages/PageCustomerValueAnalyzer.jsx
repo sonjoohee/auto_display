@@ -430,7 +430,7 @@ const PageCustomerValueAnalyzer = () => {
               analysis_purpose: customerValueAnalyzerPersona[index],
             };
 
-            const response =
+            let response =
               await InterviewXCustomerValueAnalyzerJourneyMapRequest(
                 data,
                 isLoggedIn
@@ -488,27 +488,7 @@ const PageCustomerValueAnalyzer = () => {
               [index]: "completed",
             }));
 
-            // setCustomerValueAnalyzerJourneyMap((prev) => {
-            //   // prev가 undefined인 경우 빈 배열로 초기화
-            //   const currentJourneyMaps = Array.isArray(prev) ? prev : [];
-            //   // 새로운 journey map이 존재하는 경우에만 추가
-            //   if (response?.response?.customer_value_journey_map) {
-            //     const journeyMap = response.response.customer_value_journey_map;
-            //     if (journeyMap.mermaid) {
-            //       journeyMap.mermaid = formatMermaidData(journeyMap.mermaid);
-            //     }
-            //     return [...currentJourneyMaps, journeyMap];
-            //   }
-            //   return currentJourneyMaps;
-            // });
-
-            // // 성공적인 응답 후 카드 상태 업데이트
-            // if (response?.response?.customer_value_journey_map) {
-            //   setCardStatuses((prev) => ({
-            //     ...prev,
-            //     [index]: "completed",
-            //   }));
-            // }
+        
 
             // // 모든 시나리오를 한번에 저장
             // await updateToolOnServer(
@@ -601,7 +581,7 @@ const PageCustomerValueAnalyzer = () => {
       };
 
 
-      const response = await InterviewXCustomerValueAnalyzerPersonaRequest(
+      let response = await InterviewXCustomerValueAnalyzerPersonaRequest(
         businessData,
         isLoggedIn
       );
@@ -610,23 +590,25 @@ const PageCustomerValueAnalyzer = () => {
       let attempts = 0;
 
       while (
+        attempts < maxAttempts && (
         !response ||
         !response?.response ||
         !response?.response.customer_value_persona ||
         !Array.isArray(response.response.customer_value_persona) ||
         response.response.customer_value_persona.length === 0
+        )      
       ) {
-        if (attempts >= maxAttempts) {
-          setShowPopupError(true);
-          return;
-        }
-        attempts++;
-
         response = await InterviewXCustomerValueAnalyzerPersonaRequest(
           businessData,
           isLoggedIn
         );
+        attempts++;
       }
+      if (attempts >= maxAttempts) {
+        setShowPopupError(true);
+        return;
+      }
+
       const businessUpdateData = {
         business: project.projectTitle || "",
         targetList: selectedCustomers,
@@ -805,7 +787,7 @@ const PageCustomerValueAnalyzer = () => {
         };
 
         try {
-          const response = await InterviewXCustomerValueAnalyzerFactorRequest(
+          let response = await InterviewXCustomerValueAnalyzerFactorRequest(
             requestData,
             isLoggedIn
           );
@@ -923,23 +905,24 @@ const PageCustomerValueAnalyzer = () => {
       let attempts = 0;
 
       while (
+        attempts < maxAttempts && (
         !clusteringResponse ||
         !clusteringResponse.response ||
         !clusteringResponse.response.customer_value_clustering ||
         !Array.isArray(clusteringResponse.response.customer_value_clustering) ||
         clusteringResponse.response.customer_value_clustering.length === 0
+      ) 
       ) {
-        if (attempts >= maxAttempts) {
-          setShowPopupError(true);
-          return;
-        }
-        attempts++;
-
         clusteringResponse =
           await InterviewXCustomerValueAnalyzerClusteringRequest(
             clusteringData,
             isLoggedIn
-          );
+            );
+        attempts++;
+      }
+      if (attempts >= maxAttempts) {
+        setShowPopupError(true);
+        return;
       }
 
       setCustomerValueAnalyzerClustering(
@@ -953,7 +936,8 @@ const PageCustomerValueAnalyzer = () => {
       };
 
       // 포지셔닝 요청
-      const positioningResponse =
+      let positioningResponse;
+      positioningResponse =
         await InterviewXCustomerValueAnalyzerPositioningRequest(
           positioningData,
           isLoggedIn
@@ -962,23 +946,23 @@ const PageCustomerValueAnalyzer = () => {
       let attempts2 = 0;
 
       while (
+        attempts2 < maxAttempts && (
         !positioningResponse ||
         !positioningResponse.response ||
         !positioningResponse.response.customer_value_positioning ||
         !positioningResponse.response.customer_value_positioning.cluster_list ||
         !positioningResponse.response.customer_value_positioning.mermaid
+        ) 
       ) {
-        if (attempts2 >= maxAttempts) {
-          setShowPopupError(true);
-          return;
-        }
+        positioningResponse = await InterviewXCustomerValueAnalyzerPositioningRequest(
+          positioningData,
+          isLoggedIn
+        );
         attempts2++;
-
-        positioningResponse =
-          await InterviewXCustomerValueAnalyzerPositioningRequest(
-            positioningData,
-            isLoggedIn
-          );
+      }
+      if (attempts2 >= maxAttempts) {
+        setShowPopupError(true);
+        return;
       }
       setCustomerValueAnalyzerPositioning(
         positioningResponse.response.customer_value_positioning
@@ -1003,24 +987,25 @@ const PageCustomerValueAnalyzer = () => {
       let attempts3 = 0;
 
       while (
+        attempts3 < maxAttempts && (
         !finalReportResponse ||
         !finalReportResponse.response ||
         !finalReportResponse.response.customer_value_final_report ||
         !finalReportResponse.response.customer_value_final_report.title ||
         !finalReportResponse.response.customer_value_final_report.content_1 ||
         !finalReportResponse.response.customer_value_final_report.content_2
+      ) 
       ) {
-        if (attempts3 >= maxAttempts) {
-          setShowPopupError(true);
-          return;
-        }
-        attempts3++;
-
         finalReportResponse =
           await InterviewXCustomerValueAnalyzerFinalReportRequest(
             finalReportData,
             isLoggedIn
           );
+        attempts3++;
+      }
+      if (attempts3 >= maxAttempts) {
+        setShowPopupError(true);
+        return;
       }
 
       setCustomerValueAnalyzerFinalReport(
