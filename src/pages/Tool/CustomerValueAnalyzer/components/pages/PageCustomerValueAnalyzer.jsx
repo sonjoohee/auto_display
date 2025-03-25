@@ -448,7 +448,7 @@ const PageCustomerValueAnalyzer = () => {
                 !response?.response?.customer_value_journey_map?.step1 ||
                 !response?.response?.customer_value_journey_map?.conclusion ||
                 !response?.response?.customer_value_journey_map?.mermaid ||
-                !response?.response?.customer_value_journey_map?.section1
+                !response?.response?.customer_value_journey_map?.section_1
               )
             ) {
 
@@ -470,45 +470,45 @@ const PageCustomerValueAnalyzer = () => {
                 business: customerValueAnalyzerInfo.business,
                 target: customerValueAnalyzerInfo.targetList[index],
             });
-            // setCustomerValueAnalyzerJourneyMap((prev) => {
-            //   const currentJourneyMaps = Array.isArray(prev) ? prev : [];
-            //   const journeyMap = response.response.customer_value_journey_map;
-              
-            //   // mermaid 데이터 포맷팅
-            //   if (journeyMap.mermaid) {
-            //     journeyMap.mermaid = formatMermaidData(journeyMap.mermaid);
-            //   }
-              
-            //   return [...currentJourneyMaps, journeyMap];
-            // });
-
-            // // 카드 상태 업데이트
-            // setCardStatuses((prev) => ({
-            //   ...prev,
-            //   [index]: "completed",
-            // }));
-
             setCustomerValueAnalyzerJourneyMap((prev) => {
-              // prev가 undefined인 경우 빈 배열로 초기화
               const currentJourneyMaps = Array.isArray(prev) ? prev : [];
-              // 새로운 journey map이 존재하는 경우에만 추가
-              if (response?.response?.customer_value_journey_map) {
-                const journeyMap = response.response.customer_value_journey_map;
-                if (journeyMap.mermaid) {
-                  journeyMap.mermaid = formatMermaidData(journeyMap.mermaid);
-                }
-                return [...currentJourneyMaps, journeyMap];
+              const journeyMap = response.response.customer_value_journey_map;
+              
+              // mermaid 데이터 포맷팅
+              if (journeyMap.mermaid) {
+                journeyMap.mermaid = formatMermaidData(journeyMap.mermaid);
               }
-              return currentJourneyMaps;
+              
+              return [...currentJourneyMaps, journeyMap];
             });
 
-            // 성공적인 응답 후 카드 상태 업데이트
-            if (response?.response?.customer_value_journey_map) {
-              setCardStatuses((prev) => ({
-                ...prev,
-                [index]: "completed",
-              }));
-            }
+            // 카드 상태 업데이트
+            setCardStatuses((prev) => ({
+              ...prev,
+              [index]: "completed",
+            }));
+
+            // setCustomerValueAnalyzerJourneyMap((prev) => {
+            //   // prev가 undefined인 경우 빈 배열로 초기화
+            //   const currentJourneyMaps = Array.isArray(prev) ? prev : [];
+            //   // 새로운 journey map이 존재하는 경우에만 추가
+            //   if (response?.response?.customer_value_journey_map) {
+            //     const journeyMap = response.response.customer_value_journey_map;
+            //     if (journeyMap.mermaid) {
+            //       journeyMap.mermaid = formatMermaidData(journeyMap.mermaid);
+            //     }
+            //     return [...currentJourneyMaps, journeyMap];
+            //   }
+            //   return currentJourneyMaps;
+            // });
+
+            // // 성공적인 응답 후 카드 상태 업데이트
+            // if (response?.response?.customer_value_journey_map) {
+            //   setCardStatuses((prev) => ({
+            //     ...prev,
+            //     [index]: "completed",
+            //   }));
+            // }
 
             // // 모든 시나리오를 한번에 저장
             // await updateToolOnServer(
