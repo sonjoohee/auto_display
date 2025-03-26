@@ -154,10 +154,7 @@ const PagePersona3Select = () => {
         mount: creditIndepthInterview,
       };
 
-       await UserCreditUse(
-        creditUsePayload,
-        isLoggedIn
-      );
+      await UserCreditUse(creditUsePayload, isLoggedIn);
 
       // 이후 인터뷰 시작 등 추가 로직 처리 (예를 들어 인터뷰 준비 팝업 표시)
       setShowPopup(true);
@@ -195,7 +192,6 @@ const PagePersona3Select = () => {
     setShowToast(true);
   };
 
-
   const getSelectedCount = () => {
     if (!selectedPersonas) return 0;
     return Array.isArray(selectedPersonas) ? selectedPersonas.length : 1;
@@ -222,7 +218,6 @@ const PagePersona3Select = () => {
 
       return false;
     };
-
 
     // F5 키 또는 Ctrl+R 감지
     const handleKeyDown = (event) => {
@@ -500,16 +495,16 @@ const PagePersona3Select = () => {
       {selectedInterviewType === "multiple" ? (
         <OrganismToastPopup isActive={showToast} autoClose={false} />
       ) : selectedInterviewType === "single" ? (
-        // <OrganismToastPopupSingleChat
-        //   isActive={showToast}
-        //   autoClose={false}
-        //   isIndepth={isIndepthEnabled}
-        // />
+        <OrganismToastPopupSingleChat
+          isActive={showToast}
+          autoClose={false}
+          isIndepth={isIndepthEnabled}
+        />
+      ) : selectedInterviewType === "singleLive" ? (
         <OrganismToastPopupSingleLiveChat
-        isActive={showToast}
-        autoClose={false}
-        isIndepth={isIndepthEnabled}
-      />
+          isActive={showToast}
+          autoClose={false}
+        />
       ) : null}
 
       {showCreditPopup && (

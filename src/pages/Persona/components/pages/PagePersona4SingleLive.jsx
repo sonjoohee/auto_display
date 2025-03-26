@@ -57,12 +57,14 @@ import images from "../../../../assets/styles/Images";
 import personaImages from "../../../../assets/styles/PersonaImages";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
-import { updateProjectOnServer } from "../../../../utils/indexedDB";
-import { updateProjectReportOnServer } from "../../../../utils/indexedDB";
-import { getProjectReportByIdFromIndexedDB } from "../../../../utils/indexedDB";
-import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
+import {
+  updateProjectOnServer,
+  updateProjectReportOnServer,
+  getProjectReportByIdFromIndexedDB,
+  getProjectByIdFromIndexedDB,
+} from "../../../../utils/indexedDB";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
-import OrganismToastPopupSingleChaComplete from "../organisms/OrganismToastPopupSingleChaComplete";
+import OrganismToastPopupSingleLiveChaComplete from "../organisms/OrganismToastPopupSingleLiveChaComplete";
 import * as d3 from "d3";
 
 const PagePersona4SingleLive = () => {
@@ -273,7 +275,7 @@ const PagePersona4SingleLive = () => {
       } else {
         // 2. 새로 생성된 보고서
         if (reportId) {
-          if (selectedInterviewType === "single") {
+          if (selectedInterviewType === "singleLive") {
             await updateProjectReportOnServer(
               reportId,
               {
@@ -284,7 +286,6 @@ const PagePersona4SingleLive = () => {
                 purposeData: selectedInterviewPurposeData,
                 singleInterviewReportTab1: singleInterviewReportTab1,
                 singleInterviewReportTab2: singleInterviewReportTab2,
-                singleInterviewReportTab3: singleInterviewReportTab3,
               },
               isLoggedIn
             );
@@ -748,13 +749,13 @@ const PagePersona4SingleLive = () => {
                       isActive={activeTab === 1}
                       onClick={() => handleTabClick(1)}
                     >
-                      조사 개요
+                      페르소나 정보
                     </TabButtonType3>
                     <TabButtonType3
                       isActive={activeTab === 2}
                       onClick={() => handleTabClick(2)}
                     >
-                      페르소나 행동 패턴 분석
+                      인터뷰 요약
                     </TabButtonType3>
                     {/* <TabButtonType3
                       isActive={activeTab === 3}
@@ -777,57 +778,7 @@ const PagePersona4SingleLive = () => {
                     style={{ display: activeTab === 1 ? "flex" : "none" }}
                   >
                     <div>
-                      <H4>1. 조사 방법 및 범위</H4>
-                      <UlList Disc>
-                        <li>
-                          조사 방법 :{" "}
-                          {
-                            singleInterviewReportTab1?.research_theory
-                              ?.research_type
-                          }
-                        </li>
-                        <li>
-                          조사 대상 :{" "}
-                          {
-                            singleInterviewReportTab1?.research_theory
-                              ?.research_target
-                          }
-                        </li>
-                      </UlList>
-                    </div>
-
-                    <div>
-                      <H4>2. 조사 목적</H4>
-                      <UlList Disc Spacing>
-                        <li>{singleInterviewReportTab1?.research_purpose}</li>
-                      </UlList>
-                    </div>
-
-                    <div>
-                      <H4>3. 주요 인사이트</H4>
-                      <UlList Disc Spacing>
-                        <li>
-                          {
-                            singleInterviewReportTab1?.research_insight
-                              ?.insight_1
-                          }
-                        </li>
-                        <li>
-                          {
-                            singleInterviewReportTab1?.research_insight
-                              ?.insight_2
-                          }
-                        </li>
-                      </UlList>
-                    </div>
-                  </ReportContent>
-
-                  <ReportContent
-                    section={2}
-                    style={{ display: activeTab === 2 ? "flex" : "none" }}
-                  >
-                    <div>
-                      <H4>1. 페르소나 정보</H4>
+                      {/* <H4>1. 페르소나 정보</H4> */}
                       <PersonaInformationWrap>
                         <PersonaInformation>
                           <Persona size="Large" Round>
@@ -862,7 +813,6 @@ const PagePersona4SingleLive = () => {
                         </div>
                       </PersonaInformationWrap>
                     </div>
-
                     <div>
                       <CategoryGraphWrap>
                         <CategoryGraph>
@@ -1041,7 +991,12 @@ const PagePersona4SingleLive = () => {
                         </CategoryGraph>
                       </CategoryGraphWrap>
                     </div>
+                  </ReportContent>
 
+                  <ReportContent
+                    section={2}
+                    style={{ display: activeTab === 2 ? "flex" : "none" }}
+                  >
                     <div>
                       <H4>2. 제품 관련 행동 패턴</H4>
                       <UlList Disc>
@@ -1267,7 +1222,7 @@ const PagePersona4SingleLive = () => {
             </SidebarWrap>
 
             {showToast && (
-              <OrganismToastPopupSingleChaComplete
+              <OrganismToastPopupSingleLiveChaComplete
                 isActive={showToast}
                 onClose={() => setShowToast(false)}
                 isComplete={true}

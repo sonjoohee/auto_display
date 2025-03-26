@@ -46,8 +46,8 @@ import {
   updateProjectOnServer,
   UserCreditCheck,
   UserCreditUse,
+  createProjectReportOnServer,
 } from "../../../../utils/indexedDB";
-import { createProjectReportOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../../../../pages/Persona/components/molecules/MoleculeRecreate";
 import { InterviewXPersonaSingleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewRequest } from "../../../../utils/indexedDB";
@@ -866,7 +866,7 @@ const OrganismToastPopupSingleChat = ({
     }
     setPersonaButtonState3(0);
     // onClose();
-    window.location.href = "/";
+    window.location.href = "/Project";
   };
 
   const handleWarningContinue = () => {
