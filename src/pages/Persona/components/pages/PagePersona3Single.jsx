@@ -118,10 +118,10 @@ const PagePersona3Single = () => {
       setSelectedInterviewType("singleLive");
 
       const selectedPurpose = {
-        id: 4,
-        theory_title: "자율 인터뷰를 통한 사용자 경험 및 니즈 분석",
-        title: "자율 인터뷰를 통한 사용자 경험 및 니즈 분석",
-        view_title: "자율 인터뷰를 통한 사용자 경험 및 니즈 분석",
+        id: 5,
+        theory_title: "자율 인터뷰",
+        title: "자율 인터뷰",
+        view_title: "자율 인터뷰",
         definition: "자율 인터뷰는 사용자가 직접 질문을 구성하고 진행하는 방식으로, 페르소나와의 자유로운 대화를 통해 심층적인 인사이트를 도출하는 방법론입니다. 사용자의 관심사와 목적에 맞춘 맞춤형 질문을 통해 더욱 구체적이고 실질적인 피드백을 얻을 수 있습니다.",
         objective: "사용자가 직접 설계한 질문을 통해 페르소나의 경험과 니즈를 심층적으로 이해하고, 자유로운 대화 흐름 속에서 예상하지 못한 인사이트를 발견하여 서비스 개선에 활용합니다.",
         characteristic: [
@@ -132,7 +132,7 @@ const PagePersona3Single = () => {
         ],
         description: "사용자 커스텀 방법론",
         custom_theory_data: {
-            theory_title: "자율 인터뷰를 통한 사용자 경험 및 니즈 분석",
+            theory_title: "자율 인터뷰",
             definition: "자율 인터뷰는 사용자가 직접 질문을 구성하고 진행하는 방식으로, 페르소나와의 자유로운 대화를 통해 심층적인 인사이트를 도출하는 방법론입니다. 사용자의 관심사와 목적에 맞춘 맞춤형 질문을 통해 더욱 구체적이고 실질적인 피드백을 얻을 수 있습니다.",
             objective: "사용자가 직접 설계한 질문을 통해 페르소나의 경험과 니즈를 심층적으로 이해하고, 자유로운 대화 흐름 속에서 예상하지 못한 인사이트를 발견하여 서비스 개선에 활용합니다.",
             characteristic: [
