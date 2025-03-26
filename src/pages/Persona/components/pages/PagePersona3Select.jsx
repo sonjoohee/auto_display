@@ -310,18 +310,20 @@ const PagePersona3Select = () => {
                   </Body2>
 
                   <ListBoxGroup>
-                    <li>
-                      <Body2 color="gray500">인터뷰 목적</Body2>
-                      {selectedInterviewType === "multiple" ? (
-                        <Body2 color="gray800">
-                          {selectedInterviewPurpose}
-                        </Body2>
-                      ) : selectedInterviewType === "single" ? (
-                        <Body2 color="gray800">
-                          {selectedInterviewPurposeData?.view_title || ""}
-                        </Body2>
-                      ) : null}
-                    </li>
+                    {selectedInterviewType !== "singleLive" && (
+                      <li>
+                        <Body2 color="gray500">인터뷰 목적</Body2>
+                        {selectedInterviewType === "multiple" ? (
+                          <Body2 color="gray800">
+                            {selectedInterviewPurpose}
+                          </Body2>
+                        ) : selectedInterviewType === "single" ? (
+                          <Body2 color="gray800">
+                            {selectedInterviewPurposeData?.view_title || ""}
+                          </Body2>
+                        ) : null}
+                      </li>
+                    )}
                     <li>
                       <Body2 color="gray500">페르소나 선택</Body2>
                       {selectedPersonas ? (

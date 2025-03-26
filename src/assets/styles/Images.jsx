@@ -366,6 +366,9 @@ import ProjectVietnam from "../images/Project-vietnam.svg";
 import Image from "../images/image.svg";
 import Trash from "../images/trash.svg";
 
+import InterviewModeSelfQuestion from "../images/InterviewModeSelfQuestion.svg";
+import InterviewModeModerator from "../images/InterviewModeModerator.svg";
+
 const images = {
   Logo,
   SymbolLogo,
@@ -720,6 +723,9 @@ const images = {
 
   Image,
   Trash,
+
+  InterviewModeSelfQuestion,
+  InterviewModeModerator,
 }
 
 export default images;
