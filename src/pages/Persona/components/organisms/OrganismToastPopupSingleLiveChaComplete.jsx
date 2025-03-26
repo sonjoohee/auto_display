@@ -196,13 +196,13 @@ const OrganismToastPopupSingleLiveChaComplete = ({
             {item.indepth && (
               <>
                 <ChatItem Moder>
-                  <Persona Moder color="Gainsboro" size="Medium" Round>
+                  {/* <Persona Moder color="Gainsboro" size="Medium" Round>
                     <img src={personaImages.persona_moderator} alt="모더" />
                     <span>
                       <img src={images.PatchCheckFill} alt="" />
                       <ModerText color="primary">모더</ModerText>
                     </span>
-                  </Persona>
+                  </Persona> */}
                   <ChatBox Moder>
                     <Sub1 color="gray800" align="left">
                       {typeof item.indepth.question === "string"
