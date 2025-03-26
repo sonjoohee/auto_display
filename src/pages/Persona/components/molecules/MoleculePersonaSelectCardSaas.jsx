@@ -55,7 +55,7 @@ const MoleculePersonaSelectCardSaas = ({
       ...personaList.unselected,
     ].find((p) => p._id === persona._id);
 
-    if (interviewType === "single") {
+    if (interviewType === "single" || interviewType === "singleLive") {
       if (
         personaList?.selected?.[0]?._id === persona._id &&
         personaList?.selected?.length > 0
@@ -114,7 +114,7 @@ const MoleculePersonaSelectCardSaas = ({
   };
 
   const isSelected = (personaId) => {
-    if (interviewType === "single") {
+    if (interviewType === "single" || interviewType === "singleLive") {
       return selectedPersonas === personaId;
     }
     return (
@@ -350,12 +350,22 @@ const ListBoxItem = styled.div`
     props.interviewType === "single" && props.anySelected && !props.selected
       ? 0.5
       : 1};
+  background: ${(props) =>
+    props.selected && props.interviewType === "singleLive"
+      ? palette.primaryLightest
+      : props.theme.white};
+  opacity: ${(props) =>
+    props.interviewType === "singleLive" && props.anySelected && !props.selected
+      ? 0.5
+      : 1};
 
   // hover 효과 추가
   transition: background-color 0.2s ease;
 
   ${(props) =>
-    ((props.interviewType === "single" && !props.selected) ||
+    (((props.interviewType === "single" ||
+      props.interviewType === "singleLive") &&
+      !props.selected) ||
       props.interviewType === "multiple") &&
     `    &:hover {
       border-radius: 10px;
@@ -391,7 +401,8 @@ const ListBoxItem = styled.div`
 
   ${(props) =>
     props.selected &&
-    props.interviewType === "single" &&
+    (props.interviewType === "single" ||
+      props.interviewType === "singleLive") &&
     `
       ${Button} {
         color: ${palette.primary};

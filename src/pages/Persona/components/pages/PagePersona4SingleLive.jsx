@@ -993,33 +993,64 @@ const PagePersona4SingleLive = () => {
                     style={{ display: activeTab === 2 ? "flex" : "none" }}
                   >
                     <div>
-                      <H4>2. 제품 관련 행동 패턴</H4>
+                      <H4>
+                        1. 질문의 의도 :{" "}
+                        {singleInterviewReportTab2?.summary_data?.title ||
+                          "테스트"}
+                      </H4>
                       <UlList Disc>
                         <li>
-                          {
-                            singleInterviewReportTab2?.product_service_usage_pattern
-                          }
+                          {singleInterviewReportTab2?.summary_data?.summary ||
+                            "테스트"}
                         </li>
                       </UlList>
                     </div>
 
                     <div>
-                      <H4>3. 구매 및 활용 동기</H4>
+                      <H4>2. 인터뷰 내용 정리</H4>
                       <UlList Disc>
-                        <li>
-                          {
-                            singleInterviewReportTab2?.purchase_and_usage_motivation
-                          }
-                        </li>
+                        {singleInterviewReportTab2?.thematic_analysis ? (
+                          singleInterviewReportTab2.thematic_analysis.map(
+                            (theme, index) => (
+                              <li key={index}>
+                                <strong>{theme.theme}:</strong> {theme.reason}
+                                <br />
+                                <br />
+                                <strong>주요 키워드:</strong>{" "}
+                                {theme.keywords.join(", ")}
+                                <br />
+                                <br />
+                                <strong>참고 인터뷰 내용:</strong>
+                                <ul
+                                  style={{
+                                    marginLeft: "20px",
+                                    marginTop: "10px",
+                                  }}
+                                >
+                                  {theme.interview_reference.map(
+                                    (reference, idx) => (
+                                      <li
+                                        key={idx}
+                                        style={{ marginBottom: "8px" }}
+                                      >
+                                        "{reference}"
+                                      </li>
+                                    )
+                                  )}
+                                </ul>
+                              </li>
+                            )
+                          )
+                        ) : (
+                          <li>인터뷰 내용이 없습니다</li>
+                        )}
                       </UlList>
                     </div>
 
                     <div>
-                      <H4>4. 문제점 및 요구 사항</H4>
+                      <H4>3. 주요 인사이트</H4>
                       <UlList Disc>
-                        <li>
-                          {singleInterviewReportTab2?.problems_and_requirements}
-                        </li>
+                        <li>{singleInterviewReportTab2?.main_insights}</li>
                       </UlList>
                     </div>
                   </ReportContent>

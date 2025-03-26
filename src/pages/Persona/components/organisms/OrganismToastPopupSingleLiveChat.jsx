@@ -257,9 +257,9 @@ const OrganismToastPopupSingleLiveChat = ({
             responseReportTab2.response.persona_info &&
             responseReportTab2.response.persona_attitude &&
             responseReportTab2.response.big_five_personality_traits &&
-            responseReportTab2.response.product_service_usage_pattern &&
-            responseReportTab2.response.purchase_and_usage_motivation &&
-            responseReportTab2.response.problems_and_requirements
+            responseReportTab2.response.summary_data &&
+            responseReportTab2.response.main_insights &&
+            responseReportTab2.response.thematic_analysis
           ) {
             break;
           }
