@@ -46,17 +46,11 @@ import {
   updateProjectOnServer,
   UserCreditCheck,
   UserCreditUse,
+  createProjectReportOnServer,
 } from "../../../../utils/indexedDB";
-import { createProjectReportOnServer } from "../../../../utils/indexedDB";
-import MoleculeRecreate from "../molecules/MoleculeRecreate";
-import { InterviewXPersonaSingleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewRequest } from "../../../../utils/indexedDB";
-import { InterviewXPersonaSingleInterviewRequestAddQuestion } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewReportTab1 } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewReportTab2 } from "../../../../utils/indexedDB";
-// import { InterviewXPersonaSingleInterviewReportTab3 } from "../../../../utils/indexedDB";
-import { SkeletonLine } from "../../../../assets/styles/Skeleton";
-import { InterviewXPersonaSingleIndepthInterviewGeneratorRequest } from "../../../../utils/indexedDB";
 
 const OrganismToastPopupSingleLiveChat = ({
   isActive,
@@ -590,7 +584,7 @@ const OrganismToastPopupSingleLiveChat = ({
     }
     setPersonaButtonState3(0);
     // onClose();
-    window.location.href = "/";
+    window.location.href = "/Project";
   };
 
   const handleWarningContinue = () => {
@@ -943,7 +937,7 @@ const OrganismToastPopupSingleLiveChat = ({
           <ChatWrap>
             <Header>
               <Title>
-                {projectTotalInfo.projectTitle}의 1:1 심층 인터뷰
+                {projectTotalInfo.projectTitle}의 1:1 자율형 인터뷰
                 <ColseButton onClick={handleClose} />
               </Title>
               <ul>
@@ -984,7 +978,8 @@ const OrganismToastPopupSingleLiveChat = ({
                 {interviewStatus.length > 0 &&
                   interviewStatus.every((status) => status === "Complete") &&
                   interviewQuestionListState.length < 10 &&
-                  countAdditionalQuestion !== 0 && (
+                  countAdditionalQuestion !== 0 &&
+                  selectedRadio !== "yes" && (
                     <ChatItem Add>
                       <ChatBox Moder>
                         <Sub1 color="gray800" align="left">
@@ -994,14 +989,12 @@ const OrganismToastPopupSingleLiveChat = ({
                       <ChatAddButton>
                         <label
                           disabled={
-                            countAdditionalQuestion === 0 
+                            countAdditionalQuestion === 0
                             // selectedRadio !== null
                           }
                           onClick={() => {
-                          
-                              setSelectedRadio("yes");
-                              loadInterviewReport();
-                            
+                            setSelectedRadio("yes");
+                            loadInterviewReport();
                           }}
                         >
                           <input
@@ -1087,8 +1080,26 @@ const OrganismToastPopupSingleLiveChat = ({
                       !isAnalyzing
                     ) {
                       e.preventDefault(); // 기본 엔터 동작 방지
-                      handleQuestionSelect(0, inputValue.trim());
-                      setInputValue("");
+                      // DOM 이벤트 즉시 중지 및 버블링 방지
+                      e.stopPropagation();
+
+                      // 중복 호출 방지를 위해 플래그 사용
+                      const isProcessing =
+                        e.target.dataset.processing === "true";
+                      if (isProcessing) return;
+
+                      // 처리 중 플래그 설정
+                      e.target.dataset.processing = "true";
+
+                      // 비동기 실행
+                      setTimeout(() => {
+                        handleQuestionSelect(0, inputValue.trim());
+                        setInputValue("");
+                        // 처리 완료 후 플래그 초기화 (약간의 지연 추가)
+                        setTimeout(() => {
+                          e.target.dataset.processing = "false";
+                        }, 300);
+                      }, 0);
                     }
                   }}
                   onChange={handleInputChange}
@@ -1499,38 +1510,20 @@ const ChatAddButton = styled.div`
   button {
     flex-shrink: 0;
     font-family: "Pretendard", "Poppins";
-    font-size: 0.88rem;
-    color: ${palette.gray700};
-    font-weight: 400;
-    line-height: 1.55;
-    letter-spacing: -0.42px;
-    padding: 4px 12px;
-    border-radius: 40px;
-    border: 1px solid ${palette.gray700};
-    outline: none;
-    background: transparent;
+    font-size: 1rem;
+    border: 0;
+    filter: grayscale(1) opacity(0.3);
     transition: all 0.5s;
-
-    &:hover:not(:disabled) {
-      color: ${palette.primary};
-      border-color: ${palette.primary};
-      background: rgba(34, 111, 255, 0.04);
-    }
+    background: none;
+    cursor: pointer;
 
     &:disabled {
-      opacity: 0.5;
+      opacity: 1;
       cursor: not-allowed;
     }
 
-    &:hover {
-      color: ${palette.white};
-      background: ${palette.gray800};
-    }
-
-    &[type="button"]:active {
-      color: ${palette.primary};
-      border-color: ${palette.primary};
-      background: rgba(34, 111, 255, 0.04);
+    &:not(:disabled):hover {
+      filter: grayscale(0) opacity(1);
     }
   }
 `;
@@ -1603,39 +1596,6 @@ const ChatFooter = styled.div`
       opacity: 0.5;
     }
   }
-
-  button {
-    flex-shrink: 0;
-    // width: 32px;
-    // height: 32px;
-    // font-size: 0;
-    font-family: "Pretendard", "Poppins";
-    font-size: 1rem;
-    border: 0;
-    // background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='33' height='32' viewBox='0 0 33 32' fill='none'%3E%3Cg clip-path='url(%23clip0_690_5724)'%3E%3Cpath d='M5.64515 11.6483L25.4734 5.18259C26.7812 4.75614 28.0145 6.00577 27.571 7.30785L20.9018 26.8849C20.4086 28.3327 18.39 28.41 17.7875 27.0042L15.036 20.5839C14.7672 19.9567 14.9072 19.229 15.3896 18.7463L20.4659 13.6676C20.8353 13.298 20.8353 12.6989 20.4657 12.3294C20.083 11.9466 19.4625 11.9466 19.0797 12.3294L14.036 17.373C13.5486 17.8605 12.8116 17.9982 12.1811 17.7195L5.488 14.7621C4.08754 14.1433 4.1895 12.123 5.64515 11.6483Z' fill='%23226FFF'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_690_5724'%3E%3Crect width='32' height='32' fill='white' transform='translate(0.5)'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E")
-    //   center no-repeat;
-    // background-size: 100%;
-    filter: grayscale(1) opacity(0.3);
-    transition: all 0.5s;
-    background: none;
-    cursor: pointer;
-
-    &:disabled {
-      // opacity: 0.3;
-      opacity: 1;
-      cursor: not-allowed;
-
-      // &:hover {
-      //   opacity: 0.3;
-      // }
-    }
-
-    &:not(:disabled):hover {
-      // background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='33' height='32' viewBox='0 0 33 32' fill='none'%3E%3Cg clip-path='url(%23clip0_690_5724)'%3E%3Cpath d='M5.64515 11.6483L25.4734 5.18259C26.7812 4.75614 28.0145 6.00577 27.571 7.30785L20.9018 26.8849C20.4086 28.3327 18.39 28.41 17.7875 27.0042L15.036 20.5839C14.7672 19.9567 14.9072 19.229 15.3896 18.7463L20.4659 13.6676C20.8353 13.298 20.8353 12.6989 20.4657 12.3294C20.083 11.9466 19.4625 11.9466 19.0797 12.3294L14.036 17.373C13.5486 17.8605 12.8116 17.9982 12.1811 17.7195L5.488 14.7621C4.08754 14.1433 4.1895 12.123 5.64515 11.6483Z' fill='%23226FFF'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_690_5724'%3E%3Crect width='32' height='32' fill='white' transform='translate(0.5)'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E")
-      //   center no-repeat;
-      filter: grayscale(0) opacity(1);
-    }
-  }
 `;
 
 const ChatInput = styled.div`
@@ -1659,6 +1619,26 @@ const ChatInput = styled.div`
     border-color: ${palette.primary};
 
     button {
+      filter: grayscale(0) opacity(1);
+    }
+  }
+
+  button {
+    flex-shrink: 0;
+    font-family: "Pretendard", "Poppins";
+    font-size: 1rem;
+    border: 0;
+    filter: grayscale(1) opacity(0.3);
+    transition: all 0.5s;
+    background: none;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 1;
+      cursor: not-allowed;
+    }
+
+    &:not(:disabled):hover {
       filter: grayscale(0) opacity(1);
     }
   }

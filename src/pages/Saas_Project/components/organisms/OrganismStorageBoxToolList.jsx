@@ -386,7 +386,11 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
       }
     }
     if (tool.interviewType)
-      return tool.interviewType === "single" ? "심층 인터뷰" : "그룹 인터뷰";
+      return tool.interviewType === "single"
+        ? "심층 인터뷰(모더레이터)"
+        : tool.interviewType === "multiple"
+        ? "그룹 인터뷰"
+        : "심층 인터뷰(사용자)";
     if (tool.chat_data?.expert_index) {
       switch (tool.chat_data.expert_index) {
         case "1":

@@ -161,13 +161,13 @@ const OrganismToastPopupSingleLiveChaComplete = ({
           <React.Fragment key={index}>
             {/* 메인 질문 및 답변 */}
             <ChatItem Moder>
-              <Persona Moder color="Gainsboro" size="Medium" Round>
+              {/* <Persona Moder color="Gainsboro" size="Medium" Round>
                 <img src={personaImages.persona_moderator} alt="모더" />
                 <span>
                   <img src={images.PatchCheckFill} alt="" />
                   <ModerText color="primary">모더</ModerText>
                 </span>
-              </Persona>
+              </Persona> */}
               <ChatBox Moder>
                 <Sub1 color="gray800" align="left">
                   Q{index + 1}.{" "}
@@ -273,8 +273,7 @@ const OrganismToastPopupSingleLiveChaComplete = ({
           <ChatWrap>
             <Header>
               <Title>
-                {projectTotalInfo.projectTitle}의{" "}
-                {selectedInterviewPurposeData.title}
+                {projectTotalInfo.projectTitle}의 1:1 자율형 인터뷰
                 <ColseButton onClick={handleClose} />
               </Title>
               <ul>
