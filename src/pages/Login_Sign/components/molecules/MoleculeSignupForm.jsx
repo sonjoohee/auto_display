@@ -46,6 +46,7 @@ const MoleculeSignupForm = () => {
   const [conversationId] = useAtom(CONVERSATION_ID);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const [isCommercialEmail, setIsCommercialEmail] = useState(false);
 
   const navigate = useNavigate();
 
@@ -189,6 +190,7 @@ const MoleculeSignupForm = () => {
     if (!isValidEmail(email)) {
       setErrorStatus("유효한 이메일 주소를 입력해주세요.");
       setIsEmailValid(false);
+      setIsCommercialEmail(false);
       return;
     }
 
@@ -224,10 +226,10 @@ const MoleculeSignupForm = () => {
       "foxmail.com",
       "live.com",
       "msn.com",
-      "naver.com",  
-      "daum.net",  
+      "naver.com",
+      "daum.net",
       "nate.com",
-      "kakao.com", 
+      "kakao.com",
       "hanmail.net",
       "korea.com",
       "hanmir.com",
@@ -253,16 +255,17 @@ const MoleculeSignupForm = () => {
       "cyworld.com",
       "hanafos.com",
       "unitel.co.kr",
-
     ];
     const emailDomain = email.split("@")[1];
     if (commonEmailDomains.includes(emailDomain)) {
       setErrorStatus("상용 이메일은 사용할 수 없습니다.");
       setIsEmailValid(false);
+      setIsCommercialEmail(true);
       return;
     }
 
     setIsEmailValid(true);
+    setIsCommercialEmail(false);
     setErrorStatus("");
   };
 
@@ -472,7 +475,8 @@ const MoleculeSignupForm = () => {
               !signUpPassword ||
               !confirmPassword ||
               !phoneNumber ||
-              !termsAccepted
+              !termsAccepted ||
+              isCommercialEmail
             }
           >
             {isLoading ? "메일을 전송 중입니다..." : "회원가입"}
