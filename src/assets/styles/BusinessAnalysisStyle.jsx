@@ -1176,11 +1176,13 @@ export const ProjectTag = styled.span`
 `;
 
 export const UniqueTag = styled.span`
+  width: auto !important;
+  height: auto !important;
   font-size: 0.75rem;
   font-weight: 500;
   line-height: 1.5;
-  padding: 4px 12px;
-  border-radius: 15px;
+  padding: 4px 12px !important;
+  border-radius: 15px !important;
 
   &::before {
     content: "${(props) => {

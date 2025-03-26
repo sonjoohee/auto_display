@@ -671,6 +671,10 @@ export default OrganismPersonaCardList;
 
 const StyledButton = styled(Button)`
   flex-grow: 1;
+
+  &:hover {
+    background: ${palette.chatGray};
+  }
 `;
 
 const StarButtonStyled = styled.button`
