@@ -113,7 +113,6 @@ const PagePersona3Single = () => {
   };
   const handleSelectPersona = () => {
     // 선택된 페르소나들을 selected에 반영
-    setSelectedInterviewType("singleLive");
     setPersonaStep(3);
     setIsPersonaAccessible(true);
     navigate(`/Persona/3/Select`, { replace: true });
@@ -122,9 +121,11 @@ const PagePersona3Single = () => {
   const handleConfirmInterviewMode = () => {
     if (interviewModeType === 'selfQuestion') {
       // 내가 질문하기를 선택한 경우 페르소나 선택으로 이동
+      setSelectedInterviewType("singleLive");
       handleSelectPersona();
     } else {
       // 모더레이터에게 요청하기를 선택한 경우 기존 플로우 진행
+      setSelectedInterviewType("single");
       setShowConfirmationPopup(false);
       setInterviewModeStep(false);
     }
