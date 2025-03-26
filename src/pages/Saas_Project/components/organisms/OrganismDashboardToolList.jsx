@@ -452,7 +452,8 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
       }
     }
     if (tool.interviewType)
-      return tool.interviewType === "single"
+      return tool.interviewType === "single" ||
+        tool.interviewType === "singleLive"
         ? tool.reportTitle
         : tool.theoryType;
     if (tool.chat_data?.expert_index) {
