@@ -33,7 +33,7 @@ import {
   PURPOSE_ITEMS_SINGLE,
   SINGLE_INTERVIEW_REPORT_TAB1,
   SINGLE_INTERVIEW_REPORT_TAB2,
-  SINGLE_INTERVIEW_REPORT_TAB3,
+  // SINGLE_INTERVIEW_REPORT_TAB3,
   TRIAL_STATE,
   CREDIT_ADDITIONAL_QUESTION,
   EVENT_STATE,
@@ -54,7 +54,7 @@ import { InterviewXPersonaSingleInterviewRequest } from "../../../../utils/index
 import { InterviewXPersonaSingleInterviewRequestAddQuestion } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewReportTab1 } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewReportTab2 } from "../../../../utils/indexedDB";
-import { InterviewXPersonaSingleInterviewReportTab3 } from "../../../../utils/indexedDB";
+// import { InterviewXPersonaSingleInterviewReportTab3 } from "../../../../utils/indexedDB";
 import { SkeletonLine } from "../../../../assets/styles/Skeleton";
 import { InterviewXPersonaSingleIndepthInterviewGeneratorRequest } from "../../../../utils/indexedDB";
 
@@ -79,9 +79,9 @@ const OrganismToastPopupSingleLiveChat = ({
   const [, setSingleInterviewReportTab2] = useAtom(
     SINGLE_INTERVIEW_REPORT_TAB2
   );
-  const [, setSingleInterviewReportTab3] = useAtom(
-    SINGLE_INTERVIEW_REPORT_TAB3
-  );
+  // const [, setSingleInterviewReportTab3] = useAtom(
+  //   SINGLE_INTERVIEW_REPORT_TAB3
+  // );
   const [projectId] = useAtom(PROJECT_ID);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
@@ -131,7 +131,7 @@ const OrganismToastPopupSingleLiveChat = ({
   const [isInputEnabled, setIsInputEnabled] = useState(false);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
-  const [countAdditionalQuestion, ] = useState(1);
+  const [countAdditionalQuestion] = useState(1);
 
   const [, setCurrentAnswerData] = useState("");
   // 추가 질문 관련 상태 추가
@@ -147,23 +147,19 @@ const OrganismToastPopupSingleLiveChat = ({
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
-
       loadInterviewQuestion(); // 질문 생성
     };
     interviewLoading();
   }, [personaButtonState3, isComplete]);
 
-  
-
   const loadInterviewQuestion = async () => {
     setShowRegenerateButton1(false);
     try {
       if (personaButtonState3 === 1) {
-           // 빈 질문 리스트로 초기화
-      setIsLoadingPrepare(false);  // 여기서 로딩 상태를 해제하지만
-      setInterviewQuestionListState([]);
-      setInterviewStatus([]);
-       
+        // 빈 질문 리스트로 초기화
+        setIsLoadingPrepare(false); // 여기서 로딩 상태를 해제하지만
+        setInterviewQuestionListState([]);
+        setInterviewStatus([]);
       }
     } catch (error) {}
   };
@@ -293,36 +289,36 @@ const OrganismToastPopupSingleLiveChat = ({
       setSingleInterviewReportTab2(responseReportTab2.response);
 
       // Tab 3 리포트 생성
-      let responseReportTab3;
-      retryCount = 0;
+      // let responseReportTab3;
+      // retryCount = 0;
 
-      while (retryCount < maxRetries) {
-        try {
-          responseReportTab3 = await InterviewXPersonaSingleInterviewReportTab3(
-            data,
-            isLoggedIn
-          );
+      // while (retryCount < maxRetries) {
+      //   try {
+      //     responseReportTab3 = await InterviewXPersonaSingleInterviewReportTab3(
+      //       data,
+      //       isLoggedIn
+      //     );
 
-          if (
-            responseReportTab3 &&
-            responseReportTab3.response &&
-            responseReportTab3.response.title
-          ) {
-            break;
-          }
-        } catch (error) {}
+      //     if (
+      //       responseReportTab3 &&
+      //       responseReportTab3.response &&
+      //       responseReportTab3.response.title
+      //     ) {
+      //       break;
+      //     }
+      //   } catch (error) {}
 
-        retryCount++;
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
+      //   retryCount++;
+      //   await new Promise((resolve) => setTimeout(resolve, 1000));
+      // }
 
-      if (retryCount >= maxRetries) {
-        throw new Error(
-          "Failed to generate report tab 3 after maximum retries"
-        );
-      }
+      // if (retryCount >= maxRetries) {
+      //   throw new Error(
+      //     "Failed to generate report tab 3 after maximum retries"
+      //   );
+      // }
 
-      setSingleInterviewReportTab3(responseReportTab3.response);
+      // setSingleInterviewReportTab3(responseReportTab3.response);
 
       // 분석 완료 상태 설정
       setIsAnalyzing(false);
@@ -394,7 +390,7 @@ const OrganismToastPopupSingleLiveChat = ({
             });
           }
         }
-     
+
         const data = {
           business_analysis_data: projectCreateInfo,
           question: interviewQuestionListState[currentQuestionIndex],
@@ -501,7 +497,6 @@ const OrganismToastPopupSingleLiveChat = ({
           }
         }
 
-
         // 다음 질문으로 이동
         if (currentQuestionIndex < interviewQuestionListState.length - 1) {
           setCurrentQuestionIndex((prev) => prev + 1);
@@ -516,9 +511,9 @@ const OrganismToastPopupSingleLiveChat = ({
 
         // } // 모든 인터뷰가 완료되었는지 확인
         const allComplete = newStatus.every((status) => status === "Complete");
-        const questionCount = interviewQuestionListState.length;  // 현재 질문 개수
+        const questionCount = interviewQuestionListState.length; // 현재 질문 개수
 
-        if (allComplete  && questionCount >= 10 ) {
+        if (allComplete && questionCount >= 10) {
           // 데이터가 모두 저장될 때까지 잠시 대기
           await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -555,7 +550,7 @@ const OrganismToastPopupSingleLiveChat = ({
   useEffect(() => {
     const checkAndProcessInterview = async () => {
       if (
-        !isLoadingPrepare 
+        !isLoadingPrepare
         // interviewStatus[currentQuestionIndex] === "Pre" &&
         // interviewQuestionListState.length > 0
       ) {
@@ -619,7 +614,6 @@ const OrganismToastPopupSingleLiveChat = ({
       return newVisibleAnswers;
     });
   }, [interviewStatus]);
-
 
   const renderInterviewItems = () => {
     return interviewQuestionListState.map((item, index) => {
@@ -798,7 +792,7 @@ const OrganismToastPopupSingleLiveChat = ({
     } catch (error) {
       // console.error("Failed to create project on server:", error);
     }
-    navigate(`/Persona/4/Single`, { replace: true });
+    navigate(`/Persona/4/SingleLive`, { replace: true });
     //replace: true 현재 페이지를 대체하여 이동( 뒤로 가기 시 이전 인터뷰 화면으로 돌아감 방지)
   };
 
@@ -833,12 +827,10 @@ const OrganismToastPopupSingleLiveChat = ({
         },
         isLoggedIn
       );
-
     } catch (error) {
       setShowErrorPopup(true);
     }
   };
-
 
   // 추가: useEffect를 사용하여 isInputEnabled가 true로 변경될 때 포커스 설정
   useEffect(() => {
@@ -850,7 +842,6 @@ const OrganismToastPopupSingleLiveChat = ({
   // 라디오 버튼 선택 상태를 관리하기 위한 새로운 state 추가
   const [selectedRadio, setSelectedRadio] = useState(null);
 
-  
   const contentsRef = useRef(null);
 
   // 채팅 내용이 업데이트될 때마다 스크롤을 최하단으로 이동
@@ -952,8 +943,7 @@ const OrganismToastPopupSingleLiveChat = ({
           <ChatWrap>
             <Header>
               <Title>
-                {projectTotalInfo.projectTitle}의{" "}
-               1:1 심층 인터뷰
+                {projectTotalInfo.projectTitle}의 1:1 심층 인터뷰
                 <ColseButton onClick={handleClose} />
               </Title>
               <ul>
@@ -986,21 +976,19 @@ const OrganismToastPopupSingleLiveChat = ({
             </Header>
 
             <Contents ref={contentsRef} showAddQuestion={showAddQuestion}>
-
               {!isLoadingPrepare && isComplete
                 ? renderInterviewItems()
                 : renderInterviewItems()}
 
               <ChatListWrap>
-   
                 {interviewStatus.length > 0 &&
-                  interviewStatus.every((status) => status === "Complete"  ) && interviewQuestionListState.length < 10 &&
+                  interviewStatus.every((status) => status === "Complete") &&
+                  interviewQuestionListState.length < 10 &&
                   countAdditionalQuestion !== 0 && (
                     <ChatItem Add>
                       <ChatBox Moder>
                         <Sub1 color="gray800" align="left">
                           보고서를 생성하시겠습니까?
-            
                         </Sub1>
                       </ChatBox>
                       <ChatAddButton>
@@ -1030,7 +1018,6 @@ const OrganismToastPopupSingleLiveChat = ({
                           onClick={() => {
                             if (selectedRadio === null) {
                               setSelectedRadio("no");
-
                             }
                           }}
                         >
@@ -1085,7 +1072,6 @@ const OrganismToastPopupSingleLiveChat = ({
               )}
             </Contents>
 
-           
             <ChatFooter>
               <ChatInput>
                 <CustomInput
@@ -1093,28 +1079,38 @@ const OrganismToastPopupSingleLiveChat = ({
                   type="text"
                   value={inputValue}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey && inputValue.trim() && !interviewStatus.includes("Ing") && !isAnalyzing) {
-                      e.preventDefault();  // 기본 엔터 동작 방지
-                      handleQuestionSelect(0, inputValue.trim());  
-                      setInputValue('');
+                    if (
+                      e.key === "Enter" &&
+                      !e.shiftKey &&
+                      inputValue.trim() &&
+                      !interviewStatus.includes("Ing") &&
+                      !isAnalyzing
+                    ) {
+                      e.preventDefault(); // 기본 엔터 동작 방지
+                      handleQuestionSelect(0, inputValue.trim());
+                      setInputValue("");
                     }
                   }}
                   onChange={handleInputChange}
                   placeholder="질문을 입력해주세요"
                   style={{
-                    pointerEvents: "auto" 
+                    pointerEvents: "auto",
                   }}
-                  disabled={isAnalyzing }
+                  disabled={isAnalyzing}
                 />
                 <button
                   type="button"
                   onClick={() => {
                     if (inputValue.trim()) {
-                      handleQuestionSelect(0, inputValue.trim()); 
-                      setInputValue('');
+                      handleQuestionSelect(0, inputValue.trim());
+                      setInputValue("");
                     }
                   }}
-                  disabled={!inputValue.trim() || isAnalyzing || interviewStatus.includes("Ing")  }
+                  disabled={
+                    !inputValue.trim() ||
+                    isAnalyzing ||
+                    interviewStatus.includes("Ing")
+                  }
                 >
                   <Body1 color="primary">질문하기</Body1>
                 </button>

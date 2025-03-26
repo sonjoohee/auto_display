@@ -15,12 +15,7 @@ import {
 import OrganismStorageBoxToolList from "../components/organisms/OrganismStorageBoxToolList";
 import { TOOL_LIST_SAAS, PROJECT_SAAS } from "../../AtomStates";
 import images from "../../../assets/styles/Images";
-import {
-  H1,
-  Body3,
-  Sub3,
-  Caption1,
-} from "../../../assets/styles/Typography";
+import { H1, Body3, Sub3, Caption1 } from "../../../assets/styles/Typography";
 
 import {
   getToolListOnServerSaas,
@@ -34,7 +29,7 @@ import { useDynamicViewport } from "../../../assets/DynamicViewport";
 const PageStorageBox = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const navigate = useNavigate();
-  const [projectSaas, ] = useAtom(PROJECT_SAAS);
+  const [projectSaas] = useAtom(PROJECT_SAAS);
   const [toolListSaas, setToolListSaas] = useAtom(TOOL_LIST_SAAS);
   const project = projectSaas;
   const [isTrashModalOpen, setIsTrashModalOpen] = useState(false);
@@ -149,7 +144,11 @@ const PageStorageBox = () => {
   // 툴 복구 처리
   const handleRestoreTool = async (toolId, toolType) => {
     try {
-      if (toolType === "interviewSingle" || toolType === "interviewGroup") {
+      if (
+        toolType === "interviewSingle" ||
+        toolType === "interviewGroup" ||
+        toolType === "interviewSingleLive"
+      ) {
         await updateProjectReportOnServer(
           toolId,
           {
@@ -195,7 +194,11 @@ const PageStorageBox = () => {
   // 툴 영구 삭제 처리
   const handlePermanentDelete = async (toolId, toolType) => {
     try {
-      if (toolType === "interviewSingle" || toolType === "interviewGroup") {
+      if (
+        toolType === "interviewSingle" ||
+        toolType === "interviewGroup" ||
+        toolType === "interviewSingleLive"
+      ) {
         await updateProjectReportOnServer(
           toolId,
           {
@@ -311,7 +314,11 @@ const PageStorageBox = () => {
       }
     }
     if (tool.interviewType)
-      return tool.interviewType === "single" ? "심층 인터뷰" : "그룹 인터뷰";
+      return tool.interviewType === "single"
+        ? "심층 인터뷰(모더레이터)"
+        : tool.interviewType === "multiple"
+        ? "그룹 인터뷰"
+        : "심층 인터뷰(사용자)";
     if (tool.chat_data?.expert_index) {
       switch (tool.chat_data.expert_index) {
         case "1":
@@ -368,7 +375,6 @@ const PageStorageBox = () => {
             <DashBoardItem>
               <OrganismStorageBoxToolList toolListSaas={toolListSaas} />
             </DashBoardItem>
-          
           </StorageBoxWrap>
         </MainContent>
       </ContentsWrap>

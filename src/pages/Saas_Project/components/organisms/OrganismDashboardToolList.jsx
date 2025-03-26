@@ -141,31 +141,39 @@ import {
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
-  const [projectSaas, ] = useAtom(PROJECT_SAAS);
+  const [projectSaas] = useAtom(PROJECT_SAAS);
   const project = projectSaas;
   const navigate = useNavigate();
-  const [isLoading, ] = React.useState(false);
-  const [isLoggedIn, ] = React.useState(false);
+  const [isLoading] = React.useState(false);
+  const [isLoggedIn] = React.useState(false);
 
   // 상태 변수들 정의
   const [, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
-  const [, setSelectedExpertIndex] = useAtom(
-    SELECTED_EXPERT_INDEX
-  );
+  const [, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
   const [, setConversationId] = useAtom(CONVERSATION_ID);
   const [, setConversation] = useAtom(CONVERSATION);
   const [, setConversationStage] = useAtom(CONVERSATION_STAGE);
-  const [, setInputBusinessInfo] =useAtom(INPUT_BUSINESS_INFO);
+  const [, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [, setTitleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
-  const [, setMainFeaturesOfBusinessInformation] = useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [, setMainCharacteristicOfBusinessInformation] = useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [, setBusinessInformationTargetCustomer] = useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [, setMainFeaturesOfBusinessInformation] = useAtom(
+    MAIN_FEATURES_OF_BUSINESS_INFORMATION
+  );
+  const [, setMainCharacteristicOfBusinessInformation] = useAtom(
+    MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION
+  );
+  const [, setBusinessInformationTargetCustomer] = useAtom(
+    BUSINESS_INFORMATION_TARGET_CUSTOMER
+  );
   const [, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
   const [, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
   const [, setAdditionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
-  const [, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
-  const [, setSelectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
-  const [ , setSelectedPocOptions] =useAtom(SELECTED_POC_OPTIONS);
+  const [, setCustomerAdditionalReportData] = useAtom(
+    CUSTOMER_ADDITIONAL_REPORT_DATA
+  );
+  const [, setSelectedCustomerAdditionalKeyword] = useAtom(
+    SELECTED_CUSTOMER_ADDITIONAL_KEYWORD
+  );
+  const [, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
   const [, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
   const [, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
@@ -179,24 +187,38 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   const [, setIdeaMiroState] = useAtom(IDEA_MIRO_STATE);
   const [, setButtonState] = useAtom(BUTTON_STATE);
-  const [, setGrowthHackerRecommendedSolution] = useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
+  const [, setGrowthHackerRecommendedSolution] = useAtom(
+    GROWTH_HACKER_RECOMMENDED_SOLUTION
+  );
   const [, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
-  const [, setGrowthHackerDetailReportData] =useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
-  const [, setGrowthHackerSelectedSolution] =useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
+  const [, setGrowthHackerDetailReportData] = useAtom(
+    GROWTH_HACKER_DETAIL_REPORT_DATA
+  );
+  const [, setGrowthHackerSelectedSolution] = useAtom(
+    GROWTH_HACKER_SELECTED_SOLUTION
+  );
   const [, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [, setPriceProduct] = useAtom(PRICE_PRODUCT);
-  const [, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [, setPriceSelectedProductSegmentation] = useAtom(
+    PRICE_SELECTED_PRODUCT_SEGMENTATION
+  );
   const [, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
   const [, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [, setCaseHashTag] = useAtom(CASE_HASH_TAG);
-  const [, setSurveyGuidelineDetailReportData] = useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
-  const [, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
+  const [, setSurveyGuidelineDetailReportData] = useAtom(
+    SURVEY_GUIDELINE_DETAIL_REPORT_DATA
+  );
+  const [, setSurveyGuidelineReportData] = useAtom(
+    SURVEY_GUIDELINE_REPORT_DATA
+  );
   const [, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
   const [, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
   const [, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
-  const [, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [, setBmModelSuggestionReportData] = useAtom(
+    BM_MODEL_SUGGESTION_REPORT_DATA
+  );
   const [, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [, setBmSelectedProblemOptions] = useAtom(BM_SELECTED_PROBLEM_OPTIONS);
   const [, setBmOrLean] = useAtom(BM_OR_LEAN);
@@ -208,63 +230,105 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
   const [, setIsMarketing] = useAtom(IS_MARKETING);
   const [, setMarketingMbtiResult] = useAtom(MARKETING_MBTI_RESULT);
-  const [, setMarketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA );
+  const [, setMarketingResearchReportData] = useAtom(
+    MARKETING_RESEARCH_REPORT_DATA
+  );
   const [, setMarketingBmReportData] = useAtom(MARKETING_BM_REPORT_DATA);
   const [, setMarketingCustomerData] = useAtom(MARKETING_CUSTOMER_DATA);
   const [, setMarketingSelectedCustomer] = useAtom(MARKETING_SELECTED_CUSTOMER);
   const [, setMarketingFinalCustomer] = useAtom(MARKETING_FINAL_CUSTOMER);
   const [, setMarketingFinalReportData] = useAtom(MARKETING_FINAL_REPORT_DATA);
-  const [, setStrategyConsultantReportData] = useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
+  const [, setStrategyConsultantReportData] = useAtom(
+    STRATEGY_CONSULTANT_REPORT_DATA
+  );
   const [, setApproachPath] = useAtom(APPROACH_PATH);
   const [, setIsEditingNow] = useAtom(IS_EDITING_NOW);
-  const [, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE );
+  const [, setIsEditingIdeaFeature] = useAtom(IS_EDITING_IDEA_FEATURE);
   const [, setIsEditingIdeaCustomer] = useAtom(IS_EDITING_IDEA_CUSTOMER);
-  const [, setAddingIdeaFeature] =useAtom(ADDING_IDEA_FEATURE);
+  const [, setAddingIdeaFeature] = useAtom(ADDING_IDEA_FEATURE);
   const [, setActiveIdeaFeatureIndex] = useAtom(ACTIVE_IDEA_FEATURE_INDEX);
   const [, setAddContentIdeaFeature] = useAtom(ADD_CONTENT_IDEA_FEATURE);
-  const [, setEditedIdeaFeatureTitle] = useAtom( EDITED_IDEA_FEATURE_TITLE );
+  const [, setEditedIdeaFeatureTitle] = useAtom(EDITED_IDEA_FEATURE_TITLE);
   const [, setAddingIdeaCustomer] = useAtom(ADDING_IDEA_CUSTOMER);
   const [, setActiveIdeaCustomerIndex] = useAtom(ACTIVE_IDEA_CUSTOMER_INDEX);
   const [, setAddContentIdeaCustomer] = useAtom(ADD_CONTENT_IDEA_CUSTOMER);
   const [, setEditedIdeaCustomerTitle] = useAtom(EDITED_IDEA_CUSTOMER_TITLE);
   const [, setAnalysisButtonState] = useAtom(ANALYSIS_BUTTON_STATE);
   const [, setExpertButtonState] = useAtom(EXPERT_BUTTON_STATE);
-  const [, setAdditionButtonState] = useAtom( ADDITION_BUTTON_STATE);
-  const [, setCustomerAdditionButtonState] = useAtom(CUSTOMER_ADDITION_BUTTON_STATE );
-  const [, setIsExpertInsightAccessible] = useAtom(IS_EXPERT_INSIGHT_ACCESSIBLE);
+  const [, setAdditionButtonState] = useAtom(ADDITION_BUTTON_STATE);
+  const [, setCustomerAdditionButtonState] = useAtom(
+    CUSTOMER_ADDITION_BUTTON_STATE
+  );
+  const [, setIsExpertInsightAccessible] = useAtom(
+    IS_EXPERT_INSIGHT_ACCESSIBLE
+  );
 
   const [, setToolStep] = useAtom(TOOL_STEP);
   const [, setToolId] = useAtom(TOOL_ID);
   const [, setTargetDiscoveryInfo] = useAtom(TARGET_DISCOVERY_INFO);
-  const [, setTargetDiscoveryPersona] = useAtom(TARGET_DISCOVERY_PERSONA );
-  const [, setTargetDiscoveryScenario] = useAtom(TARGET_DISCOVERY_SCENARIO );
-  const [, setTargetDiscoveryFinalReport] = useAtom(TARGET_DISCOVERY_FINAL_REPORT);
+  const [, setTargetDiscoveryPersona] = useAtom(TARGET_DISCOVERY_PERSONA);
+  const [, setTargetDiscoveryScenario] = useAtom(TARGET_DISCOVERY_SCENARIO);
+  const [, setTargetDiscoveryFinalReport] = useAtom(
+    TARGET_DISCOVERY_FINAL_REPORT
+  );
   const [, setToolLoading] = useAtom(TOOL_LOADING);
-  const [, setCustomerValueAnalyzerInfo] = useAtom(CUSTOMER_VALUE_ANALYZER_INFO);
-  const [, setCustomerValueAnalyzerPersona] =useAtom(CUSTOMER_VALUE_ANALYZER_PERSONA);
-  const [, setCustomerValueAnalyzerJourneyMap] =useAtom(CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP);
-  const [, setCustomerValueAnalyzerFactor] = useAtom(CUSTOMER_VALUE_ANALYZER_FACTOR);
-  const [, setCustomerValueAnalyzerClustering] =useAtom(CUSTOMER_VALUE_ANALYZER_CLUSTERING);
-  const [, setCustomerValueAnalyzerPositioning] = useAtom(CUSTOMER_VALUE_ANALYZER_POSITIONING);
-  const [, setCustomerValueAnalyzerFinalReport] = useAtom(CUSTOMER_VALUE_ANALYZER_FINAL_REPORT);
-  const [, setCustomerValueAnalyzerSelectedPersona] = useAtom(CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA);
-  const [, setDesignAnalysisEmotionAnalysis] =useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS);
-  const [, setDesignAnalysisBusinessInfo] = useAtom( DESIGN_ANALYSIS_BUSINESS_INFO );
-  const [, setDesignAnalysisUploadedFiles] = useAtom(DESIGN_ANALYSIS_UPLOADED_FILES);
-  const [, setDesignAnalysisFileId] = useAtom( DESIGN_ANALYSIS_FILE_ID );
-  const [, setDesignAnalysisSelectedPersona] = useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
-  const [, setDesignAnalysisEmotionTarget] = useAtom(DESIGN_ANALYSIS_EMOTION_TARGET);
-  const [, setDesignAnalysisEmotionScale] = useAtom(DESIGN_ANALYSIS_EMOTION_SCALE);
-  const [, setDesignAnalysisFileNames] = useAtom(DESIGN_ANALYSIS_FILE_NAMES );
-  const [, setIdeaGeneratorInfo] =useAtom(IDEA_GENERATOR_INFO);
+  const [, setCustomerValueAnalyzerInfo] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_INFO
+  );
+  const [, setCustomerValueAnalyzerPersona] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_PERSONA
+  );
+  const [, setCustomerValueAnalyzerJourneyMap] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_JOURNEY_MAP
+  );
+  const [, setCustomerValueAnalyzerFactor] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_FACTOR
+  );
+  const [, setCustomerValueAnalyzerClustering] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_CLUSTERING
+  );
+  const [, setCustomerValueAnalyzerPositioning] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_POSITIONING
+  );
+  const [, setCustomerValueAnalyzerFinalReport] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_FINAL_REPORT
+  );
+  const [, setCustomerValueAnalyzerSelectedPersona] = useAtom(
+    CUSTOMER_VALUE_ANALYZER_SELECTED_PERSONA
+  );
+  const [, setDesignAnalysisEmotionAnalysis] = useAtom(
+    DESIGN_ANALYSIS_EMOTION_ANALYSIS
+  );
+  const [, setDesignAnalysisBusinessInfo] = useAtom(
+    DESIGN_ANALYSIS_BUSINESS_INFO
+  );
+  const [, setDesignAnalysisUploadedFiles] = useAtom(
+    DESIGN_ANALYSIS_UPLOADED_FILES
+  );
+  const [, setDesignAnalysisFileId] = useAtom(DESIGN_ANALYSIS_FILE_ID);
+  const [, setDesignAnalysisSelectedPersona] = useAtom(
+    DESIGN_ANALYSIS_SELECTED_PERSONA
+  );
+  const [, setDesignAnalysisEmotionTarget] = useAtom(
+    DESIGN_ANALYSIS_EMOTION_TARGET
+  );
+  const [, setDesignAnalysisEmotionScale] = useAtom(
+    DESIGN_ANALYSIS_EMOTION_SCALE
+  );
+  const [, setDesignAnalysisFileNames] = useAtom(DESIGN_ANALYSIS_FILE_NAMES);
+  const [, setIdeaGeneratorInfo] = useAtom(IDEA_GENERATOR_INFO);
   const [, setIdeaGeneratorPersona] = useAtom(IDEA_GENERATOR_PERSONA);
   const [, setIdeaGeneratorIdea] = useAtom(IDEA_GENERATOR_IDEA);
   const [, setIdeaGeneratorClustering] = useAtom(IDEA_GENERATOR_CLUSTERING);
   const [, setIdeaGeneratorFinalReport] = useAtom(IDEA_GENERATOR_FINAL_REPORT);
-  const [, setIdeaGeneratorSelectedPersona] =useAtom(IDEA_GENERATOR_SELECTED_PERSONA);
+  const [, setIdeaGeneratorSelectedPersona] = useAtom(
+    IDEA_GENERATOR_SELECTED_PERSONA
+  );
   const [, setIdeaGeneratorKnowTarget] = useAtom(IDEA_GENERATOR_KNOW_TARGET);
-  const [, setIdeaGeneratorPurpose] = useAtom(IDEA_GENERATOR_PURPOSE );
-  const [, setIdeaGeneratorEditingBusinessText] = useAtom(IDEA_GENERATOR_EDITING_BUSINESS_TEXT);
+  const [, setIdeaGeneratorPurpose] = useAtom(IDEA_GENERATOR_PURPOSE);
+  const [, setIdeaGeneratorEditingBusinessText] = useAtom(
+    IDEA_GENERATOR_EDITING_BUSINESS_TEXT
+  );
   const [, setReportLoadButtonState] = useAtom(REPORT_LOAD_BUTTON_STATE);
   const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
   const [, setReportId] = useAtom(PROJECT_REPORT_ID);
@@ -308,7 +372,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
       }
     }
     if (tool.interviewType)
-      return tool.interviewType === "single" ? "심층 인터뷰" : "그룹 인터뷰";
+      return tool.interviewType === "single"
+        ? "심층 인터뷰(모더레이터)"
+        : tool.interviewType === "multiple"
+        ? "그룹 인터뷰"
+        : "심층 인터뷰(사용자)";
     if (tool.chat_data?.expert_index) {
       switch (tool.chat_data.expert_index) {
         case "1":
@@ -374,11 +442,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         case "ix_customer_value_persona":
           return (tool.analysisScope?.split("|")[0] || "상세 내용 없음").trim();
         case "ix_idea_generator_persona":
-          return (
-            tool.coreValue?.length > 1 
-              ? `${tool.coreValue[0]} 외 ${tool.coreValue.length - 1}개`
-              : tool.coreValue?.[0] || "상세 내용 없음"
-          );
+          return tool.coreValue?.length > 1
+            ? `${tool.coreValue[0]} 외 ${tool.coreValue.length - 1}개`
+            : tool.coreValue?.[0] || "상세 내용 없음";
         case "ix_design_emotion_analysis":
           return tool.imageName?.[0]?.name || "상세 내용 없음";
         default:
@@ -705,7 +771,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setCustomerValueAnalyzerClustering(
           chatData?.customerValueClustering || []
         );
-     
+
         setCustomerValueAnalyzerPositioning(
           chatData?.customerValuePositioning || []
         );
@@ -781,10 +847,8 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         }
       } catch (error) {}
     } else if (conversationType === "interviewSingle") {
-
       setProjectId(project._id);
       setReportId(conversationId);
-      // setPersonaStep(4);
       setReportLoadButtonState(true);
       setIsPersonaAccessible(true);
 
@@ -792,15 +856,22 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
 
       navigate(`/Persona/4/Single`);
     } else if (conversationType === "interviewGroup") {
-
       setProjectId(project._id);
       setReportId(conversationId);
-      // setPersonaStep(4);
       setReportLoadButtonState(true);
       setIsPersonaAccessible(true);
 
       setPersonaStep(4);
       navigate(`/Persona/4`);
+    } else if (conversationType === "interviewSingleLive") {
+      setProjectId(project._id);
+      setReportId(conversationId);
+      setReportLoadButtonState(true);
+      setIsPersonaAccessible(true);
+
+      setPersonaStep(4);
+
+      navigate(`/Persona/4/SingleLive`);
     }
   };
 
