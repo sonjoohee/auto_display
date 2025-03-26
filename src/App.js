@@ -88,6 +88,7 @@ import PageMyProject from "./pages/Persona/components/pages/PageMyProject";
 import PagePersona3Select from "./pages/Persona/components/pages/PagePersona3Select";
 import PagePersona3Single from "./pages/Persona/components/pages/PagePersona3Single";
 import PagePersona3Multiple from "./pages/Persona/components/pages/PagePersona3Multiple";
+import PagePersona4SingleLive from "./pages/Persona/components/pages/PagePersona4SingleLive";
 
 // 로그인, 회원가입
 import OrganismLogin from "./pages/Global/organisms/OrganismLogin";
@@ -212,58 +213,54 @@ function App() {
     const token = sessionStorage.getItem("accessToken");
 
     const checkServerStatus = async () => {
-        if (token) {
-          try {
-            await axios.get(
-              `https://wishresearch.kr/api/db/token_check`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                }
-              }
-            );
-          } catch (error) {
-              sessionStorage.removeItem("accessToken");
-              sessionStorage.removeItem("userName");
-              sessionStorage.removeItem("userEmail");
-              sessionStorage.removeItem("isSocialLogin");
-              localStorage.removeItem("userName");
-              localStorage.removeItem("userEmail");
-              setIsLoggedIn(false);
-              setUserName("");
-              setUserEmail("");
-              window.location.reload();
+      if (token) {
+        try {
+          await axios.get(`https://wishresearch.kr/api/db/token_check`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        } catch (error) {
+          sessionStorage.removeItem("accessToken");
+          sessionStorage.removeItem("userName");
+          sessionStorage.removeItem("userEmail");
+          sessionStorage.removeItem("isSocialLogin");
+          localStorage.removeItem("userName");
+          localStorage.removeItem("userEmail");
+          setIsLoggedIn(false);
+          setUserName("");
+          setUserEmail("");
+          window.location.reload();
+        }
+      } else {
+        try {
+          const response = await axios.get(
+            `https://wishresearch.kr/api/db/back_server`,
+            {
+              timeout: 3000, // 3초 타임아웃 설정
+            }
+          );
+          // 서버가 정상일 경우
+          if (response.status === 200) {
+            setIsServerDown(false);
+          }
+        } catch (error) {
+          if (window.location.pathname !== "/ServiceLanding") {
+            // 서버가 응답하지 않거나 에러 발생 시 서버 다운 처리
+            setIsServerDown(true);
+
+            sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
+            sessionStorage.removeItem("userName");
+            sessionStorage.removeItem("userEmail");
+            sessionStorage.removeItem("isSocialLogin");
+            localStorage.removeItem("userName");
+            localStorage.removeItem("userEmail");
+            setIsLoggedIn(false);
+            setUserName("");
+            setUserEmail("");
           }
         }
-        else {
-          try {
-            const response = await axios.get(
-              `https://wishresearch.kr/api/db/back_server`,
-              {
-                timeout: 3000, // 3초 타임아웃 설정
-              }
-            );
-            // 서버가 정상일 경우
-            if (response.status === 200) {
-              setIsServerDown(false);
-            }
-          } catch (error) {
-              if (window.location.pathname !== "/ServiceLanding") {
-                // 서버가 응답하지 않거나 에러 발생 시 서버 다운 처리
-              setIsServerDown(true);
-    
-              sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
-              sessionStorage.removeItem("userName");
-              sessionStorage.removeItem("userEmail");
-              sessionStorage.removeItem("isSocialLogin");
-              localStorage.removeItem("userName");
-              localStorage.removeItem("userEmail");
-              setIsLoggedIn(false);
-              setUserName("");
-              setUserEmail("");
-            }
-          }
-        }
+      }
     };
 
     // 처음 실행
@@ -483,6 +480,14 @@ function App() {
             }
           ></Route>
 
+          <Route
+            path="/Persona/4/SingleLive"
+            element={
+              <RequireToken>
+                <PagePersona4SingleLive />
+              </RequireToken>
+            }
+          ></Route>
           <Route
             path="/TargetDiscovery"
             element={

@@ -65,7 +65,7 @@ import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import OrganismToastPopupSingleChaComplete from "../organisms/OrganismToastPopupSingleChaComplete";
 import * as d3 from "d3";
 
-const PagePersona4Single = () => {
+const PagePersona4SingleLive = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const [
     reportDescriptionLoadButtonState,
@@ -662,7 +662,7 @@ const PagePersona4Single = () => {
     const detectRefresh = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
-      if (currentUrl.toLowerCase().includes("persona/4/single")) {
+      if (currentUrl.toLowerCase().includes("persona/4/singlelive")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         const lastUrl = sessionStorage.getItem("lastUrl");
 
@@ -732,10 +732,7 @@ const PagePersona4Single = () => {
                 <div>
                   <ReportHeader>
                     <Title>
-                      <H2>
-                        {selectedInterviewPurposeData?.title || "인터뷰"} 결과
-                        리포트
-                      </H2>
+                      <H2>인터뷰 요약 보고서</H2>
                       <Button Primary onClick={handleEnterInterviewRoom}>
                         <img
                           src={images.ReportSearch}
@@ -744,11 +741,6 @@ const PagePersona4Single = () => {
                         인터뷰 스크립트 보기
                       </Button>
                     </Title>
-                    {/* <p>
-                      {getInterviewPurposeDescription(
-                        selectedInterviewPurpose || ""
-                      )}
-                    </p> */}
                   </ReportHeader>
 
                   <TabWrapType3>
@@ -764,7 +756,7 @@ const PagePersona4Single = () => {
                     >
                       페르소나 행동 패턴 분석
                     </TabButtonType3>
-                    <TabButtonType3
+                    {/* <TabButtonType3
                       isActive={activeTab === 3}
                       onClick={() => handleTabClick(3)}
                     >
@@ -777,7 +769,7 @@ const PagePersona4Single = () => {
                         : selectedInterviewPurposeData.id === 4
                         ? "요인 분석"
                         : ""}
-                    </TabButtonType3>
+                    </TabButtonType3> */}
                   </TabWrapType3>
 
                   <ReportContent
@@ -1082,7 +1074,7 @@ const PagePersona4Single = () => {
                     </div>
                   </ReportContent>
 
-                  <ReportContent
+                  {/* <ReportContent
                     section={3}
                     style={{ display: activeTab === 3 ? "flex" : "none" }}
                   >
@@ -1106,22 +1098,14 @@ const PagePersona4Single = () => {
                       </ResultTitle>
 
                       <UlList Disc Spacing>
-                        {singleInterviewReportTab3?.insight_1
-                          ?.insight_1_context && (
-                          <li>
-                            {
-                              singleInterviewReportTab3?.insight_1
-                                ?.insight_1_context
-                            }
-                          </li>
-                        )}
-                        {singleInterviewReportTab3?.insight_1
-                          ?.insight_1_solution && (
-                          <li>
-                            {singleInterviewReportTab3?.insight_1
-                              ?.insight_1_solution || ""}
-                          </li>
-                        )}
+                        <li>
+                          {singleInterviewReportTab3?.insight_1
+                            ?.insight_1_context || ""}
+                        </li>
+                        <li>
+                          {singleInterviewReportTab3?.insight_1
+                            ?.insight_1_solution || ""}
+                        </li>
                       </UlList>
                     </div>
 
@@ -1139,22 +1123,14 @@ const PagePersona4Single = () => {
                       </ResultTitle>
 
                       <UlList Disc Spacing>
-                        {singleInterviewReportTab3?.insight_2
-                          ?.insight_2_context && (
-                          <li>
-                            {singleInterviewReportTab3?.insight_2
-                              ?.insight_2_context || ""}
-                          </li>
-                        )}
-                        {singleInterviewReportTab3?.insight_2
-                          ?.insight_2_solution && (
-                          <li>
-                            {
-                              singleInterviewReportTab3?.insight_2
-                                ?.insight_2_solution
-                            }
-                          </li>
-                        )}
+                        <li>
+                          {singleInterviewReportTab3?.insight_2
+                            ?.insight_2_context || ""}
+                        </li>
+                        <li>
+                          {singleInterviewReportTab3?.insight_2
+                            ?.insight_2_solution || ""}
+                        </li>
                       </UlList>
                     </div>
 
@@ -1172,25 +1148,17 @@ const PagePersona4Single = () => {
                       </ResultTitle>
 
                       <UlList Disc Spacing>
-                        {singleInterviewReportTab3?.insight_3
-                          ?.insight_3_context && (
-                          <li>
-                            {singleInterviewReportTab3?.insight_3
-                              ?.insight_3_context || ""}
-                          </li>
-                        )}
-                        {singleInterviewReportTab3?.insight_3
-                          ?.insight_3_solution && (
-                          <li>
-                            {
-                              singleInterviewReportTab3?.insight_3
-                                ?.insight_3_solution
-                            }
-                          </li>
-                        )}
+                        <li>
+                          {singleInterviewReportTab3?.insight_3
+                            ?.insight_3_context || ""}
+                        </li>
+                        <li>
+                          {singleInterviewReportTab3?.insight_3
+                            ?.insight_3_solution || ""}
+                        </li>
                       </UlList>
                     </div>
-                  </ReportContent>
+                  </ReportContent> */}
                 </div>
               </InterviewReport>
             </MainSection>
@@ -1312,7 +1280,7 @@ const PagePersona4Single = () => {
   );
 };
 
-export default PagePersona4Single;
+export default PagePersona4SingleLive;
 
 const TabWrapType3 = styled(TabWrap)`
   gap: 16px !important;
