@@ -50,6 +50,7 @@ const PageDashBoard = () => {
 
   const [showPopup, setShowPopup] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [macroSegmentTooltip, setMacroSegmentTooltip] = useState(false);
 
   const navigate = useNavigate();
   const macroChartRef = useRef();
@@ -58,6 +59,15 @@ const PageDashBoard = () => {
   const myPersonaChartRef = useRef();
 
   const project = projectSaas;
+
+  // 상태 추가
+  const [tooltips, setTooltips] = useState({
+    macroSegment: false,
+    uniqueUser: false,
+    keyStakeholder: false,
+    myPersona: false,
+    personaStatus: false,
+  });
 
   useEffect(() => {
     const loadPersonaList = async () => {
@@ -488,6 +498,28 @@ const PageDashBoard = () => {
                     <div className="title">
                       <Body1 color="gray700" align="left">
                         Macro Segment
+
+                        <TooltipButtonType2 
+                          onMouseEnter={() => setTooltips(prev => ({...prev, macroSegment: true}))}
+                          onMouseLeave={() => setTooltips(prev => ({...prev, macroSegment: false}))}
+                        >
+                          {tooltips.macroSegment && (
+                            <TooltipContent Top>
+                              <TooltipHeader>
+                                <Body1 color="gray800" align="left">
+                                  Macro Segment란?
+                                </Body1>
+                                <span />
+                              </TooltipHeader>
+
+                              <TooltipBody>
+                                <Sub3 color="gray700" align="left">
+                                  제품/서비스의 주요 특성에 따라 나뉜 비슷한 특성의 고객 그룹을 제시합니다. 제품의 성격에 맞는 크고 대표적인 사용자 군을 확인할 수 있어요.
+                                </Sub3>
+                              </TooltipBody>
+                            </TooltipContent>
+                          )}
+                        </TooltipButtonType2>
                       </Body1>
                       <Body1 color="gray700" align="right">
                         총 {macroSegmentStats.total}명
@@ -524,6 +556,28 @@ const PageDashBoard = () => {
                     <div className="title">
                       <Body1 color="gray700" align="left">
                         Unique User
+
+                        <TooltipButtonType2 
+                          onMouseEnter={() => setTooltips(prev => ({...prev, uniqueUser: true}))}
+                          onMouseLeave={() => setTooltips(prev => ({...prev, uniqueUser: false}))}
+                        >
+                          {tooltips.uniqueUser && (
+                            <TooltipContent Top>
+                              <TooltipHeader>
+                                <Body1 color="gray800" align="left">
+                                  Unique User란?
+                                </Body1>
+                                <span />
+                              </TooltipHeader>
+
+                              <TooltipBody>
+                                <Sub3 color="gray700" align="left">
+                                  제품을 일반적인 방식과 다르게, 자신만의 방식으로 활용하는 특별한 사용자를 제시합니다. 창의적이고 독특한 사용 사례를 통해 새로운 인사이트를 얻을 수 있어요.
+                                </Sub3>
+                              </TooltipBody>
+                            </TooltipContent>
+                          )}
+                        </TooltipButtonType2>
                       </Body1>
                       <Body1 color="gray700" align="right">
                         총 {uniqueUserStats.total}명
@@ -558,6 +612,28 @@ const PageDashBoard = () => {
                     <div className="title">
                       <Body1 color="gray700" align="left">
                         Key Stakeholder
+
+                        <TooltipButtonType2 
+                          onMouseEnter={() => setTooltips(prev => ({...prev, keyStakeholder: true}))}
+                          onMouseLeave={() => setTooltips(prev => ({...prev, keyStakeholder: false}))}
+                        >
+                          {tooltips.keyStakeholder && (
+                            <TooltipContent Top>
+                              <TooltipHeader>
+                                <Body1 color="gray800" align="left">
+                                  Key Stakeholder란?
+                                </Body1>
+                                <span />
+                              </TooltipHeader>
+
+                              <TooltipBody>
+                                <Sub3 color="gray700" align="left">
+                                  제품이나 프로젝트에 직접적인 영향을 주는 전문가 및 주요 의사결정자를 제시합니다. 기획부터 운영까지, 중요한 의견과 판단을 내릴 수 있는 핵심 인물들이에요.
+                                </Sub3>
+                              </TooltipBody>
+                            </TooltipContent>
+                          )}
+                        </TooltipButtonType2>
                       </Body1>
                       <Body1 color="gray700" align="right">
                         총 {keyStakeholderStats.total}명
@@ -594,6 +670,28 @@ const PageDashBoard = () => {
                     <div className="title">
                       <Body1 color="gray700" align="left">
                         My Persona
+
+                        <TooltipButtonType2 
+                          onMouseEnter={() => setTooltips(prev => ({...prev, myPersona: true}))}
+                          onMouseLeave={() => setTooltips(prev => ({...prev, myPersona: false}))}
+                        >
+                          {tooltips.myPersona && (
+                            <TooltipContent Top>
+                              <TooltipHeader>
+                                <Body1 color="gray800" align="left">
+                                  My Persona란?
+                                </Body1>
+                                <span />
+                              </TooltipHeader>
+
+                              <TooltipBody>
+                                <Sub3 color="gray700" align="left">
+                                  원하는 사용자 유형을 입력하면, 그에 적합한 페르소나를 자동으로 제시합니다. 아이디어 단계에서 목표 사용자를 빠르게 그려볼 수 있어요.
+                                </Sub3>
+                              </TooltipBody>
+                            </TooltipContent>
+                          )}
+                        </TooltipButtonType2>
                       </Body1>
                       <Body1 color="gray700" align="right">
                         총 {myPersonaStats.total}명
@@ -772,6 +870,7 @@ const DashBoardItem = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
+    z-index: 1;
 
     button {
       margin-left: auto;
@@ -843,17 +942,32 @@ const TooltipButton = styled.div`
   }
 `;
 
+const TooltipButtonType2 = styled(TooltipButton)`
+  padding: 0;
+  background: none;
+  cursor: pointer;
+
+  &:before {
+    width: 16px;
+    height: 16px;
+    color: ${palette.primary};
+    border: 1px solid ${palette.primary};
+    content: "?";
+    transition: all 0.2s ease-in-out;
+  }
+`;
+
 const TooltipContent = styled.div`
   position: absolute;
-  top: -25px;
-  right: -300px;
-  width: 290px;
+  top: ${(props) => (props.Top ? "35px" : "-25px")};
+  right: ${(props) => (props.Top ? "-160px" : "-300px")};
+  width: ${(props) => (props.Top ? "240px" : "290px")};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   gap: 24px;
-  padding: 20px 20px 32px;
+  padding: ${(props) => (props.Top ? "16px 20px" : "20px 20px 32px")};
   border-radius: 15px;
   background: ${palette.white};
   filter: drop-shadow(0px 4px 30px rgba(0, 0, 0, 0.15));
@@ -874,13 +988,14 @@ const TooltipContent = styled.div`
 
   &:before {
     position: absolute;
-    top: 30px;
-    left: -10px;
+    top: ${(props) => (props.Top ? "-15px" : "30px")};
+    left: ${(props) => (props.Top ? "65px" : "-10px")};
     width: 0;
     height: 0;
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
     border-right: 10px solid ${palette.white};
+    transform: ${(props) => (props.Top ? "rotate(90deg)" : "none")};
     content: "";
   }
 `;
@@ -978,6 +1093,7 @@ const TooltipBody = styled.div`
 const PersonaStatusWrap = styled.div`
   display: flex;
   gap: 24px;
+  z-index: 0;
 
   > div {
     display: flex;
@@ -1001,6 +1117,13 @@ const PersonaStatusWrap = styled.div`
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+
+    ${Body1} {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
   }
 
   .content {

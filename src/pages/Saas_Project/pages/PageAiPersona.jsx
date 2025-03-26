@@ -31,6 +31,7 @@ import {
   OCEANRangeWrap,
   RangeSlider,
   BoxWrap,
+  UniqueTag,
 } from "../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../assets/styles/Images";
 import {
@@ -155,6 +156,11 @@ const PageAiPersona = () => {
     uniqueUser: "",
     keyStakeholder: "",
   });
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  // 상태값을 분리합니다
+  const [showPersonaTypeTooltip, setShowPersonaTypeTooltip] = useState(false);
+  const [showUniqueUserTooltip, setShowUniqueUserTooltip] = useState(false);
 
   const handleEditClose = () => {
     setIsEditPopupOpen(false);
@@ -1173,6 +1179,55 @@ const PageAiPersona = () => {
               <div>
                 <H1 color="gray800" align="left">
                   AI Persona
+                  <TooltipButtonType2 onClick={() => setShowPersonaTypeTooltip(!showPersonaTypeTooltip)}>
+                    {showPersonaTypeTooltip && (
+                      <TooltipContent>
+                        <TooltipHeader>
+                          <Body2 color="gray800" align="left">
+                            페르소나 종류 알아보기
+                          </Body2>
+                          <span onClick={(e) => {
+                            e.stopPropagation();
+                            setShowPersonaTypeTooltip(false);
+                          }}/>
+                        </TooltipHeader>
+
+                        <TooltipBody>
+                          <div>
+                            <Sub1 color="gray800">Macro Segment</Sub1>
+                            <Sub3 color="gray700" align="left">
+                              제품/서비스의 주요 특성에 따라 나뉜 비슷한 특성의 고객 그룹을 제시합니다.
+                              제품의 성격에 맞는 크고 대표적인 사용자 군을 확인할 수 있어요.
+                            </Sub3>
+                          </div>
+
+                          <div>
+                            <Sub1 color="gray800">Unique User</Sub1>
+                            <Sub3 color="gray700" align="left">
+                              제품을 일반적인 방식과 다르게, 자신만의 방식으로 활용하는 특별한 사용자를 제시합니다.
+                              창의적이고 독특한 사용 사례를 통해 새로운 인사이트를 얻을 수 있어요.
+                            </Sub3>
+                          </div>
+
+                          <div>
+                            <Sub1 color="gray800">Key Stakeholder</Sub1>
+                            <Sub3 color="gray700" align="left">
+                              제품이나 프로젝트에 직접적인 영향을 주는 전문가 및 주요 의사결정자를 제시합니다.
+                              기획부터 운영까지, 중요한 의견과 판단을 내릴 수 있는 핵심 인물들이에요.
+                            </Sub3>
+                          </div>
+
+                          <div>
+                            <Sub1 color="gray800">My Persona</Sub1>
+                            <Sub3 color="gray700" align="left">
+                              원하는 사용자 유형을 입력하면, 그에 적합한 페르소나를 자동으로 제시합니다.
+                              아이디어 단계에서 목표 사용자를 빠르게 그려볼 수 있어요.
+                            </Sub3>
+                          </div>
+                        </TooltipBody>
+                      </TooltipContent>
+                    )}
+                  </TooltipButtonType2>
                 </H1>
                 <div style={{ height: "10px" }}></div>
                 <Body3 color="gray700" align="left">
@@ -1293,6 +1348,75 @@ const PageAiPersona = () => {
                       <div style={{ width: "6px" }}></div>
                     </div>
                   </div>
+
+                  {activeTab === "unique_user" && (
+                    <TooltipButton onClick={() => setShowUniqueUserTooltip(!showUniqueUserTooltip)}>
+                      <Sub3 color="gray500">Unique User 칩 알아보기</Sub3>
+                      {showUniqueUserTooltip && (
+                        <TooltipContent>
+                          <TooltipHeader>
+                            Unique User 칩 알아보기
+                            <span onClick={(e) => {
+                              e.stopPropagation();
+                              setShowUniqueUserTooltip(false);
+                            }}/>
+                          </TooltipHeader>
+
+                          <TooltipBody>
+                            <div>
+                              <UniqueTag color="Hacker" />
+                              <Sub3 color="gray700" align="left">
+                                제품을 남들과는 다르게, 창의적으로 사용하는 사용자!<br />기능을 파고들어 더 똑똑하게, 자유롭게 사용하는 하는 사용자 유형입니다
+                              </Sub3>
+                            </div>
+
+                            <div>
+                              <UniqueTag color="LeadUser" />
+                              <Sub3 color="gray700" align="left">
+                                아직 세상에 없는 기능까지 바라는, 미래형 사용자!<br />제품 개발에 큰 영향을 줄 수 있는 아이디어를 보유하고 있는 사용자 유형입니다. 
+                              </Sub3>
+                            </div>
+
+                            <div>
+                              <UniqueTag color="SuperUser" />
+                              <Sub3 color="gray700" align="left">
+                                제품을 깊이 있게 잘 아는 전문가급 사용자. 오랜 사용 경험으로 다른 사람도 도와줄 수 있는 정도의 지식이 있는 사용자 유형입니다. 
+                              </Sub3>
+                            </div>
+
+                            <div>
+                              <UniqueTag color="EarlyAdopter" />
+                              <Sub3 color="gray700" align="left">
+                                새로운 걸 보면 무조건 써보는 얼리 얼리버드! 새로운 걸 두려워하지 않고 잘 받아들이는 사용자 유형입니다. 
+                              </Sub3>
+                            </div>
+
+                            <div>
+                              <UniqueTag color="Innovator" />
+                              <Sub3 color="gray700" align="left">
+                                누구보다 먼저 새로운 걸 시도하는 실험가!<br />신기술이나 신제품을 가장 먼저 써보는 사용자 유형입니다.
+                              </Sub3>
+                            </div>
+
+                            <div>
+                              <UniqueTag color="NonUser" />
+                              <Sub3 color="gray700" align="left">
+                                변화보단 익숙함을 선호하는 사용자.<br />새로운 기술이나 서비스에 관심이 적고, 변화에 신중한 사용자 유형입니다. 
+                              </Sub3>
+                            </div>
+
+                            <div>
+                              <UniqueTag color="Critic" />
+                              <Sub3 color="gray700" align="left">
+                                제품의 단점과 문제를 날카롭게 지적하는 비판적 사용자. 작은 불편도 그냥 넘기지 않고, 기대치가 높아 불만과 피드백을 자주 표현하는 사용자 유형입니다. 
+                              </Sub3>
+                            </div>
+                          </TooltipBody>
+                        </TooltipContent>
+                      )}
+                    </TooltipButton>
+                  )}
+                  
                   {activeTab === "my_persona" && (
                     <Button
                       ExLarge
@@ -2924,6 +3048,12 @@ const AiPersonaTitle = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+
+  ${H1} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 `;
 
 const AiPersonaContent = styled.div`
@@ -3038,4 +3168,180 @@ const PersonaStatusWrap = styled.div`
       }
     }
   `}
+`;
+
+const TooltipButton = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: ${palette.chatGray};
+  cursor: pointer;
+  z-index: 1;
+
+  &:before {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    font-size: 0.75rem;
+    color: ${palette.gray500};
+    border: 1px solid ${palette.gray500};
+    content: "!";
+  }
+`;
+
+const TooltipButtonType2 = styled(TooltipButton)`
+  padding: 0;
+  background: none;
+  cursor: pointer;
+
+  &:before {
+    width: 20px;
+    height: 20px;
+    color: ${palette.primary};
+    border: 1px solid ${palette.primary};
+    content: "?";
+    transition: all 0.2s ease-in-out;
+  }
+`;
+
+const TooltipContent = styled.div`
+  position: absolute;
+  top: ${(props) => (props.Top ? "35px" : "-25px")};
+  right: ${(props) => (props.Top ? "-160px" : "-310px")};
+  width: ${(props) => (props.Top ? "240px" : "290px")};
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 24px !important;
+  padding: ${(props) => (props.Top ? "16px 20px" : "20px 20px 32px")};
+  border-radius: 15px;
+  background: ${palette.white};
+  filter: drop-shadow(0px 4px 30px rgba(0, 0, 0, 0.15));
+  animation: fadeIn 0.3s ease-in-out;
+  cursor: default;
+  z-index: 100;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  &:before {
+    position: absolute;
+    top: ${(props) => (props.Top ? "-15px" : "24px")};
+    left: ${(props) => (props.Top ? "65px" : "-10px")};
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid ${palette.white};
+    transform: ${(props) => (props.Top ? "rotate(90deg)" : "none")};
+    content: "";
+  }
+`;
+
+const TooltipHeader = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1rem;
+  font-weight: 300;
+  color: ${palette.gray800};
+  line-height: 1.5;
+  width: 100%;
+
+  span {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    display: block;
+
+    &:before,
+    &:after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 16px;
+      display: block;
+      border-radius: 5px;
+      background: ${palette.gray700};
+      content: "";
+    }
+
+    &:before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &:after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+`;
+
+const TooltipBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 16px !important;
+  width: 100%;
+  max-height: 255px;
+  overflow-y: auto;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    &:before {
+      width: 5px;
+      height: 18px;
+      border-radius: 1px;
+      content: "";
+    }
+
+    &.start:before {
+      background: ${palette.outlineGray};
+    }
+
+    &.ing:before {
+      background: #32ade6;
+    }
+
+    &.complete:before {
+      background: ${palette.primary};
+    }
+  }
+
+  p {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: ${palette.gray700};
+    text-align: left;
+  }
 `;
