@@ -102,20 +102,33 @@ const PagePersona3Single = () => {
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [activeTab, ] = useState(1);
-
+  const [interviewModeType, setInterviewModeType] = useState("");
+  const [showConfirmationPopup, setShowConfirmationPopup] = useState(false);
+  const [interviewModeStep, setInterviewModeStep] = useState(true);
 
   const handlePopupClose = () => {
     setShowInterviewReady(false);
     setShowToast(false);
+    setShowConfirmationPopup(false);
   };
   const handleSelectPersona = () => {
     // 선택된 페르소나들을 selected에 반영
-    setSelectedInterviewType("single");
+    setSelectedInterviewType("singleLive");
     setPersonaStep(3);
     setIsPersonaAccessible(true);
     navigate(`/Persona/3/Select`, { replace: true });
   };
 
+  const handleConfirmInterviewMode = () => {
+    if (interviewModeType === 'selfQuestion') {
+      // 내가 질문하기를 선택한 경우 페르소나 선택으로 이동
+      handleSelectPersona();
+    } else {
+      // 모더레이터에게 요청하기를 선택한 경우 기존 플로우 진행
+      setShowConfirmationPopup(false);
+      setInterviewModeStep(false);
+    }
+  };
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -216,7 +229,7 @@ const PagePersona3Single = () => {
 
   useEffect(() => {
     // 팝업이나 토스트가 열려있을 때
-    if (showToast || showInterviewReady || showEditPersona) {
+    if (showToast || showInterviewReady || showEditPersona || showConfirmationPopup) {
       document.body.style.overflow = "hidden";
       document.body.style.paddingRight = "15px"; // 스크롤바 자리만큼 패딩 추가
     }
@@ -231,7 +244,7 @@ const PagePersona3Single = () => {
       document.body.style.overflow = "auto"; // "hidden"에서 "auto"로 변경
       document.body.style.paddingRight = "0";
     };
-  }, [showToast, showInterviewReady, showEditPersona]);
+  }, [showToast, showInterviewReady, showEditPersona, showConfirmationPopup]);
 
   // radio6 선택 핸들러 수정
   const handlePurposeSelect = (purpose) => {
@@ -347,7 +360,7 @@ const PagePersona3Single = () => {
   return (
     <>
       <ContentsWrap
-        noScroll={Boolean(showToast || showInterviewReady || showEditPersona)}
+        noScroll={Boolean(showToast || showInterviewReady || showEditPersona || showConfirmationPopup)}
       >
         <OrganismIncNavigation />
 
@@ -412,9 +425,80 @@ const PagePersona3Single = () => {
                 </Body3>
               </div>
 
-              <div className="content">
-                <TabContent5Item>
-                  <div className="title">
+              {interviewModeStep && (
+                <div className="content">
+                  <TabContent5Item>
+                    <div className="title">
+                      <Body1 color="gray700">인터뷰 방식 선택</Body1>
+                  </div>
+                  
+                  <InterviewModeSelection>
+                    <InterviewModeCard 
+                      isActive={interviewModeType === 'selfQuestion'} 
+                      onClick={() => setInterviewModeType('selfQuestion')}
+                    >
+                      <CardContent>
+                        <img src={images.InterviewModeSelfQuestion} alt="self question" />
+                        <div>
+                          <Body2 color="gray700">내가 질문하기</Body2>
+                          <Body3 style={{marginTop: '10px'}} color="gray500">원하는 질문을 직접 입력하여 Persona에게<br />답을 얻을 수 있습니다.</Body3>
+                        </div>
+                      </CardContent>
+                      <CheckboxWrapper>
+                        <CheckCircle
+                          as="input"
+                          type="radio"
+                          id="selfQuestion"
+                          name="interviewMode"
+                          checked={interviewModeType === 'selfQuestion'}
+                          onChange={() => setInterviewModeType('selfQuestion')}
+                        />  
+                      </CheckboxWrapper>
+                    </InterviewModeCard>
+                    
+                    <InterviewModeCard 
+                      isActive={interviewModeType === 'moderator'} 
+                      onClick={() => setInterviewModeType('moderator')}
+                    >
+                      <CardContent>
+                        <img src={images.InterviewModeModerator} alt="moderator" />
+                        <div>
+                          <Body2 color="gray700">모더레이터에게 요청하기</Body2>
+                          <Body3 style={{marginTop: '10px'}} color="gray500">원하는 사항을 요청, Moderator가 직접<br />적합한 질문을 하여 답을 얻을 수 있습니다.</Body3>
+                        </div>
+                      </CardContent>
+                      <CheckboxWrapper>
+                        <CheckCircle
+                          as="input"
+                          type="radio"
+                          id="moderator"
+                          name="interviewMode"
+                          checked={interviewModeType === 'moderator'}
+                          onChange={() => setInterviewModeType('moderator')}
+                        />
+                      </CheckboxWrapper>
+                    </InterviewModeCard>
+                  </InterviewModeSelection>
+                </TabContent5Item>
+              </div>
+              )}
+
+              {interviewModeStep && (
+                <Button
+                  Other
+                  Primary
+                  Fill
+                  disabled={!interviewModeType}
+                  onClick={() => setShowConfirmationPopup(true)}
+                >
+                  확인
+                </Button>
+              )}
+
+              {!interviewModeStep && (
+                <div className="content">
+                  <TabContent5Item>
+                    <div className="title">
                     <Body1 color="gray700">맞춤형 인터뷰 문항 생성</Body1>
                   </div>
 
@@ -463,11 +547,13 @@ const PagePersona3Single = () => {
                   </CustomizationWrap>
                 </TabContent5Item>
               </div>
+              )}
 
-              <div className="content">
-                <TabContent5Item>
-                  <Body1 color="gray700" align="left">
-                    추천 질문 템플릿
+              {!interviewModeStep && (
+                <div className="content">
+                  <TabContent5Item>
+                    <Body1 color="gray700" align="left">
+                      추천 질문 템플릿
                   </Body1>
 
                   {purposeItemsSingleAtom.slice(0, 3).map((purpose) => (
@@ -487,18 +573,42 @@ const PagePersona3Single = () => {
                     />
                   ))}
                 </TabContent5Item>
-              </div>
+                </div>
+              )}
 
-              <Button
-                Other
-                Primary
-                Fill
-                disabled={!selectedInterviewPurpose}
-                onClick={handleSelectPersona}
+              {!interviewModeStep && (
+                <Button
+                  Other
+                  Primary
+                  Fill
+                  disabled={!selectedInterviewPurpose}
+                  onClick={handleSelectPersona}
               >
                 다음
               </Button>
+              )}
             </TabContent5>
+
+            {/* 인터뷰 모드 확인 팝업 */}
+            {showConfirmationPopup && (
+              <PopupWrap
+                Check
+                title="인터뷰 방식 선택 확인"
+                message={
+                  <>
+                    {interviewModeType === 'selfQuestion' 
+                      ? '내가 질문하기 방식으로 인터뷰를 진행합니다.' 
+                      : '모더레이터에게 요청하기 방식으로 인터뷰를 진행합니다.'}
+                  </>
+                }
+                buttonType="Outline"
+                closeText="취소"
+                confirmText="확인"
+                isModal={false}
+                onCancel={handlePopupClose}
+                onConfirm={handleConfirmInterviewMode}
+              />
+            )}
 
             {/* 크레딧 소진팝업 */}
             {showCreditPopup && (
@@ -721,6 +831,67 @@ const PersonaSingleWrap = styled.div`
   margin-top: 60px;
 `;
 
+const InterviewModeSelection = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 30px;
+  
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 20px;
+  }
+`;
+
+const InterviewModeCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  padding-top: 30px;
+  border-radius: 10px;
+  border: 1px solid ${props => props.isActive ? palette.primary : palette.outlineGray};
+  cursor: pointer;
+  background-color: ${props => props.isActive ? 'rgba(34, 111, 255, 0.05)' : 'white'};
+  position: relative;
+  width: calc(50% - 10px);
+  
+  &:hover {
+    border-color: ${palette.primary};
+  }
+`;
+
+const CardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  
+  img {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 4px;
+  }
+  
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+  }
+`;
+
+const CheckboxWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+  margin-left: 0;
+`;
 
 const CustomizationWrap = styled.div`
   display: flex;
@@ -763,16 +934,31 @@ const CustomizationWrap = styled.div`
   }
 `;
 
+export const CheckCircle = styled.input`
+  appearance: none;
+  display: block !important;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  background-image: ${(props) =>
+    props.checked
+      ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
+      : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11.5' stroke='%23E0E4EB'/%3E%3C/svg%3E")`};
+  transition: background-image 0.3s ease-in-out;
 
+  + label {
+    cursor: pointer;
+  }
 
-const PersonaCards = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  padding: 24px 24px 24px 20px;
-  border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+
+    + label {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
 `;
-
