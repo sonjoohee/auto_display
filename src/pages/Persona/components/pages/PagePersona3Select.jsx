@@ -351,7 +351,7 @@ const PagePersona3Select = () => {
                       ) : (
                         <Body2 color="gray300">
                           페르소나가 선택되지 않았습니다. 하단에서 페르소나를
-                          선택해 주세요!
+                          선택해 주세요!(1명 선택 가능)
                         </Body2>
                       )}
                     </li>

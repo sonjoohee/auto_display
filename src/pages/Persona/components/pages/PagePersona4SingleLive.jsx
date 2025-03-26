@@ -22,9 +22,9 @@ import {
   SELECTED_PERSONA_LIST,
   IS_SHOW_TOAST,
   SELECTED_INTERVIEW_TYPE,
-  SINGLE_INTERVIEW_REPORT_TAB1,
+  // SINGLE_INTERVIEW_REPORT_TAB1,
   SINGLE_INTERVIEW_REPORT_TAB2,
-  SINGLE_INTERVIEW_REPORT_TAB3,
+  // SINGLE_INTERVIEW_REPORT_TAB3,
   SELECTED_INTERVIEW_PURPOSE_DATA,
   PERSONA_LIST_SAAS,
 } from "../../../AtomStates";
@@ -87,15 +87,11 @@ const PagePersona4SingleLive = () => {
   const [interviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
   const [, setInterviewReport] = useAtom(INTERVIEW_REPORT);
   const [, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
-  const [singleInterviewReportTab1, setSingleInterviewReportTab1] = useAtom(
-    SINGLE_INTERVIEW_REPORT_TAB1
-  );
+
   const [singleInterviewReportTab2, setSingleInterviewReportTab2] = useAtom(
     SINGLE_INTERVIEW_REPORT_TAB2
   );
-  const [singleInterviewReportTab3, setSingleInterviewReportTab3] = useAtom(
-    SINGLE_INTERVIEW_REPORT_TAB3
-  );
+
   const [isPersonaAccessible, setIsPersonaAccessible] = useAtom(
     IS_PERSONA_ACCESSIBLE
   );
@@ -260,15 +256,15 @@ const PagePersona4SingleLive = () => {
           setInterviewReportAdditional(
             savedProjectReportInfo.interviewReportAdditional
           );
-          setSingleInterviewReportTab1(
-            savedProjectReportInfo.singleInterviewReportTab1
-          );
+          // setSingleInterviewReportTab1(
+          //   savedProjectReportInfo.singleInterviewReportTab1
+          // );
           setSingleInterviewReportTab2(
             savedProjectReportInfo.singleInterviewReportTab2
           );
-          setSingleInterviewReportTab3(
-            savedProjectReportInfo.singleInterviewReportTab3
-          );
+          // setSingleInterviewReportTab3(
+          //   savedProjectReportInfo.singleInterviewReportTab3
+          // );
         }
         // setIsLoadingPage(false); // 로딩 완료
         setReportLoadButtonState(false);
@@ -284,7 +280,6 @@ const PagePersona4SingleLive = () => {
                 interviewData: interviewData,
                 personaList: personaList.selected,
                 purposeData: selectedInterviewPurposeData,
-                singleInterviewReportTab1: singleInterviewReportTab1,
                 singleInterviewReportTab2: singleInterviewReportTab2,
               },
               isLoggedIn

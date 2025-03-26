@@ -31,7 +31,7 @@ import {
   SELECTED_INTERVIEW_PURPOSE_DATA,
   SINGLE_INTERVIEW_QUESTION_LIST,
   PURPOSE_ITEMS_SINGLE,
-  SINGLE_INTERVIEW_REPORT_TAB1,
+  // SINGLE_INTERVIEW_REPORT_TAB1,
   SINGLE_INTERVIEW_REPORT_TAB2,
   // SINGLE_INTERVIEW_REPORT_TAB3,
   TRIAL_STATE,
@@ -49,7 +49,6 @@ import {
   createProjectReportOnServer,
 } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewRequest } from "../../../../utils/indexedDB";
-import { InterviewXPersonaSingleInterviewReportTab1 } from "../../../../utils/indexedDB";
 import { InterviewXPersonaSingleInterviewReportTab2 } from "../../../../utils/indexedDB";
 
 const OrganismToastPopupSingleLiveChat = ({
@@ -67,15 +66,11 @@ const OrganismToastPopupSingleLiveChat = ({
   const [, setReportId] = useAtom(PROJECT_REPORT_ID);
   const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
   const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
-  const [, setSingleInterviewReportTab1] = useAtom(
-    SINGLE_INTERVIEW_REPORT_TAB1
-  );
+
   const [, setSingleInterviewReportTab2] = useAtom(
     SINGLE_INTERVIEW_REPORT_TAB2
   );
-  // const [, setSingleInterviewReportTab3] = useAtom(
-  //   SINGLE_INTERVIEW_REPORT_TAB3
-  // );
+
   const [projectId] = useAtom(PROJECT_ID);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
@@ -208,41 +203,41 @@ const OrganismToastPopupSingleLiveChat = ({
       };
 
       // Tab 1 리포트 생성
-      let responseReport1;
+      // let responseReport1;
       let retryCount = 0;
       const maxRetries = 10;
 
-      while (retryCount < maxRetries) {
-        try {
-          responseReport1 = await InterviewXPersonaSingleInterviewReportTab1(
-            data,
-            isLoggedIn
-          );
+      // while (retryCount < maxRetries) {
+      //   try {
+      //     responseReport1 = await InterviewXPersonaSingleInterviewReportTab1(
+      //       data,
+      //       isLoggedIn
+      //     );
 
-          // 응답 데이터 유효성 검사
-          if (
-            responseReport1 &&
-            responseReport1.response &&
-            responseReport1.response.title &&
-            responseReport1.response.research_theory &&
-            responseReport1.response.research_purpose &&
-            responseReport1.response.research_insight
-          ) {
-            break;
-          }
-        } catch (error) {}
+      //     // 응답 데이터 유효성 검사
+      //     if (
+      //       responseReport1 &&
+      //       responseReport1.response &&
+      //       responseReport1.response.title &&
+      //       responseReport1.response.research_theory &&
+      //       responseReport1.response.research_purpose &&
+      //       responseReport1.response.research_insight
+      //     ) {
+      //       break;
+      //     }
+      //   } catch (error) {}
 
-        retryCount++;
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
+      //   retryCount++;
+      //   await new Promise((resolve) => setTimeout(resolve, 1000));
+      // }
 
-      if (retryCount >= maxRetries) {
-        throw new Error(
-          "Failed to generate report tab 1 after maximum retries"
-        );
-      }
+      // if (retryCount >= maxRetries) {
+      //   throw new Error(
+      //     "Failed to generate report tab 1 after maximum retries"
+      //   );
+      // }
 
-      setSingleInterviewReportTab1(responseReport1.response);
+      // setSingleInterviewReportTab1(responseReport1.response);
 
       // Tab 2 리포트 생성
       let responseReportTab2;
