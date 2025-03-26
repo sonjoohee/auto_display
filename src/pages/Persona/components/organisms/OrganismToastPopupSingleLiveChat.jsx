@@ -994,27 +994,27 @@ const OrganismToastPopupSingleLiveChat = ({
                       <ChatAddButton>
                         <label
                           disabled={
-                            countAdditionalQuestion === 0 ||
-                            selectedRadio !== null
+                            countAdditionalQuestion === 0 
+                            // selectedRadio !== null
                           }
                           onClick={() => {
-                            if (selectedRadio === null) {
+                          
                               setSelectedRadio("yes");
                               loadInterviewReport();
-                            }
+                            
                           }}
                         >
                           <input
                             type="radio"
                             name="addQuestion"
-                            checked={selectedRadio === "yes"}
-                            disabled={selectedRadio !== null}
+                            // checked={selectedRadio === "yes"}
+                            // disabled={selectedRadio !== null}
                           />
                           <span>네!</span>
                         </label>
 
                         <label
-                          disabled={selectedRadio !== null}
+                          // disabled={selectedRadio !== null}
                           onClick={() => {
                             if (selectedRadio === null) {
                               setSelectedRadio("no");
@@ -1024,8 +1024,8 @@ const OrganismToastPopupSingleLiveChat = ({
                           <input
                             type="radio"
                             name="addQuestion"
-                            checked={selectedRadio === "no"}
-                            disabled={selectedRadio !== null}
+                            // checked={selectedRadio === "no"}
+                            // disabled={selectedRadio !== null}
                           />
                           <span>계속 질문 할게요</span>
                         </label>
