@@ -30,17 +30,10 @@ import {
   TabContent5Item,
   BoxWrap,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
-import {
-  H3,
-  Body1,
-  Body2,
-  Body3,
-} from "../../../../assets/styles/Typography";
+import { H3, Body1, Body2, Body3 } from "../../../../assets/styles/Typography";
 import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
-import {
-  Button,
-} from "../../../../assets/styles/ButtonStyle";
+import { Button } from "../../../../assets/styles/ButtonStyle";
 import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
 import MoleculePersonaCard from "../molecules/MoleculePersonaCard";
@@ -59,30 +52,31 @@ const FULL_DEFINITION_TEXT =
   "사용자 트렌드 민감도 분석은 사용자가 시장의 최신 트렌드에 얼마나 빠르고 효과적으로 반응하는지를 측정하는 방법론입니다. 이 분석은 사용자가 새로운 트렌드를 어떻게 인식하고, 그 트렌드에 따라 행동이 어떻게 변화하는지 파악하는 데 중점을 둡니다.";
 
 const PagePersona3Single = () => {
-
   const navigate = useNavigate();
 
   const [, setUserCredits] = useAtom(USER_CREDITS);
-  const [eventState, ] = useAtom(EVENT_STATE);
-  const [eventTitle, ] = useAtom(EVENT_TITLE);
-  const [trialState, ] = useAtom(TRIAL_STATE);
-  const [creditCustomTheory, ] =useAtom(CREDIT_CUSTOM_THEORY);
-  const [customTheoryData, ] = useAtom(CUSTOM_THEORY_DATA);
+  const [eventState] = useAtom(EVENT_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [creditCustomTheory] = useAtom(CREDIT_CUSTOM_THEORY);
+  const [customTheoryData] = useAtom(CUSTOM_THEORY_DATA);
   const [, setPersonaButtonState3] = useAtom(PERSONA_BUTTON_STATE_3);
-  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
-  const [businessAnalysis, ] = useAtom(BUSINESS_ANALYSIS);
+  const [businessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [, setPersonaStep] = useAtom(PERSONA_STEP);
   const [selectedInterviewPurpose, setSelectedInterviewPurpose] = useAtom(
     SELECTED_INTERVIEW_PURPOSE
   );
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [, setSelectedInterviewPurposeData] =useAtom(SELECTED_INTERVIEW_PURPOSE_DATA);
+  const [, setSelectedInterviewPurposeData] = useAtom(
+    SELECTED_INTERVIEW_PURPOSE_DATA
+  );
   const [purposeItemsSingleAtom, setPurposeItemsSingleAtom] =
     useAtom(PURPOSE_ITEMS_SINGLE);
   const [selectedInterviewType, setSelectedInterviewType] = useAtom(
-      SELECTED_INTERVIEW_TYPE
-    );
+    SELECTED_INTERVIEW_TYPE
+  );
 
   const [, setShowPopup] = useState(false);
   const [showCustomButton, setShowCustomButton] = useState(true);
@@ -101,7 +95,7 @@ const PagePersona3Single = () => {
   const [showInterviewTypeAlert, setShowInterviewTypeAlert] = useState(false);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
-  const [activeTab, ] = useState(1);
+  const [activeTab] = useState(1);
   const [interviewModeType, setInterviewModeType] = useState("");
   const [showConfirmationPopup, setShowConfirmationPopup] = useState(false);
   const [interviewModeStep, setInterviewModeStep] = useState(true);
@@ -119,7 +113,7 @@ const PagePersona3Single = () => {
   };
 
   const handleConfirmInterviewMode = () => {
-    if (interviewModeType === 'selfQuestion') {
+    if (interviewModeType === "selfQuestion") {
       // 내가 질문하기를 선택한 경우 페르소나 선택으로 이동
       setSelectedInterviewType("singleLive");
       handleSelectPersona();
@@ -164,21 +158,21 @@ const PagePersona3Single = () => {
   ];
 
   useEffect(() => {
-      setPurposeItemsSingleAtom(purposeItemsSingle);
-      if (customTheoryData?.theory_title) {
-        const generatedQuestions = {
-          id: 4,
-          title: customTheoryData?.theory_title || "",
-          theory_title: customTheoryData?.theory_title || "",
-          view_title: customTheoryData?.theory_title || "",
-          definition: customTheoryData?.definition || "",
-          objective: customTheoryData?.objective || "",
-          characteristic: customTheoryData?.characteristic || [],
-          description: "사용자 커스텀 방법론" || "",
-          custom_theory_data: customTheoryData || "",
-        };
-        setPurposeItemsSingleAtom((prev) => [...prev, generatedQuestions]);
-      }
+    setPurposeItemsSingleAtom(purposeItemsSingle);
+    if (customTheoryData?.theory_title) {
+      const generatedQuestions = {
+        id: 4,
+        title: customTheoryData?.theory_title || "",
+        theory_title: customTheoryData?.theory_title || "",
+        view_title: customTheoryData?.theory_title || "",
+        definition: customTheoryData?.definition || "",
+        objective: customTheoryData?.objective || "",
+        characteristic: customTheoryData?.characteristic || [],
+        description: "사용자 커스텀 방법론" || "",
+        custom_theory_data: customTheoryData || "",
+      };
+      setPurposeItemsSingleAtom((prev) => [...prev, generatedQuestions]);
+    }
   }, [setPurposeItemsSingleAtom]);
 
   const handleEnterInterviewRoom = () => {
@@ -230,7 +224,12 @@ const PagePersona3Single = () => {
 
   useEffect(() => {
     // 팝업이나 토스트가 열려있을 때
-    if (showToast || showInterviewReady || showEditPersona || showConfirmationPopup) {
+    if (
+      showToast ||
+      showInterviewReady ||
+      showEditPersona ||
+      showConfirmationPopup
+    ) {
       document.body.style.overflow = "hidden";
       document.body.style.paddingRight = "15px"; // 스크롤바 자리만큼 패딩 추가
     }
@@ -332,7 +331,6 @@ const PagePersona3Single = () => {
       return false;
     };
 
-
     // F5 키 또는 Ctrl+R 감지
     const handleKeyDown = (event) => {
       if (
@@ -357,11 +355,15 @@ const PagePersona3Single = () => {
     };
   }, [navigate]);
 
-
   return (
     <>
       <ContentsWrap
-        noScroll={Boolean(showToast || showInterviewReady || showEditPersona || showConfirmationPopup)}
+        noScroll={Boolean(
+          showToast ||
+            showInterviewReady ||
+            showEditPersona ||
+            showConfirmationPopup
+        )}
       >
         <OrganismIncNavigation />
 
@@ -419,69 +421,93 @@ const PagePersona3Single = () => {
 
             <TabContent5>
               <div className="title">
-                <H3 color="gray800">Interview Objective Define</H3>
+                <H3 color="gray800">Interview Method Select</H3>
                 <Body3 color="gray800">
-                  인터뷰 주제를 명확히하고 원하는 인사이트를 얻기 위한 질문을
-                  설계합니다
+                  상황에 알맞은 방식을 선택해, 인사이트를 보다 효과적으로
+                  얻어보세요.
                 </Body3>
               </div>
 
               {interviewModeStep && (
                 <div className="content">
                   <TabContent5Item>
-                    <div className="title">
+                    {/* <div className="title">
                       <Body1 color="gray700">인터뷰 방식 선택</Body1>
-                  </div>
-                  
-                  <InterviewModeSelection>
-                    <InterviewModeCard 
-                      isActive={interviewModeType === 'selfQuestion'} 
-                      onClick={() => setInterviewModeType('selfQuestion')}
-                    >
-                      <CardContent>
-                        <img src={images.InterviewModeSelfQuestion} alt="self question" />
-                        <div>
-                          <Body2 color="gray700">내가 질문하기</Body2>
-                          <Body3 style={{marginTop: '10px'}} color="gray500">원하는 질문을 직접 입력하여 Persona에게<br />답을 얻을 수 있습니다.</Body3>
-                        </div>
-                      </CardContent>
-                      <CheckboxWrapper>
-                        <CheckCircle
-                          as="input"
-                          type="radio"
-                          id="selfQuestion"
-                          name="interviewMode"
-                          checked={interviewModeType === 'selfQuestion'}
-                          onChange={() => setInterviewModeType('selfQuestion')}
-                        />  
-                      </CheckboxWrapper>
-                    </InterviewModeCard>
-                    
-                    <InterviewModeCard 
-                      isActive={interviewModeType === 'moderator'} 
-                      onClick={() => setInterviewModeType('moderator')}
-                    >
-                      <CardContent>
-                        <img src={images.InterviewModeModerator} alt="moderator" />
-                        <div>
-                          <Body2 color="gray700">모더레이터에게 요청하기</Body2>
-                          <Body3 style={{marginTop: '10px'}} color="gray500">원하는 사항을 요청, Moderator가 직접<br />적합한 질문을 하여 답을 얻을 수 있습니다.</Body3>
-                        </div>
-                      </CardContent>
-                      <CheckboxWrapper>
-                        <CheckCircle
-                          as="input"
-                          type="radio"
-                          id="moderator"
-                          name="interviewMode"
-                          checked={interviewModeType === 'moderator'}
-                          onChange={() => setInterviewModeType('moderator')}
-                        />
-                      </CheckboxWrapper>
-                    </InterviewModeCard>
-                  </InterviewModeSelection>
-                </TabContent5Item>
-              </div>
+                    </div> */}
+
+                    <InterviewModeSelection>
+                      <InterviewModeCard
+                        isActive={interviewModeType === "selfQuestion"}
+                        onClick={() => setInterviewModeType("selfQuestion")}
+                      >
+                        <CardContent>
+                          <img
+                            src={images.InterviewModeSelfQuestion}
+                            alt="self question"
+                          />
+                          <div>
+                            <Body2 color="gray700">내가 질문하기</Body2>
+                            <Body3
+                              style={{ marginTop: "10px" }}
+                              color="gray500"
+                            >
+                              원하는 질문을 직접 입력하여 Persona에게
+                              <br />
+                              답을 얻을 수 있습니다.
+                            </Body3>
+                          </div>
+                        </CardContent>
+                        <CheckboxWrapper>
+                          <CheckCircle
+                            as="input"
+                            type="radio"
+                            id="selfQuestion"
+                            name="interviewMode"
+                            checked={interviewModeType === "selfQuestion"}
+                            onChange={() =>
+                              setInterviewModeType("selfQuestion")
+                            }
+                          />
+                        </CheckboxWrapper>
+                      </InterviewModeCard>
+
+                      <InterviewModeCard
+                        isActive={interviewModeType === "moderator"}
+                        onClick={() => setInterviewModeType("moderator")}
+                      >
+                        <CardContent>
+                          <img
+                            src={images.InterviewModeModerator}
+                            alt="moderator"
+                          />
+                          <div>
+                            <Body2 color="gray700">
+                              모더레이터에게 요청하기
+                            </Body2>
+                            <Body3
+                              style={{ marginTop: "10px" }}
+                              color="gray500"
+                            >
+                              원하는 사항을 요청, Moderator가 직접
+                              <br />
+                              적합한 질문을 하여 답을 얻을 수 있습니다.
+                            </Body3>
+                          </div>
+                        </CardContent>
+                        <CheckboxWrapper>
+                          <CheckCircle
+                            as="input"
+                            type="radio"
+                            id="moderator"
+                            name="interviewMode"
+                            checked={interviewModeType === "moderator"}
+                            onChange={() => setInterviewModeType("moderator")}
+                          />
+                        </CheckboxWrapper>
+                      </InterviewModeCard>
+                    </InterviewModeSelection>
+                  </TabContent5Item>
+                </div>
               )}
 
               {interviewModeStep && (
@@ -500,36 +526,64 @@ const PagePersona3Single = () => {
                 <div className="content">
                   <TabContent5Item>
                     <div className="title">
-                    <Body1 color="gray700">맞춤형 인터뷰 문항 생성</Body1>
-                  </div>
+                      <Body1 color="gray700">맞춤형 인터뷰 문항 생성</Body1>
+                    </div>
 
-                  <CustomizationWrap>
-                    {showCustomButton &&
-                      (!customTheoryData ||
-                        Object.keys(customTheoryData).length === 0) && (
-                        <BoxWrap
-                          NoData
-                          onClick={() => setShowRequestPopup(true)}
-                        >
-                          <img src={images.NoData} alt="no data" />
-                          <Body2 color="gray700" align="center">
-                            페르소나에게 어떤 인사이트를 얻고 싶은가요? 원하는
-                            목적을 직접 입력하세요
-                          </Body2>
-                        </BoxWrap>
-                      )}
+                    <CustomizationWrap>
+                      {showCustomButton &&
+                        (!customTheoryData ||
+                          Object.keys(customTheoryData).length === 0) && (
+                          <BoxWrap
+                            NoData
+                            onClick={() => setShowRequestPopup(true)}
+                          >
+                            <img src={images.NoData} alt="no data" />
+                            <Body2 color="gray700" align="center">
+                              페르소나에게 어떤 인사이트를 얻고 싶은가요? 원하는
+                              목적을 직접 입력하세요
+                            </Body2>
+                          </BoxWrap>
+                        )}
 
-                    <OrganismCustomization
-                      customizations={customizations}
-                      setCustomizations={setCustomizations}
-                      setShowPopup={setShowPopup}
-                      setShowNewListBox={setShowNewListBox}
-                      setShowCustomization={setShowCustomization}
-                      setShowCustomButton={setShowCustomButton}
-                      setShowQuestions={setShowQuestions}
-                    />
+                      <OrganismCustomization
+                        customizations={customizations}
+                        setCustomizations={setCustomizations}
+                        setShowPopup={setShowPopup}
+                        setShowNewListBox={setShowNewListBox}
+                        setShowCustomization={setShowCustomization}
+                        setShowCustomButton={setShowCustomButton}
+                        setShowQuestions={setShowQuestions}
+                      />
 
-                    {purposeItemsSingleAtom.slice(3).map((purpose) => (
+                      {purposeItemsSingleAtom.slice(3).map((purpose) => (
+                        <MoleculeInterviewPurpose
+                          Small
+                          key={purpose.id}
+                          purpose={purpose}
+                          selectedPurpose={selectedInterviewPurpose}
+                          showQuestions={showQuestions}
+                          onPurposeSelect={handlePurposeSelect}
+                          toggleQuestions={(id) =>
+                            setShowQuestions((prev) => ({
+                              ...prev,
+                              [id]: !prev[id],
+                            }))
+                          }
+                        />
+                      ))}
+                    </CustomizationWrap>
+                  </TabContent5Item>
+                </div>
+              )}
+
+              {!interviewModeStep && (
+                <div className="content">
+                  <TabContent5Item>
+                    <Body1 color="gray700" align="left">
+                      추천 질문 템플릿
+                    </Body1>
+
+                    {purposeItemsSingleAtom.slice(0, 3).map((purpose) => (
                       <MoleculeInterviewPurpose
                         Small
                         key={purpose.id}
@@ -545,35 +599,7 @@ const PagePersona3Single = () => {
                         }
                       />
                     ))}
-                  </CustomizationWrap>
-                </TabContent5Item>
-              </div>
-              )}
-
-              {!interviewModeStep && (
-                <div className="content">
-                  <TabContent5Item>
-                    <Body1 color="gray700" align="left">
-                      추천 질문 템플릿
-                  </Body1>
-
-                  {purposeItemsSingleAtom.slice(0, 3).map((purpose) => (
-                    <MoleculeInterviewPurpose
-                      Small
-                      key={purpose.id}
-                      purpose={purpose}
-                      selectedPurpose={selectedInterviewPurpose}
-                      showQuestions={showQuestions}
-                      onPurposeSelect={handlePurposeSelect}
-                      toggleQuestions={(id) =>
-                        setShowQuestions((prev) => ({
-                          ...prev,
-                          [id]: !prev[id],
-                        }))
-                      }
-                    />
-                  ))}
-                </TabContent5Item>
+                  </TabContent5Item>
                 </div>
               )}
 
@@ -584,9 +610,9 @@ const PagePersona3Single = () => {
                   Fill
                   disabled={!selectedInterviewPurpose}
                   onClick={handleSelectPersona}
-              >
-                다음
-              </Button>
+                >
+                  다음
+                </Button>
               )}
             </TabContent5>
 
@@ -597,9 +623,9 @@ const PagePersona3Single = () => {
                 title="인터뷰 방식 선택 확인"
                 message={
                   <>
-                    {interviewModeType === 'selfQuestion' 
-                      ? '내가 질문하기 방식으로 인터뷰를 진행합니다.' 
-                      : '모더레이터에게 요청하기 방식으로 인터뷰를 진행합니다.'}
+                    {interviewModeType === "selfQuestion"
+                      ? "내가 질문하기 방식으로 인터뷰를 진행합니다."
+                      : "모더레이터에게 요청하기 방식으로 인터뷰를 진행합니다."}
                   </>
                 }
                 buttonType="Outline"
@@ -839,7 +865,7 @@ const InterviewModeSelection = styled.div`
   width: 100%;
   justify-content: center;
   margin-bottom: 30px;
-  
+
   .button-container {
     display: flex;
     justify-content: flex-end;
@@ -854,12 +880,14 @@ const InterviewModeCard = styled.div`
   padding: 20px;
   padding-top: 30px;
   border-radius: 10px;
-  border: 1px solid ${props => props.isActive ? palette.primary : palette.outlineGray};
+  border: 1px solid
+    ${(props) => (props.isActive ? palette.primary : palette.outlineGray)};
   cursor: pointer;
-  background-color: ${props => props.isActive ? 'rgba(34, 111, 255, 0.05)' : 'white'};
+  background-color: ${(props) =>
+    props.isActive ? "rgba(34, 111, 255, 0.05)" : "white"};
   position: relative;
   width: calc(50% - 10px);
-  
+
   &:hover {
     border-color: ${palette.primary};
   }
@@ -871,13 +899,13 @@ const CardContent = styled.div`
   align-items: center;
   text-align: center;
   gap: 8px;
-  
+
   img {
     width: 48px;
     height: 48px;
     margin-bottom: 4px;
   }
-  
+
   div {
     display: flex;
     flex-direction: column;
