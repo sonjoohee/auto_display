@@ -7,6 +7,7 @@ import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
 import PopupWrap from "../../../../assets/styles/Popup";
 import OrganismToastPopup from "../../../Persona/components/organisms/OrganismToastPopup";
 import OrganismToastPopupSingleChat from "../../../Persona/components/organisms/OrganismToastPopupSingleChat";
+import OrganismToastPopupSingleLiveChat from "../../../Persona/components/organisms/OrganismToastPopupSingleLiveChat";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import images from "../../../../assets/styles/Images";
 import personaImages from "../../../../assets/styles/PersonaImages";
@@ -497,11 +498,16 @@ const PagePersona3Select = () => {
       {selectedInterviewType === "multiple" ? (
         <OrganismToastPopup isActive={showToast} autoClose={false} />
       ) : selectedInterviewType === "single" ? (
-        <OrganismToastPopupSingleChat
-          isActive={showToast}
-          autoClose={false}
-          isIndepth={isIndepthEnabled}
-        />
+        // <OrganismToastPopupSingleChat
+        //   isActive={showToast}
+        //   autoClose={false}
+        //   isIndepth={isIndepthEnabled}
+        // />
+        <OrganismToastPopupSingleLiveChat
+        isActive={showToast}
+        autoClose={false}
+        isIndepth={isIndepthEnabled}
+      />
       ) : null}
 
       {showCreditPopup && (
