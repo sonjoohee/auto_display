@@ -942,7 +942,7 @@ const PagePersona4SingleLive = () => {
 
                               <div>
                                 <InterviewSection>
-                                  <InterviewTitle>인터뷰 참고 내용</InterviewTitle>
+                                  <InterviewTitle>페르소나 응답 </InterviewTitle>
                                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                                     {theme.interview_reference.map((reference, idx) => (
                                       <InterviewQuote key={idx}>"{reference}"</InterviewQuote>
@@ -1417,7 +1417,7 @@ const InterviewSection = styled.div`
 `;
 
 const InterviewTitle = styled.h4`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   color: #333;
   margin-bottom: 16px;
@@ -1425,10 +1425,10 @@ const InterviewTitle = styled.h4`
 `;
 
 const InterviewQuote = styled.div`
- color: #323232;
-  line-height: 1.6;
+  color: #666;
+  line-height: 1.2;
   border-bottom: 1px solid #E0E4EB;
-  font-size: 16px;
+  font-size: 14px;
   margin-bottom: 10px;
   text-align: left;
   justify-content:center;
