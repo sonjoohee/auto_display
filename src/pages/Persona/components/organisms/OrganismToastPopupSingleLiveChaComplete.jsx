@@ -254,6 +254,10 @@ const OrganismToastPopupSingleLiveChaComplete = ({
                     <QuestionItem
                       key={index}
                       checked={status === "Complete" ? true : item.checked}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
                     >
                       <Sub2 color="gray800">
                         Q{index + 1}. {item.main.question.question}

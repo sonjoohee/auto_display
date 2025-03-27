@@ -1348,6 +1348,10 @@ const OrganismToastPopupSingleChat = ({
                       key={index}
                       checked={status === "Complete" ? true : item.checked} // Complete일 때 checked를 true로 설정
                       disabled={status === "Pre"}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
                     >
                       <Sub2 color="gray800">
                         Q{index + 1}. {item.question}
