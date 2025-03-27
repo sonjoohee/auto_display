@@ -557,6 +557,16 @@ const OrganismToastPopupSingleLiveChat = ({
 
   useEffect(() => {
     setActive(isActive);
+
+    // 컴포넌트가 활성화되면 입력 필드에 포커스
+    if (isActive) {
+      setTimeout(() => {
+        const inputElement = document.querySelector('input[type="text"]');
+        if (inputElement) {
+          inputElement.focus();
+        }
+      }, 100); // 렌더링 완료 후 실행되도록 약간의 지연 추가
+    }
   }, [isActive]);
 
   const handleClose = () => {
@@ -828,6 +838,20 @@ const OrganismToastPopupSingleLiveChat = ({
     }
   }, [isInputEnabled]); // isInputEnabled가 변경될 때마다 실행
 
+  // isAnalyzing이 false일 때 입력 필드에 자동 포커스 설정
+  useEffect(() => {
+    if (
+      !isAnalyzing &&
+      !interviewStatus.includes("Ing") &&
+      interviewQuestionListState.length > 0
+    ) {
+      const inputElement = document.querySelector('input[type="text"]');
+      if (inputElement) {
+        inputElement.focus();
+      }
+    }
+  }, [isAnalyzing, interviewStatus, interviewQuestionListState.length]);
+
   // 라디오 버튼 선택 상태를 관리하기 위한 새로운 state 추가
   const [selectedRadio, setSelectedRadio] = useState(null);
 
@@ -928,7 +952,11 @@ const OrganismToastPopupSingleLiveChat = ({
                   );
                 })
               ) : (
-                <Sub2 color="gray800">질문을 입력해주세요.</Sub2> // 질문이 없을 때 메시지 표시
+                <Sub2 color="gray800">
+                  입력한 질문이 표시돼요
+                  <br />
+                  질문은 최대 10번 가능합니다.
+                </Sub2> // 질문이 없을 때 메시지 표시
               )}
             </QuestionList>
           </QuestionListWrap>
@@ -982,23 +1010,19 @@ const OrganismToastPopupSingleLiveChat = ({
                     <ChatItem Add>
                       <ChatBox Moder>
                         <Sub1 color="gray800" align="left">
-                          보고서를 생성하시겠습니까? ( {interviewQuestionListState.length} / 10 )     
+                          보고서를 생성하시겠습니까? ({" "}
+                          {interviewQuestionListState.length} / 10 )
                         </Sub1>
                       </ChatBox>
                       <ChatAddButton>
                         <label
-                          disabled={
-                            countAdditionalQuestion === 0
-                          }
+                          disabled={countAdditionalQuestion === 0}
                           onClick={() => {
                             setSelectedRadio("yes");
                             loadInterviewReport();
                           }}
                         >
-                          <input
-                            type="radio"
-                            name="addQuestion"
-                          />
+                          <input type="radio" name="addQuestion" />
                           <span>네!</span>
                         </label>
 
@@ -1021,6 +1045,15 @@ const OrganismToastPopupSingleLiveChat = ({
                     </ChatItem>
                   )}
               </ChatListWrap>
+              {interviewQuestionListState.length == 0 && (
+                <LoadingBox>
+                  <p>
+                    인터뷰 대상자에게 궁금한 점이 무엇인가요?
+                    <br />
+                    아래 입력창에 편하게 질문을 입력해주세요!
+                  </p>
+                </LoadingBox>
+              )}
               {isAnalyzing &&
                 (showRegenerateButton2 ? (
                   <ErrorInterviewItem>
@@ -1098,7 +1131,13 @@ const OrganismToastPopupSingleLiveChat = ({
                     }
                   }}
                   onChange={handleInputChange}
-                  placeholder={`질문을 입력해주세요. (${10 - interviewQuestionListState.length}번 더 질문 할 수 있습니다)`}
+                  placeholder={`질문을 입력해주세요. (${
+                    interviewQuestionListState.length > 0
+                      ? `${
+                          10 - interviewQuestionListState.length
+                        }번 더 질문 할 수 있습니다`
+                      : "최대 10번 질문 할 수 있습니다."
+                  })`}
                   style={{
                     pointerEvents: "auto",
                   }}
