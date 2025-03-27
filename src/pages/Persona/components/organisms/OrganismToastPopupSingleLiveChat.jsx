@@ -982,14 +982,13 @@ const OrganismToastPopupSingleLiveChat = ({
                     <ChatItem Add>
                       <ChatBox Moder>
                         <Sub1 color="gray800" align="left">
-                          보고서를 생성하시겠습니까?
+                          보고서를 생성하시겠습니까? ( {interviewQuestionListState.length} / 10 )     
                         </Sub1>
                       </ChatBox>
                       <ChatAddButton>
                         <label
                           disabled={
                             countAdditionalQuestion === 0
-                            // selectedRadio !== null
                           }
                           onClick={() => {
                             setSelectedRadio("yes");
@@ -999,14 +998,11 @@ const OrganismToastPopupSingleLiveChat = ({
                           <input
                             type="radio"
                             name="addQuestion"
-                            // checked={selectedRadio === "yes"}
-                            // disabled={selectedRadio !== null}
                           />
                           <span>네!</span>
                         </label>
 
                         <label
-                          // disabled={selectedRadio !== null}
                           onClick={() => {
                             if (selectedRadio === null) {
                               setSelectedRadio("no");
@@ -1102,7 +1098,7 @@ const OrganismToastPopupSingleLiveChat = ({
                     }
                   }}
                   onChange={handleInputChange}
-                  placeholder="질문을 입력해주세요"
+                  placeholder={`질문을 입력해주세요. (${10 - interviewQuestionListState.length}번 더 질문 할 수 있습니다)`}
                   style={{
                     pointerEvents: "auto",
                   }}
