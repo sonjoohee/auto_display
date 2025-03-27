@@ -997,10 +997,34 @@ const OrganismToastPopupSingleLiveChat = ({
             </Header>
 
             <Contents ref={contentsRef} showAddQuestion={showAddQuestion}>
+              <ChatListWrap>
+                <ChatItem Add>
+                  <ChatBox Moder>
+                    <Sub1 color="gray800" align="left">
+                      반갑습니다. {projectTotalInfo.projectTitle}에 관련된
+                      인터뷰를 시작하겠습니다.
+                    </Sub1>
+                  </ChatBox>
+                </ChatItem>
+                <ChatItem Persona>
+                  <Persona color="Linen" size="Medium" Round>
+                    <img
+                      src={personaImages[personaList?.selected[0]?.imageKey]}
+                      alt={personaList?.selected[0]?.persona}
+                    />
+                  </Persona>
+                  <ChatBox Persona>
+                    <Sub1 color="gray800" align="left">
+                      안녕하세요. 저는 {personaList?.selected[0]?.personaName}
+                      입니다. 궁금한 점을 질문해 주시면 성실하게 답변해드리도록
+                      하겠습니다.
+                    </Sub1>
+                  </ChatBox>
+                </ChatItem>
+              </ChatListWrap>
               {!isLoadingPrepare && isComplete
                 ? renderInterviewItems()
                 : renderInterviewItems()}
-
               <ChatListWrap>
                 {interviewStatus.length > 0 &&
                   interviewStatus.every((status) => status === "Complete") &&
