@@ -1561,6 +1561,7 @@ const PersonaInfo = styled.div`
 
 const WaitPersonaWrap = styled(PersonaInfoWrap)`
   gap: 24px;
+  padding: 20px 20px 20px;
 `;
 
 const WaitPersonaTitle = styled(PersonaInfoTitle)`
