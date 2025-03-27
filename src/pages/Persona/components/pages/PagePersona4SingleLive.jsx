@@ -67,7 +67,6 @@ import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import OrganismToastPopupSingleLiveChaComplete from "../organisms/OrganismToastPopupSingleLiveChaComplete";
 import * as d3 from "d3";
 
-
 const PagePersona4SingleLive = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const [
@@ -367,8 +366,6 @@ const PagePersona4SingleLive = () => {
   const existingQuestions = interviewQuestionList.find(
     (item) => item.theory_name === selectedInterviewPurpose
   );
-
-
 
   const handleEnterInterviewRoom = () => {
     setShowToast(true);
@@ -900,7 +897,7 @@ const PagePersona4SingleLive = () => {
                   >
                     <div>
                       <H4>
-                        1. {" "}
+                        1.{" "}
                         {singleInterviewReportTab2?.summary_data?.title ||
                           "테스트"}
                       </H4>
@@ -913,48 +910,79 @@ const PagePersona4SingleLive = () => {
                     </div>
 
                     <div>
-
-                      <H4 style={{ marginBottom: '-12px' }}>2. 인터뷰 핵심 내용 정리</H4>
+                      <H4 style={{ marginBottom: "-12px" }}>
+                        2. 인터뷰 핵심 내용 정리
+                      </H4>
                       {singleInterviewReportTab2?.thematic_analysis ? (
                         <ThematicGrid>
-                          {singleInterviewReportTab2.thematic_analysis.map((theme, index) => (
-                            <ThematicCard key={index}>
-                              <div >
-                                <h3 style={{ 
-                                  fontSize: '18px', 
-                                  fontWeight: 'bold',
-                                  color: '#333',
-                                  marginBottom: '8px'
-                                }}>
-                                  {theme.theme}
-                                </h3>
-                              </div>
-
-                              <div >
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                                  {theme.keywords.map((keyword, kidx) => (
-                                    <KeywordTag key={kidx}>#{keyword}</KeywordTag>
-                                  ))}
+                          {singleInterviewReportTab2.thematic_analysis.map(
+                            (theme, index) => (
+                              <ThematicCard key={index}>
+                                <div>
+                                  <h3
+                                    style={{
+                                      fontSize: "18px",
+                                      fontWeight: "bold",
+                                      color: "#333",
+                                      marginBottom: "8px",
+                                    }}
+                                  >
+                                    {theme.theme}
+                                  </h3>
                                 </div>
-                              </div>
-                              <Divider />
-                              <p style={{ color: '#666666', lineHeight: '1.6' }}>{theme.reason}</p>
 
-                              <div>
-                                <InterviewSection>
-                                  <InterviewTitle>페르소나 응답 </InterviewTitle>
-                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                    {theme.interview_reference.map((reference, idx) => (
-                                      <InterviewQuote key={idx}>"{reference}"</InterviewQuote>
+                                <div>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexWrap: "wrap",
+                                      gap: "8px",
+                                    }}
+                                  >
+                                    {theme.keywords.map((keyword, kidx) => (
+                                      <KeywordTag key={kidx}>
+                                        #{keyword}
+                                      </KeywordTag>
                                     ))}
                                   </div>
-                                </InterviewSection>
-                              </div>
-                            </ThematicCard>
-                          ))}
+                                </div>
+                                <Divider />
+                                <p
+                                  style={{
+                                    color: "#666666",
+                                    lineHeight: "1.6",
+                                  }}
+                                >
+                                  {theme.reason}
+                                </p>
+
+                                <div>
+                                  <InterviewSection>
+                                    <InterviewTitle>
+                                      페르소나 응답{" "}
+                                    </InterviewTitle>
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: "6px",
+                                      }}
+                                    >
+                                      {theme.interview_reference.map(
+                                        (reference, idx) => (
+                                          <InterviewQuote key={idx}>
+                                            "{reference}"
+                                          </InterviewQuote>
+                                        )
+                                      )}
+                                    </div>
+                                  </InterviewSection>
+                                </div>
+                              </ThematicCard>
+                            )
+                          )}
                         </ThematicGrid>
                       ) : null}
-
                     </div>
 
                     <div>
@@ -964,8 +992,6 @@ const PagePersona4SingleLive = () => {
                       </UlList>
                     </div>
                   </ReportContent>
-
-               
                 </div>
               </InterviewReport>
             </MainSection>
@@ -1181,7 +1207,6 @@ const UsageLevelGraph = styled.div`
   }
 `;
 
-
 const ReportHeader = styled.div`
   display: flex;
   flex-direction: column;
@@ -1267,7 +1292,6 @@ const UlList = styled.ul`
   }
 `;
 
-
 const InterviewReport = styled.div`
   display: flex;
   flex-direction: column;
@@ -1276,7 +1300,6 @@ const InterviewReport = styled.div`
   margin-top: 20px;
   margin-bottom: 80px;
 `;
-
 
 const SidebarWrap = styled.div`
   position: sticky;
@@ -1383,19 +1406,19 @@ const PersonaInfo = styled.div`
 
 const WaitPersonaWrap = styled(PersonaInfoWrap)`
   gap: 24px;
+  padding: 20px 20px 20px;
 `;
 
 const WaitPersonaTitle = styled(PersonaInfoTitle)`
   gap: 12px;
 `;
 
-
 const ThematicCard = styled.div`
   background-color: white;
   border-radius: 10px;
   padding: 20px;
-  border: 1px solid #E0E4EB;
-  gap:16px;
+  border: 1px solid #e0e4eb;
+  gap: 16px;
 `;
 
 const ThematicGrid = styled.div`
@@ -1410,7 +1433,7 @@ const KeywordTag = styled.span`
 `;
 
 const InterviewSection = styled.div`
-  background-color: #f7f8fA;
+  background-color: #f7f8fa;
   border-radius: 8px;
   padding: 20px;
   margin-top: 20px;
@@ -1421,17 +1444,16 @@ const InterviewTitle = styled.h4`
   font-weight: bold;
   color: #333;
   margin-bottom: 16px;
-
 `;
 
 const InterviewQuote = styled.div`
   color: #666;
   line-height: 1.2;
-  border-bottom: 1px solid #E0E4EB;
+  border-bottom: 1px solid #e0e4eb;
   font-size: 14px;
   margin-bottom: 10px;
   text-align: left;
-  justify-content:center;
+  justify-content: center;
   padding-bottom: 10px;
 
   &:last-child {
