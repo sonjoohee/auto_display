@@ -913,6 +913,7 @@ const PagePersona4SingleLive = () => {
                     </div>
 
                     <div>
+
                       <H4 style={{ marginBottom: '-12px' }}>2. 인터뷰 핵심 내용 정리</H4>
                       {singleInterviewReportTab2?.thematic_analysis ? (
                         <ThematicGrid>
@@ -953,6 +954,7 @@ const PagePersona4SingleLive = () => {
                           ))}
                         </ThematicGrid>
                       ) : null}
+
                     </div>
 
                     <div>
