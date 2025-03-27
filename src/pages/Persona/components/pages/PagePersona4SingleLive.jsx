@@ -67,6 +67,7 @@ import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import OrganismToastPopupSingleLiveChaComplete from "../organisms/OrganismToastPopupSingleLiveChaComplete";
 import * as d3 from "d3";
 
+
 const PagePersona4SingleLive = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const [
@@ -141,64 +142,6 @@ const PagePersona4SingleLive = () => {
     }
   }, [reportId]);
 
-  const getCategoryColor = (category) => {
-    switch (category) {
-      case "광고/마케팅":
-        return "Red";
-      case "교육":
-        return "LavenderMagenta";
-      case "금융/보험/핀테크":
-        return "Amethyst";
-      case "게임":
-        return "VistaBlue";
-      case "모빌리티/교통":
-        return "BlueYonder";
-      case "물류":
-        return "MidnightBlue";
-      case "부동산/건설":
-        return "ButtonBlue";
-      case "뷰티/화장품":
-        return "ButtonBlue";
-      case "AI/딥테크/블록체인":
-        return "MiddleBlueGreen";
-      case "소셜미디어/커뮤니티":
-        return "GreenSheen";
-      case "여행/레저":
-        return "TropicalRainForest";
-      case "유아/출산":
-        return "DollarBill";
-      case "인사/비즈니스":
-        return "Olivine";
-      case "제조/하드웨어":
-        return "ChineseGreen";
-      case "커머스":
-        return "Jonquil";
-      case "콘텐츠/예술":
-        return "PastelOrange";
-      case "통신/보안/데이터":
-        return "Tangerine";
-      case "패션":
-        return "Copper";
-      case "푸드/농업":
-        return "Shadow";
-      case "환경/에너지":
-        return "Tuscany";
-      case "홈리빙":
-        return "VeryLightTangelo";
-      case "헬스케어/바이오":
-        return "Orange";
-      case "피트니스/스포츠":
-        return "CarnationPink";
-      case "법률":
-        return "TurkishRose";
-      case "펫":
-        return "SuperPink";
-      case "기타":
-        return "NavyBlue";
-      default:
-        return "";
-    }
-  };
   useEffect(() => {
     // 팝업이 열려있을 때 배경 스크롤 맊음
     if (showToast) {
@@ -425,44 +368,7 @@ const PagePersona4SingleLive = () => {
     (item) => item.theory_name === selectedInterviewPurpose
   );
 
-  const getCardData = (suggestionList) => {
-    const viewpointMapping = {
-      "브랜드 강화 관점": {
-        icon: images.DiscoveryBrand,
-        badge: { icon: "🌟", text: "브랜드 파워" },
-      },
-      "타겟팅 관점": {
-        icon: images.DiscoveryInsight,
-        badge: { icon: "🎯", text: "마케팅 인사이트" },
-      },
-      "세그먼트화 관점": {
-        icon: images.DiscoveryTarget,
-        badge: { icon: "🎟", text: "타겟 세분화" },
-      },
-      "사업 전략 관점": {
-        icon: images.DiscoverySuccess,
-        badge: { icon: "🚀", text: "성공 전략" },
-      },
-      "고객 경험 개선 관점": {
-        icon: images.DiscoveryExperience,
-        badge: { icon: "🤝", text: "고객 경험" },
-      },
-      "성장 전략 관점": {
-        icon: images.DiscoveryScale,
-        badge: { icon: "📈", text: "스케일업" },
-      },
-      "비즈니스 모델 캔버스 관점": {
-        icon: images.DiscoveryBM,
-        badge: { icon: "📋", text: "BM 전략" },
-      },
-    };
 
-    return suggestionList?.map((suggestion) => ({
-      ...viewpointMapping[suggestion.title],
-      title: suggestion.title_text,
-      description: suggestion.description_text,
-    }));
-  };
 
   const handleEnterInterviewRoom = () => {
     setShowToast(true);
@@ -994,7 +900,7 @@ const PagePersona4SingleLive = () => {
                   >
                     <div>
                       <H4>
-                        1. 질문의 의도 :{" "}
+                        1. {" "}
                         {singleInterviewReportTab2?.summary_data?.title ||
                           "테스트"}
                       </H4>
@@ -1007,44 +913,46 @@ const PagePersona4SingleLive = () => {
                     </div>
 
                     <div>
-                      <H4>2. 인터뷰 내용 정리</H4>
-                      <UlList Disc>
-                        {singleInterviewReportTab2?.thematic_analysis ? (
-                          singleInterviewReportTab2.thematic_analysis.map(
-                            (theme, index) => (
-                              <li key={index}>
-                                <strong>{theme.theme}:</strong> {theme.reason}
-                                <br />
-                                <br />
-                                <strong>주요 키워드:</strong>{" "}
-                                {theme.keywords.join(", ")}
-                                <br />
-                                <br />
-                                <strong>참고 인터뷰 내용:</strong>
-                                <ul
-                                  style={{
-                                    marginLeft: "20px",
-                                    marginTop: "10px",
-                                  }}
-                                >
-                                  {theme.interview_reference.map(
-                                    (reference, idx) => (
-                                      <li
-                                        key={idx}
-                                        style={{ marginBottom: "8px" }}
-                                      >
-                                        "{reference}"
-                                      </li>
-                                    )
-                                  )}
-                                </ul>
-                              </li>
-                            )
-                          )
-                        ) : (
-                          <li>인터뷰 내용이 없습니다</li>
-                        )}
-                      </UlList>
+                      <H4 style={{ marginBottom: '-12px' }}>2. 인터뷰 핵심 내용 정리</H4>
+                      {singleInterviewReportTab2?.thematic_analysis ? (
+                        <ThematicGrid>
+                          {singleInterviewReportTab2.thematic_analysis.map((theme, index) => (
+                            <ThematicCard key={index}>
+                              <div >
+                                <h3 style={{ 
+                                  fontSize: '18px', 
+                                  fontWeight: 'bold',
+                                  color: '#333',
+                                  marginBottom: '8px'
+                                }}>
+                                  {theme.theme}
+                                </h3>
+                              </div>
+
+                              <div >
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                  {theme.keywords.map((keyword, kidx) => (
+                                    <KeywordTag key={kidx}>#{keyword}</KeywordTag>
+                                  ))}
+                                </div>
+                              </div>
+                              <Divider />
+                              <p style={{ color: '#666666', lineHeight: '1.6' }}>{theme.reason}</p>
+
+                              <div>
+                                <InterviewSection>
+                                  <InterviewTitle>인터뷰 참고 내용</InterviewTitle>
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                    {theme.interview_reference.map((reference, idx) => (
+                                      <InterviewQuote key={idx}>"{reference}"</InterviewQuote>
+                                    ))}
+                                  </div>
+                                </InterviewSection>
+                              </div>
+                            </ThematicCard>
+                          ))}
+                        </ThematicGrid>
+                      ) : null}
                     </div>
 
                     <div>
@@ -1055,91 +963,7 @@ const PagePersona4SingleLive = () => {
                     </div>
                   </ReportContent>
 
-                  {/* <ReportContent
-                    section={3}
-                    style={{ display: activeTab === 3 ? "flex" : "none" }}
-                  >
-                    <BgBoxItem>
-                      <H6 color="gray800">
-                        {singleInterviewReportTab3?.persona_summary}
-                      </H6>
-                    </BgBoxItem>
-
-                    <div>
-                      <ResultTitle>
-                        <Body2 color="primary">
-                          #
-                          {singleInterviewReportTab3?.insight_1?.keyword_1 ||
-                            ""}
-                        </Body2>
-                        <H4 color="gray800">
-                          {singleInterviewReportTab3?.insight_1
-                            ?.insight_1_sentence || ""}
-                        </H4>
-                      </ResultTitle>
-
-                      <UlList Disc Spacing>
-                        <li>
-                          {singleInterviewReportTab3?.insight_1
-                            ?.insight_1_context || ""}
-                        </li>
-                        <li>
-                          {singleInterviewReportTab3?.insight_1
-                            ?.insight_1_solution || ""}
-                        </li>
-                      </UlList>
-                    </div>
-
-                    <div>
-                      <ResultTitle>
-                        <Body2 color="primary">
-                          #
-                          {singleInterviewReportTab3?.insight_2?.keyword_2 ||
-                            ""}
-                        </Body2>
-                        <H4 color="gray800">
-                          {singleInterviewReportTab3?.insight_2
-                            ?.insight_2_sentence || ""}
-                        </H4>
-                      </ResultTitle>
-
-                      <UlList Disc Spacing>
-                        <li>
-                          {singleInterviewReportTab3?.insight_2
-                            ?.insight_2_context || ""}
-                        </li>
-                        <li>
-                          {singleInterviewReportTab3?.insight_2
-                            ?.insight_2_solution || ""}
-                        </li>
-                      </UlList>
-                    </div>
-
-                    <div>
-                      <ResultTitle>
-                        <Body2 color="primary">
-                          #
-                          {singleInterviewReportTab3?.insight_3?.keyword_3 ||
-                            ""}
-                        </Body2>
-                        <H4 color="gray800">
-                          {singleInterviewReportTab3?.insight_3
-                            ?.insight_3_sentence || ""}
-                        </H4>
-                      </ResultTitle>
-
-                      <UlList Disc Spacing>
-                        <li>
-                          {singleInterviewReportTab3?.insight_3
-                            ?.insight_3_context || ""}
-                        </li>
-                        <li>
-                          {singleInterviewReportTab3?.insight_3
-                            ?.insight_3_solution || ""}
-                        </li>
-                      </UlList>
-                    </div>
-                  </ReportContent> */}
+               
                 </div>
               </InterviewReport>
             </MainSection>
@@ -1355,33 +1179,6 @@ const UsageLevelGraph = styled.div`
   }
 `;
 
-const BgBoxItem = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 20px 32px;
-  margin-bottom: 8px;
-  border-radius: 15px;
-  background: ${palette.chatGray};
-`;
-
-const ResultTitle = styled(Title)`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px !important;
-  width: 100%;
-`;
-
-const InterviewReport = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 64px;
-  width: 100%;
-  margin-top: 20px;
-  margin-bottom: 80px;
-`;
 
 const ReportHeader = styled.div`
   display: flex;
@@ -1468,407 +1265,16 @@ const UlList = styled.ul`
   }
 `;
 
-const ResultAccordion = styled.div`
+
+const InterviewReport = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 64px;
   width: 100%;
-  padding: 24px 20px 24px 20px;
-  border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
+  margin-top: 20px;
+  margin-bottom: 80px;
 `;
 
-const AccordionHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  font-weight: 600;
-  color: ${palette.gray800};
-  cursor: pointer;
-  padding-right: 32px; // 화살표 공간 + 간격(32px) 확보
-  position: relative;
-
-  span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 30px;
-    height: 30px;
-    font-size: 0.875rem;
-    color: ${palette.primary};
-    line-height: 1.5;
-    border-radius: 2px;
-    border: 1px solid rgba(34, 111, 255, 0.5);
-    background: rgba(34, 111, 255, 0.04);
-  }
-
-  &:after {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%)
-      rotate(${(props) => (props.isOpen ? "225deg" : "45deg")});
-    width: 12px;
-    height: 12px;
-    border-right: 2px solid ${palette.gray500};
-    border-bottom: 2px solid ${palette.gray500};
-    transition: transform 0.3s ease;
-    content: "";
-  }
-`;
-
-const AccordionContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  padding: 16px 0;
-  border-top: 1px solid ${palette.outlineGray};
-
-  .title {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.5;
-
-    strong {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: ${palette.gray800};
-    }
-
-    p {
-      font-size: 0.75rem;
-      font-weight: 300;
-      color: ${palette.gray700};
-    }
-  }
-`;
-
-const GraphWrap = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 200px;
-`;
-
-const BgInside = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  color: ${palette.gray800};
-  line-height: 1.5;
-  padding: 20px;
-  border-radius: 10px;
-  background: ${palette.chatGray};
-
-  div {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    p + p {
-      padding-top: 8px;
-      border-top: 1px solid ${palette.outlineGray};
-    }
-  }
-`;
-
-const InterviewInsight = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  width: 100%;
-  padding: 32px 32px 44px;
-  border-radius: 10px;
-  background: ${palette.gray50};
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background: ${palette.chatGray};
-  }
-
-  > div {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-`;
-
-const InterviewFind = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 20px;
-  margin-bottom: 140px;
-  animation: slideDown 0.5s ease-out;
-
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-`;
-
-const FindTitle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  width: 100%;
-
-  h3 {
-    font-size: 1.25rem;
-    color: ${palette.gray800};
-    font-weight: 500;
-    line-height: 1.3;
-    text-align: left;
-  }
-`;
-
-const FindCard = styled.div`
-  position: relative;
-  display: flex;
-  width: 100%;
-  max-width: 718px;
-  overflow: hidden;
-  position: relative;
-`;
-
-const FindCardButton = styled.div`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-  z-index: 1;
-
-  span {
-    position: relative;
-    right: -10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    // border: 1px solid ${palette.outlineGray};
-    // background: ${palette.white};
-    background: ${palette.chatGray};
-    cursor: pointer;
-
-    &:before {
-      position: absolute;
-      right: 5px;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 10px;
-      height: 2px;
-      border-radius: 50%;
-      background: ${palette.gray800};
-      // content: "";
-    }
-
-    &.prev {
-      left: -15px;
-      transform: rotate(180deg);
-    }
-
-    &:after {
-      position: absolute;
-      // left: 50%;
-      left: 45%;
-      top: 50%;
-      transform: translate(-50%, -50%) rotate(45deg);
-      width: 9px;
-      height: 9px;
-      border-right: 2px solid ${palette.gray500};
-      border-top: 2px solid ${palette.gray500};
-      content: "";
-    }
-  }
-`;
-
-const CardWrap = styled.div`
-  display: flex;
-  // gap: 16px;
-  transition: transform 0.3s ease-in-out;
-  flex-shrink: 0;
-`;
-
-const Card = styled.div`
-  // width: 295px;
-  max-width: 718px;
-  height: 250px;
-  display: flex;
-  // flex-direction: column;
-  align-items: center;
-  flex-shrink: 0;
-  gap: 32px;
-  padding: 32px;
-  border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
-  // background: ${palette.chatGray};
-  cursor: pointer;
-  transition: all 0.5s;
-
-  // &:hover {
-  //   background: ${palette.outlineGray};
-  // }
-
-  // &:hover {
-  //   img {
-  //     filter: brightness(120%);
-  //   }
-  // }
-`;
-
-const CardIcon = styled.div`
-  // align-self: flex-end;
-  transition: all 0.5s;
-`;
-
-const CardBadge = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.75rem;
-  line-height: 1.5;
-  padding: 4px 12px;
-  margin-top: auto;
-  border-radius: 14px;
-
-  ${(props) => {
-    switch (props.text) {
-      case "브랜드 파워":
-        return `
-          background: #FAD6EC;
-          color: #4D2D42;
-        `;
-      case "마케팅 인사이트":
-        return `
-          background: #FED6D6;
-          color: #513333;
-        `;
-      case "타겟 세분화":
-        return `
-          background: #DFD3F5;
-          color: #7525FF;
-        `;
-      case "성공 전략":
-        return `
-          background: #D3F3DB;
-          color: #1F7534;
-        `;
-      case "고객 경험":
-        return `
-          background: #FDFCCE;
-          color: #212622;
-        `;
-      case "스케일업":
-        return `
-          background: #E7EDDF;
-          color: #008722;
-        `;
-      case "BM 전략":
-        return `
-          background: #D5DDE5;
-          color: #2E2E2E;
-        `;
-      default:
-        return `
-          background: #D5DDE5;
-          color: #2E2E2E;
-        `;
-    }
-  }}
-`;
-
-const CardTitle = styled.div`
-  font-size: 1.25rem;
-  color: ${palette.gray800};
-  font-weight: 500;
-  line-height: 1.3;
-  text-align: left;
-  word-wrap: break-word;
-`;
-
-const CardDescription = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  font-weight: 300;
-  line-height: 1.5;
-  color: ${palette.gray700};
-  text-align: left;
-  animation: slideIn 0.5s ease;
-
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  &.closing {
-    animation: slideOut 0.5s;
-  }
-
-  @keyframes slideOut {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-  }
-
-  strong {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 24px;
-    font-weight: 600;
-    color: ${palette.gray800};
-
-    &:after {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 10px;
-      height: 10px;
-      padding: 5px;
-      border-right: 2px solid ${palette.gray500};
-      border-bottom: 2px solid ${palette.gray500};
-      transform: rotate(45deg);
-      // content: "";
-    }
-  }
-`;
 
 const SidebarWrap = styled.div`
   position: sticky;
@@ -1981,75 +1387,60 @@ const WaitPersonaTitle = styled(PersonaInfoTitle)`
   gap: 12px;
 `;
 
-const ProgressBar = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
 
-  span {
-    font-size: 0.75rem;
-    line-height: 1.5;
-    color: ${palette.gray700};
-  }
-
-  .icon {
-    font-size: 1.13rem;
-  }
-`;
-
-const Progress = styled.div`
-  width: 100%;
-  height: 8px;
-  border-radius: 20px;
-  background: ${palette.outlineGray};
-
-  &:before {
-    display: block;
-    width: ${(props) => props.progress}%;
-    height: 100%;
-    border-radius: 20px;
-    background: ${palette.primary};
-    content: "";
-  }
-`;
-
-const SidebarBottom = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 16px 24px;
+const ThematicCard = styled.div`
+  background-color: white;
   border-radius: 10px;
-  border-left: 2px solid ${palette.primary};
-  background: rgba(34, 111, 255, 0.04);
-  cursor: pointer;
+  padding: 20px;
+  border: 1px solid #E0E4EB;
+  gap:16px;
+`;
 
-  strong {
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.5;
-    color: ${palette.gray800};
-    text-align: left;
+const ThematicGrid = styled.div`
+  display: grid;
+  gap: 20px;
+  padding: 20px;
+`;
+
+const KeywordTag = styled.span`
+  font-size: 14px;
+  color: #666;
+`;
+
+const InterviewSection = styled.div`
+  background-color: #f7f8fA;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+`;
+
+const InterviewTitle = styled.h4`
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16px;
+
+`;
+
+const InterviewQuote = styled.div`
+ color: #323232;
+  line-height: 1.6;
+  border-bottom: 1px solid #E0E4EB;
+  font-size: 16px;
+  margin-bottom: 10px;
+  text-align: left;
+  justify-content:center;
+  padding-bottom: 10px;
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
   }
+`;
 
-  span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    font-size: 0.75rem;
-    line-height: 1.5;
-    color: ${palette.primary};
-
-    &:after {
-      width: 6px;
-      height: 6px;
-      transform: rotate(45deg);
-      display: block;
-      border-top: 1px solid ${palette.primary};
-      border-right: 1px solid ${palette.primary};
-      content: "";
-    }
-  }
+const Divider = styled.hr`
+  border: none;
+  border-top: 1px solid #e9ecef;
+  margin: 16px 0;
 `;
