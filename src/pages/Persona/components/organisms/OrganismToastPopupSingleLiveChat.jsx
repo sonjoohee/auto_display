@@ -29,7 +29,6 @@ import {
   IS_PERSONA_ACCESSIBLE,
   SELECTED_PERSONA_LIST,
   SELECTED_INTERVIEW_PURPOSE_DATA,
-  SINGLE_INTERVIEW_QUESTION_LIST,
   PURPOSE_ITEMS_SINGLE,
   // SINGLE_INTERVIEW_REPORT_TAB1,
   SINGLE_INTERVIEW_REPORT_TAB2,
@@ -59,27 +58,22 @@ const OrganismToastPopupSingleLiveChat = ({
 }) => {
   const [projectSaas] = useAtom(PROJECT_SAAS);
   const project = projectSaas;
-  const [selectedPersonaList, setSelectedPersonaList] = useAtom(
+  const [, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
   );
   const [purposeItemsSingleAtom] = useAtom(PURPOSE_ITEMS_SINGLE);
   const [, setReportId] = useAtom(PROJECT_REPORT_ID);
   const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
-  const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
-
-  const [, setSingleInterviewReportTab2] = useAtom(
+  const [, setInterviewData] = useAtom(INTERVIEW_DATA);
+  const [singleInterviewReportTab2, setSingleInterviewReportTab2] = useAtom(
     SINGLE_INTERVIEW_REPORT_TAB2
   );
-
   const [projectId] = useAtom(PROJECT_ID);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
   const [personaList] = useAtom(PERSONA_LIST);
-  const [singleInterviewQuestionList, setSingleInterviewQuestionList] = useAtom(
-    SINGLE_INTERVIEW_QUESTION_LIST
-  );
   const [trialState] = useAtom(TRIAL_STATE);
   const [creditAdditionalQuestion] = useAtom(CREDIT_ADDITIONAL_QUESTION);
   const [eventState] = useAtom(EVENT_STATE);
@@ -108,14 +102,11 @@ const OrganismToastPopupSingleLiveChat = ({
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isAnalysisComplete, setIsAnalysisComplete] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-  const [regenerateCount1, setRegenerateCount1] = useState(0);
   const [regenerateCount2, setRegenerateCount2] = useState(0);
-  const [showRegenerateButton1, setShowRegenerateButton1] = useState(false);
+  const [, setShowRegenerateButton1] = useState(false);
   const [showRegenerateButton2, setShowRegenerateButton2] = useState(false);
-  const [interviewAdditionalQuestion, setInterviewAdditionalQuestion] =
-    useState({});
   const [selectedQuestions, setSelectedQuestions] = useState([]);
-  const [showAddQuestion, setShowAddQuestion] = useState(false);
+  const [showAddQuestion, ] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isInputEnabled, setIsInputEnabled] = useState(false);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
@@ -774,6 +765,7 @@ const OrganismToastPopupSingleLiveChat = ({
     });
   };
 
+
   const handleCheckResult = async () => {
     setActive(false);
     if (onClose) {
@@ -1129,7 +1121,8 @@ const OrganismToastPopupSingleLiveChat = ({
                       !e.shiftKey &&
                       inputValue.trim() &&
                       !interviewStatus.includes("Ing") &&
-                      !isAnalyzing
+                      !isAnalyzing &&
+                      (singleInterviewReportTab2.length === 0)  // 추가된 조건
                     ) {
                       e.preventDefault(); // 기본 엔터 동작 방지
                       // DOM 이벤트 즉시 중지 및 버블링 방지
@@ -1165,7 +1158,7 @@ const OrganismToastPopupSingleLiveChat = ({
                   style={{
                     pointerEvents: "auto",
                   }}
-                  disabled={isAnalyzing}
+                  disabled={isAnalyzing || (singleInterviewReportTab2.length !== 0)}
                 />
                 <button
                   type="button"
@@ -1178,7 +1171,7 @@ const OrganismToastPopupSingleLiveChat = ({
                   disabled={
                     !inputValue.trim() ||
                     isAnalyzing ||
-                    interviewStatus.includes("Ing")
+                    interviewStatus.includes("Ing")||  (singleInterviewReportTab2.length !== 0) 
                   }
                 >
                   <Body1 color="primary">질문하기</Body1>
