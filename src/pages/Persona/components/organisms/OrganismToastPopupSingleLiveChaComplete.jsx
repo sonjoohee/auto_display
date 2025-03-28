@@ -286,7 +286,12 @@ const OrganismToastPopupSingleLiveChaComplete = ({
                     <li key={persona.persona_id}>
                       <Thumb>
                         <img
-                          src={personaImages[persona.imageKey]}
+                          src={
+                            personaImages[persona.imageKey] ||
+                            (persona.gender === "남성" 
+                              ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                              : personaImages.persona_f_20_01) // 여성 기본 이미지
+                          }
                           alt={persona.persona}
                         />
                       </Thumb>

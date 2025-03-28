@@ -632,7 +632,12 @@ const OrganismToastPopupSingleLiveChat = ({
               <ChatItem key={`answer-${answerIndex}`} Persona>
                 <Persona color="Linen" size="Medium" Round>
                   <img
-                    src={personaImages[answer.persona.imageKey]}
+                    src={
+                      personaImages[answer.persona.imageKey] ||
+                      (answer.persona.gender === "남성" 
+                        ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                        : personaImages.persona_f_20_01) // 여성 기본 이미지
+                    }
                     alt={answer.persona.persona}
                   />
                 </Persona>
@@ -966,7 +971,12 @@ const OrganismToastPopupSingleLiveChat = ({
                     <li key={persona?._id}>
                       <Thumb>
                         <img
-                          src={personaImages[persona.imageKey]}
+                          src={
+                            personaImages[persona.imageKey] ||
+                            (persona.gender === "남성" 
+                              ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                              : personaImages.persona_f_20_01) // 여성 기본 이미지
+                          }
                           alt={persona?.personaName}
                         />
                       </Thumb>
@@ -1034,7 +1044,7 @@ const OrganismToastPopupSingleLiveChat = ({
                         <label
                           disabled={countAdditionalQuestion === 0}
                           onClick={() => {
-                            setSelectedRadio("yes");
+                              setSelectedRadio("yes");
                             loadInterviewReport();
                           }}
                         >
