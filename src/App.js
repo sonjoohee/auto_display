@@ -102,6 +102,9 @@ import DesignLens from "./pages/Persona/components/pages/DesignLens";
 import AIDesignEvaluationSystem from "./pages/Persona/components/pages/AIDesignEvaluationSystem";
 import PageToolListSaas from "./pages/Saas_Project/pages/PageToolListSaas";
 
+// 프로젝트 라우터
+import AtomProjectRouter from "./pages/Global/atoms/AtomProjectRouter";
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태를 위한 아톰
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
@@ -318,6 +321,9 @@ function App() {
       )}
 
       <BrowserRouter>
+        {/* PROJECT_SAAS가 빈 객체일 때 리다이렉션하는 컴포넌트 */}
+        <AtomProjectRouter />
+        
         <Routes>
           <Route
             path="/"
