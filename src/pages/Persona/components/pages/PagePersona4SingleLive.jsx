@@ -682,7 +682,10 @@ const PagePersona4SingleLive = () => {
                           <Persona size="Large" Round>
                             <img
                               src={
-                                personaImages[selectedPersonaList[0]?.imageKey]
+                                personaImages[selectedPersonaList[0]?.imageKey] ||
+                                (selectedPersonaList[0]?.gender === "남성" 
+                                  ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                  : personaImages.persona_f_20_01) // 여성 기본 이미지
                               }
                               alt="페르소나"
                             />
@@ -1026,7 +1029,10 @@ const PagePersona4SingleLive = () => {
                         <Persona size="Large" Round>
                           <img
                             src={
-                              personaImages[selectedPersonaList[0]?.imageKey]
+                              personaImages[selectedPersonaList[0]?.imageKey] ||
+                              (selectedPersonaList[0]?.gender === "남성" 
+                                ? personaImages.PersonaMenDefault // 남성 기본 이미지
+                                : personaImages.PersonaWomenDefault) // 여성 기본 이미지
                             }
                             alt="페르소나"
                           />

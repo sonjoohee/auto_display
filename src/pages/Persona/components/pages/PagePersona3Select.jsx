@@ -333,7 +333,12 @@ const PagePersona3Select = () => {
                                 .map((persona, index) => (
                                   <Persona key={index} size="Small" Round>
                                     <img
-                                      src={personaImages[persona.imageKey]}
+                                      src={
+                                        personaImages[persona.imageKey] ||
+                                        (persona.gender === "남성" 
+                                          ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                          : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                      }
                                       alt={persona.persona}
                                     />
                                   </Persona>
@@ -342,7 +347,12 @@ const PagePersona3Select = () => {
                           ) : (
                             <Persona size="Small" Round>
                               <img
-                                src={personaImages[selectedPersonas.imageKey]}
+                                src={
+                                  personaImages[selectedPersonas.imageKey] ||
+                                  (selectedPersonas.gender === "남성" 
+                                    ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                    : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                }
                                 alt={selectedPersonas.persona}
                               />
                             </Persona>
