@@ -1795,10 +1795,17 @@ const PageAiPersona = () => {
                       <Sub1 color="gray700">생성 중인 페르소나 입니다.</Sub1>
                     </Button>
                   ) : currentPersona.status === "complete" ? (
-                    <Button DbExLarge Disabled Fill W100>
-                      <Sub1 color="gray700">
-                        인터뷰 가능한 활성 페르소나 입니다.
-                      </Sub1>
+                    <Button
+                      DbExLarge
+                      Primary
+                      Fill
+                      W100
+                      onClick={() => {
+                        navigate("/Persona3Single");
+                      }}
+                    >
+                      {/* <Sub1>인터뷰 가능한 활성 페르소나 입니다.</Sub1> */}
+                      <Sub1>활성 페르소나와 심층 인터뷰 하러가기</Sub1>
                     </Button>
                   ) : (
                     <>
