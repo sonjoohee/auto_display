@@ -58,6 +58,7 @@ const PageProjectCreate = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [showPopupError, setShowPopupError] = useState(false);
+  const [showPopupError2, setShowPopupError2] = useState(false);
   const [isLoading] = useState(false);
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [dropUp, setDropUp] = useState(false);
@@ -310,14 +311,6 @@ const PageProjectCreate = () => {
     return true;
   };
 
-  // const toolStep = [
-  //   {
-  //     title: "프로젝트 정보 입력",
-  //     description: "프로젝트 정보를 입력하세요",
-  //     isRequired: true,
-  //   },
-  // ];
-
   // 파일 업로드 핸들러
   const handleChangeStatus = ({ meta, file, remove }, status) => {
     const maxSize = 20 * 1024 * 1024; // 20MB
@@ -463,12 +456,33 @@ const PageProjectCreate = () => {
   }, [editingTargetText, isEditingTarget]);
 
   const handleCreateProject = async () => {
-    const newProjectId = await createProjectOnServerSaas(
-      projectTotalInfo,
-      isLoggedIn
-    );
-    setprojectId(newProjectId);
-    navigate(`/Project`, { replace: true });
+    // 필수 필드 검사
+    if (!projectTotalInfo.projectTitle ||
+      !projectTotalInfo.projectDescription ||
+      !projectTotalInfo.businessModel ||
+      !projectTotalInfo.industryType ||
+      !projectTotalInfo.targetCountry ||
+      !projectTotalInfo.projectAnalysis?.business_analysis ||
+      !projectTotalInfo.projectAnalysis?.target_customer ||
+      // 건너뛰기 하지 않은 경우에만 파일 관련 검증
+      (!isSkipped && (!projectTotalInfo.files || 
+        !projectTotalInfo.projectAnalysis?.file_analysis))
+  ) {
+    setShowPopupError2(true);
+    return;
+  }
+
+    try {
+      const newProjectId = await createProjectOnServerSaas(
+        projectTotalInfo,
+        isLoggedIn
+      );
+      setprojectId(newProjectId);
+      navigate(`/Project`, { replace: true });
+    } catch (error) {
+      setShowPopupError(true);
+      console.error('프로젝트 생성 오류:', error);
+    }
   };
 
   const handleSaveClick = async () => {
@@ -1475,13 +1489,30 @@ const PageProjectCreate = () => {
         <PopupWrap
           Warning
           title="다시 입력해 주세요."
-          message="현재 입력하신 정보는 목적을 생성할 수 없습니다."
+          message="현재 입력하신 정보는 프로젝트를 생성할 수 없습니다."
           buttonType="Outline"
           confirmText="확인"
           isModal={false}
-          onConfirm={() => handleNextStep(1)}
+          onConfirm={() => setShowPopupError(false)}
         />
       )}
+
+      {showPopupError2 && (
+              <PopupWrap
+                Warning
+                title="다시 입력해 주세요."
+                message="현재 입력하신 정보는 프로젝트를 생성할 수 없습니다."
+                buttonType="Outline"
+                confirmText="확인"
+                isModal={false}
+                onConfirm={() => {
+                  setShowPopupError2(false);
+                  navigate('/Project', { replace: true });
+                }}
+                
+              />
+            )}
+
 
       {showPopupSave && (
         <PopupWrap
