@@ -8,10 +8,7 @@ import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavig
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
 import MoleculeIdeaGeneratorCard2 from "../molecules/MoleculeIdeaGeneratorCard2";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
-import {
-  Button,
-  IconButton 
-} from "../../../../../assets/styles/ButtonStyle";
+import { Button, IconButton } from "../../../../../assets/styles/ButtonStyle";
 import {
   FormBox,
   CustomTextarea,
@@ -85,11 +82,10 @@ import {
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
 const PageIdeaGenerator = () => {
-
   const navigate = useNavigate();
 
-  const [projectSaas, ] = useAtom(PROJECT_SAAS);
-  const [ideaGeneratorPurpose, ] = useAtom(IDEA_GENERATOR_PURPOSE);
+  const [projectSaas] = useAtom(PROJECT_SAAS);
+  const [ideaGeneratorPurpose] = useAtom(IDEA_GENERATOR_PURPOSE);
   const [ideaGeneratorInfo, setIdeaGeneratorInfo] =
     useAtom(IDEA_GENERATOR_INFO);
   const [ideaGeneratorKnowTarget, setIdeaGeneratorKnowTarget] = useAtom(
@@ -106,14 +102,15 @@ const PageIdeaGenerator = () => {
   const [ideaGeneratorFinalReport, setIdeaGeneratorFinalReport] = useAtom(
     IDEA_GENERATOR_FINAL_REPORT
   );
-  const [ideaGeneratorEditingBusinessText, setIdeaGeneratorEditingBusinessText] = useAtom(
-    IDEA_GENERATOR_EDITING_BUSINESS_TEXT
-  );
+  const [
+    ideaGeneratorEditingBusinessText,
+    setIdeaGeneratorEditingBusinessText,
+  ] = useAtom(IDEA_GENERATOR_EDITING_BUSINESS_TEXT);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
-  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
-  const [personaListSaas, ] = useAtom(PERSONA_LIST_SAAS);
+  const [personaListSaas] = useAtom(PERSONA_LIST_SAAS);
 
   const [tableData, setTableData] = useState([]);
   const [chartData, setChartData] = useState({});
@@ -134,7 +131,7 @@ const PageIdeaGenerator = () => {
     content: "",
   });
   const [activeTab, setActiveTab] = useState(1);
-  const [completedSteps, setCompletedSteps] = useState([]); 
+  const [completedSteps, setCompletedSteps] = useState([]);
   const [businessDescription, setBusinessDescription] = useState("");
   const [targetCustomers, setTargetCustomers] = useState([]);
   const [selectBoxStates, setSelectBoxStates] = useState({
@@ -148,11 +145,11 @@ const PageIdeaGenerator = () => {
   const customerListRef = useRef(null);
   const [customerValueList, setCustomerValueList] = useState([]);
   const [selectedPersonasSaas, setSelectedPersonasSaas] = useState([]);
-  const [selectedPersona, setSelectedPersona] = useState(null); 
-  const [selectedCustomPersona, ] = useState(null); 
+  const [selectedPersona, setSelectedPersona] = useState(null);
+  const [selectedCustomPersona] = useState(null);
   const [selectedDetailPersona, setSelectedDetailPersona] = useState(null);
   const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
-  const [activeAnalysisTab, ] = useState("summary");
+  const [activeAnalysisTab] = useState("summary");
   const [isEditingBusiness, setIsEditingBusiness] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
 
@@ -167,7 +164,6 @@ const PageIdeaGenerator = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       if (toolLoading) {
-     
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
         setToolSteps(toolStep ?? 1);
 
@@ -198,7 +194,6 @@ const PageIdeaGenerator = () => {
 
         // 페르소나 설정 (Step 2)
         if (ideaGeneratorSelectedPersona && personaListSaas?.length > 0) {
-        
           setSelectedPersonasSaas(ideaGeneratorSelectedPersona);
           // 저장된 페르소나의 personaName과 일치하는 personaListSaas의 페르소나를 찾아 _id 값을 가져옵니다
           const savedPersonaNames = Array.isArray(ideaGeneratorSelectedPersona)
@@ -250,7 +245,6 @@ const PageIdeaGenerator = () => {
         }
         setToolStep(0);
         return;
-
       }
     };
     interviewLoading();
@@ -486,27 +480,25 @@ const PageIdeaGenerator = () => {
         isLoggedIn
       );
       let clusteringData;
-      clusteringData =
-        response1?.response?.idea_generator_clustering || [];
+      clusteringData = response1?.response?.idea_generator_clustering || [];
 
       const maxAttempts = 10;
       let attempts = 0;
 
       while (
-        attempts < maxAttempts && (
-        !response1 ||
-        !response1?.response ||
-        !response1?.response.idea_generator_clustering ||
-        !Array.isArray(response1.response.idea_generator_clustering) ||
-        response1.response.idea_generator_clustering.length === 0 ||
-        response1.response.idea_generator_clustering.some(
-          (cluster) =>
-            !cluster?.name ||
-            !cluster?.ideas ||
-            !Array.isArray(cluster.ideas) ||
-            cluster.ideas.length === 0
-        )
-      )
+        attempts < maxAttempts &&
+        (!response1 ||
+          !response1?.response ||
+          !response1?.response.idea_generator_clustering ||
+          !Array.isArray(response1.response.idea_generator_clustering) ||
+          response1.response.idea_generator_clustering.length === 0 ||
+          response1.response.idea_generator_clustering.some(
+            (cluster) =>
+              !cluster?.name ||
+              !cluster?.ideas ||
+              !Array.isArray(cluster.ideas) ||
+              cluster.ideas.length === 0
+          ))
       ) {
         response1 = await InterviewXIdeaGeneratorClusteringRequest(
           data1,
@@ -514,13 +506,12 @@ const PageIdeaGenerator = () => {
         );
         attempts++;
       }
-        if (attempts >= maxAttempts) {
-          setShowPopupError(true);
-          return;
-        }
+      if (attempts >= maxAttempts) {
+        setShowPopupError(true);
+        return;
+      }
 
       setIdeaGeneratorClustering(clusteringData);
-
 
       // 결과 보고서
       const data2 = {
@@ -787,8 +778,6 @@ const PageIdeaGenerator = () => {
   //   }
   // };
 
-
-
   // // 팝업을 보여주는 함수
   // const handleShowDetail = (persona) => {
   //   setSelectedDetailPersona(persona || {});
@@ -859,8 +848,6 @@ const PageIdeaGenerator = () => {
     setShowPopupMore(true);
   };
 
-
-
   // 버튼 클릭 핸들러 추가
   const handlePersonaButtonClick = (personaId) => {
     if (toolSteps >= 2) return;
@@ -905,10 +892,9 @@ const PageIdeaGenerator = () => {
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
-   
       // 현재 URL 확인
       const currentUrl = window.location.href;
- 
+
       if (currentUrl.toLowerCase().includes("ideagenerator")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         const lastUrl = sessionStorage.getItem("lastUrl");
@@ -964,11 +950,10 @@ const PageIdeaGenerator = () => {
     };
   }, [navigate]);
 
-
   const getBusinessText = () => {
     const analysis = projectSaas?.projectAnalysis;
     const businessText = [];
-    
+
     if (ideaGeneratorEditingBusinessText?.length > 0) {
       businessText.push(ideaGeneratorEditingBusinessText);
     } else {
@@ -979,15 +964,14 @@ const PageIdeaGenerator = () => {
         businessText.push(analysis.file_analysis);
       }
     }
-    
-    return businessText.join('\n');
+
+    return businessText.join("\n");
   };
 
   // useEffect로 초기값 설정
   useEffect(() => {
     setIdeaGeneratorEditingBusinessText(getBusinessText());
   }, [projectSaas]); // projectSaas가 변경될 때마다 업데이트
-
 
   // 핸들러 함수들
   const handleEditBusinessClick = () => {
@@ -1000,9 +984,10 @@ const PageIdeaGenerator = () => {
   };
 
   const handleUndoBusinessClick = () => {
-    const originalText = (projectSaas?.projectAnalysis.business_analysis
-      ? projectSaas?.projectAnalysis.business_analysis
-      : "") +
+    const originalText =
+      (projectSaas?.projectAnalysis.business_analysis
+        ? projectSaas?.projectAnalysis.business_analysis
+        : "") +
       (projectSaas?.projectAnalysis.business_analysis &&
       projectSaas?.projectAnalysis.file_analysis
         ? "\n"
@@ -1010,7 +995,7 @@ const PageIdeaGenerator = () => {
       (projectSaas?.projectAnalysis.file_analysis
         ? projectSaas?.projectAnalysis.file_analysis
         : "");
-        
+
     setIdeaGeneratorEditingBusinessText(originalText);
   };
 
@@ -1218,10 +1203,13 @@ const PageIdeaGenerator = () => {
                     <Title>
                       <Body1 color="gray700">비즈니스 설명</Body1>
                       {!isEditingBusiness ? (
-                        <IconButton onClick={handleEditBusinessClick} disabled={toolSteps >= 1}>
+                        <IconButton
+                          onClick={handleEditBusinessClick}
+                          disabled={toolSteps >= 1}
+                        >
                           <img src={images.PencilSquare} alt="" />
                           <span>수정하기</span>
-                          </IconButton>
+                        </IconButton>
                       ) : (
                         <IconButton onClick={handleSaveBusinessClick}>
                           <img src={images.FolderArrowDown} alt="" />
@@ -1229,7 +1217,7 @@ const PageIdeaGenerator = () => {
                         </IconButton>
                       )}
                     </Title>
-                    
+
                     {!isEditingBusiness ? (
                       <ListBoxGroup>
                         <Body2 color="gray800" align="left">
@@ -1242,9 +1230,11 @@ const PageIdeaGenerator = () => {
                           Edit
                           rows={6}
                           value={ideaGeneratorEditingBusinessText}
-                          onChange={(e) => setIdeaGeneratorEditingBusinessText(e.target.value)}
+                          onChange={(e) =>
+                            setIdeaGeneratorEditingBusinessText(e.target.value)
+                          }
                           status="valid"
-                          disabled={toolSteps >= 1 }
+                          disabled={toolSteps >= 1}
                         />
                         <EditButtonGroup>
                           <IconButton onClick={handleUndoBusinessClick}>
@@ -1272,10 +1262,13 @@ const PageIdeaGenerator = () => {
                             handleTargetCustomerChange(index, e.target.value)
                           }
                         />
-                        <DeleteButton onClick={() => handleDelete(index)} disabled={toolSteps >= 1} />
+                        <DeleteButton
+                          onClick={() => handleDelete(index)}
+                          disabled={toolSteps >= 1}
+                        />
                       </DeleteFormWrap>
                     ))}
-                     {targetCustomers.length < 10 && toolSteps < 1 && (
+                    {targetCustomers.length < 10 && toolSteps < 1 && (
                       <Button
                         DbExLarge
                         More
@@ -1297,8 +1290,7 @@ const PageIdeaGenerator = () => {
                   onClick={() => handleNextStep(1)}
                   disabled={
                     targetCustomers.filter((customer) => customer.trim() !== "")
-                      .length === 0 ||
-                    toolSteps >= 1
+                      .length === 0 || toolSteps >= 1
                   }
                 >
                   다음
@@ -1352,10 +1344,11 @@ const PageIdeaGenerator = () => {
                                 .map((persona, index) => (
                                   <Persona key={index} size="Small" Round>
                                     <img
-                                      src={personaImages[persona.imageKey] ||
-                                      (persona.gender === "남성" 
-                                        ? personaImages.persona_m_20_01 // 남성 기본 이미지
-                                        : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                      src={
+                                        personaImages[persona.imageKey] ||
+                                        (persona.gender === "남성"
+                                          ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                          : personaImages.persona_f_20_01) // 여성 기본 이미지
                                       }
                                       alt={persona.persona}
                                     />
@@ -1397,8 +1390,7 @@ const PageIdeaGenerator = () => {
                     Round
                     Fill
                     disabled={
-                      selectedPersonasSaas.length === 0 ||
-                      toolSteps >= 2
+                      selectedPersonasSaas.length === 0 || toolSteps >= 2
                     }
                     onClick={() => handleNextStep(2)}
                   >
@@ -2132,5 +2124,3 @@ const ButtonGroup = styled.div`
 const EditButtonGroup = styled(ButtonGroup)`
   justify-content: end;
 `;
-
-

@@ -7,7 +7,7 @@ import { palette } from "../../../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
-import { Button ,IconButton } from "../../../../../assets/styles/ButtonStyle";
+import { Button, IconButton } from "../../../../../assets/styles/ButtonStyle";
 import {
   FormBox,
   CustomTextarea,
@@ -26,7 +26,7 @@ import {
   BgBoxItem,
   ListBoxWrap,
   Title,
-  ListBoxGroup
+  ListBoxGroup,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
   IS_LOGGED_IN,
@@ -129,28 +129,27 @@ const PageTargetDiscovery = () => {
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
-
       if (Object.keys(targetDiscoveryInfo).length === 0) {
         const projectAnalysis =
           (project?.projectAnalysis.business_analysis
             ? project?.projectAnalysis.business_analysis
-          : "") +
-        (project?.projectAnalysis.business_analysis &&
-        project?.projectAnalysis.file_analysis
-          ? "\n"
-          : "") +
-        (project?.projectAnalysis.file_analysis
-          ? project?.projectAnalysis.file_analysis
-          : "");
-      // 비즈니스 정보 설정 (Step 1)
-   
-      if (project) {
-        setBusinessDescription(projectAnalysis);
-        setTargetCustomer(project?.projectAnalysis.target_customer ?? "");
-        setSpecificSituation(targetDiscoveryInfo?.specificSituation ?? "");
-        setSelectedPurpose(project?.targetCountry ?? "");
+            : "") +
+          (project?.projectAnalysis.business_analysis &&
+          project?.projectAnalysis.file_analysis
+            ? "\n"
+            : "") +
+          (project?.projectAnalysis.file_analysis
+            ? project?.projectAnalysis.file_analysis
+            : "");
+        // 비즈니스 정보 설정 (Step 1)
+
+        if (project) {
+          setBusinessDescription(projectAnalysis);
+          setTargetCustomer(project?.projectAnalysis.target_customer ?? "");
+          setSpecificSituation(targetDiscoveryInfo?.specificSituation ?? "");
+          setSelectedPurpose(project?.targetCountry ?? "");
+        }
       }
-    }
 
       if (toolLoading) {
         // 활성 탭 설정 (기본값 1)
@@ -171,7 +170,6 @@ const PageTargetDiscovery = () => {
           completedStepsArray.push(i);
         }
         setCompletedSteps(completedStepsArray);
-
 
         // 페르소나 설정 (Step 2)
         if (
@@ -393,7 +391,7 @@ const PageTargetDiscovery = () => {
               country: targetDiscoveryInfo.country,
             };
 
-           let response = await InterviewXTargetDiscoveryScenarioRequest(
+            let response = await InterviewXTargetDiscoveryScenarioRequest(
               apiRequestData,
               isLoggedIn
             );
@@ -402,26 +400,26 @@ const PageTargetDiscovery = () => {
             let attempts = 0;
 
             while (
-              attempts < maxAttempts && (
-              !response||
-              !response?.response ||
-              !response?.response?.target_discovery_scenario ||
-              !response?.response?.target_discovery_scenario
-                ?.potential_customer_info ||
-              !response?.response?.target_discovery_scenario
-                ?.potential_customer_info?.gender ||
-              !response?.response?.target_discovery_scenario
-                ?.potential_customer_info?.age ||
-              !response?.response?.target_discovery_scenario
-                ?.potential_customer_info?.main_use_purpose ||
-              !response?.response?.target_discovery_scenario
-                ?.potential_customer_info?.pain_points ||
-              !response?.response?.target_discovery_scenario?.usage_scenario ||
-              !response?.response?.target_discovery_scenario?.usage_scenario
-                ?.description ||
-              !response?.response?.target_discovery_scenario?.usage_scenario
-                ?.key_sentence
-              )
+              attempts < maxAttempts &&
+              (!response ||
+                !response?.response ||
+                !response?.response?.target_discovery_scenario ||
+                !response?.response?.target_discovery_scenario
+                  ?.potential_customer_info ||
+                !response?.response?.target_discovery_scenario
+                  ?.potential_customer_info?.gender ||
+                !response?.response?.target_discovery_scenario
+                  ?.potential_customer_info?.age ||
+                !response?.response?.target_discovery_scenario
+                  ?.potential_customer_info?.main_use_purpose ||
+                !response?.response?.target_discovery_scenario
+                  ?.potential_customer_info?.pain_points ||
+                !response?.response?.target_discovery_scenario
+                  ?.usage_scenario ||
+                !response?.response?.target_discovery_scenario?.usage_scenario
+                  ?.description ||
+                !response?.response?.target_discovery_scenario?.usage_scenario
+                  ?.key_sentence)
             ) {
               response = await InterviewXTargetDiscoveryScenarioRequest(
                 apiRequestData,
@@ -539,19 +537,18 @@ const PageTargetDiscovery = () => {
       let attempts = 0;
 
       while (
-        attempts < maxAttempts && (
-        !response ||
-        !response?.response?.target_discovery_final_report?.potential_rank_1
-          ?.title ||
-        !response?.response?.target_discovery_final_report?.potential_rank_1
-          ?.discovery_criteria ||
-        !response?.response?.target_discovery_final_report?.potential_rank_1
-          ?.selection_criteria ||
-        !response?.response?.target_discovery_final_report?.potential_rank_1
-          ?.rank_reason ||
-        !response?.response?.target_discovery_final_report?.potential_rank_1
-          ?.keywords
-      ) 
+        attempts < maxAttempts &&
+        (!response ||
+          !response?.response?.target_discovery_final_report?.potential_rank_1
+            ?.title ||
+          !response?.response?.target_discovery_final_report?.potential_rank_1
+            ?.discovery_criteria ||
+          !response?.response?.target_discovery_final_report?.potential_rank_1
+            ?.selection_criteria ||
+          !response?.response?.target_discovery_final_report?.potential_rank_1
+            ?.rank_reason ||
+          !response?.response?.target_discovery_final_report?.potential_rank_1
+            ?.keywords)
       ) {
         response = await InterviewXTargetDiscoveryFinalReportRequest(
           scenarioData,
@@ -690,18 +687,18 @@ const PageTargetDiscovery = () => {
   };
 
   const handleUndoBusinessClick = () => {
+    const originalText =
+      (project?.projectAnalysis.business_analysis
+        ? project?.projectAnalysis.business_analysis
+        : "") +
+      (project?.projectAnalysis.business_analysis &&
+      project?.projectAnalysis.file_analysis
+        ? "\n"
+        : "") +
+      (project?.projectAnalysis.file_analysis
+        ? project?.projectAnalysis.file_analysis
+        : "");
 
-    const originalText = (project?.projectAnalysis.business_analysis
-      ? project?.projectAnalysis.business_analysis
-    : "") +
-  (project?.projectAnalysis.business_analysis &&
-  project?.projectAnalysis.file_analysis
-    ? "\n"
-    : "") +
-  (project?.projectAnalysis.file_analysis
-    ? project?.projectAnalysis.file_analysis
-    : "");
-        
     setBusinessDescription(originalText);
   };
   const handleEditTargetClick = () => {
@@ -829,7 +826,10 @@ const PageTargetDiscovery = () => {
                         <Title>
                           <Body1 color="gray700">비즈니스 설명</Body1>
                           {!isEditingBusiness ? (
-                            <IconButton onClick={handleEditBusinessClick} disabled={toolSteps >= 1}>
+                            <IconButton
+                              onClick={handleEditBusinessClick}
+                              disabled={toolSteps >= 1}
+                            >
                               <img src={images.PencilSquare} alt="" />
                               <span>수정하기</span>
                             </IconButton>
@@ -840,7 +840,7 @@ const PageTargetDiscovery = () => {
                             </IconButton>
                           )}
                         </Title>
-                        
+
                         {!isEditingBusiness ? (
                           <ListBoxGroup>
                             <Body2 color="gray800" align="left">
@@ -854,13 +854,18 @@ const PageTargetDiscovery = () => {
                               rows={6}
                               placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
                               value={businessDescription}
-                              onChange={(e) => setBusinessDescription(e.target.value)}
+                              onChange={(e) =>
+                                setBusinessDescription(e.target.value)
+                              }
                               status="valid"
                               disabled={toolSteps >= 1}
                             />
                             <EditButtonGroup>
                               <IconButton onClick={handleUndoBusinessClick}>
-                                <img src={images.ClockCounterclockwise} alt="" />
+                                <img
+                                  src={images.ClockCounterclockwise}
+                                  alt=""
+                                />
                                 <span>이전으로 되돌리기</span>
                               </IconButton>
                             </EditButtonGroup>
@@ -872,7 +877,10 @@ const PageTargetDiscovery = () => {
                         <Title>
                           <Body1 color="gray700">타겟 고객</Body1>
                           {!isEditingTarget ? (
-                            <IconButton onClick={handleEditTargetClick} disabled={toolSteps >= 1}>
+                            <IconButton
+                              onClick={handleEditTargetClick}
+                              disabled={toolSteps >= 1}
+                            >
                               <img src={images.PencilSquare} alt="" />
                               <span>수정하기</span>
                             </IconButton>
@@ -883,7 +891,7 @@ const PageTargetDiscovery = () => {
                             </IconButton>
                           )}
                         </Title>
-                        
+
                         {!isEditingTarget ? (
                           <ListBoxGroup>
                             <Body2 color="gray800" align="left">
@@ -897,13 +905,18 @@ const PageTargetDiscovery = () => {
                               rows={5}
                               placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
                               value={targetCustomer}
-                              onChange={(e) => setTargetCustomer(e.target.value)}
+                              onChange={(e) =>
+                                setTargetCustomer(e.target.value)
+                              }
                               status="valid"
                               disabled={toolSteps >= 1}
                             />
                             <EditButtonGroup>
                               <IconButton onClick={handleUndoTargetClick}>
-                                <img src={images.ClockCounterclockwise} alt="" />
+                                <img
+                                  src={images.ClockCounterclockwise}
+                                  alt=""
+                                />
                                 <span>이전으로 되돌리기</span>
                               </IconButton>
                             </EditButtonGroup>
@@ -1398,7 +1411,6 @@ const ViewInfo = styled.div`
 //     }
 //   }
 // `;
-
 
 const ButtonGroup = styled.div`
   display: flex;
