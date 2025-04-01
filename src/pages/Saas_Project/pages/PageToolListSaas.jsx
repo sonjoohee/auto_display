@@ -1110,6 +1110,44 @@ const PageToolListSaas = () => {
                     </div>
                   </ExploreCard>,
 
+                    <ExploreCard AiPersona key="analysis-2">
+                    <span>
+                      <images.GridCircle color={palette.gray700} />
+                      Interveiw
+                    </span>
+                    <p>
+                      <img src={images.ImgExplore13} alt="" />
+                    </p>
+                    <Body1 color="gray800">
+                      <em>준비중</em>
+                      Quick Survey
+                    </Body1>
+
+                    <div
+                      className="overlay"
+                      onClick={() => {
+                        navigate("/QuickSurvey");
+                      }}
+                    >
+                      <span>
+                        <images.GridCircle color={palette.white} />
+                        Interveiw
+                      </span>
+
+                      <div className="text">
+                        <Body1 color="white">
+                          <em>준비중</em>
+                          Quick Survey
+                        </Body1>
+                        <Caption1 color="white" align="left">
+                          소규모 그룹과의 대화를 통해 다양한 관점을 수집하고
+                          핵심 인사이트를 도출하는 도구
+                        </Caption1>
+                        <i />
+                      </div>
+                    </div>
+                    </ExploreCard>,
+
                   <ExploreCard Research key="research-1" {...{ Ready: false }}>
                     <span>
                       <images.GridTool color={palette.gray700} />
