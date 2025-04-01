@@ -387,7 +387,7 @@ const PagePsstReport = () => {
   };
 
   const handleSubmitPersonas = async () => {
-    handleNextStep(1);
+    handleNextStep(2);
     setToolSteps(2);
     try {
       // const selectedPersonaData = designAnalysisEmotionAnalysis.filter(
@@ -416,10 +416,10 @@ const PagePsstReport = () => {
             projectTitle: project.projectTitle,
             targetCountry: project.targetCountry,
           },
-           report_index: psstAnalysisResult
+           report_index: projectAnalysisMultimodal
           };
 
-          let response = await InterviewXPsstReportRequest(
+          let response = await InterviewXPsstAnalysisRequest(
             apiRequestData,
             isLoggedIn
           );
@@ -463,8 +463,8 @@ const PagePsstReport = () => {
             {
               completedStep: 3,
               designEmotionTarget: response.response.design_emotion_target,
-              designEmotionScale: oceanResponse.response.design_emotion_scale,
-              designSelectedPersona: selectedPersonaData,
+              // designEmotionScale: oceanResponse.response.design_emotion_scale,
+              // designSelectedPersona: selectedPersonaData,
             },
             isLoggedIn
           );
