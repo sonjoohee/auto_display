@@ -22,9 +22,8 @@ jsx 파일 구조로 가며, 주요 파일들은 jsx파일로 구성한다.
 
 ### 설치 라이브러리
 
-
-** npm 보다는  yarn 으로 설치하시는걸 추천. 
-** 설치이후 RREADME.md 파일에 꼭 남길것. 
+** npm 보다는 yarn 으로 설치하시는걸 추천.
+** 설치이후 RREADME.md 파일에 꼭 남길것.
 
 - npm i env-cmd
 
@@ -44,28 +43,27 @@ jsx 파일 구조로 가며, 주요 파일들은 jsx파일로 구성한다.
 
 - yarn add react-router-dom
 
-
-** mariadb 관련 설치파일  
+\*\* mariadb 관련 설치파일  
 npm install bcrypt  
 npm install mariadb  
-npm install cors  
+npm install cors
 
-** google 로그인 관련 설치파일  
-npm install firebase  
+\*\* google 로그인 관련 설치파일  
+npm install firebase
 
-** 아이콘 관련 설치파일  
-npm install react-icons  
+\*\* 아이콘 관련 설치파일  
+npm install react-icons
 
-** 페이팔 관련 설치파일
+\*\* 페이팔 관련 설치파일
 npm install @paypal/react-paypal-js
 
 npm install crypto-js
 
-** pdf 관련 설치파일
+\*\* pdf 관련 설치파일
 npm i jspdf
 npm i html2canvas
 
-** word 관련 설치파일
+\*\* word 관련 설치파일
 npm install file-saver
 npm install docx
 
@@ -74,5 +72,9 @@ npm install three
 npm install xlsx
 npm install d3
 
-** 드래그 앤 드롭 이미지 업로드
+\*\* 드래그 앤 드롭 이미지 업로드
 npm install react-dropzone-uploader
+
+\*\* MarkDown 형식 출력
+npm install react-markdown
+yarn add react-markdown
