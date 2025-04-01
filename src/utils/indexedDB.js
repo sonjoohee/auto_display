@@ -4145,3 +4145,49 @@ export const InterviewXPsstMultimodalRequest = async (
     throw error;
   }
 };
+
+
+
+//psst  상세 분석
+export const InterviewXPsstAnalysisRequest = async (
+  data,
+  isLoggedIn
+) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/tool/create_tool_temp",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
