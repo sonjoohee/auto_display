@@ -52,6 +52,7 @@ import PageInterviewWay from "./pages/Design_Page/PageInterviewWay";
 import PagePersonaSelect from "./pages/Design_Page/PagePersonaSelect";
 import PagePayment from "./pages/Persona/components/pages/PagePayment";
 
+import PageQuickSurvey from "./pages/Tool/QuickSurvey/components/pages/PageQuickSurvey";
 import PageTargetDiscovery from "./pages/Tool/TargetDiscovery/components/pages/PageTargetDiscovery";
 import PageCustomerValueAnalyzer from "./pages/Tool/CustomerValueAnalyzer/components/pages/PageCustomerValueAnalyzer";
 import PageIdeaGenerator from "./pages/Tool/IdeaGenerator/components/pages/PageIdeaGenerator";
@@ -494,6 +495,16 @@ function App() {
               </RequireToken>
             }
           ></Route>
+
+          <Route
+            path="/QuickSurvey"
+            element={
+              <RequireToken>
+                <PageQuickSurvey />
+              </RequireToken>
+            }
+          ></Route>
+
           <Route
             path="/TargetDiscovery"
             element={

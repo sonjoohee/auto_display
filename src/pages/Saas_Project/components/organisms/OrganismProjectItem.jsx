@@ -51,6 +51,7 @@ const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
       setProjectSaas(project);
       setAccessDashboard(true);
       setAccessStateSaas(true);
+      console.log("project", project);
 
       const projectTotalData = {
         projectTitle: project.projectTitle,
