@@ -1,22 +1,23 @@
-//타겟 탐색기
-import React, { useEffect, useState, useRef } from "react";
+//디자인 감성 분석기
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useAtom } from "jotai";
 import { palette } from "../../../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
-import { Button, IconButton } from "../../../../../assets/styles/ButtonStyle";
+import { Button , IconButton } from "../../../../../assets/styles/ButtonStyle";
 import {
   FormBox,
   CustomTextarea,
-  CustomInput,
 } from "../../../../../assets/styles/InputStyle";
 import PopupWrap from "../../../../../assets/styles/Popup";
 import {
   ContentsWrap,
   MainContent,
+  TabWrapType4,
+  TabButtonType4,
   TabWrapType5,
   TabButtonType5,
   TabContent5,
@@ -24,143 +25,149 @@ import {
   CardGroupWrap,
   BottomBar,
   BgBoxItem,
-  ListBoxWrap,
+  StyledDropzone,
+  DropzoneStyles,
+  OCEANRangeWrap,
+  RangeSlider,
   Title,
-  ListBoxGroup,
+  ListBoxGroup
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
   IS_LOGGED_IN,
-  TARGET_DISCOVERY_INFO,
-  TARGET_DISCOVERY_PERSONA,
-  SELECTED_TARGET_DISCOVERY_PERSONA,
-  TARGET_DISCOVERY_SCENARIO,
-  TARGET_DISCOVERY_FINAL_REPORT,
   TOOL_ID,
   TOOL_STEP,
-  SELECTED_TARGET_DISCOVERY_SCENARIO,
   TOOL_LOADING,
+  DESIGN_ANALYSIS_BUSINESS_INFO,
+  DESIGN_ANALYSIS_EMOTION_ANALYSIS,
+  DESIGN_ANALYSIS_SELECTED_PERSONA,
+  DESIGN_ANALYSIS_EMOTION_TARGET,
+  DESIGN_ANALYSIS_EMOTION_SCALE,
+  DESIGN_ANALYSIS_FILE_NAMES,
+  DESIGN_ANALYSIS_FILE_ID,
   PROJECT_SAAS,
+  DESIGN_ANALYSIS_BUSINESS_TITLE,
 } from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import {
   H4,
   H3,
+  Sub3,
   Body1,
   Body2,
   Body3,
 } from "../../../../../assets/styles/Typography";
 import {
-  InterviewXTargetDiscoveryPersonaRequest,
-  InterviewXTargetDiscoveryScenarioRequest,
-  InterviewXTargetDiscoveryFinalReportRequest,
+  InterviewXDesignEmotionTargetRequest,
+  InterviewXDesignEmotionScaleRequest,
   createToolOnServer,
   updateToolOnServer,
+  InterviewXPsstMultimodalRequest,
 } from "../../../../../utils/indexedDB";
+import "react-dropzone-uploader/dist/styles.css";
+import Dropzone from "react-dropzone-uploader";
+import AnalysisItem from "../molecules/MoleculeAnalysisItem";
+import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
 
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
 const PagePsstReport = () => {
+
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
-  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [targetDiscoveryInfo, setTargetDiscoveryInfo] = useAtom(
-    TARGET_DISCOVERY_INFO
+  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [projectSaas, ] = useAtom(PROJECT_SAAS);
+  const [, setDesignAnalysisBusinessTitle] = useAtom(DESIGN_ANALYSIS_BUSINESS_TITLE);
+  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(
+    DESIGN_ANALYSIS_BUSINESS_INFO
   );
-  const [targetDiscoveryPersona, setTargetDiscoveryPersona] = useAtom(
-    TARGET_DISCOVERY_PERSONA
+  const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] =
+    useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS);
+  const [
+    selectedDesignAnalysisEmotionAnalysis,
+    setSelectedDesignAnalysisEmotionAnalysis,
+  ] = useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
+  const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(
+    DESIGN_ANALYSIS_EMOTION_TARGET
   );
-  const [selectedTargetDiscoveryPersona, setSelectedTargetDiscoveryPersona] =
-    useAtom(SELECTED_TARGET_DISCOVERY_PERSONA);
-  const [targetDiscoveryScenario, setTargetDiscoveryScenario] = useAtom(
-    TARGET_DISCOVERY_SCENARIO
+  const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(
+    DESIGN_ANALYSIS_EMOTION_SCALE
   );
-  const [targetDiscoveryFinalReport, setTargetDiscoveryFinalReport] = useAtom(
-    TARGET_DISCOVERY_FINAL_REPORT
+  const [designAnalysisFileNames, ] = useAtom(DESIGN_ANALYSIS_FILE_NAMES);
+  const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
+    DESIGN_ANALYSIS_FILE_ID
   );
-  const [selectedTargetDiscoveryScenario, setSelectedTargetDiscoveryScenario] =
-    useAtom(SELECTED_TARGET_DISCOVERY_SCENARIO);
-  const [projectSaas] = useAtom(PROJECT_SAAS);
-
-  const [, setShowPopup] = useState(false);
-  const [, setShowPopupMore] = useState(false);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
-  const [showPopupRetry, setShowPopupRetry] = useState(false);
   const [selectedPersonas, setSelectedPersonas] = useState([]);
-  const [selectedPurpose, setSelectedPurpose] = useState("");
-  const [, setDropUp] = useState(false);
-  const selectBoxRef = useRef(null);
   const [activeTab, setActiveTab] = useState(1);
-  const [completedSteps, setCompletedSteps] = useState([]);
+  const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
-  const [targetCustomer, setTargetCustomer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingScenario, setIsLoadingScenario] = useState(false);
-  const [specificSituation, setSpecificSituation] = useState("");
-  const [loadingPersonas, setLoadingPersonas] = useState({});
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [fileNames, setFileNames] = useState([]);
+  const [activeDesignTab, setActiveDesignTab] = useState("emotion");
+  const [isLoadingReport, setIsLoadingReport] = useState(false);
+  const [businessDescriptionTitle, setBusinessDescriptionTitle] = useState("");
+  const [state, ] = useState({
+    isExpanded: false,
+    showQuestions: false,
+  });
+  const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [isEditingBusiness, setIsEditingBusiness] = useState(false);
-  const [isEditingTarget, setIsEditingTarget] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
+  const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useState([]);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
-  // 스크롤 초기화
+  const project = projectSaas;
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const project = projectSaas;
-
-  // const calculateDropDirection = () => {
-  //   if (selectBoxRef.current) {
-  //     const rect = selectBoxRef.current.getBoundingClientRect();
-  //     const spaceBelow = window.innerHeight - rect.bottom;
-  //     const spaceAbove = rect.top;
-  //     const dropDownHeight = 200; // 예상되는 드롭다운 높이
-
-  //     setDropUp(spaceBelow < dropDownHeight && spaceAbove > spaceBelow);
-  //   }
-  // };
-
-  //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
-      if (Object.keys(targetDiscoveryInfo).length === 0) {
-        const projectAnalysis =
-          (project?.projectAnalysis.business_analysis
-            ? project?.projectAnalysis.business_analysis
-            : "") +
-          (project?.projectAnalysis.business_analysis &&
-          project?.projectAnalysis.file_analysis
-            ? "\n"
-            : "") +
-          (project?.projectAnalysis.file_analysis
-            ? project?.projectAnalysis.file_analysis
-            : "");
-        // 비즈니스 정보 설정 (Step 1)
+      // 비즈니스 정보 설정 (Step 1)
+   
+    if (designAnalysisBusinessInfo.length === 0) {
+      const projectAnalysis =
+        (project?.projectAnalysis.business_analysis
+          ? project?.projectAnalysis.business_analysis
+          : "") +
+        (project?.projectAnalysis.business_analysis &&
+        project?.projectAnalysis.file_analysis
+          ? "\n"
+          : "") +
+        (project?.projectAnalysis.file_analysis
+          ? project?.projectAnalysis.file_analysis
+          : "");
+      const projectTitle = project?.projectTitle;
 
-        if (project) {
-          setBusinessDescription(projectAnalysis);
-          setTargetCustomer(project?.projectAnalysis.target_customer ?? "");
-          setSpecificSituation(targetDiscoveryInfo?.specificSituation ?? "");
-          setSelectedPurpose(project?.targetCountry ?? "");
-        }
+      if (project) {
+        setBusinessDescriptionTitle(projectTitle);
+        setBusinessDescription(projectAnalysis);
       }
-
+    }
+   
       if (toolLoading) {
-        // 활성 탭 설정 (기본값 1)
-        setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
-        setToolSteps(toolStep ?? 1);
+  
+        const projectTitle = project?.projectTitle;
         // 비즈니스 정보 설정 (Step 1)
-
         if (project) {
-          setBusinessDescription(targetDiscoveryInfo?.business ?? "");
-          setTargetCustomer(targetDiscoveryInfo?.target ?? "");
-          setSpecificSituation(targetDiscoveryInfo?.specificSituation ?? "");
-          setSelectedPurpose(project?.targetCountry ?? "");
+          setBusinessDescriptionTitle(projectTitle);
+        }
+
+        // 활성 탭 설정 (기본값 1)
+        setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
+        setToolSteps(toolStep ?? 1);
+
+        // 비즈니스 정보 설정 (Step 1)
+        if (designAnalysisBusinessInfo) {
+          setBusinessDescription(designAnalysisBusinessInfo ?? "");
+          setFileNames(designAnalysisFileNames);
         }
 
         // 완료된 단계 설정
@@ -172,15 +179,14 @@ const PagePsstReport = () => {
 
         // 페르소나 설정 (Step 2)
         if (
-          Array.isArray(targetDiscoveryPersona) &&
-          Array.isArray(selectedTargetDiscoveryPersona)
+          Array.isArray(designAnalysisEmotionAnalysis) &&
+          Array.isArray(selectedDesignAnalysisEmotionAnalysis)
         ) {
           // 이미 선택된 페르소나들의 인덱스 찾기
-          const selectedIndices = (targetDiscoveryPersona ?? [])
+          const selectedIndices = (designAnalysisEmotionAnalysis ?? [])
             .map((persona, index) => {
-              // targetDiscoveryScenario에 있는 페르소나만 선택
-              return (targetDiscoveryScenario ?? []).some(
-                (scenario) => scenario?.title === persona?.title
+              return (selectedDesignAnalysisEmotionAnalysis ?? []).some(
+                (target) => target?.name === persona?.name
               )
                 ? index
                 : -1;
@@ -192,43 +198,31 @@ const PagePsstReport = () => {
 
           // 선택된 페르소나 데이터 설정
           const selectedPersonaData = selectedIndices
-            .map((index) => targetDiscoveryPersona?.[index])
+            .map((index) => designAnalysisEmotionAnalysis?.[index])
             .filter(Boolean);
 
-          setSelectedTargetDiscoveryPersona(selectedPersonaData);
+          setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
         }
 
-        // 시나리오 설정 (Step 3)
+        // 추가된 조건 체크
         if (
-          Array.isArray(targetDiscoveryScenario) &&
-          Array.isArray(targetDiscoveryPersona)
+          Object.keys(designAnalysisEmotionTarget).length === 0 &&
+          !designAnalysisEmotionScale.length &&
+          completedStepsArray.length === 2
         ) {
-          const matchedScenarioData = (targetDiscoveryScenario ?? [])
-            .map((scenario) => {
-              const matchedPersona = (targetDiscoveryPersona ?? []).find(
-                (persona) => persona?.title === scenario?.title
-              );
+          // designAnalysisEmotionTarget이 빈 객체이고, designAnalysisEmotionScale이 빈 배열인 경우
+          setActiveTab(2);
+          setToolSteps(1);
+          setCompletedSteps(completedStepsArray.slice(0, -1));
+        } else {
+          if (designAnalysisEmotionTarget) {
+            setDesignAnalysisEmotionTarget(designAnalysisEmotionTarget ?? {});
+          }
 
-              if (!matchedPersona) return null;
-
-              return {
-                ...(matchedPersona ?? {}),
-                title: scenario?.title ?? "",
-                content: matchedPersona?.content ?? {},
-                keywords: matchedPersona?.content?.keywords ?? [],
-                scenario: scenario ?? {},
-              };
-            })
-            .filter((item) => item?.title);
-
-          setSelectedTargetDiscoveryScenario(matchedScenarioData);
+          if (designAnalysisEmotionScale) {
+            setDesignAnalysisEmotionScale(designAnalysisEmotionScale ?? {});
+          }
         }
-
-        // 최종 리포트 설정 (Step 4)
-        if (targetDiscoveryFinalReport) {
-          setTargetDiscoveryFinalReport(targetDiscoveryFinalReport ?? {});
-        }
-
         setToolStep(0);
 
         return;
@@ -241,12 +235,11 @@ const PagePsstReport = () => {
   const handleCheckboxChange = (personaId) => {
     if (toolSteps >= 2) return;
     setSelectedPersonas((prev) => {
+      // 하나만 선택되도록 변경, 다른 항목 선택 시 해당 항목으로 변경
       if (prev.includes(personaId)) {
-        return prev.filter((id) => id !== personaId);
+        return []; // 이미 선택된 항목을 다시 클릭하면 선택 해제
       } else {
-        // 최대 5개까지만 선택 가능
-        if (prev.length >= 5) return prev;
-        return [...prev, personaId];
+        return [personaId]; // 새 항목 선택
       }
     });
   };
@@ -260,83 +253,85 @@ const PagePsstReport = () => {
 
   // 필수 필드가 모두 입력되었는지 확인하는 함수
   const isRequiredFieldsFilled = () => {
-    return (
-      businessDescription.trim() !== "" &&
-      targetCustomer.trim() !== "" &&
-      specificSituation.trim() !== ""
-    );
+    return businessDescription.trim().length > 0 && uploadedFiles.length > 0;
+  };
+
+  // 비즈니스 설명 입력 핸들러
+  const handleBusinessDescriptionChange = (e) => {
+    const input = e.target.value;
+    if (input.length <= 500) {
+      setBusinessDescription(input);
+    }
   };
 
   const handleSubmitBusinessInfo = async () => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
+      const timeStamp = new Date().getTime();
 
-      const businessData = {
+      // 비즈니스 데이터 추가
+      const Data = {
         business: businessDescription,
-        target: targetCustomer,
-        specific_situation: specificSituation,
-        country: selectedPurpose,
+        tool_id: "file_" + timeStamp,
+        files: uploadedFiles,
       };
 
-      let response = await InterviewXTargetDiscoveryPersonaRequest(
-        businessData,
+
+     
+      setDesignAnalysisFileId(["file_" + timeStamp]);
+
+      // API 요청
+      const response = await InterviewXPsstMultimodalRequest(
+        Data,
         isLoggedIn
       );
+      // if (
+      //   !response?.response.project_analysis_multimodal ||
+      //   response.response.design_emotion_analysis.length === 0
+      // ) {
+      //   setShowPopupError(true);
+      //   return;
+      // }
 
-      const maxAttempts = 10;
-      let attempts = 0;
-      while (
-        !response ||
-        !response.response ||
-        !response.response.target_discovery_persona ||
-        !Array.isArray(response.response.target_discovery_persona) ||
-        response.response.target_discovery_persona.length === 0 ||
-        response.response.target_discovery_persona.some(
-          (persona) => !persona.title || !persona.content
-        )
-      ) {
-        if (attempts >= maxAttempts) {
-          setShowPopupRetry(true);
-          return;
-        }
-        attempts++;
+      setProjectAnalysisMultimodal(response.response.psst_index_multimodal);
 
-        response = await InterviewXTargetDiscoveryPersonaRequest(
-          businessData,
-          isLoggedIn
-        );
-      }
 
-      const updateBusinessData = {
-        business: businessDescription,
-        target: targetCustomer,
-        specificSituation: specificSituation,
-        country: selectedPurpose,
-      };
+
       const responseToolId = await createToolOnServer(
         {
-          type: "ix_target_discovery_persona",
-          completedStep: 1,
           projectId: project._id,
-          targetDiscoveryPersona: response.response.target_discovery_persona,
-          business: businessDescription,
-          target: targetCustomer,
-          specificSituation: specificSituation,
-          country: selectedPurpose,
+          type: "ix_psst_multimodal",
         },
         isLoggedIn
       );
+
       setToolId(responseToolId);
       setToolSteps(1);
-      // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
-      setTargetDiscoveryPersona(
-        response.response.target_discovery_persona || []
-      );
-      setTargetDiscoveryInfo(updateBusinessData);
 
-      // API 호출 성공시 다음 단계로 이동
-      handleNextStep(1);
-      setIsLoading(false);
+      // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
+      setDesignAnalysisEmotionAnalysis(
+        response.response.design_emotion_analysis
+      );
+      setDesignAnalysisBusinessInfo(businessDescription);
+      setDesignAnalysisBusinessTitle(businessDescriptionTitle);
+      // setDesignAnalysisUploadedFiles(uploadedFiles);
+      setFileNames(uploadedFiles.map((file) => file.name));
+
+      await updateToolOnServer(
+        responseToolId,
+        {
+          completedStep: 1,
+          projectAnalysisMultimodal: projectAnalysisMultimodal,
+          business: businessDescription,
+          fileName: uploadedFiles.map((file) => ({
+            id: "file_" + timeStamp,
+            name: file.name,
+          })),
+        },
+        isLoggedIn
+      );
+
+      // handleNextStep(1);
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
@@ -361,233 +356,128 @@ const PagePsstReport = () => {
 
   const handleSubmitPersonas = async () => {
     handleNextStep(2);
-    setIsLoading(true);
+    setToolSteps(2);
     try {
-      const selectedPersonaData = targetDiscoveryPersona.filter(
+      const selectedPersonaData = designAnalysisEmotionAnalysis.filter(
         (persona, index) => selectedPersonas.includes(index)
       );
-      setSelectedTargetDiscoveryPersona(selectedPersonaData);
+      setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
 
-      let allScenarios = []; // 모든 시나리오를 저장할 배열
-      // 각 페르소나에 대해 개별적으로 시나리오 요청 및 상태 업데이트
-      for (const persona of selectedPersonaData) {
-        // 현재 페르소나의 로딩 상태를 true로 설정
-        setLoadingPersonas((prev) => ({
-          ...prev,
-          [persona.title]: true,
-        }));
+      await updateToolOnServer(
+        toolId,
+        {
+          completedStep: 2,
+          designSelectedPersona: selectedPersonaData,
+        },
+        isLoggedIn
+      );
+      setIsLoadingReport(true);
 
+      // 선택된 페르소나가 하나일 경우에만 시나리오 요청
+      if (selectedPersonaData.length > 0) {
+        const persona = selectedPersonaData[0]; // 첫 번째 페르소나 선택
         try {
-          const isDuplicate = selectedTargetDiscoveryPersona.some(
-            (existingPersona) => existingPersona.title === persona.title
+          const apiRequestData = {
+            business: designAnalysisBusinessInfo,
+            design_emotion_selected_field: persona.name,
+            design_emotion_analysis: persona,
+          };
+
+          let response = await InterviewXDesignEmotionTargetRequest(
+            apiRequestData,
+            isLoggedIn
           );
 
-          if (!isDuplicate) {
-            const apiRequestData = {
-              business: targetDiscoveryInfo.business,
-              target_discovery_persona: persona,
-              specific_situation: targetDiscoveryInfo.specificSituation,
-              country: targetDiscoveryInfo.country,
-            };
+          const maxAttempts = 10;
+          let attempt = 0;
 
-            let response = await InterviewXTargetDiscoveryScenarioRequest(
-              apiRequestData,
-              isLoggedIn
-            );
-
-            const maxAttempts = 10;
-            let attempts = 0;
-
-            while (
-              attempts < maxAttempts &&
-              (!response ||
-                !response?.response ||
-                !response?.response?.target_discovery_scenario ||
-                !response?.response?.target_discovery_scenario
-                  ?.potential_customer_info ||
-                !response?.response?.target_discovery_scenario
-                  ?.potential_customer_info?.gender ||
-                !response?.response?.target_discovery_scenario
-                  ?.potential_customer_info?.age ||
-                !response?.response?.target_discovery_scenario
-                  ?.potential_customer_info?.main_use_purpose ||
-                !response?.response?.target_discovery_scenario
-                  ?.potential_customer_info?.pain_points ||
-                !response?.response?.target_discovery_scenario
-                  ?.usage_scenario ||
-                !response?.response?.target_discovery_scenario?.usage_scenario
-                  ?.description ||
-                !response?.response?.target_discovery_scenario?.usage_scenario
-                  ?.key_sentence)
-            ) {
-              response = await InterviewXTargetDiscoveryScenarioRequest(
-                apiRequestData,
-                isLoggedIn
-              );
-              attempts++;
-            }
-            if (attempts >= maxAttempts) {
+          while (
+            !response?.response?.design_emotion_target ||
+            typeof response.response.design_emotion_target !== "object" ||
+            Object.keys(response?.response?.design_emotion_target).length ===
+              0 ||
+            !response?.response?.design_emotion_target?.hasOwnProperty(
+              "target_emotion"
+            ) ||
+            !response?.response?.design_emotion_target?.hasOwnProperty(
+              "design_perspectives"
+            ) ||
+            !response?.response?.design_emotion_target?.hasOwnProperty(
+              "designer_guidelines"
+            )
+          ) {
+            if (attempt >= maxAttempts) {
               setShowPopupError(true);
               return;
             }
 
-            // 개별 시나리오 데이터 업데이트
-            setTargetDiscoveryScenario((prev) => {
-              const currentScenarios = prev || [];
-              return [
-                ...currentScenarios,
-                response?.response?.target_discovery_scenario,
-              ].filter(Boolean);
-            });
+            response = await InterviewXDesignEmotionTargetRequest(
+              apiRequestData,
+              isLoggedIn
+            );
 
-            // 현재 페르소나의 로딩 상태를 false로 설정
-            setLoadingPersonas((prev) => ({
-              ...prev,
-              [persona.title]: false,
-            }));
-
-            // 개별 시나리오 데이터를 selectedTargetDiscoveryScenario에 추가
-            setSelectedTargetDiscoveryScenario((prev) => [
-              ...(prev || []),
-              {
-                ...persona,
-                scenario: response.response.target_discovery_scenario,
-              },
-            ]);
-            allScenarios.push({
-              ...persona, // 기존 페르소나 데이터 유지
-              scenario: response.response.target_discovery_scenario, // 시나리오 데이터 추가
-            });
+            attempt++;
           }
-        } catch (error) {
-          // 에러 발생 시 현재 페르소나의 로딩 상태를 false로 설정
-          setLoadingPersonas((prev) => ({
-            ...prev,
-            [persona.title]: false,
-          }));
-        } finally {
-          setIsLoading(false);
-        }
+
+          setDesignAnalysisEmotionTarget(
+            response.response.design_emotion_target
+          );
+
+          const oceanData = {
+            tool_id: designAnalysisFileId[0],
+            business: designAnalysisBusinessInfo,
+            design_emotion_selected_field: persona.name,
+            design_emotion_target: response?.response?.design_emotion_target,
+          };
+
+          attempt = 0;
+          let oceanResponse = null;
+
+          while (
+            !oceanResponse ||
+            typeof oceanResponse.response.design_emotion_scale !== "object" ||
+            Object.keys(oceanResponse?.response?.design_emotion_scale)
+              .length === 0 ||
+            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
+              "conclusion"
+            ) ||
+            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
+              "evaluation_analysis"
+            ) ||
+            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
+              "sd_scale_analysis"
+            )
+          ) {
+            if (attempt >= maxAttempts) {
+              setShowPopupError(true);
+              return;
+            }
+
+            oceanResponse = await InterviewXDesignEmotionScaleRequest(
+              oceanData,
+              isLoggedIn
+            );
+
+            attempt++;
+          }
+          setDesignAnalysisEmotionScale(
+            oceanResponse.response.design_emotion_scale
+          );
+
+          await updateToolOnServer(
+            toolId,
+            {
+              completedStep: 3,
+              designEmotionTarget: response.response.design_emotion_target,
+              designEmotionScale: oceanResponse.response.design_emotion_scale,
+              designSelectedPersona: selectedPersonaData,
+            },
+            isLoggedIn
+          );
+        } catch (error) {}
       }
 
-      setSelectedTargetDiscoveryScenario(allScenarios);
-      // 모든 시나리오를 서버에 저장
-      await updateToolOnServer(
-        toolId,
-        {
-          projectId: project._id,
-          completedStep: 2,
-          targetDiscoveryScenario: allScenarios,
-          updateDate: new Date().toLocaleString("ko-KR", {
-            timeZone: "Asia/Seoul",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-          }),
-        },
-        isLoggedIn
-      );
-
-      setToolSteps(2);
-    } catch (error) {
-      // 에러 발생 시 모든 로딩 상태 초기화
-      setLoadingPersonas({});
-      setShowPopupError(true);
-      if (error.response) {
-        switch (error.response.status) {
-          case 500:
-            setShowPopupError(true);
-            break;
-          case 504:
-            setShowPopupError(true);
-            break;
-          default:
-            setShowPopupError(true);
-            break;
-        }
-      } else {
-        setShowPopupError(true);
-      }
-    }
-  };
-
-  const handleSubmitScenario = async () => {
-    try {
-      setIsLoadingScenario(true);
-      handleNextStep(3);
-
-      const scenarioData = {
-        business: targetDiscoveryInfo.business,
-        target: targetDiscoveryInfo.target,
-        target_discovery_persona: selectedTargetDiscoveryPersona,
-        target_discovery_scenario: targetDiscoveryScenario,
-      };
-
-      let response;
-      response = await InterviewXTargetDiscoveryFinalReportRequest(
-        scenarioData,
-        isLoggedIn
-      );
-
-      const maxAttempts = 10;
-      let attempts = 0;
-
-      while (
-        attempts < maxAttempts &&
-        (!response ||
-          !response?.response?.target_discovery_final_report?.potential_rank_1
-            ?.title ||
-          !response?.response?.target_discovery_final_report?.potential_rank_1
-            ?.discovery_criteria ||
-          !response?.response?.target_discovery_final_report?.potential_rank_1
-            ?.selection_criteria ||
-          !response?.response?.target_discovery_final_report?.potential_rank_1
-            ?.rank_reason ||
-          !response?.response?.target_discovery_final_report?.potential_rank_1
-            ?.keywords)
-      ) {
-        response = await InterviewXTargetDiscoveryFinalReportRequest(
-          scenarioData,
-          isLoggedIn
-        );
-        attempts++;
-      }
-      if (attempts >= maxAttempts) {
-        setShowPopupError(true);
-        return;
-      }
-
-      setTargetDiscoveryFinalReport(
-        response.response.target_discovery_final_report
-      );
-
-      // 모든 시나리오를 한번에 저장
-      await updateToolOnServer(
-        toolId,
-        {
-          projectId: project._id,
-          completedStep: 4,
-          targetDiscoveryFinalReport:
-            response.response.target_discovery_final_report,
-          updateDate: new Date().toLocaleString("ko-KR", {
-            timeZone: "Asia/Seoul",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-          }),
-        },
-        isLoggedIn
-      );
-      setToolSteps(3);
-
-      setIsLoadingScenario(false);
-      handleNextStep(3);
+      // setToolStep(3);
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
@@ -606,17 +496,78 @@ const PagePsstReport = () => {
         setShowPopupError(true);
       }
     } finally {
-      setIsLoadingScenario(false);
+      setIsLoadingReport(false);
     }
   };
 
-  const getButtonText = (persona, hasScenarioData, isLoading) => {
-    if (isLoading) {
-      return "호출중";
-    } else if (hasScenarioData) {
-      return "자세히";
+  // 파일 업로드 핸들러
+  const handleChangeStatus = ({ meta, file, remove }, status) => {
+    // 20MB 크기 제한 체크
+    const maxSize = 20 * 1024 * 1024; // 20MB in bytes
+    if (file.size > maxSize && status !== "removed") {
+      setShowPopupFileSize(true);
+      remove();
+      return;
     }
-    return "대기중";
+
+    // 파일 상태 업데이트
+    if (status === "done" || status === "preparing" || status === "uploading") {
+      setUploadedFiles((prev) => {
+        // 이미 존재하는 파일이 아닌 경우에만 추가
+        if (!prev.find((f) => f.name === file.name)) {
+          setFileNames((prev) => [...prev, file.name]);
+          return [...prev, file];
+        }
+        return prev;
+      });
+    } else if (status === "removed") {
+      setUploadedFiles((prev) => prev.filter((f) => f.name !== file.name));
+      setFileNames((prev) => prev.filter((name) => name !== file.name));
+    }
+
+    // 파일 크기를 KB 또는 MB 단위로 변환
+    const size = file.size;
+    const sizeStr =
+      size > 1024 * 1024
+        ? `${(size / (1024 * 1024)).toFixed(1)}MB`
+        : `${(size / 1024).toFixed(1)}KB`;
+
+    // setTimeout을 사용하여 DOM이 업데이트된 후 실행
+    setTimeout(() => {
+      const containers = document.querySelectorAll(".dzu-previewContainer");
+      containers.forEach((container) => {
+        if (!container.dataset.filename) {
+          container.dataset.filename = file.name;
+          container.dataset.size = sizeStr;
+        }
+      });
+    }, 0);
+  };
+
+
+
+  const handleEditBusinessClick = () => {
+    setIsEditingBusiness(true);
+  };
+
+  const handleSaveBusinessClick = () => {
+    setIsEditingBusiness(false);
+  };
+
+  const handleUndoBusinessClick = () => {
+    const originalText = (project?.projectAnalysis.business_analysis
+      ? project?.projectAnalysis.business_analysis
+    : "") +
+  (project?.projectAnalysis.business_analysis &&
+  project?.projectAnalysis.file_analysis
+    ? "\n"
+    : "") +
+  (project?.projectAnalysis.file_analysis
+    ? project?.projectAnalysis.file_analysis
+    : "");
+
+
+    setBusinessDescription(originalText);
   };
 
   useEffect(() => {
@@ -624,7 +575,7 @@ const PagePsstReport = () => {
     const detectRefresh = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
-      if (currentUrl.toLowerCase().includes("targetdiscovery")) {
+      if (currentUrl.toLowerCase().includes("psstreport")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         const lastUrl = sessionStorage.getItem("lastUrl");
 
@@ -669,128 +620,69 @@ const PagePsstReport = () => {
     detectRefresh();
 
     // 이벤트 리스너 등록
+    // window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("keydown", handleKeyDown);
 
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
+      // window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
 
-  const handleEditBusinessClick = () => {
-    setIsEditingBusiness(true);
-  };
-
-  const handleSaveBusinessClick = () => {
-    setIsEditingBusiness(false);
-  };
-
-  const handleUndoBusinessClick = () => {
-    const originalText =
-      (project?.projectAnalysis.business_analysis
-        ? project?.projectAnalysis.business_analysis
-        : "") +
-      (project?.projectAnalysis.business_analysis &&
-      project?.projectAnalysis.file_analysis
-        ? "\n"
-        : "") +
-      (project?.projectAnalysis.file_analysis
-        ? project?.projectAnalysis.file_analysis
-        : "");
-
-    setBusinessDescription(originalText);
-  };
-  const handleEditTargetClick = () => {
-    setIsEditingTarget(true);
-  };
-
-  const handleSaveTargetClick = () => {
-    setIsEditingTarget(false);
-  };
-
-  const handleUndoTargetClick = () => {
-    setTargetCustomer(project?.projectAnalysis.target_customer ?? ""); // 원래 텍스트로 되돌리는 함수 필요
-  };
-
   return (
     <>
+      <DropzoneStyles />
       <ContentsWrap>
         <OrganismIncNavigation />
 
         <MoleculeHeader />
 
         <MainContent Wide1030>
-          <TargetDiscoveryWrap>
+          <DesignAnalysisWrap>
             <TabWrapType5>
               <TabButtonType5
+                Num3
                 isActive={activeTab >= 1}
-                onClick={() =>
-                  isLoading === false &&
-                  isLoadingScenario === false &&
-                  setActiveTab(1)
-                }
+                onClick={() => setActiveTab(1)}
+                disabled={isLoading || isLoadingReport}
               >
                 <span>01</span>
                 <div className="text">
                   <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
-                    비즈니스 입력
+                    파일 업로드
                   </Body1>
                 </div>
               </TabButtonType5>
               <TabButtonType5
+                Num3
                 isActive={activeTab >= 2}
-                onClick={() =>
-                  isLoading === false &&
-                  isLoadingScenario === false &&
-                  completedSteps.includes(1) &&
-                  setActiveTab(2)
-                }
-                disabled={!completedSteps.includes(1)}
+                onClick={() => completedSteps.includes(1) && setActiveTab(2)}
+                disabled={!completedSteps.includes(1) ||  isLoading || isLoadingReport }
               >
                 <span>02</span>
                 <div className="text">
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                    잠재고객 맥락 분석
+                    디자인 분야 분석
                   </Body1>
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                    Contextual Inquiry
+                    Design Sector
                   </Body1>
                 </div>
               </TabButtonType5>
               <TabButtonType5
+                Num3
                 isActive={activeTab >= 3}
-                onClick={() =>
-                  isLoading === false &&
-                  isLoadingScenario === false &&
-                  completedSteps.includes(2) &&
-                  setActiveTab(3)
-                }
-                disabled={!completedSteps.includes(2)}
+                onClick={() => completedSteps.includes(2) && setActiveTab(3)}
+                disabled={!completedSteps.includes(2) ||  isLoading || isLoadingReport }
               >
                 <span>03</span>
                 <div className="text">
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    시나리오 분석
+                    디자인 감성 분석
                   </Body1>
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    Scenario Analysis
-                  </Body1>
-                </div>
-              </TabButtonType5>
-              <TabButtonType5
-                isActive={activeTab >= 4}
-                onClick={() =>
-                  isLoading === false &&
-                  isLoadingScenario === false &&
-                  completedSteps.includes(3) &&
-                  setActiveTab(4)
-                }
-                disabled={!completedSteps.includes(3)}
-              >
-                <span>04</span>
-                <div className="text">
-                  <Body1 color={activeTab >= 4 ? "gray700" : "gray300"}>
-                    최종 인사이트 분석
+                    Sentiment Analysis
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -798,160 +690,157 @@ const PagePsstReport = () => {
 
             {activeTab === 1 && (
               <TabContent5>
-                {isLoading ? (
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      minHeight: "200px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <AtomPersonaLoader message="잠재 고객을 분석하고 있어요..." />
-                  </div>
-                ) : (
+
                   <>
                     <div className="title">
-                      <H3 color="gray800">Find Your Potential Customers</H3>
+                      <H3 color="gray800">File Upload</H3>
                       <Body3 color="gray800">
-                        혹시 놓치고 있는 고객은 없을까요? 잠재력있는 고객을
-                        체계적으로 확인해보세요{" "}
+                        파일 업로드
                       </Body3>
                     </div>
 
                     <div className="content">
+                     
                       <TabContent5Item required>
-                        <Title>
-                          <Body1 color="gray700">비즈니스 설명</Body1>
-                          {!isEditingBusiness ? (
-                            <IconButton
-                              onClick={handleEditBusinessClick}
-                              disabled={toolSteps >= 1}
-                            >
-                              <img src={images.PencilSquare} alt="" />
-                              <span>수정하기</span>
-                            </IconButton>
-                          ) : (
-                            <IconButton onClick={handleSaveBusinessClick}>
-                              <img src={images.FolderArrowDown} alt="" />
-                              <span>저장하기</span>
-                            </IconButton>
-                          )}
-                        </Title>
-
-                        {!isEditingBusiness ? (
-                          <ListBoxGroup>
-                            <Body2 color="gray800" align="left">
-                              {businessDescription}
-                            </Body2>
-                          </ListBoxGroup>
-                        ) : (
-                          <FormBox Large>
-                            <CustomTextarea
-                              Edit
-                              rows={6}
-                              placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
-                              value={businessDescription}
-                              onChange={(e) =>
-                                setBusinessDescription(e.target.value)
-                              }
-                              status="valid"
-                              disabled={toolSteps >= 1}
-                            />
-                            <EditButtonGroup>
-                              <IconButton onClick={handleUndoBusinessClick}>
-                                <img
-                                  src={images.ClockCounterclockwise}
-                                  alt=""
-                                />
-                                <span>이전으로 되돌리기</span>
-                              </IconButton>
-                            </EditButtonGroup>
-                          </FormBox>
-                        )}
-                      </TabContent5Item>
-
-                      <TabContent5Item required>
-                        <Title>
-                          <Body1 color="gray700">타겟 고객</Body1>
-                          {!isEditingTarget ? (
-                            <IconButton
-                              onClick={handleEditTargetClick}
-                              disabled={toolSteps >= 1}
-                            >
-                              <img src={images.PencilSquare} alt="" />
-                              <span>수정하기</span>
-                            </IconButton>
-                          ) : (
-                            <IconButton onClick={handleSaveTargetClick}>
-                              <img src={images.FolderArrowDown} alt="" />
-                              <span>저장하기</span>
-                            </IconButton>
-                          )}
-                        </Title>
-
-                        {!isEditingTarget ? (
-                          <ListBoxGroup>
-                            <Body2 color="gray800" align="left">
-                              {targetCustomer}
-                            </Body2>
-                          </ListBoxGroup>
-                        ) : (
-                          <FormBox Large>
-                            <CustomTextarea
-                              Edit
-                              rows={5}
-                              placeholder="잠재고객을 도출하고 싶은 비즈니스에 대해서 설명해주세요 (예: 친환경 전기 자전거 공유 플랫폼 등)"
-                              value={targetCustomer}
-                              onChange={(e) =>
-                                setTargetCustomer(e.target.value)
-                              }
-                              status="valid"
-                              disabled={toolSteps >= 1}
-                            />
-                            <EditButtonGroup>
-                              <IconButton onClick={handleUndoTargetClick}>
-                                <img
-                                  src={images.ClockCounterclockwise}
-                                  alt=""
-                                />
-                                <span>이전으로 되돌리기</span>
-                              </IconButton>
-                            </EditButtonGroup>
-                          </FormBox>
-                        )}
-                      </TabContent5Item>
-
-                      <TabContent5Item>
                         <div className="title">
-                          <Body1 color="gray700">분석하고자 하는 상황</Body1>
-                          <Body1 color="red">*</Body1>
+                          <Body1 color="gray700">파일 업로드 (20MB)</Body1>
                         </div>
-                        <CustomInput
-                          disabled={toolSteps >= 1}
-                          type="text"
-                          placeholder="특별히 분석하고자 하는 상황을 입력해주세요 (예: 전기자전거의 배터리가 없는 상황 등)"
-                          value={specificSituation}
-                          onChange={(e) => setSpecificSituation(e.target.value)}
+                        <Dropzone
+                          onChangeStatus={handleChangeStatus}
+                          maxFiles={1}
+                          multiple={false}
+                          canRemove={false}
+                          canRestart={false}
+                          disabled={toolSteps >= 1} 
+                          accept="application/pdf"
+                          maxSizeBytes={20 * 1024 * 1024}
+                          inputWithFilesContent={
+                            <>
+                              <img src={images.ImagePrimary} alt="" />
+                              {fileNames.length === 0 && (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    gap: "12px",
+                                  }}
+                                >
+                                  <div>
+                                    <Body2 color="gray800">
+                                      업로드하려는 파일을 드래그하여 놓아주세요
+                                    </Body2>
+                                    <Sub3 color="gray500">
+                                      jpg, png, PDF 파일만 업로드가 가능합니다
+                                      (20MB 이하)
+                                    </Sub3>
+                                  </div>
+                                  <div className="browse-button">
+                                    파일 찾아보기
+                                  </div>
+                                </div>
+                              )}
+                              {fileNames.length > 0 && (
+                                <div>
+                                  {fileNames.map((name, index) => (
+                                   <Body2 key={index} color="gray700">
+                                      {name}
+                                    </Body2>
+                                  ))}
+                                </div>
+                              )}
+                            </>
+                          }
+                          inputContent={
+                            <>
+                              <img src={images.ImagePrimary} alt="" />
+                              {fileNames.length === 0 && (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    gap: "12px",
+                                  }}
+                                >
+                                  <div>
+                                    <Body2 color="gray800">
+                                      업로드하려는 파일을 드래그하여 놓아주세요
+                                    </Body2>
+                                    <Sub3 color="gray500">
+                                      PDF 파일만 업로드가 가능합니다
+                                      (20MB 이하)
+                                    </Sub3>
+                                  </div>
+                                  <div className="browse-button">
+                                    파일 찾아보기
+                                  </div>
+                                </div>
+                              )}
+                              {fileNames.length > 0 && (
+                                <div>
+                                  {fileNames.map((name, index) => (
+                                      <Body2 key={index} color="gray700">
+                                      {name}
+                                    </Body2>
+                                  ))}
+                                </div>
+                              )}
+                            </>
+                          }
+                          styles={StyledDropzone}
                         />
                       </TabContent5Item>
                     </div>
+                    {isLoading ? (
+                      <div
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                          minHeight: "200px",
+                          alignItems: "center",
+                        }}
+                      >
+                        <AtomPersonaLoader message="로딩 중..." />
+                      </div>
+                    ) : toolSteps >= 1 ? (
+                      // 로딩 후 보여질 컴포넌트
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <h2 style={{ margin: '0', textAlign: 'left' }}>프로젝트 분석 데이터</h2>
+                      <div style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+                        {projectAnalysisMultimodal.map((item, index) => (
+                          <div key={index}>
+                            <pre>{item}</pre> {/* 마크다운 형식으로 출력 */}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    ) : (
+                      <Button
+                        Other
+                        Primary
+                        Fill
+                        Round
+                        onClick={handleSubmitBusinessInfo}
+                        disabled={!fileNames.length || toolSteps >= 1}
+                      >
+                        다음
+                      </Button>
+                    )}
 
-                    <Button
+                    {/* <Button
                       Other
                       Primary
                       Fill
                       Round
                       onClick={handleSubmitBusinessInfo}
-                      disabled={
-                        !isRequiredFieldsFilled() || toolSteps >= 1 || isLoading
-                      }
+                      disabled={!isRequiredFieldsFilled() || toolSteps >= 1}
                     >
                       다음
-                    </Button>
+                    </Button> */}
                   </>
-                )}
+                
               </TabContent5>
             )}
 
@@ -972,30 +861,46 @@ const PagePsstReport = () => {
                 ) : (
                   <>
                     <div className="title">
-                      <H3 color="gray800">Contextual Inquiry Analysis</H3>
+                      <H3 color="gray800">Design Sector Analysis</H3>
                       <Body3 color="gray800">
-                        비즈니스에 적합한 다양한 페르소나를 기반으로 잠재고객을
-                        분석합니다
+                        업로드된 이미지를 기반으로 가장 적합한 디자인 분야를
+                        분류했습니다
                       </Body3>
                     </div>
 
                     <div className="content">
                       <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                        {targetDiscoveryPersona.map((persona, index) => (
-                          <></>
-                        ))}
+                        {designAnalysisEmotionAnalysis.length > 0 ? (
+                          designAnalysisEmotionAnalysis.map(
+                            (persona, index) => {
+                              return (
+                                <MoleculeDesignItem
+                                  FlexStart
+                                  key={index}
+                                  id={index}
+                                  title={persona.name}
+                                  subtitle={persona.reason}
+                                  isSelected={selectedPersonas.includes(index)}
+                                  onSelect={() => handleCheckboxChange(index)}
+                                  disabled={toolSteps >= 2 ? true : false}
+                                />
+                              );
+                            }
+                          )
+                        ) : (
+                          <Body3 color="gray700">데이터가 없습니다.</Body3>
+                        )}
                       </CardGroupWrap>
 
                       <BottomBar W100>
                         <Body2
                           color={
                             selectedPersonas.length === 0
-                              ? "gray300"
+                              ? "gray800"
                               : "gray800"
                           }
                         >
-                          시나리오 분석을 원하는 페르소나를 선택해주세요 (
-                          {selectedPersonas.length}/5)
+                          가장 적합하다고 생각하시는 디자인 분야를 선택해주세요
                         </Body2>
                         <Button
                           Large
@@ -1003,10 +908,7 @@ const PagePsstReport = () => {
                           Round
                           Fill
                           disabled={
-                            selectedPersonas.length === 0 ||
-                            toolSteps >= 2 ||
-                            isLoading ||
-                            isLoadingScenario
+                            toolSteps >= 2 || selectedPersonas.length === 0
                           }
                           onClick={handleSubmitPersonas}
                         >
@@ -1025,67 +927,8 @@ const PagePsstReport = () => {
             )}
 
             {activeTab === 3 && completedSteps.includes(2) && (
-              <TabContent5>
-                <div className="title">
-                  <H3 color="gray800">Persona Scenario Analysis</H3>
-                  <Body3 color="gray800">
-                    선택하신 잠재고객과 비즈니스의 연관성을 분석해드려요
-                  </Body3>
-                </div>
-
-                <div className="content">
-                  <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                    {selectedTargetDiscoveryPersona.map((persona, index) => {
-                      // selectedTargetDiscoveryScenario에서 매칭되는 시나리오 데이터 찾기
-                      const matchingScenarioData =
-                        selectedTargetDiscoveryScenario.find(
-                          (scenarioData) => scenarioData.title === persona.title
-                        );
-
-                      const hasScenarioData = Boolean(
-                        matchingScenarioData?.scenario
-                      );
-                      const isLoading = loadingPersonas[persona.title];
-
-                      return <></>;
-                    })}
-                  </CardGroupWrap>
-
-                  <BottomBar W100>
-                    <Body2 color="gray800">
-                      {selectedPersonas.length}명의 페르소나에 대한 잠재고객
-                      가능성을 분석해드릴게요
-                    </Body2>
-                    <Button
-                      Large
-                      Primary
-                      Round
-                      Fill
-                      disabled={
-                        isLoading ||
-                        isLoadingScenario ||
-                        toolSteps >= 3 ||
-                        !targetDiscoveryScenario ||
-                        targetDiscoveryScenario.length !==
-                          selectedTargetDiscoveryPersona.length
-                      }
-                      onClick={handleSubmitScenario}
-                    >
-                      다음
-                      <images.ChevronRight
-                        width="20"
-                        height="20"
-                        color={palette.white}
-                      />
-                    </Button>
-                  </BottomBar>
-                </div>
-              </TabContent5>
-            )}
-
-            {activeTab === 4 && completedSteps.includes(3) && (
               <TabContent5 Small>
-                {isLoadingScenario ? (
+                {isLoadingReport ? (
                   <div
                     style={{
                       width: "100%",
@@ -1100,62 +943,149 @@ const PagePsstReport = () => {
                 ) : (
                   <>
                     <BgBoxItem primaryLightest>
-                      <H3 color="gray800">타겟 탐색기 인사이트 분석</H3>
+                      <H3 color="gray800">디자인 감성 분석</H3>
                       <Body3 color="gray800">
-                        잠재 고객과 시나리오 분석을 통해 새로운 전략적 방향을
-                        탐색해보세요
+                        디자인이 사용자에게 전달하는 감정을 분석하고, 시각적
+                        커뮤니케이션 효과를 극대화하세요
                       </Body3>
                     </BgBoxItem>
 
                     <InsightAnalysis>
-                      <div className="title" style={{ textAlign: "left" }}>
-                        <H4 color="gray800">
-                          잠재력이 가장 높은 페르소나는{" "}
-                          {targetDiscoveryFinalReport?.potential_rank_1?.title}
-                          입니다.
+                      <div className="title">
+                        <div>
+                          <TabWrapType4>
+                            <TabButtonType4
+                              active={activeDesignTab === "emotion"}
+                              onClick={() => setActiveDesignTab("emotion")}
+                            >
+                              디자인 목표 감성
+                            </TabButtonType4>
+                            <TabButtonType4
+                              active={activeDesignTab === "scale"}
+                              onClick={() => setActiveDesignTab("scale")}
+                            >
+                              감정 스케일 매핑
+                            </TabButtonType4>
+                          </TabWrapType4>
+                        </div>
+                        {/* <Button Primary onClick={() => setShowPopupSave(true)}>
+                          리포트 저장하기
+                        </Button> */}
+                      </div>
+                    </InsightAnalysis>
+
+                    <InsightAnalysis>
+                      <div className="title">
+                        <H4 color="gray800" align="left">
+                          {activeDesignTab === "emotion" ? (
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: `${project?.projectTitle}가(${selectedDesignAnalysisEmotionAnalysis?.[0]?.name})
+                            에서 궁극적으로 달성하고자하는 주요 목표 감성은 ${designAnalysisEmotionTarget?.target_emotion} `,
+                              }}
+                            />
+                          ) : (
+                            `${designAnalysisEmotionScale?.conclusion}`
+                          )}
                         </H4>
                       </div>
 
                       <div className="content">
-                        <Body3 color="gray700">
-                          {
-                            targetDiscoveryFinalReport?.potential_rank_1
-                              ?.discovery_criteria
-                          }
-                        </Body3>
-
-                        <Body3 color="gray700">
-                          {
-                            targetDiscoveryFinalReport?.potential_rank_1
-                              ?.selection_criteria
-                          }
-                        </Body3>
+                        {activeDesignTab === "emotion" ? (
+                          <Body3 color="gray700">
+                            {designAnalysisEmotionTarget?.designer_guidelines}
+                          </Body3>
+                        ) : (
+                          <>
+                            <Body3 color="gray700">
+                              강점 :{" "}
+                              {
+                                designAnalysisEmotionScale?.evaluation_analysis
+                                  ?.strengths
+                              }
+                            </Body3>
+                            <Body3 color="gray700">
+                              약점 및 개선 방향:{" "}
+                              {
+                                designAnalysisEmotionScale?.evaluation_analysis
+                                  ?.weaknesses
+                              }
+                            </Body3>
+                          </>
+                        )}
                       </div>
                     </InsightAnalysis>
 
-                    <ListBoxWrap style={{ marginBottom: "240px" }}>
-                      {targetDiscoveryFinalReport &&
-                        Object.keys(targetDiscoveryFinalReport)
-                          .filter((key) => key.startsWith("potential_rank_"))
-                          .map((rankKey) => {
-                            const rank = parseInt(rankKey.split("_").pop());
-                            const rankData =
-                              targetDiscoveryFinalReport[rankKey];
+                    {activeDesignTab === "emotion" && (
+                      <InsightAnalysis style={{ marginBottom: "240px" }}>
+                        <Sub3 color="gray700" align="left">
+                          💡 %는 해당 비즈니스에서 차지하는 중요도를 의미합니다.
+                        </Sub3>
+                        <CardGroupWrap column $isExpanded={state.isExpanded}>
+                          {designAnalysisEmotionTarget?.design_perspectives?.map(
+                            (perspective, index) => (
+                              <AnalysisItem
+                                business={designAnalysisBusinessInfo}
+                                key={index}
+                                percentage={perspective.weight + "%"}
+                                title={perspective.name}
+                                subtitle={perspective.features
+                                  .map((feature) => feature.title)
+                                  .join(", ")}
+                                details={perspective}
+                              />
+                            )
+                          )}
+                        </CardGroupWrap>
+                      </InsightAnalysis>
+                    )}
 
-                            if (!rankData?.title) return null;
+                    {activeDesignTab === "scale" && (
+                      <InsightAnalysis style={{ marginBottom: "240px" }}>
+                        <OCEANRangeWrap report>
+                          {/* OCEAN 값 슬라이더 */}
+                          {designAnalysisEmotionScale?.sd_scale_analysis?.map(
+                            (item, index) => (
+                              <div key={index}>
+                                <Body3 color="gray800" align="right">
+                                  {item.opposite_emotion}
+                                </Body3>
+                                <RangeSlider
+                                  type="range"
+                                  min="1"
+                                  max="7"
+                                  step="1"
+                                  value={item.score}
+                                  // disabled={true}
+                                  // style={{ flex: "2" }}
+                                />
+                                <Body3 color="gray800" align="left">
+                                  {item.target_emotion}
+                                </Body3>
+                              </div>
+                            )
+                          )}
+                        </OCEANRangeWrap>
+                      </InsightAnalysis>
+                    )}
 
-                            return <></>;
-                          })}
-                    </ListBoxWrap>
+                    {/* <Button
+                      Small
+                      Primary
+                      onClick={() => setShowPopupSave(true)}
+                      style={{ whiteSpace: "nowrap" }}
+                    >
+                      리포트 저장하기
+                    </Button> */}
                   </>
                 )}
               </TabContent5>
             )}
-          </TargetDiscoveryWrap>
+          </DesignAnalysisWrap>
         </MainContent>
       </ContentsWrap>
 
-      {showPopupRetry && (
+      {showPopupError && (
         <PopupWrap
           Warning
           title="다시 입력해 주세요."
@@ -1167,20 +1097,15 @@ const PagePsstReport = () => {
         />
       )}
 
-      {showPopupError && (
+      {showPopupFileSize && (
         <PopupWrap
           Warning
-          title="작업이 중단되었습니다"
-          message="데이터 오류로 인해 페이지가 초기화됩니다."
-          message2="작업 중인 내용은 보관함을 확인하세요."
+          title="파일 크기 초과"
+          message="파일 크기는 20MB를 초과할 수 없습니다."
           buttonType="Outline"
-          closeText="확인"
-          onConfirm={() => {
-            window.location.reload();
-          }}
-          onCancel={() => {
-            window.location.reload();
-          }}
+          confirmText="확인"
+          isModal={false}
+          onConfirm={() => setShowPopupFileSize(false)}
         />
       )}
 
@@ -1203,12 +1128,13 @@ const PagePsstReport = () => {
 
 export default PagePsstReport;
 
-const TargetDiscoveryWrap = styled.div`
+const DesignAnalysisWrap = styled.div`
   display: flex;
   flex-direction: column;
   gap: 100px;
   margin-top: 60px;
 `;
+
 
 const InsightAnalysis = styled.div`
   display: flex;
@@ -1230,6 +1156,7 @@ const InsightAnalysis = styled.div`
     text-align: left;
   }
 `;
+
 
 const ViewInfo = styled.div`
   display: flex;
@@ -1317,41 +1244,6 @@ const ViewInfo = styled.div`
     }
   }
 `;
-
-// const ViewInfoNodata = styled(ViewInfo)`
-//   justify-content: center;
-//   padding: 24px 0 16px;
-
-//   > div {
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//     justify-content: center;
-//     gap: 16px;
-
-//     > div {
-//       display: flex;
-//       flex-direction: column;
-//       align-items: center;
-//       justify-content: center;
-//       gap: 20px;
-//       line-height: 1.5;
-//       color: ${palette.gray500};
-
-//       span {
-//         font-size: 0.875rem;
-//         font-weight: 300;
-//         line-height: 1.5;
-//         color: ${palette.primary};
-//         padding: 6px 10px;
-//         border-radius: 6px;
-//         border: 1px solid ${palette.primary};
-//         background-color: #e9f1ff;
-//         cursor: pointer;
-//       }
-//     }
-//   }
-// `;
 
 const ButtonGroup = styled.div`
   display: flex;
