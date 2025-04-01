@@ -32,6 +32,7 @@ import {
   RangeSlider,
   Title,
   ListBoxGroup,
+  BoxWrap
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
   IS_LOGGED_IN,
@@ -63,6 +64,7 @@ import {
   createToolOnServer,
   updateToolOnServer,
   InterviewXPsstMultimodalRequest,
+  InterviewXPsstAnalysisRequest
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
@@ -123,6 +125,13 @@ const PagePsstReport = () => {
   const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useState(
     []
   );
+
+  const [showButtons, setShowButtons] = useState(true);
+  const [showFileUpload, setShowFileUpload] = useState(true);
+  const [psstAnalysisResult, setPsstAnalysisResult] = useState([]);
+  const [psstRepor, setPsstReport] = useState([]);
+  // 초기 상태를 빈 배열로 설정
+  const [analysisResults, setAnalysisResults] = useState([]);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -269,12 +278,21 @@ const PagePsstReport = () => {
 
   const handleSubmitBusinessInfo = async () => {
     setIsLoading(true);
+    handleNextStep(1);
     try {
       const timeStamp = new Date().getTime();
 
+      const business = {
+        businessModel: project.businessModel,
+        projectAnalysis: project.projectAnalysis,
+        projectDescription: project.projectDescription,
+        projectTitle: project.projectTitle,
+        targetCountry: project.targetCountry,
+      }
+
       // 비즈니스 데이터 추가
       const Data = {
-        business: businessDescription,
+        business: business,
         tool_id: "file_" + timeStamp,
         files: uploadedFiles,
       };
@@ -282,7 +300,7 @@ const PagePsstReport = () => {
       setDesignAnalysisFileId(["file_" + timeStamp]);
 
       // API 요청
-      const response = await InterviewXPsstMultimodalRequest(Data, isLoggedIn);
+      const firstResponse = await InterviewXPsstMultimodalRequest(Data, isLoggedIn);
       // if (
       //   !response?.response.project_analysis_multimodal ||
       //   response.response.design_emotion_analysis.length === 0
@@ -291,7 +309,7 @@ const PagePsstReport = () => {
       //   return;
       // }
 
-      setProjectAnalysisMultimodal(response.response.psst_index_multimodal);
+      setProjectAnalysisMultimodal(firstResponse.response.psst_index_multimodal);
 
       const responseToolId = await createToolOnServer(
         {
@@ -305,13 +323,31 @@ const PagePsstReport = () => {
       setToolSteps(1);
 
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
-      setDesignAnalysisEmotionAnalysis(
-        response.response.design_emotion_analysis
-      );
-      setDesignAnalysisBusinessInfo(businessDescription);
-      setDesignAnalysisBusinessTitle(businessDescriptionTitle);
+ 
+      setDesignAnalysisBusinessInfo(business);
+      // setDesignAnalysisBusinessTitle(businessDescriptionTitle);
       // setDesignAnalysisUploadedFiles(uploadedFiles);
       setFileNames(uploadedFiles.map((file) => file.name));
+
+      // API 호출 부분
+      for (let i = 1; i <= 8; i++) {
+        const data = {
+          analysis_index: i,
+          business: business,
+          report_index: firstResponse.response.psst_index_multimodal,
+          type: "ix_psst_analysis",
+        }
+
+        const response = await InterviewXPsstAnalysisRequest(data, isLoggedIn); 
+        console.log(`Analysis ${i} response:`, response);
+        
+        // 각 응답이 올 때마다 바로 상태 업데이트
+        setAnalysisResults(prev => [...prev, response.response.psst_analysis]);
+      }
+
+      // 모든 응답이 수집된 후 한 번에 상태 업데이트
+      setPsstAnalysisResult(analysisResults);
+      console.log(psstAnalysisResult);
 
       await updateToolOnServer(
         responseToolId,
@@ -351,115 +387,77 @@ const PagePsstReport = () => {
   };
 
   const handleSubmitPersonas = async () => {
-    handleNextStep(2);
+    handleNextStep(1);
     setToolSteps(2);
     try {
-      const selectedPersonaData = designAnalysisEmotionAnalysis.filter(
-        (persona, index) => selectedPersonas.includes(index)
-      );
-      setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
+      // const selectedPersonaData = designAnalysisEmotionAnalysis.filter(
+      //   (persona, index) => selectedPersonas.includes(index)
+      // );
+      // setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
 
-      await updateToolOnServer(
-        toolId,
-        {
-          completedStep: 2,
-          designSelectedPersona: selectedPersonaData,
-        },
-        isLoggedIn
-      );
+      // await updateToolOnServer(
+      //   toolId,
+      //   {
+      //     completedStep: 2,
+      //     designSelectedPersona: selectedPersonaData,
+      //   },
+      //   isLoggedIn
+      // );
       setIsLoadingReport(true);
 
       // 선택된 페르소나가 하나일 경우에만 시나리오 요청
-      if (selectedPersonaData.length > 0) {
-        const persona = selectedPersonaData[0]; // 첫 번째 페르소나 선택
         try {
           const apiRequestData = {
-            business: designAnalysisBusinessInfo,
-            design_emotion_selected_field: persona.name,
-            design_emotion_analysis: persona,
+           type:"ix_psst_report",
+           business : {
+            businessModel: project.businessModel,
+            projectAnalysis: project.projectAnalysis,
+            projectDescription: project.projectDescription,
+            projectTitle: project.projectTitle,
+            targetCountry: project.targetCountry,
+          },
+           report_index: psstAnalysisResult
           };
 
-          let response = await InterviewXDesignEmotionTargetRequest(
+          let response = await InterviewXPsstReportRequest(
             apiRequestData,
             isLoggedIn
           );
 
-          const maxAttempts = 10;
-          let attempt = 0;
+          console.log(response);
 
-          while (
-            !response?.response?.design_emotion_target ||
-            typeof response.response.design_emotion_target !== "object" ||
-            Object.keys(response?.response?.design_emotion_target).length ===
-              0 ||
-            !response?.response?.design_emotion_target?.hasOwnProperty(
-              "target_emotion"
-            ) ||
-            !response?.response?.design_emotion_target?.hasOwnProperty(
-              "design_perspectives"
-            ) ||
-            !response?.response?.design_emotion_target?.hasOwnProperty(
-              "designer_guidelines"
-            )
-          ) {
-            if (attempt >= maxAttempts) {
-              setShowPopupError(true);
-              return;
-            }
+          // const maxAttempts = 10;
+          // let attempt = 0;
 
-            response = await InterviewXDesignEmotionTargetRequest(
-              apiRequestData,
-              isLoggedIn
-            );
+          // while (
+          //   !response?.response?.design_emotion_target ||
+          //   typeof response.response.design_emotion_target !== "object" ||
+          //   Object.keys(response?.response?.design_emotion_target).length ===
+          //     0 ||
+          //   !response?.response?.design_emotion_target?.hasOwnProperty(
+          //     "target_emotion"
+          //   ) ||
+          //   !response?.response?.design_emotion_target?.hasOwnProperty(
+          //     "design_perspectives"
+          //   ) ||
+          //   !response?.response?.design_emotion_target?.hasOwnProperty(
+          //     "designer_guidelines"
+          //   )
+          // ) {
+          //   if (attempt >= maxAttempts) {
+          //     setShowPopupError(true);
+          //     return;
+          //   }
 
-            attempt++;
-          }
+          //   response = await InterviewXDesignEmotionTargetRequest(
+          //     apiRequestData,
+          //     isLoggedIn
+          //   );
 
-          setDesignAnalysisEmotionTarget(
-            response.response.design_emotion_target
-          );
+          //   attempt++;
+          // }
 
-          const oceanData = {
-            tool_id: designAnalysisFileId[0],
-            business: designAnalysisBusinessInfo,
-            design_emotion_selected_field: persona.name,
-            design_emotion_target: response?.response?.design_emotion_target,
-          };
-
-          attempt = 0;
-          let oceanResponse = null;
-
-          while (
-            !oceanResponse ||
-            typeof oceanResponse.response.design_emotion_scale !== "object" ||
-            Object.keys(oceanResponse?.response?.design_emotion_scale)
-              .length === 0 ||
-            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
-              "conclusion"
-            ) ||
-            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
-              "evaluation_analysis"
-            ) ||
-            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
-              "sd_scale_analysis"
-            )
-          ) {
-            if (attempt >= maxAttempts) {
-              setShowPopupError(true);
-              return;
-            }
-
-            oceanResponse = await InterviewXDesignEmotionScaleRequest(
-              oceanData,
-              isLoggedIn
-            );
-
-            attempt++;
-          }
-          setDesignAnalysisEmotionScale(
-            oceanResponse.response.design_emotion_scale
-          );
-
+    
           await updateToolOnServer(
             toolId,
             {
@@ -471,8 +469,6 @@ const PagePsstReport = () => {
             isLoggedIn
           );
         } catch (error) {}
-      }
-
       // setToolStep(3);
     } catch (error) {
       setShowPopupError(true);
@@ -624,6 +620,14 @@ const PagePsstReport = () => {
     };
   }, [navigate]);
 
+  const dummyData = [
+    { name: "PSST 계획서", reason: "창업 아이템의 문제 정의부터 해결 방안, 실행 전략, 성장 계획까지 정부지원사업에 최적화" },
+    { name: "FAST 기획서", reason: "제한된 시간동안 팀을 이루어 문제 해결을 위한 기술 기반 솔루션을 실제로 구현하는 대회" },
+    { name: "IDEA PITCH 제안서", reason: "창업 아이디어의 시장성, 차별성, 실행력을 설득력 있게 구성하는 경진대회 전용 툴" },
+  ];
+
+
+
   return (
     <>
       <DropzoneStyles />
@@ -695,7 +699,7 @@ const PagePsstReport = () => {
                   </div>
 
                   <div className="content">
-                    <TabContent5Item required>
+                  <TabContent5Item required>
                       <div className="title">
                         <Body1 color="gray700">파일 업로드 (20MB)</Body1>
                       </div>
@@ -785,66 +789,36 @@ const PagePsstReport = () => {
                       />
                     </TabContent5Item>
                   </div>
-                  {isLoading ? (
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                        minHeight: "200px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <AtomPersonaLoader message="로딩 중..." />
-                    </div>
-                  ) : toolSteps >= 1 ? (
-                    // 로딩 후 보여질 컴포넌트
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "10px",
-                      }}
-                    >
-                      <h2 style={{ margin: "0", textAlign: "left" }}>
-                        사업계획서 목차 데이터
-                      </h2>
-                      <div
-                        style={{
-                          whiteSpace: "pre-wrap",
-                          wordWrap: "break-word",
-                        }}
-                      >
-                        {projectAnalysisMultimodal.map((item, index) => (
-                          <div key={index}>
-                            <Markdown>{item}</Markdown>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <Button
-                      Other
-                      Primary
-                      Fill
-                      Round
-                      onClick={handleSubmitBusinessInfo}
-                      disabled={!fileNames.length || toolSteps >= 1}
-                    >
-                      다음
-                    </Button>
-                  )}
-
-                  {/* <Button
-                      Other
-                      Primary
-                      Fill
-                      Round
-                      onClick={handleSubmitBusinessInfo}
-                      disabled={!isRequiredFieldsFilled() || toolSteps >= 1}
-                    >
-                      다음
-                    </Button> */}
+                 
+                <div className="content">
+                  <CardGroupWrap column style={{ marginBottom: "140px" }}>
+                  {dummyData.map((item, index) => (
+                      <MoleculeDesignItem
+                        style={{ marginBottom: "10px" }}
+                        FlexStart
+                        key={index}
+                        id={index}
+                        title={item.name}
+                        subtitle={item.reason}
+                        isSelected={selectedPersonas.includes(index)}
+                        onSelect={() => handleCheckboxChange(index)}
+                        disabled={toolSteps >= 1 ? true : false}
+                      />
+                    ))}
+                    </CardGroupWrap>
+                </div>
+            
+                          <Button
+                            Other
+                            Primary
+                            Fill
+                            Round
+                            onClick={handleSubmitBusinessInfo}
+                            disabled={  toolSteps >= 1}
+                          >
+                            다음
+                          </Button>
+       
                 </>
               </TabContent5>
             )}
@@ -874,30 +848,80 @@ const PagePsstReport = () => {
                     </div>
 
                     <div className="content">
-                      <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                        {designAnalysisEmotionAnalysis.length > 0 ? (
-                          designAnalysisEmotionAnalysis.map(
-                            (persona, index) => {
-                              return (
-                                <MoleculeDesignItem
-                                  FlexStart
-                                  key={index}
-                                  id={index}
-                                  title={persona.name}
-                                  subtitle={persona.reason}
-                                  isSelected={selectedPersonas.includes(index)}
-                                  onSelect={() => handleCheckboxChange(index)}
-                                  disabled={toolSteps >= 2 ? true : false}
-                                />
-                              );
-                            }
-                          )
-                        ) : (
-                          <Body3 color="gray700">데이터가 없습니다.</Body3>
-                        )}
-                      </CardGroupWrap>
 
-                      <BottomBar W100>
+                    <ListBoxGroup>
+                      <li>
+                        <Body2 color="gray500">리포트 방식</Body2>
+                        <Body2 color="gray800">
+                        PSST 계획서
+                        </Body2>
+                      </li>
+      
+                    <li>
+                      <Body2 color="gray500">설명</Body2>
+                        <Body2 color="gray800">
+                        창업 아이템의 문제 정의부터 해결 방안, 실행 전략, 성장 계획까지 정부지원사업에 최적화
+                        </Body2>
+
+                    </li>
+                  
+                  </ListBoxGroup>
+
+                   {/* 추가된 내용 */}
+                      <div style={{ marginTop: '20px' }}>
+                        {analysisResults.map((analysis, index) => (
+                          <div key={index} style={{
+                            border: '1px solid #E5E5E5',
+                            borderRadius: '8px',
+                            padding: '20px',
+                            marginBottom: '16px'
+                          }}>
+                            {/* 제목 섹션 */}
+                            <div>
+                              <Body2 color="gray500">{analysis.title}</Body2>
+                            </div>
+
+                            {/* 내용 섹션들 */}
+                            {analysis.contents?.map((content, contentIndex) => (
+                              <div key={contentIndex}>
+                                {/* 첫 번째 content가 아닐 경우에만 구분선 표시 */}
+                                {contentIndex > 0 && (
+                                  <div style={{ 
+                                    height: '1px', 
+                                    background: '#E5E5E5', 
+                                    margin: '20px 0' 
+                                  }} />
+                                )}
+
+                                <div>
+                                  <Body2 color="gray500">{content.sub_title}</Body2>
+                                  <Body2 color="gray800" style={{ marginTop: '8px' }}>
+                                    {content.key_message}
+                                  </Body2>
+                                  <Body2 color="gray800" style={{ marginTop: '8px' }}>
+                                    {content.detail_order}
+                                  </Body2>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+
+
+                      <Button
+                            Other
+                            Primary
+                            Fill
+                            Round
+                            onClick={handleSubmitPersonas}
+                            // disabled={ selectedPersonas.length === 0 || toolSteps >= 1}
+                          >
+                            다음
+                          </Button>
+
+
+                      {/* <BottomBar W100>
                         <Body2
                           color={
                             selectedPersonas.length === 0
@@ -924,7 +948,7 @@ const PagePsstReport = () => {
                             color={palette.white}
                           />
                         </Button>
-                      </BottomBar>
+                      </BottomBar> */}
                     </div>
                   </>
                 )}
@@ -973,9 +997,6 @@ const PagePsstReport = () => {
                             </TabButtonType4>
                           </TabWrapType4>
                         </div>
-                        {/* <Button Primary onClick={() => setShowPopupSave(true)}>
-                          리포트 저장하기
-                        </Button> */}
                       </div>
                     </InsightAnalysis>
 
@@ -1073,15 +1094,6 @@ const PagePsstReport = () => {
                         </OCEANRangeWrap>
                       </InsightAnalysis>
                     )}
-
-                    {/* <Button
-                      Small
-                      Primary
-                      onClick={() => setShowPopupSave(true)}
-                      style={{ whiteSpace: "nowrap" }}
-                    >
-                      리포트 저장하기
-                    </Button> */}
                   </>
                 )}
               </TabContent5>
@@ -1255,4 +1267,21 @@ const ButtonGroup = styled.div`
 
 const EditButtonGroup = styled(ButtonGroup)`
   justify-content: end;
+`;
+
+
+const ButtonWrap = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  > div {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
 `;
