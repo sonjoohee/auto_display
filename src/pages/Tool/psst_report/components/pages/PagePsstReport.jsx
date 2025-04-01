@@ -7,7 +7,8 @@ import { palette } from "../../../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
-import { Button , IconButton } from "../../../../../assets/styles/ButtonStyle";
+import { Button, IconButton } from "../../../../../assets/styles/ButtonStyle";
+import Markdown from "markdown-to-jsx";
 import {
   FormBox,
   CustomTextarea,
@@ -30,7 +31,7 @@ import {
   OCEANRangeWrap,
   RangeSlider,
   Title,
-  ListBoxGroup
+  ListBoxGroup,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
   IS_LOGGED_IN,
@@ -71,15 +72,16 @@ import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
 const PagePsstReport = () => {
-
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
-  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
-  const [projectSaas, ] = useAtom(PROJECT_SAAS);
-  const [, setDesignAnalysisBusinessTitle] = useAtom(DESIGN_ANALYSIS_BUSINESS_TITLE);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [projectSaas] = useAtom(PROJECT_SAAS);
+  const [, setDesignAnalysisBusinessTitle] = useAtom(
+    DESIGN_ANALYSIS_BUSINESS_TITLE
+  );
   const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(
     DESIGN_ANALYSIS_BUSINESS_INFO
   );
@@ -95,7 +97,7 @@ const PagePsstReport = () => {
   const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(
     DESIGN_ANALYSIS_EMOTION_SCALE
   );
-  const [designAnalysisFileNames, ] = useAtom(DESIGN_ANALYSIS_FILE_NAMES);
+  const [designAnalysisFileNames] = useAtom(DESIGN_ANALYSIS_FILE_NAMES);
   const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
     DESIGN_ANALYSIS_FILE_ID
   );
@@ -111,14 +113,16 @@ const PagePsstReport = () => {
   const [activeDesignTab, setActiveDesignTab] = useState("emotion");
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   const [businessDescriptionTitle, setBusinessDescriptionTitle] = useState("");
-  const [state, ] = useState({
+  const [state] = useState({
     isExpanded: false,
     showQuestions: false,
   });
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [isEditingBusiness, setIsEditingBusiness] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
-  const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useState([]);
+  const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useState(
+    []
+  );
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -131,29 +135,28 @@ const PagePsstReport = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
-   
-    if (designAnalysisBusinessInfo.length === 0) {
-      const projectAnalysis =
-        (project?.projectAnalysis.business_analysis
-          ? project?.projectAnalysis.business_analysis
-          : "") +
-        (project?.projectAnalysis.business_analysis &&
-        project?.projectAnalysis.file_analysis
-          ? "\n"
-          : "") +
-        (project?.projectAnalysis.file_analysis
-          ? project?.projectAnalysis.file_analysis
-          : "");
-      const projectTitle = project?.projectTitle;
 
-      if (project) {
-        setBusinessDescriptionTitle(projectTitle);
-        setBusinessDescription(projectAnalysis);
+      if (designAnalysisBusinessInfo.length === 0) {
+        const projectAnalysis =
+          (project?.projectAnalysis.business_analysis
+            ? project?.projectAnalysis.business_analysis
+            : "") +
+          (project?.projectAnalysis.business_analysis &&
+          project?.projectAnalysis.file_analysis
+            ? "\n"
+            : "") +
+          (project?.projectAnalysis.file_analysis
+            ? project?.projectAnalysis.file_analysis
+            : "");
+        const projectTitle = project?.projectTitle;
+
+        if (project) {
+          setBusinessDescriptionTitle(projectTitle);
+          setBusinessDescription(projectAnalysis);
+        }
       }
-    }
-   
+
       if (toolLoading) {
-  
         const projectTitle = project?.projectTitle;
         // 비즈니스 정보 설정 (Step 1)
         if (project) {
@@ -276,15 +279,10 @@ const PagePsstReport = () => {
         files: uploadedFiles,
       };
 
-
-     
       setDesignAnalysisFileId(["file_" + timeStamp]);
 
       // API 요청
-      const response = await InterviewXPsstMultimodalRequest(
-        Data,
-        isLoggedIn
-      );
+      const response = await InterviewXPsstMultimodalRequest(Data, isLoggedIn);
       // if (
       //   !response?.response.project_analysis_multimodal ||
       //   response.response.design_emotion_analysis.length === 0
@@ -294,8 +292,6 @@ const PagePsstReport = () => {
       // }
 
       setProjectAnalysisMultimodal(response.response.psst_index_multimodal);
-
-
 
       const responseToolId = await createToolOnServer(
         {
@@ -544,8 +540,6 @@ const PagePsstReport = () => {
     }, 0);
   };
 
-
-
   const handleEditBusinessClick = () => {
     setIsEditingBusiness(true);
   };
@@ -555,17 +549,17 @@ const PagePsstReport = () => {
   };
 
   const handleUndoBusinessClick = () => {
-    const originalText = (project?.projectAnalysis.business_analysis
-      ? project?.projectAnalysis.business_analysis
-    : "") +
-  (project?.projectAnalysis.business_analysis &&
-  project?.projectAnalysis.file_analysis
-    ? "\n"
-    : "") +
-  (project?.projectAnalysis.file_analysis
-    ? project?.projectAnalysis.file_analysis
-    : "");
-
+    const originalText =
+      (project?.projectAnalysis.business_analysis
+        ? project?.projectAnalysis.business_analysis
+        : "") +
+      (project?.projectAnalysis.business_analysis &&
+      project?.projectAnalysis.file_analysis
+        ? "\n"
+        : "") +
+      (project?.projectAnalysis.file_analysis
+        ? project?.projectAnalysis.file_analysis
+        : "");
 
     setBusinessDescription(originalText);
   };
@@ -658,7 +652,9 @@ const PagePsstReport = () => {
                 Num3
                 isActive={activeTab >= 2}
                 onClick={() => completedSteps.includes(1) && setActiveTab(2)}
-                disabled={!completedSteps.includes(1) ||  isLoading || isLoadingReport }
+                disabled={
+                  !completedSteps.includes(1) || isLoading || isLoadingReport
+                }
               >
                 <span>02</span>
                 <div className="text">
@@ -674,7 +670,9 @@ const PagePsstReport = () => {
                 Num3
                 isActive={activeTab >= 3}
                 onClick={() => completedSteps.includes(2) && setActiveTab(3)}
-                disabled={!completedSteps.includes(2) ||  isLoading || isLoadingReport }
+                disabled={
+                  !completedSteps.includes(2) || isLoading || isLoadingReport
+                }
               >
                 <span>03</span>
                 <div className="text">
@@ -690,146 +688,154 @@ const PagePsstReport = () => {
 
             {activeTab === 1 && (
               <TabContent5>
+                <>
+                  <div className="title">
+                    <H3 color="gray800">File Upload</H3>
+                    <Body3 color="gray800">파일 업로드</Body3>
+                  </div>
 
-                  <>
-                    <div className="title">
-                      <H3 color="gray800">File Upload</H3>
-                      <Body3 color="gray800">
-                        파일 업로드
-                      </Body3>
-                    </div>
-
-                    <div className="content">
-                     
-                      <TabContent5Item required>
-                        <div className="title">
-                          <Body1 color="gray700">파일 업로드 (20MB)</Body1>
-                        </div>
-                        <Dropzone
-                          onChangeStatus={handleChangeStatus}
-                          maxFiles={1}
-                          multiple={false}
-                          canRemove={false}
-                          canRestart={false}
-                          disabled={toolSteps >= 1} 
-                          accept="application/pdf"
-                          maxSizeBytes={20 * 1024 * 1024}
-                          inputWithFilesContent={
-                            <>
-                              <img src={images.ImagePrimary} alt="" />
-                              {fileNames.length === 0 && (
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    gap: "12px",
-                                  }}
-                                >
-                                  <div>
-                                    <Body2 color="gray800">
-                                      업로드하려는 파일을 드래그하여 놓아주세요
-                                    </Body2>
-                                    <Sub3 color="gray500">
-                                      jpg, png, PDF 파일만 업로드가 가능합니다
-                                      (20MB 이하)
-                                    </Sub3>
-                                  </div>
-                                  <div className="browse-button">
-                                    파일 찾아보기
-                                  </div>
-                                </div>
-                              )}
-                              {fileNames.length > 0 && (
+                  <div className="content">
+                    <TabContent5Item required>
+                      <div className="title">
+                        <Body1 color="gray700">파일 업로드 (20MB)</Body1>
+                      </div>
+                      <Dropzone
+                        onChangeStatus={handleChangeStatus}
+                        maxFiles={1}
+                        multiple={false}
+                        canRemove={false}
+                        canRestart={false}
+                        disabled={toolSteps >= 1}
+                        accept="application/pdf"
+                        maxSizeBytes={20 * 1024 * 1024}
+                        inputWithFilesContent={
+                          <>
+                            <img src={images.ImagePrimary} alt="" />
+                            {fileNames.length === 0 && (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "center",
+                                  gap: "12px",
+                                }}
+                              >
                                 <div>
-                                  {fileNames.map((name, index) => (
-                                   <Body2 key={index} color="gray700">
-                                      {name}
-                                    </Body2>
-                                  ))}
+                                  <Body2 color="gray800">
+                                    업로드하려는 파일을 드래그하여 놓아주세요
+                                  </Body2>
+                                  <Sub3 color="gray500">
+                                    jpg, png, PDF 파일만 업로드가 가능합니다
+                                    (20MB 이하)
+                                  </Sub3>
                                 </div>
-                              )}
-                            </>
-                          }
-                          inputContent={
-                            <>
-                              <img src={images.ImagePrimary} alt="" />
-                              {fileNames.length === 0 && (
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    gap: "12px",
-                                  }}
-                                >
-                                  <div>
-                                    <Body2 color="gray800">
-                                      업로드하려는 파일을 드래그하여 놓아주세요
-                                    </Body2>
-                                    <Sub3 color="gray500">
-                                      PDF 파일만 업로드가 가능합니다
-                                      (20MB 이하)
-                                    </Sub3>
-                                  </div>
-                                  <div className="browse-button">
-                                    파일 찾아보기
-                                  </div>
+                                <div className="browse-button">
+                                  파일 찾아보기
                                 </div>
-                              )}
-                              {fileNames.length > 0 && (
+                              </div>
+                            )}
+                            {fileNames.length > 0 && (
+                              <div>
+                                {fileNames.map((name, index) => (
+                                  <Body2 key={index} color="gray700">
+                                    {name}
+                                  </Body2>
+                                ))}
+                              </div>
+                            )}
+                          </>
+                        }
+                        inputContent={
+                          <>
+                            <img src={images.ImagePrimary} alt="" />
+                            {fileNames.length === 0 && (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "center",
+                                  gap: "12px",
+                                }}
+                              >
                                 <div>
-                                  {fileNames.map((name, index) => (
-                                      <Body2 key={index} color="gray700">
-                                      {name}
-                                    </Body2>
-                                  ))}
+                                  <Body2 color="gray800">
+                                    업로드하려는 파일을 드래그하여 놓아주세요
+                                  </Body2>
+                                  <Sub3 color="gray500">
+                                    PDF 파일만 업로드가 가능합니다 (20MB 이하)
+                                  </Sub3>
                                 </div>
-                              )}
-                            </>
-                          }
-                          styles={StyledDropzone}
-                        />
-                      </TabContent5Item>
+                                <div className="browse-button">
+                                  파일 찾아보기
+                                </div>
+                              </div>
+                            )}
+                            {fileNames.length > 0 && (
+                              <div>
+                                {fileNames.map((name, index) => (
+                                  <Body2 key={index} color="gray700">
+                                    {name}
+                                  </Body2>
+                                ))}
+                              </div>
+                            )}
+                          </>
+                        }
+                        styles={StyledDropzone}
+                      />
+                    </TabContent5Item>
+                  </div>
+                  {isLoading ? (
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        minHeight: "200px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <AtomPersonaLoader message="로딩 중..." />
                     </div>
-                    {isLoading ? (
+                  ) : toolSteps >= 1 ? (
+                    // 로딩 후 보여질 컴포넌트
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "10px",
+                      }}
+                    >
+                      <h2 style={{ margin: "0", textAlign: "left" }}>
+                        사업계획서 목차 데이터
+                      </h2>
                       <div
                         style={{
-                          width: "100%",
-                          display: "flex",
-                          justifyContent: "center",
-                          minHeight: "200px",
-                          alignItems: "center",
+                          whiteSpace: "pre-wrap",
+                          wordWrap: "break-word",
                         }}
                       >
-                        <AtomPersonaLoader message="로딩 중..." />
-                      </div>
-                    ) : toolSteps >= 1 ? (
-                      // 로딩 후 보여질 컴포넌트
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                      <h2 style={{ margin: '0', textAlign: 'left' }}>프로젝트 분석 데이터</h2>
-                      <div style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
                         {projectAnalysisMultimodal.map((item, index) => (
                           <div key={index}>
-                            <pre>{item}</pre> {/* 마크다운 형식으로 출력 */}
+                            <Markdown>{item}</Markdown>
                           </div>
                         ))}
                       </div>
                     </div>
-                    ) : (
-                      <Button
-                        Other
-                        Primary
-                        Fill
-                        Round
-                        onClick={handleSubmitBusinessInfo}
-                        disabled={!fileNames.length || toolSteps >= 1}
-                      >
-                        다음
-                      </Button>
-                    )}
+                  ) : (
+                    <Button
+                      Other
+                      Primary
+                      Fill
+                      Round
+                      onClick={handleSubmitBusinessInfo}
+                      disabled={!fileNames.length || toolSteps >= 1}
+                    >
+                      다음
+                    </Button>
+                  )}
 
-                    {/* <Button
+                  {/* <Button
                       Other
                       Primary
                       Fill
@@ -839,8 +845,7 @@ const PagePsstReport = () => {
                     >
                       다음
                     </Button> */}
-                  </>
-                
+                </>
               </TabContent5>
             )}
 
@@ -1135,7 +1140,6 @@ const DesignAnalysisWrap = styled.div`
   margin-top: 60px;
 `;
 
-
 const InsightAnalysis = styled.div`
   display: flex;
   flex-direction: column;
@@ -1156,7 +1160,6 @@ const InsightAnalysis = styled.div`
     text-align: left;
   }
 `;
-
 
 const ViewInfo = styled.div`
   display: flex;
