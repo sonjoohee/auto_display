@@ -48,6 +48,7 @@ import {
   PSST_FILE_NAMES,
   PSST_REPORT,
   PSST_SELECTED_TEMPLETE,
+  PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION,
 } from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import {
@@ -114,6 +115,9 @@ const PagePsstReport = () => {
   );
   const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL
+  );
+  const [projectAnalysisMultimodalDescription, setProjectAnalysisMultimodalDescription] = useAtom(
+    PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION
   );
   const [analysisResults, setAnalysisResults] = useAtom(PSST_ANALYSIS_RESULTS);
   const [fileNames, setFileNames] = useAtom(PSST_FILE_NAMES);
@@ -290,6 +294,7 @@ const PagePsstReport = () => {
         setProjectAnalysisMultimodal(
           firstResponse.response.psst_index_multimodal
         );
+        setProjectAnalysisMultimodalDescription(firstResponse.response.psst_index_multimodal_description);
 
         setToolSteps(1);
         setFileNames(uploadedFiles.map((file) => file.name));
@@ -301,6 +306,8 @@ const PagePsstReport = () => {
             completedStep: 1,
             projectAnalysisMultimodal:
               firstResponse.response.psst_index_multimodal,
+            projectAnalysisMultimodalDescription:
+              firstResponse.response.psst_index_multimodal_description,
             business: business,
             fileName: uploadedFiles.map((file) => ({
               id: "file_" + timeStamp,
@@ -805,10 +812,8 @@ const PagePsstReport = () => {
                               : "리포트 방식"}
                           </Body2>
                           <Body2 color="gray800">
-                            {uploadedFiles.length > 0
-                              ? uploadedFiles
-                                  .map((file) => file.name)
-                                  .join(", ")
+                            {fileNames.length > 0
+                              ? fileNames[0].name
                               : selectedTemplete.length > 0 &&
                                 Templete[selectedTemplete[0]].name}
                           </Body2>
@@ -821,7 +826,7 @@ const PagePsstReport = () => {
                             dangerouslySetInnerHTML={{
                               __html:
                                 uploadedFiles.length > 0
-                                  ? "창업 아이템의 문제 정의부터 해결 방안, 실행 전략, 성장 계획까지 정부지원사업에 최적화"
+                                  ? projectAnalysisMultimodalDescription
                                   : selectedTemplete.length > 0 &&
                                     Templete[selectedTemplete[0]].reason,
                             }}

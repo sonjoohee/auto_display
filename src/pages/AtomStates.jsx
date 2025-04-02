@@ -570,6 +570,7 @@ export const PSST_ANALYSIS_RESULTS = atom([]);
 export const PSST_FILE_NAMES = atom([]);
 export const PSST_REPORT = atom("");
 export const PSST_SELECTED_TEMPLETE = atom([]);
+export const PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION = atom("");
 
 //!saas
 // 프로젝트 생성 페이지
