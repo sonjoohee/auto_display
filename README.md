@@ -78,3 +78,6 @@ npm install react-dropzone-uploader
 \*\* MarkDown 형식 출력
 npm install react-markdown
 yarn add react-markdown
+
+npm install github-markdown-css
+npm install markdown-to-jsx
