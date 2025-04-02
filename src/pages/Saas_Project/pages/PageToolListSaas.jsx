@@ -131,6 +131,12 @@ import {
   EXPERT_BUTTON_STATE,
   ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITION_BUTTON_STATE,
+  PSST_BUSINESS_INFO,
+  PROJECT_ANALYSIS_MULTIMODAL,
+  PSST_ANALYSIS_RESULTS,
+  PSST_FILE_NAMES,
+  PSST_REPORT,
+  PSST_SELECTED_TEMPLETE,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -382,6 +388,13 @@ const PageToolListSaas = () => {
     CUSTOMER_ADDITION_BUTTON_STATE
   );
 
+  const [, setPsstBusinessInfo] = useAtom(PSST_BUSINESS_INFO);
+  const [, setProjectAnalysisMultimodal] = useAtom(PROJECT_ANALYSIS_MULTIMODAL);
+  const [, setPsstAnalysisResults] = useAtom(PSST_ANALYSIS_RESULTS);
+  const [, setPsstFileNames] = useAtom(PSST_FILE_NAMES);
+  const [, setPsstReport] = useAtom(PSST_REPORT);
+  const [, setPsstSelectedTemplte] = useAtom(PSST_SELECTED_TEMPLETE);
+
   const [checkRefresh, setCheckRefresh] = useState(false);
   const [, setShowHint] = useState(true);
   const [, setIsPopupRegex] = useState(false);
@@ -535,6 +548,14 @@ const PageToolListSaas = () => {
     setDesignAnalysisEmotionTarget({});
     setDesignAnalysisEmotionScale([]);
     setDesignAnalysisFileNames([]);
+
+    setPsstBusinessInfo({});
+    setProjectAnalysisMultimodal("");
+    setPsstAnalysisResults([]);
+    setPsstFileNames([]);
+    setPsstReport("");
+    setPsstSelectedTemplte([]);
+
   }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   useEffect(() => {

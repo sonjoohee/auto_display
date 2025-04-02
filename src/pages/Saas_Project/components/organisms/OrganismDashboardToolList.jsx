@@ -143,7 +143,8 @@ import {
   PSST_BUSINESS_INFO,
   PROJECT_ANALYSIS_MULTIMODAL,
   PSST_ANALYSIS_RESULTS,
-  PSST_FILE_NAMES
+  PSST_FILE_NAMES,
+  PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -349,7 +350,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setPsstReport] = useAtom(PSST_REPORT);
   const [, setPsstSelectedTemplete] = useAtom(PSST_SELECTED_TEMPLETE);
   const [, setPsstFileNames] = useAtom(PSST_FILE_NAMES);
- 
+  const [, setProjectAnalysisMultimodalDescription] = useAtom(
+    PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION
+  );
 
   const saveConversation = (data) => {};
 
@@ -861,12 +864,18 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id)
         setPsstBusinessInfo(chatData?.business || "");
-        setPsstFileNames(chatData?.fileName || []);
+        setPsstFileNames(
+          chatData?.fileName ? 
+          (Array.isArray(chatData.fileName) ? 
+            chatData.fileName.map(file => typeof file === 'object' ? file.name : file) : 
+            [typeof chatData.fileName === 'object' ? chatData.fileName.name : chatData.fileName]
+          ) : []
+        );
         setProjectAnalysisMultimodal(chatData?.projectAnalysisMultimodal|| "");
         setPsstAnalysisResults(chatData?.analysisResults || []);
         setPsstReport(chatData?.psstReport || "");
         setPsstSelectedTemplete(chatData?.selectedTemplete || []);
-
+        setProjectAnalysisMultimodalDescription(chatData?.projectAnalysisMultimodalDescription || "");
 
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);
