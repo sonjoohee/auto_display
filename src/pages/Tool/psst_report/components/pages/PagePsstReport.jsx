@@ -39,12 +39,6 @@ import {
   TOOL_ID,
   TOOL_STEP,
   TOOL_LOADING,
-  DESIGN_ANALYSIS_BUSINESS_INFO,
-  DESIGN_ANALYSIS_EMOTION_ANALYSIS,
-  DESIGN_ANALYSIS_SELECTED_PERSONA,
-  DESIGN_ANALYSIS_EMOTION_TARGET,
-  DESIGN_ANALYSIS_EMOTION_SCALE,
-  DESIGN_ANALYSIS_FILE_NAMES,
   DESIGN_ANALYSIS_FILE_ID,
   PROJECT_SAAS,
   DESIGN_ANALYSIS_BUSINESS_TITLE,
@@ -65,8 +59,6 @@ import {
   Body3,
 } from "../../../../../assets/styles/Typography";
 import {
-  InterviewXDesignEmotionTargetRequest,
-  InterviewXDesignEmotionScaleRequest,
   createToolOnServer,
   updateToolOnServer,
   InterviewXPsstMultimodalRequest,
@@ -87,6 +79,26 @@ const prepareMarkdown = (text) => {
   return text.replace(/\n\n/g, "\n&nbsp;\n").replace(/\n/g, "  \n");
 };
 
+const reportContents = `문제 정의 (Problem)
+            1-1. 창업 배경 및 필요성
+            1-2. 목표 시장 및 고객 분석
+            1-3. 기존 대안의 한계
+
+            해결책 (Solution)
+            2-1. 핵심 기능 및 문제 대응 방식
+            2-2. 기술·구조적 작동 원리
+            2-3. 차별성 및 경쟁 우위
+
+            실행 전략 (Strategy)
+            3-1. 수익 모델 및 가치 전환 구조
+            3-2. 시장 진입 전략 (GTM)
+            3-3. 사업 확장 및 운영 계획
+
+            팀 (Team)
+            4-1. 팀 구성 
+            4-2. 외부 협력 자원 및 네트워크
+            4-3. 운영 체계 및 실행 구조`;
+
 const PagePsstReport = () => {
   const navigate = useNavigate();
 
@@ -95,35 +107,15 @@ const PagePsstReport = () => {
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
-  const [, setDesignAnalysisBusinessTitle] = useAtom(
-    DESIGN_ANALYSIS_BUSINESS_TITLE
-  );
-  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(
-    DESIGN_ANALYSIS_BUSINESS_INFO
-  );
+  
   const [psstBusinessInfo, setPsstBusinessInfo] = useAtom(PSST_BUSINESS_INFO);
-  const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] =
-    useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS);
-  const [
-    selectedDesignAnalysisEmotionAnalysis,
-    setSelectedDesignAnalysisEmotionAnalysis,
-  ] = useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
-  const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(
-    DESIGN_ANALYSIS_EMOTION_TARGET
-  );
-  const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(
-    DESIGN_ANALYSIS_EMOTION_SCALE
-  );
-  const [designAnalysisFileNames] = useAtom(DESIGN_ANALYSIS_FILE_NAMES);
-  const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
+  const [, setDesignAnalysisFileId] = useAtom(
     DESIGN_ANALYSIS_FILE_ID
   );
   const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL
   );
-
   const [analysisResults, setAnalysisResults] = useAtom(PSST_ANALYSIS_RESULTS);
-
   const [fileNames, setFileNames] = useAtom(PSST_FILE_NAMES);
   const [psstReport, setPsstReport] = useAtom(PSST_REPORT);
   const [selectedTemplete, setSelectedTemplete] = useAtom(
@@ -132,13 +124,11 @@ const PagePsstReport = () => {
 
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
-  // const [selectedTemplete, setSelectedTemplete] = useState([]);
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  // const [fileNames, setFileNames] = useState([]);
   const [activeDesignTab, setActiveDesignTab] = useState("emotion");
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   const [businessDescriptionTitle, setBusinessDescriptionTitle] = useState("");
@@ -149,16 +139,10 @@ const PagePsstReport = () => {
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [isEditingBusiness, setIsEditingBusiness] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
-  // const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useState(
-  //   []
-  // );
 
-  const [showButtons, setShowButtons] = useState(true);
-  const [showFileUpload, setShowFileUpload] = useState(true);
-  const [psstAnalysisResult, setPsstAnalysisResult] = useState([]);
-  // const [psstReport, setPsstReport] = useState([]);
+
   // 초기 상태를 빈 배열로 설정
-  // const [analysisResults, setAnalysisResults] = useState([]);
+
   const [currentLoadingIndex, setCurrentLoadingIndex] = useState(1);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -169,24 +153,28 @@ const PagePsstReport = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  
   useEffect(() => {
     const interviewLoading = async () => {
+
       if (toolLoading) {
         // 비즈니스 정보 설정 (Step 1)
         if (psstBusinessInfo) {
-          setPsstBusinessInfo(psstBusinessInfo);
+          setPsstBusinessInfo(psstBusinessInfo ?? {});
         }
+  
         // 활성 탭 설정 (기본값 1)
-        setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
+        setActiveTab(Math.min((toolStep ?? 1)+1, 3));
         setToolSteps(toolStep ?? 1);
 
-        // 비즈니스 정보 설정 (Step 1)
         if (fileNames) {
-          setFileNames(fileNames);
-          setUploadedFiles(fileNames);
+          setFileNames(fileNames ?? []);
+          setUploadedFiles(fileNames ?? []);
         }
+        // 비즈니스 정보 설정 (Step 1)
+        
         if (projectAnalysisMultimodal) {
-          setProjectAnalysisMultimodal(projectAnalysisMultimodal);
+          setProjectAnalysisMultimodal(projectAnalysisMultimodal ?? "");
         }
 
         // 완료된 단계 설정
@@ -194,20 +182,28 @@ const PagePsstReport = () => {
         for (let i = 1; i <= (toolStep ?? 1); i++) {
           completedStepsArray.push(i);
         }
-        setCompletedSteps(completedStepsArray);
+        setCompletedSteps(completedStepsArray ?? []);
+
+        // if(toolStep === 1 && !uploadedFiles.length>0) {
+        //   if (!analysisResults || analysisResults.length === 0) {
+        //     setActiveTab(1);
+        //     setToolSteps(1);
+        //     setCompletedSteps([1]);
+        //   }
+          
+        // }
 
         // (Step 2)
         if (selectedTemplete) {
-          setSelectedTemplete(selectedTemplete);
+          setSelectedTemplete(selectedTemplete ?? []);
         }
 
         if(analysisResults) {
-          setAnalysisResults(analysisResults);
+          setAnalysisResults(analysisResults ?? []);
         }
 
         if(psstReport) {
-
-          setPsstReport(psstReport);
+          setPsstReport(psstReport ?? "");
         }
 
         return;
@@ -325,6 +321,13 @@ const PagePsstReport = () => {
     }
 
     try {
+      await updateToolOnServer(
+        responseToolId,
+        {
+          selectedTemplete: selectedTemplete,
+        },
+        isLoggedIn
+      );
       let allAnalysisResults = [];
       const analysisIndexes = [1, 9, 4, 5];
       // for문을 map으로 변경
@@ -332,7 +335,7 @@ const PagePsstReport = () => {
         const data = {
           analysis_index: i,
           business: business,
-          // report_index: projectAnalysisMultimodal,
+          report_index: reportContents,
           type: "ix_psst_analysis",
         };
 
@@ -344,8 +347,6 @@ const PagePsstReport = () => {
           response.response.psst_analysis,
         ]);
 
-
-        console.log(response.response.psst_analysis)
         allAnalysisResults.push(response.response.psst_analysis);
         }
         setCurrentLoadingIndex(0); 
@@ -357,7 +358,6 @@ const PagePsstReport = () => {
           completedStep: 1,
           analysisResults: allAnalysisResults,
           business: business,
-          selectedTemplete: selectedTemplete,
         },
         isLoggedIn
       );
@@ -450,11 +450,12 @@ const PagePsstReport = () => {
         return;
       }
       try {
+
         const apiRequestData = {
           type: "ix_psst_report",
           business: psstBusinessInfo,
           report_index: projectAnalysisMultimodal,
-          report_contents: analysisResults,
+          report_contents: reportContents,
           additional_request: "없음",
         };
 
@@ -634,7 +635,7 @@ const PagePsstReport = () => {
     {
       name: "PSST 프레임워크 ",
       reason:
-        "문제 정의부터 실행, 성장 계획까지 아우르는 가장 보편적인 사업계획서 구조입니다.<br/>정부지원사업, 창업 프로그램, 공공과제 등에 활용됩니다.​",
+        "문제 정의부터 실행, 성장 계획까지 아우르는 가장 보편적인 사업계획서 구조입니다.정부지원사업, 창업 프로그램, 공공과제 등에 활용됩니다.​",
     },
     // {
     //   name: "3W1H 프레임워크 ",
@@ -722,7 +723,7 @@ const PagePsstReport = () => {
 
                   <div className="content">
                     <MoleculeFileUpload
-                      fileNames={fileNames}
+                      fileNames={fileNames ?? []}
                       handleChangeStatus={handleChangeStatus}
                       toolSteps={toolSteps}
                     />
@@ -761,7 +762,7 @@ const PagePsstReport = () => {
                     onClick={handleSubmitBusinessInfo}
                     disabled={
                       toolSteps >= 1 ||
-                      (fileNames.length === 0 && selectedTemplete.length === 0)
+                      (fileNames?.length === 0 && selectedTemplete.length === 0)
                     }
                   >
                     다음
@@ -839,7 +840,7 @@ const PagePsstReport = () => {
                             }}
                           >
                             <Markdown>
-                              {prepareMarkdown(projectAnalysisMultimodal)}
+                              {prepareMarkdown(projectAnalysisMultimodal ?? "")}
                             </Markdown>
                           </div>
                         </InsightAnalysis>
@@ -901,7 +902,7 @@ const PagePsstReport = () => {
                         className="markdown-body"
                         style={{ textAlign: "left", whiteSpace: "pre-wrap" }}
                       >
-                        <Markdown>{prepareMarkdown(psstReport)}</Markdown>
+                        <Markdown>{prepareMarkdown(psstReport ?? "")}</Markdown>
                       </div>
                     </InsightAnalysis>
                   </>
