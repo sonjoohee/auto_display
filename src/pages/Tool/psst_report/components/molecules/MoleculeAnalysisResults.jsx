@@ -5,8 +5,15 @@ import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 const MoleculeAnalysisResults = ({ 
   analysisResults, 
   currentLoadingIndex,
-  hasUploadedFiles
+  hasUploadedFiles,
+  toolSteps
 }) => {
+  // 분석할 인덱스 배열
+  const analysisIndexes = [1, 9, 4, 5];
+  
+  // 현재 몇 번째 분석인지 계산 (1~4)
+  const currentAnalysisNumber = analysisIndexes.indexOf(currentLoadingIndex) + 1;
+
   return (
     <div style={{ marginTop: "20px" }}>
       {analysisResults.map((analysis, index) => (
@@ -48,7 +55,10 @@ const MoleculeAnalysisResults = ({
         </div>
       ))}
       
-      {!hasUploadedFiles && currentLoadingIndex <= 8 && (
+      {!hasUploadedFiles && 
+        analysisIndexes.includes(currentLoadingIndex) && 
+        currentLoadingIndex !== 0 && // 또는 currentLoadingIndex !== null
+        currentAnalysisNumber <= 4 && toolSteps < 2 && (
         <div style={{
           width: "100%",
           display: "flex",
@@ -57,7 +67,7 @@ const MoleculeAnalysisResults = ({
           alignItems: "center",
           marginTop: "20px"
         }}>
-          <AtomPersonaLoader message={`${currentLoadingIndex}번째 분석을 진행하고 있어요...`} />
+          <AtomPersonaLoader message={`${currentAnalysisNumber}번째 분석을 진행하고 있어요...`} />
         </div>
       )}
     </div>

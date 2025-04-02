@@ -138,6 +138,12 @@ import {
   IS_PERSONA_ACCESSIBLE,
   PERSONA_STEP,
   PROJECT_SAAS,
+  PSST_REPORT,
+  PSST_SELECTED_TEMPLETE,
+  PSST_BUSINESS_INFO,
+  PROJECT_ANALYSIS_MULTIMODAL,
+  PSST_ANALYSIS_RESULTS,
+  PSST_FILE_NAMES
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -335,6 +341,16 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setPersonaStep] = useAtom(PERSONA_STEP);
   const [, setProjectId] = useAtom(PROJECT_ID);
 
+  const [, setPsstBusinessInfo] = useAtom(PSST_BUSINESS_INFO);
+  const [, setProjectAnalysisMultimodal] = useAtom(
+    PROJECT_ANALYSIS_MULTIMODAL
+  );
+  const [, setPsstAnalysisResults] = useAtom(PSST_ANALYSIS_RESULTS);
+  const [, setPsstReport] = useAtom(PSST_REPORT);
+  const [, setPsstSelectedTemplete] = useAtom(PSST_SELECTED_TEMPLETE);
+  const [, setPsstFileNames] = useAtom(PSST_FILE_NAMES);
+ 
+
   const saveConversation = (data) => {};
 
   // 서버에서 툴 정보 가져오기 함수
@@ -367,6 +383,8 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           return "디자인 감성 분석기";
         case "ix_idea_generator_persona":
           return "아이디어 생성기";
+        case "ix_psst_multimodal":
+          return "PSST 분석기";
         default:
           return tool.type;
       }
@@ -496,6 +514,8 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         case "ix_idea_generator_persona":
           return tool.completedStep === 4 ? "완료" : "진행중";
         case "ix_design_emotion_analysis":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        case "ix_psst_multimodal":
           return tool.completedStep === 3 ? "완료" : "진행중";
         default:
           return "-";
@@ -830,6 +850,24 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         );
         setToolLoading(true);
 
+        setToolStep(1);
+        setPsstBusinessInfo([])
+        setPsstFileNames([])
+        setProjectAnalysisMultimodal("")
+        setPsstAnalysisResults([])
+        setPsstReport("")
+        setPsstSelectedTemplete([])
+        setToolLoading(false);
+        setToolStep(chatData?.completedStep);
+        setToolId(chatData?.id)
+        setPsstBusinessInfo(chatData?.business || "");
+        setPsstFileNames(chatData?.fileName || []);
+        setProjectAnalysisMultimodal(chatData?.projectAnalysisMultimodal|| "");
+        setPsstAnalysisResults(chatData?.analysisResults || []);
+        setPsstReport(chatData?.psstReport || "");
+        setPsstSelectedTemplete(chatData?.selectedTemplete || []);
+
+
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);
 
@@ -845,6 +883,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         } else if (chatData.type === "ix_design_emotion_analysis") {
           setToolLoading(true);
           navigate("/DesignAnalysis");
+        } else if (chatData.type === "ix_psst_multimodal") {
+          setToolLoading(true);
+          navigate("/PsstReport");
         }
       } catch (error) {}
     } else if (conversationType === "interviewSingle") {

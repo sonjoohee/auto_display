@@ -50,7 +50,7 @@ import {
   DESIGN_ANALYSIS_BUSINESS_TITLE,
   PSST_BUSINESS_INFO,
   PROJECT_ANALYSIS_MULTIMODAL,
-  DESIGN_ANALYSIS_ANALYSIS_RESULTS,
+  PSST_ANALYSIS_RESULTS,
   PSST_FILE_NAMES,
   PSST_REPORT,
   PSST_SELECTED_TEMPLETE,
@@ -121,9 +121,9 @@ const PagePsstReport = () => {
   const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL
   );
-  const [analysisResults, setAnalysisResults] = useAtom(
-    DESIGN_ANALYSIS_ANALYSIS_RESULTS
-  );
+
+  const [analysisResults, setAnalysisResults] = useAtom(PSST_ANALYSIS_RESULTS);
+
   const [fileNames, setFileNames] = useAtom(PSST_FILE_NAMES);
   const [psstReport, setPsstReport] = useAtom(PSST_REPORT);
   const [selectedTemplete, setSelectedTemplete] = useAtom(
@@ -174,6 +174,9 @@ const PagePsstReport = () => {
       // 비즈니스 정보 설정 (Step 1)
 
       if (toolLoading) {
+
+
+      if (toolLoading) {
         // 비즈니스 정보 설정 (Step 1)
         if (psstBusinessInfo) {
           setPsstBusinessInfo(psstBusinessInfo);
@@ -185,6 +188,7 @@ const PagePsstReport = () => {
         // 비즈니스 정보 설정 (Step 1)
         if (fileNames) {
           setFileNames(fileNames);
+          setUploadedFiles(fileNames);
         }
         if (projectAnalysisMultimodal) {
           setProjectAnalysisMultimodal(projectAnalysisMultimodal);
@@ -202,11 +206,12 @@ const PagePsstReport = () => {
           setSelectedTemplete(selectedTemplete);
         }
 
-        if (analysisResults) {
+        if(analysisResults) {
           setAnalysisResults(analysisResults);
         }
 
-        if (psstReport) {
+        if(psstReport) {
+
           setPsstReport(psstReport);
         }
 
@@ -326,30 +331,31 @@ const PagePsstReport = () => {
 
     try {
       let allAnalysisResults = [];
-      // API 호출 부분
-      for (let i = 1; i <= 8; i++) {
+      const analysisIndexes = [1, 9, 4, 5];
+      // for문을 map으로 변경
+      for (const i of analysisIndexes) {
         const data = {
           analysis_index: i,
           business: business,
-          // report_index: firstResponse.response.psst_index_multimodal,
+          // report_index: projectAnalysisMultimodal,
           type: "ix_psst_analysis",
         };
 
         setCurrentLoadingIndex(i);
         const response = await InterviewXPsstAnalysisRequest(data, isLoggedIn);
-        // console.log(`Analysis ${i} response:`, response);
 
         setAnalysisResults((prev) => [
           ...prev,
           response.response.psst_analysis,
         ]);
-        // 다음 API 요청을 위한 배열에 추가
+
+
+        console.log(response.response.psst_analysis)
         allAnalysisResults.push(response.response.psst_analysis);
-      }
-      setCurrentLoadingIndex(9);
+        }
+        setCurrentLoadingIndex(0); 
 
-      console.log(selectedTemplete);
-
+  
       await updateToolOnServer(
         responseToolId,
         {
@@ -360,6 +366,7 @@ const PagePsstReport = () => {
         },
         isLoggedIn
       );
+
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
@@ -634,16 +641,16 @@ const PagePsstReport = () => {
       reason:
         "문제 정의부터 실행, 성장 계획까지 아우르는 가장 보편적인 사업계획서 구조입니다.<br/>정부지원사업, 창업 프로그램, 공공과제 등에 활용됩니다.​",
     },
-    {
-      name: "3W1H 프레임워크 ",
-      reason:
-        "해커톤, 메이커톤 등 단기간 기술 구현 중심의 구조입니다.<br/>무엇(What), 왜(Why), 누구(Who), 어떻게(How) 구현할지를 중심으로 계획을 구체화합니다.​",
-    },
-    {
-      name: "IDEA PITCH 제안서",
-      reason:
-        "시장성, 차별성, 실행력을 강조하는 발표형 구조입니다.<br/>투자유치(IR), 경진대회, 피칭 행사에 적합합니다.​",
-    },
+    // {
+    //   name: "3W1H 프레임워크 ",
+    //   reason:
+    //     "해커톤, 메이커톤 등 단기간 기술 구현 중심의 구조입니다.<br/>무엇(What), 왜(Why), 누구(Who), 어떻게(How) 구현할지를 중심으로 계획을 구체화합니다.​",
+    // },
+    // {
+    //   name: "IDEA PITCH 제안서",
+    //   reason:
+    //     "시장성, 차별성, 실행력을 강조하는 발표형 구조입니다.<br/>투자유치(IR), 경진대회, 피칭 행사에 적합합니다.​",
+    // },
   ];
 
   return (
@@ -846,6 +853,7 @@ const PagePsstReport = () => {
                           analysisResults={analysisResults}
                           currentLoadingIndex={currentLoadingIndex}
                           hasUploadedFiles={uploadedFiles.length > 0}
+                          toolSteps={toolSteps}
                         />
                       )}
                     </div>
@@ -856,9 +864,10 @@ const PagePsstReport = () => {
                       Round
                       onClick={handleReportRequest}
                       disabled={
-                        toolSteps >= 2 ||
-                        (uploadedFiles.length === 0 &&
-                          analysisResults.length !== 8)
+
+                        toolSteps >= 2 || 
+                        (uploadedFiles.length === 0 && analysisResults.length !== 4)
+
                       }
                     >
                       다음
