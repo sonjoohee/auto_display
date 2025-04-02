@@ -1110,7 +1110,7 @@ const PageToolListSaas = () => {
                     </div>
                   </ExploreCard>,
 
-                    <ExploreCard AiPersona key="analysis-2">
+                    <ExploreCard AiPersona key="analysis-3">
                     <span>
                       <images.GridCircle color={palette.gray700} />
                       Interveiw
@@ -1521,11 +1521,11 @@ const PageToolListSaas = () => {
                     // {...(!accessableExpert && { Ready: true })}
                   >
                     <span>
-                      <images.LightningChargeFill color={palette.gray700} />
+                      <images.GridReport color={palette.gray700} />
                       Report
                     </span>
                     <p>
-                      <img src={images.ImgExplore04} alt="" />
+                      <img src={images.ImgExplore14} alt="" />
                     </p>
                     <Body1 color="gray800">
                       <em>준비중</em>
@@ -1539,7 +1539,7 @@ const PageToolListSaas = () => {
                       }}
                     >
                       <span>
-                        <images.LightningChargeFill color={palette.white} />
+                        <images.GridReport color={palette.white} />
                         Report
                       </span>
 
@@ -1548,7 +1548,9 @@ const PageToolListSaas = () => {
                           <em>준비중</em>PSST 계획서
                         </Body1>
                         <Caption1 color="white" align="left">
-                          PSST 계획서를 작성하여 프로젝트를 진행할 수 있어요
+                          여러가지 기획서 및 계획서를
+                          원하는 사업 타입에 맞춰 작성을
+                          도와주는 툴
                         </Caption1>
                         <i />
                       </div>

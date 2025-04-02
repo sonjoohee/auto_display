@@ -305,6 +305,7 @@ import ImgExplore10 from "../images/img-explore10.png";
 import ImgExplore11 from "../images/img-explore11.png";
 import ImgExplore12 from "../images/img-explore12.png";
 import ImgExplore13 from "../images/img-explore13.png";
+import ImgExplore14 from "../images/img-explore14.png";
 
 import ImgExploreNoData from "../images/img-explore-nodata.png";
 
@@ -312,6 +313,7 @@ import LightningChargeFill from "../icons/LightningChargeFill";
 import GridTool from "../icons/GridTool";
 import GridCircle from "../icons/GridCircle";
 import ThreeDotsVertical from "../icons/ThreeDotsVertical";
+import GridReport from "../icons/GridReport";
 
 import Tag from "../icons/Tag";
 import Report2 from "../icons/Report2";
@@ -665,12 +667,14 @@ const images = {
   ImgExplore11,
   ImgExplore12,
   ImgExplore13,
+  ImgExplore14,
   ImgExploreNoData,
 
   LightningChargeFill,
   GridTool,
   GridCircle,
   ThreeDotsVertical,
+  GridReport,
 
   Tag,
   Report2,
