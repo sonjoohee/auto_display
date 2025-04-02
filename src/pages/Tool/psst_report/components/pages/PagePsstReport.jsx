@@ -53,7 +53,7 @@ import {
   PSST_ANALYSIS_RESULTS,
   PSST_FILE_NAMES,
   PSST_REPORT,
-  PSST_SELECTED_TEMPLETE
+  PSST_SELECTED_TEMPLETE,
 } from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import {
@@ -80,6 +80,12 @@ import MoleculeFileUpload from "../molecules/MoleculeFileUpload";
 import MoleculeAnalysisResults from "../molecules/MoleculeAnalysisResults";
 
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
+
+const prepareMarkdown = (text) => {
+  if (!text) return "";
+  // 연속된 줄바꿈('\n\n')을 <br/><br/>로 변환
+  return text.replace(/\n\n/g, "\n&nbsp;\n").replace(/\n/g, "  \n");
+};
 
 const PagePsstReport = () => {
   const navigate = useNavigate();
@@ -115,10 +121,14 @@ const PagePsstReport = () => {
   const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL
   );
+
   const [analysisResults, setAnalysisResults] = useAtom(PSST_ANALYSIS_RESULTS);
+
   const [fileNames, setFileNames] = useAtom(PSST_FILE_NAMES);
   const [psstReport, setPsstReport] = useAtom(PSST_REPORT);
-  const [selectedTemplete, setSelectedTemplete] = useAtom(PSST_SELECTED_TEMPLETE);
+  const [selectedTemplete, setSelectedTemplete] = useAtom(
+    PSST_SELECTED_TEMPLETE
+  );
 
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
@@ -162,8 +172,11 @@ const PagePsstReport = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
+
       if (toolLoading) {
 
+
+      if (toolLoading) {
         // 비즈니스 정보 설정 (Step 1)
         if (psstBusinessInfo) {
           setPsstBusinessInfo(psstBusinessInfo);
@@ -189,15 +202,16 @@ const PagePsstReport = () => {
         setCompletedSteps(completedStepsArray);
 
         // (Step 2)
-        if(selectedTemplete) {
+        if (selectedTemplete) {
           setSelectedTemplete(selectedTemplete);
         }
-    
+
         if(analysisResults) {
           setAnalysisResults(analysisResults);
         }
 
         if(psstReport) {
+
           setPsstReport(psstReport);
         }
 
@@ -246,12 +260,12 @@ const PagePsstReport = () => {
     const responseToolId = await createToolOnServer(
       {
         projectId: project._id,
-          type: "ix_psst_multimodal",
-        },
-        isLoggedIn
-      );
-      setToolId(responseToolId);
-      
+        type: "ix_psst_multimodal",
+      },
+      isLoggedIn
+    );
+    setToolId(responseToolId);
+
     const timeStamp = new Date().getTime();
     const business = {
       businessModel: project.businessModel,
@@ -260,60 +274,62 @@ const PagePsstReport = () => {
       projectTitle: project.projectTitle,
       targetCountry: project.targetCountry,
     };
-     // 파일 업로드 케이스 먼저 체크
-  if (uploadedFiles.length > 0) {
-    try {
-      const Data = {
-        business: business,
-        tool_id: "file_" + timeStamp,
-        files: uploadedFiles,
-      };
+    // 파일 업로드 케이스 먼저 체크
+    if (uploadedFiles.length > 0) {
+      try {
+        const Data = {
+          business: business,
+          tool_id: "file_" + timeStamp,
+          files: uploadedFiles,
+        };
 
-      setDesignAnalysisFileId(["file_" + timeStamp]);
+        setDesignAnalysisFileId(["file_" + timeStamp]);
 
-      // multimodal API 요청만 실행
-      const firstResponse = await InterviewXPsstMultimodalRequest(
-        Data,
-        isLoggedIn
-      );
-      if (!firstResponse?.response.psst_index_multimodal) {
+        // multimodal API 요청만 실행
+        const firstResponse = await InterviewXPsstMultimodalRequest(
+          Data,
+          isLoggedIn
+        );
+        if (!firstResponse?.response.psst_index_multimodal) {
+          setShowPopupError(true);
+          setIsLoading(false);
+          return;
+        }
+
+        setProjectAnalysisMultimodal(
+          firstResponse.response.psst_index_multimodal
+        );
+
+        setToolSteps(1);
+        setFileNames(uploadedFiles.map((file) => file.name));
+        setPsstBusinessInfo(business);
+
+        await updateToolOnServer(
+          responseToolId,
+          {
+            completedStep: 1,
+            projectAnalysisMultimodal:
+              firstResponse.response.psst_index_multimodal,
+            business: business,
+            fileName: uploadedFiles.map((file) => ({
+              id: "file_" + timeStamp,
+              name: file.name,
+            })),
+          },
+          isLoggedIn
+        );
+
+        setIsLoading(false);
+        return;
+      } catch (error) {
+        console.error("Error:", error);
         setShowPopupError(true);
         setIsLoading(false);
         return;
       }
-
-      setProjectAnalysisMultimodal(firstResponse.response.psst_index_multimodal);
-
-      setToolSteps(1);
-      setFileNames(uploadedFiles.map((file) => file.name));
-      setPsstBusinessInfo(business);
-
-      await updateToolOnServer(
-        responseToolId,
-        {
-          completedStep: 1,
-          projectAnalysisMultimodal: firstResponse.response.psst_index_multimodal,
-          business: business,
-          fileName: uploadedFiles.map((file) => ({
-            id: "file_" + timeStamp,
-            name: file.name,
-          })),
-        },
-        isLoggedIn
-      );
-
-      setIsLoading(false);
-      return; 
-    } catch (error) {
-      console.error("Error:", error);
-      setShowPopupError(true);
-      setIsLoading(false);
-      return;
     }
-  }
-    
-    try {
 
+    try {
       let allAnalysisResults = [];
       const analysisIndexes = [1, 9, 4, 5];
       // for문을 map으로 변경
@@ -333,6 +349,7 @@ const PagePsstReport = () => {
           response.response.psst_analysis,
         ]);
 
+
         console.log(response.response.psst_analysis)
         allAnalysisResults.push(response.response.psst_analysis);
         }
@@ -349,7 +366,6 @@ const PagePsstReport = () => {
         },
         isLoggedIn
       );
-     
 
     } catch (error) {
       setShowPopupError(true);
@@ -377,7 +393,6 @@ const PagePsstReport = () => {
     handleNextStep(2);
     setToolSteps(2);
     try {
-
       await updateToolOnServer(
         toolId,
         {
@@ -397,24 +412,30 @@ const PagePsstReport = () => {
               report_index: projectAnalysisMultimodal,
               type: "ix_psst_analysis",
             };
-      
-            const response = await InterviewXPsstAnalysisRequest(data, isLoggedIn);
+
+            const response = await InterviewXPsstAnalysisRequest(
+              data,
+              isLoggedIn
+            );
             allResults.push(response.response.psst_analysis);
           }
           setAnalysisResults(allResults);
-      
+
           // 2. 바로 종합 리포트 생성
           const apiRequestData = {
             type: "ix_psst_report",
             business: psstBusinessInfo,
             report_index: projectAnalysisMultimodal,
-            report_contents: allResults,  // 방금 생성된 allResults 사용
+            report_contents: allResults, // 방금 생성된 allResults 사용
             additional_request: "없음",
           };
-      
-          let response = await InterviewXPsstAnalysisRequest(apiRequestData, isLoggedIn);
+
+          let response = await InterviewXPsstAnalysisRequest(
+            apiRequestData,
+            isLoggedIn
+          );
           setPsstReport(response.response);
-      
+
           // 3. 서버 업데이트 및 로딩 상태 변경
           setIsLoadingReport(false);
           await updateToolOnServer(
@@ -422,11 +443,10 @@ const PagePsstReport = () => {
             {
               completedStep: 3,
               psstReport: response.response,
-              analysisResults: allResults
+              analysisResults: allResults,
             },
             isLoggedIn
           );
-      
         } catch (error) {
           console.error("Error:", error);
           setShowPopupError(true);
@@ -444,40 +464,38 @@ const PagePsstReport = () => {
         };
 
         let response = await InterviewXPsstAnalysisRequest(
-              apiRequestData,
-              isLoggedIn
-            );
+          apiRequestData,
+          isLoggedIn
+        );
         setPsstReport(response.response);
 
         const maxAttempts = 10;
         let attempt = 0;
 
-          while (
-          !response?.response
-          ) {
-            if (attempt >= maxAttempts) {
-              setShowPopupError(true);
-              return;
-            }
+        while (!response?.response) {
+          if (attempt >= maxAttempts) {
+            setShowPopupError(true);
+            return;
+          }
 
           response = await InterviewXPsstAnalysisRequest(
             apiRequestData,
-              isLoggedIn
-            );
-
-            attempt++;
-          }
-          setIsLoadingReport(false);
-
-          await updateToolOnServer(
-            toolId,
-            {
-            completedStep: 3,
-            psstReport: response.response
-            },
             isLoggedIn
           );
-        } catch (error) {}
+
+          attempt++;
+        }
+        setIsLoadingReport(false);
+
+        await updateToolOnServer(
+          toolId,
+          {
+            completedStep: 3,
+            psstReport: response.response,
+          },
+          isLoggedIn
+        );
+      } catch (error) {}
       // setToolStep(3);
     } catch (error) {
       setShowPopupError(true);
@@ -556,15 +574,15 @@ const PagePsstReport = () => {
   const handleUndoBusinessClick = () => {
     const originalText =
       (project?.projectAnalysis.business_analysis
-      ? project?.projectAnalysis.business_analysis
-    : "") +
-  (project?.projectAnalysis.business_analysis &&
-  project?.projectAnalysis.file_analysis
-    ? "\n"
-    : "") +
-  (project?.projectAnalysis.file_analysis
-    ? project?.projectAnalysis.file_analysis
-    : "");
+        ? project?.projectAnalysis.business_analysis
+        : "") +
+      (project?.projectAnalysis.business_analysis &&
+      project?.projectAnalysis.file_analysis
+        ? "\n"
+        : "") +
+      (project?.projectAnalysis.file_analysis
+        ? project?.projectAnalysis.file_analysis
+        : "");
 
     setBusinessDescription(originalText);
   };
@@ -590,9 +608,8 @@ const PagePsstReport = () => {
     };
     // beforeunload 이벤트 핸들러
     const handleBeforeUnload = (event) => {
- 
       event.preventDefault();
-  
+
       event.returnValue = "";
 
       navigate("/Project");
@@ -674,7 +691,7 @@ const PagePsstReport = () => {
                     핵심 내용 확인
                   </Body1>
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                  Analyze Key Points​
+                    Analyze Key Points​
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -700,14 +717,16 @@ const PagePsstReport = () => {
 
             {activeTab === 1 && (
               <TabContent5>
-                  <>
-                    <div className="title">
-                      <H3 color="gray800">File Upload</H3>
-                    <Body3 color="gray800">어떤 계획을 만들고 싶으신가요? 관련 파일을 업로드해주세요.</Body3>
-                    </div>
+                <>
+                  <div className="title">
+                    <H3 color="gray800">File Upload</H3>
+                    <Body3 color="gray800">
+                      어떤 계획을 만들고 싶으신가요? 관련 파일을 업로드해주세요.
+                    </Body3>
+                  </div>
 
-                    <div className="content">
-                    <MoleculeFileUpload 
+                  <div className="content">
+                    <MoleculeFileUpload
                       fileNames={fileNames}
                       handleChangeStatus={handleChangeStatus}
                       toolSteps={toolSteps}
@@ -715,9 +734,14 @@ const PagePsstReport = () => {
                   </div>
 
                   <div className="content">
-                        <div className="title">
-                    <Body1 color="gray700" style={{ textAlign: "left", marginBottom: "-20px" }}>📝 사업계획서, 처음이라면 목적별 템플릿부터 시작하세요​</Body1>
-                        </div>
+                    <div className="title">
+                      <Body1
+                        color="gray700"
+                        style={{ textAlign: "left", marginBottom: "-20px" }}
+                      >
+                        📝 사업계획서, 처음이라면 목적별 템플릿부터 시작하세요​
+                      </Body1>
+                    </div>
                     <CardGroupWrap column style={{ marginBottom: "140px" }}>
                       {Templete.map((item, index) => (
                         <MoleculeDesignItem
@@ -734,16 +758,19 @@ const PagePsstReport = () => {
                       ))}
                     </CardGroupWrap>
                   </div>
-                      <Button
-                        Other
-                        Primary
-                        Fill
-                        Round
-                        onClick={handleSubmitBusinessInfo}
-                        disabled={toolSteps >= 1 || (fileNames.length === 0 && selectedTemplete.length === 0)}
-                      >
-                        다음
-                      </Button>
+                  <Button
+                    Other
+                    Primary
+                    Fill
+                    Round
+                    onClick={handleSubmitBusinessInfo}
+                    disabled={
+                      toolSteps >= 1 ||
+                      (fileNames.length === 0 && selectedTemplete.length === 0)
+                    }
+                  >
+                    다음
+                  </Button>
                 </>
               </TabContent5>
             )}
@@ -765,14 +792,11 @@ const PagePsstReport = () => {
                 ) : (
                   <>
                     <div className="title">
-                      <H3 color="gray800">
-                        Analyze Contents
-                      </H3>
+                      <H3 color="gray800">Analyze Contents</H3>
                       <Body3 color="gray800">
                         {uploadedFiles.length > 0
                           ? "업로드한 파일을 분석해 계획서의 구조와 주요 정보를 정리합니다."
-                          : "템플림의 구조에 맞춰 계획서의 구조와 핵심 내용을 정리합니다.​"
-                        }
+                          : "템플림의 구조에 맞춰 계획서의 구조와 핵심 내용을 정리합니다.​"}
                       </Body3>
                     </div>
 
@@ -780,37 +804,52 @@ const PagePsstReport = () => {
                       <ListBoxGroup>
                         <li>
                           <Body2 color="gray500">
-                            {uploadedFiles.length > 0 ? "파일 명" : "리포트 방식"}
+                            {uploadedFiles.length > 0
+                              ? "파일 명"
+                              : "리포트 방식"}
                           </Body2>
                           <Body2 color="gray800">
-                            {uploadedFiles.length > 0 
-                              ? uploadedFiles.map(file => file.name).join(", ") 
-                              : selectedTemplete.length > 0 && Templete[selectedTemplete[0]].name
-                            }
+                            {uploadedFiles.length > 0
+                              ? uploadedFiles
+                                  .map((file) => file.name)
+                                  .join(", ")
+                              : selectedTemplete.length > 0 &&
+                                Templete[selectedTemplete[0]].name}
                           </Body2>
                         </li>
                         <li>
                           <Body2 color="gray500">주요 내용</Body2>
-                          <Body2 color="gray800" style={{ textAlign: "left" }} dangerouslySetInnerHTML={{ 
-                            __html: uploadedFiles.length > 0 
-                              ? "창업 아이템의 문제 정의부터 해결 방안, 실행 전략, 성장 계획까지 정부지원사업에 최적화"
-                              : selectedTemplete.length > 0 && Templete[selectedTemplete[0]].reason
-                          }} />
+                          <Body2
+                            color="gray800"
+                            style={{ textAlign: "left" }}
+                            dangerouslySetInnerHTML={{
+                              __html:
+                                uploadedFiles.length > 0
+                                  ? "창업 아이템의 문제 정의부터 해결 방안, 실행 전략, 성장 계획까지 정부지원사업에 최적화"
+                                  : selectedTemplete.length > 0 &&
+                                    Templete[selectedTemplete[0]].reason,
+                            }}
+                          />
                         </li>
                       </ListBoxGroup>
 
                       {uploadedFiles.length > 0 ? (
                         <InsightAnalysis>
-                                  
-                        <div
-                                                className="markdown-body"
-                                                style={{ textAlign: "left", whiteSpace: "pre-wrap" }}
-                        >
-                        <Markdown>{projectAnalysisMultimodal}</Markdown>
-                        </div>
+                          <div
+                            className="markdown-body"
+                            style={{
+                              textAlign: "left",
+                              whiteSpace: "pre-wrap",
+                              fontFamily: "Pretendard",
+                            }}
+                          >
+                            <Markdown>
+                              {prepareMarkdown(projectAnalysisMultimodal)}
+                            </Markdown>
+                          </div>
                         </InsightAnalysis>
                       ) : (
-                        <MoleculeAnalysisResults 
+                        <MoleculeAnalysisResults
                           analysisResults={analysisResults}
                           currentLoadingIndex={currentLoadingIndex}
                           hasUploadedFiles={uploadedFiles.length > 0}
@@ -818,19 +857,21 @@ const PagePsstReport = () => {
                         />
                       )}
                     </div>
-                   <Button
+                    <Button
                       Other
                       Primary
                       Fill
                       Round
                       onClick={handleReportRequest}
                       disabled={
+
                         toolSteps >= 2 || 
                         (uploadedFiles.length === 0 && analysisResults.length !== 4)
+
                       }
                     >
                       다음
-                        </Button>
+                    </Button>
                   </>
                 )}
               </TabContent5>
@@ -854,19 +895,20 @@ const PagePsstReport = () => {
                   <>
                     <BgBoxItem primaryLightest>
                       <H3 color="gray800">비즈니스 기획서</H3>
-                      <Body3 color="gray800">사업 아이템의 실행 전략을 정리한 초안입니다. 이를 기반으로 세부 내용을 구체화해보세요.​</Body3>
+                      <Body3 color="gray800">
+                        사업 아이템의 실행 전략을 정리한 초안입니다. 이를
+                        기반으로 세부 내용을 구체화해보세요.​
+                      </Body3>
                     </BgBoxItem>
-                    
-                        <InsightAnalysis>
-                                              {/* Markdown 컴포넌트를 div로 감싸고 markdown-body 클래스 추가 */}
-                        <div
-                                                className="markdown-body"
-                                                style={{ textAlign: "left", whiteSpace: "pre-wrap" }}
-                        >
-                        <Markdown>{psstReport}</Markdown>
-                        </div>
-                        </InsightAnalysis>
-      
+
+                    <InsightAnalysis>
+                      <div
+                        className="markdown-body"
+                        style={{ textAlign: "left", whiteSpace: "pre-wrap" }}
+                      >
+                        <Markdown>{prepareMarkdown(psstReport)}</Markdown>
+                      </div>
+                    </InsightAnalysis>
                   </>
                 )}
               </TabContent5>
@@ -931,147 +973,34 @@ const InsightAnalysis = styled.div`
   gap: 20px;
   width: 100%;
   text-align: left;
- 
+
   .title {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
   }
- 
+
   .content {
     display: flex;
     flex-direction: column;
     gap: 12px;
     text-align: left;
   }
- 
+
   p {
     text-align: left;
   }
- 
+
   /* GitHub Markdown 스타일 적용 */
   .markdown-body {
     box-sizing: border-box;
     min-width: 200px;
     /* max-width: 980px; */
-    margin: 0 auto;
     /* padding: 45px; */
- 
+
     @media (max-width: 767px) {
       padding: 15px;
     }
-  }
-`;
-
-const ViewInfo = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: $space-between;
-  gap: 4px;
-  width: 100%;
-  font-size: 0.875rem;
-  color: ${palette.gray800};
-
-  + div {
-    padding-top: 16px;
-    border-top: 1px solid ${palette.outlineGray};
-  }
-
-  .title {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
-    gap: 8px;
-    font-size: 0.875rem;
-    color: ${palette.black};
-
-    span {
-      font-size: 0.75rem;
-      font-weight: 300;
-      color: ${palette.gray500};
-    }
-  }
-
-  .info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
-
-    div {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 7px;
-      font-size: 0.875rem;
-      font-weight: 300;
-      color: ${palette.gray500};
-      line-height: 1.5;
-
-      + div:before {
-        position: absolute;
-        top: 50%;
-        left: -16px;
-        transform: translateY(-50%);
-        width: 1px;
-        height: 12px;
-        background-color: ${palette.outlineGray};
-        content: "";
-      }
-    }
-  }
-
-  .button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-
-    button {
-      font-family: "Pretendard", poppins;
-      font-size: 0.75rem;
-      font-weight: 300;
-      padding: 6px 10px;
-      border-radius: 6px;
-
-      &.view {
-        color: ${palette.black};
-        border: 1px solid ${palette.outlineGray};
-        background: ${palette.chatGray};
-      }
-
-      &.analysis {
-        color: ${palette.primary};
-        border: 1px solid ${palette.primary};
-        background: #e9f1ff;
-      }
-    }
-  }
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 12px;
-`;
-
-const EditButtonGroup = styled(ButtonGroup)`
-  justify-content: end;
-`;
-
-const ButtonWrap = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-
-  > div {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    cursor: pointer;
   }
 `;

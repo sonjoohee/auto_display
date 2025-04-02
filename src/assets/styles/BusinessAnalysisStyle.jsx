@@ -4277,6 +4277,16 @@ export const ExploreCard = styled.div`
       }
     `}
 
+    ${(props) =>
+    props.Report &&
+    css`
+      .overlay {
+        > span {
+          background: #FF9500;
+        }
+      }
+    `}
+
   ${(props) =>
     props.Ready &&
     css`
