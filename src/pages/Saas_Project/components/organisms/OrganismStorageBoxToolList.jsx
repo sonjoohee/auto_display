@@ -139,6 +139,12 @@ import {
   PROJECT_REPORT_ID,
   REPORT_LOAD_BUTTON_STATE,
   PROJECT_SAAS,
+  PSST_REPORT,
+  PSST_SELECTED_TEMPLETE,
+  PSST_BUSINESS_INFO,
+  PROJECT_ANALYSIS_MULTIMODAL,
+  DESIGN_ANALYSIS_ANALYSIS_RESULTS,
+  PSST_FILE_NAMES,
 } from "../../../AtomStates";
 import {
   updateToolOnServer,
@@ -338,6 +344,17 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [, setIdeaGeneratorEditingBusinessText] = useAtom(
     IDEA_GENERATOR_EDITING_BUSINESS_TEXT
   );
+
+  const [, setPsstBusinessInfo] = useAtom(PSST_BUSINESS_INFO);
+  const [, setProjectAnalysisMultimodal] = useAtom(
+    PROJECT_ANALYSIS_MULTIMODAL
+  );
+  const [, setDesignAnalysisAnalysisResults] = useAtom(
+    DESIGN_ANALYSIS_ANALYSIS_RESULTS
+  );
+  const [, setPsstReport] = useAtom(PSST_REPORT);
+  const [, setPsstSelectedTemplete] = useAtom(PSST_SELECTED_TEMPLETE);
+  const [, setPsstFileNames] = useAtom(PSST_FILE_NAMES);
   const [, setReportLoadButtonState] = useAtom(REPORT_LOAD_BUTTON_STATE);
   const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
   const [, setReportId] = useAtom(PROJECT_REPORT_ID);
@@ -847,6 +864,15 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           chatData?.imageName?.map((item) => item.id) || []
         );
         setToolLoading(true);
+
+
+        setPsstBusinessInfo(chatData?.business || "");
+        setPsstFileNames(chatData?.fileName || []);
+        setProjectAnalysisMultimodal(chatData?.projectAnalysisMultimodal|| []);
+        setDesignAnalysisAnalysisResults(chatData?.analysisResults || []);
+        setPsstReport(chatData?.psstReport || []);
+        setPsstSelectedTemplete(chatData?.selectedTemplete || []);
+
 
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);
