@@ -50,7 +50,7 @@ import {
   DESIGN_ANALYSIS_BUSINESS_TITLE,
   PSST_BUSINESS_INFO,
   PROJECT_ANALYSIS_MULTIMODAL,
-  DESIGN_ANALYSIS_ANALYSIS_RESULTS,
+  PSST_ANALYSIS_RESULTS,
   PSST_FILE_NAMES,
   PSST_REPORT,
   PSST_SELECTED_TEMPLETE
@@ -115,7 +115,7 @@ const PagePsstReport = () => {
   const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL
   );
-  const [analysisResults, setAnalysisResults] = useAtom(DESIGN_ANALYSIS_ANALYSIS_RESULTS);
+  const [analysisResults, setAnalysisResults] = useAtom(PSST_ANALYSIS_RESULTS);
   const [fileNames, setFileNames] = useAtom(PSST_FILE_NAMES);
   const [psstReport, setPsstReport] = useAtom(PSST_REPORT);
   const [selectedTemplete, setSelectedTemplete] = useAtom(PSST_SELECTED_TEMPLETE);
@@ -162,7 +162,6 @@ const PagePsstReport = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
-   
       if (toolLoading) {
 
         // 비즈니스 정보 설정 (Step 1)
@@ -176,6 +175,7 @@ const PagePsstReport = () => {
         // 비즈니스 정보 설정 (Step 1)
         if (fileNames) {
           setFileNames(fileNames);
+          setUploadedFiles(fileNames);
         }
         if (projectAnalysisMultimodal) {
           setProjectAnalysisMultimodal(projectAnalysisMultimodal);
@@ -193,13 +193,13 @@ const PagePsstReport = () => {
           setSelectedTemplete(selectedTemplete);
         }
     
-       if(analysisResults) {
-        setAnalysisResults(analysisResults);
-       }
+        if(analysisResults) {
+          setAnalysisResults(analysisResults);
+        }
 
-       if(psstReport) {
-        setPsstReport(psstReport);
-       }
+        if(psstReport) {
+          setPsstReport(psstReport);
+        }
 
         return;
       }
@@ -315,31 +315,30 @@ const PagePsstReport = () => {
     try {
 
       let allAnalysisResults = [];
-      // API 호출 부분
-      for (let i = 1; i <= 8; i++) {
+      const analysisIndexes = [1, 9, 4, 5];
+      // for문을 map으로 변경
+      for (const i of analysisIndexes) {
         const data = {
           analysis_index: i,
           business: business,
-          // report_index: firstResponse.response.psst_index_multimodal,
+          // report_index: projectAnalysisMultimodal,
           type: "ix_psst_analysis",
         };
 
-        setCurrentLoadingIndex(i); 
+        setCurrentLoadingIndex(i);
         const response = await InterviewXPsstAnalysisRequest(data, isLoggedIn);
-        // console.log(`Analysis ${i} response:`, response);
 
         setAnalysisResults((prev) => [
           ...prev,
           response.response.psst_analysis,
         ]);
-          // 다음 API 요청을 위한 배열에 추가
+
+        console.log(response.response.psst_analysis)
         allAnalysisResults.push(response.response.psst_analysis);
-      
-      }
-      setCurrentLoadingIndex(9);
+        }
+        setCurrentLoadingIndex(0); 
 
-      console.log(selectedTemplete);
-
+  
       await updateToolOnServer(
         responseToolId,
         {
@@ -350,6 +349,7 @@ const PagePsstReport = () => {
         },
         isLoggedIn
       );
+     
 
     } catch (error) {
       setShowPopupError(true);
@@ -814,6 +814,7 @@ const PagePsstReport = () => {
                           analysisResults={analysisResults}
                           currentLoadingIndex={currentLoadingIndex}
                           hasUploadedFiles={uploadedFiles.length > 0}
+                          toolSteps={toolSteps}
                         />
                       )}
                     </div>
@@ -825,7 +826,7 @@ const PagePsstReport = () => {
                       onClick={handleReportRequest}
                       disabled={
                         toolSteps >= 2 || 
-                        (uploadedFiles.length === 0 && analysisResults.length !== 8)
+                        (uploadedFiles.length === 0 && analysisResults.length !== 4)
                       }
                     >
                       다음
