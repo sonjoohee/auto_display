@@ -160,8 +160,8 @@ const PagePsstReport = () => {
     window.scrollTo(0, 0);
   }, []);
 
-console.log("toolStep",toolStep);
-console.log("toolSteps",toolSteps);
+  console.log("toolStep", toolStep);
+  console.log("toolSteps", toolSteps);
 
   useEffect(() => {
     const interviewLoading = async () => {
@@ -177,7 +177,7 @@ console.log("toolSteps",toolSteps);
           setActiveTab(1);
           // setToolSteps(0);
         } else {
-          setActiveTab(Math.min(toolStep , 3));
+          setActiveTab(Math.min(toolStep, 3));
           // setToolSteps(toolStep);
         }
         setToolSteps(toolStep ?? 1);
@@ -203,7 +203,6 @@ console.log("toolSteps",toolSteps);
             projectAnalysisMultimodalDescription ?? ""
           );
         }
-
 
         // 완료된 단계 설정
         const completedStepsArray = [];
@@ -294,13 +293,12 @@ console.log("toolSteps",toolSteps);
         while (
           attempts < maxAttempts &&
           (!response ||
-            !response?.response?.psst_analysis?.report_index_key_message )
-
+            !response?.response?.psst_analysis?.report_index_key_message)
         ) {
           response = await InterviewXPsstAnalysisRequest(data, isLoggedIn);
           attempts++;
         }
-        if (attempts >= maxAttempts) {  
+        if (attempts >= maxAttempts) {
           setShowPopupError(true);
           return;
         }
@@ -313,7 +311,7 @@ console.log("toolSteps",toolSteps);
           {
             completedStep: 1,
             projectAnalysisMultimodalKeyMessage:
-            response.response.psst_analysis.report_index_key_message,
+              response.response.psst_analysis.report_index_key_message,
           },
           isLoggedIn
         );
@@ -330,7 +328,7 @@ console.log("toolSteps",toolSteps);
     }
 
     try {
-     const responseToolId = await createToolOnServer(
+      const responseToolId = await createToolOnServer(
         {
           projectId: project._id,
           type: "ix_psst_multimodal",
@@ -412,7 +410,6 @@ console.log("toolSteps",toolSteps);
     );
     setToolId(responseToolId);
 
-
     setHideIndexButton(true);
 
     const timeStamp = new Date().getTime();
@@ -454,8 +451,10 @@ console.log("toolSteps",toolSteps);
         await updateToolOnServer(
           responseToolId,
           {
-            projectAnalysisMultimodal: firstResponse.response.psst_index_multimodal,
-            projectAnalysisMultimodalDescription: firstResponse.response.psst_index_multimodal_description,
+            projectAnalysisMultimodal:
+              firstResponse.response.psst_index_multimodal,
+            projectAnalysisMultimodalDescription:
+              firstResponse.response.psst_index_multimodal_description,
             business: business,
             fileName: uploadedFiles.map((file) => ({
               id: "file_" + timeStamp,
@@ -840,7 +839,7 @@ console.log("toolSteps",toolSteps);
                                 Templete[selectedTemplete[0]].name}
                           </Body2>
                         </li>
-                        <li>
+                        <li style={{ alignItems: "flex-start" }}>
                           <Body2 color="gray500">주요 내용</Body2>
                           <Body2
                             color="gray800"
@@ -857,24 +856,26 @@ console.log("toolSteps",toolSteps);
                       </ListBoxGroup>
                     </div>
                   )}
-                  {uploadedFiles?.length > 0 && !hideIndexButton && (
-                    <Button
-                      Other
-                      Primary
-                      Fill
-                      Round
-                      onClick={handleSubmitReportIndex}
-                      disabled={
-                        toolSteps >= 1 ||
-                        fileNames?.length === 0 ||
-                        selectedTemplete.length !== 0 ||
-                        isCreateReportIndex ||
-                        isLoading
-                      }
-                    >
-                      목차 분석
-                    </Button>
-                  )}
+                  {uploadedFiles?.length > 0 &&
+                    !hideIndexButton &&
+                    !toolSteps && (
+                      <Button
+                        Other
+                        Primary
+                        Fill
+                        Round
+                        onClick={handleSubmitReportIndex}
+                        disabled={
+                          toolSteps >= 1 ||
+                          fileNames?.length === 0 ||
+                          selectedTemplete.length !== 0 ||
+                          isCreateReportIndex ||
+                          isLoading
+                        }
+                      >
+                        목차 분석 시작
+                      </Button>
+                    )}
                   {isLoading && uploadedFiles.length > 0 ? (
                     <div
                       style={{
@@ -896,8 +897,6 @@ console.log("toolSteps",toolSteps);
                               className="markdown-body"
                               style={{
                                 textAlign: "left",
-                                whiteSpace: "pre-wrap",
-                                fontFamily: "Pretendard",
                               }}
                             >
                               <Markdown>
@@ -916,7 +915,6 @@ console.log("toolSteps",toolSteps);
 
                   {!isCreateReportIndex &&
                     !isLoading &&
-
                     uploadedFiles?.length === 0 && (
                       <div className="content">
                         <div className="title">
@@ -961,7 +959,6 @@ console.log("toolSteps",toolSteps);
                       다음
                     </Button>
                   )}
-
                 </>
               </TabContent5>
             )}
@@ -1006,7 +1003,7 @@ console.log("toolSteps",toolSteps);
                                 Templete[selectedTemplete[0]].name}
                           </Body2>
                         </li>
-                        <li>
+                        <li style={{ alignItems: "flex-start" }}>
                           <Body2 color="gray500">주요 내용</Body2>
                           <Body2
                             color="gray800"
@@ -1028,8 +1025,6 @@ console.log("toolSteps",toolSteps);
                             className="markdown-body"
                             style={{
                               textAlign: "left",
-                              whiteSpace: "pre-wrap",
-                              fontFamily: "Pretendard",
                             }}
                           >
                             <Markdown>
@@ -1079,7 +1074,7 @@ console.log("toolSteps",toolSteps);
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
+                    <AtomPersonaLoader message="결과보고서를 작성하고 있습니다.\n1분 정도 소요 될 수 있어요." />
                   </div>
                 ) : (
                   <>
@@ -1094,7 +1089,9 @@ console.log("toolSteps",toolSteps);
                     <InsightAnalysis>
                       <div
                         className="markdown-body"
-                        style={{ textAlign: "left", whiteSpace: "pre-wrap" }}
+                        style={{
+                          textAlign: "left",
+                        }}
                       >
                         <Markdown>{prepareMarkdown(psstReport ?? "")}</Markdown>
                       </div>
@@ -1186,9 +1183,28 @@ const InsightAnalysis = styled.div`
   .markdown-body {
     box-sizing: border-box;
     min-width: 200px;
+    color: ${palette.gray800};
+    font-family: "Pretendard";
+    line-height: 1.65;
+    white-space: pre-wrap;
     /* max-width: 980px; */
     /* padding: 45px; */
-
+    /* &,
+    p,
+    li,
+    ul,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    em,
+    span,
+    div {
+      color: ${palette.gray800}; 
+    } */
     @media (max-width: 767px) {
       padding: 15px;
     }

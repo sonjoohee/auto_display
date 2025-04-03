@@ -335,7 +335,7 @@ const PagePersona3Select = () => {
                                     <img
                                       src={
                                         personaImages[persona.imageKey] ||
-                                        (persona.gender === "남성" 
+                                        (persona.gender === "남성"
                                           ? personaImages.persona_m_20_01 // 남성 기본 이미지
                                           : personaImages.persona_f_20_01) // 여성 기본 이미지
                                       }
@@ -349,7 +349,7 @@ const PagePersona3Select = () => {
                               <img
                                 src={
                                   personaImages[selectedPersonas.imageKey] ||
-                                  (selectedPersonas.gender === "남성" 
+                                  (selectedPersonas.gender === "남성"
                                     ? personaImages.persona_m_20_01 // 남성 기본 이미지
                                     : personaImages.persona_f_20_01) // 여성 기본 이미지
                                 }
@@ -368,7 +368,7 @@ const PagePersona3Select = () => {
                     {selectedInterviewType === "multiple" ? (
                       <></>
                     ) : selectedInterviewType === "single" ? (
-                      <li>
+                      <li style={{ alignItems: "center" }}>
                         <Body2 color="gray500">
                           인뎁스 인터뷰
                           <Tooltip>
@@ -382,7 +382,7 @@ const PagePersona3Select = () => {
                           </Tooltip>
                         </Body2>
                         <SwitchToggle>
-                          <SwitchToggleItem>
+                          <SwitchToggleItem style={{ marginBottom: "6px" }}>
                             <input
                               type="checkbox"
                               checked={isIndepthEnabled}

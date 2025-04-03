@@ -3978,7 +3978,7 @@ export const SwitchToggleItem = styled.label`
 export const SwitchHandle = styled.div`
   position: absolute;
   top: 4px;
-  left: 4px;
+  left: 0px;
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -4282,7 +4282,7 @@ export const ExploreCard = styled.div`
     css`
       .overlay {
         > span {
-          background: #FF9500;
+          background: #ff9500;
         }
       }
     `}
