@@ -566,8 +566,10 @@ export const DESIGN_ANALYSIS_FILE_ID = atom([]);
 
 export const PSST_BUSINESS_INFO = atom({});
 export const PROJECT_ANALYSIS_MULTIMODAL = atom("");
+export const PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE = atom("");
 export const PSST_ANALYSIS_RESULTS = atom([]);
 export const PSST_FILE_NAMES = atom([]);
+export const PSST_FILE_ID = atom([]);
 export const PSST_REPORT = atom("");
 export const PSST_SELECTED_TEMPLETE = atom([]);
 export const PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION = atom("");
