@@ -146,6 +146,7 @@ import {
   PSST_ANALYSIS_RESULTS,
   PSST_FILE_NAMES,
   PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION,
+  PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE,
 } from "../../../AtomStates";
 import {
   updateToolOnServer,
@@ -355,6 +356,10 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [, setProjectAnalysisMultimodalDescription] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION
   );
+  const [, setProjectAnalysisMultimodalKeyMessage] = useAtom(
+    PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE
+  );
+
   const [, setReportLoadButtonState] = useAtom(REPORT_LOAD_BUTTON_STATE);
   const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
   const [, setReportId] = useAtom(PROJECT_REPORT_ID);
@@ -481,9 +486,9 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           );
         case "ix_design_emotion_analysis":
           return tool.imageName?.[0]?.name || "상세 내용 없음";
-        case "ix_psst_multimodal":
-          return "수정필요";
-        default:
+          case "ix_psst_multimodal":
+            return tool.fileName?.[0]?.name[0] || (tool.selectedTemplete?.[0]== 0 ? "PSST 계획서" : "");
+          default:
           return tool.type;
       }
     }
@@ -878,6 +883,8 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setPsstAnalysisResults([]);
         setPsstReport("");
         setPsstSelectedTemplete([]);
+        setProjectAnalysisMultimodalDescription("");
+        setProjectAnalysisMultimodalKeyMessage("");
         setToolLoading(false);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
@@ -901,6 +908,9 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setPsstSelectedTemplete(chatData?.selectedTemplete || []);
         setProjectAnalysisMultimodalDescription(
           chatData?.projectAnalysisMultimodalDescription || ""
+        );
+        setProjectAnalysisMultimodalKeyMessage(
+          chatData?.projectAnalysisMultimodalKeyMessage || ""
         );
 
         // 페이지를 대화가 이어지는 형태로 전환

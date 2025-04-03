@@ -160,6 +160,9 @@ const PagePsstReport = () => {
     window.scrollTo(0, 0);
   }, []);
 
+console.log("toolStep",toolStep);
+console.log("toolSteps",toolSteps);
+
   useEffect(() => {
     const interviewLoading = async () => {
       if (toolLoading) {
@@ -169,7 +172,14 @@ const PagePsstReport = () => {
         }
 
         // 활성 탭 설정 (기본값 1)
-        setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
+        // setActiveTab(Math.min((toolStep ?? 1) +1 , 3));
+        if (toolStep === undefined || toolStep === 1) {
+          setActiveTab(1);
+          // setToolSteps(0);
+        } else {
+          setActiveTab(Math.min(toolStep , 3));
+          // setToolSteps(toolStep);
+        }
         setToolSteps(toolStep ?? 1);
 
         if (fileNames) {
@@ -182,22 +192,25 @@ const PagePsstReport = () => {
           setProjectAnalysisMultimodal(projectAnalysisMultimodal ?? "");
         }
 
+        if (projectAnalysisMultimodalKeyMessage) {
+          setProjectAnalysisMultimodalKeyMessage(
+            projectAnalysisMultimodalKeyMessage ?? ""
+          );
+        }
+
+        if (projectAnalysisMultimodalDescription) {
+          setProjectAnalysisMultimodalDescription(
+            projectAnalysisMultimodalDescription ?? ""
+          );
+        }
+
+
         // 완료된 단계 설정
         const completedStepsArray = [];
         for (let i = 1; i <= (toolStep ?? 1); i++) {
           completedStepsArray.push(i);
         }
         setCompletedSteps(completedStepsArray ?? []);
-
-        // if(toolStep === 1 && !uploadedFiles.length>0) {
-        //   if (!analysisResults || analysisResults.length === 0) {
-        //     setActiveTab(1);
-        //     setToolSteps(1);
-        //     setCompletedSteps([1]);
-        //   }
-
-        // }
-
         // (Step 2)
         if (selectedTemplete) {
           setSelectedTemplete(selectedTemplete ?? []);
@@ -253,14 +266,7 @@ const PagePsstReport = () => {
   const handleSubmitBusinessInfo = async () => {
     setIsLoading(true);
     handleNextStep(1);
-    const responseToolId = await createToolOnServer(
-      {
-        projectId: project._id,
-        type: "ix_psst_multimodal",
-      },
-      isLoggedIn
-    );
-    setToolId(responseToolId);
+    setToolSteps(1);
 
     const timeStamp = new Date().getTime();
     const business = {
@@ -280,30 +286,40 @@ const PagePsstReport = () => {
           type: "ix_psst_analysis",
         };
 
-        const response = await InterviewXPsstAnalysisRequest(data, isLoggedIn);
+        let response = await InterviewXPsstAnalysisRequest(data, isLoggedIn);
+
+        const maxAttempts = 10;
+        let attempts = 0;
+
+        while (
+          attempts < maxAttempts &&
+          (!response ||
+            !response?.response?.psst_analysis?.report_index_key_message )
+
+        ) {
+          response = await InterviewXPsstAnalysisRequest(data, isLoggedIn);
+          attempts++;
+        }
+        if (attempts >= maxAttempts) {  
+          setShowPopupError(true);
+          return;
+        }
         setProjectAnalysisMultimodalKeyMessage(
           response.response.psst_analysis.report_index_key_message
         );
 
         await updateToolOnServer(
-          responseToolId,
+          toolId,
           {
             completedStep: 1,
-            projectAnalysisMultimodal: projectAnalysisMultimodal,
             projectAnalysisMultimodalKeyMessage:
-              projectAnalysisMultimodalKeyMessage,
-            projectAnalysisMultimodalDescription:
-              projectAnalysisMultimodalDescription,
-            business: business,
-            fileName: uploadedFiles.map((file) => ({
-              id: "file_" + timeStamp,
-              name: fileNames,
-            })),
+            response.response.psst_analysis.report_index_key_message,
           },
           isLoggedIn
         );
 
         setIsLoading(false);
+        setToolSteps(2);
         return;
       } catch (error) {
         console.error("Error:", error);
@@ -314,6 +330,15 @@ const PagePsstReport = () => {
     }
 
     try {
+     const responseToolId = await createToolOnServer(
+        {
+          projectId: project._id,
+          type: "ix_psst_multimodal",
+        },
+        isLoggedIn
+      );
+      setToolId(responseToolId);
+
       await updateToolOnServer(
         responseToolId,
         {
@@ -353,6 +378,7 @@ const PagePsstReport = () => {
         },
         isLoggedIn
       );
+      setToolSteps(2);
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
@@ -376,6 +402,14 @@ const PagePsstReport = () => {
 
   const handleSubmitReportIndex = async () => {
     setIsLoading(true);
+    const responseToolId = await createToolOnServer(
+      {
+        projectId: project._id,
+        type: "ix_psst_multimodal",
+      },
+      isLoggedIn
+    );
+    setToolId(responseToolId);
 
     const timeStamp = new Date().getTime();
     const business = {
@@ -413,6 +447,20 @@ const PagePsstReport = () => {
           firstResponse.response.psst_index_multimodal_description
         );
 
+        await updateToolOnServer(
+          responseToolId,
+          {
+            projectAnalysisMultimodal: firstResponse.response.psst_index_multimodal,
+            projectAnalysisMultimodalDescription: firstResponse.response.psst_index_multimodal_description,
+            business: business,
+            fileName: uploadedFiles.map((file) => ({
+              id: "file_" + timeStamp,
+              name: fileNames,
+            })),
+          },
+          isLoggedIn
+        );
+
         setFileNames(uploadedFiles.map((file) => file.name));
         setPsstBusinessInfo(business);
 
@@ -431,7 +479,7 @@ const PagePsstReport = () => {
   const handleReportRequest = async () => {
     setIsLoadingReport(true);
     handleNextStep(2);
-    setToolSteps(2);
+    // setToolSteps(2);
     try {
       await updateToolOnServer(
         toolId,
@@ -827,10 +875,12 @@ const PagePsstReport = () => {
                     </>
                   )}
 
-                  {!isCreateReportIndex && !isLoading && (
-                    <div className="content">
-                      <div className="title">
-                        <Body1
+                  {!isCreateReportIndex &&
+                    !isLoading &&
+                    !projectAnalysisMultimodal && (
+                      <div className="content">
+                        <div className="title">
+                          <Body1
                           color="gray700"
                           style={{ textAlign: "left", marginBottom: "-20px" }}
                         >
@@ -849,7 +899,7 @@ const PagePsstReport = () => {
                             subtitle={item.reason}
                             isSelected={selectedTemplete.includes(index)}
                             onSelect={() => handleCheckboxChange(index)}
-                            disabled={toolSteps >= 1 ? true : false}
+                            disabled={toolSteps > 1 ? true : false}
                           />
                         ))}
                       </CardGroupWrap>
@@ -862,8 +912,9 @@ const PagePsstReport = () => {
                     Round
                     onClick={handleSubmitBusinessInfo}
                     disabled={
-                      toolSteps >= 1 ||
-                      (!isCreateReportIndex && selectedTemplete.length === 0)
+                      toolSteps > 1 ||
+                     (uploadedFiles.length >0 && projectAnalysisMultimodal.length === 0) ||
+                     (selectedTemplete.length === 0 && uploadedFiles.length === 0)
                     }
                   >
                     다음
@@ -961,7 +1012,7 @@ const PagePsstReport = () => {
                       Round
                       onClick={handleReportRequest}
                       disabled={
-                        toolSteps >= 2 ||
+                        toolSteps > 2 ||
                         (uploadedFiles.length === 0 &&
                           analysisResults.length !== 4)
                       }
