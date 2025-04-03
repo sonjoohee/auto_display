@@ -147,7 +147,7 @@ const PagePsstReport = () => {
   const [isEditingBusiness, setIsEditingBusiness] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
   const [isCreateReportIndex, setIsCreateReportIndex] = useState(false);
-
+  const [hideIndexButton, setHideIndexButton] = useState(false);
   // 초기 상태를 빈 배열로 설정
 
   const [currentLoadingIndex, setCurrentLoadingIndex] = useState(1);
@@ -376,7 +376,7 @@ const PagePsstReport = () => {
 
   const handleSubmitReportIndex = async () => {
     setIsLoading(true);
-
+    setHideIndexButton(true);
     const timeStamp = new Date().getTime();
     const business = {
       businessModel: project.businessModel,
@@ -764,30 +764,65 @@ const PagePsstReport = () => {
                       어떤 계획을 만들고 싶으신가요? 관련 파일을 업로드해주세요.
                     </Body3>
                   </div>
-
-                  <div className="content">
-                    <MoleculeFileUpload
-                      fileNames={fileNames ?? []}
-                      handleChangeStatus={handleChangeStatus}
-                      toolSteps={toolSteps}
-                    />
-                  </div>
-                  <Button
-                    Other
-                    Primary
-                    Fill
-                    Round
-                    onClick={handleSubmitReportIndex}
-                    disabled={
-                      toolSteps >= 1 ||
-                      fileNames?.length === 0 ||
-                      selectedTemplete.length !== 0 ||
-                      isCreateReportIndex ||
-                      isLoading
-                    }
-                  >
-                    목록 보기
-                  </Button>
+                  {uploadedFiles?.length === 0 ? (
+                    <div className="content">
+                      <MoleculeFileUpload
+                        fileNames={fileNames ?? []}
+                        handleChangeStatus={handleChangeStatus}
+                        toolSteps={toolSteps}
+                      />
+                    </div>
+                  ) : (
+                    <div className="content">
+                      <ListBoxGroup>
+                        <li>
+                          <Body2 color="gray500">
+                            {uploadedFiles.length > 0
+                              ? "파일 명"
+                              : "리포트 방식"}
+                          </Body2>
+                          <Body2 color="gray800">
+                            {fileNames.length > 0
+                              ? fileNames
+                              : selectedTemplete.length > 0 &&
+                                Templete[selectedTemplete[0]].name}
+                          </Body2>
+                        </li>
+                        <li>
+                          <Body2 color="gray500">주요 내용</Body2>
+                          <Body2
+                            color="gray800"
+                            style={{ textAlign: "left" }}
+                            dangerouslySetInnerHTML={{
+                              __html:
+                                uploadedFiles.length > 0
+                                  ? projectAnalysisMultimodalDescription
+                                  : selectedTemplete.length > 0 &&
+                                    Templete[selectedTemplete[0]].reason,
+                            }}
+                          />
+                        </li>
+                      </ListBoxGroup>
+                    </div>
+                  )}
+                  {uploadedFiles?.length > 0 && !hideIndexButton && (
+                    <Button
+                      Other
+                      Primary
+                      Fill
+                      Round
+                      onClick={handleSubmitReportIndex}
+                      disabled={
+                        toolSteps >= 1 ||
+                        fileNames?.length === 0 ||
+                        selectedTemplete.length !== 0 ||
+                        isCreateReportIndex ||
+                        isLoading
+                      }
+                    >
+                      목차 분석
+                    </Button>
+                  )}
                   {isLoading && uploadedFiles.length > 0 ? (
                     <div
                       style={{
@@ -827,47 +862,52 @@ const PagePsstReport = () => {
                     </>
                   )}
 
-                  {!isCreateReportIndex && !isLoading && (
-                    <div className="content">
-                      <div className="title">
-                        <Body1
-                          color="gray700"
-                          style={{ textAlign: "left", marginBottom: "-20px" }}
-                        >
-                          📝 사업계획서, 처음이라면 목적별 템플릿부터
-                          시작하세요​
-                        </Body1>
+                  {!isCreateReportIndex &&
+                    !isLoading &&
+                    uploadedFiles?.length === 0 && (
+                      <div className="content">
+                        <div className="title">
+                          <Body1
+                            color="gray700"
+                            style={{ textAlign: "left", marginBottom: "-20px" }}
+                          >
+                            📝 사업계획서, 처음이라면 목적별 템플릿부터
+                            시작하세요​
+                          </Body1>
+                        </div>
+                        <CardGroupWrap column style={{ marginBottom: "40px" }}>
+                          {Templete.map((item, index) => (
+                            <MoleculeDesignItem
+                              style={{ marginBottom: "10px" }}
+                              FlexStart
+                              key={index}
+                              id={index}
+                              title={item.name}
+                              subtitle={item.reason}
+                              isSelected={selectedTemplete.includes(index)}
+                              onSelect={() => handleCheckboxChange(index)}
+                              disabled={toolSteps >= 1 ? true : false}
+                            />
+                          ))}
+                        </CardGroupWrap>
                       </div>
-                      <CardGroupWrap column style={{ marginBottom: "40px" }}>
-                        {Templete.map((item, index) => (
-                          <MoleculeDesignItem
-                            style={{ marginBottom: "10px" }}
-                            FlexStart
-                            key={index}
-                            id={index}
-                            title={item.name}
-                            subtitle={item.reason}
-                            isSelected={selectedTemplete.includes(index)}
-                            onSelect={() => handleCheckboxChange(index)}
-                            disabled={toolSteps >= 1 ? true : false}
-                          />
-                        ))}
-                      </CardGroupWrap>
-                    </div>
+                    )}
+
+                  {(isCreateReportIndex || selectedTemplete.length !== 0) && (
+                    <Button
+                      Other
+                      Primary
+                      Fill
+                      Round
+                      onClick={handleSubmitBusinessInfo}
+                      disabled={
+                        toolSteps >= 1 ||
+                        (!isCreateReportIndex && selectedTemplete.length === 0)
+                      }
+                    >
+                      다음
+                    </Button>
                   )}
-                  <Button
-                    Other
-                    Primary
-                    Fill
-                    Round
-                    onClick={handleSubmitBusinessInfo}
-                    disabled={
-                      toolSteps >= 1 ||
-                      (!isCreateReportIndex && selectedTemplete.length === 0)
-                    }
-                  >
-                    다음
-                  </Button>
                 </>
               </TabContent5>
             )}
