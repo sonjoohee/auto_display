@@ -80,7 +80,7 @@ const prepareMarkdown = (text) => {
   return text.replace(/\n\n/g, "\n&nbsp;\n").replace(/\n/g, "  \n");
 };
 
-const reportContents = `문제 정의 (Problem)
+const psstReportIndex = `문제 정의 (Problem)
             1-1. 창업 배경 및 필요성
             1-2. 목표 시장 및 고객 분석
             1-3. 기존 대안의 한계
@@ -351,7 +351,7 @@ const PagePsstReport = () => {
         const data = {
           analysis_index: i,
           business: business,
-          report_index: reportContents,
+          report_index: psstReportIndex,
           type: "ix_psst_analysis",
         };
 
@@ -549,8 +549,8 @@ const PagePsstReport = () => {
         const apiRequestData = {
           type: "ix_psst_report",
           business: psstBusinessInfo,
-          report_index: projectAnalysisMultimodal,
-          report_contents: reportContents,
+          report_index: psstReportIndex,
+          report_contents: analysisResults,
           additional_request: "없음",
         };
 
@@ -886,7 +886,7 @@ const PagePsstReport = () => {
                         alignItems: "center",
                       }}
                     >
-                      <AtomPersonaLoader message="보고서를 분석하고 있어요..." />
+                      <AtomPersonaLoader message="계획서 목차를 분석하고 있어요." />
                     </div>
                   ) : (
                     <>
@@ -1074,7 +1074,9 @@ const PagePsstReport = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="결과보고서를 작성하고 있습니다.\n1분 정도 소요 될 수 있어요." />
+                    <AtomPersonaLoader
+                      message={`결과보고서를 작성하고 있습니다.\n1분 정도 소요 될 수 있어요.`}
+                    />
                   </div>
                 ) : (
                   <>
@@ -1186,7 +1188,7 @@ const InsightAnalysis = styled.div`
     color: ${palette.gray800};
     font-family: "Pretendard";
     line-height: 1.65;
-    white-space: pre-wrap;
+    /* white-space: pre-wrap; */
     /* max-width: 980px; */
     /* padding: 45px; */
     /* &,
