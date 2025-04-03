@@ -15,11 +15,11 @@ const MoleculeAnalysisResults = ({
   const currentAnalysisNumber = analysisIndexes.indexOf(currentLoadingIndex) + 1;
 
   return (
-    <div style={{ marginTop: "20px" }}>
+    <div style={{ marginTop: "20px"}}>
       {analysisResults.map((analysis, index) => (
         <div key={index}>
           <div>
-            <Body2 color="gray800" style={{ textAlign: "left" }}>
+            <Body2 color="gray800" style={{ textAlign: "left" , marginBottom: "10px"}}>
               {analysis.title}
             </Body2>
           </div>
@@ -27,10 +27,10 @@ const MoleculeAnalysisResults = ({
             border: "1px solid #E5E5E5",
             borderRadius: "8px",
             padding: "20px",
-            marginBottom: "16px",
+            marginBottom: "30px",
           }}>
             {analysis.contents?.map((content, contentIndex) => (
-              <div key={contentIndex}>
+              <div key={contentIndex} >
                 {contentIndex > 0 && (
                   <div style={{
                     height: "1px",

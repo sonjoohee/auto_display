@@ -145,6 +145,7 @@ import {
   PSST_ANALYSIS_RESULTS,
   PSST_FILE_NAMES,
   PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION,
+  PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -351,6 +352,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setProjectAnalysisMultimodalDescription] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION
   );
+  const [, setProjectAnalysisMultimodalKeyMessage] = useAtom(
+    PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE
+  );
 
   const saveConversation = (data) => {};
 
@@ -467,7 +471,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         case "ix_design_emotion_analysis":
           return tool.imageName?.[0]?.name || "상세 내용 없음";
         case "ix_psst_multimodal":
-          return "수정필요";
+          return tool.fileName?.[0]?.name[0] || (tool.selectedTemplete?.[0]== 0 ? "PSST 계획서" : "");
         default:
           return tool.type;
       }
@@ -883,6 +887,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setPsstSelectedTemplete(chatData?.selectedTemplete || []);
         setProjectAnalysisMultimodalDescription(
           chatData?.projectAnalysisMultimodalDescription || ""
+        );
+        setProjectAnalysisMultimodalKeyMessage(
+          chatData?.projectAnalysisMultimodalKeyMessage || ""
         );
 
         // 페이지를 대화가 이어지는 형태로 전환
