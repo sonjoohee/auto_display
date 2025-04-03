@@ -39,9 +39,8 @@ import {
   TOOL_ID,
   TOOL_STEP,
   TOOL_LOADING,
-  DESIGN_ANALYSIS_FILE_ID,
+  PSST_FILE_ID,
   PROJECT_SAAS,
-  DESIGN_ANALYSIS_BUSINESS_TITLE,
   PSST_BUSINESS_INFO,
   PROJECT_ANALYSIS_MULTIMODAL,
   PSST_ANALYSIS_RESULTS,
@@ -49,6 +48,7 @@ import {
   PSST_REPORT,
   PSST_SELECTED_TEMPLETE,
   PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION,
+  PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE,
 } from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import {
@@ -108,17 +108,20 @@ const PagePsstReport = () => {
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
-  
+
   const [psstBusinessInfo, setPsstBusinessInfo] = useAtom(PSST_BUSINESS_INFO);
-  const [, setDesignAnalysisFileId] = useAtom(
-    DESIGN_ANALYSIS_FILE_ID
-  );
+  const [, setPsstFileId] = useAtom(PSST_FILE_ID);
   const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL
   );
-  const [projectAnalysisMultimodalDescription, setProjectAnalysisMultimodalDescription] = useAtom(
-    PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION
-  );
+  const [
+    projectAnalysisMultimodalKeyMessage,
+    setProjectAnalysisMultimodalKeyMessage,
+  ] = useAtom(PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE);
+  const [
+    projectAnalysisMultimodalDescription,
+    setProjectAnalysisMultimodalDescription,
+  ] = useAtom(PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION);
   const [analysisResults, setAnalysisResults] = useAtom(PSST_ANALYSIS_RESULTS);
   const [fileNames, setFileNames] = useAtom(PSST_FILE_NAMES);
   const [psstReport, setPsstReport] = useAtom(PSST_REPORT);
@@ -143,7 +146,7 @@ const PagePsstReport = () => {
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [isEditingBusiness, setIsEditingBusiness] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
-
+  const [isCreateReportIndex, setIsCreateReportIndex] = useState(false);
 
   // 초기 상태를 빈 배열로 설정
 
@@ -157,18 +160,16 @@ const PagePsstReport = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  
   useEffect(() => {
     const interviewLoading = async () => {
-
       if (toolLoading) {
         // 비즈니스 정보 설정 (Step 1)
         if (psstBusinessInfo) {
           setPsstBusinessInfo(psstBusinessInfo ?? {});
         }
-  
+
         // 활성 탭 설정 (기본값 1)
-        setActiveTab(Math.min((toolStep ?? 1)+1, 3));
+        setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
         setToolSteps(toolStep ?? 1);
 
         if (fileNames) {
@@ -176,7 +177,7 @@ const PagePsstReport = () => {
           setUploadedFiles(fileNames ?? []);
         }
         // 비즈니스 정보 설정 (Step 1)
-        
+
         if (projectAnalysisMultimodal) {
           setProjectAnalysisMultimodal(projectAnalysisMultimodal ?? "");
         }
@@ -194,7 +195,7 @@ const PagePsstReport = () => {
         //     setToolSteps(1);
         //     setCompletedSteps([1]);
         //   }
-          
+
         // }
 
         // (Step 2)
@@ -202,11 +203,11 @@ const PagePsstReport = () => {
           setSelectedTemplete(selectedTemplete ?? []);
         }
 
-        if(analysisResults) {
+        if (analysisResults) {
           setAnalysisResults(analysisResults ?? []);
         }
 
-        if(psstReport) {
+        if (psstReport) {
           setPsstReport(psstReport ?? "");
         }
 
@@ -272,46 +273,31 @@ const PagePsstReport = () => {
     // 파일 업로드 케이스 먼저 체크
     if (uploadedFiles.length > 0) {
       try {
-        const Data = {
-          business: business,
-          tool_id: "file_" + timeStamp,
-          files: uploadedFiles,
+        const data = {
+          analysis_index: 10,
+          business: psstBusinessInfo,
+          report_index: projectAnalysisMultimodal,
+          type: "ix_psst_analysis",
         };
 
-        setDesignAnalysisFileId(["file_" + timeStamp]);
-
-        // multimodal API 요청만 실행
-        const firstResponse = await InterviewXPsstMultimodalRequest(
-          Data,
-          isLoggedIn
+        const response = await InterviewXPsstAnalysisRequest(data, isLoggedIn);
+        setProjectAnalysisMultimodalKeyMessage(
+          response.response.psst_analysis.report_index_key_message
         );
-        if (!firstResponse?.response.psst_index_multimodal) {
-          setShowPopupError(true);
-          setIsLoading(false);
-          return;
-        }
-
-        setProjectAnalysisMultimodal(
-          firstResponse.response.psst_index_multimodal
-        );
-        setProjectAnalysisMultimodalDescription(firstResponse.response.psst_index_multimodal_description);
-
-        setToolSteps(1);
-        setFileNames(uploadedFiles.map((file) => file.name));
-        setPsstBusinessInfo(business);
 
         await updateToolOnServer(
           responseToolId,
           {
             completedStep: 1,
-            projectAnalysisMultimodal:
-              firstResponse.response.psst_index_multimodal,
+            projectAnalysisMultimodal: projectAnalysisMultimodal,
+            projectAnalysisMultimodalKeyMessage:
+              projectAnalysisMultimodalKeyMessage,
             projectAnalysisMultimodalDescription:
-              firstResponse.response.psst_index_multimodal_description,
+              projectAnalysisMultimodalDescription,
             business: business,
             fileName: uploadedFiles.map((file) => ({
               id: "file_" + timeStamp,
-              name: file.name,
+              name: fileNames,
             })),
           },
           isLoggedIn
@@ -355,10 +341,9 @@ const PagePsstReport = () => {
         ]);
 
         allAnalysisResults.push(response.response.psst_analysis);
-        }
-        setCurrentLoadingIndex(0); 
+      }
+      setCurrentLoadingIndex(0);
 
-  
       await updateToolOnServer(
         responseToolId,
         {
@@ -368,7 +353,6 @@ const PagePsstReport = () => {
         },
         isLoggedIn
       );
-
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
@@ -387,6 +371,60 @@ const PagePsstReport = () => {
         setShowPopupError(true);
       }
     } finally {
+    }
+  };
+
+  const handleSubmitReportIndex = async () => {
+    setIsLoading(true);
+
+    const timeStamp = new Date().getTime();
+    const business = {
+      businessModel: project.businessModel,
+      projectAnalysis: project.projectAnalysis,
+      projectDescription: project.projectDescription,
+      projectTitle: project.projectTitle,
+      targetCountry: project.targetCountry,
+    };
+    // 파일 업로드 케이스 먼저 체크
+    if (uploadedFiles.length > 0) {
+      try {
+        const Data = {
+          business: business,
+          tool_id: "file_" + timeStamp,
+          files: uploadedFiles,
+        };
+
+        setPsstFileId(["file_" + timeStamp]);
+        // multimodal API 요청만 실행
+        const firstResponse = await InterviewXPsstMultimodalRequest(
+          Data,
+          isLoggedIn
+        );
+        if (!firstResponse?.response.psst_index_multimodal) {
+          setShowPopupError(true);
+          setIsLoading(false);
+          return;
+        }
+
+        setProjectAnalysisMultimodal(
+          firstResponse.response.psst_index_multimodal
+        );
+        setProjectAnalysisMultimodalDescription(
+          firstResponse.response.psst_index_multimodal_description
+        );
+
+        setFileNames(uploadedFiles.map((file) => file.name));
+        setPsstBusinessInfo(business);
+
+        setIsLoading(false);
+        setIsCreateReportIndex(true);
+        return;
+      } catch (error) {
+        console.error("Error:", error);
+        setShowPopupError(true);
+        setIsLoading(false);
+        return;
+      }
     }
   };
 
@@ -411,7 +449,7 @@ const PagePsstReport = () => {
             const data = {
               analysis_index: i,
               business: psstBusinessInfo,
-              report_index: projectAnalysisMultimodal,
+              report_index: projectAnalysisMultimodalKeyMessage,
               type: "ix_psst_analysis",
             };
 
@@ -427,7 +465,7 @@ const PagePsstReport = () => {
           const apiRequestData = {
             type: "ix_psst_report",
             business: psstBusinessInfo,
-            report_index: projectAnalysisMultimodal,
+            report_index: projectAnalysisMultimodalKeyMessage,
             report_contents: allResults, // 방금 생성된 allResults 사용
             additional_request: "없음",
           };
@@ -457,7 +495,6 @@ const PagePsstReport = () => {
         return;
       }
       try {
-
         const apiRequestData = {
           type: "ix_psst_report",
           business: psstBusinessInfo,
@@ -735,32 +772,89 @@ const PagePsstReport = () => {
                       toolSteps={toolSteps}
                     />
                   </div>
-
-                  <div className="content">
-                    <div className="title">
-                      <Body1
-                        color="gray700"
-                        style={{ textAlign: "left", marginBottom: "-20px" }}
-                      >
-                        📝 사업계획서, 처음이라면 목적별 템플릿부터 시작하세요​
-                      </Body1>
+                  <Button
+                    Other
+                    Primary
+                    Fill
+                    Round
+                    onClick={handleSubmitReportIndex}
+                    disabled={
+                      toolSteps >= 1 ||
+                      fileNames?.length === 0 ||
+                      selectedTemplete.length !== 0 ||
+                      isCreateReportIndex ||
+                      isLoading
+                    }
+                  >
+                    목록 보기
+                  </Button>
+                  {isLoading && uploadedFiles.length > 0 ? (
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        minHeight: "200px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <AtomPersonaLoader message="보고서를 분석하고 있어요..." />
                     </div>
-                    <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                      {Templete.map((item, index) => (
-                        <MoleculeDesignItem
-                          style={{ marginBottom: "10px" }}
-                          FlexStart
-                          key={index}
-                          id={index}
-                          title={item.name}
-                          subtitle={item.reason}
-                          isSelected={selectedTemplete.includes(index)}
-                          onSelect={() => handleCheckboxChange(index)}
-                          disabled={toolSteps >= 1 ? true : false}
-                        />
-                      ))}
-                    </CardGroupWrap>
-                  </div>
+                  ) : (
+                    <>
+                      <div className="content">
+                        {uploadedFiles.length > 0 ? (
+                          <InsightAnalysis>
+                            <div
+                              className="markdown-body"
+                              style={{
+                                textAlign: "left",
+                                whiteSpace: "pre-wrap",
+                                fontFamily: "Pretendard",
+                              }}
+                            >
+                              <Markdown>
+                                {prepareMarkdown(
+                                  projectAnalysisMultimodal ?? ""
+                                )}
+                              </Markdown>
+                            </div>
+                          </InsightAnalysis>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                    </>
+                  )}
+
+                  {!isCreateReportIndex && !isLoading && (
+                    <div className="content">
+                      <div className="title">
+                        <Body1
+                          color="gray700"
+                          style={{ textAlign: "left", marginBottom: "-20px" }}
+                        >
+                          📝 사업계획서, 처음이라면 목적별 템플릿부터
+                          시작하세요​
+                        </Body1>
+                      </div>
+                      <CardGroupWrap column style={{ marginBottom: "40px" }}>
+                        {Templete.map((item, index) => (
+                          <MoleculeDesignItem
+                            style={{ marginBottom: "10px" }}
+                            FlexStart
+                            key={index}
+                            id={index}
+                            title={item.name}
+                            subtitle={item.reason}
+                            isSelected={selectedTemplete.includes(index)}
+                            onSelect={() => handleCheckboxChange(index)}
+                            disabled={toolSteps >= 1 ? true : false}
+                          />
+                        ))}
+                      </CardGroupWrap>
+                    </div>
+                  )}
                   <Button
                     Other
                     Primary
@@ -769,7 +863,7 @@ const PagePsstReport = () => {
                     onClick={handleSubmitBusinessInfo}
                     disabled={
                       toolSteps >= 1 ||
-                      (fileNames?.length === 0 && selectedTemplete.length === 0)
+                      (!isCreateReportIndex && selectedTemplete.length === 0)
                     }
                   >
                     다음
@@ -813,7 +907,7 @@ const PagePsstReport = () => {
                           </Body2>
                           <Body2 color="gray800">
                             {fileNames.length > 0
-                              ? fileNames[0].name
+                              ? fileNames
                               : selectedTemplete.length > 0 &&
                                 Templete[selectedTemplete[0]].name}
                           </Body2>
@@ -845,7 +939,9 @@ const PagePsstReport = () => {
                             }}
                           >
                             <Markdown>
-                              {prepareMarkdown(projectAnalysisMultimodal ?? "")}
+                              {prepareMarkdown(
+                                projectAnalysisMultimodalKeyMessage ?? ""
+                              )}
                             </Markdown>
                           </div>
                         </InsightAnalysis>
@@ -865,10 +961,9 @@ const PagePsstReport = () => {
                       Round
                       onClick={handleReportRequest}
                       disabled={
-
-                        toolSteps >= 2 || 
-                        (uploadedFiles.length === 0 && analysisResults.length !== 4)
-
+                        toolSteps >= 2 ||
+                        (uploadedFiles.length === 0 &&
+                          analysisResults.length !== 4)
                       }
                     >
                       다음

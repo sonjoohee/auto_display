@@ -144,7 +144,7 @@ import {
   PROJECT_ANALYSIS_MULTIMODAL,
   PSST_ANALYSIS_RESULTS,
   PSST_FILE_NAMES,
-  PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION
+  PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -343,9 +343,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setProjectId] = useAtom(PROJECT_ID);
 
   const [, setPsstBusinessInfo] = useAtom(PSST_BUSINESS_INFO);
-  const [, setProjectAnalysisMultimodal] = useAtom(
-    PROJECT_ANALYSIS_MULTIMODAL
-  );
+  const [, setProjectAnalysisMultimodal] = useAtom(PROJECT_ANALYSIS_MULTIMODAL);
   const [, setPsstAnalysisResults] = useAtom(PSST_ANALYSIS_RESULTS);
   const [, setPsstReport] = useAtom(PSST_REPORT);
   const [, setPsstSelectedTemplete] = useAtom(PSST_SELECTED_TEMPLETE);
@@ -387,7 +385,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         case "ix_idea_generator_persona":
           return "아이디어 생성기";
         case "ix_psst_multimodal":
-          return "PSST 분석기";
+          return "계획서 생성기";
         default:
           return tool.type;
       }
@@ -468,6 +466,8 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
             : tool.coreValue?.[0] || "상세 내용 없음";
         case "ix_design_emotion_analysis":
           return tool.imageName?.[0]?.name || "상세 내용 없음";
+        case "ix_psst_multimodal":
+          return "수정필요";
         default:
           return tool.type;
       }
@@ -854,28 +854,36 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setToolLoading(true);
 
         setToolStep(1);
-        setPsstBusinessInfo([])
-        setPsstFileNames([])
-        setProjectAnalysisMultimodal("")
-        setPsstAnalysisResults([])
-        setPsstReport("")
-        setPsstSelectedTemplete([])
+        setPsstBusinessInfo([]);
+        setPsstFileNames([]);
+        setProjectAnalysisMultimodal("");
+        setPsstAnalysisResults([]);
+        setPsstReport("");
+        setPsstSelectedTemplete([]);
         setToolLoading(false);
         setToolStep(chatData?.completedStep);
-        setToolId(chatData?.id)
+        setToolId(chatData?.id);
         setPsstBusinessInfo(chatData?.business || "");
         setPsstFileNames(
-          chatData?.fileName ? 
-          (Array.isArray(chatData.fileName) ? 
-            chatData.fileName.map(file => typeof file === 'object' ? file.name : file) : 
-            [typeof chatData.fileName === 'object' ? chatData.fileName.name : chatData.fileName]
-          ) : []
+          chatData?.fileName
+            ? Array.isArray(chatData.fileName)
+              ? chatData.fileName.map((file) =>
+                  typeof file === "object" ? file.name : file
+                )
+              : [
+                  typeof chatData.fileName === "object"
+                    ? chatData.fileName.name
+                    : chatData.fileName,
+                ]
+            : []
         );
-        setProjectAnalysisMultimodal(chatData?.projectAnalysisMultimodal|| "");
+        setProjectAnalysisMultimodal(chatData?.projectAnalysisMultimodal || "");
         setPsstAnalysisResults(chatData?.analysisResults || []);
         setPsstReport(chatData?.psstReport || "");
         setPsstSelectedTemplete(chatData?.selectedTemplete || []);
-        setProjectAnalysisMultimodalDescription(chatData?.projectAnalysisMultimodalDescription || "");
+        setProjectAnalysisMultimodalDescription(
+          chatData?.projectAnalysisMultimodalDescription || ""
+        );
 
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);

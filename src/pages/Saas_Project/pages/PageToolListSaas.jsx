@@ -555,7 +555,6 @@ const PageToolListSaas = () => {
     setPsstFileNames([]);
     setPsstReport("");
     setPsstSelectedTemplte([]);
-
   }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   useEffect(() => {
@@ -1131,7 +1130,7 @@ const PageToolListSaas = () => {
                     </div>
                   </ExploreCard>,
 
-                    <ExploreCard AiPersona key="analysis-3">
+                  <ExploreCard AiPersona key="analysis-3">
                     <span>
                       <images.GridCircle color={palette.gray700} />
                       Interveiw
@@ -1167,7 +1166,7 @@ const PageToolListSaas = () => {
                         <i />
                       </div>
                     </div>
-                    </ExploreCard>,
+                  </ExploreCard>,
 
                   <ExploreCard Research key="research-1" {...{ Ready: false }}>
                     <span>
@@ -1550,7 +1549,7 @@ const PageToolListSaas = () => {
                     </p>
                     <Body1 color="gray800">
                       <em>준비중</em>
-                      PSST 계획서
+                      계획서 생성기
                     </Body1>
 
                     <div
@@ -1566,12 +1565,11 @@ const PageToolListSaas = () => {
 
                       <div className="text">
                         <Body1 color="white">
-                          <em>준비중</em>PSST 계획서
+                          <em>준비중</em>계획서 생성기
                         </Body1>
                         <Caption1 color="white" align="left">
-                          여러가지 기획서 및 계획서를
-                          원하는 사업 타입에 맞춰 작성을
-                          도와주는 툴
+                          여러가지 기획서 및 계획서를 원하는 사업 타입에 맞춰
+                          작성을 도와주는 툴
                         </Caption1>
                         <i />
                       </div>
