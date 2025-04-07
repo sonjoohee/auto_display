@@ -1,44 +1,199 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import {
   ListBoxItem,
   ListText,
   ListTitle,
   ListSubtitle,
+  ListButton,
+  BoxListWrap,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
   Body1,
-  Sub2,
+  Body3,
+  Caption1,
 } from "../../../../../assets/styles/Typography";
+import { Button } from "../../../../../assets/styles/ButtonStyle";
 import { CheckBoxButton } from '../../../../../assets/styles/InputStyle';
+import { palette } from '../../../../../assets/styles/Palette';
 
+const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disabled, question }) => {
+  const [showQuestions, setShowQuestions] = useState(false);
 
-const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disabled, FlexStart }) => {
+  const handleQuestionClick = () => {
+    setShowQuestions(!showQuestions);
+  };
+
+  const details = id === 'ab_test' 
+    ? [question[id].option_a, question[id].option_b] 
+    : id === 'single_choice'
+    ? question[id].options
+    : [question[id].options];
+
   return (
-    <ListBoxItem NoBg selected={isSelected} active={isSelected} FlexStart={FlexStart}>
+    <ListBoxItem 
+      // NoBg 
+      selected={isSelected} 
+      active={isSelected} 
+      // FlexStart={FlexStart} 
+      Small 
+      style={{ marginBottom: '-20px' }}
+      showQuestions={showQuestions}
+
+    >
       <div>
-      <CheckBoxButton
-        id={id}
-        name={id}
-        checked={isSelected}
-        onChange={() => onSelect(id)}
-        disabled={disabled}
-        style={{ cursor: 'pointer' }}
-      />
+        <CheckBoxButton
+          id={id}
+          name={id}
+          checked={isSelected}
+          onChange={() => onSelect(id)}
+          disabled={disabled}
+          style={{ cursor: 'pointer' }}
+        />
       </div>
       <ListText>
         <ListTitle>
-          <Body1 color="gray800" align="left">{title}</Body1>
+          <Caption1 color={isSelected ? "primary" : "gray500"}>{title}</Caption1>
         </ListTitle>
         <ListSubtitle>
-          <Sub2 color="gray500" align="left">{subtitle}</Sub2>
+          <Body1 style={{ fontSize: '14px' }} color="gray800">{subtitle}</Body1>
         </ListSubtitle>
       </ListText>
+      <ListButton>
+        <Button
+          Medium
+          {...(showQuestions
+            ? { PrimaryLightest: true, Fill: true }
+            : { View: true })}
+          onClick={handleQuestionClick}
+        >
+          {showQuestions ? "문항 닫기" : "문항 보기"}
+        </Button>
+      </ListButton>
+
+      {showQuestions && (
+        <BoxListWrap>
+          <div>
+            <BgBoxList>
+                      {id === 'ab_test' ? (
+              // A/B 테스트일 때
+              details.map((detail, index) => (
+                <BgBoxItem key={index}>
+                  <Body3 color="gray700" align="left">
+                    {index === 0 ? 'A : ' : 'B : '}
+                  </Body3>
+                  <Body3 color="gray700" align="left">{detail}</Body3>
+                </BgBoxItem>
+              ))
+            ) : id === 'nps' ? (
+              // NPS일 때
+              <div style={{ 
+                // display: 'flex', 
+                // flexDirection: 'column',
+                // gap: '8px',
+                // width: '100%'
+              }}>
+                <div style={{ 
+                  display: 'flex', 
+                  gap: '8px', 
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '12px 16px',
+                  width: '100%'
+                }}>
+                  {[...Array(11)].map((_, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        width: '52px',
+                        height: '64px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: palette.gray50,
+                        borderRadius: '4px'
+                      }}
+                    >
+                      <Body3 color="gray700">{index}</Body3>
+                    </div>
+                  ))}
+                </div>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  padding: '0 16px',
+                  width: '100%'
+                }}>
+                  <Body3 color="gray500">전혀 추천하고 싶지 않다</Body3>
+                  <Body3 color="gray500">매우 추천하고 싶다</Body3>
+                </div>
+              </div>
+            ) : id === 'importance' ? (
+              // importance일 때
+              <div style={{ 
+                display: 'flex', 
+                gap: '8px', 
+                alignItems: 'center',
+                padding: '12px 16px',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+              }}>
+                {question[id].options.map((option) => (
+                  <div
+                    key={option}
+                    style={{
+                      height: '80px',
+                      padding: ' 12px',
+                      backgroundColor: palette.gray50,
+                      borderRadius: '16px',
+                      border: 'none',
+                      minWidth: '120px',
+                      textAlign: 'center',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Body3 color="gray700">{option}</Body3>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              // single_choice일 때
+              details.map((detail, index) => (
+                <BgBoxItem key={index}>
+                  <Body3 color="gray700" align="left">{`${String(index + 1).padStart(2, "0")}.`}</Body3>
+                  <Body3 color="gray700" align="left">{detail}</Body3>
+                </BgBoxItem>
+              ))
+            )}
+                      </BgBoxList>
+          </div>
+        </BoxListWrap>
+      )}
     </ListBoxItem>
   );
 };
 
-export default MoleculeDesignItem; 
+const BgBoxList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 4px;
+`;
+
+const BgBoxItem = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: ${palette.chatGray};
+`;
+
+export default MoleculeDesignItem;
 
 // const CheckCircle = styled.div`
 //   width: 24px;

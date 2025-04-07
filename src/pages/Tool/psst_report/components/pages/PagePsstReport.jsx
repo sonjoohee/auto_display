@@ -549,8 +549,8 @@ const PagePsstReport = () => {
         const apiRequestData = {
           type: "ix_psst_report",
           business: psstBusinessInfo,
-          report_index: projectAnalysisMultimodal,
-          report_contents: reportContents,
+          report_index: reportContents,
+          report_contents: analysisResults,
           additional_request: "없음",
         };
 
