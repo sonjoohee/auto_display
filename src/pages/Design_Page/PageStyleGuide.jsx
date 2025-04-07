@@ -53,7 +53,12 @@ import AtomPersonaLoader from "../Global/atoms/AtomPersonaLoader";
 import images from "../../assets/styles/Images";
 import personaImages from "../../assets/styles/PersonaImages";
 import BarChart from '../../components/Charts/BarChart';
-
+import CardPersonaSelected from '../../components/Charts/CardPersonaSelected';
+import BarChartLikertScale5 from '../../components/Charts/BarChartLikertScale5';
+import ABGraph from "../../components/Charts/ABGraph";
+import BarChartLikertScale11 from "../../components/Charts/BarChartLikertScale11";
+import GraphChartScale2 from "../../components/Charts/GraphChartScale2";
+import GraphChartScale5 from "../../components/Charts/GraphChartScale5";
 const PageStyleGuide  = () => {
   const [activeSection, setActiveSection] = useState('');
   const [isChecked, setIsChecked] = useState(false);
@@ -133,8 +138,21 @@ const PageStyleGuide  = () => {
         <a href="#barChart" onClick={scrollToSection}>BarChart</a>
         <a href="#boxWrap" onClick={scrollToSection}>BoxWrap</a>
         <a href="#rangeSlider" onClick={scrollToSection}>RangeSlider</a>
+        <a href="#chartComponents" onClick={scrollToSection}>Chart Components</a>
       </Header>
-
+      
+      <ChartComponentsWrap id="chartComponents">
+        <h2>Chart Components</h2>
+        <FlexContainer>
+          <CardPersonaSelected />
+          <BarChartLikertScale5 />
+          <ABGraph />
+          <BarChartLikertScale11 />
+          <GraphChartScale2 />
+          <GraphChartScale5 />
+        </FlexContainer>
+      </ChartComponentsWrap>
+      
       <ContentsWrap>
         <div id="loader">
           <AtomPersonaLoader />
@@ -1732,4 +1750,23 @@ const CodeBlock = styled.pre`
 const BottomBarWrap = styled(BottomBar)`
   position: relative;
   bottom: 0;
+`;
+
+const ChartComponentsWrap = styled.div`
+  padding: 80px 20px 40px;
+  margin-top: 60px;
+  
+  h2 {
+    margin-bottom: 30px;
+    font-size: 24px;
+    font-weight: 600;
+  }
+`;
+
+const FlexContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start;
 `;

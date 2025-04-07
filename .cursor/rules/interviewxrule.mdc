@@ -3,6 +3,11 @@ description:
 globs: 
 alwaysApply: false
 ---
+---
+description: 
+globs: 
+alwaysApply: false
+---
 # Crowd_Insight 프로젝트 코딩 규칙
  
 ## 기본 기술 스택

@@ -718,9 +718,7 @@ function App() {
           <Route
             path="/style_guide"
             element={
-              <RequireToken>
-                <PageStyleGuide />
-              </RequireToken>
+              <PageStyleGuide />
             }
           />
 

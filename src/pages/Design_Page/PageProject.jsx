@@ -9,6 +9,7 @@ import OrganismIncNavigation from "../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../Global/molecules/MoleculeHeader";
 import MoleculeAccountPopup from "../Login_Sign/components/molecules/MoleculeAccountPopup";
 import PopupWrap from "../../assets/styles/Popup";
+import BarChartLikertScale5 from "../../components/Charts/BarChartLikertScale5";
 import {
   Button,
 } from "../../assets/styles/ButtonStyle";
@@ -126,7 +127,7 @@ const PageProject = () => {
           </ProjectWrap>
         </MainContent>
       </ContentsWrap>
-
+      <BarChartLikertScale5 />
       {isWarningPopupOpen && (
         <PopupWrap
           Warning
