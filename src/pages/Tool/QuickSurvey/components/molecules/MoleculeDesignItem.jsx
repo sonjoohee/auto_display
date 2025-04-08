@@ -25,7 +25,7 @@ const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disable
   };
 
   const details = id === 'ab_test' 
-    ? [question[id].option_a, question[id].option_b] 
+    ? question[id].options
     : id === 'single_choice'
     ? question[id].options
     : [question[id].options];
@@ -37,84 +37,99 @@ const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disable
       Small 
       style={{ 
         marginBottom: '-20px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px',
-        position: 'relative'
+        position: 'relative',
+        padding: '16px'
       }}
       showQuestions={showQuestions}
     >
-      <div style={{ 
-        flexShrink: 0,
+      <div style={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        gap: '16px',
+        position: 'relative',
+        width: '100%',
+        minHeight: '48px'
       }}>
-        <CheckBoxButton
-          id={id}
-          name={id}
-          checked={isSelected}
-          onChange={() => onSelect(id)}
-          disabled={disabled}
-          style={{ cursor: 'pointer' }}
-        />
+        <div style={{ 
+          flexShrink: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '24px',
+          height: '100%'
+        }}>
+          <CheckBoxButton
+            id={id}
+            name={id}
+            checked={isSelected}
+            onChange={() => onSelect(id)}
+            disabled={disabled}
+            style={{ 
+              cursor: 'pointer',
+              margin: 0
+            }}
+          />
+        </div>
+        <ListText style={{ 
+          flex: 1, 
+          minWidth: 0, 
+          paddingRight: '120px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '4px'
+        }}>
+          <ListTitle style={{ marginBottom: '0' }}>
+            <Caption1 
+              style={{ 
+                fontSize: '14px', 
+                lineHeight: '1.3' 
+              }} 
+              color={isSelected ? "primary" : "gray500"}
+            >
+              {title}
+            </Caption1>
+          </ListTitle>
+          <ListSubtitle>
+            <Body1 
+              style={{ 
+                fontSize: '14px',
+                textAlign: 'left',
+                wordBreak: 'break-word',
+                whiteSpace: 'pre-wrap'
+              }} 
+              color="gray800"
+            >
+              {subtitle}
+            </Body1>
+          </ListSubtitle>
+        </ListText>
+        <ListButton style={{ 
+          position: 'absolute',
+          right: '16px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: '86px'
+        }}>
+          <Button
+            Medium
+            {...(showQuestions
+              ? { PrimaryLightest: true, Fill: true }
+              : { View: true })}
+            onClick={handleQuestionClick}
+            style={{
+              width: '100%'
+            }}
+          >
+            {showQuestions ? "문항 닫기" : "문항 보기"}
+          </Button>
+        </ListButton>
       </div>
-      <ListText style={{ 
-        flex: 1, 
-        minWidth: 0, 
-        paddingRight: '100px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '4px'
-      }}>
-        <ListTitle style={{ marginBottom: '0' }}>
-          <Caption1 
-            style={{ 
-              fontSize: '14px', 
-              lineHeight: '1.3' 
-            }} 
-            color={isSelected ? "primary" : "gray500"}
-          >
-            {title}
-          </Caption1>
-        </ListTitle>
-        <ListSubtitle>
-          <Body1 
-            style={{ 
-              fontSize: '14px',
-              textAlign: 'left',
-              wordBreak: 'break-word',
-              whiteSpace: 'pre-wrap'
-            }} 
-            color="gray800"
-          >
-            {subtitle}
-          </Body1>
-        </ListSubtitle>
-      </ListText>
-      <ListButton style={{ 
-        flexShrink: 0,
-        position: 'absolute',
-        right: '16px',
-        top: '50%',
-        transform: 'translateY(-50%)'
-      }}>
-        <Button
-          Medium
-          {...(showQuestions
-            ? { PrimaryLightest: true, Fill: true }
-            : { View: true })}
-          onClick={handleQuestionClick}
-        >
-          {showQuestions ? "문항 닫기" : "문항 보기"}
-        </Button>
-      </ListButton>
 
       {showQuestions && (
-        <BoxListWrap>
+        <BoxListWrap style={{ marginTop: '16px' }}>
           <div>
             <BgBoxList>
-                      {id === 'ab_test' ? (
+              {id === 'ab_test' ? (
               // A/B 테스트일 때
               details.map((detail, index) => (
                 <BgBoxItem key={index}>
