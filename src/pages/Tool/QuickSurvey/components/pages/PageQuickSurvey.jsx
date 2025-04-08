@@ -1274,10 +1274,15 @@ const PageQuickSurvey = () => {
                                 </CheckboxWrapper>
                                 <CardContent>
                                   <div>
-                                    <Body2 color="gray700">설문 대상 직접 설정</Body2>
+                                    <Body2 
+                                      color={interviewModeType === "selfQuestion" ? "primary" : "gray800"}
+                                      style={{ fontWeight: "700" }}
+                                    >
+                                      설문 대상 직접 설정
+                                    </Body2>
                                     <Body3
-                                      style={{ marginTop: "10px" }}
-                                      color="gray500"
+                                      style={{ marginTop: "0px" }}
+                                      color={interviewModeType === "selfQuestion" ? "gray800" : "gray500"}
                                     >
                                       성별, 연령, 지역, 소득 등 원하는 설문 대상 기준을 직접 설정해 타겟 응답자의 의견을 수집할 수 있어요. 
                                       {/* 원하는 질문을 직접 입력하여 Persona에게
@@ -1318,12 +1323,15 @@ const PageQuickSurvey = () => {
                                 </CheckboxWrapper>
                                 <CardContent>
                                   <div>
-                                    <Body2 color="gray700">
-                                     맞춤형 응답자 추천
-                        </Body2>
+                                    <Body2 
+                                      color={interviewModeType === "moderator" ? "primary" : "gray800"}
+                                      style={{ fontWeight: "700" }}
+                                    >
+                                      맞춤형 응답자 추천
+                                    </Body2>
                                     <Body3
-                                      style={{ marginTop: "10px" }}
-                                      color="gray500"
+                                      style={{ marginTop: "0px" }}
+                                      color={interviewModeType === "moderator" ? "gray800" : "gray500"}
                                     >
                                       비즈니스와 설문 내용에 맞춰 가장 적합한 페르소나를 분석하여 최적의 응답자 그룹을 추천해드려요.   
                                     </Body3>
@@ -1808,7 +1816,7 @@ const CardContent = styled.div`
   text-align: left;
   gap: 8px;
   flex: 1;
-  padding: 8px 0;
+  padding: 0;
 
   img {
     width: 48px;

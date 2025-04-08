@@ -38,13 +38,18 @@ const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disable
       style={{ 
         marginBottom: '-20px',
         display: 'flex',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         gap: '16px',
         position: 'relative'
       }}
       showQuestions={showQuestions}
     >
-      <div style={{ flexShrink: 0 }}>
+      <div style={{ 
+        flexShrink: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
         <CheckBoxButton
           id={id}
           name={id}
@@ -54,10 +59,20 @@ const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disable
           style={{ cursor: 'pointer' }}
         />
       </div>
-      <ListText style={{ flex: 1, minWidth: 0, paddingRight: '100px' }}>
-        <ListTitle>
+      <ListText style={{ 
+        flex: 1, 
+        minWidth: 0, 
+        paddingRight: '100px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '4px'
+      }}>
+        <ListTitle style={{ marginBottom: '0' }}>
           <Caption1 
-            style={{ fontSize: '14px' }} 
+            style={{ 
+              fontSize: '14px', 
+              lineHeight: '1.3' 
+            }} 
             color={isSelected ? "primary" : "gray500"}
           >
             {title}
@@ -81,7 +96,8 @@ const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disable
         flexShrink: 0,
         position: 'absolute',
         right: '16px',
-        top: '16px'
+        top: '50%',
+        transform: 'translateY(-50%)'
       }}>
         <Button
           Medium

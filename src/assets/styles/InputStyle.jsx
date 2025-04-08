@@ -250,7 +250,7 @@ export const CustomTextarea = styled.textarea`
   line-height: 1.5;
   color: ${(props) =>
     props.status === "error" ? palette.error : palette.gray800};
-  padding: ${(props) => (props.None ? "0" : "8px 16px")};
+  padding: ${(props) => (props.None ? "0" : "16px")};
   border-radius: 10px;
   border: ${(props) =>
     props.None ? "0" : `1px solid ${getStatusColor(props)}`};
@@ -285,7 +285,7 @@ export const CustomTextarea = styled.textarea`
   &::placeholder {
     font-weight: 300;
     // line-height: 1.5;
-    color: ${palette.gray500};
+    color: ${palette.gray300};
   }
 
   &:focus,
