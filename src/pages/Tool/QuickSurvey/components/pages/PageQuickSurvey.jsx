@@ -161,6 +161,7 @@ const PageQuickSurvey = () => {
   // const [quickSurveyPresetData, setquickSurveyPresetData] = useState([]);
   const [selectedPresetCards, setSelectedPresetCards] = useState({});
   const [shouldRegenerate, setShouldRegenerate] = useState(false);
+  const [selectedPersona, setSelectedPersona] = useState(null);
 
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -328,7 +329,13 @@ const PageQuickSurvey = () => {
 
     // customPersonaForm도 함께 업데이트
     if (type === "gender") {
-      handleFormChange("gender", value === "남성" ? "male" : "female");
+      handleFormChange("gender", 
+        value === "남성" 
+          ? "male" 
+          : value === "여성" 
+            ? "female"
+            : "상관없음"  // "상관없음" 케이스 추가
+      );
     } else if (type === "age") {
       handleFormChange("age", value.split(", "));
     } else if (type === "residence") {
@@ -455,7 +462,8 @@ const PageQuickSurvey = () => {
   }, [quickSurveyAnalysis, shouldRegenerate]);
   
   const handleRegenerate = () => {
-    setShouldRegenerate(true);  // 재생성 flag 설정
+    setShouldRegenerate(true);
+    setSelectedQuestion([]); // 재생성 flag 설정
     setQuickSurveyAnalysis({});
   };
 
@@ -469,24 +477,25 @@ const PageQuickSurvey = () => {
         let Data;
         
         if (interviewModeType === "selfQuestion") {
+          const detail_info = {
+            gender: customPersonaForm.gender || "상관없음",
+            age: customPersonaForm.age?.length > 0 ? customPersonaForm.age : ["상관없음"],
+            residence: customPersonaForm.residence?.length > 0 ? customPersonaForm.residence : ["상관없음"],
+            income: customPersonaForm.income?.length > 0 ? customPersonaForm.income : ["상관없음"]
+          };
           Data = {
             type: "ix_quick_survey_persona_group",
             business: businessDescription,
             goal: projectDescription,
-            recruitment_criteria: recruitingCondition,
+            recruitment_criteria: recruitingCondition || "상관없음",
             survey_method: quickSurveyAnalysis[selectedQuestion],
-            detail_info: {
-              gender: customPersonaForm.gender || "",
-              age: customPersonaForm.age || "",
-              residence: customPersonaForm.residence || "",
-              income: customPersonaForm.income || ""
-            }
+            detail_info: detail_info
           };
         } else {
           // 선택된 카드의 ID 찾기
-          const selectedCardId = Object.entries(selectedPresetCards).find(([_, isSelected]) => isSelected)?.[0];
+          // const selectedCardId = Object.entries(selectedPresetCards).find(([_, isSelected]) => isSelected)?.[0];
   
-          const selectedPersona = quickSurveyPresetData.find(persona => persona._id === selectedCardId);
+          // const selectedPersona = quickSurveyPresetData.find(persona => persona._id === selectedCardId);
           Data = {
             type: "ix_quick_survey_persona_group",
             business: businessDescription,
@@ -494,12 +503,13 @@ const PageQuickSurvey = () => {
             survey_method: quickSurveyAnalysis[selectedQuestion],
             recruitment_criteria: selectedPersona?.original_description || ""
           };
+          console.log(Data);
         }
 
       const response = await InterviewXQuickSurveyRequest(
         Data,
-              isLoggedIn
-            );
+        isLoggedIn
+      );
 
       setquickSurveyPersonaGroup(response.response.quick_survey_persona_group)
 
@@ -507,10 +517,12 @@ const PageQuickSurvey = () => {
           await updateToolOnServer(
             toolId,
             {
-          detailInfo: customPersonaForm,
-          recruitmentCriteria: recruitingCondition,
-          personaGroup: response.response.quick_survey_persona_group,
-          // completedStep: 1,
+              detailInfo: customPersonaForm,
+              recruitmentCriteria: interviewModeType === "selfQuestion" 
+              ? recruitingCondition
+              : selectedPersona?.original_description,
+              personaGroup: response.response.quick_survey_persona_group,
+              // completedStep: 1,
             },
             isLoggedIn
           );
@@ -575,7 +587,16 @@ const PageQuickSurvey = () => {
       }));
 
       setQuickSurveyPresetData(allPersonas);
-
+      
+      await updateToolOnServer(
+        toolId,
+        {
+  
+          quickSurveyPresetData: allPersonas,
+   
+        },
+        isLoggedIn
+      );
 
 
   } catch (error) {
@@ -754,19 +775,41 @@ const PageQuickSurvey = () => {
     }
   };
 
-  const handlePresetCardSelection = (personaId) => {
-    setSelectedPresetCards(prev => {
-      // 현재 선택된 카드가 있고, 그게 클릭한 카드라면 선택 해제
-      if (prev[personaId]) {
-        return {};
-      }
-      // 새로운 카드 선택 시 이전 선택은 모두 해제하고 새로운 카드만 선택
-      return {
-        [personaId]: true
-      };
-    });
-  };
+  // const handlePresetCardSelection = (personaId) => {
+  //   setSelectedPresetCards(prev => {
+  //     // 현재 선택된 카드가 있고, 그게 클릭한 카드라면 선택 해제
+  //     if (prev[personaId]) {
+  //       return {};
+  //     }
+  //     // 새로운 카드 선택 시 이전 선택은 모두 해제하고 새로운 카드만 선택
+  //     return {
+  //       [personaId]: true
+  //     };
+  //   });
+  // };
 
+  const handlePresetCardSelection = (personaId) => {
+    const newSelectedCards = { ...selectedPresetCards };
+    // 현재 선택 상태 확인
+    const isCurrentlySelected = newSelectedCards[personaId];
+    
+    // 모든 카드 선택 해제
+    Object.keys(newSelectedCards).forEach(key => {
+      newSelectedCards[key] = false;
+    });
+    
+    // 현재 카드가 선택되지 않은 상태였다면 선택
+    if (!isCurrentlySelected) {
+      newSelectedCards[personaId] = true;
+      const persona = quickSurveyPresetData.find(p => p._id === personaId);
+      setSelectedPersona(persona);
+    } else {
+      // 이미 선택된 카드를 다시 클릭하면 선택 해제
+      setSelectedPersona(null);
+    }
+    
+    setSelectedPresetCards(newSelectedCards);
+  };
 
   // const handleEditBusinessClick = () => {
   //   setIsEditingBusiness(true);
@@ -797,7 +840,7 @@ const PageQuickSurvey = () => {
     const detectRefresh = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
-      if (currentUrl.toLowerCase().includes("quick_survey")) {
+      if (currentUrl.toLowerCase().includes("quicksurvey")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         const lastUrl = sessionStorage.getItem("lastUrl");
 
@@ -1402,7 +1445,7 @@ const PageQuickSurvey = () => {
                           (interviewModeType === "moderator" && 
                             (!selectedPresetCards || !Object.values(selectedPresetCards).some(value => value))) ||
                           (interviewModeType === "selfQuestion" && 
-                            ((!recruitingCondition || recruitingCondition.trim() === "") && 
+                            ((!recruitingCondition || recruitingCondition.trim() === "") || 
                             (!selectedValues || Object.values(selectedValues).every(value => !value))))
                         }
                       >
