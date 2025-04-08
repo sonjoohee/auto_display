@@ -348,8 +348,8 @@ const PageQuickSurvey = () => {
   const handleSubmitBusinessInfo = async () => {
     // quickSurveyAnalysis가 비어있을 때만 API 호출
     if (!Object.keys(quickSurveyAnalysis).length) {
-      setIsLoading(true);
-      try {
+    setIsLoading(true);
+    try {
         // 비즈니스 데이터 추가
         const Data = {
           type: "ix_quick_survey_question",
@@ -390,28 +390,28 @@ const PageQuickSurvey = () => {
           isLoggedIn
         );
 
-        setIsLoading(false);
-      } catch (error) {
-        setShowPopupError(true);
-        if (error.response) {
-          switch (error.response.status) {
-            case 500:
-              setShowPopupError(true);
-              break;
-            case 504:
-              setShowPopupError(true);
-              break;
-            default:
-              setShowPopupError(true);
-              break;
-          }
-        } else {
-          setShowPopupError(true);
-          
+      setIsLoading(false);
+    } catch (error) {
+      setShowPopupError(true);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowPopupError(true);
+            break;
+          case 504:
+            setShowPopupError(true);
+            break;
+          default:
+            setShowPopupError(true);
+            break;
         }
-      } finally {
-        setIsLoading(false);
+      } else {
+        setShowPopupError(true);
+          
       }
+    } finally {
+      setIsLoading(false);
+    }
     }
     else {
       handleNextStep(1);
@@ -438,7 +438,7 @@ const PageQuickSurvey = () => {
           surveyMethod: quickSurveyAnalysis[selectedQuestion],
           quickSurveyCustomGuide: response.response.quick_survey_custom_guide,
           // completedStep: 1,
-        }, 
+        },
         isLoggedIn
       );
       setIsLoading(false);
@@ -498,26 +498,26 @@ const PageQuickSurvey = () => {
 
       const response = await InterviewXQuickSurveyRequest(
         Data,
-        isLoggedIn
-      );
+              isLoggedIn
+            );
 
       setquickSurveyPersonaGroup(response.response.quick_survey_persona_group)
 
-      
-      await updateToolOnServer(
-        toolId,
-        {
+
+          await updateToolOnServer(
+            toolId,
+            {
           detailInfo: customPersonaForm,
           recruitmentCriteria: recruitingCondition,
           personaGroup: response.response.quick_survey_persona_group,
           // completedStep: 1,
-        }, 
-        isLoggedIn
-      );
+            },
+            isLoggedIn
+          );
 
 
     } catch (error) {
-        setShowPopupError(true);
+      setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
           case 500:
@@ -997,8 +997,8 @@ const PageQuickSurvey = () => {
 
 
                               return (
-                                <MoleculeDesignItem
-                                  FlexStart
+                        <MoleculeDesignItem
+                          FlexStart
                                   key={key}
                                   id={key}
                                   title={getTitleByKey[key]}
@@ -1017,29 +1017,29 @@ const PageQuickSurvey = () => {
                         {/* 버튼들을 content div 바깥으로 이동 */}
                         {quickSurveyAnalysis && Object.keys(quickSurveyAnalysis).length > 0 ? (
                           <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                          <Button
-                            Other
-                            Primary
-                            Fill
-                            Round
+                      <Button
+                        Other
+                        Primary
+                        Fill
+                        Round
                             onClick={handleRegenerate}  // 재생성 핸들러로 변경 필요
                             disabled={toolSteps >= 1}
                         
-                          >
+                      >
                            
                               재생성
                             
-                          </Button>
-                          <Button
-                            Other
-                            Primary
-                            Fill
-                            Round
-                            onClick={handleSubmitBusinessInfo}
+                      </Button>
+                        <Button
+                          Other
+                          Primary
+                          Fill
+                          Round
+                          onClick={handleSubmitBusinessInfo}
                             disabled={selectedQuestion.length === 0 || toolSteps >= 1}
-                          >
-                            다음
-                          </Button>
+                        >
+                          다음
+                        </Button>
                         </div>
                           
                       // <Button
@@ -1054,11 +1054,11 @@ const PageQuickSurvey = () => {
                       // </Button>
                       ) : (
                         <Button
-                          Other
-                          Primary
-                          Fill
-                          Round
-                          onClick={handleSubmitBusinessInfo}
+                      Other
+                      Primary
+                      Fill
+                      Round
+                      onClick={handleSubmitBusinessInfo}
                           disabled={!projectDescription || toolSteps >= 1}
                         >
                           다음
@@ -1133,7 +1133,7 @@ const PageQuickSurvey = () => {
 
                               if (totalValues.length === 4 && irrelevantCount === 4) {
                                 // "상관없음"이 정확히 4개일 때만 하나로 표시
-                                return (
+                              return (
                                   <div style={{
                                     padding: '4px 12px',
                                     borderRadius: '16px',
@@ -1397,7 +1397,7 @@ const PageQuickSurvey = () => {
                             } 
                           }
                         }}
-                        disabled={
+                          disabled={
                           !interviewModeType || 
                           (interviewModeType === "moderator" && 
                             (!selectedPresetCards || !Object.values(selectedPresetCards).some(value => value))) ||

@@ -1,5 +1,5 @@
 //디자인 감성 분석기
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAtom } from "jotai";
@@ -9,10 +9,6 @@ import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavig
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
 import { Button, IconButton } from "../../../../../assets/styles/ButtonStyle";
 import Markdown from "markdown-to-jsx";
-import {
-  FormBox,
-  CustomTextarea,
-} from "../../../../../assets/styles/InputStyle";
 import PopupWrap from "../../../../../assets/styles/Popup";
 import {
   ContentsWrap,
@@ -66,8 +62,6 @@ import {
   InterviewXPsstAnalysisRequest,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
-import Dropzone from "react-dropzone-uploader";
-import AnalysisItem from "../molecules/MoleculeAnalysisItem";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
 import MoleculeFileUpload from "../molecules/MoleculeFileUpload";
 import MoleculeAnalysisResults from "../molecules/MoleculeAnalysisResults";
@@ -159,9 +153,7 @@ const PagePsstReport = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  console.log("toolStep", toolStep);
-  console.log("toolSteps", toolSteps);
+  
 
   useEffect(() => {
     const interviewLoading = async () => {
@@ -175,12 +167,12 @@ const PagePsstReport = () => {
         // setActiveTab(Math.min((toolStep ?? 1) +1 , 3));
         if (toolStep === undefined || toolStep === 1) {
           setActiveTab(1);
-          // setToolSteps(0);
+          setToolSteps(0);
         } else {
           setActiveTab(Math.min(toolStep, 3));
-          // setToolSteps(toolStep);
+          setToolSteps(toolStep);
         }
-        setToolSteps(toolStep ?? 1);
+        // setToolSteps(toolStep ?? 1);
 
         if (fileNames) {
           setFileNames(fileNames ?? []);
@@ -589,7 +581,7 @@ const PagePsstReport = () => {
           isLoggedIn
         );
       } catch (error) {}
-      // setToolStep(3);
+      setToolSteps(3);
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
