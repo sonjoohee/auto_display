@@ -60,7 +60,7 @@ const BarWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 30px;
-  width: 134px;
+  width: 143px;
 `;
 
 const BarItem = styled.div`
@@ -71,7 +71,7 @@ const BarItem = styled.div`
 `;
 
 const BarFill = styled.div`
-  width: 134px;
+  width: 143px;
   height: ${props => props.height}px;
   background-color: ${palette.primary};
   border-radius: 5px;
