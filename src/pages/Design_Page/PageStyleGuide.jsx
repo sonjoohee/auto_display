@@ -59,6 +59,10 @@ import ABGraph from "../../components/Charts/ABGraph";
 import BarChartLikertScale11 from "../../components/Charts/BarChartLikertScale11";
 import GraphChartScale2 from "../../components/Charts/GraphChartScale2";
 import GraphChartScale5 from "../../components/Charts/GraphChartScale5";
+import GraphChartScale11 from "../../components/Charts/GraphChartScale11";
+import ImportanceButtonGroup from "../../components/Charts/ImportanceButtonGroup";
+import ImportanceButtonLevel from "../../components/Charts/ImportanceButtonLevel";
+import QuickSurveyCard from "../../components/Charts/QuickSurveyCard";
 const PageStyleGuide  = () => {
   const [activeSection, setActiveSection] = useState('');
   const [isChecked, setIsChecked] = useState(false);
@@ -150,6 +154,10 @@ const PageStyleGuide  = () => {
           <BarChartLikertScale11 />
           <GraphChartScale2 />
           <GraphChartScale5 />
+          <GraphChartScale11 />
+          <ImportanceButtonGroup />
+          <ImportanceButtonLevel />
+          <QuickSurveyCard />
         </FlexContainer>
       </ChartComponentsWrap>
       
