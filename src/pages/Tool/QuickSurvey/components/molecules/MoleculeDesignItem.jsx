@@ -32,16 +32,24 @@ const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disable
 
   return (
     <ListBoxItem 
-      // NoBg 
       selected={isSelected} 
       active={isSelected} 
-      // FlexStart={FlexStart} 
       Small 
-      style={{ marginBottom: '-20px' }}
+      style={{ 
+        marginBottom: '-20px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '16px',
+        position: 'relative'
+      }}
       showQuestions={showQuestions}
-
     >
-      <div>
+      <div style={{ 
+        flexShrink: 0,
+        display: 'flex',
+        alignItems: 'center',
+        height: '100%'
+      }}>
         <CheckBoxButton
           id={id}
           name={id}
@@ -51,15 +59,42 @@ const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disable
           style={{ cursor: 'pointer' }}
         />
       </div>
-      <ListText>
+      <ListText style={{ 
+        flex: 1, 
+        minWidth: 0, 
+        paddingRight: '100px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center'
+      }}>
         <ListTitle>
-          <Caption1 color={isSelected ? "primary" : "gray500"}>{title}</Caption1>
+          <Caption1 
+            style={{ fontSize: '14px' }} 
+            color={isSelected ? "primary" : "gray500"}
+          >
+            {title}
+          </Caption1>
         </ListTitle>
         <ListSubtitle>
-          <Body1 style={{ fontSize: '14px' }} color="gray800">{subtitle}</Body1>
+          <Body1 
+            style={{ 
+              fontSize: '14px',
+              textAlign: 'left',
+              wordBreak: 'break-word',
+              whiteSpace: 'pre-wrap'
+            }} 
+            color="gray800"
+          >
+            {subtitle}
+          </Body1>
         </ListSubtitle>
       </ListText>
-      <ListButton>
+      <ListButton style={{ 
+        flexShrink: 0,
+        position: 'absolute',
+        right: '16px',
+        top: '16px'
+      }}>
         <Button
           Medium
           {...(showQuestions
