@@ -575,7 +575,9 @@ export const PSST_SELECTED_TEMPLETE = atom([]);
 export const PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION = atom("");
 
 export const QUICK_SURVEY_ANALYSIS = atom([]);
-
+export const QUICK_SURVEY_CUSTOM_GUIDE = atom([]);
+export const QUICK_SURVEY_PRESET_DATA = atom([]);
+export const QUICK_SURVEY_PERSONA_GROUP = atom([]);
 //!saas
 // 프로젝트 생성 페이지
 export const PROJECT_CREATE_INFO = atom({});

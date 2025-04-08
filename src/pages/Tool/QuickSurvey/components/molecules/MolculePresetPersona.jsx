@@ -16,71 +16,67 @@ const MolculePresetPersona = ({
   selectedCards = {},
   onCardSelect = () => {},
 }) => {
-
-
-
   return (
     <>
-        <AiPersonaCardGroupWrap>
-          {personaData.map((persona) => (
-            <AiPersonaCardListItem key={persona?._id}>
-              <div className="header">
-                <div className="title">
-                  <Body1 color="gray800">
-                    {persona?.personaName || "제목 없음"}
-                  </Body1>
-                </div>
+      <AiPersonaCardGroupWrap>
+        {personaData.map((persona) => (
+          <AiPersonaCardListItem 
+            quickSurvey
+            key={persona?._id}
+            style={{
+              border: selectedCards[persona._id] ? `1px solid ${palette.primary}` : '1px solid #E0E4EB'
+            }}
+          >
+           <div className="header" style={{ textAlign: 'center' }}>
+              <div className="title" style={{ display: 'flex', justifyContent: 'center' }}>
+                <Body1 color="gray800">
+                  {persona?.personaName || "제목 없음"}
+                </Body1>
               </div>
+            </div>
 
-              <div className="content" style={{ minHeight: "114px" }}>
-                <Sub3 color="gray700">
-                  {persona?.personaType === "my_persona" ? (
-                    <>
-                      {persona?.customData?.persona_reason || ""}
-                      {persona?.customData?.persona_additional_info && (
-                        <>{" " + persona.customData.persona_additional_info}</>
-                      )}
-                    </>
-                  ) : (
-                    persona?.personaCharacteristics || "설명 없음"
-                  )}
-                </Sub3>
-              </div>
+            <div className="content" style={{ minHeight: "114px" }}>
+              <Sub3 color="gray700">
+             
+                {persona?.personaCharacteristics || "설명 없음"}
+              
+              </Sub3>
+            </div>
 
-              <AiPersonaCardButtonWrap>
-                <div style={{ flex: "1" }}>
-                  <StyledButton
-                    Medium
-                    Primary
-                    Fill
-                    onClick={() => onCardSelect(persona._id)}
+            <AiPersonaCardButtonWrap>
+              <div style={{ flex: "1" }}>
+                <StyledButton
+                  Medium
+                  Primary
+                  Fill
+                  onClick={() => onCardSelect(persona._id)}
+                  style={{
+                    background: selectedCards[persona._id] ? palette.primary : '#F7F8FA',
+                    color: selectedCards[persona._id] ? palette.white : palette.gray500,
+                  }}
+                >
+                  <div
                     style={{
-                      background: selectedCards[persona._id] ? palette.primary : '#F0F4FF',
-                      color: selectedCards[persona._id] ? palette.white : palette.primary,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
                     }}
                   >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                      }}
-                    >
-                      {selectedCards[persona._id] ? (
-                        <>
-                          <img src={images.IconCheck3} width="8" />
-                          선택됨
-                        </>
-                      ) : (
-                        "선택하기"
-                      )}
-                    </div>
-                  </StyledButton>
-                </div>
-              </AiPersonaCardButtonWrap>
-            </AiPersonaCardListItem>
-          ))}
-        </AiPersonaCardGroupWrap>
+                    {selectedCards[persona._id] ? (
+                      <>
+                        <img src={images.IconCheck3} width="8" />
+                        선택됨
+                      </>
+                    ) : (
+                      "선택하기"
+                    )}
+                  </div>
+                </StyledButton>
+              </div>
+            </AiPersonaCardButtonWrap>
+          </AiPersonaCardListItem>
+        ))}
+      </AiPersonaCardGroupWrap>
     </>
   );
 };
