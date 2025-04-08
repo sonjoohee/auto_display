@@ -56,7 +56,8 @@ import {
   QUICK_SURVEY_PRESET_DATA,
   QUICK_SURVEY_PERSONA_GROUP,
   QUICK_SURVEY_INTERVIEW,
-  QUICK_SURVEY_REPORT
+  QUICK_SURVEY_REPORT,
+  QUICK_SURVEY_STATIC_DATA
 } from "../../../../AtomStates";
 // import image from "../../../../../assets/styles/Image";
 import {
@@ -116,6 +117,7 @@ const PageQuickSurvey = () => {
   const [quickSurveyPersonaGroup, setquickSurveyPersonaGroup] = useAtom(QUICK_SURVEY_PERSONA_GROUP);
   const [quickSurveyInterview, setQuickSurveyInterview] = useAtom(QUICK_SURVEY_INTERVIEW);
   const [quickSurveyReport, setQuickSurveyReport] = useAtom(QUICK_SURVEY_REPORT);
+  const [quickSurveyStaticData, setQuickSurveyStaticData] = useState([]);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
@@ -687,6 +689,8 @@ const PageQuickSurvey = () => {
       );
 
       setQuickSurveyReport(responseReport.response.quick_survey_report);
+      
+      setQuickSurveyStaticData(responseReport.response.statistics_data);
 
       await updateToolOnServer(
         toolId,
@@ -1097,9 +1101,14 @@ const PageQuickSurvey = () => {
                           <Body2 color="gray500">
                           설문 주제
                           </Body2>
-                          <Body2 color="gray800">
-                                {quickSurveyAnalysis[selectedQuestion].question}
-                          </Body2>
+                          <div style={{
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            maxWidth: '100%',  // 또는 특정 픽셀값
+                          }}>
+                            {quickSurveyAnalysis[selectedQuestion].question}
+                          </div>
                         </li>
                         <li style={{ alignItems: "flex-start" }}>
                           <Body2 color="gray500">리쿠르팅 조건</Body2>
@@ -1136,7 +1145,7 @@ const PageQuickSurvey = () => {
                               display: 'inline-flex',
                               alignItems: 'center'
                             }}>
-                              <Body2 color="gray800">Preset</Body2>
+                              <Body2 color="gray800">상관없음</Body2>
                             </div>
                           </div>
                         ) : (

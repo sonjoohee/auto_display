@@ -580,6 +580,7 @@ export const QUICK_SURVEY_PRESET_DATA = atom([]);
 export const QUICK_SURVEY_PERSONA_GROUP = atom([]);
 export const QUICK_SURVEY_INTERVIEW = atom([]);
 export const QUICK_SURVEY_REPORT = atom([]);
+export const QUICK_SURVEY_STATIC_DATA = atom([]);
 
 //!saas
 // 프로젝트 생성 페이지
