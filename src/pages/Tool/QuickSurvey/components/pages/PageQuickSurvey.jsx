@@ -54,7 +54,9 @@ import {
   QUICK_SURVEY_ANALYSIS,
   QUICK_SURVEY_CUSTOM_GUIDE,
   QUICK_SURVEY_PRESET_DATA,
-  QUICK_SURVEY_PERSONA_GROUP
+  QUICK_SURVEY_PERSONA_GROUP,
+  QUICK_SURVEY_INTERVIEW,
+  QUICK_SURVEY_REPORT
 } from "../../../../AtomStates";
 // import image from "../../../../../assets/styles/Image";
 import {
@@ -112,7 +114,8 @@ const PageQuickSurvey = () => {
   const [quickSurveyCustomGuide, setQuickSurveyCustomGuide] = useAtom(QUICK_SURVEY_CUSTOM_GUIDE);
   const [quickSurveyPresetData, setQuickSurveyPresetData] = useAtom(QUICK_SURVEY_PRESET_DATA);
   const [quickSurveyPersonaGroup, setquickSurveyPersonaGroup] = useAtom(QUICK_SURVEY_PERSONA_GROUP);
-
+  const [quickSurveyInterview, setQuickSurveyInterview] = useAtom(QUICK_SURVEY_INTERVIEW);
+  const [quickSurveyReport, setQuickSurveyReport] = useAtom(QUICK_SURVEY_REPORT);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
@@ -351,6 +354,14 @@ const PageQuickSurvey = () => {
       [field]: value,
     }));
   };
+  
+  const business =  {
+    business: businessDescription,
+    target: project.projectAnalysis.target_customer,
+    business_model: project.businessModel,
+    sector: project.industryType,
+    country: project.targetCountry,
+  }
 
   const handleSubmitBusinessInfo = async () => {
     // quickSurveyAnalysis가 비어있을 때만 API 호출
@@ -392,7 +403,7 @@ const PageQuickSurvey = () => {
           responseToolId,
           {
             quickSurveyAnalysis: response.response.quick_survey_question,
-            business: businessDescription,
+            business: business,
           }, 
           isLoggedIn
         );
@@ -426,7 +437,7 @@ const PageQuickSurvey = () => {
 
       const Data = {
         type: "ix_quick_survey_custom_guide",
-        business: businessDescription,
+        business: business,
         goal: projectDescription,
       }
 
@@ -485,7 +496,7 @@ const PageQuickSurvey = () => {
           };
           Data = {
             type: "ix_quick_survey_persona_group",
-            business: businessDescription,
+            business: business,
             goal: projectDescription,
             recruitment_criteria: recruitingCondition || "상관없음",
             survey_method: quickSurveyAnalysis[selectedQuestion],
@@ -498,12 +509,11 @@ const PageQuickSurvey = () => {
           // const selectedPersona = quickSurveyPresetData.find(persona => persona._id === selectedCardId);
           Data = {
             type: "ix_quick_survey_persona_group",
-            business: businessDescription,
+            business: business,
             goal: projectDescription,
             survey_method: quickSurveyAnalysis[selectedQuestion],
             recruitment_criteria: selectedPersona?.original_description || ""
           };
-          console.log(Data);
         }
 
       const response = await InterviewXQuickSurveyRequest(
@@ -511,8 +521,20 @@ const PageQuickSurvey = () => {
         isLoggedIn
       );
 
-      setquickSurveyPersonaGroup(response.response.quick_survey_persona_group)
+      const personaGroupWithImage = response.response.quick_survey_persona_group.map(persona => ({
+        ...persona,
+        imageKey: `persona_${persona.gender === "남성" ? "m" : "f"}_${
+          Math.floor(
+            (persona.age ? parseInt(persona.age.replace("세", "")) : 20) / 10
+          ) * 10
+        }_${String(Math.floor(Math.random() * 10) + 1).padStart(2, "0")}`
+      }));
 
+       console.log(personaGroupWithImage)
+      
+      setquickSurveyPersonaGroup(personaGroupWithImage);
+
+      // setquickSurveyPersonaGroup(response.response.quick_survey_persona_group)
 
           await updateToolOnServer(
             toolId,
@@ -521,7 +543,7 @@ const PageQuickSurvey = () => {
               recruitmentCriteria: interviewModeType === "selfQuestion" 
               ? recruitingCondition
               : selectedPersona?.original_description,
-              personaGroup: response.response.quick_survey_persona_group,
+              personaGroup: personaGroupWithImage,
               // completedStep: 1,
             },
             isLoggedIn
@@ -560,7 +582,7 @@ const PageQuickSurvey = () => {
 
       const Data = {
         type: "ix_quick_survey_preset",
-        business: businessDescription,
+        business: business,
         goal: projectDescription,
         survey_method: {
           question: quickSurveyAnalysis[selectedQuestion].question,
@@ -621,138 +643,88 @@ const PageQuickSurvey = () => {
     }
   };
 
-  
     
   const handleSubmitPersonas = async () => {
     handleNextStep(2);
     // setToolSteps(2);
     setIsLoadingReport(true);
     try {
-      
-      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // await new Promise(resolve => setTimeout(resolve, 1500));
+
+        const Data = {
+          type: "ix_quick_survey_interview",
+          business: business,
+          survey_method: {
+            ...quickSurveyAnalysis[selectedQuestion],
+            type: selectedQuestion.toString()
+          },
+          persona_group: quickSurveyPersonaGroup
+        }
+
+        const response = await InterviewXQuickSurveyRequest(
+          Data,
+          isLoggedIn
+        );
+
+       setQuickSurveyInterview(response.response.quick_survey_interview);
+
+       const reportData =  { 
+        type: "ix_quick_survey_report",
+        business: business,
+        goal: projectDescription,
+        survey_method: {
+          ...quickSurveyAnalysis[selectedQuestion],
+          type: selectedQuestion.toString()
+        },
+        persona_group: quickSurveyPersonaGroup,
+        quick_survey_interview: response.response.quick_survey_interview
+       }
+
+       const responseReport = await InterviewXQuickSurveyRequest(
+        reportData,
+        isLoggedIn
+      );
+
+      setQuickSurveyReport(responseReport.response.quick_survey_report);
+
+      await updateToolOnServer(
+        toolId,
+        { 
+          quickSurveyInterview: response.response.quick_survey_interview,
+          quickSurveyReport: responseReport.response.quick_survey_report,
+          completedStep: 3
+        },
+        isLoggedIn
+      );
+
+
+      //  [인터부 데이터
+      //   {
+      //       "persona_name": "배달 앱 사용이 익숙하지 않은 20대 초반 대학생",
+      //       "question_answer": "매운맛 조절 옵션을 제공하여 현지인의 입맛에 맞추는 전략",
+      //       "follow_up_answer": "베트남에서는 아직 배달 앱 사용이 한국만큼 보편화되지 않았고, 저는 새로운 앱 사용에 거부감이 있어요. 엽떡의 매운맛 때문에 망설이는 사람들이 많을 텐데, 매운맛 조절 옵션이 있다면 더 쉽게 다가갈 수 있을 것 같아요. 예전에 '불닭볶음면'이 처음 나왔을 때 너무 매워서 못 먹었는데, 나중에 순한맛이 나와서 먹어봤더니 맛있어서 계속 사먹게 됐거든요. 엽떡도 비슷한 효과를 볼 수 있을 것 같아요."
+      //   },
+      //   {
+      //       "persona_name": "배달 음식보다 집밥을 선호하는 30대 직장인",
+      //       "question_answer": "매운맛 조절 옵션을 제공하여 현지인의 입맛에 맞추는 전략",
+      //       "follow_up_answer": "저는 건강 때문에 배달 음식을 잘 안 먹지만, 가끔 스트레스 해소용으로 매운 음식이 당길 때가 있어요. 하지만 엽떡은 너무 매워서 도전하기가 망설여지더라고요. 만약 덜 매운맛이 있다면 한 번쯤 시도해볼 의향이 있습니다. 예전에 '신전떡볶이'에서 순한맛을 먹어본 적이 있는데, 적당히 매콤하면서 맛있어서 좋았어요. 엽떡도 그런 식으로 순한맛을 개발하면 집밥을 선호하는 사람들도 끌어들일 수 있을 것 같아요."
+      //   },
+      //   {
+      //       "persona_name": "매운 음식을 즐기지 않는 20대 후반 여행객",
+      //       "question_answer": "매운맛 조절 옵션을 제공하여 현지인의 입맛에 맞추는 전략",
+      //       "follow_up_answer": "저는 베트남 여행 중이라 현지 음식을 주로 먹지만, 한국 음식에 대한 관심도 있어요. 하지만 엽떡은 너무 맵다는 이야기를 많이 들어서 시도해볼 엄두가 안 나더라고요. 만약 매운맛 조절 옵션이 있다면, 한 번쯤 도전해볼 의향이 있습니다. 예전에 '비빔면'을 먹어봤는데, 매운 소스 대신 간장 소스를 넣어서 먹었더니 맛있었어요. 엽떡도 그런 식으로 매운맛을 조절할 수 있다면 좋을 것 같아요."
+      //   },
+      //   {
+      //       "persona_name": "위생에 민감한 30대 주부",
+      //       "question_answer": "배달 서비스를 강화하여 베트남의 높은 모바일 사용률과 배달 문화를 공략하는 전략",
+      //       "follow_up_answer": "저는 아이 때문에 배달 음식을 잘 안 시켜 먹지만, 가끔 남편과 둘이서 엽떡을 먹고 싶을 때가 있어요. 하지만 배달 음식은 위생 상태가 걱정돼서 망설여지더라고요. 만약 엽떡에서 위생 관리 시스템을 철저하게 운영하고, 포장 상태도 꼼꼼하게 신경 쓴다면 안심하고 주문할 수 있을 것 같아요. 예전에 '배달의 민족'에서 위생 관련 캠페인을 하는 것을 보고 안심하고 주문했던 경험이 있습니다. 엽떡도 그런 식으로 위생에 대한 신뢰도를 높이면 좋을 것 같아요."
+      //   },]
+
+
      
       setToolSteps(3);
 
-      // const selectedPersonaData = designAnalysisEmotionAnalysis.filter(
-      //   (persona, index) => selectedQuestion.includes(index)
-      // );
-      // setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
-
-      // await updateToolOnServer(
-      //   toolId,
-      //   {
-      //     completedStep: 2,
-      //     designSelectedPersona: selectedPersonaData,
-      //   },
-      //   isLoggedIn
-      // );
-      // setIsLoadingReport(true);
-
-      // // 선택된 페르소나가 하나일 경우에만 시나리오 요청
-      // if (selectedPersonaData.length > 0) {
-      //   const persona = selectedPersonaData[0]; // 첫 번째 페르소나 선택
-      //   try {
-      //     const apiRequestData = {
-      //       business: designAnalysisBusinessInfo,
-      //       design_emotion_selected_field: persona.name,
-      //       design_emotion_analysis: persona,
-      //     };
-
-      //     let response = await InterviewXDesignEmotionTargetRequest(
-      //       apiRequestData,
-      //       isLoggedIn
-      //     );
-
-      //     const maxAttempts = 10;
-      //     let attempt = 0;
-
-      //     while (
-      //       !response?.response?.design_emotion_target ||
-      //       typeof response.response.design_emotion_target !== "object" ||
-      //       Object.keys(response?.response?.design_emotion_target).length ===
-      //         0 ||
-      //       !response?.response?.design_emotion_target?.hasOwnProperty(
-      //         "target_emotion"
-      //       ) ||
-      //       !response?.response?.design_emotion_target?.hasOwnProperty(
-      //         "design_perspectives"
-      //       ) ||
-      //       !response?.response?.design_emotion_target?.hasOwnProperty(
-      //         "designer_guidelines"
-      //       )
-      //     ) {
-      //       if (attempt >= maxAttempts) {
-      //         setShowPopupError(true);
-      //         return;
-      //       }
-
-      //       response = await InterviewXDesignEmotionTargetRequest(
-      //         apiRequestData,
-      //         isLoggedIn
-      //       );
-
-      //       attempt++;
-      //     }
-
-      //     setDesignAnalysisEmotionTarget(
-      //       response.response.design_emotion_target
-      //     );
-
-      //     const oceanData = {
-      //       tool_id: designAnalysisFileId[0],
-      //       business: designAnalysisBusinessInfo,
-      //       design_emotion_selected_field: persona.name,
-      //       design_emotion_target: response?.response?.design_emotion_target,
-      //     };
-
-      //     attempt = 0;
-      //     let oceanResponse = null;
-
-      //     while (
-      //       !oceanResponse ||
-      //       typeof oceanResponse.response.design_emotion_scale !== "object" ||
-      //       Object.keys(oceanResponse?.response?.design_emotion_scale)
-      //         .length === 0 ||
-      //       !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
-      //         "conclusion"
-      //       ) ||
-      //       !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
-      //         "evaluation_analysis"
-      //       ) ||
-      //       !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
-      //         "sd_scale_analysis"
-      //       )
-      //     ) {
-      //       if (attempt >= maxAttempts) {
-      //         setShowPopupError(true);
-      //         return;
-      //       }
-
-      //       oceanResponse = await InterviewXDesignEmotionScaleRequest(
-      //         oceanData,
-      //         isLoggedIn
-      //       );
-
-      //       attempt++;
-      //     }
-      //     setDesignAnalysisEmotionScale(
-      //       oceanResponse.response.design_emotion_scale
-      //     );
-
-      //     await updateToolOnServer(
-      //       toolId,
-      //       {
-      //         completedStep: 3,
-      //         designEmotionTarget: response.response.design_emotion_target,
-      //         designEmotionScale: oceanResponse.response.design_emotion_scale,
-      //         designSelectedPersona: selectedPersonaData,
-      //       },
-      //       isLoggedIn
-      //     );
-      //   } catch (error) {}
-      // }
-
-      // setToolStep(3);
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
@@ -811,38 +783,17 @@ const PageQuickSurvey = () => {
     setSelectedPresetCards(newSelectedCards);
   };
 
-  // const handleEditBusinessClick = () => {
-  //   setIsEditingBusiness(true);
-  // };
-
-  // const handleSaveBusinessClick = () => {
-  //   setIsEditingBusiness(false);
-  // };
-
-  // const handleUndoBusinessClick = () => {
-  //   const originalText = (project?.projectAnalysis.business_analysis
-  //     ? project?.projectAnalysis.business_analysis
-  //   : "") +
-  // (project?.projectAnalysis.business_analysis &&
-  // project?.projectAnalysis.file_analysis
-  //   ? "\n"
-  //   : "") +
-  // (project?.projectAnalysis.file_analysis
-  //   ? project?.projectAnalysis.file_analysis
-  //   : "");
-
-
-  //   setBusinessDescription(originalText);
-  // };
-
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
-      if (currentUrl.toLowerCase().includes("quicksurvey")) {
+      
+      if (currentUrl.toLowerCase().includes("QuickSurvey")) {
         // 세션 스토리지에서 마지막 URL 가져오기
+        console.log("세션 스토리지에서 마지막 URL 가져오기")
         const lastUrl = sessionStorage.getItem("lastUrl");
+
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
@@ -1152,63 +1103,89 @@ const PageQuickSurvey = () => {
                         </li>
                         <li style={{ alignItems: "flex-start" }}>
                           <Body2 color="gray500">리쿠르팅 조건</Body2>
-                          {recruitingCondition ? (
+                          {interviewModeType === "moderator" && selectedPersona ? (
                             <Body2 color="gray800" style={{ textAlign: "left" }}>
-                              {recruitingCondition}
+                              {selectedPersona?.original_description}
                             </Body2>
                           ) : (
-                            <Body2 color="gray300">
-                              선택해 주세요.
-                            </Body2>
+                            recruitingCondition ? (
+                              <Body2 color="gray800" style={{ textAlign: "left" }}>
+                                {recruitingCondition}
+                              </Body2>
+                            ) : (
+                              <Body2 color="gray300">
+                                선택해 주세요.
+                              </Body2>
+                            )
                           )}
                         </li>
+
                         <li>
                         <Body2 color="gray500">상세 조건</Body2>
-                        {selectedValues.gender || selectedValues.age || selectedValues.residence || selectedValues.income ? (
+                        
+                        {interviewModeType === "moderator" ? (
                           <div style={{ 
                             display: 'flex', 
                             flexWrap: 'wrap', 
                             gap: '8px' 
                           }}>
-                            {(() => {
-                              const totalValues = Object.values(selectedValues).filter(value => value); // 선택된 값들
-                              const irrelevantCount = totalValues.filter(value => value === "상관없음").length; // "상관없음" 개수
+                            <div style={{
+                              padding: '4px 12px',
+                              borderRadius: '16px',
+                              backgroundColor: '#F7F8FA',
+                              display: 'inline-flex',
+                              alignItems: 'center'
+                            }}>
+                              <Body2 color="gray800">Preset</Body2>
+                            </div>
+                          </div>
+                        ) : (
+                          selectedValues.gender || selectedValues.age || selectedValues.residence || selectedValues.income ? (
+                            <div style={{ 
+                              display: 'flex', 
+                              flexWrap: 'wrap', 
+                              gap: '8px' 
+                            }}>
+                              {(() => {
+                                const totalValues = Object.values(selectedValues).filter(value => value);
+                                const irrelevantCount = totalValues.filter(value => value === "상관없음").length;
 
-                              if (totalValues.length === 4 && irrelevantCount === 4) {
-                                // "상관없음"이 정확히 4개일 때만 하나로 표시
-                              return (
-                                  <div style={{
-                                    padding: '4px 12px',
-                                    borderRadius: '16px',
-                                    backgroundColor: '#F7F8FA',
-                                    display: 'inline-flex',
-                                    alignItems: 'center'
-                                  }}>
-                                    <Body2 color="gray800">상관없음</Body2>
-                                  </div>
-                                );
-                              } else {
-                                // 그 외의 경우는 모든 선택된 값을 표시
-                                return Object.entries(selectedValues)
-                                  .filter(([_, value]) => value)
-                                  .map(([key, value]) => (
-                                    <div key={key} style={{
+                                if (totalValues.length === 4 && irrelevantCount === 4) {
+                                  // "상관없음"이 정확히 4개일 때만 하나로 표시
+                                return (
+                                    <div style={{
                                       padding: '4px 12px',
                                       borderRadius: '16px',
                                       backgroundColor: '#F7F8FA',
                                       display: 'inline-flex',
                                       alignItems: 'center'
                                     }}>
-                                      <Body2 color="gray800">{value}</Body2>
+                                      <Body2 color="gray800">상관없음</Body2>
                                     </div>
-                                  ));
-                              }
-                            })()}
-                          </div>
-                        ) : (
-                          <Body2 color="gray300">
-                            선택해 주세요.
-                          </Body2>
+                                  );
+                                } else {
+                                  // 그 외의 경우는 모든 선택된 값을 표시
+                                  return Object.entries(selectedValues)
+                                    .filter(([_, value]) => value)
+                                    .map(([key, value]) => (
+                                      <div key={key} style={{
+                                        padding: '4px 12px',
+                                        borderRadius: '16px',
+                                        backgroundColor: '#F7F8FA',
+                                        display: 'inline-flex',
+                                        alignItems: 'center'
+                                      }}>
+                                        <Body2 color="gray800">{value}</Body2>
+                                      </div>
+                                    ));
+                                }
+                              })()}
+                            </div>
+                          ) : (
+                            <Body2 color="gray300">
+                              선택해 주세요.
+                            </Body2>
+                          )
                         )}
                         </li>
                         <li>
@@ -1237,7 +1214,6 @@ const PageQuickSurvey = () => {
                             <Body1 color="gray700">🚩 Quick Survey 참여 페르소나 리스트</Body1>
                           </div>
                           <MoleculePersonaSelect
-                          
                               filteredPersonaList={quickSurveyPersonaGroup}
                               businessPersonaList={[]}
                               customPersonaList={[]}
@@ -1487,6 +1463,31 @@ const PageQuickSurvey = () => {
                       페르소나 그룹의 의견을 확인하여 타겟 반응을 사전에 확인해보세요.
                       </Body3>
                     </BgBoxItem>
+
+                    <InsightAnalysis>
+                      <div className="title">
+                        <div>
+                          <TabWrapType4>
+                            <TabButtonType4
+                              active={activeDesignTab === "emotion"}
+                              onClick={() => setActiveDesignTab("emotion")}
+                            >
+                             결과 개요
+                            </TabButtonType4>
+                            <TabButtonType4
+                              active={activeDesignTab === "scale"}
+                              onClick={() => setActiveDesignTab("scale")}
+                            >
+                             항목별 통계
+                            </TabButtonType4>
+                          </TabWrapType4>
+                        </div>
+                        {/* <Button Primary onClick={() => setShowPopupSave(true)}>
+                          응답자 의견 확인인
+                        </Button> */}
+                      </div>
+                    </InsightAnalysis>
+
 
                     <InsightAnalysis>
                       <div className="title">
