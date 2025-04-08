@@ -114,15 +114,15 @@ const MoleculeDetailSetting = ({
                 "40대",
                 "50대",
                 "60대 이상",
-              ].map((ageGroup) => (
+              ].map((age) => (
                 <SelectBoxItem
-                  key={ageGroup}
+                  key={age}
                   onClick={() => {
-                    handleFormChange("ageGroups", [ageGroup]);
-                    handlePurposeSelect(ageGroup, "age");
+                    handleFormChange("age", [age]);
+                    handlePurposeSelect(age, "age");
                   }}
                 >
-                  <Body2 color="gray700" align="left">{ageGroup}</Body2>
+                  <Body2 color="gray700" align="left">{age}</Body2>
                 </SelectBoxItem>
               ))}
             </SelectBoxList>
@@ -135,37 +135,37 @@ const MoleculeDetailSetting = ({
           거주지역
         </Body2>
         <SelectBox>
-          <SelectBoxTitle Small onClick={() => toggleSelectBox("region")}>
-            <Body2 color={selectedValues.region ? "gray800" : "gray300"}>
-              {selectedValues.region || "선택해주세요"}
+          <SelectBoxTitle Small onClick={() => toggleSelectBox("residence")}>
+            <Body2 color={selectedValues.residence ? "gray800" : "gray300"}>
+              {selectedValues.residence || "선택해주세요"}
             </Body2>
             <images.ChevronDown
               width="24px"
               height="24px"
               color={palette.gray500}
               style={{
-                transform: selectBoxStates.region ? "rotate(180deg)" : "rotate(0deg)",
+                transform: selectBoxStates.residence ? "rotate(180deg)" : "rotate(0deg)",
                 transition: "transform 0.3s ease",
               }}
             />
           </SelectBoxTitle>
 
-          {selectBoxStates.region && (
+          {selectBoxStates.residence && (
             <SelectBoxList>
               {[
                 "상관없음",
                 "수도권 (Seoul, Gyeonggi, Inchen)",
                 "광역시 (Busan, Daegu, Daejeon, etc)",
-                "지방 도시 및 농어촌 (Other regions) ",
-              ].map((region) => (
+                "지방 도시 및 농어촌 (Other residence) ",
+              ].map((residence) => (
                 <SelectBoxItem
-                  key={region}
+                  key={residence}
                   onClick={() => {
-                    handleFormChange("regions", [region]);
-                    handlePurposeSelect(region, "region");
+                    handleFormChange("residence", [residence]);
+                    handlePurposeSelect(residence, "residence");
                   }}
                 >
-                  <Body2 color="gray700" align="left">{region}</Body2>
+                  <Body2 color="gray700" align="left">{residence}</Body2>
                 </SelectBoxItem>
               ))}
             </SelectBoxList>
@@ -207,7 +207,7 @@ const MoleculeDetailSetting = ({
                 <SelectBoxItem
                   key={income}
                   onClick={() => {
-                    handleFormChange("incomes", [income]);
+                    handleFormChange("income", [income]);
                     handlePurposeSelect(income, "income");
                   }}
                 >

@@ -51,9 +51,12 @@ import {
   DESIGN_ANALYSIS_FILE_ID,
   PROJECT_SAAS,
   DESIGN_ANALYSIS_BUSINESS_TITLE,
-  QUICK_SURVEY_ANALYSIS
+  QUICK_SURVEY_ANALYSIS,
+  QUICK_SURVEY_CUSTOM_GUIDE,
+  QUICK_SURVEY_PRESET_DATA,
+  QUICK_SURVEY_PERSONA_GROUP
 } from "../../../../AtomStates";
-import images from "../../../../../assets/styles/Images";
+// import image from "../../../../../assets/styles/Image";
 import {
   H4,
   H3,
@@ -64,9 +67,6 @@ import {
 } from "../../../../../assets/styles/Typography";
 import {
   InterviewXQuickSurveyRequest,
-  InterviewXDesignEmotionAnalysisRequest,
-  InterviewXDesignEmotionTargetRequest,
-  InterviewXDesignEmotionScaleRequest,
   createToolOnServer,
   updateToolOnServer,
 } from "../../../../../utils/indexedDB";
@@ -109,6 +109,10 @@ const PageQuickSurvey = () => {
   const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
     DESIGN_ANALYSIS_FILE_ID
   );
+  const [quickSurveyCustomGuide, setQuickSurveyCustomGuide] = useAtom(QUICK_SURVEY_CUSTOM_GUIDE);
+  const [quickSurveyPresetData, setQuickSurveyPresetData] = useAtom(QUICK_SURVEY_PRESET_DATA);
+  const [quickSurveyPersonaGroup, setquickSurveyPersonaGroup] = useAtom(QUICK_SURVEY_PERSONA_GROUP);
+
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
@@ -116,7 +120,6 @@ const PageQuickSurvey = () => {
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [fileNames, setFileNames] = useState([]);
   const [activeDesignTab, setActiveDesignTab] = useState("emotion");
   const [isLoadingReport, setIsLoadingReport] = useState(false);
@@ -135,28 +138,30 @@ const PageQuickSurvey = () => {
 
   const [customPersonaForm, setCustomPersonaForm] = useState({
     gender: "",
-    ageGroups: [],
-    regions: [],
-    incomes: [],
+    age: [],
+    residence: [],
+    income: [],
   });
   const [selectBoxStates, setSelectBoxStates] = useState({
     gender: false,
-    ageGroup: false,
-    region: false,
+    age: false,
+    residence: false,
     income: false,
   });
   const [selectedValues, setSelectedValues] = useState({
     gender: "",
-    ageGroup: "",
-    region: "",
+    age: "",
+    residence: "",
     income: "",
   });
   const [interviewModeType, setInterviewModeType] = useState("");
   const [selectedInterviewMode, setSelectedInterviewMode] = useState(false);
-  const [personaList, setPersonaList] = useState([]);
+  // const [quickSurveyPersonaGroup, setquickSurveyPersonaGroup] = useState([]);
   const [isLoadingPreset, setIsLoadingPreset] = useState(false);
-  const [presetPersonaData, setPresetPersonaData] = useState([]);
+  // const [quickSurveyPresetData, setquickSurveyPresetData] = useState([]);
   const [selectedPresetCards, setSelectedPresetCards] = useState({});
+  const [shouldRegenerate, setShouldRegenerate] = useState(false);
+
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -290,18 +295,18 @@ const PageQuickSurvey = () => {
     setShowPopupError(false);
   };
 
-  // 필수 필드가 모두 입력되었는지 확인하는 함수
-  const isRequiredFieldsFilled = () => {
-    return businessDescription.trim().length > 0 && uploadedFiles.length > 0;
-  };
+  // // 필수 필드가 모두 입력되었는지 확인하는 함수
+  // const isRequiredFieldsFilled = () => {
+  //   return businessDescription.trim().length > 0 && uploadedFiles.length > 0;
+  // };
 
-  // 비즈니스 설명 입력 핸들러
-  const handleBusinessDescriptionChange = (e) => {
-    const input = e.target.value;
-    if (input.length <= 500) {
-      setBusinessDescription(input);
-    }
-  };
+  // // 비즈니스 설명 입력 핸들러
+  // const handleBusinessDescriptionChange = (e) => {
+  //   const input = e.target.value;
+  //   if (input.length <= 500) {
+  //     setBusinessDescription(input);
+  //   }
+  // };
 
   
   const toggleSelectBox = (type) => {
@@ -325,11 +330,11 @@ const PageQuickSurvey = () => {
     if (type === "gender") {
       handleFormChange("gender", value === "남성" ? "male" : "female");
     } else if (type === "age") {
-      handleFormChange("ageGroups", value.split(", "));
-    } else if (type === "region") {
-      handleFormChange("regions", value.split(", "));
+      handleFormChange("age", value.split(", "));
+    } else if (type === "residence") {
+      handleFormChange("residence", value.split(", "));
     } else if (type === "income") {
-      handleFormChange("incomes", value.split(", "));
+      handleFormChange("income", value.split(", "));
     }
   };
 
@@ -361,8 +366,6 @@ const PageQuickSurvey = () => {
           Data,
           isLoggedIn
         );
-
-        console.log(response.response.quick_survey_question)
 
         const responseToolId = await createToolOnServer(
           {
@@ -412,98 +415,109 @@ const PageQuickSurvey = () => {
     }
     else {
       handleNextStep(1);
+      setIsLoading(true);
+
+      const Data = {
+        type: "ix_quick_survey_custom_guide",
+        business: businessDescription,
+        goal: projectDescription,
+      }
+
+      const response = await InterviewXQuickSurveyRequest(
+        Data,
+        isLoggedIn
+      );
+
+      setQuickSurveyCustomGuide(response.response.quick_survey_custom_guide)
+      
 
       await updateToolOnServer(
         toolId,
         {
           selectedQuestion: selectedQuestion,
           surveyMethod: quickSurveyAnalysis[selectedQuestion],
+          quickSurveyCustomGuide: response.response.quick_survey_custom_guide,
           // completedStep: 1,
         }, 
         isLoggedIn
       );
-      
+      setIsLoading(false);
       setToolSteps(1);
     }
   };
 
-  // const handleSubmitQuestionSelection = async () => {
-  //   handleNextStep(1);
 
-  //   await updateToolOnServer(
-  //     toolId,
-  //     {
-  //       selectedQuestion: selectedQuestion,
-  //       // completedStep: 1,
-  //     }, 
-  //     isLoggedIn
-  //   );
-    
-  //   setToolSteps(1);
-  // };
+  useEffect(() => {
+    if (shouldRegenerate && Object.keys(quickSurveyAnalysis).length === 0) {
+      handleSubmitBusinessInfo();
+      setShouldRegenerate(false);  // 리셋
+    }
+  }, [quickSurveyAnalysis, shouldRegenerate]);
+  
+  const handleRegenerate = () => {
+    setShouldRegenerate(true);  // 재생성 flag 설정
+    setQuickSurveyAnalysis({});
+  };
 
 
   const handleSubmitSelfSelect = async () => {
     // setToolSteps(2);
     setIsLoadingDetailSetting(true);
+
     try {
-      
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      const dummyPersonaList = [
-        {
-          _id: "1",
-          name: "피부 표현 완벽주의자",
-          gender: "여성",
-          age: "28세",
-          job: "뷰티 유튜버",
-          profile: "다양한 파운데이션 제품을 사용하고 리뷰하는 뷰티 유튜버입니다. 깨끗하고 잡티 없는 피부 표현을 위해 파운데이션의 커버력, 지속력, 피부 표현 방식에 매우 민감합니다. K-뷰티 트렌드에 맞춰 자연스러운 피부 표현을 선호하며, 새로운 제품을 적극적으로 시도하고 정보를 공유합니다. 본인의 유튜브 채널을 통해 제품 리뷰, 메이크업 튜토리얼을 제공하며, 구독자들과 소통합니다.",
-          insight: "파운데이션의 사용감, 커버력, 지속력에 대한 실제 사용 후기를 통해 제품의 장단점을 파악하고, 소비자들에게 어필할 수 있는 핵심적인 특징을 도출할 수 있습니다.",
+
+        let Data;
+        
+        if (interviewModeType === "selfQuestion") {
+          Data = {
+            type: "ix_quick_survey_persona_group",
+            business: businessDescription,
+            goal: projectDescription,
+            recruitment_criteria: recruitingCondition,
+            survey_method: quickSurveyAnalysis[selectedQuestion],
+            detail_info: {
+              gender: customPersonaForm.gender || "",
+              age: customPersonaForm.age || "",
+              residence: customPersonaForm.residence || "",
+              income: customPersonaForm.income || ""
+            }
+          };
+        } else {
+          // 선택된 카드의 ID 찾기
+          const selectedCardId = Object.entries(selectedPresetCards).find(([_, isSelected]) => isSelected)?.[0];
   
-        },
-        {
-          _id: "2",
-          name: "민감성 피부 케어 전문가",
-          gender: "여성",
-          age: "35세",
-          job: "피부과 간호사",
-          profile: "민감성 피부를 위한 화장품 선택에 신중하며, 제품의 성분과 피부 트러블 유발 가능성에 대한 정보를 중요하게 생각합니다. 피부 자극을 최소화하고, 피부 건강을 개선하는 데 초점을 맞춘 제품을 선호합니다. 파운데이션 구매 시, 성분, 제형, 사용감 등을 꼼꼼하게 따져보고, 피부에 안전한 제품을 선택합니다. 피부 관련 전문 지식을 바탕으로 제품 선택에 대한 조언을 구합니다.",
-          insight: "민감성 피부를 가진 소비자들이 파운데이션 선택 시 가장 중요하게 고려하는 요소와 제품 사용 후 나타나는 피부 변화에 대한 정보를 얻어, 제품 개발 및 마케팅 전략에 활용할 수 있습니다.",
-        
-        },
-        {
-          _id: "3",
-          name: "워킹맘의 간편 메이크업 추구자",
-          gender: "여성",
-          age: "38세",
-          job: "회사원",
-          profile: "출근과 육아를 병행하며, 짧은 시간 안에 완벽한 메이크업을 완성하는 것을 목표로 합니다. 파운데이션 선택 시, 간편한 사용법, 뛰어난 지속력, 빠른 피부 표현 효과를 중요하게 생각합니다. 촉촉한 사용감과 자연스러운 피부 표현을 선호하며, 수정 화장을 최소화할 수 있는 제품을 찾습니다. 온라인 쇼핑을 통해 제품을 구매하고, 다른 워킹맘들의 사용 후기를 참고합니다.",
-          insight: "시간이 부족한 워킹맘들이 파운데이션에 기대하는 기능과 사용성을 파악하여, 제품 개발 및 마케팅 전략에 반영하고, 핵심 타겟층을 공략할 수 있습니다.",
-        
+          const selectedPersona = quickSurveyPresetData.find(persona => persona._id === selectedCardId);
+          Data = {
+            type: "ix_quick_survey_persona_group",
+            business: businessDescription,
+            goal: projectDescription,
+            survey_method: quickSurveyAnalysis[selectedQuestion],
+            recruitment_criteria: selectedPersona?.original_description || ""
+          };
         }
-      ];
+
+      const response = await InterviewXQuickSurveyRequest(
+        Data,
+        isLoggedIn
+      );
+
+      setquickSurveyPersonaGroup(response.response.quick_survey_persona_group)
+
       
-  
-      setPersonaList(dummyPersonaList);
-
-      // const Data = {
-      //   type: "ix_quick_survey_persona_group",
-      //   business_description: businessDescription,
-      //   goal: projectDescription,
-      //   // recruitment_criteria: quickSurveyAnalysis[selectedQuestion],
-      //   // survey_method: quickSurveyAnalysis[selectedQuestion]
-      // };
-
-      // const response = await InterviewXQuickSurveyRequest(
-      //   Data,
-      //   isLoggedIn
-      // );
-
-      // console.log(response)
-      // setPersonaList(response.response.persona_group)
+      await updateToolOnServer(
+        toolId,
+        {
+          detailInfo: customPersonaForm,
+          recruitmentCriteria: recruitingCondition,
+          personaGroup: response.response.quick_survey_persona_group,
+          // completedStep: 1,
+        }, 
+        isLoggedIn
+      );
 
 
     } catch (error) {
-              setShowPopupError(true);
+        setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
           case 500:
@@ -526,43 +540,43 @@ const PageQuickSurvey = () => {
 
  
 
-
   const handlePresetPersona = async () => {
     // setToolSteps(2);
     setIsLoadingPreset(true);
     try {
       
-      await new Promise(resolve => setTimeout(resolve, 1500));
-     
-    // 더미 데이터 추가
-const dummyPersonaData = [
-  {
-    _id: "1",
-    personaName: "20대 직장인",
-    personaCharacteristics: "가격대 범에 따가를 보내는 젊은 지원형 소비자",
-    status: "complete",
-  },
-  {
-    _id: "2",
-    personaName: "30대 주부",
-    personaCharacteristics: "가격대 범에 따가를 보내는 젊은 지원형 소비자",
-    status: "complete",
-  },
-  {
-    _id: "3",
-    personaName: "대학생",
-    personaCharacteristics: "가격대 범에 따가를 보내는 젊은 지원형 소비자",
-    status: "complete",
-  },
-  {
-    _id: "4",
-    personaName: "40대 전문직",
-    personaCharacteristics: "가격대 범에 따가를 보내는 젊은 지원형 소비자",
-    status: "complete",
-  }
-];
 
-  setPresetPersonaData(dummyPersonaData);
+      const Data = {
+        type: "ix_quick_survey_preset",
+        business: businessDescription,
+        goal: projectDescription,
+        survey_method: {
+          question: quickSurveyAnalysis[selectedQuestion].question,
+          follow_up: quickSurveyAnalysis[selectedQuestion].follow_up,
+        }
+      }
+
+      const response = await InterviewXQuickSurveyRequest(
+        Data,
+        isLoggedIn
+      );
+
+          // 여기서 데이터 가공
+      const allPersonas = [
+        ...response.response.quick_survey_preset.low_user_group,
+        ...response.response.quick_survey_preset.general_user_group,
+        ...response.response.quick_survey_preset.high_user_group
+      ].map((persona, index) => ({
+        _id: String(index + 1),
+        personaName: persona.preset_name,
+        personaCharacteristics: persona.preset_description,
+        status: "complete",
+        original_description: persona.preset_description  // recruitment_criteria용으로 원본 저장
+      }));
+
+      setQuickSurveyPresetData(allPersonas);
+
+
 
   } catch (error) {
     setShowPopupError(true);
@@ -740,84 +754,43 @@ const dummyPersonaData = [
     }
   };
 
-  // 파일 업로드 핸들러
-  const handleChangeStatus = ({ meta, file, remove }, status) => {
-    // 20MB 크기 제한 체크
-    const maxSize = 20 * 1024 * 1024; // 20MB in bytes
-    if (file.size > maxSize && status !== "removed") {
-      setShowPopupFileSize(true);
-      remove();
-      return;
-    }
-
-    // 파일 상태 업데이트
-    if (status === "done" || status === "preparing" || status === "uploading") {
-      setUploadedFiles((prev) => {
-        // 이미 존재하는 파일이 아닌 경우에만 추가
-        if (!prev.find((f) => f.name === file.name)) {
-          setFileNames((prev) => [...prev, file.name]);
-          return [...prev, file];
-        }
-        return prev;
-      });
-    } else if (status === "removed") {
-      setUploadedFiles((prev) => prev.filter((f) => f.name !== file.name));
-      setFileNames((prev) => prev.filter((name) => name !== file.name));
-    }
-
-    // 파일 크기를 KB 또는 MB 단위로 변환
-    const size = file.size;
-    const sizeStr =
-      size > 1024 * 1024
-        ? `${(size / (1024 * 1024)).toFixed(1)}MB`
-        : `${(size / 1024).toFixed(1)}KB`;
-
-    // setTimeout을 사용하여 DOM이 업데이트된 후 실행
-    setTimeout(() => {
-      const containers = document.querySelectorAll(".dzu-previewContainer");
-      containers.forEach((container) => {
-        if (!container.dataset.filename) {
-          container.dataset.filename = file.name;
-          container.dataset.size = sizeStr;
-        }
-      });
-    }, 0);
-  };
-
- 
-
   const handlePresetCardSelection = (personaId) => {
-    setSelectedPresetCards(prev => ({
-      ...prev,
-      [personaId]: !prev[personaId]
-    }));
+    setSelectedPresetCards(prev => {
+      // 현재 선택된 카드가 있고, 그게 클릭한 카드라면 선택 해제
+      if (prev[personaId]) {
+        return {};
+      }
+      // 새로운 카드 선택 시 이전 선택은 모두 해제하고 새로운 카드만 선택
+      return {
+        [personaId]: true
+      };
+    });
   };
 
 
+  // const handleEditBusinessClick = () => {
+  //   setIsEditingBusiness(true);
+  // };
 
-  const handleEditBusinessClick = () => {
-    setIsEditingBusiness(true);
-  };
+  // const handleSaveBusinessClick = () => {
+  //   setIsEditingBusiness(false);
+  // };
 
-  const handleSaveBusinessClick = () => {
-    setIsEditingBusiness(false);
-  };
-
-  const handleUndoBusinessClick = () => {
-    const originalText = (project?.projectAnalysis.business_analysis
-      ? project?.projectAnalysis.business_analysis
-    : "") +
-  (project?.projectAnalysis.business_analysis &&
-  project?.projectAnalysis.file_analysis
-    ? "\n"
-    : "") +
-  (project?.projectAnalysis.file_analysis
-    ? project?.projectAnalysis.file_analysis
-    : "");
+  // const handleUndoBusinessClick = () => {
+  //   const originalText = (project?.projectAnalysis.business_analysis
+  //     ? project?.projectAnalysis.business_analysis
+  //   : "") +
+  // (project?.projectAnalysis.business_analysis &&
+  // project?.projectAnalysis.file_analysis
+  //   ? "\n"
+  //   : "") +
+  // (project?.projectAnalysis.file_analysis
+  //   ? project?.projectAnalysis.file_analysis
+  //   : "");
 
 
-    setBusinessDescription(originalText);
-  };
+  //   setBusinessDescription(originalText);
+  // };
 
   useEffect(() => {
     // 새로고침 감지 함수
@@ -981,7 +954,8 @@ const dummyPersonaData = [
                               );
                               setDescriptionLength(e.target.value.length);
                             }}
-                            disabled={completedSteps.includes(2) ||  Object.keys(quickSurveyAnalysis).length > 0 }
+                            // disabled={completedSteps.includes(2) ||  Object.keys(quickSurveyAnalysis).length > 0 }
+                            disabled={completedSteps.includes(2) || toolSteps >= 1}
                           />
                           <Body2 color="gray300" align="right">
                             {descriptionLength} / 150
@@ -1021,11 +995,6 @@ const dummyPersonaData = [
                                 'single_choice': '단일 선택형'
                               };
 
-                              // const getDetails = (value) => {
-                              //   if (key === 'single_choice') return value.options;
-                              //   if (key === 'ab_test') return [value.option_a, value.option_b];
-                              //   return [value.options];
-                              // };
 
                               return (
                                 <MoleculeDesignItem
@@ -1053,7 +1022,9 @@ const dummyPersonaData = [
                             Primary
                             Fill
                             Round
-                            onClick={handleSubmitBusinessInfo}  // 재생성 핸들러로 변경 필요
+                            onClick={handleRegenerate}  // 재생성 핸들러로 변경 필요
+                            disabled={toolSteps >= 1}
+                        
                           >
                            
                               재생성
@@ -1065,7 +1036,7 @@ const dummyPersonaData = [
                             Fill
                             Round
                             onClick={handleSubmitBusinessInfo}
-                            disabled={selectedQuestion.length === 0}
+                            disabled={selectedQuestion.length === 0 || toolSteps >= 1}
                           >
                             다음
                           </Button>
@@ -1150,7 +1121,7 @@ const dummyPersonaData = [
                         </li>
                         <li>
                         <Body2 color="gray500">상세 조건</Body2>
-                        {selectedValues.gender || selectedValues.age || selectedValues.region || selectedValues.income ? (
+                        {selectedValues.gender || selectedValues.age || selectedValues.residence || selectedValues.income ? (
                           <div style={{ 
                             display: 'flex', 
                             flexWrap: 'wrap', 
@@ -1217,14 +1188,14 @@ const dummyPersonaData = [
                         }}>
                           <AtomPersonaLoader message="로딩 중..." />
                         </div>
-                      ) : personaList.length > 0 ? (
+                      ) : quickSurveyPersonaGroup.length > 0 ? (
                         <TabContent5Item>
                           <div className="title">
                             <Body1 color="gray700">🚩 Quick Survey 참여 페르소나 리스트</Body1>
                           </div>
                           <MoleculePersonaSelect
                           
-                              filteredPersonaList={personaList}
+                              filteredPersonaList={quickSurveyPersonaGroup}
                               businessPersonaList={[]}
                               customPersonaList={[]}
                               // selectedQuestion={selectedQuestion}
@@ -1236,7 +1207,11 @@ const dummyPersonaData = [
                           <InterviewModeSelection>
                             <InterviewModeCard
                               isActive={interviewModeType === "selfQuestion"}
-                              onClick={() => setInterviewModeType("selfQuestion")}
+                              onClick={() => {
+                                if (toolSteps >= 2 || isLoadingPreset) return; // 여기서 조건 체크
+                                setInterviewModeType("selfQuestion");
+                              }}
+                              disabled={toolSteps >= 2 || isLoadingPreset}
                             >
                               <CardWrapper>
                                 <CheckboxWrapper>
@@ -1247,9 +1222,11 @@ const dummyPersonaData = [
                                     id="selfQuestion"
                                     name="interviewMode"
                                     checked={interviewModeType === "selfQuestion"}
-                                    onChange={() =>
-                                      setInterviewModeType("selfQuestion")
-                                    }
+                                    onChange={() => {
+                                      if (toolSteps >= 2 || isLoadingPreset) return; // onChange에도 조건 체크
+                                      setInterviewModeType("selfQuestion");
+                                    }}
+                                    disabled={toolSteps >= 2 || isLoadingPreset}
                                   />
                                 </CheckboxWrapper>
                                 <CardContent>
@@ -1273,8 +1250,9 @@ const dummyPersonaData = [
                               isActive={interviewModeType === "moderator"}
                               onClick={() => {
                                 setInterviewModeType("moderator");
-                                handlePresetPersona();
-                               
+                                if (!quickSurveyPresetData || quickSurveyPresetData.length === 0 ) {
+                                  handlePresetPersona();
+                                }
                               }}
                             >
                               <CardWrapper>
@@ -1326,21 +1304,21 @@ const dummyPersonaData = [
                                     value={recruitingCondition}
                                     onChange={(e) => setRecruitingCondition(e.target.value)}
                                   />
-                                  <div style={{ 
-                                    display: 'flex', 
-                                    flexWrap: 'wrap', 
-                                    gap: '8px', 
-                                  }}>
-                                    <TagButton>
-                                      <Body2 color="gray700" style={{ fontSize: "14px" }}>리쿠르팅 조건 도출</Body2>
-                                    </TagButton>
-                                    <TagButton>
-                                      <Body2 color="gray700" style={{ fontSize: "14px" }}>리쿠르팅 조건 도출</Body2>
-                                    </TagButton>
-                                    <TagButton>
-                                      <Body2 color="gray700" style={{ fontSize: "14px" }}>리쿠르팅 조건 도출</Body2>
-                                    </TagButton>
-                                  </div>
+                                  {quickSurveyCustomGuide && quickSurveyCustomGuide.length > 0 ? (
+                                    <div>
+                                      {quickSurveyCustomGuide.map((guide, index) => (
+                                        <TagButton key={index}>
+                                          <Body2 color="gray700" style={{ fontSize: "14px" }}>{guide}</Body2>
+                                        </TagButton>
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    <div>
+                                      <TagButton>
+                                        <Body2 color="gray700" style={{ fontSize: "14px" }}>리쿠르팅 조건 도출</Body2>
+                                      </TagButton>
+                                    </div>
+                                  )}
                                 </TabContent5Item>
 
                                 <div className="title" style={{ marginTop: "30px" }}> 
@@ -1374,7 +1352,7 @@ const dummyPersonaData = [
                                     <Body1 color="gray700">💡Quick Survey에 최적화된 페르소나 집단을 추천 드려요 </Body1>
                                   </div>
                                   <MolculePresetPersona
-                                    personaData={presetPersonaData}
+                                    personaData={quickSurveyPresetData}
                                     selectedCards={selectedPresetCards}
                                     onCardSelect={handlePresetCardSelection}
                                   />
@@ -1390,7 +1368,7 @@ const dummyPersonaData = [
                     </div>
                     
 
-                    {isLoadingDetailSetting ? (
+                    {isLoadingDetailSetting || isLoadingPreset ? (
                       <div style={{
                         width: "100%",
                         display: "flex",
@@ -1407,18 +1385,26 @@ const dummyPersonaData = [
                         Fill
                         Round
                         onClick={() => {
-                          if (personaList.length > 0) {
+                          if (quickSurveyPersonaGroup.length > 0) {
                             handleSubmitPersonas(); //마지막 보고서 함수
                            
                           } else {
-                            if(interviewModeType === "selfQuestion"){
+                            if(interviewModeType === "selfQuestion" ||  (interviewModeType === "moderator" && 
+                              quickSurveyPresetData && 
+                              quickSurveyPresetData.length > 0)){
+                        
                               handleSubmitSelfSelect();
-                            } else {
-                              handleSubmitPersonas();
-                            }
+                            } 
                           }
                         }}
-                        disabled={!interviewModeType}
+                        disabled={
+                          !interviewModeType || 
+                          (interviewModeType === "moderator" && 
+                            (!selectedPresetCards || !Object.values(selectedPresetCards).some(value => value))) ||
+                          (interviewModeType === "selfQuestion" && 
+                            ((!recruitingCondition || recruitingCondition.trim() === "") && 
+                            (!selectedValues || Object.values(selectedValues).every(value => !value))))
+                        }
                       >
                         다음
                         </Button>
@@ -1725,6 +1711,7 @@ const TagButton = styled.div`
   border-radius: 6px;
   background-color:  #F7F8FA;
   border: none;
+  margin-right: 10px;
   transition: all 0.2s ease;
 `;
 

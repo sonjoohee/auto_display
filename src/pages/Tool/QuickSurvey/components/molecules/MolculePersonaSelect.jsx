@@ -126,8 +126,7 @@ const MoleculePersonaSelect = ({
     <CardGroupWrap>
 
       {filteredPersonaList
-
-          .map((persona) => {
+          ?.map((persona) => {
             // 현재 persona가 선태된 상태인지 확인 (personaList.selected 에서 조회)
             const isSelected = personaList.selected.some(
               (p) => p._id === persona._id

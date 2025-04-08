@@ -2546,16 +2546,18 @@ export const AiPersonaCardListItem = styled(ListBoxItem)`
   .header {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    // align-items: flex-start;
+    align-items: ${(props) => (props.quickSurvey ? "center" : "flex-start")};
     gap: 12px;
     width: 100%;
-    border-bottom: 1px solid ${palette.outlineGray};
+    // border-bottom: 1px solid ${palette.outlineGray};
+    border-bottom: ${(props) => (props.quickSurvey ? "0" : "1px solid ${palette.outlineGray}")};
   }
 
   .title {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: ${(props) => (props.quickSurvey ? "center" : "flex-start")};
     gap: 4px;
 
     > div {
