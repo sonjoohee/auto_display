@@ -78,7 +78,12 @@ import MoleculeDetailSetting from '../molecules/MoleculeDetailSetting';
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 import MoleculePersonaSelect from "../molecules/MolculePersonaSelect";
 import MolculePresetPersona from "../molecules/MolculePresetPersona";
-
+import ABGraph from "../../../../../components/Charts/ABGraph";
+import BarChartLikertScale5 from "../../../../../components/Charts/BarChartLikertScale5";
+import BarChartLikertScale11 from "../../../../../components/Charts/BarChartLikertScale11";
+import GraphChartScale2 from "../../../../../components/Charts/GraphChartScale2";
+import GraphChartScale5 from "../../../../../components/Charts/GraphChartScale5";
+import GraphChartScale11 from "../../../../../components/Charts/GraphChartScale11";
 const PageQuickSurvey = () => {
 
   const navigate = useNavigate();
@@ -1527,6 +1532,13 @@ const PageQuickSurvey = () => {
                       </div>
                     </InsightAnalysis>
 
+                    <ABGraph />
+                    <BarChartLikertScale5 />
+                    <BarChartLikertScale11 />
+                    <GraphChartScale2 />
+                    <GraphChartScale5 />
+                    <GraphChartScale11 />
+
                     {activeDesignTab === "emotion" && (
                       <InsightAnalysis style={{ marginBottom: "240px" }}>
                         <Sub3 color="gray700" align="left">
@@ -1550,7 +1562,6 @@ const PageQuickSurvey = () => {
                         </CardGroupWrap>
                       </InsightAnalysis>
                     )}
-
                     {activeDesignTab === "scale" && (
                       <InsightAnalysis style={{ marginBottom: "240px" }}>
                         <OCEANRangeWrap report>
@@ -1584,6 +1595,8 @@ const PageQuickSurvey = () => {
           </DesignAnalysisWrap>
         </MainContent>
       </ContentsWrap>
+ 
+
 
       {showPopupError && (
         <PopupWrap
