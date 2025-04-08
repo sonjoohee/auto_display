@@ -29,7 +29,7 @@ const MoleculeDetailSetting = ({
               alignItems: "center",
               gap: "4px",
             }}>
-              {customPersonaForm.gender && (
+              {customPersonaForm.gender && customPersonaForm.gender !== "상관없음" && (
                 <img
                   src={
                     customPersonaForm.gender === "male"
@@ -40,12 +40,14 @@ const MoleculeDetailSetting = ({
                   style={{ width: "25px", height: "25px" }}
                 />
               )}
-              <Body2 color={customPersonaForm.gender ? "primary" : "gray300"}>
-                {customPersonaForm.gender === "male"
-                  ? "남성"
-                  : customPersonaForm.gender === "female"
-                    ? "여성"
-                    : "선택해주세요"}
+              <Body2 color={customPersonaForm.gender ? "gray800" : "gray300"}>
+                {customPersonaForm.gender === "상관없음" 
+                  ? "상관없음"
+                  : customPersonaForm.gender === "male"
+                    ? "남성"
+                    : customPersonaForm.gender === "female"
+                      ? "여성"
+                      : "선택해주세요"}
               </Body2>
             </div>
             <images.ChevronDown
