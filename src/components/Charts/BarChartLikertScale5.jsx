@@ -88,6 +88,9 @@ const BarChartLikertScale5 = ({
           <CategoryLabel>
             {index + 1}. {item.category}
           </CategoryLabel>
+          <SubCategoryLabel>
+            추가 설명
+          </SubCategoryLabel>
         </CategoryItem>
       ))}
     </GraphContainer>
@@ -163,4 +166,16 @@ const CategoryLabel = styled.div`
   text-align: center;
   color: #323232;
   width: 100%;
+`;
+
+const SubCategoryLabel = styled.div`
+  font-family: "Pretendard", "Poppins";
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.5em;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: #323232;
+  width: 100%;
+  margin-top: -10px;
 `;

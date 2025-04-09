@@ -61,8 +61,8 @@ const ABGraph = ({
               onBarClick();
             }}
           >
-            <BarFill height={getBarHeight(calculatedData.a)} />
             <BarValue>{calculatedData.a}%</BarValue>
+            <BarFill height={getBarHeight(calculatedData.a)} />
           </BarItem>
           <BarLabel>A</BarLabel>
           <BarSubtitle>{Object.keys(quickSurveyStaticData)[0]}</BarSubtitle>
@@ -78,8 +78,8 @@ const ABGraph = ({
               onBarClick();
             }}
           >
-            <BarFill height={getBarHeight(calculatedData.b)} />
             <BarValue>{calculatedData.b}%</BarValue>
+            <BarFill height={getBarHeight(calculatedData.b)} />
           </BarItem>
           <BarLabel>B</BarLabel>
           <BarSubtitle>{Object.keys(quickSurveyStaticData)[1]}</BarSubtitle>
