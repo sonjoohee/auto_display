@@ -96,6 +96,7 @@ const OrganismToastPopupQuickSurveyComplete = ({
 
   const renderAnswersComplete = () => {
     const questionAnswers = answers || [];
+ 
 
     const filteredAnswers = selectedOption
       ? questionAnswers.filter(
@@ -126,8 +127,8 @@ const OrganismToastPopupQuickSurveyComplete = ({
               </div>
             </TypeName>
             <TextContainer>
-              <div>
-                {selectedOptionIndex}. {answer.answer.main}
+            <div>
+                {selectedOptionIndex && selectedOption ? `${selectedOptionIndex}. ` : ''}{answer.answer.main}
               </div>
               <div style={{ marginTop: "16px" }}>{answer.answer.followUp}</div>
             </TextContainer>

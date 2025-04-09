@@ -5,6 +5,9 @@ import { useAtom } from "jotai";
 import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
 
 const BarChartLikertScale11 = ({
+  onOptionSelect = () => {},
+  onOptionSelectIndex = () => {},
+  onBarClick,
   showLegend = true,
 }) => {
   const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
@@ -96,7 +99,11 @@ const BarChartLikertScale11 = ({
             return (
               <BarItem
                 key={index}
-                onClick={() => console.log("Clicked Bar Value:", item.label)}
+                onClick={() => {
+                  onOptionSelect(item.label);
+                  onOptionSelectIndex(index + 1);
+                  onBarClick();
+                }}
               >
                 <BarValue color={valueColor}>{item.value}%</BarValue>
                 <BarGroup>

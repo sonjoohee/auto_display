@@ -577,6 +577,8 @@ export const PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION = atom("");
 export const QUICK_SURVEY_PROJECT_DESCRIPTION = atom("");
 export const QUICK_SURVEY_ANALYSIS = atom([]);
 export const QUICK_SURVEY_SELECTED_QUESTION = atom([]);
+export const QUICK_SURVEY_DETAIL_INFO = atom({});
+export const QUICK_SURVEY_RECRUITING_CONDITION = atom("");
 export const QUICK_SURVEY_SURVEY_METHOD = atom([]);
 export const QUICK_SURVEY_CUSTOM_GUIDE = atom([]);
 export const QUICK_SURVEY_PRESET_DATA = atom([]);
@@ -584,6 +586,7 @@ export const QUICK_SURVEY_PERSONA_GROUP = atom([]);
 export const QUICK_SURVEY_INTERVIEW = atom([]);
 export const QUICK_SURVEY_REPORT = atom([]);
 export const QUICK_SURVEY_STATIC_DATA = atom([]);
+export const QUICK_SURVEY_INTERVIEW_MODE_TYPE = atom("");
 
 //!saas
 // 프로젝트 생성 페이지

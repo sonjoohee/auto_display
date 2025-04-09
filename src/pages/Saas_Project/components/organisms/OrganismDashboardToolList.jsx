@@ -156,6 +156,9 @@ import {
   QUICK_SURVEY_STATIC_DATA,
   QUICK_SURVEY_SURVEY_METHOD,
   QUICK_SURVEY_SELECTED_QUESTION,
+  QUICK_SURVEY_DETAIL_INFO,
+  QUICK_SURVEY_RECRUITING_CONDITION,
+  QUICK_SURVEY_INTERVIEW_MODE_TYPE,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -374,6 +377,10 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setQuickSurveyInterview] = useAtom(QUICK_SURVEY_INTERVIEW);
   const [, setQuickSurveySurveyMethod] = useAtom(QUICK_SURVEY_SURVEY_METHOD);
   const [, setQuickSurveyReport] = useAtom(QUICK_SURVEY_REPORT);
+  const [, setQuickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
+  const [, setQuickSurveyDetailInfo] = useAtom(QUICK_SURVEY_DETAIL_INFO);
+  const [, setQuickSurveyRecruitingCondition] = useAtom(QUICK_SURVEY_RECRUITING_CONDITION);
+  const [, setQuickSurveyInterviewModeType] = useAtom(QUICK_SURVEY_INTERVIEW_MODE_TYPE);
 
   const saveConversation = (data) => {};
 
@@ -542,6 +549,8 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         case "ix_design_emotion_analysis":
           return tool.completedStep === 3 ? "완료" : "진행중";
         case "ix_psst_multimodal":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        case "ix_quick_survey_question":
           return tool.completedStep === 3 ? "완료" : "진행중";
         default:
           return "-";
@@ -919,7 +928,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setquickSurveyPersonaGroup([]);
         setQuickSurveyInterview([]);
         setQuickSurveySurveyMethod([]);
+        setQuickSurveyStaticData([]);
         setQuickSurveyReport([]);
+        setQuickSurveyDetailInfo({});
+        setQuickSurveyInterviewModeType("");
+        setQuickSurveyRecruitingCondition("");
         setToolLoading(false);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
@@ -928,10 +941,14 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setQuickSurveyAnalysis(chatData?.quickSurveyAnalysis || []);
         setQuickSurveyCustomGuide(chatData?.quickSurveyCustomGuide || []);
         setQuickSurveyPresetData(chatData?.quickSurveyPresetData || []);
-        setquickSurveyPersonaGroup(chatData?.quickSurveyPersonaGroup || []);
+        setquickSurveyPersonaGroup(chatData?.personaGroup || []);
         setQuickSurveyInterview(chatData?.quickSurveyInterview || []);
         setQuickSurveySurveyMethod(chatData?.surveyMethod || []);
         setQuickSurveyReport(chatData?.quickSurveyReport || []);
+        setQuickSurveyStaticData(chatData?.quickSurveyStaticData || []);
+        setQuickSurveyDetailInfo(chatData?.detailInfo || {});
+        setQuickSurveyRecruitingCondition(chatData?.recruitmentCriteria || "");
+        setQuickSurveyInterviewModeType(chatData?.interviewModeType || "");
 
 
         // 페이지를 대화가 이어지는 형태로 전환
