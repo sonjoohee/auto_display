@@ -983,11 +983,7 @@ const PageQuickSurvey = () => {
                         </Body1>
                       </Title>
                       <ABGraph />
-                      <BarChartLikertScale5 />
-                      <BarChartLikertScale11 />
-                      <GraphChartScale2 />
-                      <GraphChartScale5 />
-                      <GraphChartScale11 />
+
                       <FormBox Large>
                         <CustomTextarea
                           Edit
@@ -1656,7 +1652,7 @@ const PageQuickSurvey = () => {
                       {activeDesignTab === "emotion" && (
                         <>
                          {/* 각 질문 유형에 맞는 그래프 렌더링 */}
-                         {selectedQuestion[0] === 'ab_test' && (
+                         {selectedQuestion[0] === 'ab_test' && Object.keys(quickSurveyStaticData).length > 0 && (
                             <ABGraph />
                           )}
                           {(selectedQuestion[0] === 'importance' || selectedQuestion[0] === 'single_choice') && Object.keys(quickSurveyStaticData).length > 0 && (
