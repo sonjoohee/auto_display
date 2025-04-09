@@ -23,6 +23,7 @@ const OrganismToastPopupQuickSurveyComplete = ({
   isActive,
   onClose,
   isComplete,
+  selectedOption,
 }) => {
   const [projectSaas] = useAtom(PROJECT_SAAS);
   const project = projectSaas;
@@ -94,12 +95,18 @@ const OrganismToastPopupQuickSurveyComplete = ({
 
 
   const renderAnswersComplete = () => {
-    
+
     const questionAnswers = answers || [];
+
+    const filteredAnswers = selectedOption 
+    ? questionAnswers.filter(answer => answer.answer.main === selectedOption)
+    : questionAnswers;
+
+
 
     return (
       <>
-      {questionAnswers.map((answer, index) => (
+      {filteredAnswers.map((answer, index) => (
         <AnswerItem key={index}>
           <TypeName>
             <Thumb>
@@ -126,6 +133,34 @@ const OrganismToastPopupQuickSurveyComplete = ({
         </AnswerItem>
       ))}
     </>
+    //   <>
+    //   {questionAnswers.map((answer, index) => (
+    //     <AnswerItem key={index}>
+    //       <TypeName>
+    //         <Thumb>
+    //           <img
+    //             src={personaImages[answer.imageKey]}
+    //             alt={answer.persona.persona_name}
+    //           />
+    //         </Thumb>
+    //         <div>
+    //           {answer.persona.persona_name}
+    //           <p>
+    //             <span>{answer.gender}</span>
+    //             <span>
+    //               {answer.age.includes("세") ? answer.age : `${answer.age}세`}
+    //             </span>
+    //             <span>{answer.job}</span>
+    //           </p>
+    //         </div>
+    //       </TypeName>
+    //       <TextContainer>
+    //         <div>{answer.answer.main}</div>
+    //         <div style={{ marginTop: '16px' }}>{answer.answer.followUp}</div>
+    //       </TextContainer>
+    //     </AnswerItem>
+    //   ))}
+    // </>
     );
   };
 
