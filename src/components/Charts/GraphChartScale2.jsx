@@ -59,8 +59,8 @@ const GraphChartScale2 = () => {
   const data = getDataFromQuickSurveyStaticData(quickSurveyStaticData);
 
   // 합계 계산
-  const sumA = data.a.reduce((sum, val) => sum + val, 0);
-  const sumB = data.b.reduce((sum, val) => sum + val, 0);
+  const sumA = data.a[0] + data.a[1]; // 남성과 여성 데이터만 합산
+  const sumB = data.b[0] + data.b[1]; // 남성과 여성 데이터만 합산
   const importanceLabels = ["A", "B"]; // A, B를 레이블로 사용
   // const barWidths = [Math.min(70, sumA), Math.min(70, sumB)];
 
@@ -356,7 +356,7 @@ const BarsColumn = styled.div`
 
 const ImportanceBar = styled.div`
   height: 16px;
-  min-width: ${(props) => props.width}px;
+  width: ${(props) => props.width}px;
   background-color: #226fff;
   border-radius: 2px;
   display: flex;

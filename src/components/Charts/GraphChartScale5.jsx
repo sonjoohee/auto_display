@@ -82,12 +82,6 @@ const GraphChartScale5 = () => {
   };
 
   const importanceLabels = [1, 2, 3, 4, 5];
-  // 각 중요도 레벨별 합계 계산
-  const rowSums = importanceLabels.map((_, index) => {
-    const rowKey = `row${index + 1}`;
-    const values = data[rowKey];
-    return values.reduce((sum, val) => sum + val, 0);
-  });
 
   return (
     <ChartContainer>
@@ -141,7 +135,17 @@ const GraphChartScale5 = () => {
                   style={{ position: "relative" }}
                 >
                   <ImportanceBar key={`bar-${index}`} width={barWidth} />
-                  <BarValue>{rowSums[index]}</BarValue>
+                  <BarValue>
+                    {index === 0
+                      ? data.a[0] + data.a[1]
+                      : index === 1
+                      ? data.b[0] + data.b[1]
+                      : index === 2
+                      ? data.c[0] + data.c[1]
+                      : index === 3
+                      ? data.d[0] + data.d[1]
+                      : data.e[0] + data.e[1]}
+                  </BarValue>
                 </div>
               );
             })}
