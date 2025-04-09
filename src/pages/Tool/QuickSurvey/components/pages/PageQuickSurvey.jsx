@@ -102,32 +102,10 @@ const PageQuickSurvey = () => {
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
-  const [, setDesignAnalysisBusinessTitle] = useAtom(
-    DESIGN_ANALYSIS_BUSINESS_TITLE
-  );
-  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(
-    DESIGN_ANALYSIS_BUSINESS_INFO
-  );
-  const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] =
-    useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS);
   const [quickSurveyAnalysis, setQuickSurveyAnalysis] = useAtom(
     QUICK_SURVEY_ANALYSIS
   );
-  const [
-    selectedDesignAnalysisEmotionAnalysis,
-    setSelectedDesignAnalysisEmotionAnalysis,
-  ] = useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
-  const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(
-    DESIGN_ANALYSIS_EMOTION_TARGET
-  );
-  const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(
-    DESIGN_ANALYSIS_EMOTION_SCALE
-  );
-  const [designAnalysisFileNames] = useAtom(DESIGN_ANALYSIS_FILE_NAMES);
-  const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
-    DESIGN_ANALYSIS_FILE_ID
-  );
-  const [quickSurveySelectedQuestion, setQuickSurveySelectedQuestion] = useAtom(
+  const [quickSurveySelectedQuestion, ] = useAtom(
     QUICK_SURVEY_SELECTED_QUESTION
   );
   const [quickSurveyCustomGuide, setQuickSurveyCustomGuide] = useAtom(
@@ -145,13 +123,13 @@ const PageQuickSurvey = () => {
   const [quickSurveySurveyMethod, setQuickSurveySurveyMethod] = useAtom(
     QUICK_SURVEY_SURVEY_METHOD
   );
-  const [quickSurveyDetailInfo, setquickSurveyDetailInfo] = useAtom(
+  const [quickSurveyDetailInfo, ] = useAtom(
     QUICK_SURVEY_DETAIL_INFO
   );
-  const [quickSurveyRecruitingCondition, setQuickSurveyRecruitingCondition] = useAtom(
+  const [quickSurveyRecruitingCondition, ] = useAtom(
     QUICK_SURVEY_RECRUITING_CONDITION
   );
-  const [quickSurveyInterviewModeType, setQuickSurveyInterviewModeType] = useAtom(
+  const [quickSurveyInterviewModeType, ] = useAtom(
     QUICK_SURVEY_INTERVIEW_MODE_TYPE
   );
   const [quickSurveyReport, setQuickSurveyReport] =
@@ -172,11 +150,6 @@ const PageQuickSurvey = () => {
   const [activeDesignTab, setActiveDesignTab] = useState("emotion");
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   const [isLoadingDetailSetting, setIsLoadingDetailSetting] = useState(false);
-  const [businessDescriptionTitle, setBusinessDescriptionTitle] = useState("");
-  const [state] = useState({
-    isExpanded: false,
-    showQuestions: false,
-  });
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [isEditingBusiness, setIsEditingBusiness] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
@@ -203,10 +176,7 @@ const PageQuickSurvey = () => {
     income: "",
   });
   const [interviewModeType, setInterviewModeType] = useState("");
-  const [selectedInterviewMode, setSelectedInterviewMode] = useState(false);
-  // const [quickSurveyPersonaGroup, setquickSurveyPersonaGroup] = useState([]);
   const [isLoadingPreset, setIsLoadingPreset] = useState(false);
-  // const [quickSurveyPresetData, setquickSurveyPresetData] = useState([]);
   const [selectedPresetCards, setSelectedPresetCards] = useState({});
   const [shouldRegenerate, setShouldRegenerate] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState(null);
@@ -216,7 +186,7 @@ const PageQuickSurvey = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const project = projectSaas;
-  // console.log(project)
+ 
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -307,10 +277,7 @@ const PageQuickSurvey = () => {
         if (quickSurveyInterviewModeType && quickSurveyInterviewModeType.length > 0){
           setInterviewModeType(quickSurveyInterviewModeType);
         }
-        // if (quickSurveyDetailInfo && quickSurveyDetailInfo.length > 0){
-        //   // setSelectedValues(quickSurveyDetailInfo);
-        //   setCustomPersonaForm(quickSurveyDetailInfo);
-        // }
+       
         if (quickSurveyDetailInfo && Object.keys(quickSurveyDetailInfo).length > 0) {
           // customPersonaForm 설정
           setCustomPersonaForm(quickSurveyDetailInfo);
@@ -1449,12 +1416,12 @@ const PageQuickSurvey = () => {
                                       color={
                                         interviewModeType === "moderator"
                                           ? "primary"
-                              : "gray800"
-                          }
+                                            : "gray800"
+                                        }
                                       style={{ fontWeight: "700" }}
-                        >
+                                   >
                                       맞춤형 응답자 추천
-                        </Body2>
+                                   </Body2>
                                     <Body3
                                       style={{ marginTop: "0px" }}
                                       color={
@@ -1606,7 +1573,7 @@ const PageQuickSurvey = () => {
                             (!selectedPresetCards ||
                               !Object.values(selectedPresetCards).some(
                                 (value) => value
-                              ))) ||
+                              ))&&(!quickSurveyPersonaGroup.length > 0 )) ||
                           (interviewModeType === "selfQuestion" &&
                             (!recruitingCondition ||
                               recruitingCondition.trim() === "" ||

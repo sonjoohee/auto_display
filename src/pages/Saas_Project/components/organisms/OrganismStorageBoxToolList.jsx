@@ -989,6 +989,9 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         } else if (chatData.type === "ix_psst_multimodal") {
           setToolLoading(true);
           navigate("/PsstReport");
+        } else if (chatData.type === "ix_quick_survey_question") {
+          setToolLoading(true);
+          navigate("/QuickSurvey");
         }
       } catch (error) {}
     } else if (conversationType === "interviewSingle") {
