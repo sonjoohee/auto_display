@@ -286,26 +286,26 @@ const DataSection = styled.div`
 const VerticalLine = styled.div`
   position: absolute;
   height: calc(
-    100% + 56px + 20px
-  ); /* DataSection 높이(100%) + 헤더 여백(56px) + 하단 패딩 조정(20px) */
+    100% + 98px + 20px
+  ); /* DataSection 높이(100%) + 헤더 여백(98px) + 하단 패딩 조정(20px) */
   width: 1px;
   background-color: #dddddd;
   left: 303px; /* ImportanceContainer 너비(291px) + 약간의 간격(12px) */
-  top: -56px; /* 헤더 여백만큼 위로 확장 */
+  top: -70px; /* 헤더 여백만큼 위로 확장 */
   z-index: 1;
 `;
 
 const RightVerticalLine = styled.div`
   position: absolute;
   height: calc(
-    100% + 56px + 20px
-  ); /* DataSection 높이(100%) + 헤더 여백(56px) + 하단 패딩 조정(20px) */
+    100% + 70px + 20px
+  ); /* DataSection 높이(100%) + 헤더 여백(70px) + 하단 패딩 조정(20px) */
   width: 1px;
   background-color: #dddddd;
   left: calc(
     303px + 55px * 2 + 4px
   ); /* 왼쪽 세로선(303px) + 남성 열 너비(55px) + 여성 열 너비(55px) + 간격(4px) */
-  top: -56px; /* 헤더 여백만큼 위로 확장 */
+  top: -98px; /* 헤더 여백만큼 위로 확장 */
   z-index: 1;
 `;
 
