@@ -1,14 +1,18 @@
-import React from 'react';
-import styled from 'styled-components';
-import { palette } from '../../assets/styles/Palette';
-import { useAtom } from 'jotai';
-import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
-import { QUICK_SURVEY_SURVEY_METHOD } from '../../pages/AtomStates';
+import React from "react";
+import styled from "styled-components";
+import { palette } from "../../assets/styles/Palette";
+import { useAtom } from "jotai";
+import { QUICK_SURVEY_STATIC_DATA } from "../../pages/AtomStates";
+import { QUICK_SURVEY_SURVEY_METHOD } from "../../pages/AtomStates";
 
-const ABGraph = ({ onOptionSelect = () => {}, onBarClick }) => {
+const ABGraph = ({
+  onOptionSelect = () => {},
+  onOptionSelectIndex = () => {},
+  onBarClick,
+}) => {
   const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
   const [quickSurveySurveyMethod] = useAtom(QUICK_SURVEY_SURVEY_METHOD);
-  
+
   // 높이 계산 함수 - a(28%)는 66px, b(72%)는 176px이 되도록 설정
   const getBarHeight = (value) => {
     if (value === 28) return 66;
@@ -26,13 +30,15 @@ const ABGraph = ({ onOptionSelect = () => {}, onBarClick }) => {
 
   // 데이터 계산
   const getABData = () => {
-    const totalSum = quickSurveyStaticData['총합']['전체총합'];
-    const aValue = quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]]['전체총합'];
-    const bValue = quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]]['전체총합'];
+    const totalSum = quickSurveyStaticData["총합"]["전체총합"];
+    const aValue =
+      quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]]["전체총합"];
+    const bValue =
+      quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]]["전체총합"];
 
     return {
       a: calculatePercentage(aValue, totalSum),
-      b: calculatePercentage(bValue, totalSum)
+      b: calculatePercentage(bValue, totalSum),
     };
   };
 
@@ -42,26 +48,29 @@ const ABGraph = ({ onOptionSelect = () => {}, onBarClick }) => {
     <GraphContainer>
       <BarContainer>
         <BarWrapper>
-
-        <BarItem onClick={() => {
-          onOptionSelect(quickSurveySurveyMethod.options[0]);
-          onBarClick();
-        }}>
+          <BarItem
+            onClick={() => {
+              onOptionSelect(quickSurveySurveyMethod.options[0]);
+              onOptionSelectIndex("A");
+              onBarClick();
+            }}
+          >
             <BarFill height={getBarHeight(calculatedData.a)} />
             <BarValue>{calculatedData.a}%</BarValue>
-
           </BarItem>
           <BarLabel>{Object.keys(quickSurveyStaticData)[0]}</BarLabel>
         </BarWrapper>
 
         <BarWrapper>
-          <BarItem onClick={() => {
-            onOptionSelect(quickSurveySurveyMethod.options[1]);
-            onBarClick();
-          }}>
+          <BarItem
+            onClick={() => {
+              onOptionSelect(quickSurveySurveyMethod.options[1]);
+              onOptionSelectIndex("B");
+              onBarClick();
+            }}
+          >
             <BarFill height={getBarHeight(calculatedData.b)} />
             <BarValue>{calculatedData.b}%</BarValue>
-
           </BarItem>
           <BarLabel>{Object.keys(quickSurveyStaticData)[1]}</BarLabel>
         </BarWrapper>
