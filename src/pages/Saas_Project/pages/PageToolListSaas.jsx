@@ -137,6 +137,19 @@ import {
   PSST_FILE_NAMES,
   PSST_REPORT,
   PSST_SELECTED_TEMPLETE,
+  QUICK_SURVEY_PROJECT_DESCRIPTION,
+  QUICK_SURVEY_ANALYSIS,
+  QUICK_SURVEY_SELECTED_QUESTION,
+  QUICK_SURVEY_DETAIL_INFO,
+  QUICK_SURVEY_RECRUITING_CONDITION,
+  QUICK_SURVEY_SURVEY_METHOD,
+  QUICK_SURVEY_CUSTOM_GUIDE,
+  QUICK_SURVEY_PRESET_DATA,
+  QUICK_SURVEY_PERSONA_GROUP,
+  QUICK_SURVEY_INTERVIEW,
+  QUICK_SURVEY_REPORT,
+  QUICK_SURVEY_STATIC_DATA,
+  QUICK_SURVEY_INTERVIEW_MODE_TYPE,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -404,6 +417,21 @@ const PageToolListSaas = () => {
   const [isComingSoon, setIsComingSoon] = useState(false);
   const [, setFloatingText] = useState("창업 MBTI 테스트");
 
+  const [, setQuickSurveyProjectDescription] = useAtom(QUICK_SURVEY_PROJECT_DESCRIPTION);
+  const [, setQuickSurveyAnalysis] = useAtom(QUICK_SURVEY_ANALYSIS);
+  const [, setQuickSurveySelectedQuestion] = useAtom(QUICK_SURVEY_SELECTED_QUESTION);
+  const [, setQuickSurveyDetailInfo] = useAtom(QUICK_SURVEY_DETAIL_INFO);
+  const [, setQuickSurveyRecruitingCondition] = useAtom(QUICK_SURVEY_RECRUITING_CONDITION);
+  const [, setQuickSurveySurveyMethod] = useAtom(QUICK_SURVEY_SURVEY_METHOD);
+  const [, setQuickSurveyCustomGuide] = useAtom(QUICK_SURVEY_CUSTOM_GUIDE);
+  const [, setQuickSurveyPresetData] = useAtom(QUICK_SURVEY_PRESET_DATA);
+  const [, setQuickSurveyPersonaGroup] = useAtom(QUICK_SURVEY_PERSONA_GROUP);
+  const [, setQuickSurveyInterview] = useAtom(QUICK_SURVEY_INTERVIEW);
+  const [, setQuickSurveyReport] = useAtom(QUICK_SURVEY_REPORT);
+  const [, setQuickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
+  const [, setQuickSurveyInterviewModeType] = useAtom(QUICK_SURVEY_INTERVIEW_MODE_TYPE);
+  
+
   // 초기화 useEffect
   useEffect(() => {
     // !chat 초기화
@@ -555,6 +583,21 @@ const PageToolListSaas = () => {
     setPsstFileNames([]);
     setPsstReport("");
     setPsstSelectedTemplte([]);
+
+    // Quick Survey 관련 atom 초기화
+    setQuickSurveyProjectDescription("");
+    setQuickSurveyAnalysis([]);
+    setQuickSurveySelectedQuestion([]);
+    setQuickSurveyDetailInfo({});
+    setQuickSurveyRecruitingCondition("");
+    setQuickSurveySurveyMethod([]);
+    setQuickSurveyCustomGuide([]);
+    setQuickSurveyPresetData([]);
+    setQuickSurveyPersonaGroup([]);
+    setQuickSurveyInterview([]);
+    setQuickSurveyReport([]);
+    setQuickSurveyStaticData([]);
+    setQuickSurveyInterviewModeType("");
   }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   useEffect(() => {

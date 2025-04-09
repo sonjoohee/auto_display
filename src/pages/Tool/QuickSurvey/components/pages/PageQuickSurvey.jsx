@@ -216,18 +216,18 @@ const PageQuickSurvey = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
-      if (businessDescription.length === 0) {
-      const projectAnalysis =
-        (project?.projectAnalysis.business_analysis
-          ? project?.projectAnalysis.business_analysis
-          : "") +
-        (project?.projectAnalysis.business_analysis &&
-        project?.projectAnalysis.file_analysis
-          ? "\n"
-          : "") +
-        (project?.projectAnalysis.file_analysis
-          ? project?.projectAnalysis.file_analysis
-          : "");
+      if (businessDescription && businessDescription.length === 0) {
+        const projectAnalysis =
+          (project?.projectAnalysis?.business_analysis
+            ? project?.projectAnalysis?.business_analysis
+            : "") +
+          (project?.projectAnalysis?.business_analysis &&
+          project?.projectAnalysis?.file_analysis
+            ? "\n"
+            : "") +
+          (project?.projectAnalysis?.file_analysis
+            ? project?.projectAnalysis?.file_analysis
+            : "");
 
       if (project) {
         setBusinessDescription(projectAnalysis);
@@ -239,7 +239,7 @@ const PageQuickSurvey = () => {
           setProjectDescription(quickSurveyProjectDescription);
         }
 
-        if (quickSurveyAnalysis && quickSurveyAnalysis.length > 0) {
+        if (quickSurveyAnalysis && Object.keys(quickSurveyAnalysis || {}).length > 0) {
           setQuickSurveyAnalysis(quickSurveyAnalysis);
         }
         if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0) {
@@ -275,27 +275,28 @@ const PageQuickSurvey = () => {
           setQuickSurveySurveyMethod(quickSurveySurveyMethod); 
 
         }
+        
         if (quickSurveyInterviewModeType && quickSurveyInterviewModeType.length > 0){
           setInterviewModeType(quickSurveyInterviewModeType);
         }
        
-        if (quickSurveyDetailInfo && Object.keys(quickSurveyDetailInfo).length > 0) {
+        if (quickSurveyDetailInfo && Object.keys(quickSurveyDetailInfo || {}).length > 0) {
           // customPersonaForm 설정
           setCustomPersonaForm(quickSurveyDetailInfo);
           
           // selectedValues용으로 데이터 가공
           const processedValues = {
-            gender: quickSurveyDetailInfo.gender === "male" ? "남성" : 
-                    quickSurveyDetailInfo.gender === "female" ? "여성" : 
-                    quickSurveyDetailInfo.gender,  // "상관없음"은 그대로
+            gender: quickSurveyDetailInfo?.gender === "male" ? "남성" : 
+                    quickSurveyDetailInfo?.gender === "female" ? "여성" : 
+                    quickSurveyDetailInfo?.gender || "",  // "상관없음"은 그대로
             
-            age: Array.isArray(quickSurveyDetailInfo.age) ? 
-                 quickSurveyDetailInfo.age[0] === "상관없음" ? "상관없음" :
-                 quickSurveyDetailInfo.age.join(", ") : "",
+            age: Array.isArray(quickSurveyDetailInfo?.age) ? 
+                 quickSurveyDetailInfo?.age[0] === "상관없음" ? "상관없음" :
+                 quickSurveyDetailInfo?.age.join(", ") : "",
             
-            residence: Array.isArray(quickSurveyDetailInfo.residence) ?
-                      quickSurveyDetailInfo.residence[0] === "상관없음" ? "상관없음" :
-                      quickSurveyDetailInfo.residence.join(", ") : "",
+            residence: Array.isArray(quickSurveyDetailInfo?.residence) ?
+                      quickSurveyDetailInfo?.residence[0] === "상관없음" ? "상관없음" :
+                      quickSurveyDetailInfo?.residence.join(", ") : "",
             
             income: Array.isArray(quickSurveyDetailInfo.income) ?
                     quickSurveyDetailInfo.income[0] === "상관없음" ? "상관없음" :
@@ -403,10 +404,10 @@ const PageQuickSurvey = () => {
 
   const business = {
     business: businessDescription,
-    target: project.projectAnalysis.target_customer,
-    business_model: project.businessModel,
-    sector: project.industryType,
-    country: project.targetCountry,
+    target: project?.projectAnalysis?.target_customer || "",
+    business_model: project?.businessModel || "",
+    sector: project?.industryType || "",
+    country: project?.targetCountry || "",
   };
 
   const handleSubmitBusinessInfo = async () => {
@@ -469,7 +470,7 @@ const PageQuickSurvey = () => {
           responseToolId,
           {
             quickSurveyAnalysis: response.response.quick_survey_question,
-            business: business,
+            business: businessDescription,
             goal: projectDescription,
           },
           isLoggedIn
@@ -502,7 +503,7 @@ const PageQuickSurvey = () => {
 
       const Data = {
         type: "ix_quick_survey_custom_guide",
-        business: business,
+        business: businessDescription,
         goal: projectDescription,
       };
       let response;
@@ -583,7 +584,7 @@ const PageQuickSurvey = () => {
         };
         Data = {
           type: "ix_quick_survey_persona_group",
-          business: business,
+          business: businessDescription,
           goal: projectDescription,
           recruitment_criteria: recruitingCondition || "상관없음",
           survey_method: quickSurveyAnalysis[selectedQuestion],
@@ -596,14 +597,43 @@ const PageQuickSurvey = () => {
         // const selectedPersona = quickSurveyPresetData.find(persona => persona._id === selectedCardId);
         Data = {
           type: "ix_quick_survey_persona_group",
-          business: business,
+          business: businessDescription,
           goal: projectDescription,
           survey_method: quickSurveyAnalysis[selectedQuestion],
           recruitment_criteria: selectedPersona?.original_description || "",
         };
       }
 
-      const response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+      let response;
+      let retryCount = 0;
+      const maxRetries = 10;
+      
+      while (retryCount < maxRetries) {
+        try {
+          response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+          
+          // 응답 형식 검증
+          if (response.response && 
+              response.response.quick_survey_persona_group && 
+              Array.isArray(response.response.quick_survey_persona_group) &&
+              response.response.quick_survey_persona_group.length > 0 &&
+              response.response.quick_survey_persona_group[0].name &&
+              response.response.quick_survey_persona_group[0].gender &&
+              response.response.quick_survey_persona_group[0].age &&
+              response.response.quick_survey_persona_group[0].job &&
+              response.response.quick_survey_persona_group[0].profile &&
+              response.response.quick_survey_persona_group[0].insight) {
+            break; // 올바른 응답 형식이면 루프 종료
+          }
+          
+          retryCount++;
+        } catch (error) {
+          retryCount++;
+          if (retryCount >= maxRetries) {
+            throw error; // 최대 재시도 횟수 초과 시 에러 던지기
+          }
+        }
+      }
 
       const personaGroupWithImage =
         response.response.quick_survey_persona_group.map((persona) => ({
@@ -662,7 +692,7 @@ const PageQuickSurvey = () => {
     try {
       const Data = {
         type: "ix_quick_survey_preset",
-        business: business,
+        business: businessDescription,
         goal: projectDescription,
         survey_method: {
           question: quickSurveyAnalysis[selectedQuestion].question,
@@ -748,7 +778,7 @@ const PageQuickSurvey = () => {
 
       const Data = {
         type: "ix_quick_survey_interview",
-        business: business,
+        business: businessDescription,
         survey_method: {
           ...quickSurveyAnalysis[selectedQuestion],
           type: selectedQuestion.toString(),
@@ -805,7 +835,7 @@ const PageQuickSurvey = () => {
 
       const reportData = {
         type: "ix_quick_survey_report",
-        business: business,
+        business: businessDescription,
         goal: projectDescription,
         survey_method: {
           ...quickSurveyAnalysis[selectedQuestion],
@@ -933,10 +963,11 @@ const PageQuickSurvey = () => {
     const detectRefresh = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
-
-      if (currentUrl.toLowerCase().includes("QuickSurvey")) {
+      console.log("currentUrl", currentUrl);
+      if (currentUrl.toLowerCase().includes("quicksurvey")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         console.log("세션 스토리지에서 마지막 URL 가져오기");
+
         const lastUrl = sessionStorage.getItem("lastUrl");
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
