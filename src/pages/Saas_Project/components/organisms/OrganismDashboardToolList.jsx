@@ -155,6 +155,7 @@ import {
   QUICK_SURVEY_REPORT,
   QUICK_SURVEY_STATIC_DATA,
   QUICK_SURVEY_SURVEY_METHOD,
+  QUICK_SURVEY_SELECTED_QUESTION,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -365,6 +366,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
     PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE
   );
   const [, setQuickSurveyProjectDescription] = useAtom(QUICK_SURVEY_PROJECT_DESCRIPTION);
+  const [, setQuickSurveySelectedQuestion] = useAtom(QUICK_SURVEY_SELECTED_QUESTION);
   const [, setQuickSurveyAnalysis] = useAtom(QUICK_SURVEY_ANALYSIS);
   const [, setQuickSurveyCustomGuide] = useAtom( QUICK_SURVEY_CUSTOM_GUIDE);
   const [, setQuickSurveyPresetData] = useAtom(QUICK_SURVEY_PRESET_DATA);
@@ -922,12 +924,13 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setQuickSurveyProjectDescription(chatData?.goal || "");
+        setQuickSurveySelectedQuestion(chatData?.selectedQuestion || []);
         setQuickSurveyAnalysis(chatData?.quickSurveyAnalysis || []);
         setQuickSurveyCustomGuide(chatData?.quickSurveyCustomGuide || []);
         setQuickSurveyPresetData(chatData?.quickSurveyPresetData || []);
         setquickSurveyPersonaGroup(chatData?.quickSurveyPersonaGroup || []);
         setQuickSurveyInterview(chatData?.quickSurveyInterview || []);
-        setQuickSurveySurveyMethod(chatData?.quickSurveySurveyMethod || []);
+        setQuickSurveySurveyMethod(chatData?.surveyMethod || []);
         setQuickSurveyReport(chatData?.quickSurveyReport || []);
 
 

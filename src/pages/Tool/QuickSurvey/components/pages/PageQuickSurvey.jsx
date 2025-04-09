@@ -124,6 +124,9 @@ const PageQuickSurvey = () => {
   const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
     DESIGN_ANALYSIS_FILE_ID
   );
+  const [quickSurveySelectedQuestion, setQuickSurveySelectedQuestion] = useAtom(
+    QUICK_SURVEY_SELECTED_QUESTION
+  );
   const [quickSurveyCustomGuide, setQuickSurveyCustomGuide] = useAtom(
     QUICK_SURVEY_CUSTOM_GUIDE
   );
@@ -224,6 +227,10 @@ const PageQuickSurvey = () => {
     };
   }, [showToast]);
 
+  console.log(selectedQuestion)
+  console.log(quickSurveySelectedQuestion)
+  console.log(quickSurveySurveyMethod) 
+  console.log(quickSurveyAnalysis)
 
   useEffect(() => {
     const interviewLoading = async () => {
@@ -252,9 +259,13 @@ const PageQuickSurvey = () => {
         }
 
         if ( quickSurveyAnalysis && quickSurveyAnalysis.length > 0){
-          setSelectedQuestion(quickSurveyAnalysis[0]);
           setQuickSurveyAnalysis(quickSurveyAnalysis);
+        }
+        if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0){
           setQuickSurveySurveyMethod(quickSurveySurveyMethod);
+        }
+        if (quickSurveySelectedQuestion && quickSurveySelectedQuestion.length > 0){
+          setQuickSurveySelectedQuestion(quickSurveySelectedQuestion);
         }
        
 
@@ -488,6 +499,7 @@ const PageQuickSurvey = () => {
       setQuickSurveyCustomGuide(response.response.quick_survey_custom_guide);
 
       setQuickSurveySurveyMethod(quickSurveyAnalysis[selectedQuestion]);
+ 
 
       await updateToolOnServer(
         toolId,
@@ -1652,10 +1664,15 @@ const PageQuickSurvey = () => {
                         <>
                          {/* 각 질문 유형에 맞는 그래프 렌더링 */}
                          {selectedQuestion[0] === 'ab_test' && Object.keys(quickSurveyStaticData).length > 0 && (
-                            <ABGraph />
+                            <ABGraph 
+                            onOptionSelect={setSelectedOption} 
+                            onBarClick={() => setShowToast(true)} 
+                            />
                           )}
                           {(selectedQuestion[0] === 'importance' || selectedQuestion[0] === 'single_choice') && Object.keys(quickSurveyStaticData).length > 0 && (
-                            <BarChartLikertScale5 />
+                            <BarChartLikertScale5 
+                            onOptionSelect={setSelectedOption} 
+                            onBarClick={() => setShowToast(true)} />
                           )}
                           {selectedQuestion[0] === 'nps' && Object.keys(quickSurveyStaticData).length > 0 && (
                             <BarChartLikertScale11 />

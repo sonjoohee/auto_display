@@ -3,9 +3,11 @@ import styled from 'styled-components';
 import { palette } from '../../assets/styles/Palette';
 import { useAtom } from 'jotai';
 import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
+import { QUICK_SURVEY_SURVEY_METHOD } from '../../pages/AtomStates';
 
-const ABGraph = () => {
+const ABGraph = ({ onOptionSelect = () => {}, onBarClick }) => {
   const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
+  const [quickSurveySurveyMethod] = useAtom(QUICK_SURVEY_SURVEY_METHOD);
   
   // 높이 계산 함수 - a(28%)는 66px, b(72%)는 176px이 되도록 설정
   const getBarHeight = (value) => {
@@ -41,7 +43,10 @@ const ABGraph = () => {
       <BarContainer>
         <BarWrapper>
 
-          <BarItem onClick={() => console.log("Clicked Bar Value:", calculatedData.a)}>
+        <BarItem onClick={() => {
+          onOptionSelect(quickSurveySurveyMethod.options[0]);
+          onBarClick();
+        }}>
             <BarFill height={getBarHeight(calculatedData.a)} />
             <BarValue>{calculatedData.a}%</BarValue>
 
@@ -50,7 +55,10 @@ const ABGraph = () => {
         </BarWrapper>
 
         <BarWrapper>
-          <BarItem onClick={() => console.log("Clicked Bar Value:", calculatedData.b)}>
+          <BarItem onClick={() => {
+            onOptionSelect(quickSurveySurveyMethod.options[1]);
+            onBarClick();
+          }}>
             <BarFill height={getBarHeight(calculatedData.b)} />
             <BarValue>{calculatedData.b}%</BarValue>
 
