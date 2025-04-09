@@ -204,7 +204,7 @@ const OrganismToastPopupSingleChat = ({ isActive, onClose, isComplete }) => {
                       {typeof item.indepth.question === "string"
                         ? `Q${index + 1}-1 ${item.indepth.question}`
                         : ""}
-                    </Sub1>
+                    </Sub1>{" "}
                   </ChatBox>
                 </ChatItem>
 
