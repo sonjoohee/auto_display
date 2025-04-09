@@ -15,7 +15,7 @@ const ABGraph = ({
 
 
   const getBarHeight = (value) => {
-    console.log("getBarHeight value:", value);
+    // console.log("getBarHeight value:", value);
     // 최소 높이와 최대 높이 설정
     const minHeight = 50;
     const maxHeight = 200;
@@ -23,7 +23,7 @@ const ABGraph = ({
     // 백분율 값에 따라 선형적으로 높이 계산
     // 0%일 때 minHeight, 100%일 때 maxHeight가 되도록 설정
     const height = minHeight + (value / 100) * (maxHeight - minHeight);
-    console.log("getBarHeight height:", height);
+    // console.log("getBarHeight height:", height);
     // 소수점 반올림하여 정수 값 반환
     return Math.round(height);
   };
