@@ -683,21 +683,23 @@ const PageQuickSurvey = () => {
 
       const response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
 
-      const combinedInterviews = response.response.quick_survey_interview.map((interview, index) => {
-        const matchedPersona = quickSurveyPersonaGroup.find(
-          (persona, pIndex) => 
-            pIndex === index && persona.name === interview.persona_name
-        );
-      
-        if (matchedPersona) {
-          const { name, ...personaInfoWithoutName } = matchedPersona;
-          return {
-            ...interview,
-            ...personaInfoWithoutName
-          };
+      const combinedInterviews = response.response.quick_survey_interview.map(
+        (interview, index) => {
+          const matchedPersona = quickSurveyPersonaGroup.find(
+            (persona, pIndex) =>
+              pIndex === index && persona.name === interview.persona_name
+          );
+
+          if (matchedPersona) {
+            const { name, ...personaInfoWithoutName } = matchedPersona;
+            return {
+              ...interview,
+              ...personaInfoWithoutName,
+            };
+          }
+          return interview;
         }
-        return interview;
-      });
+      );
 
       setQuickSurveyInterview(combinedInterviews);
 
@@ -729,12 +731,10 @@ const PageQuickSurvey = () => {
           quickSurveyInterview: combinedInterviews,
           quickSurveyReport: responseReport.response.quick_survey_report,
           quickSurveyStaticData: responseReport.response.statistics_data,
-          completedStep: 3
-
+          completedStep: 3,
         },
         isLoggedIn
       );
-
 
       setToolSteps(3);
     } catch (error) {
@@ -798,7 +798,6 @@ const PageQuickSurvey = () => {
   const handleEnterInterviewRoom = () => {
     setShowToast(true);
   };
-
 
   useEffect(() => {
     // 새로고침 감지 함수
@@ -870,24 +869,24 @@ const PageQuickSurvey = () => {
     }
   };
 
-    const processMarketingABData = (data) => {
-      if (!data || !data.총합) return { a: 0, b: 0 };
-    
-      const options = Object.keys(data).filter(key => key !== "총합");
-      if (options.length !== 2) return { a: 0, b: 0 };
-    
-      const [optionAKey, optionBKey] = options;
-      const totalA = data[optionAKey]?.총합 || 0;
-      const totalB = data[optionBKey]?.총합 || 0;
-      const overallTotal = data.총합?.총합 || (totalA + totalB); // 혹시 전체 총합이 없을 경우 대비
-    
-      if (overallTotal === 0) return { a: 0, b: 0 };
-    
-      return {
-        a: Math.round((totalA / overallTotal) * 100),
-        b: Math.round((totalB / overallTotal) * 100)
-      };
+  const processMarketingABData = (data) => {
+    if (!data || !data.총합) return { a: 0, b: 0 };
+
+    const options = Object.keys(data).filter((key) => key !== "총합");
+    if (options.length !== 2) return { a: 0, b: 0 };
+
+    const [optionAKey, optionBKey] = options;
+    const totalA = data[optionAKey]?.총합 || 0;
+    const totalB = data[optionBKey]?.총합 || 0;
+    const overallTotal = data.총합?.총합 || totalA + totalB; // 혹시 전체 총합이 없을 경우 대비
+
+    if (overallTotal === 0) return { a: 0, b: 0 };
+
+    return {
+      a: Math.round((totalA / overallTotal) * 100),
+      b: Math.round((totalB / overallTotal) * 100),
     };
+  };
 
   return (
     <>
@@ -972,7 +971,12 @@ const PageQuickSurvey = () => {
                           Quick Survey로 확인하고 싶은 내용이 무엇인가요?
                         </Body1>
                       </Title>
-
+                      <ABGraph />
+                      <BarChartLikertScale5 />
+                      <BarChartLikertScale11 />
+                      <GraphChartScale2 />
+                      <GraphChartScale5 />
+                      <GraphChartScale11 />
                       <FormBox Large>
                         <CustomTextarea
                           Edit
@@ -1613,12 +1617,12 @@ const PageQuickSurvey = () => {
                           </TabWrapType4>
                         </div>
                         <Button Primary onClick={handleEnterInterviewRoom}>
-                        <img
-                          src={images.ReportSearch}
-                          alt="인터뷰 스크립트 보기"
-                        />
-                        응답자 의견 확인
-                      </Button>
+                          <img
+                            src={images.ReportSearch}
+                            alt="인터뷰 스크립트 보기"
+                          />
+                          응답자 의견 확인
+                        </Button>
                       </div>
                     </InsightAnalysis>
 
@@ -1635,11 +1639,10 @@ const PageQuickSurvey = () => {
                       </div>
 
                       {activeDesignTab === "emotion" && (
-                        
                         <>
-                        {/* ABGraph를 emotion 탭 내부에 추가 */}
-                         {/* 각 질문 유형에 맞는 그래프 렌더링 */}
-                         {/* {selectedQuestion === 'ab_test' && quickSurveyStaticData && (
+                          {/* ABGraph를 emotion 탭 내부에 추가 */}
+                          {/* 각 질문 유형에 맞는 그래프 렌더링 */}
+                          {/* {selectedQuestion === 'ab_test' && quickSurveyStaticData && (
                             <ABGraph />
                           )}
                           {selectedQuestion === 'importance' && quickSurveyStaticData && (
@@ -1653,37 +1656,42 @@ const PageQuickSurvey = () => {
                             <BarChart />
                           )} */}
 
-                        {/* Insight 섹션 */}
-                        <div className="content">
-                          {quickSurveyReport?.[0] && (
-                            <InsightContainer>
-                              <InsightSection>
-                                <InsightLabel color="gray700">총평</InsightLabel>
-                                <InsightContent color="gray700">
-                                  {quickSurveyReport[0].total_insight}
-                                </InsightContent>
-                              </InsightSection>
+                          {/* Insight 섹션 */}
+                          <div className="content">
+                            {quickSurveyReport?.[0] && (
+                              <InsightContainer>
+                                <InsightSection>
+                                  <InsightLabel color="gray700">
+                                    총평
+                                  </InsightLabel>
+                                  <InsightContent color="gray700">
+                                    {quickSurveyReport[0].total_insight}
+                                  </InsightContent>
+                                </InsightSection>
 
-                              <InsightSection>
-                                <InsightLabel color="gray700">성별 의견 정리</InsightLabel>
-                                <InsightContent color="gray700">
-                                  {quickSurveyReport[0].gender_insight}
-                                </InsightContent>
-                              </InsightSection>
+                                <InsightSection>
+                                  <InsightLabel color="gray700">
+                                    성별 의견 정리
+                                  </InsightLabel>
+                                  <InsightContent color="gray700">
+                                    {quickSurveyReport[0].gender_insight}
+                                  </InsightContent>
+                                </InsightSection>
 
-                              <InsightSection>
-                                <InsightLabel color="gray700">연령별 의견 정리</InsightLabel>
-                                <InsightContent color="gray700">
-                                  {quickSurveyReport[0].age_insight}
-                                </InsightContent>
-                              </InsightSection>
-                            </InsightContainer>
-                          )}
-                        </div>
-                      </>
-                    )}
+                                <InsightSection>
+                                  <InsightLabel color="gray700">
+                                    연령별 의견 정리
+                                  </InsightLabel>
+                                  <InsightContent color="gray700">
+                                    {quickSurveyReport[0].age_insight}
+                                  </InsightContent>
+                                </InsightSection>
+                              </InsightContainer>
+                            )}
+                          </div>
+                        </>
+                      )}
                     </InsightAnalysis>
-
 
                     <ABGraph data={{ a: 45, b: 55 }} />
 
@@ -2083,7 +2091,7 @@ const InsightContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  border: 1px solid #E0E4E8;
+  border: 1px solid #e0e4e8;
   border-radius: 10px;
   padding: 16px;
 `;
@@ -2092,10 +2100,10 @@ const InsightSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-    border-bottom: 1px solid #E0E4E8;
-      padding-bottom: 16px;
+  border-bottom: 1px solid #e0e4e8;
+  padding-bottom: 16px;
 
-   &:last-child {
+  &:last-child {
     border-bottom: none;
     padding-bottom: 0;
   }
@@ -2111,7 +2119,6 @@ const InsightContent = styled(Body3)`
   //   border-bottom: none;
   // }
 `;
-
 
 const InsightLabel = styled(Body3)`
   font-size: 16px;

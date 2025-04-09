@@ -1,20 +1,25 @@
-import React from 'react';
-import styled from 'styled-components';
-import { palette } from '../../assets/styles/Palette';
+import React from "react";
+import styled from "styled-components";
+import { palette } from "../../assets/styles/Palette";
 
 // 5개의 카테고리 그래프를 위한 데이터 구조
 // [{ category: string, value: number }, ...]
-const BarChartLikertScale5 = ({ data = [
-  { category: '카테고리1', value: 4 },
-  { category: '카테고리2', value: 12 },
-  { category: '카테고리3', value: 20 },
-  { category: '카테고리4', value: 38 },
-  { category: '카테고리5', value: 26 }
-] }) => {
+const BarChartLikertScale5 = ({
+  data = [
+    { category: "카테고리1", value: 4 },
+    { category: "카테고리2", value: 12 },
+    { category: "카테고리3", value: 20 },
+    { category: "카테고리4", value: 38 },
+    { category: "카테고리5", value: 26 },
+  ],
+}) => {
   return (
     <GraphContainer>
       {data.map((item, index) => (
-        <CategoryItem key={index}>
+        <CategoryItem
+          key={index}
+          onClick={() => console.log("Clicked Bar Value:", item.category)}
+        >
           <BarGroup>
             <BarBackground />
             <BarFill width={item.value} />
@@ -27,7 +32,7 @@ const BarChartLikertScale5 = ({ data = [
   );
 };
 
-export default BarChartLikertScale5; 
+export default BarChartLikertScale5;
 
 const GraphContainer = styled.div`
   display: flex;
@@ -61,7 +66,7 @@ const BarBackground = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border-radius: 5px;
 `;
 
@@ -70,7 +75,7 @@ const BarFill = styled.div`
   bottom: 0;
   left: 0;
   width: 100%;
-  height: ${props => props.width}%;
+  height: ${(props) => props.width}%;
   background-color: ${palette.primary};
   border-radius: 5px;
 `;
@@ -78,7 +83,7 @@ const BarFill = styled.div`
 const BarValue = styled.div`
   position: relative;
   z-index: 2;
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-weight: 600;
   font-size: 20px;
   line-height: 1.55em;
@@ -88,7 +93,7 @@ const BarValue = styled.div`
 `;
 
 const CategoryLabel = styled.div`
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-weight: 400;
   font-size: 14px;
   line-height: 1.55em;
