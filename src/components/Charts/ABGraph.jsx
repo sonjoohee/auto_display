@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import { palette } from '../../assets/styles/Palette';
+import React from "react";
+import styled from "styled-components";
+import { palette } from "../../assets/styles/Palette";
 
 // 비교 데이터를 위한 props 구조: { a: number, b: number }
 const ABGraph = ({ data = { a: 28, b: 72 } }) => {
@@ -8,7 +8,7 @@ const ABGraph = ({ data = { a: 28, b: 72 } }) => {
   const getBarHeight = (value) => {
     if (value === 28) return 66;
     if (value === 72) return 176;
-    
+
     // 다른 값의 경우 선형 비례로 계산
     const slope = (176 - 66) / (72 - 28);
     return Math.round(66 + slope * (value - 28));
@@ -18,15 +18,15 @@ const ABGraph = ({ data = { a: 28, b: 72 } }) => {
     <GraphContainer>
       <BarContainer>
         <BarWrapper>
-          <BarItem>
+          <BarItem onClick={() => console.log("Clicked Bar Value:", data.a)}>
             <BarFill height={getBarHeight(data.a)} />
             <BarValue>{data.a}%</BarValue>
           </BarItem>
           <BarLabel>A</BarLabel>
         </BarWrapper>
-        
+
         <BarWrapper>
-          <BarItem>
+          <BarItem onClick={() => console.log("Clicked Bar Value:", data.b)}>
             <BarFill height={getBarHeight(data.b)} />
             <BarValue>{data.b}%</BarValue>
           </BarItem>
@@ -72,13 +72,13 @@ const BarItem = styled.div`
 
 const BarFill = styled.div`
   width: 143px;
-  height: ${props => props.height}px;
+  height: ${(props) => props.height}px;
   background-color: ${palette.primary};
   border-radius: 5px;
 `;
 
 const BarValue = styled.span`
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-weight: 600;
   font-size: 20px;
   line-height: 1.55em;
@@ -88,7 +88,7 @@ const BarValue = styled.span`
 `;
 
 const BarLabel = styled.span`
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-weight: 400;
   font-size: 16px;
   line-height: 1.55em;
