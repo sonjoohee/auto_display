@@ -1,34 +1,55 @@
 import React from "react";
 import styled from "styled-components";
 import { palette } from "../../assets/styles/Palette";
+import { useAtom } from "jotai";
+import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
 
-// 11개 척도의 그래프를 위한 데이터 구조
-// [{ value: number, label: string }, ...]
 const BarChartLikertScale11 = ({
-  data = [
-    { value: 4, label: "0" },
-    { value: 2, label: "1" },
-    { value: 7, label: "2" },
-    { value: 4, label: "3" },
-    { value: 2, label: "4" },
-    { value: 31, label: "5" },
-    { value: 4, label: "6" },
-    { value: 13, label: "7" },
-    { value: 20, label: "8" },
-    { value: 11, label: "9" },
-    { value: 2, label: "10" },
-  ],
   showLegend = true,
-  npsScore = 32,
 }) => {
-  console.log("BarChartLikertScale11 rendered with data:", data); // 렌더링 및 데이터 확인 로그 추가
+  const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
 
-  // 그룹별 바 인덱스 범위 정의
-  const groupRanges = {
-    negative: [0, 1, 2, 3, 4], // 0-4: 비추천 그룹
-    neutral: [5], // 5: 중립 그룹
-    positive: [6, 7, 8, 9, 10], // 6-10: 추천 그룹
+  // quickSurveyStaticData에서 데이터 추출 및 계산
+  const calculateData = () => {
+    const result = [];
+    const total = quickSurveyStaticData['총합']['전체총합'];
+    
+    // 0점부터 10점까지의 데이터 생성
+    for (let i = 0; i <= 10; i++) {
+      const value = quickSurveyStaticData[i.toString()]['전체총합'];
+      const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+      result.push({ value: percentage, label: i.toString() });
+    }
+    
+    return result;
   };
+
+  // NPS 점수 계산
+  const calculateNpsScore = () => {
+    const total = quickSurveyStaticData['총합']['전체총합'];
+    if (total === 0) return 0;
+    
+    // Promoters (9-10점) 비율 계산
+    const promoters = quickSurveyStaticData['9']['전체총합'] + quickSurveyStaticData['10']['전체총합'];
+    const promotersPercentage = Math.round((promoters / total) * 100);
+    
+    // Detractors (0-6점) 비율 계산
+    const detractors = 
+      quickSurveyStaticData['0']['전체총합'] + 
+      quickSurveyStaticData['1']['전체총합'] + 
+      quickSurveyStaticData['2']['전체총합'] + 
+      quickSurveyStaticData['3']['전체총합'] + 
+      quickSurveyStaticData['4']['전체총합'] + 
+      quickSurveyStaticData['5']['전체총합'] + 
+      quickSurveyStaticData['6']['전체총합'];
+    const detractorsPercentage = Math.round((detractors / total) * 100);
+    
+    // NPS = Promoters% - Detractors%
+    return promotersPercentage - detractorsPercentage;
+  };
+
+  const data = calculateData();
+  const npsScore = calculateNpsScore();
 
   // NPS 점수에 따른 스타일 결정
   const getNpsStyle = (score) => {

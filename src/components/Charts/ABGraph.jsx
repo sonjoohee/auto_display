@@ -7,14 +7,19 @@ import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
 const ABGraph = () => {
   const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
   
-  // 높이 계산 함수 - a(28%)는 66px, b(72%)는 176px이 되도록 설정
+  // 높이 계산 함수 - 백분율 값에 따라 가변적으로 높이 설정
   const getBarHeight = (value) => {
-    if (value === 28) return 66;
-    if (value === 72) return 176;
-
-    // 다른 값의 경우 선형 비례로 계산
-    const slope = (176 - 66) / (72 - 28);
-    return Math.round(66 + slope * (value - 28));
+    console.log("getBarHeight value:", value);
+    // 최소 높이와 최대 높이 설정
+    const minHeight = 50;
+    const maxHeight = 200;
+    
+    // 백분율 값에 따라 선형적으로 높이 계산
+    // 0%일 때 minHeight, 100%일 때 maxHeight가 되도록 설정
+    const height = minHeight + (value / 100) * (maxHeight - minHeight);
+    console.log("getBarHeight height:", height);
+    // 소수점 반올림하여 정수 값 반환
+    return Math.round(height);
   };
 
   // 백분율 계산 함수
