@@ -13,6 +13,7 @@ const ABGraph = ({
   const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
   const [quickSurveySurveyMethod] = useAtom(QUICK_SURVEY_SURVEY_METHOD);
 
+
   const getBarHeight = (value) => {
     console.log("getBarHeight value:", value);
     // 최소 높이와 최대 높이 설정
@@ -52,6 +53,7 @@ const ABGraph = ({
     <GraphContainer>
       <BarContainer>
         <BarWrapper>
+
           <BarItem
             onClick={() => {
               onOptionSelect(quickSurveySurveyMethod.options[0]);
@@ -62,10 +64,13 @@ const ABGraph = ({
             <BarFill height={getBarHeight(calculatedData.a)} />
             <BarValue>{calculatedData.a}%</BarValue>
           </BarItem>
-          <BarLabel>{Object.keys(quickSurveyStaticData)[0]}</BarLabel>
+          <BarLabel>A</BarLabel>
+          <BarSubtitle>{Object.keys(quickSurveyStaticData)[0]}</BarSubtitle>
+
         </BarWrapper>
 
         <BarWrapper>
+
           <BarItem
             onClick={() => {
               onOptionSelect(quickSurveySurveyMethod.options[1]);
@@ -76,7 +81,9 @@ const ABGraph = ({
             <BarFill height={getBarHeight(calculatedData.b)} />
             <BarValue>{calculatedData.b}%</BarValue>
           </BarItem>
-          <BarLabel>{Object.keys(quickSurveyStaticData)[1]}</BarLabel>
+          <BarLabel>B</BarLabel>
+          <BarSubtitle>{Object.keys(quickSurveyStaticData)[1]}</BarSubtitle>
+
         </BarWrapper>
       </BarContainer>
     </GraphContainer>
@@ -89,7 +96,7 @@ const GraphContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  min-height: 320px;
+  min-height: 380px;
 `;
 
 const BarContainer = styled.div`
@@ -105,15 +112,14 @@ const BarWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
-  width: 143px;
+  gap: 8px;
+  width: 240px;
 `;
 
 const BarItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
 `;
 
 const BarFill = styled.div`
@@ -131,6 +137,7 @@ const BarValue = styled.span`
   letter-spacing: -0.03em;
   color: ${palette.primary};
   text-align: center;
+  margin-bottom: 10px;
 `;
 
 const BarLabel = styled.span`
@@ -141,6 +148,28 @@ const BarLabel = styled.span`
   letter-spacing: -0.03em;
   color: #666666;
   text-align: center;
+  margin-top: 20px;
+  margin-bottom: 0;
+`;
+
+const BarSubtitle = styled.span`
+  font-family: 'Pretendard', 'Poppins';
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: -0.03em;
+  color: #666666;
+  text-align: center;
+  max-width: 240px;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  word-break: keep-all;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-y: auto;
 `;
 
 export default ABGraph;
