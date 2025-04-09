@@ -146,6 +146,15 @@ import {
   PSST_FILE_NAMES,
   PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION,
   PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE,
+  QUICK_SURVEY_PROJECT_DESCRIPTION,
+  QUICK_SURVEY_ANALYSIS,
+  QUICK_SURVEY_CUSTOM_GUIDE,
+  QUICK_SURVEY_PRESET_DATA,
+  QUICK_SURVEY_PERSONA_GROUP,
+  QUICK_SURVEY_INTERVIEW,
+  QUICK_SURVEY_REPORT,
+  QUICK_SURVEY_STATIC_DATA,
+  QUICK_SURVEY_SURVEY_METHOD,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -355,6 +364,14 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setProjectAnalysisMultimodalKeyMessage] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE
   );
+  const [, setQuickSurveyProjectDescription] = useAtom(QUICK_SURVEY_PROJECT_DESCRIPTION);
+  const [, setQuickSurveyAnalysis] = useAtom(QUICK_SURVEY_ANALYSIS);
+  const [, setQuickSurveyCustomGuide] = useAtom( QUICK_SURVEY_CUSTOM_GUIDE);
+  const [, setQuickSurveyPresetData] = useAtom(QUICK_SURVEY_PRESET_DATA);
+  const [, setquickSurveyPersonaGroup] = useAtom(QUICK_SURVEY_PERSONA_GROUP);
+  const [, setQuickSurveyInterview] = useAtom(QUICK_SURVEY_INTERVIEW);
+  const [, setQuickSurveySurveyMethod] = useAtom(QUICK_SURVEY_SURVEY_METHOD);
+  const [, setQuickSurveyReport] = useAtom(QUICK_SURVEY_REPORT);
 
   const saveConversation = (data) => {};
 
@@ -892,6 +909,28 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           chatData?.projectAnalysisMultimodalKeyMessage || ""
         );
 
+        setToolStep(1);
+        setQuickSurveyProjectDescription("");
+        setQuickSurveyAnalysis([]);
+        setQuickSurveyCustomGuide([]);
+        setQuickSurveyPresetData([]);
+        setquickSurveyPersonaGroup([]);
+        setQuickSurveyInterview([]);
+        setQuickSurveySurveyMethod([]);
+        setQuickSurveyReport([]);
+        setToolLoading(false);
+        setToolStep(chatData?.completedStep);
+        setToolId(chatData?.id);
+        setQuickSurveyProjectDescription(chatData?.goal || "");
+        setQuickSurveyAnalysis(chatData?.quickSurveyAnalysis || []);
+        setQuickSurveyCustomGuide(chatData?.quickSurveyCustomGuide || []);
+        setQuickSurveyPresetData(chatData?.quickSurveyPresetData || []);
+        setquickSurveyPersonaGroup(chatData?.quickSurveyPersonaGroup || []);
+        setQuickSurveyInterview(chatData?.quickSurveyInterview || []);
+        setQuickSurveySurveyMethod(chatData?.quickSurveySurveyMethod || []);
+        setQuickSurveyReport(chatData?.quickSurveyReport || []);
+
+
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);
 
@@ -910,6 +949,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         } else if (chatData.type === "ix_psst_multimodal") {
           setToolLoading(true);
           navigate("/PsstReport");
+        } else if (chatData.type === "ix_quick_survey_question") {
+          setToolLoading(true);
+          navigate("/QuickSurvey");
         }
       } catch (error) {}
     } else if (conversationType === "interviewSingle") {

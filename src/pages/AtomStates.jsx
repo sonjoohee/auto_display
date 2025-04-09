@@ -574,6 +574,7 @@ export const PSST_REPORT = atom("");
 export const PSST_SELECTED_TEMPLETE = atom([]);
 export const PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION = atom("");
 
+export const QUICK_SURVEY_PROJECT_DESCRIPTION = atom("");
 export const QUICK_SURVEY_ANALYSIS = atom([]);
 export const QUICK_SURVEY_SURVEY_METHOD = atom([]);
 export const QUICK_SURVEY_CUSTOM_GUIDE = atom([]);

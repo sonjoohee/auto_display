@@ -52,6 +52,7 @@ import {
   DESIGN_ANALYSIS_FILE_ID,
   PROJECT_SAAS,
   DESIGN_ANALYSIS_BUSINESS_TITLE,
+  QUICK_SURVEY_PROJECT_DESCRIPTION,
   QUICK_SURVEY_ANALYSIS,
   QUICK_SURVEY_CUSTOM_GUIDE,
   QUICK_SURVEY_PRESET_DATA,
@@ -139,6 +140,8 @@ const PageQuickSurvey = () => {
   );
   const [quickSurveyReport, setQuickSurveyReport] =
     useAtom(QUICK_SURVEY_REPORT);
+  const [quickSurveyProjectDescription, setQuickSurveyProjectDescription] =
+    useAtom(QUICK_SURVEY_PROJECT_DESCRIPTION);
   const [quickSurveyStaticData, setQuickSurveyStaticData] = useState([]);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
@@ -190,6 +193,7 @@ const PageQuickSurvey = () => {
   const [shouldRegenerate, setShouldRegenerate] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState(null);
   const [showToast, setShowToast] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -219,10 +223,10 @@ const PageQuickSurvey = () => {
     };
   }, [showToast]);
 
+
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
-
       if (designAnalysisBusinessInfo.length === 0) {
         const projectAnalysis =
           (project?.projectAnalysis.business_analysis
@@ -235,30 +239,35 @@ const PageQuickSurvey = () => {
           (project?.projectAnalysis.file_analysis
             ? project?.projectAnalysis.file_analysis
             : "");
-        const projectTitle = project?.projectTitle;
 
         if (project) {
-          setBusinessDescriptionTitle(projectTitle);
           setBusinessDescription(projectAnalysis);
         }
       }
-
       if (toolLoading) {
-        const projectTitle = project?.projectTitle;
         // 비즈니스 정보 설정 (Step 1)
-        if (project) {
-          setBusinessDescriptionTitle(projectTitle);
+        if (quickSurveyProjectDescription) {
+          setProjectDescription(quickSurveyProjectDescription);
         }
+
+        if ( quickSurveyAnalysis && quickSurveyAnalysis.length > 0){
+          setSelectedQuestion(quickSurveyAnalysis[0]);
+          setQuickSurveyAnalysis(quickSurveyAnalysis);
+          setQuickSurveySurveyMethod(quickSurveySurveyMethod);
+        }
+       
 
         // 활성 탭 설정 (기본값 1)
-        setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
-        setToolSteps(toolStep ?? 1);
-
-        // 비즈니스 정보 설정 (Step 1)
-        if (designAnalysisBusinessInfo) {
-          setBusinessDescription(designAnalysisBusinessInfo ?? "");
-          setFileNames(designAnalysisFileNames);
+        if (toolStep === undefined || toolStep === 1) {
+          setActiveTab(1);
+          setToolSteps(0);
+        } else {
+          setActiveTab(Math.min(toolStep, 3));
+          setToolSteps(toolStep);
         }
+        // setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
+        // setToolSteps(toolStep ?? 1);
+  
 
         // 완료된 단계 설정
         const completedStepsArray = [];
@@ -268,14 +277,12 @@ const PageQuickSurvey = () => {
         setCompletedSteps(completedStepsArray);
 
         // 페르소나 설정 (Step 2)
-        if (
-          Array.isArray(designAnalysisEmotionAnalysis) &&
-          Array.isArray(selectedDesignAnalysisEmotionAnalysis)
-        ) {
+        if ( quickSurveyAnalysis && quickSurveyAnalysis.length > 0){
+          
           // 이미 선택된 페르소나들의 인덱스 찾기
-          const selectedIndices = (designAnalysisEmotionAnalysis ?? [])
+          const selectedIndices = (quickSurveyAnalysis ?? [])
             .map((persona, index) => {
-              return (selectedDesignAnalysisEmotionAnalysis ?? []).some(
+              return (quickSurveyPersonaGroup ?? []).some(
                 (target) => target?.name === persona?.name
               )
                 ? index
@@ -417,6 +424,8 @@ const PageQuickSurvey = () => {
           goal: projectDescription,
         };
 
+        setQuickSurveyProjectDescription(projectDescription);
+
         // API 요청
         const response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
 
@@ -437,6 +446,7 @@ const PageQuickSurvey = () => {
           {
             quickSurveyAnalysis: response.response.quick_survey_question,
             business: business,
+            goal: projectDescription,
           },
           isLoggedIn
         );
@@ -484,7 +494,7 @@ const PageQuickSurvey = () => {
           selectedQuestion: selectedQuestion,
           surveyMethod: quickSurveyAnalysis[selectedQuestion],
           quickSurveyCustomGuide: response.response.quick_survey_custom_guide,
-          // completedStep: 1,
+          completedStep: 1,
         },
         isLoggedIn
       );
@@ -1268,7 +1278,11 @@ const PageQuickSurvey = () => {
                         </li>
                         <li>
                           <Body2 color="gray500">페르소나 수</Body2>
-                          <Body2 color="gray800">30 명</Body2>
+                          <Body2 color="gray800">
+                            {quickSurveyPersonaGroup && quickSurveyPersonaGroup.length > 0 ?
+                              `${quickSurveyPersonaGroup.length}명 완료` : 
+                              '30명 예상'}
+                          </Body2>
                         </li>
                       </ListBoxGroup>
 
@@ -1752,6 +1766,7 @@ const PageQuickSurvey = () => {
                 isActive={showToast}
                 onClose={() => setShowToast(false)}
                 isComplete={true}
+                selectedOption={selectedOption} 
               />
             )}
           </DesignAnalysisWrap>
