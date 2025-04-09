@@ -69,6 +69,18 @@ const GraphChartScale5 = () => {
   
   const data = getDataFromQuickSurveyStaticData(quickSurveyStaticData);
 
+  // 바의 너비를 계산하는 함수 - 백분율 값에 따라 가변적으로 설정
+  const calculateBarWidth = (index) => {
+    const total = quickSurveyStaticData['총합']['전체총합'];
+    const optionKey = Object.keys(quickSurveyStaticData)[index];
+    const value = quickSurveyStaticData[optionKey]['전체총합'];
+    
+    // 백분율 계산
+    const percentage = Math.round((value / total) * 100);
+    
+    return percentage;
+  };
+
   return (
     <ChartContainer>
       <HeaderSection>
@@ -282,7 +294,6 @@ const BarsColumn = styled.div`
 const ImportanceBar = styled.div`
   height: 16px;
   width: ${props => props.width}px;
-  min-width: 20px;
   background-color: #226FFF;
   border-radius: 2px;
   display: flex;
@@ -338,11 +349,5 @@ const DataSectionHorizontalLine = styled(HorizontalLine)`
   background-color: #DDDDDD;
   height: 1px;
 `;
-
-// 바의 너비를 계산하는 함수 - 인덱스에 따라 다른 너비 반환
-const calculateBarWidth = (index) => {
-  const widths = [90, 75, 60, 45, 30];
-  return widths[index] || 60;
-};
 
 export default GraphChartScale5; 

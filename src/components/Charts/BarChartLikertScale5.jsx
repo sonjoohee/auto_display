@@ -1,43 +1,72 @@
-import React from 'react';
-import styled from 'styled-components';
-import { palette } from '../../assets/styles/Palette';
-import { useAtom } from 'jotai';
-import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
+import React from "react";
+import styled from "styled-components";
+import { palette } from "../../assets/styles/Palette";
+import { useAtom } from "jotai";
+import { QUICK_SURVEY_STATIC_DATA } from "../../pages/AtomStates";
 
-const BarChartLikertScale5 = ({ onOptionSelect = () => {}, onBarClick }) => {
+const BarChartLikertScale5 = ({
+  onOptionSelect = () => {},
+  onOptionSelectIndex = () => {},
+  onBarClick,
+}) => {
   const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
-  
+
   const calculatePercentage = (value, total) => {
     return Math.round((value / total) * 100);
   };
-  
+
   const processData = () => {
-    const total = quickSurveyStaticData['총합']['전체총합'];
-    
+    const total = quickSurveyStaticData["총합"]["전체총합"];
+
     return [
-      { 
+      {
         category: Object.keys(quickSurveyStaticData)[0],
-        value: calculatePercentage(quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]]['전체총합'], total) 
+        value: calculatePercentage(
+          quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]][
+            "전체총합"
+          ],
+          total
+        ),
       },
-      { 
+      {
         category: Object.keys(quickSurveyStaticData)[1],
-        value: calculatePercentage(quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]]['전체총합'], total) 
+        value: calculatePercentage(
+          quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]][
+            "전체총합"
+          ],
+          total
+        ),
       },
-      { 
+      {
         category: Object.keys(quickSurveyStaticData)[2],
-        value: calculatePercentage(quickSurveyStaticData[Object.keys(quickSurveyStaticData)[2]]['전체총합'], total) 
+        value: calculatePercentage(
+          quickSurveyStaticData[Object.keys(quickSurveyStaticData)[2]][
+            "전체총합"
+          ],
+          total
+        ),
       },
-      { 
+      {
         category: Object.keys(quickSurveyStaticData)[3],
-        value: calculatePercentage(quickSurveyStaticData[Object.keys(quickSurveyStaticData)[3]]['전체총합'], total) 
+        value: calculatePercentage(
+          quickSurveyStaticData[Object.keys(quickSurveyStaticData)[3]][
+            "전체총합"
+          ],
+          total
+        ),
       },
-      { 
+      {
         category: Object.keys(quickSurveyStaticData)[4],
-        value: calculatePercentage(quickSurveyStaticData[Object.keys(quickSurveyStaticData)[4]]['전체총합'], total) 
-      }
+        value: calculatePercentage(
+          quickSurveyStaticData[Object.keys(quickSurveyStaticData)[4]][
+            "전체총합"
+          ],
+          total
+        ),
+      },
     ];
   };
-  
+
   const data = processData();
 
   return (
@@ -47,6 +76,7 @@ const BarChartLikertScale5 = ({ onOptionSelect = () => {}, onBarClick }) => {
           key={index}
           onClick={() => {
             onOptionSelect(item.category);
+            onOptionSelectIndex(index + 1);
             onBarClick();
           }}
         >
@@ -55,7 +85,9 @@ const BarChartLikertScale5 = ({ onOptionSelect = () => {}, onBarClick }) => {
             <BarFill width={item.value} />
             <BarValue>{item.value}%</BarValue>
           </BarGroup>
-          <CategoryLabel>{item.category}</CategoryLabel>
+          <CategoryLabel>
+            {index + 1}. {item.category}
+          </CategoryLabel>
         </CategoryItem>
       ))}
     </GraphContainer>

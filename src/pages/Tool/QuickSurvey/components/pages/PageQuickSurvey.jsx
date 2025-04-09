@@ -144,7 +144,9 @@ const PageQuickSurvey = () => {
   );
   const [quickSurveyReport, setQuickSurveyReport] =
     useAtom(QUICK_SURVEY_REPORT);
-  const [quickSurveyStaticData, setQuickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
+  const [quickSurveyStaticData, setQuickSurveyStaticData] = useAtom(
+    QUICK_SURVEY_STATIC_DATA
+  );
   const [quickSurveyProjectDescription, setQuickSurveyProjectDescription] =
     useAtom(QUICK_SURVEY_PROJECT_DESCRIPTION);
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -198,7 +200,7 @@ const PageQuickSurvey = () => {
   const [selectedPersona, setSelectedPersona] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
-
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const project = projectSaas;
@@ -227,7 +229,7 @@ const PageQuickSurvey = () => {
     };
   }, [showToast]);
 
-// console.log(toolStep)
+
 
   useEffect(() => {
     const interviewLoading = async () => {
@@ -255,16 +257,18 @@ const PageQuickSurvey = () => {
           setProjectDescription(quickSurveyProjectDescription);
         }
 
-        if ( quickSurveyAnalysis && quickSurveyAnalysis.length > 0){
+        if (quickSurveyAnalysis && quickSurveyAnalysis.length > 0) {
           setQuickSurveyAnalysis(quickSurveyAnalysis);
         }
-        if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0){
+        if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0) {
           setQuickSurveySurveyMethod(quickSurveySurveyMethod);
         }
+
         if (quickSurveySelectedQuestion && quickSurveySelectedQuestion.length > 0){
           setSelectedQuestion(quickSurveySelectedQuestion);
         }
        
+
         // 활성 탭 설정 (기본값 1)
         if (toolStep === undefined || toolStep === 1) {
           setActiveTab(1);
@@ -275,7 +279,6 @@ const PageQuickSurvey = () => {
         }
         // setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
         // setToolSteps(toolStep ?? 1);
-  
 
         // 완료된 단계 설정
         const completedStepsArray = [];
@@ -285,8 +288,10 @@ const PageQuickSurvey = () => {
         setCompletedSteps(completedStepsArray);
 
         // 페르소나 설정 (Step 2)
+
         if (quickSurveyCustomGuide && quickSurveyCustomGuide.length > 0){
           setQuickSurveySurveyMethod(quickSurveyCustomGuide); 
+
         }
 
         if (quickSurveyPersonaGroup && quickSurveyPersonaGroup.length > 0){
@@ -395,10 +400,6 @@ const PageQuickSurvey = () => {
         const Data = {
           type: "ix_quick_survey_question",
           business: businessDescription,
-          target: project.projectAnalysis.target_customer,
-          business_model: project.businessModel,
-          sector: project.industryType,
-          country: project.targetCountry,
           goal: projectDescription,
         };
 
@@ -465,7 +466,6 @@ const PageQuickSurvey = () => {
       setQuickSurveyCustomGuide(response.response.quick_survey_custom_guide);
 
       setQuickSurveySurveyMethod(quickSurveyAnalysis[selectedQuestion]);
- 
 
       await updateToolOnServer(
         toolId,
@@ -1259,9 +1259,10 @@ const PageQuickSurvey = () => {
                         <li>
                           <Body2 color="gray500">페르소나 수</Body2>
                           <Body2 color="gray800">
-                            {quickSurveyPersonaGroup && quickSurveyPersonaGroup.length > 0 ?
-                              `${quickSurveyPersonaGroup.length}명 완료` : 
-                              '30명 예상'}
+                            {quickSurveyPersonaGroup &&
+                            quickSurveyPersonaGroup.length > 0
+                              ? `${quickSurveyPersonaGroup.length}명 완료`
+                              : "30명 예상"}
                           </Body2>
                         </li>
                       </ListBoxGroup>
@@ -1630,65 +1631,80 @@ const PageQuickSurvey = () => {
 
                       {activeDesignTab === "emotion" && (
                         <>
+                          {/* 각 질문 유형에 맞는 그래프 렌더링 */}
+                          {selectedQuestion[0] === "ab_test" &&
+                            Object.keys(quickSurveyStaticData).length > 0 && (
+                              <ABGraph
+                                onOptionSelect={setSelectedOption}
+                                onOptionSelectIndex={setSelectedOptionIndex}
+                                onBarClick={() => setShowToast(true)}
+                              />
+                            )}
+                          {(selectedQuestion[0] === "importance" ||
+                            selectedQuestion[0] === "single_choice") &&
+                            Object.keys(quickSurveyStaticData).length > 0 && (
+                              <BarChartLikertScale5
+                                onOptionSelect={setSelectedOption}
+                                onOptionSelectIndex={setSelectedOptionIndex}
+                                onBarClick={() => setShowToast(true)}
+                              />
+                            )}
+                          {selectedQuestion[0] === "nps" &&
+                            Object.keys(quickSurveyStaticData).length > 0 && (
+                              <BarChartLikertScale11 />
+                            )}
+
+                          {/* Insight 섹션 */}
+                          <div className="content">
+                            {quickSurveyReport?.[0] && (
+                              <InsightContainer>
+                                <InsightSection>
+                                  <InsightLabel color="gray700">
+                                    총평
+                                  </InsightLabel>
+                                  <InsightContent color="gray700">
+                                    {quickSurveyReport[0].total_insight}
+                                  </InsightContent>
+                                </InsightSection>
+
+                                <InsightSection>
+                                  <InsightLabel color="gray700">
+                                    성별 의견 정리
+                                  </InsightLabel>
+                                  <InsightContent color="gray700">
+                                    {quickSurveyReport[0].gender_insight}
+                                  </InsightContent>
+                                </InsightSection>
+
+                                <InsightSection>
+                                  <InsightLabel color="gray700">
+                                    연령별 의견 정리
+                                  </InsightLabel>
+                                  <InsightContent color="gray700">
+                                    {quickSurveyReport[0].age_insight}
+                                  </InsightContent>
+                                </InsightSection>
+                              </InsightContainer>
+                            )}
+                          </div>
+                        </>
+                      )}
+                      {activeDesignTab === "scale" && (
+                        <>
+
                          {/* 각 질문 유형에 맞는 그래프 렌더링 */}
                          {selectedQuestion[0] === 'ab_test' && Object.keys(quickSurveyStaticData).length > 0 && (
-                            <ABGraph 
-                            onOptionSelect={setSelectedOption} 
-                            onBarClick={() => setShowToast(true)} 
-                            />
-                          )}
-                          {(selectedQuestion[0] === 'importance' || selectedQuestion[0] === 'single_choice') && Object.keys(quickSurveyStaticData).length > 0 && (
-                            <BarChartLikertScale5 
-                            onOptionSelect={setSelectedOption} 
-                            onBarClick={() => setShowToast(true)} />
-                          )}
-                          {selectedQuestion[0] === 'nps' && Object.keys(quickSurveyStaticData).length > 0 && (
-                            <BarChartLikertScale11 />
-                          )}
-
-                        {/* Insight 섹션 */}
-                        <div className="content">
-                          {quickSurveyReport?.[0] && (
-                            <InsightContainer>
-                              <InsightSection>
-                                <InsightLabel color="gray700">총평</InsightLabel>
-                                <InsightContent color="gray700">
-                                  {quickSurveyReport[0].total_insight}
-                                </InsightContent>
-                              </InsightSection>
-
-                              <InsightSection>
-                                <InsightLabel color="gray700">성별 의견 정리</InsightLabel>
-                                <InsightContent color="gray700">
-                                  {quickSurveyReport[0].gender_insight}
-                                </InsightContent>
-                              </InsightSection>
-
-                              <InsightSection>
-                                <InsightLabel color="gray700">연령별 의견 정리</InsightLabel>
-                                <InsightContent color="gray700">
-                                  {quickSurveyReport[0].age_insight}
-                                </InsightContent>
-                              </InsightSection>
-                            </InsightContainer>
-                          )}
-                        </div>
-                      </>
-                    )}
-                    {activeDesignTab === "scale" && (
-                        <>
-                         {/* 각 질문 유형에 맞는 그래프 렌더링 */}
-                         {selectedQuestion[0] === 'ab_test' && (
                             <GraphChartScale2 />
                           )}
-                          {(selectedQuestion[0] === 'importance' || selectedQuestion[0] === 'single_choice') && (
+                          {(selectedQuestion[0] === 'importance' || selectedQuestion[0] === 'single_choice') && Object.keys(quickSurveyStaticData).length > 0 && (
                             <GraphChartScale5 />
                           )}
-                          {selectedQuestion[0] === 'nps' && (
+                          {selectedQuestion[0] === 'nps' && Object.keys(quickSurveyStaticData).length > 0 && (
+
                             <GraphChartScale11 />
                           )}
-                      </>
-                    )}
+                        </>
+                      )}
                     </InsightAnalysis>
                   </>
                 )}
@@ -1700,7 +1716,8 @@ const PageQuickSurvey = () => {
                 isActive={showToast}
                 onClose={() => setShowToast(false)}
                 isComplete={true}
-                selectedOption={selectedOption} 
+                selectedOption={selectedOption}
+                selectedOptionIndex={selectedOptionIndex}
               />
             )}
           </DesignAnalysisWrap>
