@@ -423,7 +423,34 @@ const PageQuickSurvey = () => {
         setQuickSurveyProjectDescription(projectDescription);
 
         // API 요청
-        const response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+        let response;
+        let retryCount = 0;
+        const maxRetries = 10;
+        
+        while (retryCount < maxRetries) {
+          try {
+            response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+            
+            // 응답 형식 검증
+            if (response.response && 
+                response.response.quick_survey_question && 
+                response.response.quick_survey_question.ab_test && 
+                response.response.quick_survey_question.importance && 
+                response.response.quick_survey_question.nps && 
+                response.response.quick_survey_question.single_choice) {
+              break; // 올바른 응답 형식이면 루프 종료
+            }
+            
+            retryCount++;
+          } catch (error) {
+            retryCount++;
+            if (retryCount >= maxRetries) throw error;
+          }
+        }
+        
+        if (retryCount >= maxRetries) {
+          throw new Error("올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다.");
+        }
 
         const responseToolId = await createToolOnServer(
           {
@@ -477,8 +504,26 @@ const PageQuickSurvey = () => {
         business: business,
         goal: projectDescription,
       };
-
-      const response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+      let response;
+      let retryCount = 0;
+      const maxRetries = 10;
+      
+      while (retryCount < maxRetries) {
+        response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+        
+        // 응답 형식 확인
+        if (response.response && 
+            response.response.quick_survey_custom_guide && 
+            Array.isArray(response.response.quick_survey_custom_guide) && 
+            response.response.quick_survey_custom_guide.length === 3) {
+          break;
+        }
+        
+        retryCount++;
+        if (retryCount >= maxRetries) {
+          throw new Error("응답 형식이 올바르지 않습니다. 최대 재시도 횟수를 초과했습니다.");
+        }
+      }
 
       setQuickSurveyCustomGuide(response.response.quick_survey_custom_guide);
 
@@ -624,7 +669,30 @@ const PageQuickSurvey = () => {
         },
       };
 
-      const response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+      let response;
+      let retryCount = 0;
+      const maxRetries = 10;
+      
+      while (retryCount < maxRetries) {
+        try {
+          response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+          
+          // 응답 형식 확인
+          if (response?.response?.quick_survey_preset?.low_user_group &&
+              response?.response?.quick_survey_preset?.general_user_group &&
+              response?.response?.quick_survey_preset?.high_user_group) {
+            break; // 올바른 형식이면 루프 종료
+          }
+          
+          retryCount++;
+        } catch (error) {
+          retryCount++;
+        }
+      }
+      
+      if (retryCount >= maxRetries) {
+        throw new Error("최대 재시도 횟수를 초과했습니다. 응답 형식이 올바르지 않습니다.");
+      }
 
       // 여기서 데이터 가공
       const allPersonas = [
@@ -693,7 +761,32 @@ const PageQuickSurvey = () => {
         persona_group: quickSurveyPersonaGroup,
       };
 
-      const response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+      let response;
+      let retryCount = 0;
+      const maxRetries = 10;
+      
+      while (retryCount < maxRetries) {
+        try {
+          response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+          
+          // 응답 형식 검증
+          if (response.response && 
+              response.response.quick_survey_interview && 
+              Array.isArray(response.response.quick_survey_interview) && 
+              response.response.quick_survey_interview.length > 0) {
+            break; // 올바른 응답 형식이면 루프 종료
+          }
+          
+          retryCount++;
+        } catch (error) {
+          retryCount++;
+          if (retryCount >= maxRetries) throw error;
+        }
+      }
+      
+      if (retryCount >= maxRetries) {
+        throw new Error("올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다.");
+      }
 
       const combinedInterviews = response.response.quick_survey_interview.map(
         (interview, index) => {
@@ -727,10 +820,30 @@ const PageQuickSurvey = () => {
         quick_survey_interview: response.response.quick_survey_interview,
       };
 
-      const responseReport = await InterviewXQuickSurveyRequest(
-        reportData,
-              isLoggedIn
-            );
+      let responseReport;
+      let reportRetryCount = 0;
+      const reportMaxRetries = 10;
+      
+      while (reportRetryCount < reportMaxRetries) {
+        try {
+          responseReport = await InterviewXQuickSurveyRequest(reportData, isLoggedIn);
+          
+          // 응답 형식 검증
+          if (responseReport.response && 
+              responseReport.response.quick_survey_report && 
+              responseReport.response.statistics_data) {
+            break; // 올바른 응답 형식이면 루프 종료
+          }
+          reportRetryCount++;
+        } catch (error) {
+          reportRetryCount++;
+          if (reportRetryCount >= reportMaxRetries) throw error;
+        }
+      }
+      
+      if (reportRetryCount >= reportMaxRetries) {
+        throw new Error("올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다.");
+      }
 
       setQuickSurveyReport(responseReport.response.quick_survey_report);
 
