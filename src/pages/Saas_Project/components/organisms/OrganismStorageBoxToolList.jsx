@@ -147,6 +147,19 @@ import {
   PSST_FILE_NAMES,
   PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION,
   PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE,
+  QUICK_SURVEY_PROJECT_DESCRIPTION,
+  QUICK_SURVEY_ANALYSIS,
+  QUICK_SURVEY_CUSTOM_GUIDE,
+  QUICK_SURVEY_PRESET_DATA,
+  QUICK_SURVEY_PERSONA_GROUP,
+  QUICK_SURVEY_INTERVIEW,
+  QUICK_SURVEY_REPORT,
+  QUICK_SURVEY_STATIC_DATA,
+  QUICK_SURVEY_SURVEY_METHOD,
+  QUICK_SURVEY_SELECTED_QUESTION,
+  QUICK_SURVEY_DETAIL_INFO,
+  QUICK_SURVEY_RECRUITING_CONDITION,
+  QUICK_SURVEY_INTERVIEW_MODE_TYPE,
 } from "../../../AtomStates";
 import {
   updateToolOnServer,
@@ -359,6 +372,19 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [, setProjectAnalysisMultimodalKeyMessage] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE
   );
+  const [, setQuickSurveyProjectDescription] = useAtom(QUICK_SURVEY_PROJECT_DESCRIPTION);
+  const [, setQuickSurveySelectedQuestion] = useAtom(QUICK_SURVEY_SELECTED_QUESTION);
+  const [, setQuickSurveyAnalysis] = useAtom(QUICK_SURVEY_ANALYSIS);
+  const [, setQuickSurveyCustomGuide] = useAtom( QUICK_SURVEY_CUSTOM_GUIDE);
+  const [, setQuickSurveyPresetData] = useAtom(QUICK_SURVEY_PRESET_DATA);
+  const [, setquickSurveyPersonaGroup] = useAtom(QUICK_SURVEY_PERSONA_GROUP);
+  const [, setQuickSurveyInterview] = useAtom(QUICK_SURVEY_INTERVIEW);
+  const [, setQuickSurveySurveyMethod] = useAtom(QUICK_SURVEY_SURVEY_METHOD);
+  const [, setQuickSurveyReport] = useAtom(QUICK_SURVEY_REPORT);
+  const [, setQuickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
+  const [, setQuickSurveyDetailInfo] = useAtom(QUICK_SURVEY_DETAIL_INFO);
+  const [, setQuickSurveyRecruitingCondition] = useAtom(QUICK_SURVEY_RECRUITING_CONDITION);
+  const [, setQuickSurveyInterviewModeType] = useAtom(QUICK_SURVEY_INTERVIEW_MODE_TYPE);
 
   const [, setReportLoadButtonState] = useAtom(REPORT_LOAD_BUTTON_STATE);
   const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
@@ -538,6 +564,8 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         case "ix_design_emotion_analysis":
           return tool.completedStep === 3 ? "완료" : "진행중";
         case "ix_psst_multimodal":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        case "ix_quick_survey_question":
           return tool.completedStep === 3 ? "완료" : "진행중";
         default:
           return "-";
@@ -912,6 +940,36 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setProjectAnalysisMultimodalKeyMessage(
           chatData?.projectAnalysisMultimodalKeyMessage || ""
         );
+
+        setToolStep(1);
+        setQuickSurveyProjectDescription("");
+        setQuickSurveyAnalysis([]);
+        setQuickSurveyCustomGuide([]);
+        setQuickSurveyPresetData([]);
+        setquickSurveyPersonaGroup([]);
+        setQuickSurveyInterview([]);
+        setQuickSurveySurveyMethod([]);
+        setQuickSurveyStaticData([]);
+        setQuickSurveyReport([]);
+        setQuickSurveyDetailInfo({});
+        setQuickSurveyInterviewModeType("");
+        setQuickSurveyRecruitingCondition("");
+        setToolLoading(false);
+        setToolStep(chatData?.completedStep);
+        setToolId(chatData?.id);
+        setQuickSurveyProjectDescription(chatData?.goal || "");
+        setQuickSurveySelectedQuestion(chatData?.selectedQuestion || []);
+        setQuickSurveyAnalysis(chatData?.quickSurveyAnalysis || []);
+        setQuickSurveyCustomGuide(chatData?.quickSurveyCustomGuide || []);
+        setQuickSurveyPresetData(chatData?.quickSurveyPresetData || []);
+        setquickSurveyPersonaGroup(chatData?.personaGroup || []);
+        setQuickSurveyInterview(chatData?.quickSurveyInterview || []);
+        setQuickSurveySurveyMethod(chatData?.surveyMethod || []);
+        setQuickSurveyReport(chatData?.quickSurveyReport || []);
+        setQuickSurveyStaticData(chatData?.quickSurveyStaticData || []);
+        setQuickSurveyDetailInfo(chatData?.detailInfo || {});
+        setQuickSurveyRecruitingCondition(chatData?.recruitmentCriteria || "");
+        setQuickSurveyInterviewModeType(chatData?.interviewModeType || "");
 
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);
