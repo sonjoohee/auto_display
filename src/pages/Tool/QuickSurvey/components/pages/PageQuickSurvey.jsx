@@ -982,7 +982,6 @@ const PageQuickSurvey = () => {
                           Quick Survey로 확인하고 싶은 내용이 무엇인가요?
                         </Body1>
                       </Title>
-                      <ABGraph />
 
                       <FormBox Large>
                         <CustomTextarea
