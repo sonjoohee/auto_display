@@ -684,32 +684,14 @@ const PageQuickSurvey = () => {
         {
           quickSurveyInterview: response.response.quick_survey_interview,
           quickSurveyReport: responseReport.response.quick_survey_report,
-          completedStep: 3,
+
+          quickSurveyStaticData: responseReport.response.statistics_data,
+          completedStep: 3
+
         },
         isLoggedIn
       );
 
-      //  [인터부 데이터
-      //   {
-      //       "persona_name": "배달 앱 사용이 익숙하지 않은 20대 초반 대학생",
-      //       "question_answer": "매운맛 조절 옵션을 제공하여 현지인의 입맛에 맞추는 전략",
-      //       "follow_up_answer": "베트남에서는 아직 배달 앱 사용이 한국만큼 보편화되지 않았고, 저는 새로운 앱 사용에 거부감이 있어요. 엽떡의 매운맛 때문에 망설이는 사람들이 많을 텐데, 매운맛 조절 옵션이 있다면 더 쉽게 다가갈 수 있을 것 같아요. 예전에 '불닭볶음면'이 처음 나왔을 때 너무 매워서 못 먹었는데, 나중에 순한맛이 나와서 먹어봤더니 맛있어서 계속 사먹게 됐거든요. 엽떡도 비슷한 효과를 볼 수 있을 것 같아요."
-      //   },
-      //   {
-      //       "persona_name": "배달 음식보다 집밥을 선호하는 30대 직장인",
-      //       "question_answer": "매운맛 조절 옵션을 제공하여 현지인의 입맛에 맞추는 전략",
-      //       "follow_up_answer": "저는 건강 때문에 배달 음식을 잘 안 먹지만, 가끔 스트레스 해소용으로 매운 음식이 당길 때가 있어요. 하지만 엽떡은 너무 매워서 도전하기가 망설여지더라고요. 만약 덜 매운맛이 있다면 한 번쯤 시도해볼 의향이 있습니다. 예전에 '신전떡볶이'에서 순한맛을 먹어본 적이 있는데, 적당히 매콤하면서 맛있어서 좋았어요. 엽떡도 그런 식으로 순한맛을 개발하면 집밥을 선호하는 사람들도 끌어들일 수 있을 것 같아요."
-      //   },
-      //   {
-      //       "persona_name": "매운 음식을 즐기지 않는 20대 후반 여행객",
-      //       "question_answer": "매운맛 조절 옵션을 제공하여 현지인의 입맛에 맞추는 전략",
-      //       "follow_up_answer": "저는 베트남 여행 중이라 현지 음식을 주로 먹지만, 한국 음식에 대한 관심도 있어요. 하지만 엽떡은 너무 맵다는 이야기를 많이 들어서 시도해볼 엄두가 안 나더라고요. 만약 매운맛 조절 옵션이 있다면, 한 번쯤 도전해볼 의향이 있습니다. 예전에 '비빔면'을 먹어봤는데, 매운 소스 대신 간장 소스를 넣어서 먹었더니 맛있었어요. 엽떡도 그런 식으로 매운맛을 조절할 수 있다면 좋을 것 같아요."
-      //   },
-      //   {
-      //       "persona_name": "위생에 민감한 30대 주부",
-      //       "question_answer": "배달 서비스를 강화하여 베트남의 높은 모바일 사용률과 배달 문화를 공략하는 전략",
-      //       "follow_up_answer": "저는 아이 때문에 배달 음식을 잘 안 시켜 먹지만, 가끔 남편과 둘이서 엽떡을 먹고 싶을 때가 있어요. 하지만 배달 음식은 위생 상태가 걱정돼서 망설여지더라고요. 만약 엽떡에서 위생 관리 시스템을 철저하게 운영하고, 포장 상태도 꼼꼼하게 신경 쓴다면 안심하고 주문할 수 있을 것 같아요. 예전에 '배달의 민족'에서 위생 관련 캠페인을 하는 것을 보고 안심하고 주문했던 경험이 있습니다. 엽떡도 그런 식으로 위생에 대한 신뢰도를 높이면 좋을 것 같아요."
-      //   },]
 
       setToolSteps(3);
     } catch (error) {
@@ -839,6 +821,25 @@ const PageQuickSurvey = () => {
       setProjectDescription(value);
     }
   };
+
+    const processMarketingABData = (data) => {
+      if (!data || !data.총합) return { a: 0, b: 0 };
+    
+      const options = Object.keys(data).filter(key => key !== "총합");
+      if (options.length !== 2) return { a: 0, b: 0 };
+    
+      const [optionAKey, optionBKey] = options;
+      const totalA = data[optionAKey]?.총합 || 0;
+      const totalB = data[optionBKey]?.총합 || 0;
+      const overallTotal = data.총합?.총합 || (totalA + totalB); // 혹시 전체 총합이 없을 경우 대비
+    
+      if (overallTotal === 0) return { a: 0, b: 0 };
+    
+      return {
+        a: Math.round((totalA / overallTotal) * 100),
+        b: Math.round((totalB / overallTotal) * 100)
+      };
+    };
 
   return (
     <>
@@ -1581,33 +1582,59 @@ const PageQuickSurvey = () => {
                         </H4>
                       </div>
 
-                      <div className="content">
-                        {activeDesignTab === "emotion" ? (
-                          <Body3 color="gray700">
-                            {designAnalysisEmotionTarget?.designer_guidelines}
-                          </Body3>
-                        ) : (
-                          <>
-                            <Body3 color="gray700">
-                              강점 :{" "}
-                              {
-                                designAnalysisEmotionScale?.evaluation_analysis
-                                  ?.strengths
-                              }
-                            </Body3>
-                            <Body3 color="gray700">
-                              약점 및 개선 방향:{" "}
-                              {
-                                designAnalysisEmotionScale?.evaluation_analysis
-                                  ?.weaknesses
-                              }
-                            </Body3>
-                          </>
-                        )}
-                      </div>
+                      {activeDesignTab === "emotion" && (
+                        
+                        <>
+                        {/* ABGraph를 emotion 탭 내부에 추가 */}
+                         {/* 각 질문 유형에 맞는 그래프 렌더링 */}
+                         {/* {selectedQuestion === 'ab_test' && quickSurveyStaticData && (
+                            <ABGraph />
+                          )}
+                          {selectedQuestion === 'importance' && quickSurveyStaticData && (
+                            <GraphChartScale5 />
+                          )}
+                          {selectedQuestion === 'nps' && quickSurveyStaticData && (
+                            <BarChartLikertScale11 />
+                          )}
+                           {selectedQuestion === 'single_choice' && quickSurveyStaticData && (
+                            // BarChart는 data prop만 받으므로 바로 전달
+                            <BarChart />
+                          )} */}
+
+                        {/* Insight 섹션 */}
+                        <div className="content">
+                          {quickSurveyReport?.[0] && (
+                            <InsightContainer>
+                              <InsightSection>
+                                <InsightLabel color="gray700">총평</InsightLabel>
+                                <InsightContent color="gray700">
+                                  {quickSurveyReport[0].total_insight}
+                                </InsightContent>
+                              </InsightSection>
+
+                              <InsightSection>
+                                <InsightLabel color="gray700">성별 의견 정리</InsightLabel>
+                                <InsightContent color="gray700">
+                                  {quickSurveyReport[0].gender_insight}
+                                </InsightContent>
+                              </InsightSection>
+
+                              <InsightSection>
+                                <InsightLabel color="gray700">연령별 의견 정리</InsightLabel>
+                                <InsightContent color="gray700">
+                                  {quickSurveyReport[0].age_insight}
+                                </InsightContent>
+                              </InsightSection>
+                            </InsightContainer>
+                          )}
+                        </div>
+                      </>
+                    )}
                     </InsightAnalysis>
 
+
                     <ABGraph data={{ a: 45, b: 55 }} />
+
                     <BarChartLikertScale5 />
                     <BarChartLikertScale11 />
                     <GraphChartScale2 />
@@ -1991,4 +2018,41 @@ export const CheckCircle = styled.input`
       opacity: 0.5;
     }
   }
+`;
+const InsightContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid #E0E4E8;
+  border-radius: 10px;
+  padding: 16px;
+`;
+
+const InsightSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+    border-bottom: 1px solid #E0E4E8;
+      padding-bottom: 16px;
+
+   &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+`;
+
+const InsightContent = styled(Body3)`
+  // border-bottom: 1px solid #E0E4E8;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+
+  // &:last-child {
+  //   border-bottom: none;
+  // }
+`;
+
+
+const InsightLabel = styled(Body3)`
+  font-size: 16px;
 `;
