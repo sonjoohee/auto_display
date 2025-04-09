@@ -203,7 +203,7 @@ const DataSection = styled.div`
 
 const VerticalLine = styled.div`
   position: absolute;
-  height: calc(100% + 56px + 24px + 2px); /* DataSection 높이(100%) + 헤더 여백(56px) + 하단 패딩(24px) + 테두리(2px) */
+  height: calc(100% + 56px + 20px); /* DataSection 높이(100%) + 헤더 여백(56px) + 하단 패딩 조정(20px) */
   width: 1px;
   background-color: #DDDDDD;
   left: 303px; /* ImportanceContainer 너비(291px) + 약간의 간격(12px) */
@@ -213,7 +213,7 @@ const VerticalLine = styled.div`
 
 const RightVerticalLine = styled.div`
   position: absolute;
-  height: calc(100% + 56px + 24px + 2px); /* DataSection 높이(100%) + 헤더 여백(56px) + 하단 패딩(24px) + 테두리(2px) */
+  height: calc(100% + 56px + 20px); /* DataSection 높이(100%) + 헤더 여백(56px) + 하단 패딩 조정(20px) */
   width: 1px;
   background-color: #DDDDDD;
   left: calc(303px + 55px * 2 + 4px); /* 왼쪽 세로선(303px) + 남성 열 너비(55px) + 여성 열 너비(55px) + 간격(4px) */
