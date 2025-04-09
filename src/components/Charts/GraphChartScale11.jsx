@@ -39,15 +39,6 @@ const GraphChartScale11 = () => {
     return percentage;
   };
 
-  //const GraphChartScale11 = ({ data = defaultData }) => {
-  // 각 점수 레벨별 합계 계산
-
-  const rowSums = importanceLabels.map((_, index) => {
-    const rowKey = `row${index + 1}`;
-    const values = data[rowKey];
-    return values.reduce((sum, val) => sum + val, 0);
-  });
-
   return (
     <ChartContainer>
       <HeaderSection>
@@ -96,7 +87,29 @@ const GraphChartScale11 = () => {
                   style={{ position: "relative" }}
                 >
                   <ImportanceBar key={`bar-${index}`} width={barWidth} />
-                  <BarValue>{rowSums[index]}</BarValue>
+                  <BarValue>
+                    {index === 0
+                      ? data.a[0] + data.a[1]
+                      : index === 1
+                      ? data.b[0] + data.b[1]
+                      : index === 2
+                      ? data.c[0] + data.c[1]
+                      : index === 3
+                      ? data.d[0] + data.d[1]
+                      : index === 4
+                      ? data.e[0] + data.e[1]
+                      : index === 5
+                      ? data.f[0] + data.f[1]
+                      : index === 6
+                      ? data.g[0] + data.g[1]
+                      : index === 7
+                      ? data.h[0] + data.h[1]
+                      : index === 8
+                      ? data.i[0] + data.i[1]
+                      : index === 9
+                      ? data.j[0] + data.j[1]
+                      : data.k[0] + data.k[1]}
+                  </BarValue>
                 </div>
               );
             })}
