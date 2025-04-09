@@ -11,7 +11,7 @@ const ABGraph = () => {
   const getBarHeight = (value) => {
     if (value === 28) return 66;
     if (value === 72) return 176;
-    
+
     // 다른 값의 경우 선형 비례로 계산
     const slope = (176 - 66) / (72 - 28);
     return Math.round(66 + slope * (value - 28));
@@ -40,17 +40,20 @@ const ABGraph = () => {
     <GraphContainer>
       <BarContainer>
         <BarWrapper>
-          <BarItem>
+
+          <BarItem onClick={() => console.log("Clicked Bar Value:", calculatedData.a)}>
             <BarFill height={getBarHeight(calculatedData.a)} />
             <BarValue>{calculatedData.a}%</BarValue>
+
           </BarItem>
           <BarLabel>{Object.keys(quickSurveyStaticData)[0]}</BarLabel>
         </BarWrapper>
-        
+
         <BarWrapper>
-          <BarItem>
+          <BarItem onClick={() => console.log("Clicked Bar Value:", calculatedData.b)}>
             <BarFill height={getBarHeight(calculatedData.b)} />
             <BarValue>{calculatedData.b}%</BarValue>
+
           </BarItem>
           <BarLabel>{Object.keys(quickSurveyStaticData)[1]}</BarLabel>
         </BarWrapper>
@@ -94,13 +97,13 @@ const BarItem = styled.div`
 
 const BarFill = styled.div`
   width: 143px;
-  height: ${props => props.height}px;
+  height: ${(props) => props.height}px;
   background-color: ${palette.primary};
   border-radius: 5px;
 `;
 
 const BarValue = styled.span`
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-weight: 600;
   font-size: 20px;
   line-height: 1.55em;
@@ -110,7 +113,7 @@ const BarValue = styled.span`
 `;
 
 const BarLabel = styled.span`
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-weight: 400;
   font-size: 16px;
   line-height: 1.55em;

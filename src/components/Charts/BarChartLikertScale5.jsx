@@ -43,7 +43,10 @@ const BarChartLikertScale5 = () => {
   return (
     <GraphContainer>
       {data.map((item, index) => (
-        <CategoryItem key={index}>
+        <CategoryItem
+          key={index}
+          onClick={() => console.log("Clicked Bar Value:", item.category)}
+        >
           <BarGroup>
             <BarBackground />
             <BarFill width={item.value} />
@@ -56,7 +59,7 @@ const BarChartLikertScale5 = () => {
   );
 };
 
-export default BarChartLikertScale5; 
+export default BarChartLikertScale5;
 
 const GraphContainer = styled.div`
   display: flex;
@@ -90,7 +93,7 @@ const BarBackground = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border-radius: 5px;
 `;
 
@@ -99,7 +102,7 @@ const BarFill = styled.div`
   bottom: 0;
   left: 0;
   width: 100%;
-  height: ${props => props.width}%;
+  height: ${(props) => props.width}%;
   background-color: ${palette.primary};
   border-radius: 5px;
 `;
@@ -107,7 +110,7 @@ const BarFill = styled.div`
 const BarValue = styled.div`
   position: relative;
   z-index: 2;
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-weight: 600;
   font-size: 20px;
   line-height: 1.55em;
@@ -117,7 +120,7 @@ const BarValue = styled.div`
 `;
 
 const CategoryLabel = styled.div`
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-weight: 400;
   font-size: 14px;
   line-height: 1.55em;
