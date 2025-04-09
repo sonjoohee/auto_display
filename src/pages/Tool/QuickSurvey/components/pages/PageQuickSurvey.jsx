@@ -431,10 +431,6 @@ const PageQuickSurvey = () => {
         const Data = {
           type: "ix_quick_survey_question",
           business: businessDescription,
-          target: project.projectAnalysis.target_customer,
-          business_model: project.businessModel,
-          sector: project.industryType,
-          country: project.targetCountry,
           goal: projectDescription,
         };
 
@@ -1724,15 +1720,16 @@ const PageQuickSurvey = () => {
                       )}
                       {activeDesignTab === "scale" && (
                         <>
-                          {/* 각 질문 유형에 맞는 그래프 렌더링 */}
-                          {selectedQuestion[0] === "ab_test" && (
+
+                         {/* 각 질문 유형에 맞는 그래프 렌더링 */}
+                         {selectedQuestion[0] === 'ab_test' && Object.keys(quickSurveyStaticData).length > 0 && (
                             <GraphChartScale2 />
                           )}
-                          {(selectedQuestion[0] === "importance" ||
-                            selectedQuestion[0] === "single_choice") && (
+                          {(selectedQuestion[0] === 'importance' || selectedQuestion[0] === 'single_choice') && Object.keys(quickSurveyStaticData).length > 0 && (
                             <GraphChartScale5 />
                           )}
-                          {selectedQuestion[0] === "nps" && (
+                          {selectedQuestion[0] === 'nps' && Object.keys(quickSurveyStaticData).length > 0 && (
+
                             <GraphChartScale11 />
                           )}
                         </>

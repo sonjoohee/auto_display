@@ -6,9 +6,23 @@ import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
 const GraphChartScale2 = () => {
   const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
 
-  // 그래프 바 너비 - 서로 다른 값으로 설정
-  const barWidthA = quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]]['전체총합']; // A는 더 긴 바
-  const barWidthB = quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]]['전체총합'];  // B는 더 짧은 바
+  // 그래프 바 너비 계산 - 백분율 값에 따라 가변적으로 설정
+  const getBarWidth = (value) => {
+    // 최소 너비와 최대 너비 설정
+    const minWidth = 10;
+    const maxWidth = 120;
+    
+    // 백분율 값에 따라 선형적으로 너비 계산
+    // 0%일 때 minWidth, 100%일 때 maxWidth가 되도록 설정
+    const width = minWidth + (value / 100) * (maxWidth - minWidth);
+    
+    // 소수점 반올림하여 정수 값 반환
+    return Math.round(width);
+  };
+  
+  // A와 B 옵션의 총합 값 가져오기
+  const barWidthA = getBarWidth(quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]]['전체총합']);
+  const barWidthB = getBarWidth(quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]]['전체총합']);
 
   const getDataFromQuickSurveyStaticData = (quickSurveyStaticData) => {
     const option1Key = Object.keys(quickSurveyStaticData)[0];
@@ -228,8 +242,7 @@ const LabelText = styled.div`
 
 const GraphBar = styled.div`
   height: 16px;
-  width: ${props => props.width}px;
-  min-width: 20px;
+  min-width: ${props => props.width}px;
   background-color: #226FFF;
   border-radius: 2px;
   position: absolute;
