@@ -192,6 +192,7 @@ const PageQuickSurvey = () => {
     window.scrollTo(0, 0);
   }, []);
 
+
   useEffect(() => {
     // 팝업이 열려있을 때 배경 스크롤 맊음
     if (showToast) {
@@ -584,7 +585,7 @@ const PageQuickSurvey = () => {
               : selectedPersona?.original_description,
           personaGroup: personaGroupWithImage,
           interviewModeType: interviewModeType,
-          // completedStep: 1,
+          completedStep: 2,
         },
         isLoggedIn
       );
@@ -674,13 +675,7 @@ const PageQuickSurvey = () => {
     handleNextStep(2);
     // setToolSteps(2);
     setIsLoadingReport(true);
-    await updateToolOnServer(
-      toolId,
-      {
-        completedStep: 2,
-      },
-            isLoggedIn
-          );
+   
     try {
 
       const Data = {
@@ -1350,8 +1345,8 @@ const PageQuickSurvey = () => {
                                 </CheckboxWrapper>
                                 <CardContent>
                                   <div>
-                        <Body2
-                          color={
+                                    <Body2
+                                      color={
                                         interviewModeType === "selfQuestion"
                                           ? "primary"
                                           : "gray800"
@@ -1364,7 +1359,7 @@ const PageQuickSurvey = () => {
                                       style={{ marginTop: "0px" }}
                                       color={
                                         interviewModeType === "selfQuestion"
-                              ? "gray800"
+                                         ? "gray800"
                                           : "gray500"
                                       }
                                     >
@@ -1401,13 +1396,6 @@ const PageQuickSurvey = () => {
                                     name="interviewMode"
                                     checked={interviewModeType === "moderator"}
                                     onChange={() => {}} // 빈 함수로 변경
-                                    // onChange={() => {
-                                    //   setInterviewModeType("moderator");
-                                    //   setIsLoadingPreset(true);
-                                    //   setTimeout(() => {
-                                    //     setIsLoadingPreset(false);
-                                    //   }, 1500);
-                                    // }}
                                   />
                                 </CheckboxWrapper>
                                 <CardContent>
