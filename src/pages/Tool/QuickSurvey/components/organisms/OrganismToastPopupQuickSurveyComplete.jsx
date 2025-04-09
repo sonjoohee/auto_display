@@ -24,6 +24,7 @@ const OrganismToastPopupQuickSurveyComplete = ({
   onClose,
   isComplete,
   selectedOption,
+  selectedOptionIndex,
 }) => {
   const [projectSaas] = useAtom(PROJECT_SAAS);
   const project = projectSaas;
@@ -32,8 +33,8 @@ const OrganismToastPopupQuickSurveyComplete = ({
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
-  const [quickSurveyInterview, ] = useAtom(QUICK_SURVEY_INTERVIEW);
-  const [quickSurveySurveyMethod, ] = useAtom(QUICK_SURVEY_SURVEY_METHOD);
+  const [quickSurveyInterview] = useAtom(QUICK_SURVEY_INTERVIEW);
+  const [quickSurveySurveyMethod] = useAtom(QUICK_SURVEY_SURVEY_METHOD);
   const [projectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
 
   const [active, setActive] = useState(isActive);
@@ -47,17 +48,17 @@ const OrganismToastPopupQuickSurveyComplete = ({
   const [visibleAnswers, setVisibleAnswers] = useState({});
   const [showErrorPopup, setShowErrorPopup] = useState(false);
 
-
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
-
         // 단일 질문 설정
-        const question = [{
-          question: quickSurveySurveyMethod.question
-        }];
+        const question = [
+          {
+            question: quickSurveySurveyMethod.question,
+          },
+        ];
         setInterviewQuestionListState(question);
 
         // 단일 질문에 대한 Complete 상태 설정
@@ -74,16 +75,16 @@ const OrganismToastPopupQuickSurveyComplete = ({
             job: interviewItem.job,
             answer: {
               main: interviewItem.question_answer,
-              followUp: interviewItem.follow_up_answer
-            }
+              followUp: interviewItem.follow_up_answer,
+            },
           };
         });
-        
+
         setAnswers(processedAnswers);
         // console.log(processedAnswers);
 
         // 모든 답변을 보이도록 설정
-       
+
         setVisibleAnswers(true);
         setIsLoadingPrepare(false);
 
@@ -93,74 +94,74 @@ const OrganismToastPopupQuickSurveyComplete = ({
     interviewLoading();
   }, [personaButtonState3, isComplete]);
 
-
   const renderAnswersComplete = () => {
-
     const questionAnswers = answers || [];
 
-    const filteredAnswers = selectedOption 
-    ? questionAnswers.filter(answer => answer.answer.main === selectedOption)
-    : questionAnswers;
-
-
+    const filteredAnswers = selectedOption
+      ? questionAnswers.filter(
+          (answer) => answer.answer.main === selectedOption
+        )
+      : questionAnswers;
 
     return (
       <>
-      {filteredAnswers.map((answer, index) => (
-        <AnswerItem key={index}>
-          <TypeName>
-            <Thumb>
-              <img
-                src={personaImages[answer.imageKey]}
-                alt={answer.persona.persona_name}
-              />
-            </Thumb>
-            <div>
-              {answer.persona.persona_name}
-              <p>
-                <span>{answer.gender}</span>
-                <span>
-                  {answer.age.includes("세") ? answer.age : `${answer.age}세`}
-                </span>
-                <span>{answer.job}</span>
-              </p>
-            </div>
-          </TypeName>
-          <TextContainer>
-            <div>{answer.answer.main}</div>
-            <div style={{ marginTop: '16px' }}>{answer.answer.followUp}</div>
-          </TextContainer>
-        </AnswerItem>
-      ))}
-    </>
-    //   <>
-    //   {questionAnswers.map((answer, index) => (
-    //     <AnswerItem key={index}>
-    //       <TypeName>
-    //         <Thumb>
-    //           <img
-    //             src={personaImages[answer.imageKey]}
-    //             alt={answer.persona.persona_name}
-    //           />
-    //         </Thumb>
-    //         <div>
-    //           {answer.persona.persona_name}
-    //           <p>
-    //             <span>{answer.gender}</span>
-    //             <span>
-    //               {answer.age.includes("세") ? answer.age : `${answer.age}세`}
-    //             </span>
-    //             <span>{answer.job}</span>
-    //           </p>
-    //         </div>
-    //       </TypeName>
-    //       <TextContainer>
-    //         <div>{answer.answer.main}</div>
-    //         <div style={{ marginTop: '16px' }}>{answer.answer.followUp}</div>
-    //       </TextContainer>
-    //     </AnswerItem>
-    //   ))}
-    // </>
+        {filteredAnswers.map((answer, index) => (
+          <AnswerItem key={index}>
+            <TypeName>
+              <Thumb>
+                <img
+                  src={personaImages[answer.imageKey]}
+                  alt={answer.persona.persona_name}
+                />
+              </Thumb>
+              <div>
+                {answer.persona.persona_name}
+                <p>
+                  <span>{answer.gender}</span>
+                  <span>
+                    {answer.age.includes("세") ? answer.age : `${answer.age}세`}
+                  </span>
+                  <span>{answer.job}</span>
+                </p>
+              </div>
+            </TypeName>
+            <TextContainer>
+              <div>
+                {selectedOptionIndex}. {answer.answer.main}
+              </div>
+              <div style={{ marginTop: "16px" }}>{answer.answer.followUp}</div>
+            </TextContainer>
+          </AnswerItem>
+        ))}
+      </>
+      //   <>
+      //   {questionAnswers.map((answer, index) => (
+      //     <AnswerItem key={index}>
+      //       <TypeName>
+      //         <Thumb>
+      //           <img
+      //             src={personaImages[answer.imageKey]}
+      //             alt={answer.persona.persona_name}
+      //           />
+      //         </Thumb>
+      //         <div>
+      //           {answer.persona.persona_name}
+      //           <p>
+      //             <span>{answer.gender}</span>
+      //             <span>
+      //               {answer.age.includes("세") ? answer.age : `${answer.age}세`}
+      //             </span>
+      //             <span>{answer.job}</span>
+      //           </p>
+      //         </div>
+      //       </TypeName>
+      //       <TextContainer>
+      //         <div>{answer.answer.main}</div>
+      //         <div style={{ marginTop: '16px' }}>{answer.answer.followUp}</div>
+      //       </TextContainer>
+      //     </AnswerItem>
+      //   ))}
+      // </>
     );
   };
 
@@ -199,21 +200,13 @@ const OrganismToastPopupQuickSurveyComplete = ({
   const renderInterviewItemsComplete = () => {
     return (
       <InterviewItem status={"Complete"}>
-        <QuestionWrap
-          status={"Complete"}
-          isOpen={visibleAnswers}
-        >
-          <QuestionText>
-            Q. {quickSurveySurveyMethod?.question}
-          </QuestionText>
+        <QuestionWrap status={"Complete"} isOpen={visibleAnswers}>
+          <QuestionText>Q. {quickSurveySurveyMethod?.question}</QuestionText>
         </QuestionWrap>
-        {visibleAnswers && (
-          <AnswerWrap>{renderAnswersComplete()}</AnswerWrap>
-        )}
+        {visibleAnswers && <AnswerWrap>{renderAnswersComplete()}</AnswerWrap>}
       </InterviewItem>
     );
   };
- 
 
   return (
     <>
@@ -230,16 +223,13 @@ const OrganismToastPopupQuickSurveyComplete = ({
                   <img src={images.PeopleFill} alt="참여 페르소나" />
                   참여 페르소나
                 </span>
-                <span>
-                  {quickSurveyInterview.length}명
-                </span>
+                <span>{quickSurveyInterview.length}명</span>
               </li>
             </ul>
           </Header>
 
           <Contents>
-        
-              {!isLoadingPrepare && isComplete && renderInterviewItemsComplete()}
+            {!isLoadingPrepare && isComplete && renderInterviewItemsComplete()}
           </Contents>
         </ToastPopup>
       </PopupBox>
@@ -332,7 +322,7 @@ const Header = styled.div`
     color: ${palette.gray500};
     font-weight: 300;
     line-height: 1.5;
-    margin-bottom: 40px; 
+    margin-bottom: 40px;
   }
 
   li {
@@ -408,9 +398,6 @@ const Contents = styled.div`
   overflow-y: auto;
 `;
 
-
-
-
 const InterviewItem = styled.div`
   display: flex;
   flex-direction: column;
@@ -424,8 +411,6 @@ const InterviewItem = styled.div`
   border-radius: 10px;
 `;
 
-
-
 const QuestionWrap = styled.div`
   display: flex;
   align-items: center;
@@ -435,8 +420,6 @@ const QuestionWrap = styled.div`
   position: relative;
 `;
 
-
-
 const QuestionText = styled.div`
   font-size: 0.875rem;
   font-weight: 600;
@@ -444,7 +427,6 @@ const QuestionText = styled.div`
   color: ${palette.gray800};
   text-align: left;
 `;
-
 
 const AnswerWrap = styled.div`
   display: flex;
@@ -466,7 +448,6 @@ const AnswerItem = styled.div`
   gap: 12px;
   width: 100%;
 `;
-
 
 const TypeName = styled.div`
   display: flex;
@@ -529,4 +510,3 @@ const TextContainer = styled.div`
   border-radius: 0 15px 15px 15px;
   background: rgba(34, 111, 255, 0.06);
 `;
-
