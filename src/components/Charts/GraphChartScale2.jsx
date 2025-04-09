@@ -92,7 +92,7 @@ const defaultData = {
 };
 
 const ChartContainer = styled.div`
-  padding: 28px 24px 20px 24px;
+  padding: 28px 24px 24px 24px;
   border: 1px solid #E0E4EB;
   border-radius: 10px;
   background-color: #FFFFFF;
