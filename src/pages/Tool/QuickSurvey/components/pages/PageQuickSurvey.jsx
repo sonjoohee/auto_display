@@ -60,6 +60,7 @@ import {
   QUICK_SURVEY_INTERVIEW,
   QUICK_SURVEY_REPORT,
   QUICK_SURVEY_STATIC_DATA,
+  QUICK_SURVEY_SELECTED_QUESTION,
   QUICK_SURVEY_SURVEY_METHOD,
 } from "../../../../AtomStates";
 import {
@@ -140,9 +141,9 @@ const PageQuickSurvey = () => {
   );
   const [quickSurveyReport, setQuickSurveyReport] =
     useAtom(QUICK_SURVEY_REPORT);
+  const [quickSurveyStaticData, setQuickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
   const [quickSurveyProjectDescription, setQuickSurveyProjectDescription] =
     useAtom(QUICK_SURVEY_PROJECT_DESCRIPTION);
-  const [quickSurveyStaticData, setQuickSurveyStaticData] = useState([]);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
@@ -1654,116 +1655,61 @@ const PageQuickSurvey = () => {
 
                       {activeDesignTab === "emotion" && (
                         <>
-                          {/* ABGraph를 emotion 탭 내부에 추가 */}
-                          {/* 각 질문 유형에 맞는 그래프 렌더링 */}
-                          {/* {selectedQuestion === 'ab_test' && quickSurveyStaticData && (
+                         {/* 각 질문 유형에 맞는 그래프 렌더링 */}
+                         {selectedQuestion[0] === 'ab_test' && (
                             <ABGraph />
                           )}
-                          {selectedQuestion === 'importance' && quickSurveyStaticData && (
-                            <GraphChartScale5 />
+                          {(selectedQuestion[0] === 'importance' || selectedQuestion[0] === 'single_choice') && Object.keys(quickSurveyStaticData).length > 0 && (
+                            <BarChartLikertScale5 />
                           )}
-                          {selectedQuestion === 'nps' && quickSurveyStaticData && (
+                          {selectedQuestion[0] === 'nps' && Object.keys(quickSurveyStaticData).length > 0 && (
                             <BarChartLikertScale11 />
                           )}
-                           {selectedQuestion === 'single_choice' && quickSurveyStaticData && (
-                            // BarChart는 data prop만 받으므로 바로 전달
-                            <BarChart />
-                          )} */}
 
-                          {/* Insight 섹션 */}
-                          <div className="content">
-                            {quickSurveyReport?.[0] && (
-                              <InsightContainer>
-                                <InsightSection>
-                                  <InsightLabel color="gray700">
-                                    총평
-                                  </InsightLabel>
-                                  <InsightContent color="gray700">
-                                    {quickSurveyReport[0].total_insight}
-                                  </InsightContent>
-                                </InsightSection>
+                        {/* Insight 섹션 */}
+                        <div className="content">
+                          {quickSurveyReport?.[0] && (
+                            <InsightContainer>
+                              <InsightSection>
+                                <InsightLabel color="gray700">총평</InsightLabel>
+                                <InsightContent color="gray700">
+                                  {quickSurveyReport[0].total_insight}
+                                </InsightContent>
+                              </InsightSection>
 
-                                <InsightSection>
-                                  <InsightLabel color="gray700">
-                                    성별 의견 정리
-                                  </InsightLabel>
-                                  <InsightContent color="gray700">
-                                    {quickSurveyReport[0].gender_insight}
-                                  </InsightContent>
-                                </InsightSection>
+                              <InsightSection>
+                                <InsightLabel color="gray700">성별 의견 정리</InsightLabel>
+                                <InsightContent color="gray700">
+                                  {quickSurveyReport[0].gender_insight}
+                                </InsightContent>
+                              </InsightSection>
 
-                                <InsightSection>
-                                  <InsightLabel color="gray700">
-                                    연령별 의견 정리
-                                  </InsightLabel>
-                                  <InsightContent color="gray700">
-                                    {quickSurveyReport[0].age_insight}
-                                  </InsightContent>
-                                </InsightSection>
-                              </InsightContainer>
-                            )}
-                          </div>
-                        </>
-                      )}
-                    </InsightAnalysis>
-
-                    <ABGraph data={{ a: 45, b: 55 }} />
-
-                    <BarChartLikertScale5 />
-                    <BarChartLikertScale11 />
-                    <GraphChartScale2 />
-                    <GraphChartScale5 />
-                    <GraphChartScale11 />
-
-                    {activeDesignTab === "emotion" && (
-                      <InsightAnalysis style={{ marginBottom: "240px" }}>
-                        <Sub3 color="gray700" align="left">
-                          💡 %는 해당 비즈니스에서 차지하는 중요도를 의미합니다.
-                        </Sub3>
-                        <CardGroupWrap column $isExpanded={state.isExpanded}>
-                          {designAnalysisEmotionTarget?.design_perspectives?.map(
-                            (perspective, index) => (
-                              <AnalysisItem
-                                business={designAnalysisBusinessInfo}
-                                key={index}
-                                percentage={perspective.weight + "%"}
-                                title={perspective.name}
-                                subtitle={perspective.features
-                                  .map((feature) => feature.title)
-                                  .join(", ")}
-                                details={perspective}
-                              />
-                            )
+                              <InsightSection>
+                                <InsightLabel color="gray700">연령별 의견 정리</InsightLabel>
+                                <InsightContent color="gray700">
+                                  {quickSurveyReport[0].age_insight}
+                                </InsightContent>
+                              </InsightSection>
+                            </InsightContainer>
                           )}
-                        </CardGroupWrap>
-                      </InsightAnalysis>
+                        </div>
+                      </>
                     )}
                     {activeDesignTab === "scale" && (
-                      <InsightAnalysis style={{ marginBottom: "240px" }}>
-                        <OCEANRangeWrap report>
-                          {/* OCEAN 값 슬라이더 */}
-                          {designAnalysisEmotionScale?.sd_scale_analysis?.map(
-                            (item, index) => (
-                              <div key={index}>
-                                <Body3 color="gray800" align="right">
-                                  {item.opposite_emotion}
-                                </Body3>
-                                <RangeSlider
-                                  type="range"
-                                  min="1"
-                                  max="7"
-                                  step="1"
-                                  value={item.score}
-                                />
-                                <Body3 color="gray800" align="left">
-                                  {item.target_emotion}
-                                </Body3>
-                              </div>
-                            )
+                        <>
+                         {/* 각 질문 유형에 맞는 그래프 렌더링 */}
+                         {selectedQuestion[0] === 'ab_test' && (
+                            <GraphChartScale2 />
                           )}
-                        </OCEANRangeWrap>
-                      </InsightAnalysis>
+                          {(selectedQuestion[0] === 'importance' || selectedQuestion[0] === 'single_choice') && (
+                            <GraphChartScale5 />
+                          )}
+                          {selectedQuestion[0] === 'nps' && (
+                            <GraphChartScale11 />
+                          )}
+                      </>
                     )}
+                    </InsightAnalysis>
                   </>
                 )}
               </TabContent5>

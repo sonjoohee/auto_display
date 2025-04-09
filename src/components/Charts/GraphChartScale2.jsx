@@ -1,10 +1,42 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useAtom } from 'jotai';
+import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
 
-const GraphChartScale2 = ({ data = defaultData }) => {
+const GraphChartScale2 = () => {
+  const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
+
   // 그래프 바 너비 - 서로 다른 값으로 설정
-  const barWidthA = 120; // A는 더 긴 바
-  const barWidthB = 90;  // B는 더 짧은 바
+  const barWidthA = quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]]['전체총합']; // A는 더 긴 바
+  const barWidthB = quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]]['전체총합'];  // B는 더 짧은 바
+
+  const getDataFromQuickSurveyStaticData = (quickSurveyStaticData) => {
+    const option1Key = Object.keys(quickSurveyStaticData)[0];
+    const option2Key = Object.keys(quickSurveyStaticData)[1];
+    
+    return {
+      a: [
+        quickSurveyStaticData[option1Key]['성별']['남성'],
+        quickSurveyStaticData[option1Key]['성별']['여성'],
+        quickSurveyStaticData[option1Key]['연령대']['10대'],
+        quickSurveyStaticData[option1Key]['연령대']['20대'],
+        quickSurveyStaticData[option1Key]['연령대']['30대'],
+        quickSurveyStaticData[option1Key]['연령대']['40대'],
+        quickSurveyStaticData[option1Key]['연령대']['50대'],
+        quickSurveyStaticData[option1Key]['연령대']['60대 이상']
+      ],
+      b: [
+        quickSurveyStaticData[option2Key]['성별']['남성'],
+        quickSurveyStaticData[option2Key]['성별']['여성'],
+        quickSurveyStaticData[option2Key]['연령대']['10대'],
+        quickSurveyStaticData[option2Key]['연령대']['20대'],
+        quickSurveyStaticData[option2Key]['연령대']['30대'],
+        quickSurveyStaticData[option2Key]['연령대']['40대'],
+        quickSurveyStaticData[option2Key]['연령대']['50대'],
+        quickSurveyStaticData[option2Key]['연령대']['60대 이상']
+      ]
+    };
+  };
 
   return (
     <ChartContainer>
@@ -20,7 +52,7 @@ const GraphChartScale2 = ({ data = defaultData }) => {
           <CategoriesContainer>
             <DemographicItem>남</DemographicItem>
             <DemographicItem>여</DemographicItem>
-            <DemographicItem>10대</DemographicItem>
+            <DemographicItem>10대</DemographicItem>    
             <DemographicItem>20대</DemographicItem>
             <DemographicItem>30대</DemographicItem>
             <DemographicItem>40대</DemographicItem>
@@ -38,7 +70,7 @@ const GraphChartScale2 = ({ data = defaultData }) => {
             <GraphBar width={barWidthA} type="a" />
           </RowLabel>
           <DataRow>
-            {data.a.map((value, index) => (
+            {getDataFromQuickSurveyStaticData(quickSurveyStaticData).a.map((value, index) => (
               <DataCell key={`a-${index}`}>{value}</DataCell>
             ))}
           </DataRow>
@@ -52,7 +84,7 @@ const GraphChartScale2 = ({ data = defaultData }) => {
             <GraphBar width={barWidthB} type="b" />
           </RowLabel>
           <DataRow>
-            {data.b.map((value, index) => (
+            {getDataFromQuickSurveyStaticData(quickSurveyStaticData).b.map((value, index) => (
               <DataCell key={`b-${index}`}>{value}</DataCell>
             ))}
           </DataRow>
@@ -60,12 +92,6 @@ const GraphChartScale2 = ({ data = defaultData }) => {
       </DataSection>
     </ChartContainer>
   );
-};
-
-// 데이터 형식: [남성, 여성, 10대, 20대, 30대, 40대, 50대, 60대 이상]
-const defaultData = {
-  a: [7, 4, 8, 5, 6, 3, 9, 2],
-  b: [5, 8, 3, 7, 6, 9, 4, 5]
 };
 
 const ChartContainer = styled.div`
