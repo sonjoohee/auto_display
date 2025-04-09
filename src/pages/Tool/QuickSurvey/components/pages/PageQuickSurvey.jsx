@@ -229,10 +229,7 @@ const PageQuickSurvey = () => {
     };
   }, [showToast]);
 
-  console.log(selectedQuestion);
-  console.log(quickSurveySelectedQuestion);
-  console.log(quickSurveySurveyMethod);
-  console.log(quickSurveyAnalysis);
+
 
   useEffect(() => {
     const interviewLoading = async () => {
@@ -266,12 +263,11 @@ const PageQuickSurvey = () => {
         if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0) {
           setQuickSurveySurveyMethod(quickSurveySurveyMethod);
         }
-        if (
-          quickSurveySelectedQuestion &&
-          quickSurveySelectedQuestion.length > 0
-        ) {
-          setQuickSurveySelectedQuestion(quickSurveySelectedQuestion);
+
+        if (quickSurveySelectedQuestion && quickSurveySelectedQuestion.length > 0){
+          setSelectedQuestion(quickSurveySelectedQuestion);
         }
+       
 
         // 활성 탭 설정 (기본값 1)
         if (toolStep === undefined || toolStep === 1) {
@@ -292,51 +288,24 @@ const PageQuickSurvey = () => {
         setCompletedSteps(completedStepsArray);
 
         // 페르소나 설정 (Step 2)
-        if (quickSurveyAnalysis && quickSurveyAnalysis.length > 0) {
-          // 이미 선택된 페르소나들의 인덱스 찾기
-          const selectedIndices = (quickSurveyAnalysis ?? [])
-            .map((persona, index) => {
-              return (quickSurveyPersonaGroup ?? []).some(
-                (target) => target?.name === persona?.name
-              )
-                ? index
-                : -1;
-            })
-            .filter((index) => index !== -1);
 
-          // selectedQuestion 상태 업데이트
-          setSelectedQuestion(selectedIndices);
+        if (quickSurveyCustomGuide && quickSurveyCustomGuide.length > 0){
+          setQuickSurveySurveyMethod(quickSurveyCustomGuide); 
 
-          // 선택된 페르소나 데이터 설정
-          const selectedPersonaData = selectedIndices
-            .map((index) => designAnalysisEmotionAnalysis?.[index])
-            .filter(Boolean);
-
-          setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
         }
 
-        // 추가된 조건 체크
-        if (
-          Object.keys(designAnalysisEmotionTarget).length === 0 &&
-          !designAnalysisEmotionScale.length &&
-          completedStepsArray.length === 2
-        ) {
-          // designAnalysisEmotionTarget이 빈 객체이고, designAnalysisEmotionScale이 빈 배열인 경우
-          setActiveTab(2);
-          setToolSteps(1);
-          setCompletedSteps(completedStepsArray.slice(0, -1));
-        } else {
-          if (designAnalysisEmotionTarget) {
-            setDesignAnalysisEmotionTarget(designAnalysisEmotionTarget ?? {});
-          }
-
-          if (designAnalysisEmotionScale) {
-            setDesignAnalysisEmotionScale(designAnalysisEmotionScale ?? {});
-          }
+        if (quickSurveyPersonaGroup && quickSurveyPersonaGroup.length > 0){
+          setquickSurveyPersonaGroup(quickSurveyPersonaGroup);
         }
-        setToolStep(0);
 
-        return;
+        if (quickSurveyInterview && quickSurveyInterview.length > 0){
+          setQuickSurveyInterview(quickSurveyInterview);
+        }
+          
+        if (quickSurveyReport && quickSurveyReport.length > 0){
+          setQuickSurveyReport(quickSurveyReport);
+        }
+
       }
     };
     interviewLoading();
@@ -688,8 +657,14 @@ const PageQuickSurvey = () => {
     handleNextStep(2);
     // setToolSteps(2);
     setIsLoadingReport(true);
+    await updateToolOnServer(
+      toolId,
+      {
+        completedStep: 2,
+      },
+      isLoggedIn
+    );
     try {
-      // await new Promise(resolve => setTimeout(resolve, 1500));
 
       const Data = {
         type: "ix_quick_survey_interview",
@@ -816,6 +791,7 @@ const PageQuickSurvey = () => {
   };
 
   const handleEnterInterviewRoom = () => {
+    setSelectedOption(null);
     setShowToast(true);
   };
 
@@ -1235,18 +1211,13 @@ const PageQuickSurvey = () => {
                               }}
                             >
                               {(() => {
-                                const totalValues = Object.values(
-                                  selectedValues
-                                ).filter((value) => value);
+                                const totalValues = Object.values(selectedValues).filter((value) => value);
                                 const irrelevantCount = totalValues.filter(
                                   (value) => value === "상관없음"
                                 ).length;
 
-                                if (
-                                  totalValues.length === 4 &&
-                                  irrelevantCount === 4
-                                ) {
-                                  // "상관없음"이 정확히 4개일 때만 하나로 표시
+                                if (totalValues.length === 4 && irrelevantCount === 4) {
+                                  // 모든 값이 "상관없음"일 때
                                   return (
                                     <div
                                       style={{
@@ -1261,9 +1232,9 @@ const PageQuickSurvey = () => {
                                     </div>
                                   );
                                 } else {
-                                  // 그 외의 경우는 모든 선택된 값을 표시
+                                  // "상관없음"을 제외한 나머지 값들만 표시
                                   return Object.entries(selectedValues)
-                                    .filter(([_, value]) => value)
+                                    .filter(([_, value]) => value && value !== "상관없음") // "상관없음" 제외
                                     .map(([key, value]) => (
                                       <div
                                         key={key}
