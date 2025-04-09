@@ -80,7 +80,7 @@ const OrganismToastPopupQuickSurveyComplete = ({
         });
         
         setAnswers(processedAnswers);
-        console.log(processedAnswers);
+        // console.log(processedAnswers);
 
         // 모든 답변을 보이도록 설정
        

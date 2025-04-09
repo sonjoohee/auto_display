@@ -4,7 +4,7 @@ import { palette } from '../../assets/styles/Palette';
 import { useAtom } from 'jotai';
 import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
 
-const BarChartLikertScale5 = () => {
+const BarChartLikertScale5 = ({ onOptionSelect = () => {}, onBarClick }) => {
   const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
   
   const calculatePercentage = (value, total) => {
@@ -45,7 +45,10 @@ const BarChartLikertScale5 = () => {
       {data.map((item, index) => (
         <CategoryItem
           key={index}
-          onClick={() => console.log("Clicked Bar Value:", item.category)}
+          onClick={() => {
+            onOptionSelect(item.category);
+            onBarClick();
+          }}
         >
           <BarGroup>
             <BarBackground />
