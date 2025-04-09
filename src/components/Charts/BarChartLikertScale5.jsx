@@ -1,33 +1,100 @@
-import React from 'react';
-import styled from 'styled-components';
-import { palette } from '../../assets/styles/Palette';
+import React from "react";
+import styled from "styled-components";
+import { palette } from "../../assets/styles/Palette";
+import { useAtom } from "jotai";
+import { QUICK_SURVEY_STATIC_DATA } from "../../pages/AtomStates";
 
-// 5개의 카테고리 그래프를 위한 데이터 구조
-// [{ category: string, value: number }, ...]
-const BarChartLikertScale5 = ({ data = [
-  { category: '카테고리1', value: 4 },
-  { category: '카테고리2', value: 12 },
-  { category: '카테고리3', value: 20 },
-  { category: '카테고리4', value: 38 },
-  { category: '카테고리5', value: 26 }
-] }) => {
+const BarChartLikertScale5 = ({
+  onOptionSelect = () => {},
+  onOptionSelectIndex = () => {},
+  onBarClick,
+}) => {
+  const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
+
+  const calculatePercentage = (value, total) => {
+    return Math.round((value / total) * 100);
+  };
+
+  const processData = () => {
+    const total = quickSurveyStaticData["총합"]["전체총합"];
+
+    return [
+      {
+        category: Object.keys(quickSurveyStaticData)[0],
+        value: calculatePercentage(
+          quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]][
+            "전체총합"
+          ],
+          total
+        ),
+      },
+      {
+        category: Object.keys(quickSurveyStaticData)[1],
+        value: calculatePercentage(
+          quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]][
+            "전체총합"
+          ],
+          total
+        ),
+      },
+      {
+        category: Object.keys(quickSurveyStaticData)[2],
+        value: calculatePercentage(
+          quickSurveyStaticData[Object.keys(quickSurveyStaticData)[2]][
+            "전체총합"
+          ],
+          total
+        ),
+      },
+      {
+        category: Object.keys(quickSurveyStaticData)[3],
+        value: calculatePercentage(
+          quickSurveyStaticData[Object.keys(quickSurveyStaticData)[3]][
+            "전체총합"
+          ],
+          total
+        ),
+      },
+      {
+        category: Object.keys(quickSurveyStaticData)[4],
+        value: calculatePercentage(
+          quickSurveyStaticData[Object.keys(quickSurveyStaticData)[4]][
+            "전체총합"
+          ],
+          total
+        ),
+      },
+    ];
+  };
+
+  const data = processData();
+
   return (
     <GraphContainer>
       {data.map((item, index) => (
-        <CategoryItem key={index}>
+        <CategoryItem
+          key={index}
+          onClick={() => {
+            onOptionSelect(item.category);
+            onOptionSelectIndex(index + 1);
+            onBarClick();
+          }}
+        >
           <BarGroup>
             <BarBackground />
             <BarFill width={item.value} />
             <BarValue>{item.value}%</BarValue>
           </BarGroup>
-          <CategoryLabel>{item.category}</CategoryLabel>
+          <CategoryLabel>
+            {index + 1}. {item.category}
+          </CategoryLabel>
         </CategoryItem>
       ))}
     </GraphContainer>
   );
 };
 
-export default BarChartLikertScale5; 
+export default BarChartLikertScale5;
 
 const GraphContainer = styled.div`
   display: flex;
@@ -61,7 +128,7 @@ const BarBackground = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border-radius: 5px;
 `;
 
@@ -70,7 +137,7 @@ const BarFill = styled.div`
   bottom: 0;
   left: 0;
   width: 100%;
-  height: ${props => props.width}%;
+  height: ${(props) => props.width}%;
   background-color: ${palette.primary};
   border-radius: 5px;
 `;
@@ -78,7 +145,7 @@ const BarFill = styled.div`
 const BarValue = styled.div`
   position: relative;
   z-index: 2;
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-weight: 600;
   font-size: 20px;
   line-height: 1.55em;
@@ -88,7 +155,7 @@ const BarValue = styled.div`
 `;
 
 const CategoryLabel = styled.div`
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-weight: 400;
   font-size: 14px;
   line-height: 1.55em;

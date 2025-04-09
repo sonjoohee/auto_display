@@ -1,13 +1,51 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useAtom } from 'jotai';
+import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
 
-const GraphChartScale11 = ({ data = defaultData }) => {
+const GraphChartScale11 = () => {
+  const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
+
+    const getDataFromQuickSurveyStaticData = (quickSurveyStaticData) => {
+      const result = {};
+      const labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k'];
+      
+      for (let i = 0; i < 11; i++) {
+        result[labels[i]] = [
+          quickSurveyStaticData[i]['성별']['남성'],
+          quickSurveyStaticData[i]['성별']['여성'],
+          quickSurveyStaticData[i]['연령대']['10대'],
+          quickSurveyStaticData[i]['연령대']['20대'],
+          quickSurveyStaticData[i]['연령대']['30대'],
+          quickSurveyStaticData[i]['연령대']['40대'],
+          quickSurveyStaticData[i]['연령대']['50대'],
+          quickSurveyStaticData[i]['연령대']['60대 이상']
+        ];
+      }
+      
+      return result;
+    };
+  
+  const data = getDataFromQuickSurveyStaticData(quickSurveyStaticData);
+
+  // 바의 너비를 계산하는 함수 - 백분율 값에 따라 가변적으로 설정
+  const calculateBarWidth = (index) => {
+    const total = quickSurveyStaticData['총합']['전체총합'];
+    const value = quickSurveyStaticData[index]['전체총합'];
+    
+    // 백분율 계산
+    const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+    
+    return percentage;
+  };
+
+//const GraphChartScale11 = ({ data = defaultData }) => {
   // 각 점수 레벨별 합계 계산
-  const rowSums = importanceLabels.map((_, index) => {
-    const rowKey = `row${index + 1}`;
-    const values = data[rowKey];
-    return values.reduce((sum, val) => sum + val, 0);
-  });
+//  const rowSums = importanceLabels.map((_, index) => {
+//    const rowKey = `row${index + 1}`;
+//    const values = data[rowKey];
+//    return values.reduce((sum, val) => sum + val, 0);
+//  });
 
   return (
     <ChartContainer>
@@ -76,21 +114,6 @@ const GraphChartScale11 = ({ data = defaultData }) => {
       </DataSection>
     </ChartContainer>
   );
-};
-
-// 데이터 형식: [남성, 여성, 10대, 20대, 30대, 40대, 50대, 60대 이상]
-const defaultData = {
-  row1: [2, 8, 12, 18, 4, 6, 12, 3],  // 10점
-  row2: [4, 13, 8, 12, 4, 3, 1, 2],  // 9점
-  row3: [2, 1, 3, 2, 14, 14, 4, 3],  // 8점
-  row4: [12, 2, 1, 3, 13, 12, 4, 2],  // 7점
-  row5: [4, 9, 6, 9, 13, 15, 6, 2],  // 6점
-  row6: [13, 4, 8, 12, 18, 12, 8, 4],  // 5점
-  row7: [4, 10, 3, 4, 0, 12, 7, 2],  // 4점
-  row8: [7, 1, 14, 20, 3, 2, 1, 7],  // 3점
-  row9: [8, 2, 4, 9, 16, 2, 7, 2],  // 2점
-  row10: [9, 5, 4, 9, 12, 10, 7, 4], // 1점
-  row11: [6, 4, 7, 9, 19, 12, 9, 4]  // 0점
 };
 
 const importanceLabels = [
@@ -259,7 +282,6 @@ const BarsColumn = styled.div`
 const ImportanceBar = styled.div`
   height: 16px;
   width: ${props => props.width}px;
-  min-width: 20px;
   background-color: #226FFF;
   border-radius: 2px;
   display: flex;

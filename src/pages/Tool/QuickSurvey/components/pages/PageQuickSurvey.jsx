@@ -8,6 +8,7 @@ import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
 import { Button, IconButton } from "../../../../../assets/styles/ButtonStyle";
+import images from "../../../../../assets/styles/Images";
 import {
   CustomTextarea,
   SelectBox,
@@ -51,6 +52,7 @@ import {
   DESIGN_ANALYSIS_FILE_ID,
   PROJECT_SAAS,
   DESIGN_ANALYSIS_BUSINESS_TITLE,
+  QUICK_SURVEY_PROJECT_DESCRIPTION,
   QUICK_SURVEY_ANALYSIS,
   QUICK_SURVEY_CUSTOM_GUIDE,
   QUICK_SURVEY_PRESET_DATA,
@@ -58,8 +60,9 @@ import {
   QUICK_SURVEY_INTERVIEW,
   QUICK_SURVEY_REPORT,
   QUICK_SURVEY_STATIC_DATA,
+  QUICK_SURVEY_SELECTED_QUESTION,
+  QUICK_SURVEY_SURVEY_METHOD,
 } from "../../../../AtomStates";
-// import image from "../../../../../assets/styles/Image";
 import {
   H4,
   H3,
@@ -87,6 +90,7 @@ import BarChartLikertScale11 from "../../../../../components/Charts/BarChartLike
 import GraphChartScale2 from "../../../../../components/Charts/GraphChartScale2";
 import GraphChartScale5 from "../../../../../components/Charts/GraphChartScale5";
 import GraphChartScale11 from "../../../../../components/Charts/GraphChartScale11";
+import OrganismToastPopupQuickSurveyComplete from "../organisms/OrganismToastPopupQuickSurveyComplete";
 const PageQuickSurvey = () => {
   const navigate = useNavigate();
 
@@ -120,6 +124,9 @@ const PageQuickSurvey = () => {
   const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
     DESIGN_ANALYSIS_FILE_ID
   );
+  const [quickSurveySelectedQuestion, setQuickSurveySelectedQuestion] = useAtom(
+    QUICK_SURVEY_SELECTED_QUESTION
+  );
   const [quickSurveyCustomGuide, setQuickSurveyCustomGuide] = useAtom(
     QUICK_SURVEY_CUSTOM_GUIDE
   );
@@ -132,9 +139,16 @@ const PageQuickSurvey = () => {
   const [quickSurveyInterview, setQuickSurveyInterview] = useAtom(
     QUICK_SURVEY_INTERVIEW
   );
+  const [quickSurveySurveyMethod, setQuickSurveySurveyMethod] = useAtom(
+    QUICK_SURVEY_SURVEY_METHOD
+  );
   const [quickSurveyReport, setQuickSurveyReport] =
     useAtom(QUICK_SURVEY_REPORT);
-  const [quickSurveyStaticData, setQuickSurveyStaticData] = useState([]);
+  const [quickSurveyStaticData, setQuickSurveyStaticData] = useAtom(
+    QUICK_SURVEY_STATIC_DATA
+  );
+  const [quickSurveyProjectDescription, setQuickSurveyProjectDescription] =
+    useAtom(QUICK_SURVEY_PROJECT_DESCRIPTION);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
@@ -184,7 +198,9 @@ const PageQuickSurvey = () => {
   const [selectedPresetCards, setSelectedPresetCards] = useState({});
   const [shouldRegenerate, setShouldRegenerate] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState(null);
-
+  const [showToast, setShowToast] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const project = projectSaas;
@@ -195,9 +211,29 @@ const PageQuickSurvey = () => {
   }, []);
 
   useEffect(() => {
+    // 팝업이 열려있을 때 배경 스크롤 맊음
+    if (showToast) {
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = "15px"; // 스크롤바 자리만큼 패딩 추가
+    }
+    // 팝업이 닫혔을 때
+    else {
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0";
+    }
+
+    // 컴포넌트 언마운트 시 원래대로 복구
+    return () => {
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0";
+    };
+  }, [showToast]);
+
+
+
+  useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
-
       if (designAnalysisBusinessInfo.length === 0) {
         const projectAnalysis =
           (project?.projectAnalysis.business_analysis
@@ -210,30 +246,39 @@ const PageQuickSurvey = () => {
           (project?.projectAnalysis.file_analysis
             ? project?.projectAnalysis.file_analysis
             : "");
-        const projectTitle = project?.projectTitle;
 
         if (project) {
-          setBusinessDescriptionTitle(projectTitle);
           setBusinessDescription(projectAnalysis);
         }
       }
-
       if (toolLoading) {
-        const projectTitle = project?.projectTitle;
         // 비즈니스 정보 설정 (Step 1)
-        if (project) {
-          setBusinessDescriptionTitle(projectTitle);
+        if (quickSurveyProjectDescription) {
+          setProjectDescription(quickSurveyProjectDescription);
         }
+
+        if (quickSurveyAnalysis && quickSurveyAnalysis.length > 0) {
+          setQuickSurveyAnalysis(quickSurveyAnalysis);
+        }
+        if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0) {
+          setQuickSurveySurveyMethod(quickSurveySurveyMethod);
+        }
+
+        if (quickSurveySelectedQuestion && quickSurveySelectedQuestion.length > 0){
+          setSelectedQuestion(quickSurveySelectedQuestion);
+        }
+       
 
         // 활성 탭 설정 (기본값 1)
-        setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
-        setToolSteps(toolStep ?? 1);
-
-        // 비즈니스 정보 설정 (Step 1)
-        if (designAnalysisBusinessInfo) {
-          setBusinessDescription(designAnalysisBusinessInfo ?? "");
-          setFileNames(designAnalysisFileNames);
+        if (toolStep === undefined || toolStep === 1) {
+          setActiveTab(1);
+          setToolSteps(0);
+        } else {
+          setActiveTab(Math.min(toolStep, 3));
+          setToolSteps(toolStep);
         }
+        // setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
+        // setToolSteps(toolStep ?? 1);
 
         // 완료된 단계 설정
         const completedStepsArray = [];
@@ -243,54 +288,24 @@ const PageQuickSurvey = () => {
         setCompletedSteps(completedStepsArray);
 
         // 페르소나 설정 (Step 2)
-        if (
-          Array.isArray(designAnalysisEmotionAnalysis) &&
-          Array.isArray(selectedDesignAnalysisEmotionAnalysis)
-        ) {
-          // 이미 선택된 페르소나들의 인덱스 찾기
-          const selectedIndices = (designAnalysisEmotionAnalysis ?? [])
-            .map((persona, index) => {
-              return (selectedDesignAnalysisEmotionAnalysis ?? []).some(
-                (target) => target?.name === persona?.name
-              )
-                ? index
-                : -1;
-            })
-            .filter((index) => index !== -1);
 
-          // selectedQuestion 상태 업데이트
-          setSelectedQuestion(selectedIndices);
+        if (quickSurveyCustomGuide && quickSurveyCustomGuide.length > 0){
+          setQuickSurveySurveyMethod(quickSurveyCustomGuide); 
 
-          // 선택된 페르소나 데이터 설정
-          const selectedPersonaData = selectedIndices
-            .map((index) => designAnalysisEmotionAnalysis?.[index])
-            .filter(Boolean);
-
-          setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
         }
 
-        // 추가된 조건 체크
-        if (
-          Object.keys(designAnalysisEmotionTarget).length === 0 &&
-          !designAnalysisEmotionScale.length &&
-          completedStepsArray.length === 2
-        ) {
-          // designAnalysisEmotionTarget이 빈 객체이고, designAnalysisEmotionScale이 빈 배열인 경우
-          setActiveTab(2);
-          setToolSteps(1);
-          setCompletedSteps(completedStepsArray.slice(0, -1));
-        } else {
-          if (designAnalysisEmotionTarget) {
-            setDesignAnalysisEmotionTarget(designAnalysisEmotionTarget ?? {});
-          }
-
-          if (designAnalysisEmotionScale) {
-            setDesignAnalysisEmotionScale(designAnalysisEmotionScale ?? {});
-          }
+        if (quickSurveyPersonaGroup && quickSurveyPersonaGroup.length > 0){
+          setquickSurveyPersonaGroup(quickSurveyPersonaGroup);
         }
-        setToolStep(0);
 
-        return;
+        if (quickSurveyInterview && quickSurveyInterview.length > 0){
+          setQuickSurveyInterview(quickSurveyInterview);
+        }
+          
+        if (quickSurveyReport && quickSurveyReport.length > 0){
+          setQuickSurveyReport(quickSurveyReport);
+        }
+
       }
     };
     interviewLoading();
@@ -385,12 +400,10 @@ const PageQuickSurvey = () => {
         const Data = {
           type: "ix_quick_survey_question",
           business: businessDescription,
-          target: project.projectAnalysis.target_customer,
-          business_model: project.businessModel,
-          sector: project.industryType,
-          country: project.targetCountry,
           goal: projectDescription,
         };
+
+        setQuickSurveyProjectDescription(projectDescription);
 
         // API 요청
         const response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
@@ -412,6 +425,7 @@ const PageQuickSurvey = () => {
           {
             quickSurveyAnalysis: response.response.quick_survey_question,
             business: business,
+            goal: projectDescription,
           },
           isLoggedIn
         );
@@ -451,13 +465,15 @@ const PageQuickSurvey = () => {
 
       setQuickSurveyCustomGuide(response.response.quick_survey_custom_guide);
 
+      setQuickSurveySurveyMethod(quickSurveyAnalysis[selectedQuestion]);
+
       await updateToolOnServer(
         toolId,
         {
           selectedQuestion: selectedQuestion,
           surveyMethod: quickSurveyAnalysis[selectedQuestion],
           quickSurveyCustomGuide: response.response.quick_survey_custom_guide,
-          // completedStep: 1,
+          completedStep: 1,
         },
         isLoggedIn
       );
@@ -641,8 +657,14 @@ const PageQuickSurvey = () => {
     handleNextStep(2);
     // setToolSteps(2);
     setIsLoadingReport(true);
+    await updateToolOnServer(
+      toolId,
+      {
+        completedStep: 2,
+      },
+      isLoggedIn
+    );
     try {
-      // await new Promise(resolve => setTimeout(resolve, 1500));
 
       const Data = {
         type: "ix_quick_survey_interview",
@@ -656,7 +678,25 @@ const PageQuickSurvey = () => {
 
       const response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
 
-      setQuickSurveyInterview(response.response.quick_survey_interview);
+      const combinedInterviews = response.response.quick_survey_interview.map(
+        (interview, index) => {
+          const matchedPersona = quickSurveyPersonaGroup.find(
+            (persona, pIndex) =>
+              pIndex === index && persona.name === interview.persona_name
+          );
+
+          if (matchedPersona) {
+            const { name, ...personaInfoWithoutName } = matchedPersona;
+            return {
+              ...interview,
+              ...personaInfoWithoutName,
+            };
+          }
+          return interview;
+        }
+      );
+
+      setQuickSurveyInterview(combinedInterviews);
 
       const reportData = {
         type: "ix_quick_survey_report",
@@ -682,16 +722,14 @@ const PageQuickSurvey = () => {
       await updateToolOnServer(
         toolId,
         {
-          quickSurveyInterview: response.response.quick_survey_interview,
+          // quickSurveyInterview: response.response.quick_survey_interview,
+          quickSurveyInterview: combinedInterviews,
           quickSurveyReport: responseReport.response.quick_survey_report,
-
           quickSurveyStaticData: responseReport.response.statistics_data,
-          completedStep: 3
-
+          completedStep: 3,
         },
         isLoggedIn
       );
-
 
       setToolSteps(3);
     } catch (error) {
@@ -750,6 +788,11 @@ const PageQuickSurvey = () => {
     }
 
     setSelectedPresetCards(newSelectedCards);
+  };
+
+  const handleEnterInterviewRoom = () => {
+    setSelectedOption(null);
+    setShowToast(true);
   };
 
   useEffect(() => {
@@ -822,24 +865,24 @@ const PageQuickSurvey = () => {
     }
   };
 
-    const processMarketingABData = (data) => {
-      if (!data || !data.총합) return { a: 0, b: 0 };
-    
-      const options = Object.keys(data).filter(key => key !== "총합");
-      if (options.length !== 2) return { a: 0, b: 0 };
-    
-      const [optionAKey, optionBKey] = options;
-      const totalA = data[optionAKey]?.총합 || 0;
-      const totalB = data[optionBKey]?.총합 || 0;
-      const overallTotal = data.총합?.총합 || (totalA + totalB); // 혹시 전체 총합이 없을 경우 대비
-    
-      if (overallTotal === 0) return { a: 0, b: 0 };
-    
-      return {
-        a: Math.round((totalA / overallTotal) * 100),
-        b: Math.round((totalB / overallTotal) * 100)
-      };
+  const processMarketingABData = (data) => {
+    if (!data || !data.총합) return { a: 0, b: 0 };
+
+    const options = Object.keys(data).filter((key) => key !== "총합");
+    if (options.length !== 2) return { a: 0, b: 0 };
+
+    const [optionAKey, optionBKey] = options;
+    const totalA = data[optionAKey]?.총합 || 0;
+    const totalB = data[optionBKey]?.총합 || 0;
+    const overallTotal = data.총합?.총합 || totalA + totalB; // 혹시 전체 총합이 없을 경우 대비
+
+    if (overallTotal === 0) return { a: 0, b: 0 };
+
+    return {
+      a: Math.round((totalA / overallTotal) * 100),
+      b: Math.round((totalB / overallTotal) * 100),
     };
+  };
 
   return (
     <>
@@ -1168,18 +1211,13 @@ const PageQuickSurvey = () => {
                               }}
                             >
                               {(() => {
-                                const totalValues = Object.values(
-                                  selectedValues
-                                ).filter((value) => value);
+                                const totalValues = Object.values(selectedValues).filter((value) => value);
                                 const irrelevantCount = totalValues.filter(
                                   (value) => value === "상관없음"
                                 ).length;
 
-                                if (
-                                  totalValues.length === 4 &&
-                                  irrelevantCount === 4
-                                ) {
-                                  // "상관없음"이 정확히 4개일 때만 하나로 표시
+                                if (totalValues.length === 4 && irrelevantCount === 4) {
+                                  // 모든 값이 "상관없음"일 때
                                   return (
                                     <div
                                       style={{
@@ -1194,9 +1232,9 @@ const PageQuickSurvey = () => {
                                     </div>
                                   );
                                 } else {
-                                  // 그 외의 경우는 모든 선택된 값을 표시
+                                  // "상관없음"을 제외한 나머지 값들만 표시
                                   return Object.entries(selectedValues)
-                                    .filter(([_, value]) => value)
+                                    .filter(([_, value]) => value && value !== "상관없음") // "상관없음" 제외
                                     .map(([key, value]) => (
                                       <div
                                         key={key}
@@ -1220,7 +1258,12 @@ const PageQuickSurvey = () => {
                         </li>
                         <li>
                           <Body2 color="gray500">페르소나 수</Body2>
-                          <Body2 color="gray800">30 명</Body2>
+                          <Body2 color="gray800">
+                            {quickSurveyPersonaGroup &&
+                            quickSurveyPersonaGroup.length > 0
+                              ? `${quickSurveyPersonaGroup.length}명 완료`
+                              : "30명 예상"}
+                          </Body2>
                         </li>
                       </ListBoxGroup>
 
@@ -1564,9 +1607,13 @@ const PageQuickSurvey = () => {
                             </TabButtonType4>
                           </TabWrapType4>
                         </div>
-                        {/* <Button Primary onClick={() => setShowPopupSave(true)}>
-                          응답자 의견 확인인
-                        </Button> */}
+                        <Button Primary onClick={handleEnterInterviewRoom}>
+                          <img
+                            src={images.ReportSearch}
+                            alt="인터뷰 스크립트 보기"
+                          />
+                          응답자 의견 확인
+                        </Button>
                       </div>
                     </InsightAnalysis>
 
@@ -1583,116 +1630,95 @@ const PageQuickSurvey = () => {
                       </div>
 
                       {activeDesignTab === "emotion" && (
-                        
                         <>
-                        {/* ABGraph를 emotion 탭 내부에 추가 */}
+                          {/* 각 질문 유형에 맞는 그래프 렌더링 */}
+                          {selectedQuestion[0] === "ab_test" &&
+                            Object.keys(quickSurveyStaticData).length > 0 && (
+                              <ABGraph
+                                onOptionSelect={setSelectedOption}
+                                onOptionSelectIndex={setSelectedOptionIndex}
+                                onBarClick={() => setShowToast(true)}
+                              />
+                            )}
+                          {(selectedQuestion[0] === "importance" ||
+                            selectedQuestion[0] === "single_choice") &&
+                            Object.keys(quickSurveyStaticData).length > 0 && (
+                              <BarChartLikertScale5
+                                onOptionSelect={setSelectedOption}
+                                onOptionSelectIndex={setSelectedOptionIndex}
+                                onBarClick={() => setShowToast(true)}
+                              />
+                            )}
+                          {selectedQuestion[0] === "nps" &&
+                            Object.keys(quickSurveyStaticData).length > 0 && (
+                              <BarChartLikertScale11 />
+                            )}
+
+                          {/* Insight 섹션 */}
+                          <div className="content">
+                            {quickSurveyReport?.[0] && (
+                              <InsightContainer>
+                                <InsightSection>
+                                  <InsightLabel color="gray700">
+                                    총평
+                                  </InsightLabel>
+                                  <InsightContent color="gray700">
+                                    {quickSurveyReport[0].total_insight}
+                                  </InsightContent>
+                                </InsightSection>
+
+                                <InsightSection>
+                                  <InsightLabel color="gray700">
+                                    성별 의견 정리
+                                  </InsightLabel>
+                                  <InsightContent color="gray700">
+                                    {quickSurveyReport[0].gender_insight}
+                                  </InsightContent>
+                                </InsightSection>
+
+                                <InsightSection>
+                                  <InsightLabel color="gray700">
+                                    연령별 의견 정리
+                                  </InsightLabel>
+                                  <InsightContent color="gray700">
+                                    {quickSurveyReport[0].age_insight}
+                                  </InsightContent>
+                                </InsightSection>
+                              </InsightContainer>
+                            )}
+                          </div>
+                        </>
+                      )}
+                      {activeDesignTab === "scale" && (
+                        <>
+
                          {/* 각 질문 유형에 맞는 그래프 렌더링 */}
-                         {/* {selectedQuestion === 'ab_test' && quickSurveyStaticData && (
-                            <ABGraph />
+                         {selectedQuestion[0] === 'ab_test' && Object.keys(quickSurveyStaticData).length > 0 && (
+                            <GraphChartScale2 />
                           )}
-                          {selectedQuestion === 'importance' && quickSurveyStaticData && (
+                          {(selectedQuestion[0] === 'importance' || selectedQuestion[0] === 'single_choice') && Object.keys(quickSurveyStaticData).length > 0 && (
                             <GraphChartScale5 />
                           )}
-                          {selectedQuestion === 'nps' && quickSurveyStaticData && (
-                            <BarChartLikertScale11 />
+                          {selectedQuestion[0] === 'nps' && Object.keys(quickSurveyStaticData).length > 0 && (
+
+                            <GraphChartScale11 />
                           )}
-                           {selectedQuestion === 'single_choice' && quickSurveyStaticData && (
-                            // BarChart는 data prop만 받으므로 바로 전달
-                            <BarChart />
-                          )} */}
-
-                        {/* Insight 섹션 */}
-                        <div className="content">
-                          {quickSurveyReport?.[0] && (
-                            <InsightContainer>
-                              <InsightSection>
-                                <InsightLabel color="gray700">총평</InsightLabel>
-                                <InsightContent color="gray700">
-                                  {quickSurveyReport[0].total_insight}
-                                </InsightContent>
-                              </InsightSection>
-
-                              <InsightSection>
-                                <InsightLabel color="gray700">성별 의견 정리</InsightLabel>
-                                <InsightContent color="gray700">
-                                  {quickSurveyReport[0].gender_insight}
-                                </InsightContent>
-                              </InsightSection>
-
-                              <InsightSection>
-                                <InsightLabel color="gray700">연령별 의견 정리</InsightLabel>
-                                <InsightContent color="gray700">
-                                  {quickSurveyReport[0].age_insight}
-                                </InsightContent>
-                              </InsightSection>
-                            </InsightContainer>
-                          )}
-                        </div>
-                      </>
-                    )}
+                        </>
+                      )}
                     </InsightAnalysis>
-
-
-                    <ABGraph data={{ a: 45, b: 55 }} />
-
-                    <BarChartLikertScale5 />
-                    <BarChartLikertScale11 />
-                    <GraphChartScale2 />
-                    <GraphChartScale5 />
-                    <GraphChartScale11 />
-
-                    {activeDesignTab === "emotion" && (
-                      <InsightAnalysis style={{ marginBottom: "240px" }}>
-                        <Sub3 color="gray700" align="left">
-                          💡 %는 해당 비즈니스에서 차지하는 중요도를 의미합니다.
-                        </Sub3>
-                        <CardGroupWrap column $isExpanded={state.isExpanded}>
-                          {designAnalysisEmotionTarget?.design_perspectives?.map(
-                            (perspective, index) => (
-                              <AnalysisItem
-                                business={designAnalysisBusinessInfo}
-                                key={index}
-                                percentage={perspective.weight + "%"}
-                                title={perspective.name}
-                                subtitle={perspective.features
-                                  .map((feature) => feature.title)
-                                  .join(", ")}
-                                details={perspective}
-                              />
-                            )
-                          )}
-                        </CardGroupWrap>
-                      </InsightAnalysis>
-                    )}
-                    {activeDesignTab === "scale" && (
-                      <InsightAnalysis style={{ marginBottom: "240px" }}>
-                        <OCEANRangeWrap report>
-                          {/* OCEAN 값 슬라이더 */}
-                          {designAnalysisEmotionScale?.sd_scale_analysis?.map(
-                            (item, index) => (
-                              <div key={index}>
-                                <Body3 color="gray800" align="right">
-                                  {item.opposite_emotion}
-                                </Body3>
-                                <RangeSlider
-                                  type="range"
-                                  min="1"
-                                  max="7"
-                                  step="1"
-                                  value={item.score}
-                                />
-                                <Body3 color="gray800" align="left">
-                                  {item.target_emotion}
-                                </Body3>
-                              </div>
-                            )
-                          )}
-                        </OCEANRangeWrap>
-                      </InsightAnalysis>
-                    )}
                   </>
                 )}
               </TabContent5>
+            )}
+
+            {showToast && (
+              <OrganismToastPopupQuickSurveyComplete
+                isActive={showToast}
+                onClose={() => setShowToast(false)}
+                isComplete={true}
+                selectedOption={selectedOption}
+                selectedOptionIndex={selectedOptionIndex}
+              />
             )}
           </DesignAnalysisWrap>
         </MainContent>
@@ -2023,7 +2049,7 @@ const InsightContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  border: 1px solid #E0E4E8;
+  border: 1px solid #e0e4e8;
   border-radius: 10px;
   padding: 16px;
 `;
@@ -2032,10 +2058,10 @@ const InsightSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-    border-bottom: 1px solid #E0E4E8;
-      padding-bottom: 16px;
+  border-bottom: 1px solid #e0e4e8;
+  padding-bottom: 16px;
 
-   &:last-child {
+  &:last-child {
     border-bottom: none;
     padding-bottom: 0;
   }
@@ -2051,7 +2077,6 @@ const InsightContent = styled(Body3)`
   //   border-bottom: none;
   // }
 `;
-
 
 const InsightLabel = styled(Body3)`
   font-size: 16px;

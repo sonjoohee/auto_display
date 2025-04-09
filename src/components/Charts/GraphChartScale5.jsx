@@ -1,13 +1,92 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useAtom } from 'jotai';
+import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
 
-const GraphChartScale5 = ({ data = defaultData }) => {
+const GraphChartScale5 = () => {
+  const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
+
+  const getDataFromQuickSurveyStaticData = (quickSurveyStaticData) => {
+    const option1Key = Object.keys(quickSurveyStaticData)[0];
+    const option2Key = Object.keys(quickSurveyStaticData)[1];
+    const option3Key = Object.keys(quickSurveyStaticData)[2];
+    const option4Key = Object.keys(quickSurveyStaticData)[3];
+    const option5Key = Object.keys(quickSurveyStaticData)[4];
+    
+    return {
+      a: [
+        quickSurveyStaticData[option1Key]['성별']['남성'],
+        quickSurveyStaticData[option1Key]['성별']['여성'],
+        quickSurveyStaticData[option1Key]['연령대']['10대'],
+        quickSurveyStaticData[option1Key]['연령대']['20대'],
+        quickSurveyStaticData[option1Key]['연령대']['30대'],
+        quickSurveyStaticData[option1Key]['연령대']['40대'],
+        quickSurveyStaticData[option1Key]['연령대']['50대'],
+        quickSurveyStaticData[option1Key]['연령대']['60대 이상']
+      ],
+      b: [
+        quickSurveyStaticData[option2Key]['성별']['남성'],
+        quickSurveyStaticData[option2Key]['성별']['여성'],
+        quickSurveyStaticData[option2Key]['연령대']['10대'],
+        quickSurveyStaticData[option2Key]['연령대']['20대'],
+        quickSurveyStaticData[option2Key]['연령대']['30대'],
+        quickSurveyStaticData[option2Key]['연령대']['40대'],
+        quickSurveyStaticData[option2Key]['연령대']['50대'],
+        quickSurveyStaticData[option2Key]['연령대']['60대 이상']
+      ],
+      c: [
+        quickSurveyStaticData[option3Key]['성별']['남성'],
+        quickSurveyStaticData[option3Key]['성별']['여성'],
+        quickSurveyStaticData[option3Key]['연령대']['10대'],
+        quickSurveyStaticData[option3Key]['연령대']['20대'],
+        quickSurveyStaticData[option3Key]['연령대']['30대'],
+        quickSurveyStaticData[option3Key]['연령대']['40대'],
+        quickSurveyStaticData[option3Key]['연령대']['50대'],
+        quickSurveyStaticData[option3Key]['연령대']['60대 이상']
+      ],
+      d: [  
+        quickSurveyStaticData[option4Key]['성별']['남성'],
+        quickSurveyStaticData[option4Key]['성별']['여성'],
+        quickSurveyStaticData[option4Key]['연령대']['10대'],
+        quickSurveyStaticData[option4Key]['연령대']['20대'],
+        quickSurveyStaticData[option4Key]['연령대']['30대'],
+        quickSurveyStaticData[option4Key]['연령대']['40대'],
+        quickSurveyStaticData[option4Key]['연령대']['50대'],
+        quickSurveyStaticData[option4Key]['연령대']['60대 이상']
+      ],
+      e: [
+        quickSurveyStaticData[option5Key]['성별']['남성'],
+        quickSurveyStaticData[option5Key]['성별']['여성'],
+        quickSurveyStaticData[option5Key]['연령대']['10대'],
+        quickSurveyStaticData[option5Key]['연령대']['20대'],
+        quickSurveyStaticData[option5Key]['연령대']['30대'],
+        quickSurveyStaticData[option5Key]['연령대']['40대'],
+        quickSurveyStaticData[option5Key]['연령대']['50대'],
+        quickSurveyStaticData[option5Key]['연령대']['60대 이상']
+      ]
+    };
+  };
+  
+  const data = getDataFromQuickSurveyStaticData(quickSurveyStaticData);
+
+  // 바의 너비를 계산하는 함수 - 백분율 값에 따라 가변적으로 설정
+  const calculateBarWidth = (index) => {
+    const total = quickSurveyStaticData['총합']['전체총합'];
+    const optionKey = Object.keys(quickSurveyStaticData)[index];
+    const value = quickSurveyStaticData[optionKey]['전체총합'];
+    
+    // 백분율 계산
+    const percentage = Math.round((value / total) * 100);
+    
+    return percentage;
+  };
+
   // 각 중요도 레벨별 합계 계산
-  const rowSums = importanceLabels.map((_, index) => {
-    const rowKey = `row${index + 1}`;
-    const values = data[rowKey];
-    return values.reduce((sum, val) => sum + val, 0);
-  });
+//   const rowSums = importanceLabels.map((_, index) => {
+//     const rowKey = `row${index + 1}`;
+//     const values = data[rowKey];
+//     return values.reduce((sum, val) => sum + val, 0);
+//   });
 
   return (
     <ChartContainer>
@@ -39,12 +118,13 @@ const GraphChartScale5 = ({ data = defaultData }) => {
         <RightVerticalLine />
         <ImportanceContainer>
           <ImportanceLabelsColumn>
-            {importanceLabels.map((label, index) => (
+            {Object.keys(quickSurveyStaticData).slice(0, 5).map((label, index) => (
               <ImportanceLabel key={`label-${index}`}>{label}</ImportanceLabel>
             ))}
           </ImportanceLabelsColumn>
           
           <BarsColumn>
+
             {importanceLabels.map((_, index) => {
               const barWidth = Math.min(70, calculateBarWidth(index));
               return (
@@ -54,6 +134,11 @@ const GraphChartScale5 = ({ data = defaultData }) => {
                 </div>
               );
             })}
+
+//             {Object.keys(quickSurveyStaticData).slice(0, 5).map((_, index) => (
+//               <ImportanceBar key={`bar-${index}`} width={calculateBarWidth(index)} />
+//             ))}
+
           </BarsColumn>
         </ImportanceContainer>
 
@@ -77,23 +162,6 @@ const GraphChartScale5 = ({ data = defaultData }) => {
     </ChartContainer>
   );
 };
-
-// 데이터 형식: [남성, 여성, 10대, 20대, 30대, 40대, 50대, 60대 이상]
-const defaultData = {
-  row1: [7, 6, 8, 7, 5, 4, 6, 7],
-  row2: [5, 6, 7, 5, 6, 7, 5, 4],
-  row3: [4, 3, 5, 6, 4, 5, 3, 4],
-  row4: [3, 4, 2, 3, 5, 6, 4, 3],
-  row5: [2, 2, 1, 3, 4, 2, 3, 2]
-};
-
-const importanceLabels = [
-  "매우 중요함",
-  "중요함",
-  "보통",
-  "중요하지 않음",
-  "전혀 중요하지 않음"
-];
 
 const ChartContainer = styled.div`
   padding: 28px 24px 24px 24px;
@@ -273,7 +341,6 @@ const calculateBarWidth = (index) => {
 const ImportanceBar = styled.div`
   height: 16px;
   width: ${props => props.width}px;
-  min-width: 20px;
   background-color: #226FFF;
   border-radius: 2px;
   display: flex;

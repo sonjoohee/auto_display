@@ -1,15 +1,67 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useAtom } from 'jotai';
+import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
 
-const GraphChartScale2 = ({ data = defaultData }) => {
-  // 합계 계산
-  const sumA = data.a.reduce((sum, val) => sum + val, 0);
-  const sumB = data.b.reduce((sum, val) => sum + val, 0);
-  const importanceLabels = ["A", "B"]; // A, B를 레이블로 사용
-  const barWidths = [
-    Math.min(70, sumA),
-    Math.min(70, sumB)
-  ];
+
+const GraphChartScale2 = () => {
+  const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
+
+  // 그래프 바 너비 계산 - 백분율 값에 따라 가변적으로 설정
+  const getBarWidth = (value) => {
+    // 최소 너비와 최대 너비 설정
+    const minWidth = 10;
+    const maxWidth = 120;
+    
+    // 백분율 값에 따라 선형적으로 너비 계산
+    // 0%일 때 minWidth, 100%일 때 maxWidth가 되도록 설정
+    const width = minWidth + (value / 100) * (maxWidth - minWidth);
+    
+    // 소수점 반올림하여 정수 값 반환
+    return Math.round(width);
+  };
+  
+  // A와 B 옵션의 총합 값 가져오기
+  const barWidthA = getBarWidth(quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]]['전체총합']);
+  const barWidthB = getBarWidth(quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]]['전체총합']);
+
+  const getDataFromQuickSurveyStaticData = (quickSurveyStaticData) => {
+    const option1Key = Object.keys(quickSurveyStaticData)[0];
+    const option2Key = Object.keys(quickSurveyStaticData)[1];
+    
+    return {
+      a: [
+        quickSurveyStaticData[option1Key]['성별']['남성'],
+        quickSurveyStaticData[option1Key]['성별']['여성'],
+        quickSurveyStaticData[option1Key]['연령대']['10대'],
+        quickSurveyStaticData[option1Key]['연령대']['20대'],
+        quickSurveyStaticData[option1Key]['연령대']['30대'],
+        quickSurveyStaticData[option1Key]['연령대']['40대'],
+        quickSurveyStaticData[option1Key]['연령대']['50대'],
+        quickSurveyStaticData[option1Key]['연령대']['60대 이상']
+      ],
+      b: [
+        quickSurveyStaticData[option2Key]['성별']['남성'],
+        quickSurveyStaticData[option2Key]['성별']['여성'],
+        quickSurveyStaticData[option2Key]['연령대']['10대'],
+        quickSurveyStaticData[option2Key]['연령대']['20대'],
+        quickSurveyStaticData[option2Key]['연령대']['30대'],
+        quickSurveyStaticData[option2Key]['연령대']['40대'],
+        quickSurveyStaticData[option2Key]['연령대']['50대'],
+        quickSurveyStaticData[option2Key]['연령대']['60대 이상']
+      ]
+    };
+  };
+  
+    // 합계 계산
+//  const sumA = data.a.reduce((sum, val) => sum + val, 0);
+//  const sumB = data.b.reduce((sum, val) => sum + val, 0);
+//  const importanceLabels = ["A", "B"]; // A, B를 레이블로 사용
+//  const barWidths = [
+//    Math.min(70, sumA),
+//    Math.min(70, sumB)
+//  ];
+
 
   return (
     <ChartContainer>
@@ -25,7 +77,7 @@ const GraphChartScale2 = ({ data = defaultData }) => {
           <CategoriesContainer>
             <DemographicItem>남</DemographicItem>
             <DemographicItem>여</DemographicItem>
-            <DemographicItem>10대</DemographicItem>
+            <DemographicItem>10대</DemographicItem>    
             <DemographicItem>20대</DemographicItem>
             <DemographicItem>30대</DemographicItem>
             <DemographicItem>40대</DemographicItem>
@@ -37,6 +89,7 @@ const GraphChartScale2 = ({ data = defaultData }) => {
       </HeaderSection>
 
       <DataSection>
+
         <VerticalLine />
         <RightVerticalLine />
         <ImportanceContainer>
@@ -80,15 +133,36 @@ const GraphChartScale2 = ({ data = defaultData }) => {
             </DataRowGroup>
           </React.Fragment>
         </DataRowsContainer>
+
+//        <DataRowGroup>
+//          <RowLabel>
+//            <LabelText>A</LabelText>
+//            <GraphBar width={barWidthA} type="a" />
+//          </RowLabel>
+//           <DataRow>
+//             {getDataFromQuickSurveyStaticData(quickSurveyStaticData).a.map((value, index) => (
+//               <DataCell key={`a-${index}`}>{value}</DataCell>
+//             ))}
+//           </DataRow>
+//         </DataRowGroup>
+        
+//         <DataSectionHorizontalLine marginTop="12px" marginBottom="12px" />
+        
+//         <DataRowGroup>
+//           <RowLabel>
+//             <LabelText>B</LabelText>
+//             <GraphBar width={barWidthB} type="b" />
+//           </RowLabel>
+//           <DataRow>
+//             {getDataFromQuickSurveyStaticData(quickSurveyStaticData).b.map((value, index) => (
+//               <DataCell key={`b-${index}`}>{value}</DataCell>
+//             ))}
+//           </DataRow>
+//         </DataRowGroup>
+
       </DataSection>
     </ChartContainer>
   );
-};
-
-// 데이터 형식: [남성, 여성, 10대, 20대, 30대, 40대, 50대, 60대 이상]
-const defaultData = {
-  a: [7, 4, 8, 5, 6, 3, 9, 2],
-  b: [5, 8, 3, 7, 6, 9, 4, 5]
 };
 
 const ChartContainer = styled.div`
@@ -263,8 +337,7 @@ const BarsColumn = styled.div`
 
 const ImportanceBar = styled.div`
   height: 16px;
-  width: ${props => props.width}px;
-  min-width: 20px;
+  min-width: ${props => props.width}px;
   background-color: #226FFF;
   border-radius: 2px;
   display: flex;

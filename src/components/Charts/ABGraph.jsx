@@ -1,38 +1,89 @@
-import React from 'react';
-import styled from 'styled-components';
-import { palette } from '../../assets/styles/Palette';
+import React from "react";
+import styled from "styled-components";
+import { palette } from "../../assets/styles/Palette";
+import { useAtom } from "jotai";
+import { QUICK_SURVEY_STATIC_DATA } from "../../pages/AtomStates";
+import { QUICK_SURVEY_SURVEY_METHOD } from "../../pages/AtomStates";
 
-// 비교 데이터를 위한 props 구조: { a: number, b: number, subtitleA: string, subtitleB: string }
-const ABGraph = ({ data = { a: 28, b: 72 }, subtitleA = "옵션 A의 상세 설명이 들어가는 영역입니다.", subtitleB = "옵션 B의 좀 더 긴 상세 설명이 들어가는 영역입니다." }) => {
-  // 높이 계산 함수 - a(28%)는 66px, b(72%)는 176px이 되도록 설정
+const ABGraph = ({
+  onOptionSelect = () => {},
+  onOptionSelectIndex = () => {},
+  onBarClick,
+}) => {
+  const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
+  const [quickSurveySurveyMethod] = useAtom(QUICK_SURVEY_SURVEY_METHOD);
+
+
   const getBarHeight = (value) => {
-    if (value === 28) return 66;
-    if (value === 72) return 176;
+    console.log("getBarHeight value:", value);
+    // 최소 높이와 최대 높이 설정
+    const minHeight = 50;
+    const maxHeight = 200;
     
-    // 다른 값의 경우 선형 비례로 계산
-    const slope = (176 - 66) / (72 - 28);
-    return Math.round(66 + slope * (value - 28));
+    // 백분율 값에 따라 선형적으로 높이 계산
+    // 0%일 때 minHeight, 100%일 때 maxHeight가 되도록 설정
+    const height = minHeight + (value / 100) * (maxHeight - minHeight);
+    console.log("getBarHeight height:", height);
+    // 소수점 반올림하여 정수 값 반환
+    return Math.round(height);
   };
+
+  // 백분율 계산 함수
+  const calculatePercentage = (value, total) => {
+    return Math.round((value / total) * 100);
+  };
+
+  // 데이터 계산
+  const getABData = () => {
+    const totalSum = quickSurveyStaticData["총합"]["전체총합"];
+    const aValue =
+      quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]]["전체총합"];
+    const bValue =
+      quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]]["전체총합"];
+
+    return {
+      a: calculatePercentage(aValue, totalSum),
+      b: calculatePercentage(bValue, totalSum),
+    };
+  };
+
+  const calculatedData = getABData();
 
   return (
     <GraphContainer>
       <BarContainer>
         <BarWrapper>
-          <BarValue>{data.a}%</BarValue>
-          <BarItem>
-            <BarFill height={getBarHeight(data.a)} />
+
+          <BarItem
+            onClick={() => {
+              onOptionSelect(quickSurveySurveyMethod.options[0]);
+              onOptionSelectIndex("A");
+              onBarClick();
+            }}
+          >
+            <BarFill height={getBarHeight(calculatedData.a)} />
+            <BarValue>{calculatedData.a}%</BarValue>
           </BarItem>
           <BarLabel>A</BarLabel>
-          <BarSubtitle>{subtitleA}</BarSubtitle>
+          <BarSubtitle>{Object.keys(quickSurveyStaticData)[0]}</BarSubtitle>
+
         </BarWrapper>
-        
+
         <BarWrapper>
-          <BarValue>{data.b}%</BarValue>
-          <BarItem>
-            <BarFill height={getBarHeight(data.b)} />
+
+          <BarItem
+            onClick={() => {
+              onOptionSelect(quickSurveySurveyMethod.options[1]);
+              onOptionSelectIndex("B");
+              onBarClick();
+            }}
+          >
+            <BarFill height={getBarHeight(calculatedData.b)} />
+            <BarValue>{calculatedData.b}%</BarValue>
           </BarItem>
           <BarLabel>B</BarLabel>
-          <BarSubtitle>{subtitleB}</BarSubtitle>
+          <BarSubtitle>{Object.keys(quickSurveyStaticData)[1]}</BarSubtitle>
+
         </BarWrapper>
       </BarContainer>
     </GraphContainer>
@@ -73,13 +124,13 @@ const BarItem = styled.div`
 
 const BarFill = styled.div`
   width: 143px;
-  height: ${props => props.height}px;
+  height: ${(props) => props.height}px;
   background-color: ${palette.primary};
   border-radius: 5px;
 `;
 
 const BarValue = styled.span`
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-weight: 600;
   font-size: 20px;
   line-height: 1.55em;
@@ -90,7 +141,7 @@ const BarValue = styled.span`
 `;
 
 const BarLabel = styled.span`
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-weight: 400;
   font-size: 16px;
   line-height: 1.55em;
