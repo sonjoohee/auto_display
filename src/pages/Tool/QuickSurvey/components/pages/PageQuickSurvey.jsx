@@ -8,6 +8,7 @@ import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
 import { Button, IconButton } from "../../../../../assets/styles/ButtonStyle";
+import images from "../../../../../assets/styles/Images";
 import {
   CustomTextarea,
   SelectBox,
@@ -58,8 +59,8 @@ import {
   QUICK_SURVEY_INTERVIEW,
   QUICK_SURVEY_REPORT,
   QUICK_SURVEY_STATIC_DATA,
+  QUICK_SURVEY_SURVEY_METHOD,
 } from "../../../../AtomStates";
-// import image from "../../../../../assets/styles/Image";
 import {
   H4,
   H3,
@@ -87,6 +88,7 @@ import BarChartLikertScale11 from "../../../../../components/Charts/BarChartLike
 import GraphChartScale2 from "../../../../../components/Charts/GraphChartScale2";
 import GraphChartScale5 from "../../../../../components/Charts/GraphChartScale5";
 import GraphChartScale11 from "../../../../../components/Charts/GraphChartScale11";
+import OrganismToastPopupQuickSurveyComplete from "../organisms/OrganismToastPopupQuickSurveyComplete";
 const PageQuickSurvey = () => {
   const navigate = useNavigate();
 
@@ -131,6 +133,9 @@ const PageQuickSurvey = () => {
   );
   const [quickSurveyInterview, setQuickSurveyInterview] = useAtom(
     QUICK_SURVEY_INTERVIEW
+  );
+  const [quickSurveySurveyMethod, setQuickSurveySurveyMethod] = useAtom(
+    QUICK_SURVEY_SURVEY_METHOD
   );
   const [quickSurveyReport, setQuickSurveyReport] =
     useAtom(QUICK_SURVEY_REPORT);
@@ -184,6 +189,7 @@ const PageQuickSurvey = () => {
   const [selectedPresetCards, setSelectedPresetCards] = useState({});
   const [shouldRegenerate, setShouldRegenerate] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState(null);
+  const [showToast, setShowToast] = useState(false);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -193,6 +199,25 @@ const PageQuickSurvey = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    // 팝업이 열려있을 때 배경 스크롤 맊음
+    if (showToast) {
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = "15px"; // 스크롤바 자리만큼 패딩 추가
+    }
+    // 팝업이 닫혔을 때
+    else {
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0";
+    }
+
+    // 컴포넌트 언마운트 시 원래대로 복구
+    return () => {
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0";
+    };
+  }, [showToast]);
 
   useEffect(() => {
     const interviewLoading = async () => {
@@ -451,6 +476,8 @@ const PageQuickSurvey = () => {
 
       setQuickSurveyCustomGuide(response.response.quick_survey_custom_guide);
 
+      setQuickSurveySurveyMethod(quickSurveyAnalysis[selectedQuestion]);
+
       await updateToolOnServer(
         toolId,
         {
@@ -656,7 +683,23 @@ const PageQuickSurvey = () => {
 
       const response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
 
-      setQuickSurveyInterview(response.response.quick_survey_interview);
+      const combinedInterviews = response.response.quick_survey_interview.map((interview, index) => {
+        const matchedPersona = quickSurveyPersonaGroup.find(
+          (persona, pIndex) => 
+            pIndex === index && persona.name === interview.persona_name
+        );
+      
+        if (matchedPersona) {
+          const { name, ...personaInfoWithoutName } = matchedPersona;
+          return {
+            ...interview,
+            ...personaInfoWithoutName
+          };
+        }
+        return interview;
+      });
+
+      setQuickSurveyInterview(combinedInterviews);
 
       const reportData = {
         type: "ix_quick_survey_report",
@@ -682,9 +725,9 @@ const PageQuickSurvey = () => {
       await updateToolOnServer(
         toolId,
         {
-          quickSurveyInterview: response.response.quick_survey_interview,
+          // quickSurveyInterview: response.response.quick_survey_interview,
+          quickSurveyInterview: combinedInterviews,
           quickSurveyReport: responseReport.response.quick_survey_report,
-
           quickSurveyStaticData: responseReport.response.statistics_data,
           completedStep: 3
 
@@ -751,6 +794,11 @@ const PageQuickSurvey = () => {
 
     setSelectedPresetCards(newSelectedCards);
   };
+
+  const handleEnterInterviewRoom = () => {
+    setShowToast(true);
+  };
+
 
   useEffect(() => {
     // 새로고침 감지 함수
@@ -1564,9 +1612,13 @@ const PageQuickSurvey = () => {
                             </TabButtonType4>
                           </TabWrapType4>
                         </div>
-                        {/* <Button Primary onClick={() => setShowPopupSave(true)}>
-                          응답자 의견 확인인
-                        </Button> */}
+                        <Button Primary onClick={handleEnterInterviewRoom}>
+                        <img
+                          src={images.ReportSearch}
+                          alt="인터뷰 스크립트 보기"
+                        />
+                        응답자 의견 확인
+                      </Button>
                       </div>
                     </InsightAnalysis>
 
@@ -1693,6 +1745,14 @@ const PageQuickSurvey = () => {
                   </>
                 )}
               </TabContent5>
+            )}
+
+            {showToast && (
+              <OrganismToastPopupQuickSurveyComplete
+                isActive={showToast}
+                onClose={() => setShowToast(false)}
+                isComplete={true}
+              />
             )}
           </DesignAnalysisWrap>
         </MainContent>

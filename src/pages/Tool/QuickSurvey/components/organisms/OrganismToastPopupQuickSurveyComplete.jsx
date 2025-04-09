@@ -5,33 +5,19 @@ import { palette } from "../../../../../assets/styles/Palette";
 import { Button } from "../../../../../assets/styles/ButtonStyle";
 import images from "../../../../../assets/styles/Images";
 import PopupWrap from "../../../../../assets/styles/Popup";
-import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import {
   IS_LOGGED_IN,
-  SELECTED_INTERVIEW_PURPOSE,
-  PERSONA_LIST,
-  INTERVIEW_QUESTION_LIST,
   PERSONA_BUTTON_STATE_3,
   PROJECT_ID,
-  PROJECT_REPORT_ID,
-  INTERVIEW_DATA,
-  INTERVIEW_REPORT,
-  INTERVIEW_REPORT_ADDITIONAL,
-  IS_PERSONA_ACCESSIBLE,
-  SELECTED_PERSONA_LIST,
   PROJECT_TOTAL_INFO,
-  PROJECT_CREATE_INFO,
   PROJECT_SAAS,
+  QUICK_SURVEY_INTERVIEW,
+  QUICK_SURVEY_SURVEY_METHOD,
 } from "../../../../AtomStates";
 import personaImages from "../../../../../assets/styles/PersonaImages";
 import { updateProjectOnServer } from "../../../../../utils/indexedDB";
 import { createProjectReportOnServer } from "../../../../../utils/indexedDB";
-import MoleculeRecreate from "../../../../Persona/components/molecules/MoleculeRecreate";
-import { InterviewXPersonaMultipleInterviewGeneratorRequest } from "../../../../../utils/indexedDB";
-import { InterviewXPersonaMultipleInterviewRequest } from "../../../../../utils/indexedDB";
-import { InterviewXInterviewReportRequest } from "../../../../../utils/indexedDB";
-import { InterviewXInterviewReportAdditionalRequest } from "../../../../../utils/indexedDB";
 
 const OrganismToastPopupQuickSurveyComplete = ({
   isActive,
@@ -40,28 +26,14 @@ const OrganismToastPopupQuickSurveyComplete = ({
 }) => {
   const [projectSaas] = useAtom(PROJECT_SAAS);
   const project = projectSaas;
-  const [selectedPersonaList, setSelectedPersonaList] = useAtom(
-    SELECTED_PERSONA_LIST
-  );
-  const [, setReportId] = useAtom(PROJECT_REPORT_ID);
-  const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
-  const [, setInterviewReport] = useAtom(INTERVIEW_REPORT);
-  const [, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
-  const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
   const [projectId] = useAtom(PROJECT_ID);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
-  const [selectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
-  const [personaList] = useAtom(PERSONA_LIST);
-  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
-    INTERVIEW_QUESTION_LIST
-  );
+  const [quickSurveyInterview, ] = useAtom(QUICK_SURVEY_INTERVIEW);
+  const [quickSurveySurveyMethod, ] = useAtom(QUICK_SURVEY_SURVEY_METHOD);
   const [projectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
-  const [projectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
-
-  const navigate = useNavigate();
 
   const [active, setActive] = useState(isActive);
   const [showWarning, setShowWarning] = useState(false);
@@ -70,66 +42,48 @@ const OrganismToastPopupQuickSurveyComplete = ({
     []
   );
   const [interviewStatus, setInterviewStatus] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [isGenerating, setIsGenerating] = useState(false);
   const [visibleAnswers, setVisibleAnswers] = useState({});
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [isAnalysisComplete, setIsAnalysisComplete] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-  const [regenerateCount1, setRegenerateCount1] = useState(0);
-  const [regenerateCount2, setRegenerateCount2] = useState(0);
-  const [showRegenerateButton1, setShowRegenerateButton1] = useState(false);
-  const [showRegenerateButton2, setShowRegenerateButton2] = useState(false);
+
 
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
-        const questions = interviewData.map((item) => ({
-          question: item.question_1 || item.question_2 || item.question_3,
-        }));
-        setInterviewQuestionListState(questions);
-        // 모든 질문을 Complete 상태로 설정
-        const completedStatus = new Array(interviewData.length).fill(
-          "Complete"
-        );
+
+        // 단일 질문 설정
+        const question = [{
+          question: quickSurveySurveyMethod.question
+        }];
+        setInterviewQuestionListState(question);
+
+        // 단일 질문에 대한 Complete 상태 설정
+        const completedStatus = ["Complete"];
         setInterviewStatus(completedStatus);
 
-        const newAnswers = {};
-
-        questions.forEach((_, index) => {
-          const answers = interviewData[index][`answer_${index + 1}`];
-          newAnswers[index] = (
-            selectedPersonaList.length
-              ? selectedPersonaList
-              : personaList.selected
-          ).map((persona, pIndex) => {
-            // profile 문자열에서 정보 추출
-
-            const age = persona.age;
-            const gender = persona.gender;
-            const job = persona.job;
-
-            return {
-              persona: persona,
-              imageKey: persona.imageKey,
-              gender: gender,
-              age: age,
-              job: job,
-              answer: answers[pIndex],
-            };
-          });
+        // quickSurveyInterview를 기반으로 답변 구성
+        const processedAnswers = quickSurveyInterview.map((interviewItem) => {
+          return {
+            persona: interviewItem,
+            imageKey: interviewItem.imageKey,
+            gender: interviewItem.gender,
+            age: interviewItem.age,
+            job: interviewItem.job,
+            answer: {
+              main: interviewItem.question_answer,
+              followUp: interviewItem.follow_up_answer
+            }
+          };
         });
-        setAnswers(newAnswers);
+        
+        setAnswers(processedAnswers);
+        console.log(processedAnswers);
 
         // 모든 답변을 보이도록 설정
-        const allVisible = {};
-        questions.forEach((_, index) => {
-          allVisible[index] = true;
-        });
-        setVisibleAnswers(allVisible);
+       
+        setVisibleAnswers(true);
         setIsLoadingPrepare(false);
 
         return; // isComplete가 True일 때 API 호출 없이 종료
@@ -138,37 +92,40 @@ const OrganismToastPopupQuickSurveyComplete = ({
     interviewLoading();
   }, [personaButtonState3, isComplete]);
 
-  const renderAnswersComplete = (questionIndex) => {
-    const questionAnswers = answers[questionIndex] || [];
+
+  const renderAnswersComplete = () => {
+    
+    const questionAnswers = answers || [];
 
     return (
       <>
-        {questionAnswers.map((answer, index) => (
-          <AnswerItem key={index}>
-            <TypeName>
-              <Thumb>
-                <img
-                  src={personaImages[answer.persona.imageKey]}
-                  alt={answer.persona.persona}
-                />
-              </Thumb>
-              <div>
-                {answer.persona.request_persona_type
-                  ? answer.persona.persona
-                  : answer.persona.persona_view}
-                <p>
-                  <span>{answer.gender}</span>
-                  <span>
-                    {answer.age.includes("세") ? answer.age : `${answer.age}세`}
-                  </span>
-                  <span>{answer.job}</span>
-                </p>
-              </div>
-            </TypeName>
-            <TextContainer>{answer.answer}</TextContainer>
-          </AnswerItem>
-        ))}
-      </>
+      {questionAnswers.map((answer, index) => (
+        <AnswerItem key={index}>
+          <TypeName>
+            <Thumb>
+              <img
+                src={personaImages[answer.imageKey]}
+                alt={answer.persona.persona_name}
+              />
+            </Thumb>
+            <div>
+              {answer.persona.persona_name}
+              <p>
+                <span>{answer.gender}</span>
+                <span>
+                  {answer.age.includes("세") ? answer.age : `${answer.age}세`}
+                </span>
+                <span>{answer.job}</span>
+              </p>
+            </div>
+          </TypeName>
+          <TextContainer>
+            <div>{answer.answer.main}</div>
+            <div style={{ marginTop: '16px' }}>{answer.answer.followUp}</div>
+          </TextContainer>
+        </AnswerItem>
+      ))}
+    </>
     );
   };
 
@@ -203,76 +160,25 @@ const OrganismToastPopupQuickSurveyComplete = ({
     setShowWarning(false);
   };
 
-  useEffect(() => {
-    setVisibleAnswers((prev) => {
-      const newVisibleAnswers = { ...prev };
-      interviewStatus.forEach(async (status, index) => {
-        // 진행중인 질문은 자동으로 열기
-        if (status === "Ing") {
-          newVisibleAnswers[index] = true;
-        }
-        // 완료된 질문은 자동으로 닫기
-        else if (status === "Complete") {
-          await new Promise((resolve) => setTimeout(resolve, 5000));
-          newVisibleAnswers[index] = false;
-        }
-      });
-      return newVisibleAnswers;
-    });
-  }, [interviewStatus]);
-
-  const handleAnswerToggle = (index) => {
-    // 'Pre', 'Ing' 상태일 때는 토글 불가능
-    if (
-      interviewStatus[index] === "Pre" ||
-      interviewStatus[index] === "Ing" ||
-      interviewStatus[index] === undefined
-    )
-      return;
-    setVisibleAnswers((prev) => ({ ...prev, [index]: !prev[index] }));
-  };
-
   // 이미 완료된 인터뷰를 확인할 때 사용 ex)인터뷰 스크립트 보기, 인터뷰 상세보기
   const renderInterviewItemsComplete = () => {
-    return interviewQuestionListState.map((item, index) => (
-      <InterviewItem key={index} status={"Complete"}>
+    return (
+      <InterviewItem status={"Complete"}>
         <QuestionWrap
-          onClick={() => handleAnswerToggle(index)}
           status={"Complete"}
-          style={{ cursor: "pointer" }}
-          isOpen={visibleAnswers[index]}
+          isOpen={visibleAnswers}
         >
-          <Status status={"Complete"}>완료</Status>
           <QuestionText>
-            Q{index + 1}. {item.question}
+            Q. {quickSurveySurveyMethod?.question}
           </QuestionText>
         </QuestionWrap>
-        {visibleAnswers[index] && (
-          <AnswerWrap>{renderAnswersComplete(index)}</AnswerWrap>
+        {visibleAnswers && (
+          <AnswerWrap>{renderAnswersComplete()}</AnswerWrap>
         )}
       </InterviewItem>
-    ));
+    );
   };
-
-  const handleCheckResult = async () => {
-    setActive(false);
-    if (onClose) {
-      onClose();
-    }
-    setIsPersonaAccessible(true);
-    try {
-      // 인터뷰 완료 후 결과 저장하기 위해 새로운 리포트 생성 (나중에 리포트 조회)
-      let newReportId = await createProjectReportOnServer(
-        project._id,
-        "interviewGroup"
-      );
-      setReportId(newReportId); // 생성된 대화 ID 설정
-    } catch (error) {
-      // console.error("Failed to create project on server:", error);
-    }
-    setSelectedPersonaList(personaList.selected);
-    navigate(`/Persona/4`, { replace: true });
-  };
+ 
 
   return (
     <>
@@ -280,7 +186,7 @@ const OrganismToastPopupQuickSurveyComplete = ({
         <ToastPopup isActive={active}>
           <Header>
             <Title>
-              {projectTotalInfo.projectTitle}의 {selectedInterviewPurpose}
+              {projectTotalInfo.projectTitle}에 대한 퀵서베이 결과
               <ColseButton onClick={handleClose} />
             </Title>
             <ul>
@@ -290,37 +196,15 @@ const OrganismToastPopupQuickSurveyComplete = ({
                   참여 페르소나
                 </span>
                 <span>
-                  {personaList.selected.length || selectedPersonaList.length}명
+                  {quickSurveyInterview.length}명
                 </span>
               </li>
             </ul>
           </Header>
 
           <Contents>
-            {isLoadingPrepare &&
-              (showRegenerateButton1 ? (
-                <LoadingBox>
-                  <MoleculeRecreate
-                    Medium
-                    onRegenerate={loadInterviewQuestion}
-                  />
-                </LoadingBox>
-              ) : (
-                <LoadingBox>
-                  <Loading>
-                    <div />
-                    <div />
-                    <div />
-                  </Loading>
-                  <p>
-                    페르소나가 인터뷰 룸으로 입장 중이에요
-                    <span>잠시만 기다려주세요 ...</span>
-                  </p>
-                </LoadingBox>
-              ))}
-
-            {(!isLoadingPrepare && isComplete) ??
-              renderInterviewItemsComplete()}
+        
+              {!isLoadingPrepare && isComplete && renderInterviewItemsComplete()}
           </Contents>
         </ToastPopup>
       </PopupBox>
@@ -403,6 +287,7 @@ const Header = styled.div`
   justify-content: space-between;
   gap: 16px;
   width: 100%;
+  border-bottom: 1px solid ${palette.lineGray};
 
   ul {
     display: flex;
@@ -412,6 +297,7 @@ const Header = styled.div`
     color: ${palette.gray500};
     font-weight: 300;
     line-height: 1.5;
+    margin-bottom: 40px; 
   }
 
   li {
@@ -487,106 +373,8 @@ const Contents = styled.div`
   overflow-y: auto;
 `;
 
-const LoadingBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 20px;
-  width: 100%;
-  padding: 40px 20px 24px;
-  border-radius: 10px;
-  background: ${palette.chatGray};
 
-  p {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.5;
-    color: ${palette.gray700};
 
-    span {
-      color: ${palette.white};
-      padding: 8px 16px;
-      border-radius: 10px;
-      background: ${(props) =>
-        props.Complete ? palette.primary : palette.gray300};
-      cursor: pointer;
-    }
-  }
-`;
-
-const move = keyframes`
-  0% {
-    -webkit-transform:scale(0);
-    transform:scale(0);
-    opacity:0
-  }
-  5% {
-    opacity:1
-  }
-  100% {
-    -webkit-transform:scale(6);
-    transform:scale(6);
-    opacity:0
-  }
-`;
-
-const moveCircle = keyframes`
-  0% {
-    -webkit-transform:scale(1);
-    transform:scale(1);
-  }
-  50% {
-    -webkit-transform:scale(1.2);
-    transform:scale(1.2);
-  }
-  100% {
-    -webkit-transform:scale(1);
-    transform:scale(1);
-  }
-`;
-
-const Loading = styled.div`
-  position: relative;
-  width: 80px;
-  height: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  > div {
-    position: absolute;
-    top: 42%;
-    left: 42%;
-    transform: translate(-50%, -50%);
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
-
-    &:nth-child(1) {
-      border: 1px solid ${palette.primary};
-      background: rgba(34, 111, 255, 1);
-      animation: ${move} 2s 0s linear infinite;
-      animation-delay: -3s;
-      opacity: 0.7;
-    }
-    &:nth-child(2) {
-      border: 1px solid ${palette.primary};
-      background: rgba(34, 111, 255, 1);
-      animation: ${move} 2s 0s linear infinite;
-      opacity: 0.5;
-    }
-    &:nth-child(3) {
-      background: ${palette.primary};
-      animation: ${moveCircle} 2s 0s linear infinite;
-    }
-  }
-`;
 
 const InterviewItem = styled.div`
   display: flex;
@@ -595,25 +383,13 @@ const InterviewItem = styled.div`
   justify-content: flex-start;
   gap: 20px;
   width: 100%;
-  padding: 20px;
+  padding: 10px;
+  // padding: 20px;
+  // padding-top:10px;
   border-radius: 10px;
-  border: 1px solid ${palette.outlineGray};
-  // cursor: ${(props) => (props.status === "Pre" ? "default" : "pointer")};
 `;
 
-const ErrorInterviewItem = styled(InterviewItem)`
-  gap: 12px;
-  padding: 73px 0;
-  border: 0;
-  background: ${palette.chatGray};
 
-  p {
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.5;
-    color: ${palette.gray700};
-  }
-`;
 
 const QuestionWrap = styled.div`
   display: flex;
@@ -621,63 +397,10 @@ const QuestionWrap = styled.div`
   justify-content: flex-start;
   gap: 12px;
   width: 100%;
-  cursor: inherit;
   position: relative;
-  padding-right: 56px;
-  cursor: ${(props) => (props.status === "Complete" ? "pointer" : "default")};
-
-  ${(props) =>
-    props.status === "Complete" &&
-    css`
-      &:after {
-        content: "";
-        position: absolute;
-        right: 8px;
-        top: 50%;
-        transform: translateY(-50%) rotate(45deg);
-        width: 8px;
-        height: 8px;
-        border-right: 2px solid ${palette.gray500};
-        border-bottom: 2px solid ${palette.gray500};
-        transition: transform 0.3s ease;
-      }
-    `}
-
-  ${(props) =>
-    props.status === "Complete" &&
-    props.isOpen &&
-    css`
-      &:after {
-        transform: translateY(-50%) rotate(225deg);
-      }
-    `}
 `;
 
-const Number = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  color: ${(props) =>
-    props.status === "Ing"
-      ? palette.primary
-      : props.status === "Complete"
-      ? palette.green
-      : palette.gray300};
-  border-radius: 2px;
-  border: 1px solid
-    ${(props) =>
-      props.status === "Ing"
-        ? palette.primary
-        : props.status === "Complete"
-        ? palette.green
-        : palette.gray300};
-  background: ${palette.chatGray};
-`;
+
 
 const QuestionText = styled.div`
   font-size: 0.875rem;
@@ -687,51 +410,6 @@ const QuestionText = styled.div`
   text-align: left;
 `;
 
-const Status = styled.div`
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  gap: 8px;
-  max-width: 55px;
-  width: 100%;
-  font-size: 0.75rem;
-  line-height: 1.5;
-  color: ${(props) =>
-    props.status === "Ing"
-      ? palette.primary
-      : props.status === "Complete"
-      ? palette.green
-      : palette.gray700};
-  // margin-left: auto;
-  padding: 2px 8px;
-  border-radius: 2px;
-  border: ${(props) =>
-    props.status === "Ing"
-      ? `1px solid ${palette.primary}`
-      : props.status === "Complete"
-      ? `1px solid ${palette.green}`
-      : `1px solid ${palette.outlineGray}`};
-  background: ${(props) =>
-    props.status === "Ing"
-      ? `rgba(34, 111, 255, 0.04)`
-      : props.status === "Complete"
-      ? palette.white
-      : palette.chatGray};
-
-  ${(props) =>
-    props.status === "Complete" &&
-    css`
-      &:before {
-        content: "";
-        width: 8px;
-        height: 8px;
-        background: url(${images.CheckGreen}) center no-repeat;
-        background-size: contain;
-      }
-    `}
-`;
 
 const AnswerWrap = styled.div`
   display: flex;
@@ -744,7 +422,6 @@ const AnswerWrap = styled.div`
   color: ${palette.gray800};
   text-align: left;
   padding-top: 32px;
-  border-top: 1px solid ${palette.outlineGray};
 `;
 
 const AnswerItem = styled.div`
@@ -755,57 +432,6 @@ const AnswerItem = styled.div`
   width: 100%;
 `;
 
-const ErrorAnswerItem = styled(AnswerItem)`
-  align-items: flex-start;
-  margin-top: 24px;
-  padding: 20px;
-  border-radius: 15px;
-  border: 1px solid ${palette.error};
-  background: rgba(255, 59, 48, 0.06);
-
-  strong {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.5;
-    color: ${palette.error};
-
-    &:before {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-      background: url(${images.ExclamationCircleFill}) center no-repeat;
-      background-size: 100%;
-      content: "";
-    }
-  }
-
-  div {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    margin-left: 28px;
-  }
-
-  p {
-    font-size: 0.875rem;
-    font-weight: 300;
-    line-height: 1.5;
-    color: ${palette.gray700};
-  }
-
-  button {
-    font-size: 0.875rem;
-    color: ${palette.gray800};
-    border-radius: 8px;
-    border: 1px solid ${palette.gray500};
-  }
-`;
 
 const TypeName = styled.div`
   display: flex;
@@ -869,28 +495,3 @@ const TextContainer = styled.div`
   background: rgba(34, 111, 255, 0.06);
 `;
 
-const flash = keyframes`
-  0% {
-    background-color: ${palette.gray300};
-    box-shadow: 12px 0 ${palette.gray300}, -12px 0 ${palette.gray500};
-  }
-  50% {
-    background-color: ${palette.gray500};
-    box-shadow: 12px 0 ${palette.gray500}, -12px 0 ${palette.gray300};
-  }
-  100% {
-    background-color: ${palette.gray300};
-    box-shadow: 12px 0 ${palette.gray500}, -12px 0 ${palette.gray300};
-  }
-`;
-
-const Entering = styled.div`
-  width: 6px;
-  height: 6px;
-  margin: 0 12px;
-  border-radius: 50%;
-  background: ${palette.gray500};
-  box-shadow: 12px 0 ${palette.gray500}, -12px 0 ${palette.gray500};
-  position: relative;
-  animation: ${flash} 0.5s ease-out infinite alternate;
-`;
