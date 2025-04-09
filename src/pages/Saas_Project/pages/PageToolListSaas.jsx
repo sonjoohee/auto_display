@@ -1136,7 +1136,7 @@ const PageToolListSaas = () => {
                       Interveiw
                     </span>
                     <p>
-                      <img src={images.ImgExplore13} alt="" />
+                      <img src={images.ImgExplore15} alt="" />
                     </p>
                     <Body1 color="gray800">
                       <em>준비중</em>
