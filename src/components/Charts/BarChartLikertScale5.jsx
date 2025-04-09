@@ -1,16 +1,45 @@
 import React from 'react';
 import styled from 'styled-components';
 import { palette } from '../../assets/styles/Palette';
+import { useAtom } from 'jotai';
+import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
 
-// 5개의 카테고리 그래프를 위한 데이터 구조
-// [{ category: string, value: number }, ...]
-const BarChartLikertScale5 = ({ data = [
-  { category: '카테고리1', value: 4 },
-  { category: '카테고리2', value: 12 },
-  { category: '카테고리3', value: 20 },
-  { category: '카테고리4', value: 38 },
-  { category: '카테고리5', value: 26 }
-] }) => {
+const BarChartLikertScale5 = () => {
+  const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
+  
+  const calculatePercentage = (value, total) => {
+    return Math.round((value / total) * 100);
+  };
+  
+  const processData = () => {
+    const total = quickSurveyStaticData['총합']['전체총합'];
+    
+    return [
+      { 
+        category: Object.keys(quickSurveyStaticData)[0],
+        value: calculatePercentage(quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]]['전체총합'], total) 
+      },
+      { 
+        category: Object.keys(quickSurveyStaticData)[1],
+        value: calculatePercentage(quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]]['전체총합'], total) 
+      },
+      { 
+        category: Object.keys(quickSurveyStaticData)[2],
+        value: calculatePercentage(quickSurveyStaticData[Object.keys(quickSurveyStaticData)[2]]['전체총합'], total) 
+      },
+      { 
+        category: Object.keys(quickSurveyStaticData)[3],
+        value: calculatePercentage(quickSurveyStaticData[Object.keys(quickSurveyStaticData)[3]]['전체총합'], total) 
+      },
+      { 
+        category: Object.keys(quickSurveyStaticData)[4],
+        value: calculatePercentage(quickSurveyStaticData[Object.keys(quickSurveyStaticData)[4]]['전체총합'], total) 
+      }
+    ];
+  };
+  
+  const data = processData();
+
   return (
     <GraphContainer>
       {data.map((item, index) => (

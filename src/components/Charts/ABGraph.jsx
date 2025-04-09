@@ -1,9 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { palette } from '../../assets/styles/Palette';
+import { useAtom } from 'jotai';
+import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
 
-// 비교 데이터를 위한 props 구조: { a: number, b: number }
-const ABGraph = ({ data = { a: 28, b: 72 } }) => {
+const ABGraph = () => {
+  const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
+  
   // 높이 계산 함수 - a(28%)는 66px, b(72%)는 176px이 되도록 설정
   const getBarHeight = (value) => {
     if (value === 28) return 66;
@@ -14,23 +17,42 @@ const ABGraph = ({ data = { a: 28, b: 72 } }) => {
     return Math.round(66 + slope * (value - 28));
   };
 
+  // 백분율 계산 함수
+  const calculatePercentage = (value, total) => {
+    return Math.round((value / total) * 100);
+  };
+
+  // 데이터 계산
+  const getABData = () => {
+    const totalSum = quickSurveyStaticData['총합']['전체총합'];
+    const aValue = quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]]['전체총합'];
+    const bValue = quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]]['전체총합'];
+
+    return {
+      a: calculatePercentage(aValue, totalSum),
+      b: calculatePercentage(bValue, totalSum)
+    };
+  };
+
+  const calculatedData = getABData();
+
   return (
     <GraphContainer>
       <BarContainer>
         <BarWrapper>
           <BarItem>
-            <BarFill height={getBarHeight(data.a)} />
-            <BarValue>{data.a}%</BarValue>
+            <BarFill height={getBarHeight(calculatedData.a)} />
+            <BarValue>{calculatedData.a}%</BarValue>
           </BarItem>
-          <BarLabel>A</BarLabel>
+          <BarLabel>{Object.keys(quickSurveyStaticData)[0]}</BarLabel>
         </BarWrapper>
         
         <BarWrapper>
           <BarItem>
-            <BarFill height={getBarHeight(data.b)} />
-            <BarValue>{data.b}%</BarValue>
+            <BarFill height={getBarHeight(calculatedData.b)} />
+            <BarValue>{calculatedData.b}%</BarValue>
           </BarItem>
-          <BarLabel>B</BarLabel>
+          <BarLabel>{Object.keys(quickSurveyStaticData)[1]}</BarLabel>
         </BarWrapper>
       </BarContainer>
     </GraphContainer>
