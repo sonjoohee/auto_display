@@ -1,23 +1,19 @@
 //인터뷰룸
 import React, { useState, useEffect } from "react";
-import styled, { keyframes, css } from "styled-components";
+import styled from "styled-components";
 import { palette } from "../../../../../assets/styles/Palette";
 import { Button } from "../../../../../assets/styles/ButtonStyle";
 import images from "../../../../../assets/styles/Images";
 import PopupWrap from "../../../../../assets/styles/Popup";
 import { useAtom } from "jotai";
 import {
-  IS_LOGGED_IN,
   PERSONA_BUTTON_STATE_3,
-  PROJECT_ID,
   PROJECT_TOTAL_INFO,
   PROJECT_SAAS,
   QUICK_SURVEY_INTERVIEW,
   QUICK_SURVEY_SURVEY_METHOD,
 } from "../../../../AtomStates";
 import personaImages from "../../../../../assets/styles/PersonaImages";
-import { updateProjectOnServer } from "../../../../../utils/indexedDB";
-import { createProjectReportOnServer } from "../../../../../utils/indexedDB";
 
 const OrganismToastPopupQuickSurveyComplete = ({
   isActive,
@@ -26,10 +22,6 @@ const OrganismToastPopupQuickSurveyComplete = ({
   selectedOption,
   selectedOptionIndex,
 }) => {
-  const [projectSaas] = useAtom(PROJECT_SAAS);
-  const project = projectSaas;
-  const [projectId] = useAtom(PROJECT_ID);
-  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
@@ -81,7 +73,6 @@ const OrganismToastPopupQuickSurveyComplete = ({
         });
 
         setAnswers(processedAnswers);
-        // console.log(processedAnswers);
 
         // 모든 답변을 보이도록 설정
 
@@ -98,11 +89,11 @@ const OrganismToastPopupQuickSurveyComplete = ({
     const questionAnswers = answers || [];
  
 
-    const filteredAnswers = selectedOption
-      ? questionAnswers.filter(
-          (answer) => answer.answer.main === selectedOption
-        )
-      : questionAnswers;
+    const filteredAnswers = selectedOption && questionAnswers.length > 0
+    ? questionAnswers.filter(
+        (answer) => answer?.answer?.main === selectedOption
+      )
+    : questionAnswers;
 
     return (
       <>
@@ -111,18 +102,18 @@ const OrganismToastPopupQuickSurveyComplete = ({
             <TypeName>
               <Thumb>
                 <img
-                  src={personaImages[answer.imageKey]}
-                  alt={answer.persona.persona_name}
+                  src={personaImages[answer?.imageKey]}
+                  alt={answer?.persona?.persona_name}
                 />
               </Thumb>
               <div>
-                {answer.persona.persona_name}
+                {answer?.persona?.persona_name}
                 <p>
-                  <span>{answer.gender}</span>
+                  <span>{answer?.gender}</span>
                   <span>
-                    {answer.age.includes("세") ? answer.age : `${answer.age}세`}
+                      {answer?.age?.includes("세") ? answer?.age : `${answer?.age}세`}
                   </span>
-                  <span>{answer.job}</span>
+                  <span>{answer?.job}</span>
                 </p>
               </div>
             </TypeName>
@@ -130,7 +121,7 @@ const OrganismToastPopupQuickSurveyComplete = ({
             <div>
                 {selectedOptionIndex && selectedOption ? `${selectedOptionIndex}. ` : ''}{answer.answer.main}
               </div>
-              <div style={{ marginTop: "16px" }}>{answer.answer.followUp}</div>
+              <div style={{ marginTop: "16px" }}>{answer?.answer?.followUp}</div>
             </TextContainer>
           </AnswerItem>
         ))}
