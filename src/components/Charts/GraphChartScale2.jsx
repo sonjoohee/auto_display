@@ -2,9 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 
 const GraphChartScale2 = ({ data = defaultData }) => {
-  // 그래프 바 너비 - 서로 다른 값으로 설정
-  const barWidthA = 120; // A는 더 긴 바
-  const barWidthB = 90;  // B는 더 짧은 바
+  // 합계 계산
+  const sumA = data.a.reduce((sum, val) => sum + val, 0);
+  const sumB = data.b.reduce((sum, val) => sum + val, 0);
+  const importanceLabels = ["A", "B"]; // A, B를 레이블로 사용
+  const barWidths = [
+    Math.min(70, sumA),
+    Math.min(70, sumB)
+  ];
 
   return (
     <ChartContainer>
@@ -32,31 +37,49 @@ const GraphChartScale2 = ({ data = defaultData }) => {
       </HeaderSection>
 
       <DataSection>
-        <DataRowGroup>
-          <RowLabel>
-            <LabelText>A</LabelText>
-            <GraphBar width={barWidthA} type="a" />
-          </RowLabel>
-          <DataRow>
-            {data.a.map((value, index) => (
-              <DataCell key={`a-${index}`}>{value}</DataCell>
+        <VerticalLine />
+        <RightVerticalLine />
+        <ImportanceContainer>
+          <ImportanceLabelsColumn>
+            {importanceLabels.map((label, index) => (
+              <ImportanceLabel key={`label-${index}`}>{label}</ImportanceLabel>
             ))}
-          </DataRow>
-        </DataRowGroup>
-        
-        <DataSectionHorizontalLine marginTop="12px" marginBottom="12px" />
-        
-        <DataRowGroup>
-          <RowLabel>
-            <LabelText>B</LabelText>
-            <GraphBar width={barWidthB} type="b" />
-          </RowLabel>
-          <DataRow>
-            {data.b.map((value, index) => (
-              <DataCell key={`b-${index}`}>{value}</DataCell>
-            ))}
-          </DataRow>
-        </DataRowGroup>
+          </ImportanceLabelsColumn>
+          
+          <BarsColumn>
+            {importanceLabels.map((_, index) => {
+              return (
+                <div key={`bar-container-${index}`} style={{ position: 'relative' }}>
+                  <ImportanceBar key={`bar-${index}`} width={barWidths[index]} />
+                  <BarValue>{index === 0 ? sumA : sumB}</BarValue>
+                </div>
+              );
+            })}
+          </BarsColumn>
+        </ImportanceContainer>
+
+        <DataRowsContainer>
+          <React.Fragment key="row-a">
+            <DataRowGroup>
+              <DataRowValues>
+                {data.a.map((value, index) => (
+                  <DataCell key={`a-${index}`}>{value}</DataCell>
+                ))}
+              </DataRowValues>
+            </DataRowGroup>
+            <DataSectionHorizontalLine />
+          </React.Fragment>
+          
+          <React.Fragment key="row-b">
+            <DataRowGroup>
+              <DataRowValues>
+                {data.b.map((value, index) => (
+                  <DataCell key={`b-${index}`}>{value}</DataCell>
+                ))}
+              </DataRowValues>
+            </DataRowGroup>
+          </React.Fragment>
+        </DataRowsContainer>
       </DataSection>
     </ChartContainer>
   );
@@ -135,10 +158,12 @@ const CategoryItem = styled.div`
 `;
 
 const CategoriesContainer = styled.div`
-  display: flex;
-  margin-left: 24px;
+  display: grid;
+  grid-template-columns: repeat(8, 55px);
+  margin-left: 12px;
   gap: 4px;
   align-items: center;
+  width: 455px;
 `;
 
 const DemographicItem = styled.div`
@@ -168,54 +193,125 @@ const HorizontalLine = styled.div`
 
 const DataSection = styled.div`
   display: flex;
-  flex-direction: column;
   width: 100%;
-`;
-
-const DataRowGroup = styled.div`
-  display: flex;
-  width: 100%;
-`;
-
-const RowLabel = styled.div`
-  display: flex;
-  align-items: center;
-  width: 291px;
-  padding-left: 20px;
   position: relative;
+  height: 100px; /* A, B 두 개의 라벨(16px) + 간격(1개, 25px) + 여백 */
 `;
 
-const LabelText = styled.div`
+const VerticalLine = styled.div`
+  position: absolute;
+  height: calc(100% + 56px + 24px + 2px); /* DataSection 높이(100%) + 헤더 여백(56px) + 하단 패딩(24px) + 테두리(2px) */
+  width: 1px;
+  background-color: #DDDDDD;
+  left: 303px; /* ImportanceContainer 너비(291px) + 약간의 간격(12px) */
+  top: -56px; /* 헤더 여백만큼 위로 확장 */
+  z-index: 1;
+`;
+
+const RightVerticalLine = styled.div`
+  position: absolute;
+  height: calc(100% + 56px + 24px + 2px); /* DataSection 높이(100%) + 헤더 여백(56px) + 하단 패딩(24px) + 테두리(2px) */
+  width: 1px;
+  background-color: #DDDDDD;
+  left: calc(303px + 55px * 2 + 4px); /* 왼쪽 세로선(303px) + 남성 열 너비(55px) + 여성 열 너비(55px) + 간격(4px) */
+  top: -56px; /* 헤더 여백만큼 위로 확장 */
+  z-index: 1;
+`;
+
+const ImportanceContainer = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 291px;
+  height: 100%;
+`;
+
+const ImportanceLabelsColumn = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  left: 90px;
+  transform: translateX(-50%);
+  z-index: 1;
+  top: 0;
+`;
+
+const ImportanceLabel = styled.div`
   font-family: 'Pretendard', 'Poppins';
   font-weight: 400;
   font-size: 16px;
   line-height: 1.55;
-  text-align: center;
   letter-spacing: -0.03em;
   color: #666666;
-  width: 60px;
-  position: absolute;
-  left: 60px;
+  width: 80px;
+  text-align: center;
+  height: 16px;
   display: flex;
+  align-items: center;
   justify-content: center;
 `;
 
-const GraphBar = styled.div`
+const BarsColumn = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  left: 180px;
+  top: 0;
+`;
+
+const ImportanceBar = styled.div`
   height: 16px;
   width: ${props => props.width}px;
   min-width: 20px;
   background-color: #226FFF;
   border-radius: 2px;
-  position: absolute;
-  left: 180px;
+  display: flex;
+  align-items: center;
 `;
 
-const DataRow = styled.div`
+const BarValue = styled.div`
+  font-family: 'Pretendard', 'Poppins';
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1;
+  text-align: left;
+  letter-spacing: -0.03em;
+  color: #226FFF;
+  position: absolute;
+  left: calc(${props => props.width || 70}px + 12px);
+  top: 0;
   display: flex;
-  width: calc(100% - 291px);
-  gap: 4px;
-  margin-left: 24px;
   align-items: center;
+  height: 100%;
+`;
+
+const DataRowsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: absolute;
+  left: 303px;
+  width: 455px;
+  top: 0;
+`;
+
+const DataRowGroup = styled.div`
+  display: flex;
+  width: 100%;
+  height: 16px;
+`;
+
+const DataRowValues = styled.div`
+  display: grid;
+  grid-template-columns: repeat(7, 55px) 58px;
+  gap: 4px;
+  align-items: center;
+  height: 16px;
+  margin-left: 0;
+  width: 455px;
+  justify-content: start;
 `;
 
 const DataCell = styled.div`
@@ -228,12 +324,17 @@ const DataCell = styled.div`
   text-align: center;
   width: 55px;
   display: flex;
+  align-items: center;
   justify-content: center;
 `;
 
 const DataSectionHorizontalLine = styled(HorizontalLine)`
-  width: calc(100% - 291px - 24px);
-  margin-left: 315px; /* 291px(RowLabel 너비) + 24px(DataRow 마진) */
+  width: 455px;
+  margin-left: 0;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  background-color: #DDDDDD;
+  height: 1px;
 `;
 
 export default GraphChartScale2; 

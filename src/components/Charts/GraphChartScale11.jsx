@@ -2,6 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 
 const GraphChartScale11 = ({ data = defaultData }) => {
+  // 각 점수 레벨별 합계 계산
+  const rowSums = importanceLabels.map((_, index) => {
+    const rowKey = `row${index + 1}`;
+    const values = data[rowKey];
+    return values.reduce((sum, val) => sum + val, 0);
+  });
+
   return (
     <ChartContainer>
       <HeaderSection>
@@ -28,6 +35,8 @@ const GraphChartScale11 = ({ data = defaultData }) => {
       </HeaderSection>
 
       <DataSection>
+        <VerticalLine />
+        <RightVerticalLine />
         <ImportanceContainer>
           <ImportanceLabelsColumn>
             {importanceLabels.map((label, index) => (
@@ -36,9 +45,15 @@ const GraphChartScale11 = ({ data = defaultData }) => {
           </ImportanceLabelsColumn>
           
           <BarsColumn>
-            {importanceLabels.map((_, index) => (
-              <ImportanceBar key={`bar-${index}`} width={calculateBarWidth(index)} />
-            ))}
+            {importanceLabels.map((_, index) => {
+              const barWidth = Math.min(70, calculateBarWidth(index));
+              return (
+                <div key={`bar-container-${index}`} style={{ position: 'relative' }}>
+                  <ImportanceBar key={`bar-${index}`} width={barWidth} />
+                  <BarValue>{rowSums[index]}</BarValue>
+                </div>
+              );
+            })}
           </BarsColumn>
         </ImportanceContainer>
 
@@ -301,10 +316,46 @@ const DataSectionHorizontalLine = styled(HorizontalLine)`
   height: 1px;
 `;
 
-// 바의 너비를 계산하는 함수 - 인덱스에 따라 다른 너비 반환
+const VerticalLine = styled.div`
+  position: absolute;
+  height: calc(100% + 56px + 24px + 2px); /* DataSection 높이(100%) + 헤더 여백(56px) + 하단 패딩(24px) + 테두리(2px) */
+  width: 1px;
+  background-color: #DDDDDD;
+  left: 303px; /* ImportanceContainer 너비(291px) + 약간의 간격(12px) */
+  top: -56px; /* 헤더 여백만큼 위로 확장 */
+  z-index: 1;
+`;
+
+const RightVerticalLine = styled.div`
+  position: absolute;
+  height: calc(100% + 56px + 24px + 2px); /* DataSection 높이(100%) + 헤더 여백(56px) + 하단 패딩(24px) + 테두리(2px) */
+  width: 1px;
+  background-color: #DDDDDD;
+  left: calc(303px + 55px * 2 + 4px); /* 왼쪽 세로선(303px) + 남성 열 너비(55px) + 여성 열 너비(55px) + 간격(4px) */
+  top: -56px; /* 헤더 여백만큼 위로 확장 */
+  z-index: 1;
+`;
+
+// 바의 너비를 계산하는 함수 - 인덱스에 따라 다른 너비 반환 (최대 70px로 제한)
 const calculateBarWidth = (index) => {
-  const widths = [90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40]; // 10점부터 0점까지 내림차순으로 바 너비 설정
-  return widths[index] || 60;
+  const widths = [70, 68, 66, 64, 60, 55, 50, 45, 40, 35, 30]; // 10점부터 0점까지 내림차순으로 바 너비 설정 (최대 70px)
+  return widths[index] || 50;
 };
+
+const BarValue = styled.div`
+  font-family: 'Pretendard', 'Poppins';
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1;
+  text-align: left;
+  letter-spacing: -0.03em;
+  color: #226FFF;
+  position: absolute;
+  left: calc(${props => props.width || 70}px + 12px);
+  top: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+`;
 
 export default GraphChartScale11;
