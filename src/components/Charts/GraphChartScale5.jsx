@@ -80,9 +80,47 @@ const GraphChartScale5 = () => {
 
     return percentage;
   };
+  // 그래프 바 너비 계산 - 백분율 값에 따라 가변적으로 설정
+  const getBarWidth = (value) => {
+    const total = quickSurveyStaticData["총합"]["전체총합"];
+    // 최소 너비와 최대 너비 설정
+    const minWidth = 0;
+    const maxWidth = 100;
 
+    // 백분율 값에 따라 선형적으로 너비 계산
+    // 0%일 때 minWidth, 100%일 때 maxWidth가 되도록 설정
+    const width = minWidth + (value / total) * (maxWidth - minWidth);
+
+    // 소수점 반올림하여 정수 값 반환
+    return Math.round(width);
+  };
+
+  // A와 B 옵션의 총합 값 가져오기
+  const barWidth1 = getBarWidth(
+    quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]]["전체총합"]
+  );
+  const barWidth2 = getBarWidth(
+    quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]]["전체총합"]
+  );
+  const barWidth3 = getBarWidth(
+    quickSurveyStaticData[Object.keys(quickSurveyStaticData)[2]]["전체총합"]
+  );
+  const barWidth4 = getBarWidth(
+    quickSurveyStaticData[Object.keys(quickSurveyStaticData)[3]]["전체총합"]
+  );
+  const barWidth5 = getBarWidth(
+    quickSurveyStaticData[Object.keys(quickSurveyStaticData)[4]]["전체총합"]
+  );
+
+  const barWidths = [barWidth1, barWidth2, barWidth3, barWidth4, barWidth5];
   const importanceLabels = [1, 2, 3, 4, 5];
-
+  const importanceOptions = [
+    Object.keys(quickSurveyStaticData)[0],
+    Object.keys(quickSurveyStaticData)[1],
+    Object.keys(quickSurveyStaticData)[2],
+    Object.keys(quickSurveyStaticData)[3],
+    Object.keys(quickSurveyStaticData)[4],
+  ]; // A, B를 레이블로 사용
   return (
     <ChartContainer>
       <HeaderSection>
@@ -90,7 +128,7 @@ const GraphChartScale5 = () => {
           <CategoryHeader>
             <EmptySpace />
             <CategoryLabels>
-              <CategoryItem>점수</CategoryItem>
+              <CategoryItem>보기</CategoryItem>
               <CategoryItem>계</CategoryItem>
             </CategoryLabels>
           </CategoryHeader>
@@ -132,7 +170,7 @@ const GraphChartScale5 = () => {
         <VerticalLine />
         <RightVerticalLine />
         <ImportanceContainer>
-          <ImportanceLabelsColumn>
+          {/* <ImportanceLabelsColumn>
             {Object.keys(quickSurveyStaticData)
               .slice(0, 5)
               .map((label, index) => (
@@ -140,9 +178,34 @@ const GraphChartScale5 = () => {
                   {label}
                 </ImportanceLabel>
               ))}
+          </ImportanceLabelsColumn> */}
+          <ImportanceLabelsColumn>
+            {/* Render importance options and labels together */}
+            {importanceOptions.map((option, index) => (
+              <ImportanceLabel key={`label-${index}`}>
+                <span
+                  style={{
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {option}
+                </span>
+              </ImportanceLabel>
+            ))}
+            <ImportanceLabelsColumnIndex>
+              {/* Render importance options and labels together */}
+              {importanceOptions.map((option, index) => (
+                <ImportanceLabel key={`label-${index}`}>
+                  {`${importanceLabels[index]}`}
+                </ImportanceLabel>
+              ))}
+              {/* Remove the separate mapping for importanceLabels if it existed or was commented out */}
+            </ImportanceLabelsColumnIndex>
+            {/* Remove the separate mapping for importanceLabels if it existed or was commented out */}
           </ImportanceLabelsColumn>
-
-          <BarsColumn>
+          {/* <BarsColumn>
             {importanceLabels.map((_, index) => {
               const barWidth = Math.min(70, calculateBarWidth(index));
               return (
@@ -152,6 +215,34 @@ const GraphChartScale5 = () => {
                 >
                   <ImportanceBar key={`bar-${index}`} width={barWidth} />
                   <BarValue>
+                    {index === 0
+                      ? data.a[0] + data.a[1]
+                      : index === 1
+                      ? data.b[0] + data.b[1]
+                      : index === 2
+                      ? data.c[0] + data.c[1]
+                      : index === 3
+                      ? data.d[0] + data.d[1]
+                      : data.e[0] + data.e[1]}
+                  </BarValue>
+                </div>
+              );
+            })}
+          </BarsColumn> */}
+          <BarsColumn>
+            {importanceLabels.map((_, index) => {
+              // Assuming importanceLabels ('A', 'B') map directly to barWidths and sums
+              return (
+                <div
+                  key={`bar-container-${index}`}
+                  style={{ position: "relative" }}
+                >
+                  <ImportanceBar
+                    key={`bar-${index}`}
+                    width={barWidths[index]}
+                  />
+                  {/* Restore original BarValue positioning and content */}
+                  <BarValue width={barWidths[index]}>
                     {index === 0
                       ? data.a[0] + data.a[1]
                       : index === 1
@@ -302,7 +393,7 @@ const GenderText = styled.div`
 const GenderLine = styled.div`
   width: 100%;
   height: 1px;
-  background-color: #E0E4EB;
+  background-color: #e0e4eb;
   margin-top: 12px;
 `;
 
@@ -342,7 +433,7 @@ const AgeText = styled.div`
 const AgeLine = styled.div`
   width: 378px;
   height: 1px;
-  background-color: #E0E4EB;
+  background-color: #e0e4eb;
   margin-left: 30px;
   margin-top: 12px;
 `;
@@ -371,13 +462,13 @@ const DemographicItem = styled.div`
 `;
 
 const HorizontalLine = styled.div`
-  width: ${props => props.fullWidth ? "calc(100% + 48px)" : "100%"};
+  width: ${(props) => (props.fullWidth ? "calc(100% + 48px)" : "100%")};
   height: 1px;
-  background-color: #E0E4EB;
+  background-color: #e0e4eb;
   margin-top: ${(props) => props.marginTop || "4px"};
   margin-bottom: ${(props) => props.marginBottom || "4px"};
-  margin-left: ${props => props.fullWidth ? "-24px" : "0"};
-  position: ${props => props.fullWidth ? "relative" : "static"};
+  margin-left: ${(props) => (props.fullWidth ? "-24px" : "0")};
+  position: ${(props) => (props.fullWidth ? "relative" : "static")};
 `;
 
 const DataSection = styled.div`
@@ -391,7 +482,7 @@ const VerticalLine = styled.div`
   position: absolute;
   height: 335px; /* 원래 지정된 335px 유지 */
   width: 1px;
-  background-color: #E0E4EB; /* 테두리와 동일한 색상으로 변경 */
+  background-color: #e0e4eb; /* 테두리와 동일한 색상으로 변경 */
   left: 303px; /* ImportanceContainer 너비(291px) + 약간의 간격(12px) */
   top: -130px; /* -132px에서 2px 아래로 이동 */
   z-index: 1;
@@ -401,7 +492,7 @@ const RightVerticalLine = styled.div`
   position: absolute;
   height: 335px; /* 원래 지정된 335px 유지 */
   width: 1px;
-  background-color: #E0E4EB; /* 테두리와 동일한 색상으로 변경 */
+  background-color: #e0e4eb; /* 테두리와 동일한 색상으로 변경 */
   left: calc(
     303px + 55px * 2 + 4px
   ); /* 왼쪽 세로선(303px) + 남성 열 너비(55px) + 여성 열 너비(55px) + 간격(4px) */
@@ -417,13 +508,35 @@ const ImportanceContainer = styled.div`
   height: 100%;
 `;
 
+// const ImportanceLabelsColumn = styled.div`
+//   position: absolute;
+//   display: flex;
+//   flex-direction: column;
+//   gap: 25px;
+//   left: 120px;
+//   transform: translateX(-100%);
+//   z-index: 1;
+//   top: 0;
+// `;
+
 const ImportanceLabelsColumn = styled.div`
   position: absolute;
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  left: 120px;
-  transform: translateX(-100%);
+  gap: 25px; // Restore original gap
+  /* left: 50px; // Restore original position */
+  /* transform: translateX(-80%); // Restore original transform */
+  z-index: 1;
+  top: 0;
+`;
+
+const ImportanceLabelsColumnIndex = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 25px; // Restore original gap
+  left: 20px; // Restore original position
+  /* transform: translateX(-20%); // Restore original transform */
   z-index: 1;
   top: 0;
 `;
@@ -449,7 +562,7 @@ const BarsColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: 25px;
-  left: 130px;
+  left: 160px;
   top: 0;
 `;
 
@@ -477,7 +590,8 @@ const BarValue = styled.div`
   letter-spacing: -0.03em;
   color: #226fff;
   position: absolute;
-  right: -114px;
+  /* right: -80px; */
+  left: 100px;
   top: 0;
   display: flex;
   align-items: center;
@@ -516,7 +630,7 @@ const DataRowValues = styled.div`
 const DataCell = styled.div`
   font-family: "Pretendard", "Poppins";
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1;
   letter-spacing: -0.03em;
   color: #666666;
@@ -533,7 +647,7 @@ const DataSectionHorizontalLine = styled(HorizontalLine)`
   margin-top: 12px;
   margin-bottom: 12px;
   background-color: transparent; /* 배경색 제거 */
-  border-bottom: 1px dashed #E0E4EB; /* 점선 색상을 outline 색상으로 변경 */
+  border-bottom: 1px dashed #e0e4eb; /* 점선 색상을 outline 색상으로 변경 */
   height: 1px;
 `;
 

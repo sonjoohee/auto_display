@@ -5,29 +5,11 @@ import { QUICK_SURVEY_STATIC_DATA } from "../../pages/AtomStates";
 
 const GraphChartScale2 = () => {
   const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
-
-  // 그래프 바 너비 계산 - 백분율 값에 따라 가변적으로 설정
-  const getBarWidth = (value) => {
-    // 최소 너비와 최대 너비 설정
-    const minWidth = 10;
-    const maxWidth = 120;
-
-    // 백분율 값에 따라 선형적으로 너비 계산
-    // 0%일 때 minWidth, 100%일 때 maxWidth가 되도록 설정
-    const width = minWidth + (value / 100) * (maxWidth - minWidth);
-
-    // 소수점 반올림하여 정수 값 반환
-    return Math.round(width);
-  };
-
-  // A와 B 옵션의 총합 값 가져오기
-  const barWidthA = getBarWidth(
-    quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]]["전체총합"]
+  console.log(
+    "🚀 ~ GraphChartScale2 ~ quickSurveyStaticData:",
+    quickSurveyStaticData
   );
-  const barWidthB = getBarWidth(
-    quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]]["전체총합"]
-  );
-  const barWidths = [barWidthA, barWidthB];
+
   const getDataFromQuickSurveyStaticData = (quickSurveyStaticData) => {
     const option1Key = Object.keys(quickSurveyStaticData)[0];
     const option2Key = Object.keys(quickSurveyStaticData)[1];
@@ -62,8 +44,34 @@ const GraphChartScale2 = () => {
   const sumA = data.a[0] + data.a[1]; // 남성과 여성 데이터만 합산
   const sumB = data.b[0] + data.b[1]; // 남성과 여성 데이터만 합산
   const importanceLabels = ["A", "B"]; // A, B를 레이블로 사용
-  // const barWidths = [Math.min(70, sumA), Math.min(70, sumB)];
+  const importanceOptions = [
+    Object.keys(quickSurveyStaticData)[0],
+    Object.keys(quickSurveyStaticData)[1],
+  ]; // A, B를 레이블로 사용
 
+  // 그래프 바 너비 계산 - 백분율 값에 따라 가변적으로 설정
+  const getBarWidth = (value) => {
+    // 최소 너비와 최대 너비 설정
+    const minWidth = 0;
+    const maxWidth = 100;
+
+    // 백분율 값에 따라 선형적으로 너비 계산
+    // 0%일 때 minWidth, 100%일 때 maxWidth가 되도록 설정
+    const width = minWidth + (value / (sumA + sumB)) * (maxWidth - minWidth);
+
+    // 소수점 반올림하여 정수 값 반환
+    return Math.round(width);
+  };
+  // A와 B 옵션의 총합 값 가져오기
+  const barWidthA = getBarWidth(
+    quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]]["전체총합"]
+  );
+  const barWidthB = getBarWidth(
+    quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]]["전체총합"]
+  );
+  const barWidths = [barWidthA, barWidthB];
+  // const barWidths = [Math.min(70, sumA), Math.min(70, sumB)];
+  console.log("🚀 ~ GraphChartScale2 ~ importanceOptions:", importanceOptions);
   return (
     <ChartContainer>
       <HeaderSection>
@@ -71,7 +79,7 @@ const GraphChartScale2 = () => {
           <CategoryHeader>
             <EmptySpace />
             <CategoryLabels>
-              <CategoryItem>점수</CategoryItem>
+              <CategoryItem>보기</CategoryItem>
               <CategoryItem>계</CategoryItem>
             </CategoryLabels>
           </CategoryHeader>
@@ -114,13 +122,31 @@ const GraphChartScale2 = () => {
         <RightVerticalLine />
         <ImportanceContainer>
           <ImportanceLabelsColumn>
-            {importanceLabels.map((label, index) => (
-              <ImportanceLabel key={`label-${index}`}>{label}</ImportanceLabel>
+            {importanceOptions.map((option, index) => (
+              <ImportanceLabel key={`label-${index}`}>
+                <span
+                  style={{
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {option}
+                </span>
+              </ImportanceLabel>
             ))}
+            <ImportanceLabelsColumnIndex>
+              {importanceOptions.map((option, index) => (
+                <ImportanceLabel key={`label-${index}`}>
+                  {`${importanceLabels[index]}`}
+                </ImportanceLabel>
+              ))}
+            </ImportanceLabelsColumnIndex>
           </ImportanceLabelsColumn>
 
           <BarsColumn>
             {importanceLabels.map((_, index) => {
+              // Assuming importanceLabels ('A', 'B') map directly to barWidths and sums
               return (
                 <div
                   key={`bar-container-${index}`}
@@ -130,7 +156,10 @@ const GraphChartScale2 = () => {
                     key={`bar-${index}`}
                     width={barWidths[index]}
                   />
-                  <BarValue>{index === 0 ? sumA : sumB}</BarValue>
+                  {/* Restore original BarValue positioning and content */}
+                  <BarValue width={barWidths[index]}>
+                    {index === 0 ? sumA : sumB}
+                  </BarValue>
                 </div>
               );
             })}
@@ -278,7 +307,7 @@ const GenderText = styled.div`
 const GenderLine = styled.div`
   width: 100%;
   height: 1px;
-  background-color: #E0E4EB;
+  background-color: #e0e4eb;
   margin-top: 12px;
 `;
 
@@ -319,7 +348,7 @@ const AgeText = styled.div`
 const AgeLine = styled.div`
   width: 378px;
   height: 1px;
-  background-color: #E0E4EB;
+  background-color: #e0e4eb;
   margin-left: 26px;
   margin-top: 12px;
 `;
@@ -349,27 +378,31 @@ const DemographicItem = styled.div`
 `;
 
 const HorizontalLine = styled.div`
-  width: ${props => props.fullWidth ? "calc(100% + 48px)" : "100%"};
+  width: ${(props) => (props.fullWidth ? "calc(100% + 48px)" : "100%")};
   height: 1px;
-  background-color: #E0E4EB;
+  background-color: #e0e4eb;
   margin-top: ${(props) => props.marginTop || "4px"};
   margin-bottom: ${(props) => props.marginBottom || "4px"};
-  margin-left: ${props => props.fullWidth ? "-24px" : "0"};
-  position: ${props => props.fullWidth ? "relative" : "static"};
+  margin-left: ${(props) => (props.fullWidth ? "-24px" : "0")};
+  position: ${(props) => (props.fullWidth ? "relative" : "static")};
 `;
 
 const DataSection = styled.div`
   display: flex;
+  /* flex-direction: row; // Implicit default or restore if explicitly set */
   width: 100%;
   position: relative;
-  height: 100px; /* A, B 두 개의 라벨(16px) + 간격(1개, 25px) + 여백 */
+  height: 100px; /* Restore original height calculation if different */
+  /* Remove gap and padding-top added in previous edit */
 `;
 
 const VerticalLine = styled.div`
   position: absolute;
-  height: calc(100% + 130px + 24px + 17px); /* DataSection 높이(100%) + 상단 확장(130px) + 하단 패딩(24px) + 추가 높이(17px) */
+  height: calc(
+    100% + 130px + 24px + 17px
+  ); /* DataSection 높이(100%) + 상단 확장(130px) + 하단 패딩(24px) + 추가 높이(17px) */
   width: 1px;
-  background-color: #E0E4EB; 
+  background-color: #e0e4eb;
   left: 303px;
   top: -147px; /* 기존 -130px에서 17px 더 위로 확장 */
   z-index: 1;
@@ -377,9 +410,11 @@ const VerticalLine = styled.div`
 
 const RightVerticalLine = styled.div`
   position: absolute;
-  height: calc(100% + 130px + 24px + 17px); /* DataSection 높이(100%) + 상단 확장(130px) + 하단 패딩(24px) + 추가 높이(17px) */
+  height: calc(
+    100% + 130px + 24px + 17px
+  ); /* DataSection 높이(100%) + 상단 확장(130px) + 하단 패딩(24px) + 추가 높이(17px) */
   width: 1px;
-  background-color: #E0E4EB;
+  background-color: #e0e4eb;
   left: calc(
     303px + 55px * 2 + 4px
   ); /* 왼쪽 세로선(303px) + 남성 열 너비(55px) + 여성 열 너비(55px) + 간격(4px) */
@@ -390,7 +425,7 @@ const RightVerticalLine = styled.div`
 const ImportanceContainer = styled.div`
   position: absolute;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; // Or original layout
   width: 291px;
   height: 100%;
 `;
@@ -399,13 +434,22 @@ const ImportanceLabelsColumn = styled.div`
   position: absolute;
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  left: 50px;
-  transform: translateX(-50%);
+  gap: 25px; // Restore original gap
+  /* left: 50px; // Restore original position */
+  /* transform: translateX(-80%); // Restore original transform */
   z-index: 1;
   top: 0;
 `;
-
+const ImportanceLabelsColumnIndex = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 25px; // Restore original gap
+  left: 20px; // Restore original position
+  /* transform: translateX(-20%); // Restore original transform */
+  z-index: 1;
+  top: 0;
+`;
 const ImportanceLabel = styled.div`
   font-family: "Pretendard", "Poppins";
   font-weight: 400;
@@ -413,21 +457,22 @@ const ImportanceLabel = styled.div`
   line-height: 1.55;
   letter-spacing: -0.03em;
   color: #666666;
-  width: 130px;
+  width: 130px; // Restore original width
   text-align: right;
-  height: 16px;
+  height: 16px; // Restore original height
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-right: 0;
+  padding-right: 0; // Restore original padding
+  /* Remove styles added in previous edit if any */
 `;
 
 const BarsColumn = styled.div`
   position: absolute;
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  left: 120px;
+  gap: 25px; // Restore original gap
+  left: 160px; // Restore original position
   top: 0;
 `;
 
@@ -436,8 +481,8 @@ const ImportanceBar = styled.div`
   width: ${(props) => props.width}px;
   background-color: #226fff;
   border-radius: 2px;
-  display: flex;
-  align-items: center;
+  display: flex; // Keep or restore original display
+  align-items: center; // Keep or restore original align-items
 `;
 
 const BarValue = styled.div`
@@ -449,9 +494,15 @@ const BarValue = styled.div`
   letter-spacing: -0.03em;
   color: #226fff;
   position: absolute;
-  left: calc(${(props) => props.width || 70}px + 72px);
+  /* Restore original left calculation */
+  /* left: calc(
+    ${(props) => props.width}px + 52px
+  );  */
   width: 30px;
-  top: 0;
+  top: 0; // Restore original top
+  /* transform: none; // Remove transform if added */
+
+  left: 100px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -461,28 +512,28 @@ const BarValue = styled.div`
 const DataRowsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 0; // Restore original gap
   position: absolute;
-  left: 303px;
-  width: 455px;
+  left: 303px; // Restore original position
+  width: 455px; // Restore original width
   top: 0;
 `;
 
 const DataRowGroup = styled.div`
   display: flex;
   width: 100%;
-  height: 16px;
+  height: 16px; // Restore original height
 `;
 
 const DataRowValues = styled.div`
   display: grid;
-  grid-template-columns: repeat(7, 55px) 58px;
-  gap: 4px;
+  grid-template-columns: repeat(7, 55px) 58px; // Restore original columns
+  gap: 4px; // Restore original gap
   align-items: center;
-  height: 16px;
-  margin-left: 0;
-  width: 455px;
-  justify-content: start;
+  height: 16px; // Restore original height
+  margin-left: 0; // Restore original margin
+  width: 455px; // Restore original width
+  justify-content: start; // Restore original justify
 `;
 
 const DataCell = styled.div`
@@ -494,19 +545,23 @@ const DataCell = styled.div`
   color: #666666;
   text-align: center;
   width: 55px;
+  /* height: auto; // Remove height: 100% if added */
   display: flex;
   align-items: center;
   justify-content: center;
+  /* box-sizing: content-box; // Remove box-sizing if added */
 `;
 
 const DataSectionHorizontalLine = styled(HorizontalLine)`
-  width: 490px;
-  margin-left: 0;
-  margin-top: 12px;
-  margin-bottom: 12px;
+  width: 490px; // Restore original width
+  margin-left: 0; // Restore original margin
+  margin-top: 12px; // Restore original margin
+  margin-bottom: 12px; // Restore original margin
   background-color: transparent; /* 배경색 제거 */
-  border-bottom: 1px dashed #E0E4EB; /* 점선 색상을 outline 색상으로 변경 */
+  border: none; // Ensure border is none if changed
+  border-bottom: 1px dashed #e0e4eb; /* 점선 색상을 outline 색상으로 변경 */
   height: 1px;
+  /* position: static; // Remove position: relative if added */
 `;
 
 export default GraphChartScale2;

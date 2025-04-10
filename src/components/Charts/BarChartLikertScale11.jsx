@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { palette } from "../../assets/styles/Palette";
 import { useAtom } from "jotai";
-import { QUICK_SURVEY_STATIC_DATA } from '../../pages/AtomStates';
+import { QUICK_SURVEY_STATIC_DATA } from "../../pages/AtomStates";
 
 const BarChartLikertScale11 = ({
   onOptionSelect = () => {},
@@ -15,38 +15,42 @@ const BarChartLikertScale11 = ({
   // quickSurveyStaticData에서 데이터 추출 및 계산
   const calculateData = () => {
     const result = [];
-    const total = quickSurveyStaticData['총합']['전체총합'];
-    
+    const total = quickSurveyStaticData["총합"]["전체총합"] || 0;
+
     // 0점부터 10점까지의 데이터 생성
     for (let i = 0; i <= 10; i++) {
-      const value = quickSurveyStaticData[i.toString()]['전체총합'];
+      const value = quickSurveyStaticData[i.toString()]["전체총합"] || 0;
       const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
       result.push({ value: percentage, label: i.toString() });
     }
-    
+
     return result;
   };
 
   // NPS 점수 계산
   const calculateNpsScore = () => {
-    const total = quickSurveyStaticData['총합']['전체총합'];
+    const total = quickSurveyStaticData["총합"]["전체총합"] || 0;
     if (total === 0) return 0;
-    
+
     // Promoters (9-10점) 비율 계산
-    const promoters = quickSurveyStaticData['9']['전체총합'] + quickSurveyStaticData['10']['전체총합'];
+    const promoters =
+      quickSurveyStaticData["9"]["전체총합"] ||
+      0 + quickSurveyStaticData["10"]["전체총합"] ||
+      0;
     const promotersPercentage = Math.round((promoters / total) * 100);
-    
+
     // Detractors (0-6점) 비율 계산
-    const detractors = 
-      quickSurveyStaticData['0']['전체총합'] + 
-      quickSurveyStaticData['1']['전체총합'] + 
-      quickSurveyStaticData['2']['전체총합'] + 
-      quickSurveyStaticData['3']['전체총합'] + 
-      quickSurveyStaticData['4']['전체총합'] + 
-      quickSurveyStaticData['5']['전체총합'] + 
-      quickSurveyStaticData['6']['전체총합'];
+    const detractors =
+      quickSurveyStaticData["0"]["전체총합"] ||
+      0 + quickSurveyStaticData["1"]["전체총합"] ||
+      0 + quickSurveyStaticData["2"]["전체총합"] ||
+      0 + quickSurveyStaticData["3"]["전체총합"] ||
+      0 + quickSurveyStaticData["4"]["전체총합"] ||
+      0 + quickSurveyStaticData["5"]["전체총합"] ||
+      0 + quickSurveyStaticData["6"]["전체총합"] ||
+      0;
     const detractorsPercentage = Math.round((detractors / total) * 100);
-    
+
     // NPS = Promoters% - Detractors%
     return promotersPercentage - detractorsPercentage;
   };
@@ -100,7 +104,7 @@ const BarChartLikertScale11 = ({
               <BarItem
                 key={index}
                 onClick={() => {
-                  onOptionSelect(item.label);
+                  onOptionSelect(item.label || "0");
                   onOptionSelectIndex(index + 1);
                   onBarClick();
                 }}
@@ -108,9 +112,9 @@ const BarChartLikertScale11 = ({
                 <BarValue color={valueColor}>{item.value}%</BarValue>
                 <BarGroup>
                   <BarBackground />
-                  <BarFill height={item.value} color={barColor} />
+                  <BarFill height={item.value || 0} color={barColor} />
                 </BarGroup>
-                <BarLabel>{item.label}</BarLabel>
+                <BarLabel>{item.label || "0"}</BarLabel>
               </BarItem>
             );
           })}
