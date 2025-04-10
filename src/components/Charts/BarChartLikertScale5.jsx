@@ -16,11 +16,11 @@ const BarChartLikertScale5 = ({
   };
 
   const processData = () => {
-    const total = quickSurveyStaticData["총합"]["전체총합"];
+    const total = quickSurveyStaticData["총합"]["전체총합"] || 0;
 
     return [
       {
-        category: Object.keys(quickSurveyStaticData)[0],
+        category: Object.keys(quickSurveyStaticData)[0] || "0",
         value: calculatePercentage(
           quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]][
             "전체총합"
@@ -29,7 +29,7 @@ const BarChartLikertScale5 = ({
         ),
       },
       {
-        category: Object.keys(quickSurveyStaticData)[1],
+        category: Object.keys(quickSurveyStaticData)[1] || "0",
         value: calculatePercentage(
           quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]][
             "전체총합"
@@ -38,7 +38,7 @@ const BarChartLikertScale5 = ({
         ),
       },
       {
-        category: Object.keys(quickSurveyStaticData)[2],
+        category: Object.keys(quickSurveyStaticData)[2] || "0",
         value: calculatePercentage(
           quickSurveyStaticData[Object.keys(quickSurveyStaticData)[2]][
             "전체총합"
@@ -47,7 +47,7 @@ const BarChartLikertScale5 = ({
         ),
       },
       {
-        category: Object.keys(quickSurveyStaticData)[3],
+        category: Object.keys(quickSurveyStaticData)[3] || "0",
         value: calculatePercentage(
           quickSurveyStaticData[Object.keys(quickSurveyStaticData)[3]][
             "전체총합"
@@ -56,7 +56,7 @@ const BarChartLikertScale5 = ({
         ),
       },
       {
-        category: Object.keys(quickSurveyStaticData)[4],
+        category: Object.keys(quickSurveyStaticData)[4] || "0",
         value: calculatePercentage(
           quickSurveyStaticData[Object.keys(quickSurveyStaticData)[4]][
             "전체총합"
@@ -75,13 +75,14 @@ const BarChartLikertScale5 = ({
         <CategoryItem
           key={index}
           onClick={() => {
-            onOptionSelect(item.category);
+            onOptionSelect(item.category || "0");
             onOptionSelectIndex(index + 1);
             onBarClick();
           }}
         >
           <BarGroup>
             <BarBackground />
+
             <BarFill width={item.value} />
             <BarValue width={item.value}>{item.value}%</BarValue>
           </BarGroup>
@@ -93,8 +94,9 @@ const BarChartLikertScale5 = ({
              "5"}
           </CategoryLabel>
           <SubCategoryLabel>
-            추가 설명을 넣으려고
+            {item.category || "더미데이터"}
           </SubCategoryLabel>
+
         </CategoryItem>
       ))}
     </GraphContainer>
