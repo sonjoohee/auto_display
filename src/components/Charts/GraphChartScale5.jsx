@@ -94,22 +94,38 @@ const GraphChartScale5 = () => {
               <CategoryItem>계</CategoryItem>
             </CategoryLabels>
           </CategoryHeader>
-          <CategoriesContainer>
-            <DemographicItem>남</DemographicItem>
-            <DemographicItem>여</DemographicItem>
-            <DemographicItem>10대</DemographicItem>
-            <DemographicItem>20대</DemographicItem>
-            <DemographicItem>30대</DemographicItem>
-            <DemographicItem>40대</DemographicItem>
-            <DemographicItem>50대</DemographicItem>
-            <DemographicItem>
-              60대
-              <br />
-              이상
-            </DemographicItem>
-          </CategoriesContainer>
+          <CategoriesWrapper>
+            <GenderSection>
+              <GenderHeader>
+                <GenderText>성별</GenderText>
+                <GenderLine />
+              </GenderHeader>
+              <GenderItems>
+                <DemographicItem>남</DemographicItem>
+                <DemographicItem>여</DemographicItem>
+              </GenderItems>
+            </GenderSection>
+            <AgeSection>
+              <AgeHeader>
+                <AgeText>나이(10세 단위)</AgeText>
+                <AgeLine />
+              </AgeHeader>
+              <AgeItems>
+                <DemographicItem>10대</DemographicItem>
+                <DemographicItem>20대</DemographicItem>
+                <DemographicItem>30대</DemographicItem>
+                <DemographicItem>40대</DemographicItem>
+                <DemographicItem>50대</DemographicItem>
+                <DemographicItem>
+                  60대
+                  <br />
+                  이상
+                </DemographicItem>
+              </AgeItems>
+            </AgeSection>
+          </CategoriesWrapper>
         </HeaderRow>
-        <HorizontalLine marginTop="16px" marginBottom="0" />
+        <HorizontalLine marginTop="16px" marginBottom="0" fullWidth />
       </HeaderSection>
 
       <DataSection>
@@ -149,10 +165,6 @@ const GraphChartScale5 = () => {
                 </div>
               );
             })}
-            {/* 
-             {Object.keys(quickSurveyStaticData).slice(0, 5).map((_, index) => (
-               <ImportanceBar key={`bar-${index}`} width={calculateBarWidth(index)} />
-             ))} */}
           </BarsColumn>
         </ImportanceContainer>
 
@@ -187,6 +199,8 @@ const ChartContainer = styled.div`
   gap: 20px;
   width: 820px;
   box-sizing: border-box;
+  position: relative;
+  overflow: visible; /* 세로 라인이 컨테이너 밖으로 나갈 수 있게 변경 */
 `;
 
 const HeaderSection = styled.div`
@@ -217,14 +231,15 @@ const CategoryLabels = styled.div`
   justify-content: flex-start;
   align-items: center;
   width: 160px;
-  margin-left: 60px;
+  margin-left: 40px;
   gap: 0;
+  position: relative;
 `;
 
 const CategoryItem = styled.div`
   font-family: "Pretendard", "Poppins";
   font-weight: 700;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.2;
   text-align: center;
   letter-spacing: -0.03em;
@@ -232,30 +247,116 @@ const CategoryItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
+  height: 64px;
   &:first-child {
-    width: 60px;
+    box-sizing: border-box;
+    min-width: 25px;
+    width: 25px;
+    text-align: center;
+    justify-content: center;
+    padding: 0;
+    margin-left: 20px;
   }
   &:last-child {
     width: 62px;
-    margin-left: 60px;
+    margin-left: 140px;
   }
 `;
 
-const CategoriesContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(8, 55px);
+const CategoriesWrapper = styled.div`
+  display: flex;
   margin-left: 12px;
   gap: 4px;
-  align-items: center;
+  align-items: flex-end;
   width: 455px;
+`;
+
+const GenderSection = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+`;
+
+const GenderHeader = styled.div`
+  position: absolute;
+  top: -30px;
+  left: 0;
+  width: 114px; /* 남성, 여성 컬럼 너비 합계 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+`;
+
+const GenderText = styled.div`
+  font-family: "Pretendard", "Poppins";
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: center;
+  letter-spacing: -0.03em;
+  color: #323232;
+  padding-top: 6px;
+`;
+
+const GenderLine = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: #E0E4EB;
+  margin-top: 12px;
+`;
+
+const GenderItems = styled.div`
+  display: flex;
+  gap: 4px;
+`;
+
+const AgeSection = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+`;
+
+const AgeHeader = styled.div`
+  position: absolute;
+  top: -30px;
+  left: 0;
+  width: 338px; /* 10대~60대 이상 컬럼 너비 합계 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+`;
+
+const AgeText = styled.div`
+  font-family: "Pretendard", "Poppins";
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: center;
+  letter-spacing: -0.03em;
+  color: #323232;
+  padding-top: 6px;
+`;
+
+const AgeLine = styled.div`
+  width: 378px;
+  height: 1px;
+  background-color: #E0E4EB;
+  margin-left: 30px;
+  margin-top: 12px;
+`;
+
+const AgeItems = styled.div`
+  display: flex;
+  gap: 4px;
 `;
 
 const DemographicItem = styled.div`
   width: 55px;
   font-family: "Pretendard", "Poppins";
   font-weight: 700;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.2;
   text-align: center;
   letter-spacing: -0.03em;
@@ -265,15 +366,18 @@ const DemographicItem = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 36px;
+  height: 44px;
+  padding-top: 40px;
 `;
 
 const HorizontalLine = styled.div`
-  width: 100%;
+  width: ${props => props.fullWidth ? "calc(100% + 48px)" : "100%"};
   height: 1px;
-  background-color: #dddddd;
+  background-color: #E0E4EB;
   margin-top: ${(props) => props.marginTop || "4px"};
   margin-bottom: ${(props) => props.marginBottom || "4px"};
+  margin-left: ${props => props.fullWidth ? "-24px" : "0"};
+  position: ${props => props.fullWidth ? "relative" : "static"};
 `;
 
 const DataSection = styled.div`
@@ -285,27 +389,23 @@ const DataSection = styled.div`
 
 const VerticalLine = styled.div`
   position: absolute;
-  height: calc(
-    100% + 98px + 20px
-  ); /* DataSection 높이(100%) + 헤더 여백(98px) + 하단 패딩 조정(20px) */
+  height: 335px; /* 원래 지정된 335px 유지 */
   width: 1px;
-  background-color: #dddddd;
+  background-color: #E0E4EB; /* 테두리와 동일한 색상으로 변경 */
   left: 303px; /* ImportanceContainer 너비(291px) + 약간의 간격(12px) */
-  top: -70px; /* 헤더 여백만큼 위로 확장 */
+  top: -130px; /* -132px에서 2px 아래로 이동 */
   z-index: 1;
 `;
 
 const RightVerticalLine = styled.div`
   position: absolute;
-  height: calc(
-    100% + 70px + 20px
-  ); /* DataSection 높이(100%) + 헤더 여백(70px) + 하단 패딩 조정(20px) */
+  height: 335px; /* 원래 지정된 335px 유지 */
   width: 1px;
-  background-color: #dddddd;
+  background-color: #E0E4EB; /* 테두리와 동일한 색상으로 변경 */
   left: calc(
     303px + 55px * 2 + 4px
   ); /* 왼쪽 세로선(303px) + 남성 열 너비(55px) + 여성 열 너비(55px) + 간격(4px) */
-  top: -98px; /* 헤더 여백만큼 위로 확장 */
+  top: -130px; /* -132px에서 2px 아래로 이동 */
   z-index: 1;
 `;
 
@@ -322,8 +422,8 @@ const ImportanceLabelsColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: 25px;
-  left: 90px;
-  transform: translateX(-50%);
+  left: 120px;
+  transform: translateX(-100%);
   z-index: 1;
   top: 0;
 `;
@@ -331,16 +431,17 @@ const ImportanceLabelsColumn = styled.div`
 const ImportanceLabel = styled.div`
   font-family: "Pretendard", "Poppins";
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.55;
   letter-spacing: -0.03em;
   color: #666666;
   width: 130px;
-  text-align: center;
+  text-align: right;
   height: 16px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
+  padding-right: 0;
 `;
 
 const BarsColumn = styled.div`
@@ -348,7 +449,7 @@ const BarsColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: 25px;
-  left: 180px;
+  left: 130px;
   top: 0;
 `;
 
@@ -370,17 +471,19 @@ const ImportanceBar = styled.div`
 const BarValue = styled.div`
   font-family: "Pretendard", "Poppins";
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1;
-  text-align: left;
+  text-align: right;
   letter-spacing: -0.03em;
   color: #226fff;
   position: absolute;
-  left: calc(${(props) => props.width || 70}px + 12px);
+  right: -114px;
   top: 0;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   height: 100%;
+  width: 30px;
 `;
 
 const DataRowsContainer = styled.div`
@@ -425,11 +528,12 @@ const DataCell = styled.div`
 `;
 
 const DataSectionHorizontalLine = styled(HorizontalLine)`
-  width: 455px;
+  width: 490px;
   margin-left: 0;
   margin-top: 12px;
   margin-bottom: 12px;
-  background-color: #dddddd;
+  background-color: transparent; /* 배경색 제거 */
+  border-bottom: 1px dashed #E0E4EB; /* 점선 색상을 outline 색상으로 변경 */
   height: 1px;
 `;
 

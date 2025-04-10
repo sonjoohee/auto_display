@@ -1183,7 +1183,7 @@ const PageToolListSaas = () => {
                     </p>
                     <Body1 color="gray800">
                       <em>준비중</em>
-                      Quick Survey
+                      퀵 서베이
                     </Body1>
 
                     <div
@@ -1200,11 +1200,11 @@ const PageToolListSaas = () => {
                       <div className="text">
                         <Body1 color="white">
                           <em>준비중</em>
-                          Quick Survey
+                          퀵 서베이
                         </Body1>
                         <Caption1 color="white" align="left">
-                          소규모 그룹과의 대화를 통해 다양한 관점을 수집하고
-                          핵심 인사이트를 도출하는 도구
+                          핵심 페르소나 그룹의 빠른 의견을 수집하고
+                          인사이트를 도출할 수 있는 빠른 리서치 도구
                         </Caption1>
                         <i />
                       </div>
