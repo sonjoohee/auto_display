@@ -203,6 +203,21 @@ const PageServiceLanding = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // PDF 다운로드 함수
+const handleDownload = () => {
+  // PDF 파일의 경로 (public 폴더 내 위치)
+  const pdfUrl = '/pdf/interviewX.pdf';
+  
+  // PDF 파일 다운로드
+  const link = document.createElement('a');
+  link.href = pdfUrl;
+  link.download = 'interviewX.pdf';  // 다운로드될 파일명
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+
   return (
     <>
       <Header scrollPosition={scrollPosition}>
@@ -263,6 +278,13 @@ const PageServiceLanding = () => {
           >
             나의 X 만나기
           </Button>
+          {/* <Button
+            // type="button"
+            style={{ paddingTop: "10px" }}
+            onClick={handleDownload}
+          >
+            회사 소개서 
+          </Button> */}
         </div>
 
         <div className="img">
