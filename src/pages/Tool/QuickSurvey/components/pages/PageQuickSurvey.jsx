@@ -1536,7 +1536,9 @@ const PageQuickSurvey = () => {
                         </TabContent5Item>
                       ) : (
                         <TabContent5Item>
-                          <InterviewModeSelection style={{ marginTop: '-16px' }}>
+                          <InterviewModeSelection
+                            style={{ marginTop: "-16px" }}
+                          >
                             <InterviewModeCard
                               isActive={interviewModeType === "selfQuestion"}
                               onClick={() => {
@@ -1850,10 +1852,6 @@ const PageQuickSurvey = () => {
                           응답자 의견 확인
                         </Button>
                       </div>
-                    </InsightAnalysis>
-
-                    <InsightAnalysis>
-                      <div className="title"></div>
                     </InsightAnalysis>
 
                     <InsightAnalysis>
