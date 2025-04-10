@@ -17,7 +17,9 @@ import { Button } from "../../../../../assets/styles/ButtonStyle";
 import { CheckBoxButton } from '../../../../../assets/styles/InputStyle';
 import { palette } from '../../../../../assets/styles/Palette';
 
-const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disabled, question }) => {
+
+
+const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disabled, question, onAnswerChange }) => {
   const [showQuestions, setShowQuestions] = useState(false);
 
   const handleQuestionClick = () => {
@@ -140,78 +142,53 @@ const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disable
                 </BgBoxItem>
               ))
             ) : id === 'nps' ? (
-              // NPS일 때
-              <div style={{ 
-                // display: 'flex', 
-                // flexDirection: 'column',
-                // gap: '8px',
-                // width: '100%'
-              }}>
-                <div style={{ 
-                  display: 'flex', 
-                  gap: '8px', 
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '12px 16px',
-                  width: '100%'
-                }}>
-                  {[...Array(11)].map((_, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        width: '52px',
-                        height: '64px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: palette.gray50,
-                        borderRadius: '4px'
-                      }}
-                    >
-                      <Body3 color="gray700">{index}</Body3>
-                    </div>
-                  ))}
-                </div>
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  padding: '0 16px',
-                  width: '100%'
-                }}>
-                  <Body3 color="gray500">전혀 추천하고 싶지 않다</Body3>
-                  <Body3 color="gray500">매우 추천하고 싶다</Body3>
-                </div>
-              </div>
+              <NPSContainer>
+                <NPSButtonsWrapper>
+                  {[...Array(11)].map((_, index) => {
+                    const isOptionSelected = question[id].answer === index;
+                    
+                    return (
+                      <NPSButton
+                        key={index}
+                        isSelected={isOptionSelected}
+                        onClick={() => onAnswerChange(id, index)}
+                      >
+                        <NPSButtonText isSelected={isOptionSelected}>
+                          {index}
+                        </NPSButtonText>
+                      </NPSButton>
+                    );
+                  })}
+                </NPSButtonsWrapper>
+                <NPSLabelContainer>
+                  <NPSLabel>전혀 추천하고 싶지 않다</NPSLabel>
+                  <NPSLabel>매우 추천하고 싶다</NPSLabel>
+                </NPSLabelContainer>
+              </NPSContainer>
             ) : id === 'importance' ? (
-              // importance일 때
-              <div style={{ 
-                display: 'flex', 
-                gap: '8px', 
-                alignItems: 'center',
-                padding: '12px 16px',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-              }}>
-                {question[id].options.map((option) => (
-                  <div
-                    key={option}
-                    style={{
-                      height: '80px',
-                      padding: ' 12px',
-                      backgroundColor: palette.gray50,
-                      borderRadius: '16px',
-                      border: 'none',
-                      minWidth: '120px',
-                      textAlign: 'center',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <Body3 color="gray700">{option}</Body3>
-                  </div>
-                ))}
-              </div>
+              <ImportanceContainer>
+                <ImportanceButtonsWrapper>
+                  {question[id].options.map((option) => {
+                    const isOptionSelected = question[id].answer === option;
+                    const formattedText = option === '전혀 중요하지 않음' ? '전혀\n중요하지 않음' :
+                                        option === '중요하지 않음' ? '중요하지\n않음' :
+                                        option === '매우 중요함' ? '매우\n중요함' :
+                                        option;
+                    
+                    return (
+                      <ImportanceButton
+                        key={option}
+                        isSelected={isOptionSelected}
+                        onClick={() => onAnswerChange(id, option)}
+                      >
+                        <ImportanceButtonText isSelected={isOptionSelected}>
+                          {formattedText}
+                        </ImportanceButtonText>
+                      </ImportanceButton>
+                    );
+                  })}
+                </ImportanceButtonsWrapper>
+              </ImportanceContainer>
             ) : (
               // single_choice일 때
               details.map((detail, index) => (
@@ -249,15 +226,124 @@ const BgBoxItem = styled.div`
 
 export default MoleculeDesignItem;
 
-// const CheckCircle = styled.div`
-//   width: 24px;
-//   height: 24px;
-//   border-radius: 50%;
-//   cursor: pointer;
-//   background-image: ${(props) =>
-//     props.$isChecked
-//       ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
-//       : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11.5' stroke='%23E0E4EB'/%3E%3C/svg%3E")`};
-//   transition: background-image 0.3s ease-in-out;
-//   cursor: pointer;
-// `;
+
+const ImportanceContainer = styled.div`
+   display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+`;
+
+const ImportanceDivider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: #E0E4EB;
+`;
+
+const ImportanceButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: stretch;
+  gap: 20px;
+  width: 100%;
+`;
+
+const ImportanceButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  background-color: ${props => props.isSelected ? '#226FFF' : '#F7F8FA'};
+  border: 1px solid #E0E4EB;
+  border-radius: 10px;
+  height: 80px;
+  flex: 1;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: ${props => props.isSelected ? '#226FFF' : '#EAECF0'};
+  }
+`;
+
+const ImportanceButtonText = styled.span`
+  font-family: 'Pretendard', 'Poppins';
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.55;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: ${props => props.isSelected ? '#FFFFFF' : '#666666'};
+  white-space: pre-line;
+`;
+
+const NPSContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+`;
+
+const NPSDivider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: #E0E4EB;
+`;
+
+const NPSButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: stretch;
+  gap: 16px;
+  width: 100%;
+`;
+
+const NPSButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: ${props => props.isSelected ? '#226FFF' : '#F7F8FA'};
+  border: 1px solid #E0E4EB;
+  border-radius: 10px;
+  height: 64px;
+  flex: 1;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: ${props => props.isSelected ? '#226FFF' : '#EAECF0'};
+  }
+`;
+
+const NPSButtonText = styled.span`
+  font-family: 'Pretendard', 'Poppins';
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.55;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: ${props => props.isSelected ? '#FFFFFF' : '#666666'};
+`;
+
+const NPSLabelContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const NPSLabel = styled.span`
+  font-family: 'Pretendard', 'Poppins';
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.55;
+  letter-spacing: -0.03em;
+  color: #666666;
+`;
