@@ -154,17 +154,17 @@ const GraphChartScale11 = () => {
 };
 
 const importanceLabels = [
-  "(매우 추천함) 10점",
-  "9점",
-  "8점",
-  "7점",
-  "6점",
-  "5점",
-  "4점",
-  "3점",
-  "2점",
-  "1점",
   "(전혀 추천하지 않음) 0점",
+  "1점",
+  "2점",
+  "3점",
+  "4점",
+  "5점",
+  "6점",
+  "7점",
+  "8점",
+  "9점",
+  "(매우 추천함) 10점",
 ];
 
 const ChartContainer = styled.div`
@@ -273,7 +273,7 @@ const GenderText = styled.div`
 const GenderLine = styled.div`
   width: 100%;
   height: 1px;
-  background-color: #E0E4EB;
+  background-color: #e0e4eb;
   margin-top: 12px;
 `;
 
@@ -314,7 +314,7 @@ const AgeText = styled.div`
 const AgeLine = styled.div`
   width: 378px;
   height: 1px;
-  background-color: #E0E4EB;
+  background-color: #e0e4eb;
   margin-left: 26px;
   margin-top: 12px;
 `;
@@ -344,13 +344,13 @@ const DemographicItem = styled.div`
 `;
 
 const HorizontalLine = styled.div`
-  width: ${props => props.fullWidth ? "calc(100% + 48px)" : "100%"};
+  width: ${(props) => (props.fullWidth ? "calc(100% + 48px)" : "100%")};
   height: 1px;
-  background-color: #E0E4EB;
+  background-color: #e0e4eb;
   margin-top: ${(props) => props.marginTop || "4px"};
   margin-bottom: ${(props) => props.marginBottom || "4px"};
-  margin-left: ${props => props.fullWidth ? "-24px" : "0"};
-  position: ${props => props.fullWidth ? "relative" : "static"};
+  margin-left: ${(props) => (props.fullWidth ? "-24px" : "0")};
+  position: ${(props) => (props.fullWidth ? "relative" : "static")};
 `;
 
 const DataSection = styled.div`
@@ -362,9 +362,11 @@ const DataSection = styled.div`
 
 const VerticalLine = styled.div`
   position: absolute;
-  height: calc(100% + 130px + 24px + 17px); /* DataSection 높이(100%) + 상단 확장(130px) + 하단 패딩(24px) + 추가 높이(17px) */
+  height: calc(
+    100% + 130px + 24px + 17px
+  ); /* DataSection 높이(100%) + 상단 확장(130px) + 하단 패딩(24px) + 추가 높이(17px) */
   width: 1px;
-  background-color: #E0E4EB; 
+  background-color: #e0e4eb;
   left: 303px;
   top: -147px; /* 기존 -130px에서 17px 더 위로 확장 */
   z-index: 1;
@@ -372,9 +374,11 @@ const VerticalLine = styled.div`
 
 const RightVerticalLine = styled.div`
   position: absolute;
-  height: calc(100% + 130px + 24px + 17px); /* DataSection 높이(100%) + 상단 확장(130px) + 하단 패딩(24px) + 추가 높이(17px) */
+  height: calc(
+    100% + 130px + 24px + 17px
+  ); /* DataSection 높이(100%) + 상단 확장(130px) + 하단 패딩(24px) + 추가 높이(17px) */
   width: 1px;
-  background-color: #E0E4EB;
+  background-color: #e0e4eb;
   left: calc(
     303px + 55px * 2 + 4px
   ); /* 왼쪽 세로선(303px) + 남성 열 너비(55px) + 여성 열 너비(55px) + 간격(4px) */
@@ -500,7 +504,7 @@ const DataSectionHorizontalLine = styled(HorizontalLine)`
   margin-top: 12px;
   margin-bottom: 12px;
   background-color: transparent; /* 배경색 제거 */
-  border-bottom: 1px dashed #E0E4EB; /* 점선 색상을 outline 색상으로 변경 */
+  border-bottom: 1px dashed #e0e4eb; /* 점선 색상을 outline 색상으로 변경 */
   height: 1px;
 `;
 
