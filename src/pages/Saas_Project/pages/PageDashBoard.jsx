@@ -278,23 +278,34 @@ const PageDashBoard = () => {
       ];
 
       // My Persona 데이터
-      const myPersonaData = [
-        {
-          label: "비활성 페르소나",
-          value: myPersonaStats.inactive || 0,
-          color: palette.outlineGray,
-        },
-        {
-          label: "생성 중",
-          value: myPersonaStats.generating || 0,
-          color: "#32ADE6",
-        },
-        {
-          label: "활성 페르소나",
-          value: myPersonaStats.active || 0,
-          color: palette.primary,
-        },
-      ];
+      let myPersonaData;
+      if (myPersonaStats.total === 0) {
+        myPersonaData = [
+          {
+            label: "데이터 없음",
+            value: 1, // 차트 렌더링을 위한 값
+            color: "#f0f0f0", // 연한 회색
+          },
+        ];
+      } else {
+        myPersonaData = [
+          {
+            label: "비활성 페르소나",
+            value: myPersonaStats.inactive || 0,
+            color: "#E0E4EB", // 비활성 색상 일치
+          },
+          {
+            label: "생성 중",
+            value: myPersonaStats.generating || 0,
+            color: "#A8BFFF", // 생성 중 색상 일치
+          },
+          {
+            label: "활성 페르소나",
+            value: myPersonaStats.active || 0,
+            color: palette.primary, // 활성 색상 유지
+          },
+        ];
+      }
 
       // 각각의 차트 생성
       createPieChart(macroChartRef, macroData);
@@ -445,11 +456,11 @@ const PageDashBoard = () => {
                 </H2>
 
                 <TooltipButton onClick={() => setShowTooltip(!showTooltip)}>
-                  <Sub3 color="gray500">페르소나 유형 알아보기</Sub3>
+                  <Sub3 color="gray500">페르소나 상태 알아보기</Sub3>
                   {showTooltip && (
                     <TooltipContent>
                       <TooltipHeader>
-                        페르소나 유형 알아보기
+                        페르소나 상태 알아보기
                         <span />
                       </TooltipHeader>
 
@@ -498,10 +509,19 @@ const PageDashBoard = () => {
                     <div className="title">
                       <Body1 color="gray700" align="left">
                         Macro Segment
-
-                        <TooltipButtonType2 
-                          onMouseEnter={() => setTooltips(prev => ({...prev, macroSegment: true}))}
-                          onMouseLeave={() => setTooltips(prev => ({...prev, macroSegment: false}))}
+                        <TooltipButtonType2
+                          onMouseEnter={() =>
+                            setTooltips((prev) => ({
+                              ...prev,
+                              macroSegment: true,
+                            }))
+                          }
+                          onMouseLeave={() =>
+                            setTooltips((prev) => ({
+                              ...prev,
+                              macroSegment: false,
+                            }))
+                          }
                         >
                           {tooltips.macroSegment && (
                             <TooltipContent Top>
@@ -514,7 +534,10 @@ const PageDashBoard = () => {
 
                               <TooltipBody>
                                 <Sub3 color="gray700" align="left">
-                                  제품/서비스의 주요 특성에 따라 나뉜 비슷한 특성의 고객 그룹을 제시합니다. 제품의 성격에 맞는 크고 대표적인 사용자 군을 확인할 수 있어요.
+                                  제품/서비스의 주요 특성에 따라 나뉜 비슷한
+                                  특성의 고객 그룹을 제시합니다. 제품의 성격에
+                                  맞는 크고 대표적인 사용자 군을 확인할 수
+                                  있어요.
                                 </Sub3>
                               </TooltipBody>
                             </TooltipContent>
@@ -556,10 +579,19 @@ const PageDashBoard = () => {
                     <div className="title">
                       <Body1 color="gray700" align="left">
                         Unique User
-
-                        <TooltipButtonType2 
-                          onMouseEnter={() => setTooltips(prev => ({...prev, uniqueUser: true}))}
-                          onMouseLeave={() => setTooltips(prev => ({...prev, uniqueUser: false}))}
+                        <TooltipButtonType2
+                          onMouseEnter={() =>
+                            setTooltips((prev) => ({
+                              ...prev,
+                              uniqueUser: true,
+                            }))
+                          }
+                          onMouseLeave={() =>
+                            setTooltips((prev) => ({
+                              ...prev,
+                              uniqueUser: false,
+                            }))
+                          }
                         >
                           {tooltips.uniqueUser && (
                             <TooltipContent Top>
@@ -572,7 +604,10 @@ const PageDashBoard = () => {
 
                               <TooltipBody>
                                 <Sub3 color="gray700" align="left">
-                                  제품을 일반적인 방식과 다르게, 자신만의 방식으로 활용하는 특별한 사용자를 제시합니다. 창의적이고 독특한 사용 사례를 통해 새로운 인사이트를 얻을 수 있어요.
+                                  제품을 일반적인 방식과 다르게, 자신만의
+                                  방식으로 활용하는 특별한 사용자를 제시합니다.
+                                  창의적이고 독특한 사용 사례를 통해 새로운
+                                  인사이트를 얻을 수 있어요.
                                 </Sub3>
                               </TooltipBody>
                             </TooltipContent>
@@ -612,10 +647,19 @@ const PageDashBoard = () => {
                     <div className="title">
                       <Body1 color="gray700" align="left">
                         Key Stakeholder
-
-                        <TooltipButtonType2 
-                          onMouseEnter={() => setTooltips(prev => ({...prev, keyStakeholder: true}))}
-                          onMouseLeave={() => setTooltips(prev => ({...prev, keyStakeholder: false}))}
+                        <TooltipButtonType2
+                          onMouseEnter={() =>
+                            setTooltips((prev) => ({
+                              ...prev,
+                              keyStakeholder: true,
+                            }))
+                          }
+                          onMouseLeave={() =>
+                            setTooltips((prev) => ({
+                              ...prev,
+                              keyStakeholder: false,
+                            }))
+                          }
                         >
                           {tooltips.keyStakeholder && (
                             <TooltipContent Top>
@@ -628,7 +672,10 @@ const PageDashBoard = () => {
 
                               <TooltipBody>
                                 <Sub3 color="gray700" align="left">
-                                  제품이나 프로젝트에 직접적인 영향을 주는 전문가 및 주요 의사결정자를 제시합니다. 기획부터 운영까지, 중요한 의견과 판단을 내릴 수 있는 핵심 인물들이에요.
+                                  제품이나 프로젝트에 직접적인 영향을 주는
+                                  전문가 및 주요 의사결정자를 제시합니다.
+                                  기획부터 운영까지, 중요한 의견과 판단을 내릴
+                                  수 있는 핵심 인물들이에요.
                                 </Sub3>
                               </TooltipBody>
                             </TooltipContent>
@@ -670,10 +717,19 @@ const PageDashBoard = () => {
                     <div className="title">
                       <Body1 color="gray700" align="left">
                         My Persona
-
-                        <TooltipButtonType2 
-                          onMouseEnter={() => setTooltips(prev => ({...prev, myPersona: true}))}
-                          onMouseLeave={() => setTooltips(prev => ({...prev, myPersona: false}))}
+                        <TooltipButtonType2
+                          onMouseEnter={() =>
+                            setTooltips((prev) => ({
+                              ...prev,
+                              myPersona: true,
+                            }))
+                          }
+                          onMouseLeave={() =>
+                            setTooltips((prev) => ({
+                              ...prev,
+                              myPersona: false,
+                            }))
+                          }
                         >
                           {tooltips.myPersona && (
                             <TooltipContent Top>
@@ -686,7 +742,10 @@ const PageDashBoard = () => {
 
                               <TooltipBody>
                                 <Sub3 color="gray700" align="left">
-                                  원하는 사용자 유형을 입력하면, 그에 적합한 페르소나를 자동으로 제시합니다. 아이디어 단계에서 목표 사용자를 빠르게 그려볼 수 있어요.
+                                  원하는 사용자 유형을 입력하면, 그에 적합한
+                                  페르소나를 자동으로 제시합니다. 아이디어
+                                  단계에서 목표 사용자를 빠르게 그려볼 수
+                                  있어요.
                                 </Sub3>
                               </TooltipBody>
                             </TooltipContent>

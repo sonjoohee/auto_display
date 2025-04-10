@@ -13,13 +13,12 @@ const ABGraph = ({
   const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
   const [quickSurveySurveyMethod] = useAtom(QUICK_SURVEY_SURVEY_METHOD);
 
-
   const getBarHeight = (value) => {
     // console.log("getBarHeight value:", value);
     // 최소 높이와 최대 높이 설정
     const minHeight = 50;
     const maxHeight = 200;
-    
+
     // 백분율 값에 따라 선형적으로 높이 계산
     // 0%일 때 minHeight, 100%일 때 maxHeight가 되도록 설정
     const height = minHeight + (value / 100) * (maxHeight - minHeight);
@@ -35,11 +34,15 @@ const ABGraph = ({
 
   // 데이터 계산
   const getABData = () => {
-    const totalSum = quickSurveyStaticData["총합"]["전체총합"];
+    const totalSum = quickSurveyStaticData["총합"]["전체총합"] || 0;
     const aValue =
-      quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]]["전체총합"];
+      quickSurveyStaticData[Object.keys(quickSurveyStaticData)[0]][
+        "전체총합"
+      ] || 0;
     const bValue =
-      quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]]["전체총합"];
+      quickSurveyStaticData[Object.keys(quickSurveyStaticData)[1]][
+        "전체총합"
+      ] || 0;
 
     return {
       a: calculatePercentage(aValue, totalSum),
@@ -53,37 +56,37 @@ const ABGraph = ({
     <GraphContainer>
       <BarContainer>
         <BarWrapper>
-
           <BarItem
             onClick={() => {
-              onOptionSelect(quickSurveySurveyMethod.options[0]);
+              onOptionSelect(quickSurveySurveyMethod.options[0] || "A");
               onOptionSelectIndex("A");
               onBarClick();
             }}
           >
-            <BarValue>{calculatedData.a}%</BarValue>
-            <BarFill height={getBarHeight(calculatedData.a)} />
+            <BarValue>{calculatedData.a || 0}%</BarValue>
+            <BarFill height={getBarHeight(calculatedData.a || 0)} />
           </BarItem>
           <BarLabel>A</BarLabel>
-          <BarSubtitle>{Object.keys(quickSurveyStaticData)[0]}</BarSubtitle>
-
+          <BarSubtitle>
+            {Object.keys(quickSurveyStaticData)[0] || "A"}
+          </BarSubtitle>
         </BarWrapper>
 
         <BarWrapper>
-
           <BarItem
             onClick={() => {
-              onOptionSelect(quickSurveySurveyMethod.options[1]);
+              onOptionSelect(quickSurveySurveyMethod.options[1] || "B");
               onOptionSelectIndex("B");
               onBarClick();
             }}
           >
-            <BarValue>{calculatedData.b}%</BarValue>
-            <BarFill height={getBarHeight(calculatedData.b)} />
+            <BarValue>{calculatedData.b || 0}%</BarValue>
+            <BarFill height={getBarHeight(calculatedData.b || 0)} />
           </BarItem>
           <BarLabel>B</BarLabel>
-          <BarSubtitle>{Object.keys(quickSurveyStaticData)[1]}</BarSubtitle>
-
+          <BarSubtitle>
+            {Object.keys(quickSurveyStaticData)[1] || "B"}
+          </BarSubtitle>
         </BarWrapper>
       </BarContainer>
     </GraphContainer>
@@ -153,7 +156,7 @@ const BarLabel = styled.span`
 `;
 
 const BarSubtitle = styled.span`
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-weight: 400;
   font-size: 14px;
   line-height: 1.4;

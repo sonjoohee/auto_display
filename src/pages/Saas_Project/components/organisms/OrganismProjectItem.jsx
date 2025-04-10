@@ -26,7 +26,6 @@ import { getProjectByIdFromIndexedDB } from "../../../../utils/indexedDB";
 import PopupWrap from "../../../../assets/styles/Popup";
 
 const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
-
   const navigate = useNavigate();
 
   const [, setProjectId] = useAtom(PROJECT_ID);
@@ -34,8 +33,10 @@ const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
   const [, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
   const [, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
   const [, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
-  const [, setProjectCreateInfo] =useAtom(PROJECT_CREATE_INFO);
-  const [, setSingleInterviewQuestionList] = useAtom(SINGLE_INTERVIEW_QUESTION_LIST);
+  const [, setProjectCreateInfo] = useAtom(PROJECT_CREATE_INFO);
+  const [, setSingleInterviewQuestionList] = useAtom(
+    SINGLE_INTERVIEW_QUESTION_LIST
+  );
   const [, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
   const [, setCustomTheoryData] = useAtom(CUSTOM_THEORY_DATA);
 
@@ -81,8 +82,8 @@ const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
   };
 
   const handleDeleteClick = (e) => {
-    e.stopPropagation(); 
-    setShowTooltip(false); 
+    e.stopPropagation();
+    setShowTooltip(false);
     if (onDelete) {
       onDelete(project);
     }
@@ -115,8 +116,11 @@ const OrganismProjectItem = ({ project, onClick, isNoData, onDelete }) => {
           <div className="content">
             <div className="info">
               <Body1 color="gray800" align="left">
-                {project?.projectTitle || "전기차 충전소 안내 서비스"}
-                <span onClick={handleDotsClick}>
+                <span className="project-title-text">
+                  {project?.projectTitle ||
+                    "전기차 충전소 안차 충전소 안내 서비차 충전소 안내 서비차 충전소 안내 서비차 충전소 안내 서비차 충전소 안내 서비차 충전소 안내 서비차 충전소 안내 서비내 서비스"}
+                </span>
+                <span className="dots-wrapper" onClick={handleDotsClick}>
                   <images.ThreeDotsVertical />
                   {showTooltip && (
                     <Tooltip>
@@ -248,11 +252,21 @@ const ProjectItem = styled.div`
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 8px;
 
-        span {
+        .project-title-text {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          min-width: 0;
+          flex-grow: 1;
+        }
+
+        .dots-wrapper {
           position: relative;
           width: 24px;
           height: 24px;
+          flex-shrink: 0;
         }
       }
 
