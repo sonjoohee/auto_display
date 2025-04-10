@@ -160,6 +160,8 @@ const PageIdeaGenerator = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  console.log("toolLoading", toolLoading);
+
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {

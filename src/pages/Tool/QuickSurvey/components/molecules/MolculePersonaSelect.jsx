@@ -166,7 +166,7 @@ const MoleculePersonaSelect = ({
                       <PersonaInfo>
                         <span>{persona.gender}</span>
                         <span>
-                          {persona.age.includes("세")
+                          {persona.age.includes("세") || persona.age.endsWith("대")
                             ? persona.age
                             : `${persona.age}세`}
                         </span>
