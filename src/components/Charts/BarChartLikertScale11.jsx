@@ -156,11 +156,13 @@ const BarChartLikertScale11 = ({
 const MainContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 31px;
   padding-bottom: 16px;
   width: 820px;
+  height: 100%;
+  align-self: flex-end;
 `;
 
 const ContentContainer = styled.div`
@@ -169,12 +171,13 @@ const ContentContainer = styled.div`
   width: 636px;
   gap: 16px;
   min-height: 373px;
+  justify-content: flex-end;
 `;
 
 const BarContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-start;
   width: 100%;
   gap: 24px;
@@ -286,7 +289,7 @@ const NpsScoreContainer = styled.div`
   width: 143px;
   height: 250px;
   margin: 0;
-  transform: translateY(-20px);
+  transform: translateY(-50px);
 `;
 
 const NpsScoreHeader = styled.div`
@@ -329,3 +332,4 @@ const NpsScoreLabel = styled.div`
 `;
 
 export default BarChartLikertScale11;
+

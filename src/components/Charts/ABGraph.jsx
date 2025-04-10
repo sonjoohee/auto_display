@@ -16,7 +16,7 @@ const ABGraph = ({
   const getBarHeight = (value) => {
     // console.log("getBarHeight value:", value);
     // 최소 높이와 최대 높이 설정
-    const minHeight = 50;
+    const minHeight = 0;
     const maxHeight = 200;
 
     // 백분율 값에 따라 선형적으로 높이 계산
@@ -63,13 +63,17 @@ const ABGraph = ({
               onBarClick();
             }}
           >
-            <BarValue>{calculatedData.a || 0}%</BarValue>
-            <BarFill height={getBarHeight(calculatedData.a || 0)} />
+
+            <BarGroup>
+              <BarBackground />
+              <BarFill height={getBarHeight(calculatedData.a)} />
+              <BarValue>{calculatedData.a}%</BarValue>
+            </BarGroup>
+            <BarLabel>A</BarLabel>
+            <BarSubtitle>{Object.keys(quickSurveyStaticData)[0]}</BarSubtitle>
           </BarItem>
-          <BarLabel>A</BarLabel>
-          <BarSubtitle>
-            {Object.keys(quickSurveyStaticData)[0] || "A"}
-          </BarSubtitle>
+
+
         </BarWrapper>
 
         <BarWrapper>
@@ -80,13 +84,17 @@ const ABGraph = ({
               onBarClick();
             }}
           >
-            <BarValue>{calculatedData.b || 0}%</BarValue>
-            <BarFill height={getBarHeight(calculatedData.b || 0)} />
+
+            <BarGroup>
+              <BarBackground />
+              <BarFill height={getBarHeight(calculatedData.b)} />
+              <BarValue>{calculatedData.b}%</BarValue>
+            </BarGroup>
+            <BarLabel>B</BarLabel>
+            <BarSubtitle>{Object.keys(quickSurveyStaticData)[1]}</BarSubtitle>
           </BarItem>
-          <BarLabel>B</BarLabel>
-          <BarSubtitle>
-            {Object.keys(quickSurveyStaticData)[1] || "B"}
-          </BarSubtitle>
+
+
         </BarWrapper>
       </BarContainer>
     </GraphContainer>
@@ -97,7 +105,7 @@ const GraphContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   width: 100%;
   min-height: 380px;
 `;
@@ -125,6 +133,27 @@ const BarItem = styled.div`
   align-items: center;
 `;
 
+const BarGroup = styled.div`
+  position: relative;
+  width: 143px;
+  height: ${(props) => props.height || 200}px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  border-radius: 5px;
+`;
+
+const BarBackground = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: ${palette.background};
+  border-radius: 5px;
+`;
+
 const BarFill = styled.div`
   width: 143px;
   height: ${(props) => props.height}px;
@@ -133,6 +162,10 @@ const BarFill = styled.div`
 `;
 
 const BarValue = styled.span`
+  position: absolute;
+  top: -30px;  /* 바 상단으로부터 위쪽 간격 */
+  left: 0;
+  width: 100%;
   font-family: "Pretendard", "Poppins";
   font-weight: 600;
   font-size: 20px;
@@ -140,7 +173,6 @@ const BarValue = styled.span`
   letter-spacing: -0.03em;
   color: ${palette.primary};
   text-align: center;
-  margin-bottom: 10px;
 `;
 
 const BarLabel = styled.span`

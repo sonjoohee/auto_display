@@ -38,7 +38,7 @@ const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disable
       active={isSelected} 
       Small 
       style={{ 
-        marginBottom: '-20px',
+        marginBottom: '-26px',
         position: 'relative',
         padding: '16px'
       }}

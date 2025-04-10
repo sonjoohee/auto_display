@@ -1487,7 +1487,7 @@ const handleAnswerChange = (id, option) => {
                         </TabContent5Item>
                       ) : (
                         <TabContent5Item>
-                          <InterviewModeSelection>
+                          <InterviewModeSelection style={{ marginTop: '-16px' }}>
                             <InterviewModeCard
                               isActive={interviewModeType === "selfQuestion"}
                               onClick={() => {
@@ -2125,7 +2125,7 @@ const InterviewModeSelection = styled.div`
   gap: 20px;
   width: 100%;
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 48px;
 
   .button-container {
     display: flex;
