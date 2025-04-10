@@ -217,17 +217,17 @@ const PageQuickSurvey = () => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
       if (businessDescription && businessDescription.length === 0) {
-        const projectAnalysis =
+      const projectAnalysis =
           (project?.projectAnalysis?.business_analysis
             ? project?.projectAnalysis?.business_analysis
-            : "") +
+          : "") +
           (project?.projectAnalysis?.business_analysis &&
           project?.projectAnalysis?.file_analysis
-            ? "\n"
-            : "") +
+          ? "\n"
+          : "") +
           (project?.projectAnalysis?.file_analysis
             ? project?.projectAnalysis?.file_analysis
-            : "");
+          : "");
 
       if (project) {
         setBusinessDescription(projectAnalysis);
@@ -772,8 +772,8 @@ const PageQuickSurvey = () => {
   const handleSubmitPersonas = async () => {
     handleNextStep(2);
     // setToolSteps(2);
-    setIsLoadingReport(true);
-   
+      setIsLoadingReport(true);
+
     try {
 
       const Data = {
@@ -963,10 +963,10 @@ const PageQuickSurvey = () => {
     const detectRefresh = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
-      console.log("currentUrl", currentUrl);
+      // console.log("currentUrl", currentUrl);
       if (currentUrl.toLowerCase().includes("quicksurvey")) {
         // 세션 스토리지에서 마지막 URL 가져오기
-        console.log("세션 스토리지에서 마지막 URL 가져오기");
+        // console.log("세션 스토리지에서 마지막 URL 가져오기");
 
         const lastUrl = sessionStorage.getItem("lastUrl");
 
@@ -1047,6 +1047,32 @@ const PageQuickSurvey = () => {
       b: Math.round((totalB / overallTotal) * 100),
     };
   };
+
+  const getQuestionTitle = (type) => {
+    switch(type) {
+        case 'ab_test':
+            return '[A/B 테스트]';
+        case 'importance':
+            return '[경험 평가 질문]';
+        case 'nps':
+            return '[NPS 질문]';
+        case 'single_choice':
+            return '[단일 선택형]';
+        default:
+            return '';
+    }
+};
+
+
+const handleAnswerChange = (id, option) => {
+  setQuickSurveyAnalysis(prev => ({
+      ...prev,
+      [id]: {
+          ...prev[id],
+          answer: option
+      }
+  }));
+    };
 
   return (
     <>
@@ -1211,6 +1237,7 @@ const PageQuickSurvey = () => {
                                       )}
                                       onSelect={() => handleCheckboxChange(key)}
                                       disabled={toolSteps >= 1}
+                                      onAnswerChange={handleAnswerChange}
                                     />
                                   );
                                 }
@@ -1315,7 +1342,7 @@ const PageQuickSurvey = () => {
                               maxWidth: "100%", // 또는 특정 픽셀값
                             }}
                           >
-                            {quickSurveyAnalysis[selectedQuestion].question}
+                           <span style={{ color: "#8C8C8C" }}> {`${getQuestionTitle(selectedQuestion[0])} `} </span> {quickSurveyAnalysis[selectedQuestion].question}
                           </div>
                         </li>
                         <li style={{ alignItems: "flex-start" }}>
@@ -1489,8 +1516,8 @@ const PageQuickSurvey = () => {
                                 </CheckboxWrapper>
                                 <CardContent>
                                   <div>
-                                    <Body2
-                                      color={
+                        <Body2
+                          color={
                                         interviewModeType === "selfQuestion"
                                           ? "primary"
                                           : "gray800"
@@ -1503,7 +1530,7 @@ const PageQuickSurvey = () => {
                                       style={{ marginTop: "0px" }}
                                       color={
                                         interviewModeType === "selfQuestion"
-                                         ? "gray800"
+                              ? "gray800"
                                           : "gray500"
                                       }
                                     >
@@ -1548,12 +1575,12 @@ const PageQuickSurvey = () => {
                                       color={
                                         interviewModeType === "moderator"
                                           ? "primary"
-                                            : "gray800"
-                                        }
+                              : "gray800"
+                          }
                                       style={{ fontWeight: "700" }}
-                                   >
+                        >
                                       맞춤형 응답자 추천
-                                   </Body2>
+                        </Body2>
                                     <Body3
                                       style={{ marginTop: "0px" }}
                                       color={

@@ -9,9 +9,9 @@ import { useAtom } from "jotai";
 import {
   PERSONA_BUTTON_STATE_3,
   PROJECT_TOTAL_INFO,
-  PROJECT_SAAS,
   QUICK_SURVEY_INTERVIEW,
   QUICK_SURVEY_SURVEY_METHOD,
+  QUICK_SURVEY_SELECTED_QUESTION
 } from "../../../../AtomStates";
 import personaImages from "../../../../../assets/styles/PersonaImages";
 
@@ -32,10 +32,8 @@ const OrganismToastPopupQuickSurveyComplete = ({
   const [active, setActive] = useState(isActive);
   const [showWarning, setShowWarning] = useState(false);
   const [isLoadingPrepare, setIsLoadingPrepare] = useState(true);
-  const [interviewQuestionListState, setInterviewQuestionListState] = useState(
-    []
-  );
-  const [interviewStatus, setInterviewStatus] = useState([]);
+  const [quickSurveySelectedQuestion, ] = useAtom(QUICK_SURVEY_SELECTED_QUESTION);
+  const [, setInterviewStatus] = useState([]);
   const [answers, setAnswers] = useState({});
   const [visibleAnswers, setVisibleAnswers] = useState({});
   const [showErrorPopup, setShowErrorPopup] = useState(false);
@@ -46,12 +44,12 @@ const OrganismToastPopupQuickSurveyComplete = ({
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
         // 단일 질문 설정
-        const question = [
-          {
-            question: quickSurveySurveyMethod.question,
-          },
-        ];
-        setInterviewQuestionListState(question);
+        // const question = [
+        //   {
+        //     question: quickSurveySurveyMethod.question,
+        //   },
+        // ];
+        // setInterviewQuestionListState(question);
 
         // 단일 질문에 대한 Complete 상태 설정
         const completedStatus = ["Complete"];
@@ -118,42 +116,26 @@ const OrganismToastPopupQuickSurveyComplete = ({
               </div>
             </TypeName>
             <TextContainer>
-            <div>
-                {selectedOptionIndex && selectedOption ? `${selectedOptionIndex}. ` : ''}{answer.answer.main}
+
+              <div>
+                  {quickSurveySelectedQuestion[0] === 'ab_test' && selectedOptionIndex == null ? 
+                      `${String.fromCharCode(65 + (answer.answer.main === quickSurveySurveyMethod.options[0] ? 0 : 1))}. ${answer.answer.main}`
+                      :
+                      (quickSurveySelectedQuestion[0] === 'importance' || quickSurveySelectedQuestion[0] === 'single_choice') && selectedOptionIndex == null ?
+                      `${quickSurveySurveyMethod.options.indexOf(answer.answer.main) + 1}. ${answer.answer.main}`
+                      :
+                      quickSurveySelectedQuestion[0] === 'nps' ? 
+                      answer.answer.main
+                      :
+                      `${selectedOptionIndex ? `${selectedOptionIndex}. ` : ''}${answer.answer.main}`
+              }
               </div>
               <div style={{ marginTop: "16px" }}>{answer?.answer?.followUp}</div>
             </TextContainer>
           </AnswerItem>
         ))}
       </>
-      //   <>
-      //   {questionAnswers.map((answer, index) => (
-      //     <AnswerItem key={index}>
-      //       <TypeName>
-      //         <Thumb>
-      //           <img
-      //             src={personaImages[answer.imageKey]}
-      //             alt={answer.persona.persona_name}
-      //           />
-      //         </Thumb>
-      //         <div>
-      //           {answer.persona.persona_name}
-      //           <p>
-      //             <span>{answer.gender}</span>
-      //             <span>
-      //               {answer.age.includes("세") ? answer.age : `${answer.age}세`}
-      //             </span>
-      //             <span>{answer.job}</span>
-      //           </p>
-      //         </div>
-      //       </TypeName>
-      //       <TextContainer>
-      //         <div>{answer.answer.main}</div>
-      //         <div style={{ marginTop: '16px' }}>{answer.answer.followUp}</div>
-      //       </TextContainer>
-      //     </AnswerItem>
-      //   ))}
-      // </>
+    
     );
   };
 

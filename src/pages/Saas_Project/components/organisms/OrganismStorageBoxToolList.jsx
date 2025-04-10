@@ -431,6 +431,8 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           return "아이디어 생성기";
         case "ix_psst_multimodal":
           return "계획서 생성기";
+        case "ix_quick_survey_question":
+          return "퀵 서베이";
         default:
           return tool.type;
       }
@@ -514,6 +516,8 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           return tool.imageName?.[0]?.name || "상세 내용 없음";
           case "ix_psst_multimodal":
             return tool.fileName?.[0]?.name[0] || (tool.selectedTemplete?.[0]== 0 ? "PSST 계획서" : "");
+        case "ix_quick_survey_question":
+          return tool.goal || "상세 내용 없음";
           default:
           return tool.type;
       }
