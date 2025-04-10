@@ -83,13 +83,17 @@ const BarChartLikertScale5 = ({
           <BarGroup>
             <BarBackground />
             <BarFill width={item.value} />
-            <BarValue>{item.value}%</BarValue>
+            <BarValue width={item.value}>{item.value}%</BarValue>
           </BarGroup>
           <CategoryLabel>
-            {index + 1}. {item.category}
+            {index === 0 ? "1" : 
+             index === 1 ? "2" : 
+             index === 2 ? "3" : 
+             index === 3 ? "4" : 
+             "5"}
           </CategoryLabel>
           <SubCategoryLabel>
-            추가 설명
+            추가 설명을 넣으려고
           </SubCategoryLabel>
         </CategoryItem>
       ))}
@@ -102,8 +106,9 @@ export default BarChartLikertScale5;
 const GraphContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   gap: 44px;
+  height: 320px;
 `;
 
 const CategoryItem = styled.div`
@@ -121,7 +126,7 @@ const BarGroup = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   border-radius: 5px;
 `;
 
@@ -145,16 +150,18 @@ const BarFill = styled.div`
   border-radius: 5px;
 `;
 
-const BarValue = styled.div`
-  position: relative;
-  z-index: 2;
+const BarValue = styled.span`
+  position: absolute;
+  top: -30px;  /* 바 상단으로부터 위쪽 간격 */
+  left: 0;
+  width: 100%;
   font-family: "Pretendard", "Poppins";
   font-weight: 600;
   font-size: 20px;
   line-height: 1.55em;
   letter-spacing: -0.03em;
-  text-align: center;
   color: ${palette.primary};
+  text-align: center;
 `;
 
 const CategoryLabel = styled.div`
@@ -164,7 +171,7 @@ const CategoryLabel = styled.div`
   line-height: 1.55em;
   letter-spacing: -0.03em;
   text-align: center;
-  color: #323232;
+  color: #666666;
   width: 100%;
 `;
 
@@ -175,7 +182,12 @@ const SubCategoryLabel = styled.div`
   line-height: 1.5em;
   letter-spacing: -0.03em;
   text-align: center;
-  color: #323232;
+  color: #666666;
   width: 100%;
-  margin-top: -10px;
+  height: 60px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: -22px;
+  padding-top: 5px;
 `;
