@@ -136,6 +136,15 @@ const Description = styled.p`
   color: #8C8C8C;
   width: 150px;
   text-align: left;
+  
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  height: 54px;
+  margin: 0;
+  padding: 0;
 `;
 
 const StyledButton = styled(Button)`

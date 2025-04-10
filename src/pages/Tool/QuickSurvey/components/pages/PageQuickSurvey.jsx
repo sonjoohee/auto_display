@@ -2351,7 +2351,7 @@ const InsightContainer = styled.div`
 const InsightSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 20px;
   border-bottom: 1px solid #e0e4e8;
   padding-bottom: 16px;
 
@@ -2374,4 +2374,6 @@ const InsightContent = styled(Body3)`
 
 const InsightLabel = styled(Body3)`
   font-size: 16px;
+  font-weight: 700; /* 400에서 700으로 변경하여 bold 적용 */
+  color: ${palette.gray800}; /* 직접 색상 지정 */
 `;
