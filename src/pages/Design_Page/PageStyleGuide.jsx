@@ -149,12 +149,12 @@ const PageStyleGuide  = () => {
         <h2>Chart Components</h2>
         <FlexContainer>
           <CardPersonaSelected />
-          <BarChartLikertScale5 />
+          {/* <BarChartLikertScale5 />
           <ABGraph />
           <BarChartLikertScale11 />
           <GraphChartScale2 />
           <GraphChartScale5 />
-          <GraphChartScale11 />
+          <GraphChartScale11 /> */}
           <ImportanceButtonGroup />
           <ImportanceButtonLevel />
           <QuickSurveyCard />

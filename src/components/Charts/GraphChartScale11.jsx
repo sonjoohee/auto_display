@@ -50,22 +50,38 @@ const GraphChartScale11 = () => {
               <CategoryItem>계</CategoryItem>
             </CategoryLabels>
           </CategoryHeader>
-          <CategoriesContainer>
-            <DemographicItem>남</DemographicItem>
-            <DemographicItem>여</DemographicItem>
-            <DemographicItem>10대</DemographicItem>
-            <DemographicItem>20대</DemographicItem>
-            <DemographicItem>30대</DemographicItem>
-            <DemographicItem>40대</DemographicItem>
-            <DemographicItem>50대</DemographicItem>
-            <DemographicItem>
-              60대
-              <br />
-              이상
-            </DemographicItem>
-          </CategoriesContainer>
+          <CategoriesWrapper>
+            <GenderSection>
+              <GenderHeader>
+                <GenderText>성별</GenderText>
+                <GenderLine />
+              </GenderHeader>
+              <GenderItems>
+                <DemographicItem>남</DemographicItem>
+                <DemographicItem>여</DemographicItem>
+              </GenderItems>
+            </GenderSection>
+            <AgeSection>
+              <AgeHeader>
+                <AgeText>나이(10세 단위)</AgeText>
+                <AgeLine />
+              </AgeHeader>
+              <AgeItems>
+                <DemographicItem>10대</DemographicItem>
+                <DemographicItem>20대</DemographicItem>
+                <DemographicItem>30대</DemographicItem>
+                <DemographicItem>40대</DemographicItem>
+                <DemographicItem>50대</DemographicItem>
+                <DemographicItem>
+                  60대
+                  <br />
+                  이상
+                </DemographicItem>
+              </AgeItems>
+            </AgeSection>
+          </CategoriesWrapper>
         </HeaderRow>
-        <HorizontalLine marginTop="16px" marginBottom="0" />
+        <HorizontalLine marginTop="16px" marginBottom="0" fullWidth />
       </HeaderSection>
 
       <DataSection>
@@ -127,10 +143,7 @@ const GraphChartScale11 = () => {
                 </DataRowValues>
               </DataRowGroup>
               {rowIndex < Object.keys(data).length - 1 && (
-                <DataSectionHorizontalLine
-                  marginTop="12px"
-                  marginBottom="12px"
-                />
+                <DataSectionHorizontalLine />
               )}
             </React.Fragment>
           ))}
@@ -164,6 +177,8 @@ const ChartContainer = styled.div`
   gap: 20px;
   width: 820px;
   box-sizing: border-box;
+  position: relative;
+  overflow: visible; /* 세로 라인이 컨테이너 밖으로 나갈 수 있게 변경 */
 `;
 
 const HeaderSection = styled.div`
@@ -201,7 +216,7 @@ const CategoryLabels = styled.div`
 const CategoryItem = styled.div`
   font-family: "Pretendard", "Poppins";
   font-weight: 700;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.2;
   text-align: center;
   letter-spacing: -0.03em;
@@ -209,30 +224,112 @@ const CategoryItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
+  height: 44px;
   &:first-child {
     width: 60px;
   }
   &:last-child {
     width: 62px;
-    margin-left: 60px;
+    margin-left: 110px;
   }
 `;
 
-const CategoriesContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(8, 55px);
+const CategoriesWrapper = styled.div`
+  display: flex;
   margin-left: 12px;
   gap: 4px;
-  align-items: center;
+  align-items: flex-end;
   width: 455px;
+`;
+
+const GenderSection = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+`;
+
+const GenderHeader = styled.div`
+  position: absolute;
+  top: -30px;
+  left: 0;
+  width: 114px; /* 남성, 여성 컬럼 너비 합계 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+`;
+
+const GenderText = styled.div`
+  font-family: "Pretendard", "Poppins";
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: center;
+  letter-spacing: -0.03em;
+  color: #323232;
+  padding-top: 18px;
+`;
+
+const GenderLine = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: #E0E4EB;
+  margin-top: 12px;
+`;
+
+const GenderItems = styled.div`
+  display: flex;
+  gap: 4px;
+  margin-top: 36px;
+`;
+
+const AgeSection = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+`;
+
+const AgeHeader = styled.div`
+  position: absolute;
+  top: -30px;
+  left: 0;
+  width: 338px; /* 10대~60대 이상 컬럼 너비 합계 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+`;
+
+const AgeText = styled.div`
+  font-family: "Pretendard", "Poppins";
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.2;
+  text-align: center;
+  letter-spacing: -0.03em;
+  color: #323232;
+  padding-top: 18px;
+`;
+
+const AgeLine = styled.div`
+  width: 378px;
+  height: 1px;
+  background-color: #E0E4EB;
+  margin-left: 26px;
+  margin-top: 12px;
+`;
+
+const AgeItems = styled.div`
+  display: flex;
+  gap: 4px;
+  margin-top: 36px;
 `;
 
 const DemographicItem = styled.div`
   width: 55px;
   font-family: "Pretendard", "Poppins";
   font-weight: 700;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.2;
   text-align: center;
   letter-spacing: -0.03em;
@@ -242,15 +339,18 @@ const DemographicItem = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 36px;
+  height: 44px;
+  padding-top: 8px;
 `;
 
 const HorizontalLine = styled.div`
-  width: 100%;
+  width: ${props => props.fullWidth ? "calc(100% + 48px)" : "100%"};
   height: 1px;
-  background-color: #dddddd;
+  background-color: #E0E4EB;
   margin-top: ${(props) => props.marginTop || "4px"};
   margin-bottom: ${(props) => props.marginBottom || "4px"};
+  margin-left: ${props => props.fullWidth ? "-24px" : "0"};
+  position: ${props => props.fullWidth ? "relative" : "static"};
 `;
 
 const DataSection = styled.div`
@@ -258,6 +358,28 @@ const DataSection = styled.div`
   width: 100%;
   position: relative;
   height: 426px; /* 중요도 라벨 11개(16px) + 간격 10개(25px) = 176px + 250px = 426px */
+`;
+
+const VerticalLine = styled.div`
+  position: absolute;
+  height: calc(100% + 130px + 24px + 17px); /* DataSection 높이(100%) + 상단 확장(130px) + 하단 패딩(24px) + 추가 높이(17px) */
+  width: 1px;
+  background-color: #E0E4EB; 
+  left: 303px;
+  top: -147px; /* 기존 -130px에서 17px 더 위로 확장 */
+  z-index: 1;
+`;
+
+const RightVerticalLine = styled.div`
+  position: absolute;
+  height: calc(100% + 130px + 24px + 17px); /* DataSection 높이(100%) + 상단 확장(130px) + 하단 패딩(24px) + 추가 높이(17px) */
+  width: 1px;
+  background-color: #E0E4EB;
+  left: calc(
+    303px + 55px * 2 + 4px
+  ); /* 왼쪽 세로선(303px) + 남성 열 너비(55px) + 여성 열 너비(55px) + 간격(4px) */
+  top: -147px; /* 기존 -130px에서 17px 더 위로 확장 */
+  z-index: 1;
 `;
 
 const ImportanceContainer = styled.div`
@@ -273,7 +395,7 @@ const ImportanceLabelsColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: 25px;
-  left: 90px;
+  left: 50px;
   transform: translateX(-50%);
   z-index: 1;
   top: 0;
@@ -282,16 +404,17 @@ const ImportanceLabelsColumn = styled.div`
 const ImportanceLabel = styled.div`
   font-family: "Pretendard", "Poppins";
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.55;
   letter-spacing: -0.03em;
   color: #666666;
-  width: 170px;
-  text-align: center;
+  width: 140px;
+  text-align: right;
   height: 16px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
+  padding-right: 0;
 `;
 
 const BarsColumn = styled.div`
@@ -299,7 +422,7 @@ const BarsColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: 25px;
-  left: 180px;
+  left: 130px;
   top: 0;
 `;
 
@@ -310,6 +433,24 @@ const ImportanceBar = styled.div`
   border-radius: 2px;
   display: flex;
   align-items: center;
+`;
+
+const BarValue = styled.div`
+  font-family: "Pretendard", "Poppins";
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1;
+  text-align: right;
+  letter-spacing: -0.03em;
+  color: #226fff;
+  position: absolute;
+  left: calc(${(props) => props.width || 70}px + 62px);
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  min-width: 30px;
 `;
 
 const DataRowsContainer = styled.div`
@@ -342,7 +483,7 @@ const DataRowValues = styled.div`
 const DataCell = styled.div`
   font-family: "Pretendard", "Poppins";
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1;
   letter-spacing: -0.03em;
   color: #666666;
@@ -354,60 +495,13 @@ const DataCell = styled.div`
 `;
 
 const DataSectionHorizontalLine = styled(HorizontalLine)`
-  width: 455px;
+  width: 490px;
   margin-left: 0;
   margin-top: 12px;
   margin-bottom: 12px;
-  background-color: #dddddd;
+  background-color: transparent; /* 배경색 제거 */
+  border-bottom: 1px dashed #E0E4EB; /* 점선 색상을 outline 색상으로 변경 */
   height: 1px;
-`;
-
-const VerticalLine = styled.div`
-  position: absolute;
-  height: calc(
-    100% + 56px + 20px
-  ); /* DataSection 높이(100%) + 헤더 여백(56px) + 하단 패딩 조정(20px) */
-  width: 1px;
-  background-color: #dddddd;
-  left: 303px; /* ImportanceContainer 너비(291px) + 약간의 간격(12px) */
-  top: -56px; /* 헤더 여백만큼 위로 확장 */
-  z-index: 1;
-`;
-
-const RightVerticalLine = styled.div`
-  position: absolute;
-  height: calc(
-    100% + 56px + 20px
-  ); /* DataSection 높이(100%) + 헤더 여백(56px) + 하단 패딩 조정(20px) */
-  width: 1px;
-  background-color: #dddddd;
-  left: calc(
-    303px + 55px * 2 + 4px
-  ); /* 왼쪽 세로선(303px) + 남성 열 너비(55px) + 여성 열 너비(55px) + 간격(4px) */
-  top: -56px; /* 헤더 여백만큼 위로 확장 */
-  z-index: 1;
-`;
-
-// 바의 너비를 계산하는 함수 - 인덱스에 따라 다른 너비 반환 (최대 70px로 제한)
-const calculateBarWidth = (index) => {
-  const widths = [70, 68, 66, 64, 60, 55, 50, 45, 40, 35, 30]; // 10점부터 0점까지 내림차순으로 바 너비 설정 (최대 70px)
-  return widths[index] || 50;
-};
-
-const BarValue = styled.div`
-  font-family: "Pretendard", "Poppins";
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 1;
-  text-align: left;
-  letter-spacing: -0.03em;
-  color: #226fff;
-  position: absolute;
-  left: calc(${(props) => props.width || 70}px + 12px);
-  top: 0;
-  display: flex;
-  align-items: center;
-  height: 100%;
 `;
 
 export default GraphChartScale11;

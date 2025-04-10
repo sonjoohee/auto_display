@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { palette } from '../../assets/styles/Palette';
 import { Button } from '../../assets/styles/ButtonStyle';
+import PersonaIcon from '../../assets/images/Persona_icon_QuickSurvey.png';
 
 // 선택 여부에 따라 다른 디자인을 표시하는 카드 컴포넌트
 const CardPersonaSelected = ({ 
@@ -12,7 +13,9 @@ const CardPersonaSelected = ({
 }) => {
   return (
     <CardContainer isSelected={isSelected}>
-      <ProfileImageFrame />
+      <ProfileImageFrame>
+        <ProfileImage src={PersonaIcon} alt="Persona Icon" />
+      </ProfileImageFrame>
 
       <ContentContainer>
         <TitleFrame>
@@ -64,6 +67,13 @@ const ProfileImageFrame = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+`;
+
+const ProfileImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 const ContentContainer = styled.div`

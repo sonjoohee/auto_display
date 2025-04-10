@@ -1770,11 +1770,13 @@ const PageQuickSurvey = () => {
                           {(selectedQuestion[0] === "importance" ||
                             selectedQuestion[0] === "single_choice") &&
                             Object.keys(quickSurveyStaticData).length > 0 && (
-                              <BarChartLikertScale5
-                                onOptionSelect={setSelectedOption}
-                                onOptionSelectIndex={setSelectedOptionIndex}
-                                onBarClick={() => setShowToast(true)}
-                              />
+                              <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                                <BarChartLikertScale5
+                                  onOptionSelect={setSelectedOption}
+                                  onOptionSelectIndex={setSelectedOptionIndex}
+                                  onBarClick={() => setShowToast(true)}
+                                />
+                              </div>
                             )}
                           {selectedQuestion[0] === "nps" &&
                             Object.keys(quickSurveyStaticData).length > 0 && (
