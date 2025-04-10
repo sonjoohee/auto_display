@@ -1853,7 +1853,16 @@ const handleAnswerChange = (id, option) => {
                                     총평
                                   </InsightLabel>
                                   <InsightContent color="gray700">
-                                    {quickSurveyReport[0].total_insight}
+                                  {quickSurveySelectedQuestion[0] === 'nps' ? 
+                                      quickSurveyReport[0].total_insight
+                                      :
+                                      <>
+                                          {quickSurveyReport[0].total_insight.statistic}
+                                          <br />
+                                          <br />
+                                          {quickSurveyReport[0].total_insight.insight}
+                                      </>
+                                  }
                                   </InsightContent>
                                 </InsightSection>
 
@@ -1862,7 +1871,16 @@ const handleAnswerChange = (id, option) => {
                                     성별 의견 정리
                                   </InsightLabel>
                                   <InsightContent color="gray700">
-                                    {quickSurveyReport[0].gender_insight}
+                                  {quickSurveySelectedQuestion[0] === 'nps' ? 
+                                      quickSurveyReport[0].total_insight
+                                      :
+                                      <>
+                                          {quickSurveyReport[0].total_insight.statistic}
+                                          <br />
+                                          <br />
+                                          {quickSurveyReport[0].total_insight.insight}
+                                      </>
+                                  }
                                   </InsightContent>
                                 </InsightSection>
 
@@ -1871,7 +1889,16 @@ const handleAnswerChange = (id, option) => {
                                     연령별 의견 정리
                                   </InsightLabel>
                                   <InsightContent color="gray700">
-                                    {quickSurveyReport[0].age_insight}
+                                  {quickSurveySelectedQuestion[0] === 'nps' ? 
+                                      quickSurveyReport[0].total_insight
+                                      :
+                                      <>
+                                          {quickSurveyReport[0].total_insight.statistic}
+                                          <br />
+                                          <br />
+                                          {quickSurveyReport[0].total_insight.insight}
+                                      </>
+                                  }
                                   </InsightContent>
                                 </InsightSection>
                               </InsightContainer>
