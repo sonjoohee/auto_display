@@ -35,8 +35,9 @@ const OrganismToastPopupQuickSurveyComplete = ({
   const [quickSurveySelectedQuestion, ] = useAtom(QUICK_SURVEY_SELECTED_QUESTION);
   const [, setInterviewStatus] = useState([]);
   const [answers, setAnswers] = useState({});
-  const [visibleAnswers, setVisibleAnswers] = useState({});
+  const [visibleAnswers, setVisibleAnswers] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [filteredAnswers, setFilteredAnswers] = useState([]);
 
   //저장되었던 인터뷰 로드
   useEffect(() => {
@@ -83,15 +84,30 @@ const OrganismToastPopupQuickSurveyComplete = ({
     interviewLoading();
   }, [personaButtonState3, isComplete]);
 
-  const renderAnswersComplete = () => {
+  useEffect(() => {
+    // answers가 없으면 빈 배열 사용
     const questionAnswers = answers || [];
- 
+    
+    try {
+      const filtered = selectedOption && questionAnswers.length > 0
+        ? questionAnswers.filter(
+            (answer) => answer?.answer?.main === selectedOption
+          )
+        : questionAnswers;
+      
+      // filtered가 배열인지 확인
+      setFilteredAnswers(Array.isArray(filtered) ? filtered : []);
+    } catch (error) {
+      // 에러 발생시 빈 배열로 설정
+      setFilteredAnswers([]);
+    }
+  }, [selectedOption, answers]);
 
-    const filteredAnswers = selectedOption && questionAnswers.length > 0
-    ? questionAnswers.filter(
-        (answer) => answer?.answer?.main === selectedOption
-      )
-    : questionAnswers;
+  const renderAnswersComplete = () => {
+    // filteredAnswers가 배열인지 확인
+    if (!Array.isArray(filteredAnswers)) {
+      return null;
+    }
 
     return (
       <>
@@ -170,6 +186,7 @@ const OrganismToastPopupQuickSurveyComplete = ({
     setShowWarning(false);
   };
 
+
   // 이미 완료된 인터뷰를 확인할 때 사용 ex)인터뷰 스크립트 보기, 인터뷰 상세보기
   const renderInterviewItemsComplete = () => {
     return (
@@ -197,7 +214,7 @@ const OrganismToastPopupQuickSurveyComplete = ({
                   <img src={images.PeopleFill} alt="참여 페르소나" />
                   참여 페르소나
                 </span>
-                <span>{quickSurveyInterview.length}명</span>
+                <span>{filteredAnswers.length}명</span>
               </li>
             </ul>
           </Header>
