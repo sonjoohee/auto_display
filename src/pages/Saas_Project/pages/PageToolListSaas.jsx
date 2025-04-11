@@ -1582,12 +1582,7 @@ const PageToolListSaas = () => {
                       </div>
                     </div>
                   </ExploreCard>,
-                  <ExploreCard
-                    Report
-                    // Ready
-                    key="report-1"
-                    // {...(!accessableExpert && { Ready: true })}
-                  >
+                  <ExploreCard Report key="report-1">
                     <span>
                       <images.GridReport color={palette.gray700} />
                       Report

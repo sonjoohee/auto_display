@@ -921,7 +921,6 @@ const PageQuickSurvey = () => {
     }
   };
 
-
   const handlePresetCardSelection = (personaId) => {
     const newSelectedCards = { ...selectedPresetCards };
     // 현재 선택 상태 확인
@@ -950,7 +949,6 @@ const PageQuickSurvey = () => {
     setSelectedOptionIndex(null);
     setShowToast(true);
   };
-
 
   useEffect(() => {
     // 새로고침 감지 함수
@@ -1177,8 +1175,12 @@ const PageQuickSurvey = () => {
                           {descriptionLength} / 100
                         </Body2>
                       </FormBox>
-                      <TooltipButton >
-                      <Sub3 color="gray500">입력하신 내용을 바탕으로, 명확하고 응답이 쉬운 퀵서베이 문항(A/B, 만족도평가, NPS, 단일 선택형)으로 구성됩니다.</Sub3>
+                      <TooltipButton>
+                        <Sub3 color="gray500">
+                          입력하신 내용을 바탕으로, 명확하고 응답이 쉬운
+                          퀵서베이 문항(A/B, 만족도평가, NPS, 단일 선택형)으로
+                          구성됩니다.
+                        </Sub3>
                       </TooltipButton>
                     </TabContent5Item>
                   </div>
@@ -1277,7 +1279,6 @@ const PageQuickSurvey = () => {
                           </Button>
                         </div>
                       ) : (
-                      
                         <Button
                           Other
                           Primary
@@ -2337,14 +2338,11 @@ const InsightLabel = styled(Body3)`
   color: ${palette.gray800}; /* 직접 색상 지정 */
 `;
 
-
 const TooltipButton = styled.div`
   position: relative;
   display: flex;
-  align-items : flex-start;
-  // justify-content: center;
+  align-items: flex-start;
   gap: 4px;
-  // padding: 4px 8px;
   padding: 12px;
   border-radius: 15px;
   background: ${palette.chatGray};
@@ -2363,6 +2361,6 @@ const TooltipButton = styled.div`
     color: ${palette.gray500};
     border: 1px solid ${palette.gray500};
     content: "!";
-     margin-top: 2px;  // 아래로 내리기 위해 추가
+    margin-top: 3.5px; // 아래로 내리기 위해 추가
   }
 `;
