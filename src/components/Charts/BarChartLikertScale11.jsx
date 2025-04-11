@@ -34,23 +34,23 @@ const BarChartLikertScale11 = ({
 
     // Promoters (9-10점) 비율 계산
     const promoters =
-      quickSurveyStaticData["9"]["전체총합"] ||
-      0 + quickSurveyStaticData["10"]["전체총합"] ||
-      0;
+      (quickSurveyStaticData["9"]["전체총합"] || 0) +
+      (quickSurveyStaticData["10"]["전체총합"] || 0);
     const promotersPercentage = Math.round((promoters / total) * 100);
 
     // Detractors (0-6점) 비율 계산
     const detractors =
-      quickSurveyStaticData["0"]["전체총합"] ||
-      0 + quickSurveyStaticData["1"]["전체총합"] ||
-      0 + quickSurveyStaticData["2"]["전체총합"] ||
-      0 + quickSurveyStaticData["3"]["전체총합"] ||
-      0 + quickSurveyStaticData["4"]["전체총합"] ||
-      0 + quickSurveyStaticData["5"]["전체총합"] ||
-      0 + quickSurveyStaticData["6"]["전체총합"] ||
-      0;
+      (quickSurveyStaticData["0"]["전체총합"] || 0) +
+      (quickSurveyStaticData["1"]["전체총합"] || 0) +
+      (quickSurveyStaticData["2"]["전체총합"] || 0) +
+      (quickSurveyStaticData["3"]["전체총합"] || 0) +
+      (quickSurveyStaticData["4"]["전체총합"] || 0) +
+      (quickSurveyStaticData["5"]["전체총합"] || 0) +
+      (quickSurveyStaticData["6"]["전체총합"] || 0);
     const detractorsPercentage = Math.round((detractors / total) * 100);
 
+    console.log("🚀 ~ calculateNpsScore ~ promoters:", promoters);
+    console.log("🚀 ~ calculateNpsScore ~ detractors:", detractors);
     // NPS = Promoters% - Detractors%
     return promotersPercentage - detractorsPercentage;
   };

@@ -372,10 +372,14 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [, setProjectAnalysisMultimodalKeyMessage] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE
   );
-  const [, setQuickSurveyProjectDescription] = useAtom(QUICK_SURVEY_PROJECT_DESCRIPTION);
-  const [, setQuickSurveySelectedQuestion] = useAtom(QUICK_SURVEY_SELECTED_QUESTION);
+  const [, setQuickSurveyProjectDescription] = useAtom(
+    QUICK_SURVEY_PROJECT_DESCRIPTION
+  );
+  const [, setQuickSurveySelectedQuestion] = useAtom(
+    QUICK_SURVEY_SELECTED_QUESTION
+  );
   const [, setQuickSurveyAnalysis] = useAtom(QUICK_SURVEY_ANALYSIS);
-  const [, setQuickSurveyCustomGuide] = useAtom( QUICK_SURVEY_CUSTOM_GUIDE);
+  const [, setQuickSurveyCustomGuide] = useAtom(QUICK_SURVEY_CUSTOM_GUIDE);
   const [, setQuickSurveyPresetData] = useAtom(QUICK_SURVEY_PRESET_DATA);
   const [, setquickSurveyPersonaGroup] = useAtom(QUICK_SURVEY_PERSONA_GROUP);
   const [, setQuickSurveyInterview] = useAtom(QUICK_SURVEY_INTERVIEW);
@@ -383,8 +387,12 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [, setQuickSurveyReport] = useAtom(QUICK_SURVEY_REPORT);
   const [, setQuickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
   const [, setQuickSurveyDetailInfo] = useAtom(QUICK_SURVEY_DETAIL_INFO);
-  const [, setQuickSurveyRecruitingCondition] = useAtom(QUICK_SURVEY_RECRUITING_CONDITION);
-  const [, setQuickSurveyInterviewModeType] = useAtom(QUICK_SURVEY_INTERVIEW_MODE_TYPE);
+  const [, setQuickSurveyRecruitingCondition] = useAtom(
+    QUICK_SURVEY_RECRUITING_CONDITION
+  );
+  const [, setQuickSurveyInterviewModeType] = useAtom(
+    QUICK_SURVEY_INTERVIEW_MODE_TYPE
+  );
 
   const [, setReportLoadButtonState] = useAtom(REPORT_LOAD_BUTTON_STATE);
   const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
@@ -430,7 +438,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         case "ix_idea_generator_persona":
           return "아이디어 생성기";
         case "ix_psst_multimodal":
-          return "계획서 생성기";
+          return "보고서 생성기";
         case "ix_quick_survey_question":
           return "퀵 서베이";
         default:
@@ -514,11 +522,14 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           );
         case "ix_design_emotion_analysis":
           return tool.imageName?.[0]?.name || "상세 내용 없음";
-          case "ix_psst_multimodal":
-            return tool.fileName?.[0]?.name[0] || (tool.selectedTemplete?.[0]== 0 ? "PSST 계획서" : "");
+        case "ix_psst_multimodal":
+          return (
+            tool.fileName?.[0]?.name[0] ||
+            (tool.selectedTemplete?.[0] == 0 ? "PSST 계획서" : "")
+          );
         case "ix_quick_survey_question":
           return tool.goal || "상세 내용 없음";
-          default:
+        default:
           return tool.type;
       }
     }

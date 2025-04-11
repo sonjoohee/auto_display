@@ -153,7 +153,6 @@ const PagePsstReport = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
 
   useEffect(() => {
     const interviewLoading = async () => {
@@ -259,7 +258,6 @@ const PagePsstReport = () => {
     handleNextStep(1);
     setToolSteps(1);
 
-    const timeStamp = new Date().getTime();
     const business = {
       businessModel: project.businessModel,
       projectAnalysis: project.projectAnalysis,
@@ -267,6 +265,7 @@ const PagePsstReport = () => {
       projectTitle: project.projectTitle,
       targetCountry: project.targetCountry,
     };
+    setPsstBusinessInfo(business);
     // 파일 업로드 케이스 먼저 체크
     if (uploadedFiles.length > 0) {
       try {

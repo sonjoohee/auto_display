@@ -105,7 +105,9 @@ const PageQuickSurvey = () => {
   const [quickSurveyAnalysis, setQuickSurveyAnalysis] = useAtom(
     QUICK_SURVEY_ANALYSIS
   );
-  const [quickSurveySelectedQuestion] = useAtom(QUICK_SURVEY_SELECTED_QUESTION);
+  const [quickSurveySelectedQuestion, setQuickSurveySelectedQuestion] = useAtom(
+    QUICK_SURVEY_SELECTED_QUESTION
+  );
   const [quickSurveyCustomGuide, setQuickSurveyCustomGuide] = useAtom(
     QUICK_SURVEY_CUSTOM_GUIDE
   );
@@ -1186,7 +1188,9 @@ const PageQuickSurvey = () => {
                         <CustomTextarea
                           Edit
                           rows={6}
-                          placeholder="알고 싶은 문제 및 문항에 대한 내용을 작성해 주세요."
+                          placeholder='이 서베이를 통해 어떤 정보를 얻고 싶은지 구체적으로 적어주세요. 
+예: "카메라 구매 시 소비자들이 가장 중요하게 생각하는 기능을 알고 싶습니다." 
+"건강 관련 앱에서 가장 선호되는 기능이 무엇인지 알고 싶습니다.'
                           maxLength={100}
                           status="valid"
                           value={projectDescription}
@@ -1890,8 +1894,7 @@ const PageQuickSurvey = () => {
                                     총평
                                   </InsightLabel>
                                   <InsightContent color="gray700">
-                                    {quickSurveySelectedQuestion[0] ===
-                                    "nps" ? (
+                                    {selectedQuestion[0] === "nps" ? (
                                       <>
                                         <div>
                                           {
