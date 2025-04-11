@@ -1651,38 +1651,26 @@ const PageQuickSurvey = () => {
                                   type="text"
                                   placeholder="아래 태그의 정보를 참고하여 작성해 주세요."
                                   value={recruitingCondition}
-                                  onChange={(e) =>
-                                    setRecruitingCondition(e.target.value)
-                                  }
+                                  onChange={(e) => setRecruitingCondition(e.target.value)}
                                 />
-                                {quickSurveyCustomGuide &&
-                                quickSurveyCustomGuide.length > 0 ? (
+                                {quickSurveyCustomGuide && quickSurveyCustomGuide.length > 0 ? (
                                   <div>
-                                    {quickSurveyCustomGuide.map(
-                                      (guide, index) => (
-                                        <TagButton key={index}>
-                                          <Body2
-                                            color="gray700"
-                                            style={{ fontSize: "14px" }}
-                                          >
-                                            {guide}
-                                          </Body2>
-                                        </TagButton>
-                                      )
-                                    )}
-                                  </div>
-                                ) : (
-                                  <div>
-                                    <TagButton>
-                                      <Body2
-                                        color="gray700"
-                                        style={{ fontSize: "14px" }}
+                                    {quickSurveyCustomGuide.map((guide, index) => (
+                                      <TagButton 
+                                        key={index}
+                                        onClick={() => setRecruitingCondition(guide)}  // 클릭 이벤트 추가
+                                        style={{ cursor: 'pointer' }}  // 클릭 가능함을 표시
                                       >
-                                        리쿠르팅 조건 도출
-                                      </Body2>
-                                    </TagButton>
+                                        <Body2
+                                          color="gray700"
+                                          style={{ fontSize: "14px" }}
+                                        >
+                                          {guide}
+                                        </Body2>
+                                      </TagButton>
+                                    ))}
                                   </div>
-                                )}
+                                ) : null}
                               </TabContent5Item>
 
                               <div
@@ -2178,6 +2166,9 @@ const TagButton = styled.div`
   border: none;
   margin-right: 10px;
   transition: all 0.2s ease;
+   &:hover {
+    background-color: ${props => props.isSelected ? '#226FFF' : '#EAECF0'};
+  }
 `;
 
 const InterviewModeSelection = styled.div`
