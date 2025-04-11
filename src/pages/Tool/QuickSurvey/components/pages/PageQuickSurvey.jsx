@@ -7,16 +7,11 @@ import { palette } from "../../../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
-import { Button, IconButton } from "../../../../../assets/styles/ButtonStyle";
+import { Button } from "../../../../../assets/styles/ButtonStyle";
 import images from "../../../../../assets/styles/Images";
 import {
   CustomTextarea,
-  SelectBox,
-  SelectBoxTitle,
-  SelectBoxList,
-  SelectBoxItem,
   FormBox,
-  CustomInput,
 } from "../../../../../assets/styles/InputStyle";
 import PopupWrap from "../../../../../assets/styles/Popup";
 import {
@@ -28,13 +23,8 @@ import {
   TabButtonType5,
   TabContent5,
   TabContent5Item,
-  CardGroupWrap,
-  BottomBar,
   BgBoxItem,
-  StyledDropzone,
   DropzoneStyles,
-  OCEANRangeWrap,
-  RangeSlider,
   Title,
   ListBoxGroup,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
@@ -43,15 +33,7 @@ import {
   TOOL_ID,
   TOOL_STEP,
   TOOL_LOADING,
-  DESIGN_ANALYSIS_BUSINESS_INFO,
-  DESIGN_ANALYSIS_EMOTION_ANALYSIS,
-  DESIGN_ANALYSIS_SELECTED_PERSONA,
-  DESIGN_ANALYSIS_EMOTION_TARGET,
-  DESIGN_ANALYSIS_EMOTION_SCALE,
-  DESIGN_ANALYSIS_FILE_NAMES,
-  DESIGN_ANALYSIS_FILE_ID,
   PROJECT_SAAS,
-  DESIGN_ANALYSIS_BUSINESS_TITLE,
   QUICK_SURVEY_PROJECT_DESCRIPTION,
   QUICK_SURVEY_ANALYSIS,
   QUICK_SURVEY_CUSTOM_GUIDE,
@@ -80,8 +62,6 @@ import {
   updateToolOnServer,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
-import Dropzone from "react-dropzone-uploader";
-import AnalysisItem from "../molecules/MoleculeAnalysisItem";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
 import MoleculeDetailSetting from "../molecules/MoleculeDetailSetting";
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
@@ -144,12 +124,10 @@ const PageQuickSurvey = () => {
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [fileNames, setFileNames] = useState([]);
   const [activeDesignTab, setActiveDesignTab] = useState("emotion");
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   const [isLoadingDetailSetting, setIsLoadingDetailSetting] = useState(false);
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
-  const [isEditingBusiness, setIsEditingBusiness] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
   const [projectDescription, setProjectDescription] = useState("");
   const [descriptionLength, setDescriptionLength] = useState(0);
@@ -188,6 +166,7 @@ const PageQuickSurvey = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  console.log(completedSteps);
 
   useEffect(() => {
     // 팝업이 열려있을 때 배경 스크롤 맊음
@@ -255,19 +234,25 @@ const PageQuickSurvey = () => {
         if (toolStep === undefined || toolStep === 1) {
           setActiveTab(1);
           setToolSteps(0);
+          setCompletedSteps([]);
         } else {
           setActiveTab(Math.min(toolStep, 3));
           setToolSteps(toolStep);
+          const completedStepsArray = [];
+          for (let i = 1; i <= toolStep; i++) {
+            completedStepsArray.push(i);
+          }
+          setCompletedSteps(completedStepsArray);
         }
         // setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
         // setToolSteps(toolStep ?? 1);
 
         // 완료된 단계 설정
-        const completedStepsArray = [];
-        for (let i = 1; i <= (toolStep ?? 1); i++) {
-          completedStepsArray.push(i);
-        }
-        setCompletedSteps(completedStepsArray);
+        // const completedStepsArray = [];
+        // for (let i = 1; i <= (toolStep ?? 1); i++) {
+        //   completedStepsArray.push(i);
+        // }
+        // setCompletedSteps(completedStepsArray);
 
         // 페르소나 설정 (Step 2)
 
@@ -936,18 +921,6 @@ const PageQuickSurvey = () => {
     }
   };
 
-  // const handlePresetCardSelection = (personaId) => {
-  //   setSelectedPresetCards(prev => {
-  //     // 현재 선택된 카드가 있고, 그게 클릭한 카드라면 선택 해제
-  //     if (prev[personaId]) {
-  //       return {};
-  //     }
-  //     // 새로운 카드 선택 시 이전 선택은 모두 해제하고 새로운 카드만 선택
-  //     return {
-  //       [personaId]: true
-  //     };
-  //   });
-  // };
 
   const handlePresetCardSelection = (personaId) => {
     const newSelectedCards = { ...selectedPresetCards };
@@ -977,13 +950,7 @@ const PageQuickSurvey = () => {
     setSelectedOptionIndex(null);
     setShowToast(true);
   };
-  // showToast가 변경될 때마다 selectedOption 초기화
-  // useEffect(() => {
-  //   if (!showToast) {
-  //     setSelectedOption(null);
-  //     // setSelectedOptionIndex(null);
-  //   }
-  // }, [showToast]);
+
 
   useEffect(() => {
     // 새로고침 감지 함수
@@ -1150,7 +1117,7 @@ const PageQuickSurvey = () => {
                 isActive={activeTab >= 3}
                 onClick={() => completedSteps.includes(2) && setActiveTab(3)}
                 disabled={
-                  !completedSteps.includes(2) || isLoading || isLoadingReport
+                  !completedSteps.includes(3) || isLoading || isLoadingReport
                 }
               >
                 <span>03</span>
@@ -1307,16 +1274,7 @@ const PageQuickSurvey = () => {
                           </Button>
                         </div>
                       ) : (
-                        // <Button
-                        //   Other
-                        //   Primary
-                        //   Fill
-                        //   Round
-                        //       onClick={handleSubmitBusinessInfo}
-                        //       disabled={selectedQuestion.length === 0}
-                        // >
-                        //   다음
-                        // </Button>
+                      
                         <Button
                           Other
                           Primary
@@ -1374,7 +1332,7 @@ const PageQuickSurvey = () => {
                               {" "}
                               {`${getQuestionTitle(selectedQuestion[0])} `}{" "}
                             </span>{" "}
-                            {quickSurveyAnalysis[selectedQuestion].question}
+                            {quickSurveyAnalysis[selectedQuestion]?.question}
                           </div>
                         </li>
                         <li style={{ alignItems: "flex-start" }}>
