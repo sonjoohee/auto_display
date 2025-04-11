@@ -7,28 +7,19 @@ import { palette } from "../../../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
-import { Button, IconButton } from "../../../../../assets/styles/ButtonStyle";
+import { Button } from "../../../../../assets/styles/ButtonStyle";
 import Markdown from "markdown-to-jsx";
 import PopupWrap from "../../../../../assets/styles/Popup";
 import {
   ContentsWrap,
   MainContent,
-  TabWrapType4,
-  TabButtonType4,
   TabWrapType5,
   TabButtonType5,
   TabContent5,
-  TabContent5Item,
   CardGroupWrap,
-  BottomBar,
   BgBoxItem,
-  StyledDropzone,
   DropzoneStyles,
-  OCEANRangeWrap,
-  RangeSlider,
-  Title,
   ListBoxGroup,
-  BoxWrap,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
   IS_LOGGED_IN,
@@ -46,11 +37,8 @@ import {
   PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION,
   PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE,
 } from "../../../../AtomStates";
-import images from "../../../../../assets/styles/Images";
 import {
-  H4,
   H3,
-  Sub3,
   Body1,
   Body2,
   Body3,
@@ -130,13 +118,7 @@ const PagePsstReport = () => {
   const [businessDescription, setBusinessDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [activeDesignTab, setActiveDesignTab] = useState("emotion");
   const [isLoadingReport, setIsLoadingReport] = useState(false);
-  const [businessDescriptionTitle, setBusinessDescriptionTitle] = useState("");
-  const [state] = useState({
-    isExpanded: false,
-    showQuestions: false,
-  });
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [isEditingBusiness, setIsEditingBusiness] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
@@ -164,14 +146,20 @@ const PagePsstReport = () => {
 
         // 활성 탭 설정 (기본값 1)
         // setActiveTab(Math.min((toolStep ?? 1) +1 , 3));
-        if (toolStep === undefined || toolStep === 1) {
-          setActiveTab(1);
-          setToolSteps(0);
-        } else {
-          setActiveTab(Math.min(toolStep, 3));
-          setToolSteps(toolStep);
+      if (toolStep === undefined || toolStep === 1) {
+        setActiveTab(1);
+        setToolSteps(0);
+        setCompletedSteps([]);
+      } else {
+        setActiveTab(Math.min(toolStep, 3));
+        setToolSteps(toolStep);
+        const completedStepsArray = [];
+        for (let i = 1; i <= toolStep; i++) {
+          completedStepsArray.push(i);
         }
-        // setToolSteps(toolStep ?? 1);
+        setCompletedSteps(completedStepsArray);
+      }      
+        
 
         if (fileNames) {
           setFileNames(fileNames ?? []);
@@ -181,6 +169,7 @@ const PagePsstReport = () => {
 
         if (projectAnalysisMultimodal) {
           setProjectAnalysisMultimodal(projectAnalysisMultimodal ?? "");
+          setIsCreateReportIndex(true);
         }
 
         if (projectAnalysisMultimodalKeyMessage) {
@@ -195,13 +184,7 @@ const PagePsstReport = () => {
           );
         }
 
-        // 완료된 단계 설정
-        const completedStepsArray = [];
-        for (let i = 1; i <= (toolStep ?? 1); i++) {
-          completedStepsArray.push(i);
-        }
-        setCompletedSteps(completedStepsArray ?? []);
-        // (Step 2)
+      
         if (selectedTemplete) {
           setSelectedTemplete(selectedTemplete ?? []);
         }
@@ -300,7 +283,7 @@ const PagePsstReport = () => {
         await updateToolOnServer(
           toolId,
           {
-            completedStep: 1,
+            completedStep: 2,
             projectAnalysisMultimodalKeyMessage:
               response.response.psst_analysis.report_index_key_message,
           },
@@ -361,7 +344,7 @@ const PagePsstReport = () => {
       await updateToolOnServer(
         responseToolId,
         {
-          completedStep: 1,
+          completedStep: 2,
           analysisResults: allAnalysisResults,
           business: business,
         },
@@ -422,16 +405,33 @@ const PagePsstReport = () => {
 
         setPsstFileId(["file_" + timeStamp]);
         // multimodal API 요청만 실행
-        const firstResponse = await InterviewXPsstMultimodalRequest(
+        let firstResponse = await InterviewXPsstMultimodalRequest(
           Data,
           isLoggedIn
         );
-        if (!firstResponse?.response.psst_index_multimodal) {
+
+        const maxAttempts = 10;
+        let attempts = 0;
+
+        while (
+          attempts < maxAttempts && (
+          !firstResponse ||
+          firstResponse?.repsponse === null ||
+          !firstResponse?.response?.psst_index_multimodal 
+        )
+        ) {
+          firstResponse = await InterviewXPsstMultimodalRequest(
+            Data,
+            isLoggedIn
+          );
+          console.log(firstResponse);
+          attempts++;
+        }
+        if (attempts >= maxAttempts) {
           setShowPopupError(true);
-          setIsLoading(false);
           return;
         }
-
+  
         setProjectAnalysisMultimodal(
           firstResponse.response.psst_index_multimodal
         );
@@ -475,13 +475,13 @@ const PagePsstReport = () => {
     handleNextStep(2);
     // setToolSteps(2);
     try {
-      await updateToolOnServer(
-        toolId,
-        {
-          completedStep: 2,
-        },
-        isLoggedIn
-      );
+      // await updateToolOnServer(
+      //   toolId,
+      //   {
+      //     completedStep: 2,
+      //   },
+      //   isLoggedIn
+      // );
 
       if (uploadedFiles.length > 0) {
         try {
@@ -554,21 +554,23 @@ const PagePsstReport = () => {
         setPsstReport(response.response);
 
         const maxAttempts = 10;
-        let attempt = 0;
+        let attempts = 0;
 
-        while (!response?.response) {
-          if (attempt >= maxAttempts) {
-            setShowPopupError(true);
-            return;
-          }
-
+        while (
+          attempts < maxAttempts && (
+          (!response || !response?.response) )
+        ) {
           response = await InterviewXPsstAnalysisRequest(
             apiRequestData,
-            isLoggedIn
-          );
-
-          attempt++;
+          isLoggedIn
+        );
+          attempts++;
         }
+        if (attempts >= maxAttempts) {
+          setShowPopupError(true);
+          return;
+        }
+      
         setIsLoadingReport(false);
 
         await updateToolOnServer(
@@ -784,7 +786,7 @@ const PagePsstReport = () => {
                 isActive={activeTab >= 3}
                 onClick={() => completedSteps.includes(2) && setActiveTab(3)}
                 disabled={
-                  !completedSteps.includes(2) || isLoading || isLoadingReport
+                  !completedSteps.includes(3) || isLoading || isLoadingReport
                 }
               >
                 <span>03</span>
@@ -863,7 +865,8 @@ const PagePsstReport = () => {
                           fileNames?.length === 0 ||
                           selectedTemplete.length !== 0 ||
                           isCreateReportIndex ||
-                          isLoading
+                          isLoading ||
+                          projectAnalysisMultimodal.length >0
                         }
                       >
                         목차 분석 시작
