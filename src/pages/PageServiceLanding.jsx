@@ -743,39 +743,14 @@ const PageServiceLanding = () => {
       <Section06>
         <div className="content">
           <h3>
-            비즈니스와 고객을 잇는 AI 파트너
+            <span className="medium-text">비즈니스와 고객을 잇는 AI 파트너</span>
             <br />
-            InterviewX와 함께하세요.
+            <span className="medium-text">
+              <span className="bold-text">InterviewX</span>와 함께하세요.
+            </span>
           </h3>
           <button onClick={handleDownload}>
             서비스 소개서 다운로드
-            <svg
-              width="32"
-              height="21"
-              viewBox="0 0 32 21"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g clip-path="url(#clip0_1056_6390)">
-                <path
-                  d="M1.5 15.125H30.5L25.75 10.375L23.375 8"
-                  stroke="white"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_1056_6390">
-                  <rect
-                    width="31"
-                    height="21"
-                    fill="white"
-                    transform="translate(0.5)"
-                  />
-                </clipPath>
-              </defs>
-            </svg>
           </button>
         </div>
       </Section06>
@@ -2054,7 +2029,7 @@ const Footer = styled.div`
     strong {
       font-size: 1rem;
       font-weight: 600;
-      color: ${palette.black};
+      color: ${palette.gray700};
       line-height: 1.2;
       letter-spacing: -0.48px;
 
@@ -2078,13 +2053,13 @@ const Footer = styled.div`
         gap: 20px;
         font-size: 1rem;
         font-weight: 400;
-        color: ${palette.black};
+        color: ${palette.gray700};
         line-height: 1.2;
         letter-spacing: -0.48px;
 
         ${media.mobile} {
           font-size: 0.75rem;
-          color: ${palette.gray800};
+          color: ${palette.gray700};
           gap: 8px;
           flex-wrap: wrap;
         }
@@ -2101,11 +2076,11 @@ const Footer = styled.div`
           &:before {
             width: 1px;
             height: 12px;
-            background: ${palette.black};
+            background: ${palette.gray700};
             content: "";
 
             ${media.mobile} {
-              color: ${palette.gray800};
+              color: ${palette.gray700};
             }
           }
         }
@@ -2116,7 +2091,7 @@ const Footer = styled.div`
   .copyright {
     font-size: 1rem;
     font-weight: 400;
-    color: ${palette.black};
+    color: ${palette.gray700};
     line-height: 1.2;
     letter-spacing: -0.48px;
     text-align: left;
@@ -2218,7 +2193,7 @@ const Section06 = styled.div`
     justify-content: center;
     text-align: center;
     z-index: 2;
-    gap: 32px;
+    gap: 20px;
     max-width: 1200px;
     width: 100%;
     padding: 0 20px;
@@ -2231,15 +2206,19 @@ const Section06 = styled.div`
 
   h3 {
     font-size: 28px;
-    font-weight: 700;
+    font-weight: 500; /* 기본 폰트 굵기를 medium(500)으로 변경 */
     color: #ffffff;
     line-height: 1.3;
     letter-spacing: -0.5px;
 
+    .bold-text {
+      font-weight: 700; /* InterviewX만 bold(700)로 설정 */
+    }
+
     ${media.mobile} {
-      font-size: 18px; /* 모바일에서 더 작은 폰트 사이즈 */
+      font-size: 18px;
       letter-spacing: -0.3px;
-      width: 100%; /* 텍스트가 모바일 화면에 맞게 */
+      width: 100%;
     }
   }
 
@@ -2250,7 +2229,7 @@ const Section06 = styled.div`
     color: #ffffff;
     background-color: transparent;
     border: 2px solid #ffffff;
-    border-radius: 4px; /* 50px에서 4px로 변경 */
+    border-radius: 50px;
     padding: 16px 42px;
     cursor: pointer;
     transition: all 0.3s ease;
