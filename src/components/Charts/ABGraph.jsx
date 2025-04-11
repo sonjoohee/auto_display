@@ -63,7 +63,6 @@ const ABGraph = ({
               onBarClick();
             }}
           >
-
             <BarGroup>
               <BarBackground />
               <BarFill height={getBarHeight(calculatedData.a)} />
@@ -72,8 +71,6 @@ const ABGraph = ({
             <BarLabel>A</BarLabel>
             <BarSubtitle>{Object.keys(quickSurveyStaticData)[0]}</BarSubtitle>
           </BarItem>
-
-
         </BarWrapper>
 
         <BarWrapper>
@@ -84,7 +81,6 @@ const ABGraph = ({
               onBarClick();
             }}
           >
-
             <BarGroup>
               <BarBackground />
               <BarFill height={getBarHeight(calculatedData.b)} />
@@ -93,8 +89,6 @@ const ABGraph = ({
             <BarLabel>B</BarLabel>
             <BarSubtitle>{Object.keys(quickSurveyStaticData)[1]}</BarSubtitle>
           </BarItem>
-
-
         </BarWrapper>
       </BarContainer>
     </GraphContainer>
@@ -131,6 +125,7 @@ const BarItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
 `;
 
 const BarGroup = styled.div`
@@ -163,7 +158,7 @@ const BarFill = styled.div`
 
 const BarValue = styled.span`
   position: absolute;
-  top: -30px;  /* 바 상단으로부터 위쪽 간격 */
+  top: -30px; /* 바 상단으로부터 위쪽 간격 */
   left: 0;
   width: 100%;
   font-family: "Pretendard", "Poppins";

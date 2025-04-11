@@ -1187,7 +1187,7 @@ const PageQuickSurvey = () => {
                           Edit
                           rows={6}
                           placeholder="알고 싶은 문제 및 문항에 대한 내용을 작성해 주세요."
-                          maxLength={150}
+                          maxLength={100}
                           status="valid"
                           value={projectDescription}
                           onChange={(e) => {
@@ -1203,7 +1203,7 @@ const PageQuickSurvey = () => {
                           }
                         />
                         <Body2 color="gray300" align="right">
-                          {descriptionLength} / 150
+                          {descriptionLength} / 100
                         </Body2>
                       </FormBox>
                     </TabContent5Item>
@@ -1649,24 +1649,31 @@ const PageQuickSurvey = () => {
                                   type="text"
                                   placeholder="아래 태그의 정보를 참고하여 작성해 주세요."
                                   value={recruitingCondition}
-                                  onChange={(e) => setRecruitingCondition(e.target.value)}
+                                  onChange={(e) =>
+                                    setRecruitingCondition(e.target.value)
+                                  }
                                 />
-                                {quickSurveyCustomGuide && quickSurveyCustomGuide.length > 0 ? (
+                                {quickSurveyCustomGuide &&
+                                quickSurveyCustomGuide.length > 0 ? (
                                   <div>
-                                    {quickSurveyCustomGuide.map((guide, index) => (
-                                      <TagButton 
-                                        key={index}
-                                        onClick={() => setRecruitingCondition(guide)}  // 클릭 이벤트 추가
-                                        style={{ cursor: 'pointer' }}  // 클릭 가능함을 표시
-                                      >
-                                        <Body2
-                                          color="gray700"
-                                          style={{ fontSize: "14px" }}
+                                    {quickSurveyCustomGuide.map(
+                                      (guide, index) => (
+                                        <TagButton
+                                          key={index}
+                                          onClick={() =>
+                                            setRecruitingCondition(guide)
+                                          } // 클릭 이벤트 추가
+                                          style={{ cursor: "pointer" }} // 클릭 가능함을 표시
                                         >
-                                          {guide}
-                                        </Body2>
-                                      </TagButton>
-                                    ))}
+                                          <Body2
+                                            color="gray700"
+                                            style={{ fontSize: "14px" }}
+                                          >
+                                            {guide}
+                                          </Body2>
+                                        </TagButton>
+                                      )
+                                    )}
                                   </div>
                                 ) : null}
                               </TabContent5Item>
@@ -2179,8 +2186,8 @@ const TagButton = styled.div`
   border: none;
   margin-right: 10px;
   transition: all 0.2s ease;
-   &:hover {
-    background-color: ${props => props.isSelected ? '#226FFF' : '#EAECF0'};
+  &:hover {
+    background-color: ${(props) => (props.isSelected ? "#226FFF" : "#EAECF0")};
   }
 `;
 
