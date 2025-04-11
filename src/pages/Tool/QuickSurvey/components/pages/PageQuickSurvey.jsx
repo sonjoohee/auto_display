@@ -1177,6 +1177,9 @@ const PageQuickSurvey = () => {
                           {descriptionLength} / 100
                         </Body2>
                       </FormBox>
+                      <TooltipButton >
+                      <Sub3 color="gray500">입력하신 내용을 바탕으로, 명확하고 응답이 쉬운 퀵서베이 문항(A/B, 만족도평가, NPS, 단일 선택형)으로 구성됩니다.</Sub3>
+                      </TooltipButton>
                     </TabContent5Item>
                   </div>
                   {isLoading ? (
@@ -2332,4 +2335,34 @@ const InsightLabel = styled(Body3)`
   font-size: 16px;
   font-weight: 700; /* 400에서 700으로 변경하여 bold 적용 */
   color: ${palette.gray800}; /* 직접 색상 지정 */
+`;
+
+
+const TooltipButton = styled.div`
+  position: relative;
+  display: flex;
+  align-items : flex-start;
+  // justify-content: center;
+  gap: 4px;
+  // padding: 4px 8px;
+  padding: 12px;
+  border-radius: 15px;
+  background: ${palette.chatGray};
+  z-index: 1;
+  width: 100%;
+  text-align: left;
+
+  &:before {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    font-size: 0.63rem;
+    color: ${palette.gray500};
+    border: 1px solid ${palette.gray500};
+    content: "!";
+     margin-top: 2px;  // 아래로 내리기 위해 추가
+  }
 `;
