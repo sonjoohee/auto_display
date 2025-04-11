@@ -206,27 +206,26 @@ const PageQuickSurvey = () => {
     };
   }, [showToast]);
 
-
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
 
-        const projectAnalysis =
-          (project?.projectAnalysis?.business_analysis
-            ? project?.projectAnalysis?.business_analysis
-            : "") +
-          (project?.projectAnalysis?.business_analysis &&
-          project?.projectAnalysis?.file_analysis
-            ? "\n"
-            : "") +
-          (project?.projectAnalysis?.file_analysis
-            ? project?.projectAnalysis?.file_analysis
-            : "");
+      const projectAnalysis =
+        (project?.projectAnalysis?.business_analysis
+          ? project?.projectAnalysis?.business_analysis
+          : "") +
+        (project?.projectAnalysis?.business_analysis &&
+        project?.projectAnalysis?.file_analysis
+          ? "\n"
+          : "") +
+        (project?.projectAnalysis?.file_analysis
+          ? project?.projectAnalysis?.file_analysis
+          : "");
 
-        if (project) {
-          setBusinessDescription(projectAnalysis);
-        }
-      
+      if (project) {
+        setBusinessDescription(projectAnalysis);
+      }
+
       if (toolLoading) {
         // 비즈니스 정보 설정 (Step 1)
         if (quickSurveyProjectDescription) {
@@ -364,8 +363,6 @@ const PageQuickSurvey = () => {
     setActiveTab(currentStep + 1);
     setShowPopupError(false);
   };
-
-
 
   const toggleSelectBox = (type) => {
     setSelectBoxStates((prev) => ({
@@ -612,7 +609,8 @@ const PageQuickSurvey = () => {
           business: business,
           goal: projectDescription,
           survey_method: quickSurveyAnalysis[selectedQuestion],
-          recruitment_criteria: selectedPersona?.original_description || "",
+          // recruitment_criteria: selectedPersona?.original_description || "",
+          recruitment_criteria: selectedPersona?.personaName || "",
         };
       }
 
@@ -1885,24 +1883,46 @@ const PageQuickSurvey = () => {
                                     총평
                                   </InsightLabel>
                                   <InsightContent color="gray700">
-                                    {quickSurveySelectedQuestion[0] === "nps" ? (
-                                        <>
-                                            <div>{quickSurveyReport[0]?.total_insight?.nps_score_interpretation}</div>
-                                            <br />
-                                            <div>{quickSurveyReport[0]?.total_insight?.group_response_analysis}</div>
-                                            <br />
-                                            <div>{quickSurveyReport[0]?.total_insight?.enhancement_and_improvement_insight}</div>
-                                        </>
+                                    {quickSurveySelectedQuestion[0] ===
+                                    "nps" ? (
+                                      <>
+                                        <div>
+                                          {
+                                            quickSurveyReport[0]?.total_insight
+                                              ?.nps_score_interpretation
+                                          }
+                                        </div>
+                                        <br />
+                                        <div>
+                                          {
+                                            quickSurveyReport[0]?.total_insight
+                                              ?.group_response_analysis
+                                          }
+                                        </div>
+                                        <br />
+                                        <div>
+                                          {
+                                            quickSurveyReport[0]?.total_insight
+                                              ?.enhancement_and_improvement_insight
+                                          }
+                                        </div>
+                                      </>
                                     ) : (
-                                        // 기존 non-NPS 로직
-                                        <>
-                                            {quickSurveyReport[0]?.total_insight?.statistic}
-                                            <br />
-                                            <br />
-                                            {quickSurveyReport[0]?.total_insight?.insight}
-                                        </>
+                                      // 기존 non-NPS 로직
+                                      <>
+                                        {
+                                          quickSurveyReport[0]?.total_insight
+                                            ?.statistic
+                                        }
+                                        <br />
+                                        <br />
+                                        {
+                                          quickSurveyReport[0]?.total_insight
+                                            ?.insight
+                                        }
+                                      </>
                                     )}
-                                </InsightContent>
+                                  </InsightContent>
                                 </InsightSection>
 
                                 <InsightSection>
@@ -1910,20 +1930,18 @@ const PageQuickSurvey = () => {
                                     성별 의견 정리
                                   </InsightLabel>
                                   <InsightContent color="gray700">
-                                  
-                                      <>
-                                        {
-                                          quickSurveyReport[0]?.gender_insight
-                                            ?.statistic
-                                        }
-                                        <br />
-                                        <br />
-                                        {
-                                          quickSurveyReport[0]?.gender_insight
-                                            ?.insight
-                                        }
-                                      </>
-                                
+                                    <>
+                                      {
+                                        quickSurveyReport[0]?.gender_insight
+                                          ?.statistic
+                                      }
+                                      <br />
+                                      <br />
+                                      {
+                                        quickSurveyReport[0]?.gender_insight
+                                          ?.insight
+                                      }
+                                    </>
                                   </InsightContent>
                                 </InsightSection>
 
@@ -1932,20 +1950,15 @@ const PageQuickSurvey = () => {
                                     연령별 의견 정리
                                   </InsightLabel>
                                   <InsightContent color="gray700">
-                                   
-                                      <>
-                                        {
-                                          quickSurveyReport[0].age_insight
-                                            .statistic
-                                        }
-                                        <br />
-                                        <br />
-                                        {
-                                          quickSurveyReport[0].age_insight
-                                            .insight
-                                        }
-                                      </>
-                                
+                                    <>
+                                      {
+                                        quickSurveyReport[0].age_insight
+                                          .statistic
+                                      }
+                                      <br />
+                                      <br />
+                                      {quickSurveyReport[0].age_insight.insight}
+                                    </>
                                   </InsightContent>
                                 </InsightSection>
                               </InsightContainer>
