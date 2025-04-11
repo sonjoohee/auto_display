@@ -417,11 +417,17 @@ const PageToolListSaas = () => {
   const [isComingSoon, setIsComingSoon] = useState(false);
   const [, setFloatingText] = useState("창업 MBTI 테스트");
 
-  const [, setQuickSurveyProjectDescription] = useAtom(QUICK_SURVEY_PROJECT_DESCRIPTION);
+  const [, setQuickSurveyProjectDescription] = useAtom(
+    QUICK_SURVEY_PROJECT_DESCRIPTION
+  );
   const [, setQuickSurveyAnalysis] = useAtom(QUICK_SURVEY_ANALYSIS);
-  const [, setQuickSurveySelectedQuestion] = useAtom(QUICK_SURVEY_SELECTED_QUESTION);
+  const [, setQuickSurveySelectedQuestion] = useAtom(
+    QUICK_SURVEY_SELECTED_QUESTION
+  );
   const [, setQuickSurveyDetailInfo] = useAtom(QUICK_SURVEY_DETAIL_INFO);
-  const [, setQuickSurveyRecruitingCondition] = useAtom(QUICK_SURVEY_RECRUITING_CONDITION);
+  const [, setQuickSurveyRecruitingCondition] = useAtom(
+    QUICK_SURVEY_RECRUITING_CONDITION
+  );
   const [, setQuickSurveySurveyMethod] = useAtom(QUICK_SURVEY_SURVEY_METHOD);
   const [, setQuickSurveyCustomGuide] = useAtom(QUICK_SURVEY_CUSTOM_GUIDE);
   const [, setQuickSurveyPresetData] = useAtom(QUICK_SURVEY_PRESET_DATA);
@@ -429,8 +435,9 @@ const PageToolListSaas = () => {
   const [, setQuickSurveyInterview] = useAtom(QUICK_SURVEY_INTERVIEW);
   const [, setQuickSurveyReport] = useAtom(QUICK_SURVEY_REPORT);
   const [, setQuickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
-  const [, setQuickSurveyInterviewModeType] = useAtom(QUICK_SURVEY_INTERVIEW_MODE_TYPE);
-  
+  const [, setQuickSurveyInterviewModeType] = useAtom(
+    QUICK_SURVEY_INTERVIEW_MODE_TYPE
+  );
 
   // 초기화 useEffect
   useEffect(() => {
@@ -1182,8 +1189,7 @@ const PageToolListSaas = () => {
                       <img src={images.ImgExplore15} alt="" />
                     </p>
                     <Body1 color="gray800">
-                      <em>준비중</em>
-                      퀵 서베이
+                      <em>준비중</em>퀵 서베이
                     </Body1>
 
                     <div
@@ -1199,12 +1205,11 @@ const PageToolListSaas = () => {
 
                       <div className="text">
                         <Body1 color="white">
-                          <em>준비중</em>
-                          퀵 서베이
+                          <em>준비중</em>퀵 서베이
                         </Body1>
                         <Caption1 color="white" align="left">
-                          핵심 페르소나 그룹의 빠른 의견을 수집하고
-                          인사이트를 도출할 수 있는 빠른 리서치 도구
+                          핵심 페르소나 그룹의 빠른 의견을 수집하고 인사이트를
+                          도출할 수 있는 빠른 리서치 도구
                         </Caption1>
                         <i />
                       </div>
@@ -1592,7 +1597,7 @@ const PageToolListSaas = () => {
                     </p>
                     <Body1 color="gray800">
                       <em>준비중</em>
-                      계획서 생성기
+                      보고서 생성기
                     </Body1>
 
                     <div
@@ -1608,7 +1613,7 @@ const PageToolListSaas = () => {
 
                       <div className="text">
                         <Body1 color="white">
-                          <em>준비중</em>계획서 생성기
+                          <em>준비중</em>보고서 생성기
                         </Body1>
                         <Caption1 color="white" align="left">
                           여러가지 기획서 및 계획서를 원하는 사업 타입에 맞춰

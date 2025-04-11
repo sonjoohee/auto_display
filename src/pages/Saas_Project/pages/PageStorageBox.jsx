@@ -310,7 +310,7 @@ const PageStorageBox = () => {
         case "ix_idea_generator_persona":
           return "아이디어 생성기";
         case "ix_psst_multimodal":
-          return "계획서 생성기";
+          return "보고서 생성기";
         default:
           return tool.type;
       }
