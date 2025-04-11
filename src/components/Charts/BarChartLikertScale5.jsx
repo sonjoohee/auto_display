@@ -87,16 +87,17 @@ const BarChartLikertScale5 = ({
             <BarValue width={item.value}>{item.value}%</BarValue>
           </BarGroup>
           <CategoryLabel>
-            {index === 0 ? "1" : 
-             index === 1 ? "2" : 
-             index === 2 ? "3" : 
-             index === 3 ? "4" : 
-             "5"}
+            {index === 0
+              ? "1"
+              : index === 1
+              ? "2"
+              : index === 2
+              ? "3"
+              : index === 3
+              ? "4"
+              : "5"}
           </CategoryLabel>
-          <SubCategoryLabel>
-            {item.category || "더미데이터"}
-          </SubCategoryLabel>
-
+          <SubCategoryLabel>{item.category || "더미데이터"}</SubCategoryLabel>
         </CategoryItem>
       ))}
     </GraphContainer>
@@ -119,6 +120,7 @@ const CategoryItem = styled.div`
   align-items: center;
   gap: 20px;
   width: 86px;
+  cursor: pointer;
 `;
 
 const BarGroup = styled.div`
@@ -154,7 +156,7 @@ const BarFill = styled.div`
 
 const BarValue = styled.span`
   position: absolute;
-  top: -30px;  /* 바 상단으로부터 위쪽 간격 */
+  top: -30px; /* 바 상단으로부터 위쪽 간격 */
   left: 0;
   width: 100%;
   font-family: "Pretendard", "Poppins";

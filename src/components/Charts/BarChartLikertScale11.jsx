@@ -332,4 +332,3 @@ const NpsScoreLabel = styled.div`
 `;
 
 export default BarChartLikertScale11;
-
