@@ -24,8 +24,16 @@ const MolculeQuickSurveyPopup = ({
   const [isVisible, setIsVisible] = useState(isOpen);
   const [questionText, setQuestionText] = useState("");
   const [options, setOptions] = useState(["", ""]);
-//   const [isLoading, setIsLoading] = useState(false);
+//   const [aiResponse, setAiResponse] = useState(null);
   
+  // 초기 입력값과 AI 응답 히스토리를 저장할 상태 추가
+  const [initialInput, setInitialInput] = useState({
+    questionText: "",
+    options: ["", ""]
+  });
+  console.log("initialInput", initialInput);
+  const [aiResponseHistory, setAiResponseHistory] = useState([]);
+
   // AI로 다듬기 버튼 상태 관리
   const [showAiButton, setShowAiButton] = useState(false);
   
@@ -44,12 +52,27 @@ const MolculeQuickSurveyPopup = ({
   }, [questionText, options]);
 
   // AI 응답이 변경될 때마다 입력 필드 업데이트
-
   useEffect(() => {
-    if (aiResponse && aiResponse.options) {
-      // aiResponse.options가 존재할 때만 업데이트
+    if (aiResponse) {
       setQuestionText(aiResponse.question || "");
       setOptions(Array.isArray(aiResponse.options) ? aiResponse.options : ["", ""]);
+    }
+  }, [aiResponse]);
+
+  // 팝업이 처음 열릴 때 초기 입력값 저장
+  useEffect(() => {
+    if (isOpen) {
+      setInitialInput({
+        questionText,
+        options: [...options]
+      });
+    }
+  }, [isOpen]);
+
+  // AI 응답이 변경될 때마다 히스토리에 추가
+  useEffect(() => {
+    if (aiResponse) {
+      setAiResponseHistory(prev => [...prev, aiResponse]);
     }
   }, [aiResponse]);
 
@@ -63,7 +86,7 @@ const MolculeQuickSurveyPopup = ({
   // 옵션 텍스트 변경
   const handleOptionChange = (index, value) => {
     const newOptions = [...options];
-    newOptions[index] = value || ""; // null이나 undefined인 경우 빈 문자열로 처리
+    newOptions[index] = value || "";
     setOptions(newOptions);
   };
 
@@ -77,18 +100,26 @@ const MolculeQuickSurveyPopup = ({
     setOptions(newOptions);
   };
 
-  
+
   const handleUndoBusinessClick = () => {
-    if (aiResponse) {
-      setQuestionText(aiResponse.question || "");
-      setOptions(aiResponse.options || ["", ""]);
-    } else {
-      setQuestionText("");
-      setOptions(["", ""]);
+    if (aiResponseHistory.length > 1) {
+      // 이전 AI 응답이 있으면 그걸로 되돌리기
+      const previousResponse = aiResponseHistory[aiResponseHistory.length - 2];
+      setQuestionText(previousResponse.question);
+      setOptions(previousResponse.options);
+      // 현재 응답을 히스토리에서 제거
+      setAiResponseHistory(prev => prev.slice(0, -1));
+    } else if (aiResponseHistory.length === 1) {
+    
+      // 첫 번째 AI 응답이면 초기 입력값으로 되돌리기
+      setQuestionText(initialInput.questionText);
+      setOptions([...initialInput.options]);
+      setAiResponseHistory([]);
+    //   aiResponse = null;
     }
   };
 
-  
+
   // 버튼 활성화 조건 계산
   const isAiRefineEnabled = () => {
     if (!questionText || questionText.trim() === "") return false;
@@ -114,11 +145,29 @@ const MolculeQuickSurveyPopup = ({
       questionText: questionText.trim(),
       options: filledOptions
     });
+    setInitialInput({
+        questionText: questionText.trim(),
+        options: filledOptions
+      });
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      setAiResponseHistory([]); // 팝업이 열릴 때 초기화
+    }
+  }, [isOpen]);
 
   // 팝업 닫기 처리
   const handleClose = () => {
     setIsVisible(false);
+    setQuestionText("");
+    setOptions(["", ""]);
+    setInitialInput({
+      questionText: "",
+      options: ["", ""]
+    });
+    aiResponse = null;
+
     if (onClose) {
       onClose();
     }
@@ -147,6 +196,20 @@ const MolculeQuickSurveyPopup = ({
   };
 
   if (!isVisible) return null;
+
+
+  const isEqualToInitialInput = () => {
+    const currentFilledOptions = options.filter(option => option.trim() !== "");
+    const initialFilledOptions = initialInput.options.filter(option => option.trim() !== "");
+  
+    return questionText.trim() === initialInput.questionText.trim() &&
+           JSON.stringify(currentFilledOptions) === JSON.stringify(initialFilledOptions);
+        //    console.log(questionText.trim() === initialInput.questionText.trim());
+        //    console.log(JSON.stringify(currentFilledOptions) === JSON.stringify(initialFilledOptions));
+           
+  };
+
+//   console.log(isEqualToInitialInput());
 
   return (
     <PopupOverlay>
@@ -187,7 +250,7 @@ const MolculeQuickSurveyPopup = ({
 
               <SectionTitle>보기 문항 추가</SectionTitle>
               <OptionsContainer>
-                {options.map((option, index) => (
+                {Array.isArray(options) && options.map((option, index) => (
                   <OptionItemWrapper key={index}>
                     <InputField 
                       placeholder="핵심 가치를 작성해주세요 (예: 안전한 송금 등)"
@@ -195,7 +258,7 @@ const MolculeQuickSurveyPopup = ({
                       onChange={(e) => handleOptionChange(index, e.target.value)}
                     />
                     {/* 옵션이 2개 초과일 때만 삭제 아이콘 표시 */}
-                    {options.length > 2 && (
+                    {Array.isArray(options) && options.length > 2 && (
                       <DeleteButton onClick={() => handleDeleteOption(index)}>
                         <img src={images.Trash} alt="삭제" />
                       </DeleteButton>
@@ -216,11 +279,11 @@ const MolculeQuickSurveyPopup = ({
 
             <ButtonContainer>
               <div>
-              {aiResponse &&  aiResponse.options && (
-                <AiRefineButton onClick={handleUndoBusinessClick}>
+                {aiResponse &&  aiResponse.options && (
+                  <AiRefineButton onClick={handleUndoBusinessClick}>
                     <img src={images.ClockCounterclockwise} alt="" />
                     <span>이전으로 되돌리기</span>
-                </AiRefineButton>
+                  </AiRefineButton>
                 )}
 
                 <AiRefineButton 
@@ -239,9 +302,16 @@ const MolculeQuickSurveyPopup = ({
             
               </div>
               <CreateButton onClick={handleSave}
-              disabled={!isAiRefineEnabled()}>
+              disabled={!aiResponse?.question  || !isAiRefineEnabled()}
+              hasAiResponse={aiResponse && aiResponse?.question && aiResponse?.options  ? true : false}
+              style={{
+                opacity:( aiResponse || aiResponse?.question || aiResponse?.options () )? 1 : 0.5,
+                cursor: ( aiResponse || aiResponse?.question || aiResponse?.options () )? 'pointer' : 'not-allowed'
+              }}
+              >
                 질문 기반 서베이 생성
               </CreateButton>
+              
             </ButtonContainer>
           </>
         )}
@@ -279,7 +349,7 @@ const CloseButton = styled.div`
 
 export default MolculeQuickSurveyPopup;
 
-// 스타일 컴포넌트
+// 스타일 컴포넌트ㅅㅅ
 const PopupOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -425,7 +495,7 @@ const CreateButton = styled.button`
   width: 220px;
   height: 40px;
   border-radius: 4px;
-  background-color: ${palette.gray300};
+  background-color: ${props => props.hasAiResponse ? palette.primary : palette.gray300};
   font-family: "Pretendard", "Poppins";
   font-size: 16px;
   font-weight: 500;
