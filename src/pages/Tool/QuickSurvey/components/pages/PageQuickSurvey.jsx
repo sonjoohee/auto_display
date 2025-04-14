@@ -910,6 +910,7 @@ const PageQuickSurvey = () => {
           );
 
       setToolSteps(3);
+      setCompletedSteps([...completedSteps, 3]);
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
