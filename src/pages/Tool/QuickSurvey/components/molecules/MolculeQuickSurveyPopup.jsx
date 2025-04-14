@@ -31,7 +31,7 @@ const MolculeQuickSurveyPopup = ({
     questionText: "",
     options: ["", ""]
   });
-  console.log("initialInput", initialInput);
+//   console.log("initialInput", initialInput);
   const [aiResponseHistory, setAiResponseHistory] = useState([]);
 
   // AI로 다듬기 버튼 상태 관리
