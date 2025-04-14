@@ -28,7 +28,7 @@ const MoleculeDesignItem = ({ title, subtitle, isSelected, onSelect, id, disable
 
   const details = id === 'ab_test' 
     ? question[id].options
-    : id === 'single_choice'
+    : id === 'single_choice' || id === 'custom_question'
     ? question[id].options
     : [question[id].options];
 
