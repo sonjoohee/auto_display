@@ -1081,8 +1081,10 @@ const PageQuickSurvey = () => {
   // AI 다듬기 처리 함수
   const handleAiRefine = async (data) => {
     setIsCustomLoading(true);
-    try {
 
+    const options_length = data.options.length;
+
+    try {
       data = {
         type: "ix_quick_survey_custom_question",
         business: business,
@@ -1090,12 +1092,19 @@ const PageQuickSurvey = () => {
         user_question: data.questionText,
         user_options: data.options
       }
+
       // API 호출
       const response = await InterviewXQuickSurveyRequest(data, isLoggedIn);  
-
-      setQuickSurveyCustomQuestion(response.response.quick_survey_custom_question);
-  
       
+      // 응답에서 받은 옵션 중 사용자가 입력한 옵션 수만큼만 사용
+      const refinedQuestion = response.response.quick_survey_custom_question;
+      const limitedOptions = refinedQuestion.options.slice(0, options_length);
+      
+      setQuickSurveyCustomQuestion({
+        question: refinedQuestion.question,
+        options: limitedOptions
+      });
+
     } catch (error) {
       console.error("AI 다듬기 실패:", error);
       // 에러 처리
