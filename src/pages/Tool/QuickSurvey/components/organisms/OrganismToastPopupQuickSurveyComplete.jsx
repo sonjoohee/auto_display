@@ -137,7 +137,7 @@ const OrganismToastPopupQuickSurveyComplete = ({
                   {quickSurveySelectedQuestion[0] === 'ab_test' && selectedOptionIndex == null ? 
                       `${String.fromCharCode(65 + (answer.answer.main === quickSurveySurveyMethod.options[0] ? 0 : 1))}. ${answer.answer.main}`
                       :
-                      (quickSurveySelectedQuestion[0] === 'importance' || quickSurveySelectedQuestion[0] === 'single_choice') && selectedOptionIndex == null ?
+                      (quickSurveySelectedQuestion[0] === 'importance' || quickSurveySelectedQuestion[0] === 'single_choice' || quickSurveySelectedQuestion[0] === 'custom_question') && selectedOptionIndex == null ?
                       `${quickSurveySurveyMethod.options.indexOf(answer.answer.main) + 1}. ${answer.answer.main}`
                       :
                       quickSurveySelectedQuestion[0] === 'nps' ? 
