@@ -63,6 +63,8 @@ import GraphChartScale11 from "../../components/Charts/GraphChartScale11";
 import ImportanceButtonGroup from "../../components/Charts/ImportanceButtonGroup";
 import ImportanceButtonLevel from "../../components/Charts/ImportanceButtonLevel";
 import QuickSurveyCard from "../../components/Charts/QuickSurveyCard";
+import QuckSurveyPopup from "../../components/Charts/QuckSurveyPopup";
+
 const PageStyleGuide  = () => {
   const [activeSection, setActiveSection] = useState('');
   const [isChecked, setIsChecked] = useState(false);
@@ -158,6 +160,7 @@ const PageStyleGuide  = () => {
           <ImportanceButtonGroup />
           <ImportanceButtonLevel />
           <QuickSurveyCard />
+          <QuckSurveyPopup isOpen={true} />
         </FlexContainer>
       </ChartComponentsWrap>
       
@@ -1498,6 +1501,7 @@ onChange={() => setSelectedRadio2('gender1')}
 
                 <CardButton>
                   <Button Medium Primary>버튼</Button>
+                  <Button Medium Primary Fill>버튼</Button>
                 </CardButton>
               </CardListItem>
               <CardListItem>
