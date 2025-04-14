@@ -713,9 +713,9 @@ const PageCustomerValueAnalyzer = () => {
   };
 
   // selectedPersonasSaas가 변경될 때마다 로그 출력
-  useEffect(() => {
-    console.log(selectedPersonasSaas);
-  }, [selectedPersonasSaas]);
+  // useEffect(() => {
+  //   console.log(selectedPersonasSaas);
+  // }, [selectedPersonasSaas]);
 
   const handleCheckboxChange = (index) => {
     if ((toolStep || 0) >= 2) return;

@@ -982,7 +982,7 @@ const PageAiPersona = () => {
             return [...filteredPrev, ...sortedList];
           });
         } else {
-          console.log("No my_persona data found in sortedList");
+          // console.log("No my_persona data found in sortedList");
         }
       }
 

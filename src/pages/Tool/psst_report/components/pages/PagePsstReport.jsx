@@ -424,7 +424,7 @@ const PagePsstReport = () => {
             Data,
             isLoggedIn
           );
-          console.log(firstResponse);
+          // console.log(firstResponse);
           attempts++;
         }
         if (attempts >= maxAttempts) {

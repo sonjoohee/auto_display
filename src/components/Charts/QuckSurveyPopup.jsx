@@ -64,7 +64,6 @@ const QuckSurveyPopup = ({
   // AI로 다듬기 함수 
   const handleAiRefine = () => {
     // 실제 AI 다듬기 로직은 여기에 구현
-    console.log("AI로 문장 다듬기");
     // API 호출 또는 다른 처리 로직 추가
   };
 

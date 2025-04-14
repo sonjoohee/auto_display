@@ -327,8 +327,8 @@ const PageDesignAnalysis = () => {
 
   // 필수 필드가 모두 입력되었는지 확인하는 함수
   const isRequiredFieldsFilled = () => {
-    console.log("Business Description:", businessDescription.trim());
-    console.log("Uploaded Files:", uploadedFiles);
+    // console.log("Business Description:", businessDescription.trim());
+    // console.log("Uploaded Files:", uploadedFiles);
     return businessDescription.trim().length > 0 && uploadedFiles.length > 0;
   };
 
@@ -354,7 +354,7 @@ const PageDesignAnalysis = () => {
         isLoggedIn
       );
       setToolId(responseToolId);
-      console.log("responseToolId:", responseToolId);
+      // console.log("responseToolId:", responseToolId);
 
       setIsLoading(true);
 
@@ -376,10 +376,10 @@ const PageDesignAnalysis = () => {
       // FormData에 비즈니스 데이터 추가
       data.append("business", JSON.stringify(businessData));
 
-      console.log("전송할 데이터:", {
-        image: uploadedFiles.length > 0 ? uploadedFiles[0] : null,
-        business: businessData,
-      });
+      // console.log("전송할 데이터:", {
+      //   image: uploadedFiles.length > 0 ? uploadedFiles[0] : null,
+      //   business: businessData,
+      // });
 
       // const response = await api(
       //   data,
@@ -479,7 +479,7 @@ const PageDesignAnalysis = () => {
               ?.potential_customer_info ||
             !response?.response?.design_emotion_target?.usage_scenario
           ) {
-            console.log("🚀 ~ handleSubmitPersonas ~ response:", response);
+            // console.log("🚀 ~ handleSubmitPersonas ~ response:", response);
             setShowPopupError(true);
             return;
           }

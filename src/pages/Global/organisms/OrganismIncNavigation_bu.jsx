@@ -1559,7 +1559,7 @@ const OrganismIncNavigation = () => {
                         // )
                         .map(
                           (chat) => (
-                            console.log("🚀 ~ chatList ~ chat:", chat),
+                            // console.log("🚀 ~ chatList ~ chat:", chat),
                             (
                               <li
                                 key={chat.id}
