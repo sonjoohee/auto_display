@@ -139,7 +139,8 @@ const MolculeQuickSurveyPopup = ({
 
     onSave({
       question: questionText,
-      options: filledOptions
+      options: filledOptions,
+      follow_up: "왜 그렇게 생각하셨나요?"
     });
     
     handleClose();

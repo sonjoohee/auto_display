@@ -1918,7 +1918,8 @@ const PageQuickSurvey = () => {
                               />
                             )}
                           {(selectedQuestion[0] === "importance" ||
-                            selectedQuestion[0] === "single_choice") &&
+                            selectedQuestion[0] === "single_choice" ||
+                            selectedQuestion[0] === "custom_question") &&
                             Object.keys(quickSurveyStaticData).length > 0 && (
                               <div
                                 style={{
@@ -2042,7 +2043,8 @@ const PageQuickSurvey = () => {
                               <GraphChartScale2 />
                             )}
                           {(selectedQuestion[0] === "importance" ||
-                            selectedQuestion[0] === "single_choice") &&
+                            selectedQuestion[0] === "single_choice" ||
+                            selectedQuestion[0] === "custom_question") &&
                             Object.keys(quickSurveyStaticData).length > 0 && (
                               <GraphChartScale5 />
                             )}
