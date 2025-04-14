@@ -654,10 +654,10 @@ const OrganismToastPopupSingleChat = ({
             });
           }
         }
-        console.log(
-          "personaList.selected[0] 정보 보기",
-          personaList.selected[0]
-        );
+        // console.log(
+        //   "personaList.selected[0] 정보 보기",
+        //   personaList.selected[0]
+        // );
         const data = {
           business_analysis_data: projectCreateInfo,
           question: interviewQuestionListState[currentQuestionIndex],

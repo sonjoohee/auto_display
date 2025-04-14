@@ -5,10 +5,6 @@ import { QUICK_SURVEY_STATIC_DATA } from "../../pages/AtomStates";
 
 const GraphChartScale2 = () => {
   const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
-  console.log(
-    "🚀 ~ GraphChartScale2 ~ quickSurveyStaticData:",
-    quickSurveyStaticData
-  );
 
   const getDataFromQuickSurveyStaticData = (quickSurveyStaticData) => {
     const option1Key = Object.keys(quickSurveyStaticData)[0];
@@ -71,7 +67,7 @@ const GraphChartScale2 = () => {
   );
   const barWidths = [barWidthA, barWidthB];
   // const barWidths = [Math.min(70, sumA), Math.min(70, sumB)];
-  console.log("🚀 ~ GraphChartScale2 ~ importanceOptions:", importanceOptions);
+
   return (
     <ChartContainer>
       <HeaderSection>

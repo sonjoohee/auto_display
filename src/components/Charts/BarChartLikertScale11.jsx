@@ -49,8 +49,6 @@ const BarChartLikertScale11 = ({
       (quickSurveyStaticData["6"]["전체총합"] || 0);
     const detractorsPercentage = Math.round((detractors / total) * 100);
 
-    console.log("🚀 ~ calculateNpsScore ~ promoters:", promoters);
-    console.log("🚀 ~ calculateNpsScore ~ detractors:", detractors);
     // NPS = Promoters% - Detractors%
     return promotersPercentage - detractorsPercentage;
   };
