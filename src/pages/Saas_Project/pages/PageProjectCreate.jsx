@@ -1283,7 +1283,7 @@ const PageProjectCreate = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
+                    <AtomPersonaLoader message="프로젝트 개요를 분석하고 있습니다." />
                   </div>
                 ) : (
                   <>
