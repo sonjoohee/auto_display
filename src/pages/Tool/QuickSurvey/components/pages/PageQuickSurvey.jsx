@@ -1134,6 +1134,12 @@ const PageQuickSurvey = () => {
       // 에러 처리
     }
   };
+
+  const handleCloseCustomPopup = () => {
+    setIsCustomPopupOpen(false);
+    setQuickSurveyCustomQuestion(null); // aiResponse 초기화
+  };
+  
   
   return (
     <>
@@ -1335,7 +1341,7 @@ const PageQuickSurvey = () => {
                         <MolculeQuickSurveyPopup 
                           isOpen={isCustomPopupOpen}
                           isLoading={isCustomLoading}
-                          onClose={() => setIsCustomPopupOpen(false)}
+                          onClose={handleCloseCustomPopup}
                           onAiRefine={handleAiRefine}
                           onSave={handleSaveCustomSurvey}
                           aiResponse={quickSurveyCustomQuestion}  // AI 응답 전달
