@@ -225,6 +225,7 @@ const PageQuickSurvey = () => {
       }
 
       if (toolLoading) {
+
         // 비즈니스 정보 설정 (Step 1)
         if (quickSurveyProjectDescription) {
           setProjectDescription(quickSurveyProjectDescription);
@@ -553,6 +554,7 @@ const PageQuickSurvey = () => {
       setQuickSurveyCustomGuide(response.response.quick_survey_custom_guide);
 
       setQuickSurveySurveyMethod(quickSurveyAnalysis[selectedQuestion]);
+      setQuickSurveySelectedQuestion(selectedQuestion);
 
       await updateToolOnServer(
         toolId,
@@ -1192,7 +1194,7 @@ const PageQuickSurvey = () => {
               <TabButtonType5
                 Num3
                 isActive={activeTab >= 3}
-                onClick={() => completedSteps.includes(2) && setActiveTab(3)}
+                onClick={() =>(( completedSteps.includes(2) || completedSteps.includes(3)) && setActiveTab(3))}
                 disabled={
                   !completedSteps.includes(3) || isLoading || isLoadingReport
                 }

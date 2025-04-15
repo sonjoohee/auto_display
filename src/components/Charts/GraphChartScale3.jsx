@@ -412,7 +412,7 @@ const DataSection = styled.div`
 
 const VerticalLine = styled.div`
   position: absolute;
-  height: 335px;
+  height: 275px;
   width: 1px;
   background-color: #e0e4eb;
   left: 303px;
@@ -422,7 +422,7 @@ const VerticalLine = styled.div`
 
 const RightVerticalLine = styled.div`
   position: absolute;
-  height: 335px;
+  height: 275px;
   width: 1px;
   background-color: #e0e4eb;
   left: calc(303px + 55px * 2 + 4px);
