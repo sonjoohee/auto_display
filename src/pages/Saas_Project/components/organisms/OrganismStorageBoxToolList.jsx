@@ -981,7 +981,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setQuickSurveyInterview(chatData?.quickSurveyInterview || []);
         setQuickSurveySurveyMethod(chatData?.surveyMethod || []);
         setQuickSurveyReport(chatData?.quickSurveyReport || []);
-        setQuickSurveyStaticData(chatData?.quickSurveyStaticData || []);
+        setQuickSurveyStaticData(chatData?.quickSurveyStaticData || {});
         setQuickSurveyDetailInfo(chatData?.detailInfo || {});
         setQuickSurveyRecruitingCondition(chatData?.recruitmentCriteria || "");
         setQuickSurveyInterviewModeType(chatData?.interviewModeType || "");

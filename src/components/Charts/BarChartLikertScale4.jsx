@@ -48,6 +48,15 @@ const BarChartLikertScale3 = ({
           total
         ),
       },
+      {
+        category: Object.keys(quickSurveyStaticData)[3] || "0",
+        value: calculatePercentage(
+          quickSurveyStaticData[Object.keys(quickSurveyStaticData)[3]][
+            "전체총합"
+          ],
+          total
+        ),
+      },
     ];
   };
 
