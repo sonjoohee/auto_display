@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { palette } from "../../assets/styles/Palette";
 import { useAtom } from "jotai";
 import { QUICK_SURVEY_STATIC_DATA } from "../../pages/AtomStates";
 
-// 컴포넌트 이름 변경
 const BarChartLikertScale3 = ({
   onOptionSelect = () => {},
   onOptionSelectIndex = () => {},
   onBarClick,
 }) => {
   const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
-
 
   const calculatePercentage = (value, total) => {
     return Math.round((value / total) * 100);
@@ -55,34 +53,35 @@ const BarChartLikertScale3 = ({
   const data = processData();
 
   return (
-    <GraphContainer>
-      {data.map((item, index) => (
-        <CategoryItem
-          key={index}
-          onClick={() => {
-            onOptionSelect(item.category || "0");
-            onOptionSelectIndex(index + 1);
-            if (onBarClick) onBarClick();
-          }}
-        >
-          <BarGroup>
-            <BarBackground />
+    <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+      <GraphContainer>
+        {data.map((item, index) => (
+          <CategoryItem
+            key={index}
+            onClick={() => {
+              onOptionSelect(item.category || "0");
+              onOptionSelectIndex(index + 1);
+              if (onBarClick) onBarClick();
+            }}
+          >
+            <BarGroup>
+              <BarBackground />
 
-            <BarFill width={item.value} />
-            <BarValue width={item.value}>{item.value}%</BarValue>
-          </BarGroup>
-          <CategoryLabel>
-            {/* 1-3까지만 표시 */}
-            {index === 0 ? "1" : index === 1 ? "2" : "3"}
-          </CategoryLabel>
-          <SubCategoryLabel>{item.category || "더미데이터"}</SubCategoryLabel>
-        </CategoryItem>
-      ))}
-    </GraphContainer>
+              <BarFill width={item.value} />
+              <BarValue width={item.value}>{item.value}%</BarValue>
+            </BarGroup>
+            <CategoryLabel>
+              {/* 1-3까지만 표시 */}
+              {index === 0 ? "1" : index === 1 ? "2" : "3"}
+            </CategoryLabel>
+            <SubCategoryLabel>{item.category || "더미데이터"}</SubCategoryLabel>
+          </CategoryItem>
+        ))}
+      </GraphContainer>
+    </div>
   );
 };
 
-// 컴포넌트 이름 변경
 export default BarChartLikertScale3;
 
 const GraphContainer = styled.div`
@@ -113,7 +112,6 @@ const BarGroup = styled.div`
   border-radius: 5px;
 `;
 
-// 나머지 스타일 컴포넌트는 동일하게 유지
 const BarBackground = styled.div`
   position: absolute;
   top: 0;
