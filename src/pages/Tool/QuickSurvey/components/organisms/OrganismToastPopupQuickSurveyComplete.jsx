@@ -108,7 +108,7 @@ const OrganismToastPopupQuickSurveyComplete = ({
     if (!Array.isArray(filteredAnswers)) {
       return null;
     }
-
+    
     return (
       <>
         {filteredAnswers.map((answer, index) => (
