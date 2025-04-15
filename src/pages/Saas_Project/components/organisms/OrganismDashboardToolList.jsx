@@ -783,6 +783,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
 
         const chatData = response;
 
+        //! 타겟 탐색기
         setToolStep(1);
         setToolId("");
         setTargetDiscoveryInfo({
@@ -811,7 +812,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setToolLoading(true);
 
         // customer value persona 타입일 경우
-
+        //! 고객 가치 타입
         setToolStep(1);
         setToolId("");
         setCustomerValueAnalyzerInfo({});
@@ -849,6 +850,8 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setCustomerValueAnalyzerFinalReport(
           chatData?.customerValueFinalReport || {}
         );
+
+        //! 아이디어 생성
         setToolLoading(true);
         setIdeaGeneratorInfo({});
         setIdeaGeneratorPersona([]);
@@ -876,6 +879,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setIdeaGeneratorPurpose(chatData?.purpose);
         setIdeaGeneratorEditingBusinessText(chatData?.businessDescription);
 
+        //! 디자인 감성 분석
         setDesignAnalysisEmotionAnalysis([]);
         setDesignAnalysisBusinessInfo("");
         setDesignAnalysisUploadedFiles([]);
@@ -899,6 +903,8 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           chatData?.imageName?.map((item) => item.id) || []
         );
         setToolLoading(true);
+
+        //!PSST 보고서
 
         setToolStep(1);
         setPsstBusinessInfo([]);
@@ -935,6 +941,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           chatData?.projectAnalysisMultimodalKeyMessage || ""
         );
 
+        //!퀵서베이
         setToolStep(1);
         setQuickSurveyProjectDescription("");
         setQuickSurveyAnalysis([]);

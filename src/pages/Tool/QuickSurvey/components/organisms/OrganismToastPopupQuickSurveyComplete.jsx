@@ -44,14 +44,7 @@ const OrganismToastPopupQuickSurveyComplete = ({
     const interviewLoading = async () => {
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
-        // 단일 질문 설정
-        // const question = [
-        //   {
-        //     question: quickSurveySurveyMethod.question,
-        //   },
-        // ];
-        // setInterviewQuestionListState(question);
-
+  
         // 단일 질문에 대한 Complete 상태 설정
         const completedStatus = ["Complete"];
         setInterviewStatus(completedStatus);
@@ -87,7 +80,6 @@ const OrganismToastPopupQuickSurveyComplete = ({
   useEffect(() => {
     // answers가 없으면 빈 배열 사용
     const questionAnswers = answers || [];
-    
     try {
       const filtered = selectedOption && questionAnswers.length > 0
         ? questionAnswers.filter(
@@ -132,19 +124,29 @@ const OrganismToastPopupQuickSurveyComplete = ({
               </div>
             </TypeName>
             <TextContainer>
-
               <div>
-                  {quickSurveySelectedQuestion[0] === 'ab_test' && selectedOptionIndex == null ? 
-                      `${String.fromCharCode(65 + (answer.answer.main === quickSurveySurveyMethod.options[0] ? 0 : 1))}. ${answer.answer.main}`
-                      :
-                      (quickSurveySelectedQuestion[0] === 'importance' || quickSurveySelectedQuestion[0] === 'single_choice' || quickSurveySelectedQuestion[0] === 'custom_question') && selectedOptionIndex == null ?
-                      `${quickSurveySurveyMethod.options.indexOf(answer.answer.main) + 1}. ${answer.answer.main}`
-                      :
-                      quickSurveySelectedQuestion[0] === 'nps' ? 
-                      answer.answer.main
-                      :
-                      `${selectedOptionIndex ? `${selectedOptionIndex}. ` : ''}${answer.answer.main}`
-              }
+                  {answer?.answer?.main && quickSurveySurveyMethod?.options && (
+                      (() => {
+                          const index = quickSurveySurveyMethod.options.indexOf(answer.answer.main);
+
+                          if (quickSurveySelectedQuestion[0] === 'ab_test' && selectedOptionIndex == null) {
+                              return `${String.fromCharCode(65 + (answer.answer.main === quickSurveySurveyMethod.options[0] ? 0 : 1))}. ${answer.answer.main}`;
+                          }
+                          
+                          if ((quickSurveySelectedQuestion[0] === 'importance' || 
+                              quickSurveySelectedQuestion[0] === 'single_choice' || 
+                              quickSurveySelectedQuestion[0] === 'custom_question') && 
+                              selectedOptionIndex == null) {
+                              return `${index + 1}. ${answer.answer.main}`;
+                          }
+                          
+                          if (quickSurveySelectedQuestion[0] === 'nps') {
+                              return answer.answer.main;
+                          }
+                          
+                          return `${selectedOptionIndex ? `${selectedOptionIndex}. ` : ''}${answer.answer.main}`;
+                      })()
+                  )}
               </div>
               <div style={{ marginTop: "16px" }}>{answer?.answer?.followUp}</div>
             </TextContainer>
