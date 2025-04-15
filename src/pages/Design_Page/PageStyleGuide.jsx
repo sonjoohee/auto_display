@@ -65,6 +65,8 @@ import ImportanceButtonLevel from "../../components/Charts/ImportanceButtonLevel
 import QuickSurveyCard from "../../components/Charts/QuickSurveyCard";
 import QuckSurveyPopup from "../../components/Charts/QuckSurveyPopup";
 import KanoModelGraph from "../../components/Charts/KanoModelGraph";
+import MandalArtGraph from "../../components/Charts/MandalArtGraph";
+import WriteSelfCard from "../../components/Charts/WriteSelfCard";
 
 const PageStyleGuide  = () => {
   const [activeSection, setActiveSection] = useState('');
@@ -163,6 +165,8 @@ const PageStyleGuide  = () => {
           <QuickSurveyCard />
           <KanoModelGraph />
           <QuckSurveyPopup isOpen={true} />
+          <MandalArtGraph />
+          <WriteSelfCard />
         </FlexContainer>
       </ChartComponentsWrap>
       
@@ -1479,30 +1483,6 @@ onChange={() => setSelectedRadio2('gender1')}
                 </CardText>
 
                 <CardButton>
-                  <Button Medium Primary Fill>버튼</Button>
-                </CardButton>
-              </CardListItem>
-              <CardListItem>
-                <CardText>
-                  <CardTitle>
-                    <Badge Custom>
-                      <img src={images.StatusBadgeCustom} alt="커스터마이즈" />
-                      커스터마이즈
-                    </Badge>
-                    가족과 함께 여가를 보내는 활동 지향형 소비자
-                  </CardTitle>
-                  <ListSubtitle>
-                    <Badge None>#키워드1</Badge>
-                    <Badge None>#키워드2</Badge>
-                    <Badge None>#키워드3</Badge>
-                  </ListSubtitle>
-                  <ListSubtitle>
-                    <p>김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한 아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를 주시합니다.<br />주말에는 친구들과 브런치를 즐기거나 패션 아이템을 쇼핑하며 사교적인 시간을 보냅니다. 또한, 새로운 장소를 탐험하는 것을 좋아해 국내외 여행을 자주 다닙니다. 자기계발에도 관심이 많아 꾸준히 독서와 온라인 강의를 통해 지식을 넓혀갑니다.</p>
-                  </ListSubtitle>
-                </CardText>
-
-                <CardButton>
-                  <Button Medium Primary>버튼</Button>
                   <Button Medium Primary Fill>버튼</Button>
                 </CardButton>
               </CardListItem>
