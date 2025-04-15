@@ -77,6 +77,8 @@ import BarChartLikertScale11 from "../../../../../components/Charts/BarChartLike
 import GraphChartScale2 from "../../../../../components/Charts/GraphChartScale2";
 import GraphChartScale5 from "../../../../../components/Charts/GraphChartScale5";
 import GraphChartScale11 from "../../../../../components/Charts/GraphChartScale11";
+import GraphChartScale3 from "../../../../../components/Charts/GraphChartScale3";
+import GraphChartScale4 from "../../../../../components/Charts/GraphChartScale4";
 import OrganismToastPopupQuickSurveyComplete from "../organisms/OrganismToastPopupQuickSurveyComplete";
 import MolculeQuickSurveyPopup from "../molecules/MolculeQuickSurveyPopup";
 const PageQuickSurvey = () => {
@@ -927,7 +929,7 @@ const PageQuickSurvey = () => {
       );
 
       setToolSteps(3);
-      // setCompletedSteps([...completedSteps, 3]);
+      setCompletedSteps([...completedSteps, 3]);
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
@@ -1858,7 +1860,7 @@ const PageQuickSurvey = () => {
               </TabContent5>
             )}
 
-            {activeTab === 3 && completedSteps.includes(2) && (
+            {activeTab === 3 && (completedSteps.includes(2) || completedSteps.includes(3)) && (
               <TabContent5 Small>
                 {isLoadingReport ? (
                   <div
@@ -2100,22 +2102,47 @@ const PageQuickSurvey = () => {
                       {activeDesignTab === "scale" && (
                         <>
                           {/* 각 질문 유형에 맞는 그래프 렌더링 */}
-                          {selectedQuestion[0] === "ab_test" && (
+                          {(selectedQuestion[0] === "ab_test" ||
+                            (selectedQuestion[0] === "custom_question" &&
+                              quickSurveyAnalysis[selectedQuestion]?.options
+                              ?.length === 2
+                            )) && (
                             // quickSurveyStaticDataState &&
                             // typeof quickSurveyStaticDataState === "object" &&
                             // Object.keys(quickSurveyStaticDataState).length >
                             //   0 &&
                             <GraphChartScale2 />
                           )}
+                          {(selectedQuestion[0] === "custom_question" && 
+                              quickSurveyAnalysis[selectedQuestion]?.options
+                                ?.length === 3) && (
+                                // quickSurveyStaticDataState &&
+                                // typeof quickSurveyStaticDataState === "object" &&
+                                // Object.keys(quickSurveyStaticDataState).length >
+                                //   0 &&
+                                <GraphChartScale3 />
+                              )}
+                          {(selectedQuestion[0] === "custom_question" && 
+                            quickSurveyAnalysis[selectedQuestion]?.options
+                              ?.length === 4) && (
+                              // quickSurveyStaticDataState &&
+                              // typeof quickSurveyStaticDataState === "object" &&
+                              // Object.keys(quickSurveyStaticDataState).length >
+                              //   0 &&
+                              <GraphChartScale4 />
+                            )}
                           {(selectedQuestion[0] === "importance" ||
                             selectedQuestion[0] === "single_choice" ||
-                            selectedQuestion[0] === "custom_question") && (
+                            (selectedQuestion[0] === "custom_question" &&
+                              quickSurveyAnalysis[selectedQuestion]?.options
+                                ?.length === 5)) && (
                             // quickSurveyStaticDataState &&
                             // typeof quickSurveyStaticDataState === "object" &&
                             // Object.keys(quickSurveyStaticDataState).length >
                             //   0 &&
                             <GraphChartScale5 />
                           )}
+                            
                           {selectedQuestion[0] === "nps" && (
                             // quickSurveyStaticDataState &&
                             // typeof quickSurveyStaticDataState === "object" &&
