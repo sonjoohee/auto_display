@@ -225,7 +225,6 @@ const PageQuickSurvey = () => {
       }
 
       if (toolLoading) {
-        console.log(quickSurveyStaticData);
         // 비즈니스 정보 설정 (Step 1)
         if (quickSurveyProjectDescription) {
           setProjectDescription(quickSurveyProjectDescription);
@@ -353,7 +352,6 @@ const PageQuickSurvey = () => {
         ) {
           setQuickSurveyStaticData(quickSurveyStaticData);
           setQuickSurveyStaticDataState(quickSurveyStaticData);
-          console.log(quickSurveyStaticData);
         }
       }
     };
@@ -1860,303 +1858,309 @@ const PageQuickSurvey = () => {
               </TabContent5>
             )}
 
-            {activeTab === 3 && (completedSteps.includes(2) || completedSteps.includes(3)) && (
-              <TabContent5 Small>
-                {isLoadingReport ? (
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      minHeight: "200px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
-                  </div>
-                ) : (
-                  <>
-                    <BgBoxItem primaryLightest>
-                      <H3 color="gray800">퀵서베이 결과</H3>
-                      <Body3 color="gray800">
-                        페르소나 그룹의 의견을 확인하여 타겟 반응을 사전에
-                        확인해보세요.
-                      </Body3>
-                    </BgBoxItem>
+            {activeTab === 3 &&
+              (completedSteps.includes(2) || completedSteps.includes(3)) && (
+                <TabContent5 Small>
+                  {isLoadingReport ? (
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        minHeight: "200px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
+                    </div>
+                  ) : (
+                    <>
+                      <BgBoxItem primaryLightest>
+                        <H3 color="gray800">퀵서베이 결과</H3>
+                        <Body3 color="gray800">
+                          페르소나 그룹의 의견을 확인하여 타겟 반응을 사전에
+                          확인해보세요.
+                        </Body3>
+                      </BgBoxItem>
 
-                    <InsightAnalysis>
-                      <div className="title">
-                        <div>
-                          <TabWrapType4>
-                            <TabButtonType4
-                              active={activeDesignTab === "emotion"}
-                              onClick={() => setActiveDesignTab("emotion")}
-                            >
-                              결과 개요
-                            </TabButtonType4>
-                            <TabButtonType4
-                              active={activeDesignTab === "scale"}
-                              onClick={() => setActiveDesignTab("scale")}
-                            >
-                              항목별 통계
-                            </TabButtonType4>
-                          </TabWrapType4>
+                      <InsightAnalysis>
+                        <div className="title">
+                          <div>
+                            <TabWrapType4>
+                              <TabButtonType4
+                                active={activeDesignTab === "emotion"}
+                                onClick={() => setActiveDesignTab("emotion")}
+                              >
+                                결과 개요
+                              </TabButtonType4>
+                              <TabButtonType4
+                                active={activeDesignTab === "scale"}
+                                onClick={() => setActiveDesignTab("scale")}
+                              >
+                                항목별 통계
+                              </TabButtonType4>
+                            </TabWrapType4>
+                          </div>
+                          <Button Primary onClick={handleEnterInterviewRoom}>
+                            <img
+                              src={images.ReportSearch}
+                              alt="인터뷰 스크립트 보기"
+                            />
+                            응답자 의견 확인
+                          </Button>
                         </div>
-                        <Button Primary onClick={handleEnterInterviewRoom}>
-                          <img
-                            src={images.ReportSearch}
-                            alt="인터뷰 스크립트 보기"
-                          />
-                          응답자 의견 확인
-                        </Button>
-                      </div>
-                    </InsightAnalysis>
+                      </InsightAnalysis>
 
-                    <InsightAnalysis>
-                      <div className="title">
-                        <H4 color="gray800" align="left">
-                          Q. {quickSurveyAnalysis[selectedQuestion].question}
-                        </H4>
-                      </div>
+                      <InsightAnalysis>
+                        <div className="title">
+                          <H4 color="gray800" align="left">
+                            Q. {quickSurveyAnalysis[selectedQuestion].question}
+                          </H4>
+                        </div>
 
-                      {activeDesignTab === "emotion" && (
-                        <>
-                          {/* 각 질문 유형에 맞는 그래프 렌더링 */}
-                          {selectedQuestion[0] === "ab_test" && ( // null 또는 undefined가 아닌지 확인 // 비어있지 않은 객체인지 확인
-                            // quickSurveyStaticDataState &&
-                            // typeof quickSurveyStaticDataState === "object" && // 객체 타입인지 확인
-                            // Object.keys(quickSurveyStaticData).length > 0 &&
-                            <ABGraph
-                              onOptionSelect={setSelectedOption}
-                              onOptionSelectIndex={setSelectedOptionIndex}
-                              onBarClick={() => setShowToast(true)}
-                            />
-                          )}
-
-                          {selectedQuestion[0] === "custom_question" &&
-                            quickSurveyAnalysis[selectedQuestion]?.options
-                              ?.length === 2 && (
+                        {activeDesignTab === "emotion" && (
+                          <>
+                            {/* 각 질문 유형에 맞는 그래프 렌더링 */}
+                            {selectedQuestion[0] === "ab_test" && ( // null 또는 undefined가 아닌지 확인 // 비어있지 않은 객체인지 확인
                               // quickSurveyStaticDataState &&
-                              // typeof quickSurveyStaticDataState === "object" &&
-                              // Object.keys(quickSurveyStaticDataState).length >
-                              //   0 &&
-                              <BarChartLikertScale2
-                                onOptionSelect={setSelectedOption}
-                                onOptionSelectIndex={setSelectedOptionIndex}
-                                onBarClick={() => setShowToast(true)}
-                              />
-                            )}
-                          {selectedQuestion[0] === "custom_question" &&
-                            quickSurveyAnalysis[selectedQuestion]?.options
-                              ?.length === 3 && (
-                              // quickSurveyStaticDataState &&
-                              // typeof quickSurveyStaticDataState === "object" &&
-                              // Object.keys(quickSurveyStaticDataState).length >
-                              //   0 &&
-                              <BarChartLikertScale3
-                                onOptionSelect={setSelectedOption}
-                                onOptionSelectIndex={setSelectedOptionIndex}
-                                onBarClick={() => setShowToast(true)}
-                              />
-                            )}
-                          {selectedQuestion[0] === "custom_question" &&
-                            quickSurveyAnalysis[selectedQuestion]?.options
-                              ?.length === 4 && (
-                              // quickSurveyStaticDataState &&
-                              // typeof quickSurveyStaticDataState === "object" &&
-                              // Object.keys(quickSurveyStaticDataState).length >
-                              //   0 &&
-                              <BarChartLikertScale4
+                              // typeof quickSurveyStaticDataState === "object" && // 객체 타입인지 확인
+                              // Object.keys(quickSurveyStaticData).length > 0 &&
+                              <ABGraph
                                 onOptionSelect={setSelectedOption}
                                 onOptionSelectIndex={setSelectedOptionIndex}
                                 onBarClick={() => setShowToast(true)}
                               />
                             )}
 
-                          {(selectedQuestion[0] === "importance" ||
-                            selectedQuestion[0] === "single_choice" ||
-                            (selectedQuestion[0] === "custom_question" &&
+                            {selectedQuestion[0] === "custom_question" &&
                               quickSurveyAnalysis[selectedQuestion]?.options
-                                ?.length === 5)) && (
-                            // quickSurveyStaticDataState &&
-                            // typeof quickSurveyStaticDataState === "object" &&
-                            // Object.keys(quickSurveyStaticDataState).length >
-                            //   0 &&
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                width: "100%",
-                              }}
-                            >
-                              <BarChartLikertScale5
+                                ?.length === 2 && (
+                                // quickSurveyStaticDataState &&
+                                // typeof quickSurveyStaticDataState === "object" &&
+                                // Object.keys(quickSurveyStaticDataState).length >
+                                //   0 &&
+                                <BarChartLikertScale2
+                                  onOptionSelect={setSelectedOption}
+                                  onOptionSelectIndex={setSelectedOptionIndex}
+                                  onBarClick={() => setShowToast(true)}
+                                />
+                              )}
+                            {selectedQuestion[0] === "custom_question" &&
+                              quickSurveyAnalysis[selectedQuestion]?.options
+                                ?.length === 3 && (
+                                // quickSurveyStaticDataState &&
+                                // typeof quickSurveyStaticDataState === "object" &&
+                                // Object.keys(quickSurveyStaticDataState).length >
+                                //   0 &&
+                                <BarChartLikertScale3
+                                  onOptionSelect={setSelectedOption}
+                                  onOptionSelectIndex={setSelectedOptionIndex}
+                                  onBarClick={() => setShowToast(true)}
+                                />
+                              )}
+                            {selectedQuestion[0] === "custom_question" &&
+                              quickSurveyAnalysis[selectedQuestion]?.options
+                                ?.length === 4 && (
+                                // quickSurveyStaticDataState &&
+                                // typeof quickSurveyStaticDataState === "object" &&
+                                // Object.keys(quickSurveyStaticDataState).length >
+                                //   0 &&
+                                <BarChartLikertScale4
+                                  onOptionSelect={setSelectedOption}
+                                  onOptionSelectIndex={setSelectedOptionIndex}
+                                  onBarClick={() => setShowToast(true)}
+                                />
+                              )}
+
+                            {(selectedQuestion[0] === "importance" ||
+                              selectedQuestion[0] === "single_choice" ||
+                              (selectedQuestion[0] === "custom_question" &&
+                                quickSurveyAnalysis[selectedQuestion]?.options
+                                  ?.length === 5)) && (
+                              // quickSurveyStaticDataState &&
+                              // typeof quickSurveyStaticDataState === "object" &&
+                              // Object.keys(quickSurveyStaticDataState).length >
+                              //   0 &&
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  width: "100%",
+                                }}
+                              >
+                                <BarChartLikertScale5
+                                  onOptionSelect={setSelectedOption}
+                                  onOptionSelectIndex={setSelectedOptionIndex}
+                                  onBarClick={() => setShowToast(true)}
+                                />
+                              </div>
+                            )}
+                            {selectedQuestion[0] === "nps" && (
+                              // quickSurveyStaticDataState &&
+                              // typeof quickSurveyStaticDataState === "object" &&
+                              // Object.keys(quickSurveyStaticDataState).length >
+                              //   0 &&
+                              <BarChartLikertScale11
                                 onOptionSelect={setSelectedOption}
                                 onOptionSelectIndex={setSelectedOptionIndex}
                                 onBarClick={() => setShowToast(true)}
                               />
-                            </div>
-                          )}
-                          {selectedQuestion[0] === "nps" && (
-                            // quickSurveyStaticDataState &&
-                            // typeof quickSurveyStaticDataState === "object" &&
-                            // Object.keys(quickSurveyStaticDataState).length >
-                            //   0 &&
-                            <BarChartLikertScale11
-                              onOptionSelect={setSelectedOption}
-                              onOptionSelectIndex={setSelectedOptionIndex}
-                              onBarClick={() => setShowToast(true)}
-                            />
-                          )}
+                            )}
 
-                          {/* Insight 섹션 */}
-                          <div className="content">
-                            {quickSurveyReport?.[0] && (
-                              <InsightContainer>
-                                <InsightSection>
-                                  <InsightLabel color="gray700">
-                                    총평
-                                  </InsightLabel>
-                                  <InsightContent color="gray700">
-                                    {selectedQuestion[0] === "nps" ? (
-                                      <>
-                                        <div>
+                            {/* Insight 섹션 */}
+                            <div className="content">
+                              {quickSurveyReport?.[0] && (
+                                <InsightContainer>
+                                  <InsightSection>
+                                    <InsightLabel color="gray700">
+                                      총평
+                                    </InsightLabel>
+                                    <InsightContent color="gray700">
+                                      {selectedQuestion[0] === "nps" ? (
+                                        <>
+                                          <div>
+                                            {
+                                              quickSurveyReport[0]
+                                                ?.total_insight
+                                                ?.nps_score_interpretation
+                                            }
+                                          </div>
+                                          <br />
+                                          <div>
+                                            {
+                                              quickSurveyReport[0]
+                                                ?.total_insight
+                                                ?.group_response_analysis
+                                            }
+                                          </div>
+                                          <br />
+                                          <div>
+                                            {
+                                              quickSurveyReport[0]
+                                                ?.total_insight
+                                                ?.enhancement_and_improvement_insight
+                                            }
+                                          </div>
+                                        </>
+                                      ) : (
+                                        // 기존 non-NPS 로직
+                                        <>
                                           {
                                             quickSurveyReport[0]?.total_insight
-                                              ?.nps_score_interpretation
+                                              ?.statistic
                                           }
-                                        </div>
-                                        <br />
-                                        <div>
+                                          <br />
+                                          <br />
                                           {
                                             quickSurveyReport[0]?.total_insight
-                                              ?.group_response_analysis
+                                              ?.insight
                                           }
-                                        </div>
-                                        <br />
-                                        <div>
-                                          {
-                                            quickSurveyReport[0]?.total_insight
-                                              ?.enhancement_and_improvement_insight
-                                          }
-                                        </div>
-                                      </>
-                                    ) : (
-                                      // 기존 non-NPS 로직
+                                        </>
+                                      )}
+                                    </InsightContent>
+                                  </InsightSection>
+
+                                  <InsightSection>
+                                    <InsightLabel color="gray700">
+                                      성별 의견 정리
+                                    </InsightLabel>
+                                    <InsightContent color="gray700">
                                       <>
                                         {
-                                          quickSurveyReport[0]?.total_insight
+                                          quickSurveyReport[0]?.gender_insight
                                             ?.statistic
                                         }
                                         <br />
                                         <br />
                                         {
-                                          quickSurveyReport[0]?.total_insight
+                                          quickSurveyReport[0]?.gender_insight
                                             ?.insight
                                         }
                                       </>
-                                    )}
-                                  </InsightContent>
-                                </InsightSection>
+                                    </InsightContent>
+                                  </InsightSection>
 
-                                <InsightSection>
-                                  <InsightLabel color="gray700">
-                                    성별 의견 정리
-                                  </InsightLabel>
-                                  <InsightContent color="gray700">
-                                    <>
-                                      {
-                                        quickSurveyReport[0]?.gender_insight
-                                          ?.statistic
-                                      }
-                                      <br />
-                                      <br />
-                                      {
-                                        quickSurveyReport[0]?.gender_insight
-                                          ?.insight
-                                      }
-                                    </>
-                                  </InsightContent>
-                                </InsightSection>
-
-                                <InsightSection>
-                                  <InsightLabel color="gray700">
-                                    연령별 의견 정리
-                                  </InsightLabel>
-                                  <InsightContent color="gray700">
-                                    <>
-                                      {
-                                        quickSurveyReport[0].age_insight
-                                          .statistic
-                                      }
-                                      <br />
-                                      <br />
-                                      {quickSurveyReport[0].age_insight.insight}
-                                    </>
-                                  </InsightContent>
-                                </InsightSection>
-                              </InsightContainer>
+                                  <InsightSection>
+                                    <InsightLabel color="gray700">
+                                      연령별 의견 정리
+                                    </InsightLabel>
+                                    <InsightContent color="gray700">
+                                      <>
+                                        {
+                                          quickSurveyReport[0].age_insight
+                                            .statistic
+                                        }
+                                        <br />
+                                        <br />
+                                        {
+                                          quickSurveyReport[0].age_insight
+                                            .insight
+                                        }
+                                      </>
+                                    </InsightContent>
+                                  </InsightSection>
+                                </InsightContainer>
+                              )}
+                            </div>
+                          </>
+                        )}
+                        {activeDesignTab === "scale" && (
+                          <>
+                            {/* 각 질문 유형에 맞는 그래프 렌더링 */}
+                            {(selectedQuestion[0] === "ab_test" ||
+                              (selectedQuestion[0] === "custom_question" &&
+                                quickSurveyAnalysis[selectedQuestion]?.options
+                                  ?.length === 2)) && (
+                              // quickSurveyStaticDataState &&
+                              // typeof quickSurveyStaticDataState === "object" &&
+                              // Object.keys(quickSurveyStaticDataState).length >
+                              //   0 &&
+                              <GraphChartScale2 />
                             )}
-                          </div>
-                        </>
-                      )}
-                      {activeDesignTab === "scale" && (
-                        <>
-                          {/* 각 질문 유형에 맞는 그래프 렌더링 */}
-                          {(selectedQuestion[0] === "ab_test" ||
-                            (selectedQuestion[0] === "custom_question" &&
+                            {selectedQuestion[0] === "custom_question" &&
                               quickSurveyAnalysis[selectedQuestion]?.options
-                              ?.length === 2
-                            )) && (
-                            // quickSurveyStaticDataState &&
-                            // typeof quickSurveyStaticDataState === "object" &&
-                            // Object.keys(quickSurveyStaticDataState).length >
-                            //   0 &&
-                            <GraphChartScale2 />
-                          )}
-                          {(selectedQuestion[0] === "custom_question" && 
-                              quickSurveyAnalysis[selectedQuestion]?.options
-                                ?.length === 3) && (
+                                ?.length === 3 && (
                                 // quickSurveyStaticDataState &&
                                 // typeof quickSurveyStaticDataState === "object" &&
                                 // Object.keys(quickSurveyStaticDataState).length >
                                 //   0 &&
                                 <GraphChartScale3 />
                               )}
-                          {(selectedQuestion[0] === "custom_question" && 
-                            quickSurveyAnalysis[selectedQuestion]?.options
-                              ?.length === 4) && (
+                            {selectedQuestion[0] === "custom_question" &&
+                              quickSurveyAnalysis[selectedQuestion]?.options
+                                ?.length === 4 && (
+                                // quickSurveyStaticDataState &&
+                                // typeof quickSurveyStaticDataState === "object" &&
+                                // Object.keys(quickSurveyStaticDataState).length >
+                                //   0 &&
+                                <GraphChartScale4 />
+                              )}
+                            {(selectedQuestion[0] === "importance" ||
+                              selectedQuestion[0] === "single_choice" ||
+                              (selectedQuestion[0] === "custom_question" &&
+                                quickSurveyAnalysis[selectedQuestion]?.options
+                                  ?.length === 5)) && (
                               // quickSurveyStaticDataState &&
                               // typeof quickSurveyStaticDataState === "object" &&
                               // Object.keys(quickSurveyStaticDataState).length >
                               //   0 &&
-                              <GraphChartScale4 />
+                              <GraphChartScale5 />
                             )}
-                          {(selectedQuestion[0] === "importance" ||
-                            selectedQuestion[0] === "single_choice" ||
-                            (selectedQuestion[0] === "custom_question" &&
-                              quickSurveyAnalysis[selectedQuestion]?.options
-                                ?.length === 5)) && (
-                            // quickSurveyStaticDataState &&
-                            // typeof quickSurveyStaticDataState === "object" &&
-                            // Object.keys(quickSurveyStaticDataState).length >
-                            //   0 &&
-                            <GraphChartScale5 />
-                          )}
-                            
-                          {selectedQuestion[0] === "nps" && (
-                            // quickSurveyStaticDataState &&
-                            // typeof quickSurveyStaticDataState === "object" &&
-                            // Object.keys(quickSurveyStaticDataState).length >
-                            //   0 &&
-                            <GraphChartScale11 />
-                          )}
-                        </>
-                      )}
-                    </InsightAnalysis>
-                  </>
-                )}
-              </TabContent5>
-            )}
+
+                            {selectedQuestion[0] === "nps" && (
+                              // quickSurveyStaticDataState &&
+                              // typeof quickSurveyStaticDataState === "object" &&
+                              // Object.keys(quickSurveyStaticDataState).length >
+                              //   0 &&
+                              <GraphChartScale11 />
+                            )}
+                          </>
+                        )}
+                      </InsightAnalysis>
+                    </>
+                  )}
+                </TabContent5>
+              )}
 
             {showToast && (
               <OrganismToastPopupQuickSurveyComplete
