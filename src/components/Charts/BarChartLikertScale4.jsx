@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 import { QUICK_SURVEY_STATIC_DATA } from "../../pages/AtomStates";
 
 // 컴포넌트 이름 변경
-const BarChartLikertScale3 = ({
+const BarChartLikertScale4 = ({
   onOptionSelect = () => {},
   onOptionSelectIndex = () => {},
   onBarClick,
@@ -19,7 +19,7 @@ const BarChartLikertScale3 = ({
   const processData = () => {
     const total = quickSurveyStaticData["총합"]["전체총합"] || 0;
 
-    // 3개 항목만 사용
+    // 4개 항목만 사용
     return [
       {
         category: Object.keys(quickSurveyStaticData)[0] || "0",
@@ -48,6 +48,15 @@ const BarChartLikertScale3 = ({
           total
         ),
       },
+      {
+        category: Object.keys(quickSurveyStaticData)[3] || "0",
+        value: calculatePercentage(
+          quickSurveyStaticData[Object.keys(quickSurveyStaticData)[3]][
+            "전체총합"
+          ],
+          total
+        ),
+      },
     ];
   };
 
@@ -55,41 +64,59 @@ const BarChartLikertScale3 = ({
 
   return (
     <GraphContainer>
-      {data.map((item, index) => (
-        <CategoryItem
-          key={index}
-          onClick={() => {
-            onOptionSelect(item.category || "0");
-            onOptionSelectIndex(index + 1);
-            if (onBarClick) onBarClick();
-          }}
-        >
-          <BarGroup>
-            <BarBackground />
+      <BarContainer>
+        {data.map((item, index) => (
+          <CategoryItem
+            key={index}
+            onClick={() => {
+              onOptionSelect(item.category || "0");
+              onOptionSelectIndex(index + 1);
+              if (onBarClick) onBarClick();
+            }}
+          >
+            <BarGroup>
+              <BarBackground />
 
-            <BarFill width={item.value} />
-            <BarValue width={item.value}>{item.value}%</BarValue>
-          </BarGroup>
-          <CategoryLabel>
-            {/* 1-3까지만 표시 */}
-            {index === 0 ? "1" : index === 1 ? "2" : "3"}
-          </CategoryLabel>
-          <SubCategoryLabel>{item.category || "더미데이터"}</SubCategoryLabel>
-        </CategoryItem>
-      ))}
+              <BarFill width={item.value} />
+              <BarValue width={item.value}>{item.value}%</BarValue>
+            </BarGroup>
+            <CategoryLabel>
+              {/* 1-4까지만 표시 */}
+              {index === 0
+                ? "1"
+                : index === 1
+                ? "2"
+                : index === 2
+                ? "3"
+                : "4"}
+            </CategoryLabel>
+            <SubCategoryLabel>{item.category || "더미데이터"}</SubCategoryLabel>
+          </CategoryItem>
+        ))}
+      </BarContainer>
     </GraphContainer>
   );
 };
 
 // 컴포넌트 이름 변경
-export default BarChartLikertScale3;
+export default BarChartLikertScale4;
 
 const GraphContainer = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: center;
   align-items: flex-end;
-  gap: 110px; // 간격 110px로 변경
+  gap: 66px; // 간격 66 px로 변경
   height: 320px;
+`;
+
+const BarContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 60px;
+  width: auto;
+  max-width: 100%;
 `;
 
 const CategoryItem = styled.div`
@@ -97,13 +124,13 @@ const CategoryItem = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  width: 118px; // 너비 118px로 변경
+  width: 100px; // 너비 100px로 변경
   cursor: pointer;
 `;
 
 const BarGroup = styled.div`
   position: relative;
-  width: 118px; // 너비 118px로 변경
+  width: 102px; // 너비 102px로 변경
   height: 110px;
   display: flex;
   flex-direction: column;

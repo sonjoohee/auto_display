@@ -7,7 +7,21 @@ import { palette } from "../../assets/styles/Palette";
  * x축: 충족도(불충족 -> 충족)
  * y축: 만족도(불만족 -> 만족)
  */
-const KanoModelGraph = ({ data = [] }) => {
+const KanoModelGraph = ({
+  data = [],
+  satisfactionLabels = {
+    veryHigh: "매우 높음",
+    high: "높음",
+    neutral: "중립",
+    low: "낮음",
+    veryLow: "매우 낮음"
+  },
+  fulfillmentLabels = {
+    fulfilled: "완전 충족",
+    adequate: "중간",
+    unfulfilled: "미충족"
+  }
+}) => {
   return (
     <GraphContainer>
       {/* 그래프 영역 */}
@@ -52,11 +66,11 @@ const KanoModelGraph = ({ data = [] }) => {
         <LeftAxisCircle position={100} />
         
         {/* 좌측 원 옆 텍스트 */}
-        <AxisCircleLabel position={0}>아주 만족</AxisCircleLabel>
-        <AxisCircleLabel position={25}>만족</AxisCircleLabel>
-        <AxisCircleLabel position={50}>보통</AxisCircleLabel>
-        <AxisCircleLabel position={75}>불만족</AxisCircleLabel>
-        <AxisCircleLabel position={100}>매우 불만족</AxisCircleLabel>
+        <AxisCircleLabel position={0}>{satisfactionLabels.veryLow}</AxisCircleLabel>
+        <AxisCircleLabel position={25}>{satisfactionLabels.low}</AxisCircleLabel>
+        <AxisCircleLabel position={50}>{satisfactionLabels.neutral}</AxisCircleLabel>
+        <AxisCircleLabel position={75}>{satisfactionLabels.high}</AxisCircleLabel>
+        <AxisCircleLabel position={100}>{satisfactionLabels.veryHigh}</AxisCircleLabel>
         
         {/* 하단 원 */}
         <BottomAxisCircle position={25} />
@@ -64,9 +78,9 @@ const KanoModelGraph = ({ data = [] }) => {
         <BottomAxisCircle position={75} />
         
         {/* 하단 원 옆 텍스트 */}
-        <BottomCircleLabel position={25} align="left">불충족</BottomCircleLabel>
-        <BottomCircleLabel position={50} align="center">적당한</BottomCircleLabel>
-        <BottomCircleLabel position={75} align="right">충족</BottomCircleLabel>
+        <BottomCircleLabel position={25} align="left">{fulfillmentLabels.unfulfilled}</BottomCircleLabel>
+        <BottomCircleLabel position={50} align="center">{fulfillmentLabels.adequate}</BottomCircleLabel>
+        <BottomCircleLabel position={75} align="right">{fulfillmentLabels.fulfilled}</BottomCircleLabel>
         
         {/* 데이터 포인트 */}
         {data.map((point, index) => (
