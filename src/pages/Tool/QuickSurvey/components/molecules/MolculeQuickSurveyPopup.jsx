@@ -260,7 +260,7 @@ const MolculeQuickSurveyPopup = ({
                 {Array.isArray(options) && options.map((option, index) => (
                   <OptionItemWrapper key={index}>
                     <InputField 
-                      placeholder="핵심 가치를 작성해주세요 (예: 안전한 송금 등)"
+                      placeholder="선택지를 작성해주세요."
                       value={option || ""}
                       onChange={(e) => handleOptionChange(index, e.target.value)}
                     />
