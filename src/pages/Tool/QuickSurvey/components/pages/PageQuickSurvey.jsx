@@ -70,6 +70,9 @@ import MoleculePersonaSelect from "../molecules/MolculePersonaSelect";
 import MolculePresetPersona from "../molecules/MolculePresetPersona";
 import ABGraph from "../../../../../components/Charts/ABGraph";
 import BarChartLikertScale5 from "../../../../../components/Charts/BarChartLikertScale5";
+import BarChartLikertScale2 from "../../../../../components/Charts/BarChartLikertScale2";
+import BarChartLikertScale3 from "../../../../../components/Charts/BarChartLikertScale3";
+import BarChartLikertScale4 from "../../../../../components/Charts/BarChartLikertScale4";
 import BarChartLikertScale11 from "../../../../../components/Charts/BarChartLikertScale11";
 import GraphChartScale2 from "../../../../../components/Charts/GraphChartScale2";
 import GraphChartScale5 from "../../../../../components/Charts/GraphChartScale5";
@@ -266,9 +269,9 @@ const PageQuickSurvey = () => {
 
         // 페르소나 설정 (Step 2)
 
-        if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0) {
-          setQuickSurveySurveyMethod(quickSurveySurveyMethod);
-        }
+        // if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0) {
+        //   setQuickSurveySurveyMethod(quickSurveySurveyMethod);
+        // }
 
         if (
           quickSurveyInterviewModeType &&
@@ -1150,7 +1153,6 @@ const PageQuickSurvey = () => {
     setQuickSurveyCustomQuestion(null); // aiResponse 초기화
   };
   
-  
   return (
     <>
       <DropzoneStyles />
@@ -1933,9 +1935,35 @@ const PageQuickSurvey = () => {
                                 onBarClick={() => setShowToast(true)}
                               />
                             )}
+
+                        {(selectedQuestion[0] === "custom_question" && quickSurveyAnalysis[selectedQuestion]?.options?.length === 2) &&
+                            Object.keys(quickSurveyStaticData).length > 0 && (
+                              <BarChartLikertScale2
+                                onOptionSelect={setSelectedOption}
+                                onOptionSelectIndex={setSelectedOptionIndex}
+                                onBarClick={() => setShowToast(true)}
+                              />
+                            )}
+                            {(selectedQuestion[0] === "custom_question" && quickSurveyAnalysis[selectedQuestion]?.options?.length === 3) &&
+                            Object.keys(quickSurveyStaticData).length > 0 && (
+                              <BarChartLikertScale3
+                                onOptionSelect={setSelectedOption}
+                                onOptionSelectIndex={setSelectedOptionIndex}
+                                onBarClick={() => setShowToast(true)}
+                              />
+                            )}
+                             {(selectedQuestion[0] === "custom_question" && quickSurveyAnalysis[selectedQuestion]?.options?.length === 4) &&
+                            Object.keys(quickSurveyStaticData).length > 0 && (
+                              <BarChartLikertScale4
+                                onOptionSelect={setSelectedOption}
+                                onOptionSelectIndex={setSelectedOptionIndex}
+                                onBarClick={() => setShowToast(true)}
+                              />
+                            )}
+
                           {(selectedQuestion[0] === "importance" ||
                             selectedQuestion[0] === "single_choice" ||
-                            selectedQuestion[0] === "custom_question") &&
+                            (selectedQuestion[0] === "custom_question" && quickSurveyAnalysis[selectedQuestion]?.options?.length === 5)) &&
                             Object.keys(quickSurveyStaticData).length > 0 && (
                               <div
                                 style={{

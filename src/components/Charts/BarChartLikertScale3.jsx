@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { palette } from "../../assets/styles/Palette";
 import { useAtom } from "jotai";
@@ -11,6 +11,7 @@ const BarChartLikertScale3 = ({
   onBarClick,
 }) => {
   const [quickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
+
 
   const calculatePercentage = (value, total) => {
     return Math.round((value / total) * 100);
