@@ -64,6 +64,7 @@ import ImportanceButtonGroup from "../../components/Charts/ImportanceButtonGroup
 import ImportanceButtonLevel from "../../components/Charts/ImportanceButtonLevel";
 import QuickSurveyCard from "../../components/Charts/QuickSurveyCard";
 import QuckSurveyPopup from "../../components/Charts/QuckSurveyPopup";
+import KanoModelGraph from "../../components/Charts/KanoModelGraph";
 
 const PageStyleGuide  = () => {
   const [activeSection, setActiveSection] = useState('');
@@ -160,6 +161,7 @@ const PageStyleGuide  = () => {
           <ImportanceButtonGroup />
           <ImportanceButtonLevel />
           <QuickSurveyCard />
+          <KanoModelGraph />
           <QuckSurveyPopup isOpen={true} />
         </FlexContainer>
       </ChartComponentsWrap>
