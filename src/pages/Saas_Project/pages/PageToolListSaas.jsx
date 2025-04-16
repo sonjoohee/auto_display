@@ -1672,7 +1672,7 @@ const PageToolListSaas = () => {
                     <div
                       className="overlay"
                       onClick={() => {
-                        navigate("/IdeaGenerate");
+                        navigate("/IdeaGeneration");
                       }}
                     >
                       <span>

@@ -44,8 +44,9 @@ import {
   PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE,
   PERSONA_LIST_SAAS,
   CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS,
-  CUSTOMER_JOURNEY_MAP_PERSONA,
+  CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA,
   CUSTOMER_JOURNEY_MAP_REPORT,
+  CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION,
 } from "../../../../AtomStates";
 import personaImages from "../../../../../assets/styles/PersonaImages";
 import {
@@ -67,6 +68,7 @@ import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
 // import MoleculeFileUpload from "../molecules/MoleculeFileUpload";
 import MoleculeAnalysisResults from "../molecules/MoleculeAnalysisResults";
 import MoleculePersonaSelectCard from "../molecules/MoleculePersonaSelectCard";
+import MoleculeWriteCard from "../molecules/MoleculeWriteCard";
 
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
@@ -91,7 +93,7 @@ const PageCustomerJourneyMap = () => {
   const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL
   );
-  const [customerJourneyPersona, setCustomerJourneyPersona] = useAtom(CUSTOMER_JOURNEY_MAP_PERSONA);
+  const [customerJourneyMapSelectedPersona, setCustomerJourneyMapSelectedPersona] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA);
   const [
     projectAnalysisMultimodalKeyMessage,
     setProjectAnalysisMultimodalKeyMessage,
@@ -108,6 +110,7 @@ const PageCustomerJourneyMap = () => {
   );
   const [personaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [customerJourneyMapMomentAnalysis, setCustomerJourneyMapMomentAnalysis] = useAtom(CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS);
+  const [customerJourneyMapSelectedDirection, setCustomerJourneyMapSelectedDirection] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION);
   const [customerJourneyMapReport, setCustomerJourneyMapReport] = useAtom(CUSTOMER_JOURNEY_MAP_REPORT);
 
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -147,6 +150,11 @@ const PageCustomerJourneyMap = () => {
     window.scrollTo(0, 0);
   }, []);
 
+
+  console.log(customerJourneyMapSelectedDirection);
+  console.log(selectedMoment);
+
+
   useEffect(() => {
     const interviewLoading = async () => {
       if (toolLoading) {
@@ -169,45 +177,22 @@ const PageCustomerJourneyMap = () => {
           completedStepsArray.push(i);
         }
         setCompletedSteps(completedStepsArray);
-      }      
+      } 
+
+      if (customerJourneyMapMomentAnalysis) {
+        setCustomerJourneyMapMomentAnalysis(customerJourneyMapMomentAnalysis ?? []);
+      }
+      if (customerJourneyMapSelectedDirection) {
+        setSelectedMoment(customerJourneyMapSelectedDirection ?? []);
+      }
+      if (customerJourneyMapReport) {
+        setCustomerJourneyMapReport(customerJourneyMapReport ?? []);
+      }
+      if (customerJourneyMapSelectedPersona) {
+        setSelectedPersonas(customerJourneyMapSelectedPersona ?? {});
+      } 
         
-
-        if (fileNames) {
-          setFileNames(fileNames ?? []);
-          setUploadedFiles(fileNames ?? []);
-        }
-        // 비즈니스 정보 설정 (Step 1)
-
-        if (projectAnalysisMultimodal) {
-          setProjectAnalysisMultimodal(projectAnalysisMultimodal ?? "");
-          setIsCreateReportIndex(true);
-        }
-
-        if (projectAnalysisMultimodalKeyMessage) {
-          setProjectAnalysisMultimodalKeyMessage(
-            projectAnalysisMultimodalKeyMessage ?? ""
-          );
-        }
-
-        if (projectAnalysisMultimodalDescription) {
-          setProjectAnalysisMultimodalDescription(
-            projectAnalysisMultimodalDescription ?? ""
-          );
-        }
-
-      
-        if (selectedTemplete) {
-          setSelectedTemplete(selectedTemplete ?? []);
-        }
-
-        if (analysisResults) {
-          setAnalysisResults(analysisResults ?? []);
-        }
-
-        if (psstReport) {
-          setPsstReport(psstReport ?? "");
-        }
-
+        
         return;
       }
     };
@@ -287,7 +272,8 @@ const PageCustomerJourneyMap = () => {
       business: business, 
       persona:selectedCustomer
     }
-    setCustomerJourneyPersona(selectedCustomer);
+    setCustomerJourneyMapSelectedPersona(selectedCustomer);
+
     
 
     let response = await EducationToolsRequest(data, isLoggedIn);
@@ -342,7 +328,9 @@ const PageCustomerJourneyMap = () => {
         responseToolId,
         {
           customerJourneyMapMomentAnalysis:
-            transformedData
+            transformedData,
+          customerJourneyMapSelectedPersona: selectedPersonas
+    
         },
         isLoggedIn
       );
@@ -389,20 +377,21 @@ const PageCustomerJourneyMap = () => {
     handleNextStep(2);
     // setToolSteps(2);
     try {
-      // await updateToolOnServer(
-      //   toolId,
-      //   {
-      //     completedStep: 2,
-      //   },
-      //   isLoggedIn
-      // );
+      await updateToolOnServer(
+        toolId,
+        {
+          completedStep: 2,
+          selectedDirection: selectedMomentData
+        },
+        isLoggedIn
+      );
 
     
       try {
         const apiRequestData = {
           type: "ix_customer_journey_map_report_education",
           business: business,
-          persona:customerJourneyPersona,
+          persona:customerJourneyMapSelectedPersona,
           direction: selectedMomentData 
         };
 
@@ -726,7 +715,7 @@ const PageCustomerJourneyMap = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="보고서를 분석하고 있어요..." />
+                    <AtomPersonaLoader message="로딩중..." />
                   </div>
                 ) : (
                   <>
@@ -829,7 +818,7 @@ const PageCustomerJourneyMap = () => {
                     <div style={{ marginBottom: "140px", width: '100%' }}>
                       {customItemCount < 3 && (
                         <>
-                          {showCustomForm && (
+                          {/* {showCustomForm && (
                             <InputContainer>
                               <InputField 
                                 placeholder="직접 입력"
@@ -843,7 +832,16 @@ const PageCustomerJourneyMap = () => {
                                 등록
                               </RegisterButton>
                             </InputContainer>
-                          )}
+                          )} */}
+                             {showCustomForm && (
+                              <MoleculeWriteCard
+                                placeholder="직접 입력"
+                                value={inputValue}
+                                onChange={handleInputChange}
+                                onSubmit={addCustomMoment}
+                                buttonText="등록"
+                              />
+                            )}
 
                           <CustomButton
                             onClick={() => setShowCustomForm(!showCustomForm)}
@@ -872,7 +870,7 @@ const PageCustomerJourneyMap = () => {
                       Round
                       onClick={handleReportRequest}
                       disabled={
-                        // toolSteps > 2 ||
+                        toolSteps > 2 ||
                         selectedMoment.length === 0
                       }
                     >

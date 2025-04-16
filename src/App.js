@@ -61,7 +61,7 @@ import PageDesignSuitability from "./pages/Persona/components/pages/PageDesignSu
 
 import PageCustomerJourneyMap from "./pages/Education_Tool/CustomerJourneyMap/components/pages/PageCustomerJourneyMap";
 import PageKanoModel from "./pages/Education_Tool/KanoModel/components/pages/PageKanoModel";
-import PageIdeaGenerate from "./pages/Education_Tool/IdeaGenerate/components/pages/PageIdeaGenerate";
+import PageIdeaGeneration from "./pages/Education_Tool/IdeaGeneration/components/pages/PageIdeaGeneration";
 import PageNps from "./pages/Education_Tool/Nps/components/pages/PageNps";
 import PageIdeaEvaluate from "./pages/Education_Tool/IdeaEvaluate/components/pages/PageIdeaEvaluate";
 
@@ -560,10 +560,10 @@ function App() {
           ></Route>
           
           <Route
-            path="/IdeaGenerate"
+            path="/IdeaGeneration"
             element={
               <RequireToken>
-                <PageIdeaGenerate />
+                <PageIdeaGeneration />
               </RequireToken>
             }
           ></Route>

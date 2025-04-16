@@ -159,6 +159,10 @@ import {
   QUICK_SURVEY_DETAIL_INFO,
   QUICK_SURVEY_RECRUITING_CONDITION,
   QUICK_SURVEY_INTERVIEW_MODE_TYPE,
+  CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS,
+  CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA,
+  CUSTOMER_JOURNEY_MAP_REPORT,
+  CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -389,6 +393,12 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setQuickSurveyInterviewModeType] = useAtom(
     QUICK_SURVEY_INTERVIEW_MODE_TYPE
   );
+
+  //!Education Tool
+  const [, setCustomerJourneyMapMomentAnalysis] = useAtom(CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS);
+  const [, setCustomerJourneyMapSelectedPersona] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA);
+  const [, setCustomerJourneyMapReport] = useAtom(CUSTOMER_JOURNEY_MAP_REPORT);
+  const [, setCustomerJourneyMapSelectedDirection] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION);
 
   const saveConversation = (data) => {};
 
@@ -972,6 +982,26 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setQuickSurveyRecruitingCondition(chatData?.recruitmentCriteria || "");
         setQuickSurveyInterviewModeType(chatData?.interviewModeType || "");
 
+
+        //!Education Tool
+
+        //!고객 저니 맵
+        setToolStep(1);
+        setCustomerJourneyMapMomentAnalysis([]);
+        setCustomerJourneyMapSelectedPersona([]);
+        setCustomerJourneyMapReport([]);
+        setCustomerJourneyMapSelectedDirection([]);
+        setToolLoading(false);
+        setToolStep(chatData?.completedStep);
+        setToolId(chatData?.id);
+        setCustomerJourneyMapMomentAnalysis(chatData?.customerJourneyMapMomentAnalysis || []);
+        setCustomerJourneyMapSelectedPersona(chatData?.customerJourneyMapSelectedPersona || {});
+        setCustomerJourneyMapReport(chatData?.customerJourneyMapReport || []);
+        setCustomerJourneyMapSelectedDirection(chatData?.selectedDirection || []);
+
+
+
+
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);
 
@@ -993,6 +1023,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         } else if (chatData.type === "ix_quick_survey_question") {
           setToolLoading(true);
           navigate("/QuickSurvey");
+        } else if (chatData.type === "ix_customer_journey_map_direction_education") {
+          setToolLoading(true);
+          navigate("/CustomerJourneyMap");
         }
       } catch (error) {}
     } else if (conversationType === "interviewSingle") {
