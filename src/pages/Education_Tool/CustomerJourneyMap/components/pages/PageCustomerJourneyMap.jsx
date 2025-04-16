@@ -78,7 +78,6 @@ const prepareMarkdown = (text) => {
   return text.replace(/\n\n/g, "\n&nbsp;\n").replace(/\n/g, "  \n");
 };
 
-
 const PageCustomerJourneyMap = () => {
   const navigate = useNavigate();
 
@@ -93,7 +92,10 @@ const PageCustomerJourneyMap = () => {
   const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL
   );
-  const [customerJourneyMapSelectedPersona, setCustomerJourneyMapSelectedPersona] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA);
+  const [
+    customerJourneyMapSelectedPersona,
+    setCustomerJourneyMapSelectedPersona,
+  ] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA);
   const [
     projectAnalysisMultimodalKeyMessage,
     setProjectAnalysisMultimodalKeyMessage,
@@ -109,9 +111,17 @@ const PageCustomerJourneyMap = () => {
     PSST_SELECTED_TEMPLETE
   );
   const [personaListSaas] = useAtom(PERSONA_LIST_SAAS);
-  const [customerJourneyMapMomentAnalysis, setCustomerJourneyMapMomentAnalysis] = useAtom(CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS);
-  const [customerJourneyMapSelectedDirection, setCustomerJourneyMapSelectedDirection] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION);
-  const [customerJourneyMapReport, setCustomerJourneyMapReport] = useAtom(CUSTOMER_JOURNEY_MAP_REPORT);
+  const [
+    customerJourneyMapMomentAnalysis,
+    setCustomerJourneyMapMomentAnalysis,
+  ] = useAtom(CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS);
+  const [
+    customerJourneyMapSelectedDirection,
+    setCustomerJourneyMapSelectedDirection,
+  ] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION);
+  const [customerJourneyMapReport, setCustomerJourneyMapReport] = useAtom(
+    CUSTOMER_JOURNEY_MAP_REPORT
+  );
 
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
@@ -135,9 +145,9 @@ const PageCustomerJourneyMap = () => {
   const [selectedMoment, setSelectedMoment] = useState([]);
 
   const [showCustomForm, setShowCustomForm] = useState(false);
-  const [customItems, setCustomItems] = useState(Array(7).fill(''));
+  const [customItems, setCustomItems] = useState(Array(7).fill(""));
 
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const [customItemCount, setCustomItemCount] = useState(0);
   const [selectedMomentData, setSelectedMomentData] = useState(null);
@@ -150,10 +160,8 @@ const PageCustomerJourneyMap = () => {
     window.scrollTo(0, 0);
   }, []);
 
-
   console.log(customerJourneyMapSelectedDirection);
   console.log(selectedMoment);
-
 
   useEffect(() => {
     const interviewLoading = async () => {
@@ -165,41 +173,41 @@ const PageCustomerJourneyMap = () => {
 
         // 활성 탭 설정 (기본값 1)
         // setActiveTab(Math.min((toolStep ?? 1) +1 , 3));
-      if (toolStep === undefined || toolStep === 1) {
-        setActiveTab(1);
-        setToolSteps(0);
-        setCompletedSteps([]);
-      } else {
-        setActiveTab(Math.min(toolStep, 3));
-        setToolSteps(toolStep);
-        const completedStepsArray = [];
-        for (let i = 1; i <= toolStep; i++) {
-          completedStepsArray.push(i);
+        if (toolStep === undefined || toolStep === 1) {
+          setActiveTab(1);
+          setToolSteps(0);
+          setCompletedSteps([]);
+        } else {
+          setActiveTab(Math.min(toolStep, 3));
+          setToolSteps(toolStep);
+          const completedStepsArray = [];
+          for (let i = 1; i <= toolStep; i++) {
+            completedStepsArray.push(i);
+          }
+          setCompletedSteps(completedStepsArray);
         }
-        setCompletedSteps(completedStepsArray);
-      } 
 
-      if (customerJourneyMapMomentAnalysis) {
-        setCustomerJourneyMapMomentAnalysis(customerJourneyMapMomentAnalysis ?? []);
-      }
-      if (customerJourneyMapSelectedDirection) {
-        setSelectedMoment(customerJourneyMapSelectedDirection ?? []);
-      }
-      if (customerJourneyMapReport) {
-        setCustomerJourneyMapReport(customerJourneyMapReport ?? []);
-      }
-      if (customerJourneyMapSelectedPersona) {
-        setSelectedPersonas(customerJourneyMapSelectedPersona ?? {});
-      } 
-        
-        
+        if (customerJourneyMapMomentAnalysis) {
+          setCustomerJourneyMapMomentAnalysis(
+            customerJourneyMapMomentAnalysis ?? []
+          );
+        }
+        if (customerJourneyMapSelectedDirection) {
+          setSelectedMoment(customerJourneyMapSelectedDirection ?? []);
+        }
+        if (customerJourneyMapReport) {
+          setCustomerJourneyMapReport(customerJourneyMapReport ?? []);
+        }
+        if (customerJourneyMapSelectedPersona) {
+          setSelectedPersonas(customerJourneyMapSelectedPersona ?? {});
+        }
+
         return;
       }
     };
     interviewLoading();
     setToolLoading(false);
   }, [toolLoading]);
-
 
   // const handleCheckboxChange = (momentId) => {
   //   // if (toolSteps >= 2) return;
@@ -227,8 +235,6 @@ const PageCustomerJourneyMap = () => {
     });
   };
 
-  
-  
   const business = {
     business: businessDescription,
     target: project?.projectAnalysis?.target_customer || "",
@@ -244,81 +250,81 @@ const PageCustomerJourneyMap = () => {
     setShowPopupError(false);
   };
 
-
-
   const handleSubmitPersona = async () => {
     setIsLoading(true);
     handleNextStep(1);
     setToolSteps(1);
 
     // 선택된 페르소나에서 필요한 필드만 추출
-  const selectedCustomer = {
-    personaName: selectedPersonas?.personaName || "",
-    personaCharacteristics: selectedPersonas?.personaCharacteristics || "",
-    age: selectedPersonas?.age || "",
-    gender: selectedPersonas?.gender || "",
-    job: selectedPersonas?.job || "",
-    keywords: selectedPersonas?.keywords || [],
-    imageKey: selectedPersonas?.imageKey || "",
-    userExperience: selectedPersonas?.userExperience || "",
-    consumptionPattern: selectedPersonas?.consumptionPattern || "",
-    interests: selectedPersonas?.interests || "",
-    lifestyle: selectedPersonas?.lifestyle || "",
-  };
+    const selectedCustomer = {
+      personaName: selectedPersonas?.personaName || "",
+      personaCharacteristics: selectedPersonas?.personaCharacteristics || "",
+      age: selectedPersonas?.age || "",
+      gender: selectedPersonas?.gender || "",
+      job: selectedPersonas?.job || "",
+      keywords: selectedPersonas?.keywords || [],
+      imageKey: selectedPersonas?.imageKey || "",
+      userExperience: selectedPersonas?.userExperience || "",
+      consumptionPattern: selectedPersonas?.consumptionPattern || "",
+      interests: selectedPersonas?.interests || "",
+      lifestyle: selectedPersonas?.lifestyle || "",
+    };
 
     const data = {
       projectId: project._id,
       type: "ix_customer_journey_map_direction_education",
-      business: business, 
-      persona:selectedCustomer
-    }
+      business: business,
+      persona: selectedCustomer,
+    };
     setCustomerJourneyMapSelectedPersona(selectedCustomer);
 
-    
-
     let response = await EducationToolsRequest(data, isLoggedIn);
- 
 
     const maxAttempts = 10;
     let attempts = 0;
 
-        while (
-          attempts < maxAttempts &&
-          (!response ||
-            !response?.response?.customer_journey_map_direction_education ||
-            !response?.response?.customer_journey_map_direction_education?.time_based ||
-            !response?.response?.customer_journey_map_direction_education?.context_based ||
-            !response?.response?.customer_journey_map_direction_education?.goal_based)
-        ) {
-          response = await EducationToolsRequest(data, isLoggedIn);
-          attempts++;
-        }
-        if (attempts >= maxAttempts) {
-          setShowPopupError(true);
-          return;
-        }
+    while (
+      attempts < maxAttempts &&
+      (!response ||
+        !response?.response?.customer_journey_map_direction_education ||
+        !response?.response?.customer_journey_map_direction_education
+          ?.time_based ||
+        !response?.response?.customer_journey_map_direction_education
+          ?.context_based ||
+        !response?.response?.customer_journey_map_direction_education
+          ?.goal_based)
+    ) {
+      response = await EducationToolsRequest(data, isLoggedIn);
+      attempts++;
+    }
+    if (attempts >= maxAttempts) {
+      setShowPopupError(true);
+      return;
+    }
 
-          // 데이터 변환 및 저장
-      const transformedData = Object.entries(response.response.customer_journey_map_direction_education)
-      .reduce((acc, [type, items]) => [
+    // 데이터 변환 및 저장
+    const transformedData = Object.entries(
+      response.response.customer_journey_map_direction_education
+    ).reduce(
+      (acc, [type, items]) => [
         ...acc,
-        ...items.map(item => ({
+        ...items.map((item) => ({
           name: item.title,
           description: item.description,
-          type: type
-        }))
-      ], []);
+          type: type,
+        })),
+      ],
+      []
+    );
 
-      // 상태 업데이트
-      setCustomerJourneyMapMomentAnalysis(transformedData);
-  
-   
+    // 상태 업데이트
+    setCustomerJourneyMapMomentAnalysis(transformedData);
 
     try {
       const responseToolId = await createToolOnServer(
         {
           projectId: project._id,
-          type: "ix_customer_journey_map_direction_education",
+          type: "ix_customer_journey_map_education",
         },
         isLoggedIn
       );
@@ -327,14 +333,12 @@ const PageCustomerJourneyMap = () => {
       await updateToolOnServer(
         responseToolId,
         {
-          customerJourneyMapMomentAnalysis:
-            transformedData,
-          customerJourneyMapSelectedPersona: selectedPersonas
-    
+          customerJourneyMapMomentAnalysis: transformedData,
+          customerJourneyMapSelectedPersona: selectedPersonas,
         },
         isLoggedIn
       );
-     
+
       setToolSteps(2);
       setIsLoading(false);
     } catch (error) {
@@ -364,11 +368,14 @@ const PageCustomerJourneyMap = () => {
 
   const addCustomMoment = () => {
     if (inputValue.trim() && customItemCount < 3) {
-      setCustomerJourneyMapMomentAnalysis([...customerJourneyMapMomentAnalysis, {
-        name: inputValue,
-      }]);
-      setInputValue('');
-      setCustomItemCount(prev => prev + 1);
+      setCustomerJourneyMapMomentAnalysis([
+        ...customerJourneyMapMomentAnalysis,
+        {
+          name: inputValue,
+        },
+      ]);
+      setInputValue("");
+      setCustomItemCount((prev) => prev + 1);
     }
   };
 
@@ -381,54 +388,49 @@ const PageCustomerJourneyMap = () => {
         toolId,
         {
           completedStep: 2,
-          selectedDirection: selectedMomentData
+          selectedDirection: selectedMomentData,
         },
         isLoggedIn
       );
 
-    
       try {
         const apiRequestData = {
           type: "ix_customer_journey_map_report_education",
           business: business,
-          persona:customerJourneyMapSelectedPersona,
-          direction: selectedMomentData 
+          persona: customerJourneyMapSelectedPersona,
+          direction: selectedMomentData,
         };
 
-        let response = await EducationToolsRequest(
-          apiRequestData,
-          isLoggedIn
-        );
-       
+        let response = await EducationToolsRequest(apiRequestData, isLoggedIn);
 
         const maxAttempts = 10;
         let attempts = 0;
 
         while (
-          attempts < maxAttempts && (
-          (!response || !response?.response) ||
-          !response?.response?.customer_journey_map_report_education
-        )
+          attempts < maxAttempts &&
+          (!response ||
+            !response?.response ||
+            !response?.response?.customer_journey_map_report_education)
         ) {
-          response = await EducationToolsRequest(
-            apiRequestData,
-          isLoggedIn
-        );
+          response = await EducationToolsRequest(apiRequestData, isLoggedIn);
           attempts++;
         }
         if (attempts >= maxAttempts) {
           setShowPopupError(true);
           return;
         }
-        setCustomerJourneyMapReport(response.response.customer_journey_map_report_education);
-      
+        setCustomerJourneyMapReport(
+          response.response.customer_journey_map_report_education
+        );
+
         setIsLoadingReport(false);
 
         await updateToolOnServer(
           toolId,
           {
             completedStep: 3,
-            customerJourneyMapReport: response.response.customer_journey_map_report_education,
+            customerJourneyMapReport:
+              response.response.customer_journey_map_report_education,
           },
           isLoggedIn
         );
@@ -456,14 +458,10 @@ const PageCustomerJourneyMap = () => {
     }
   };
 
-
-
   const getSelectedCount = () => {
     if (!selectedPersonas) return 0;
     return Array.isArray(selectedPersonas) ? selectedPersonas.length : 1;
   };
-
-
 
   useEffect(() => {
     // 새로고침 감지 함수
@@ -513,8 +511,6 @@ const PageCustomerJourneyMap = () => {
     };
   }, [navigate]);
 
-
-
   return (
     <>
       <DropzoneStyles />
@@ -552,7 +548,6 @@ const PageCustomerJourneyMap = () => {
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     분석 방향 설정
                   </Body1>
-                 
                 </div>
               </TabButtonType5>
               <TabButtonType5
@@ -581,124 +576,126 @@ const PageCustomerJourneyMap = () => {
                   <div className="title">
                     <H3 color="gray800">Persona Selection</H3>
                     <Body3 color="gray800">
-                    고객 여정 분석을 진행할 대상 페르소나를 선택해주세요
+                      고객 여정 분석을 진행할 대상 페르소나를 선택해주세요
                     </Body3>
                   </div>
-                      
-              <div className="content">
-                <div>
-                  <ListBoxGroup>
 
-                    <li>
-                      <Body2 color="gray500">페르소나 선택</Body2>
-                      {selectedPersonas ? (
-                        <PersonaGroup>
-                          {Array.isArray(selectedPersonas) ? (
-                            <>
-                              {selectedPersonas.length > 3 && (
-                                <span>+{selectedPersonas.length - 3}</span>
+                  <div className="content">
+                    <div>
+                      <ListBoxGroup>
+                        <li>
+                          <Body2 color="gray500">페르소나 선택</Body2>
+                          {selectedPersonas ? (
+                            <PersonaGroup>
+                              {Array.isArray(selectedPersonas) ? (
+                                <>
+                                  {selectedPersonas.length > 3 && (
+                                    <span>+{selectedPersonas.length - 3}</span>
+                                  )}
+                                  {selectedPersonas
+                                    .slice(0, 3)
+                                    .map((persona, index) => (
+                                      <Persona key={index} size="Small" Round>
+                                        <img
+                                          src={
+                                            personaImages[persona.imageKey] ||
+                                            (persona.gender === "남성"
+                                              ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                              : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                          }
+                                          alt={persona.persona}
+                                        />
+                                      </Persona>
+                                    ))}
+                                </>
+                              ) : (
+                                <Persona size="Small" Round>
+                                  <img
+                                    src={
+                                      personaImages[
+                                        selectedPersonas.imageKey
+                                      ] ||
+                                      (selectedPersonas.gender === "남성"
+                                        ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                        : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                    }
+                                    alt={selectedPersonas.persona}
+                                  />
+                                </Persona>
                               )}
-                              {selectedPersonas
-                                .slice(0, 3)
-                                .map((persona, index) => (
-                                  <Persona key={index} size="Small" Round>
-                                    <img
-                                      src={
-                                        personaImages[persona.imageKey] ||
-                                        (persona.gender === "남성"
-                                          ? personaImages.persona_m_20_01 // 남성 기본 이미지
-                                          : personaImages.persona_f_20_01) // 여성 기본 이미지
-                                      }
-                                      alt={persona.persona}
-                                    />
-                                  </Persona>
-                                ))}
-                            </>
+                            </PersonaGroup>
                           ) : (
-                            <Persona size="Small" Round>
-                              <img
-                                src={
-                                  personaImages[selectedPersonas.imageKey] ||
-                                  (selectedPersonas.gender === "남성"
-                                    ? personaImages.persona_m_20_01 // 남성 기본 이미지
-                                    : personaImages.persona_f_20_01) // 여성 기본 이미지
-                                }
-                                alt={selectedPersonas.persona}
-                              />
-                            </Persona>
+                            <Body2 color="gray300">
+                              페르소나가 선택되지 않았습니다. 하단에서
+                              페르소나를 선택해 주세요!(1명 선택 가능)
+                            </Body2>
                           )}
-                        </PersonaGroup>
-                      ) : (
-                        <Body2 color="gray300">
-                          페르소나가 선택되지 않았습니다. 하단에서 페르소나를
-                          선택해 주세요!(1명 선택 가능)
+                        </li>
+                      </ListBoxGroup>
+                    </div>
+
+                    {personaListSaas &&
+                    personaListSaas.some(
+                      (persona) => persona?.status === "complete"
+                    ) ? (
+                      // <MoleculePersonaSelectCard
+                      //   filteredPersonaList={personaListSaas}
+                      //   // businessPersonaList={allBusinessPersonas.filter(
+                      //   //   (persona) => persona?.status === "complete"
+                      //   // )}
+                      //   // customPersonaList={customPersonaList}
+                      //   selectedPersonas={selectedPersonas}
+                      //   onPersonaSelect={setSelectedPersonas}
+                      // />
+                      <MoleculePersonaSelectCard
+                        filteredPersonaList={personaListSaas.filter(
+                          (persona) => persona?.status === "complete"
+                        )}
+                        selectedPersonas={selectedPersonas}
+                        onPersonaSelect={(persona) => {
+                          setSelectedPersonas(persona);
+                          // 필요한 경우 여기서 추가 로직 수행
+                        }}
+                      />
+                    ) : (
+                      <BoxWrap
+                        NoData
+                        style={{ height: "300px" }}
+                        onClick={() => navigate("/AiPersona")}
+                      >
+                        <img src={images.PeopleFillPrimary2} alt="" />
+
+                        <Body2 color="gray700" align="center !important">
+                          현재 대화가 가능한 활성 페르소나가 없습니다
+                          <br />
+                          페르소나 생성 요청을 진행하여 페르소나를
+                          활성화해주세요
                         </Body2>
-                      )}
-                    </li>
-                  </ListBoxGroup>
-                </div>
 
-                {personaListSaas &&
-                personaListSaas.some(
-                  (persona) => persona?.status === "complete"
-                ) ? (
-                  // <MoleculePersonaSelectCard
-                  //   filteredPersonaList={personaListSaas}
-                  //   // businessPersonaList={allBusinessPersonas.filter(
-                  //   //   (persona) => persona?.status === "complete"
-                  //   // )}
-                  //   // customPersonaList={customPersonaList}
-                  //   selectedPersonas={selectedPersonas}
-                  //   onPersonaSelect={setSelectedPersonas}
-                  // />
-                  <MoleculePersonaSelectCard
-                  filteredPersonaList={personaListSaas.filter(persona => persona?.status === "complete")}
-                  selectedPersonas={selectedPersonas}
-                  onPersonaSelect={(persona) => {
-                    setSelectedPersonas(persona);
-                    // 필요한 경우 여기서 추가 로직 수행
-                  }}
-                />
-                ) : (
-                  <BoxWrap
-                    NoData
-                    style={{ height: "300px" }}
-                    onClick={() => navigate("/AiPersona")}
+                        <Button
+                          Medium
+                          Outline
+                          Fill
+                          onClick={() => navigate("/AiPersona")}
+                        >
+                          <Caption1 color="gray700">
+                            AI Person 생성 요청
+                          </Caption1>
+                        </Button>
+                      </BoxWrap>
+                    )}
+                  </div>
+
+                  <Button
+                    Other
+                    Primary
+                    Fill
+                    Round
+                    onClick={handleSubmitPersona}
+                    disabled={toolSteps >= 1 || getSelectedCount() === 0}
                   >
-                    <img src={images.PeopleFillPrimary2} alt="" />
-
-                    <Body2 color="gray700" align="center !important">
-                      현재 대화가 가능한 활성 페르소나가 없습니다
-                      <br />
-                      페르소나 생성 요청을 진행하여 페르소나를 활성화해주세요
-                    </Body2>
-
-                    <Button
-                      Medium
-                      Outline
-                      Fill
-                      onClick={() => navigate("/AiPersona")}
-                    >
-                      <Caption1 color="gray700">AI Person 생성 요청</Caption1>
-                    </Button>
-                  </BoxWrap>
-                )}
-              </div>
-                  
-                    <Button
-                      Other
-                      Primary
-                      Fill
-                      Round
-                      onClick={handleSubmitPersona}
-                      disabled={
-                        toolSteps >= 1 ||
-                        getSelectedCount() === 0
-                      }
-                    >
-                      다음
-                    </Button>
-            
+                    다음
+                  </Button>
                 </>
               </TabContent5>
             )}
@@ -722,103 +719,111 @@ const PageCustomerJourneyMap = () => {
                     <div className="title">
                       <H3 color="gray800">Moment of Analysis</H3>
                       <Body3 color="gray800">
-                      페르소나의 고객 여정에서 집중적으로 분석하고 싶은 순간을 선택해주세요
+                        페르소나의 고객 여정에서 집중적으로 분석하고 싶은 순간을
+                        선택해주세요
                       </Body3>
                     </div>
 
                     <div className="content">
                       <ListBoxGroup>
-                    
                         <li>
-                      <Body2 color="gray500">페르소나 선택</Body2>
-                      {selectedPersonas ? (
-                        <PersonaGroup>
-                          {Array.isArray(selectedPersonas) ? (
-                            <>
-                              {selectedPersonas.length > 3 && (
-                                <span>+{selectedPersonas.length - 3}</span>
+                          <Body2 color="gray500">페르소나 선택</Body2>
+                          {selectedPersonas ? (
+                            <PersonaGroup>
+                              {Array.isArray(selectedPersonas) ? (
+                                <>
+                                  {selectedPersonas.length > 3 && (
+                                    <span>+{selectedPersonas.length - 3}</span>
+                                  )}
+                                  {selectedPersonas
+                                    .slice(0, 3)
+                                    .map((persona, index) => (
+                                      <Persona key={index} size="Small" Round>
+                                        <img
+                                          src={
+                                            personaImages[persona.imageKey] ||
+                                            (persona.gender === "남성"
+                                              ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                              : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                          }
+                                          alt={persona.persona}
+                                        />
+                                      </Persona>
+                                    ))}
+                                </>
+                              ) : (
+                                <Persona size="Small" Round>
+                                  <img
+                                    src={
+                                      personaImages[
+                                        selectedPersonas.imageKey
+                                      ] ||
+                                      (selectedPersonas.gender === "남성"
+                                        ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                        : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                    }
+                                    alt={selectedPersonas.persona}
+                                  />
+                                </Persona>
                               )}
-                              {selectedPersonas
-                                .slice(0, 3)
-                                .map((persona, index) => (
-                                  <Persona key={index} size="Small" Round>
-                                    <img
-                                      src={
-                                        personaImages[persona.imageKey] ||
-                                        (persona.gender === "남성"
-                                          ? personaImages.persona_m_20_01 // 남성 기본 이미지
-                                          : personaImages.persona_f_20_01) // 여성 기본 이미지
-                                      }
-                                      alt={persona.persona}
-                                    />
-                                  </Persona>
-                                ))}
-                            </>
+                            </PersonaGroup>
                           ) : (
-                            <Persona size="Small" Round>
-                              <img
-                                src={
-                                  personaImages[selectedPersonas.imageKey] ||
-                                  (selectedPersonas.gender === "남성"
-                                    ? personaImages.persona_m_20_01 // 남성 기본 이미지
-                                    : personaImages.persona_f_20_01) // 여성 기본 이미지
-                                }
-                                alt={selectedPersonas.persona}
-                              />
-                            </Persona>
+                            <Body2 color="gray300">
+                              페르소나가 선택되지 않았습니다. 하단에서
+                              페르소나를 선택해 주세요!(1명 선택 가능)
+                            </Body2>
                           )}
-                        </PersonaGroup>
-                      ) : (
-                        <Body2 color="gray300">
-                          페르소나가 선택되지 않았습니다. 하단에서 페르소나를
-                          선택해 주세요!(1명 선택 가능)
-                        </Body2>
-                      )}
-                    </li>
+                        </li>
 
-                    <li>
-                    <Body2 color="gray500">
-                           분석 장면 선택
-                          </Body2>
+                        <li>
+                          <Body2 color="gray500">분석 장면 선택</Body2>
                           {/* <Body2 color={selectedMoment !== null ? "gray800" : "gray300"}>
                           {selectedMoment !== null && customerJourneyMapMomentAnalysis[selectedMoment]
                             ? customerJourneyMapMomentAnalysis[selectedMoment].name
                             : '선택해주세요'}
                         </Body2> */}
-                        <Body2 
-                          color={selectedMoment?.length > 0 ? "gray800" : "gray300"}
-                        >
-                          {selectedMoment?.length > 0 
-                            ? customerJourneyMapMomentAnalysis[selectedMoment]?.name 
-                            : '선택해주세요'
-                          }
-                        </Body2>
-                     </li>
+                          <Body2
+                            color={
+                              selectedMoment?.length > 0 ? "gray800" : "gray300"
+                            }
+                          >
+                            {selectedMoment?.length > 0
+                              ? customerJourneyMapMomentAnalysis[selectedMoment]
+                                  ?.name
+                              : "선택해주세요"}
+                          </Body2>
+                        </li>
                       </ListBoxGroup>
                       <TabContent5Item>
-                      <div className="title">
-                      <Body1 color="gray700">어떤 순간을 고객 여정으로 분석하시겠습니까? </Body1>
-                    </div>
+                        <div className="title">
+                          <Body1 color="gray700">
+                            어떤 순간을 고객 여정으로 분석하시겠습니까?{" "}
+                          </Body1>
+                        </div>
 
-                    
-                    <CardGroupWrap column style={{ marginBottom: "0px", width: '100%' }}>
-                      {customerJourneyMapMomentAnalysis.map((moment, index) => {
-                        return (
-                          <MoleculeDesignItem
-                            FlexStart
-                            key={index}
-                            id={index}
-                            title={moment.name}
-                            isSelected={selectedMoment.includes(index)}
-                            onSelect={() => handleCheckboxChange(index)}
-                          />
-                        );
-                      })}
-                    </CardGroupWrap>
-                    <div style={{ marginBottom: "140px", width: '100%' }}>
-                      {customItemCount < 3 && (
-                        <>
-                          {/* {showCustomForm && (
+                        <CardGroupWrap
+                          column
+                          style={{ marginBottom: "0px", width: "100%" }}
+                        >
+                          {customerJourneyMapMomentAnalysis.map(
+                            (moment, index) => {
+                              return (
+                                <MoleculeDesignItem
+                                  FlexStart
+                                  key={index}
+                                  id={index}
+                                  title={moment.name}
+                                  isSelected={selectedMoment.includes(index)}
+                                  onSelect={() => handleCheckboxChange(index)}
+                                />
+                              );
+                            }
+                          )}
+                        </CardGroupWrap>
+                        <div style={{ marginBottom: "140px", width: "100%" }}>
+                          {customItemCount < 3 && (
+                            <>
+                              {/* {showCustomForm && (
                             <InputContainer>
                               <InputField 
                                 placeholder="직접 입력"
@@ -833,35 +838,34 @@ const PageCustomerJourneyMap = () => {
                               </RegisterButton>
                             </InputContainer>
                           )} */}
-                             {showCustomForm && (
-                              <MoleculeWriteCard
-                                placeholder="직접 입력"
-                                value={inputValue}
-                                onChange={handleInputChange}
-                                onSubmit={addCustomMoment}
-                                buttonText="등록"
-                              />
-                            )}
+                              {showCustomForm && (
+                                <MoleculeWriteCard
+                                  placeholder="직접 입력"
+                                  value={inputValue}
+                                  onChange={handleInputChange}
+                                  onSubmit={addCustomMoment}
+                                  buttonText="등록"
+                                />
+                              )}
 
-                          <CustomButton
-                            onClick={() => setShowCustomForm(!showCustomForm)}
-                            style={{ width: '100%' }}
-                            disabled={toolSteps > 2}
-                          >
-                            <ButtonContent>
-                              <PlusIconWrapper>
-                                <PlusIcon>+</PlusIcon>
-                                <ButtonTitle>직접 생성하기</ButtonTitle>
-                              </PlusIconWrapper>
-                            </ButtonContent>
-                          </CustomButton>
-                        </>
-                      )}
-                    </div>
-                    </TabContent5Item>
-                                
-
-
+                              <CustomButton
+                                onClick={() =>
+                                  setShowCustomForm(!showCustomForm)
+                                }
+                                style={{ width: "100%" }}
+                                disabled={toolSteps > 2}
+                              >
+                                <ButtonContent>
+                                  <PlusIconWrapper>
+                                    <PlusIcon>+</PlusIcon>
+                                    <ButtonTitle>직접 생성하기</ButtonTitle>
+                                  </PlusIconWrapper>
+                                </ButtonContent>
+                              </CustomButton>
+                            </>
+                          )}
+                        </div>
+                      </TabContent5Item>
                     </div>
                     <Button
                       Other
@@ -869,10 +873,7 @@ const PageCustomerJourneyMap = () => {
                       Fill
                       Round
                       onClick={handleReportRequest}
-                      disabled={
-                        toolSteps > 2 ||
-                        selectedMoment.length === 0
-                      }
+                      disabled={toolSteps > 2 || selectedMoment.length === 0}
                     >
                       다음
                     </Button>
@@ -902,7 +903,8 @@ const PageCustomerJourneyMap = () => {
                     <BgBoxItem primaryLightest>
                       <H3 color="gray800">Customer Journey Analysis</H3>
                       <Body3 color="gray800">
-                      페르소나와 분석 상황을 기반으로 고객 여정의 주요 단계를 정리해드립니다
+                        페르소나와 분석 상황을 기반으로 고객 여정의 주요 단계를
+                        정리해드립니다
                       </Body3>
                     </BgBoxItem>
 
@@ -913,7 +915,9 @@ const PageCustomerJourneyMap = () => {
                           textAlign: "left",
                         }}
                       >
-                        <Markdown>{prepareMarkdown(customerJourneyMapReport ?? "")}</Markdown>
+                        <Markdown>
+                          {prepareMarkdown(customerJourneyMapReport ?? "")}
+                        </Markdown>
                       </div>
                     </InsightAnalysis>
                   </>
@@ -1031,7 +1035,6 @@ const InsightAnalysis = styled.div`
   }
 `;
 
-
 const CustomButton = styled.button`
   width: 100%;
   padding: 16px;
@@ -1084,13 +1087,11 @@ const InputContainer = styled.div`
   width: 100%;
 `;
 
-
-
 const InputField = styled.input`
   width: 100%;
   height: 65px;
   padding: 24px 20px;
-  border: 1px solid #E0E4EB;
+  border: 1px solid #e0e4eb;
   border-radius: 8px;
   font-size: 14px;
   color: #333;
@@ -1100,11 +1101,10 @@ const InputField = styled.input`
   }
 
   &:focus {
-    outline: none;  // 기본 포커스 아웃라인 제거
-    border-color: #E0E4EB;  // 기존 테두리 색상 유지
+    outline: none; // 기본 포커스 아웃라인 제거
+    border-color: #e0e4eb; // 기존 테두리 색상 유지
   }
 `;
-
 
 const RegisterButton = styled.button`
   position: absolute;
@@ -1115,20 +1115,20 @@ const RegisterButton = styled.button`
   padding: 0 16px;
   border: none;
   border-radius: 6px;
-  background: ${props => props.disabled ? '#F7F8FA' : '#F0F4FF'};
-  color: ${props => props.disabled ? '#8C8C8C' : '#226FFF'};
+  background: ${(props) => (props.disabled ? "#F7F8FA" : "#F0F4FF")};
+  color: ${(props) => (props.disabled ? "#8C8C8C" : "#226FFF")};
   font-size: 14px;
-  cursor: ${props => props.disabled ? 'default' : 'pointer'};
+  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
 
   // &:hover {
-  //   background: ${props => props.disabled ? '#E0E4EB' : '#1b5cd9'};
+  //   background: ${(props) => (props.disabled ? "#E0E4EB" : "#1b5cd9")};
   // }
 `;
 
 const AddButton = styled.button`
   width: 100%;
   height: 48px;
-  border: 1px dashed #E0E4EB;
+  border: 1px dashed #e0e4eb;
   border-radius: 8px;
   background: #fff;
   color: #666;
