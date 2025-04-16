@@ -53,8 +53,44 @@ const BarChartLikertScale11 = ({
     return promotersPercentage - detractorsPercentage;
   };
 
+  // 그룹별 퍼센티지 계산
+  const calculateGroupPercentages = () => {
+    const total = quickSurveyStaticData["총합"]["전체총합"] || 0;
+    if (total === 0) return { detractors: 0, neutral: 0, promoters: 0 };
+
+    // 비추천 그룹 (0-6점) 비율 계산
+    const detractors =
+      (quickSurveyStaticData["0"]["전체총합"] || 0) +
+      (quickSurveyStaticData["1"]["전체총합"] || 0) +
+      (quickSurveyStaticData["2"]["전체총합"] || 0) +
+      (quickSurveyStaticData["3"]["전체총합"] || 0) +
+      (quickSurveyStaticData["4"]["전체총합"] || 0) +
+      (quickSurveyStaticData["5"]["전체총합"] || 0) +
+      (quickSurveyStaticData["6"]["전체총합"] || 0);
+    const detractorsPercentage = Math.round((detractors / total) * 100);
+
+    // 중립 그룹 (7-8점) 비율 계산
+    const neutral =
+      (quickSurveyStaticData["7"]["전체총합"] || 0) +
+      (quickSurveyStaticData["8"]["전체총합"] || 0);
+    const neutralPercentage = Math.round((neutral / total) * 100);
+
+    // 추천 그룹 (9-10점) 비율 계산
+    const promoters =
+      (quickSurveyStaticData["9"]["전체총합"] || 0) +
+      (quickSurveyStaticData["10"]["전체총합"] || 0);
+    const promotersPercentage = Math.round((promoters / total) * 100);
+
+    return {
+      detractors: detractorsPercentage,
+      neutral: neutralPercentage,
+      promoters: promotersPercentage,
+    };
+  };
+
   const data = calculateData();
   const npsScore = calculateNpsScore();
+  const groupPercentages = calculateGroupPercentages();
 
   // NPS 점수에 따른 스타일 결정
   const getNpsStyle = (score) => {
@@ -122,15 +158,21 @@ const BarChartLikertScale11 = ({
           <LegendContainer>
             <GroupContainer width="393px">
               <LegendColor color="#E0E4EB" />
-              <GroupLabel>비추천 그룹</GroupLabel>
+              <LabelContainer>
+                <GroupLabel>비추천 ({groupPercentages.detractors}%)</GroupLabel>
+              </LabelContainer>
             </GroupContainer>
             <GroupContainer width="98px">
               <LegendColor color="#CFDAFF" />
-              <GroupLabel>중립 그룹</GroupLabel>
+              <LabelContainer>
+                <GroupLabel>중립 ({groupPercentages.neutral}%)</GroupLabel>
+              </LabelContainer>
             </GroupContainer>
             <GroupContainer width="97px">
               <LegendColor color={palette.primary} />
-              <GroupLabel>추천 그룹</GroupLabel>
+              <LabelContainer>
+                <GroupLabel>추천 ({groupPercentages.promoters}%)</GroupLabel>
+              </LabelContainer>
             </GroupContainer>
           </LegendContainer>
         )}
@@ -248,14 +290,20 @@ const LegendContainer = styled.div`
   align-items: flex-start;
   gap: 24px;
   width: 100%;
-  margin-top: 16px;
+  margin-top: 4px;
 `;
 
 const GroupContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: ${(props) => props.width || "auto"};
-  gap: 8px;
+  gap: 4px;
+`;
+
+const LabelContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
 `;
 
 const GroupLabel = styled.div`
@@ -265,7 +313,7 @@ const GroupLabel = styled.div`
   line-height: 1.55em;
   letter-spacing: -0.03em;
   color: #666666;
-  text-align: left;
+  text-align: center;
 `;
 
 const LegendColor = styled.div`
