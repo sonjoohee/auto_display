@@ -67,6 +67,7 @@ import QuckSurveyPopup from "../../components/Charts/QuckSurveyPopup";
 import KanoModelGraph from "../../components/Charts/KanoModelGraph";
 import MandalArtGraph from "../../components/Charts/MandalArtGraph";
 import WriteSelfCard from "../../components/Charts/WriteSelfCard";
+import IdeaGenerationTag from "../../components/Charts/IdeaGenerationTag";
 
 const PageStyleGuide  = () => {
   const [activeSection, setActiveSection] = useState('');
@@ -167,6 +168,7 @@ const PageStyleGuide  = () => {
           <QuckSurveyPopup isOpen={true} />
           <MandalArtGraph />
           <WriteSelfCard />
+          <IdeaGenerationTag text="경험 기반 쇼핑 큐레이션" />
         </FlexContainer>
       </ChartComponentsWrap>
       

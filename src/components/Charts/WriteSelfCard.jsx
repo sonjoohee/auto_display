@@ -95,46 +95,14 @@ const WriteSelfCard = () => {
           )}
         </CardContent>
         <IconContainer>
-          <TrashIcon onClick={(e) => e.stopPropagation()}>
-            <svg 
-              width="14" 
-              height="17" 
-              viewBox="0 0 14 17" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path 
-                fill-rule="evenodd" 
-                clip-rule="evenodd" 
-                d="M4.67517 1.86523C4.67517 1.52006 4.95499 1.24023 5.30017 1.24023H9.25951C9.60469 1.24023 9.88451 1.52006 9.88451 1.86523C9.88451 2.21041 9.60469 2.49023 9.25951 2.49023H5.30017C4.95499 2.49023 4.67517 2.21041 4.67517 1.86523ZM0.55896 4.20532C0.55896 3.86014 0.838782 3.58032 1.18396 3.58032H13.375C13.7202 3.58032 14 3.86014 14 4.20532C14 4.5505 13.7202 4.83032 13.375 4.83032H13.0349V13.6346C13.0349 15.3605 11.6358 16.7596 9.90987 16.7596H4.64831C2.92242 16.7596 1.52332 15.3605 1.52332 13.6346V4.83032H1.18396C0.838782 4.83032 0.55896 4.5505 0.55896 4.20532ZM2.77332 4.83032V13.6346C2.77332 14.6702 3.61278 15.5096 4.64831 15.5096H9.90987C10.9454 15.5096 11.7849 14.6702 11.7849 13.6346V4.83032H2.77332ZM5.97034 6.52954C6.31552 6.52954 6.59534 6.80936 6.59534 7.15454L6.59534 12.9573C6.59534 13.3025 6.31551 13.5823 5.97034 13.5823C5.62516 13.5823 5.34534 13.3025 5.34534 12.9573L5.34534 7.15454C5.34534 6.80936 5.62516 6.52954 5.97034 6.52954ZM9.21252 7.15454C9.21252 6.80936 8.9327 6.52954 8.58752 6.52954C8.24235 6.52954 7.96252 6.80936 7.96252 7.15454L7.96252 12.9573C7.96252 13.3025 8.24235 13.5823 8.58752 13.5823C8.9327 13.5823 9.21252 13.3025 9.21252 12.9573V7.15454Z" 
-                fill="#8C8C8C"
-              />
-            </svg>
-          </TrashIcon>
-          <CheckIcon 
+          <RegisterButton 
             onClick={(e) => {
               e.stopPropagation();
-              // 체크표시 클릭 시 아무 동작도 하지 않음
-              // 메시지 추가 기능 제거
             }}
             active={inputText.trim() !== ""}
           >
-            <svg 
-              width="24" 
-              height="24" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path 
-                d="M4 13L9 18L20 7" 
-                stroke={inputText.trim() !== "" ? "#226FFF" : "#E0E4EB"} 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-              />
-            </svg>
-          </CheckIcon>
+            등록
+          </RegisterButton>
         </IconContainer>
       </InputContainer>
     </CardContainer>
@@ -246,38 +214,27 @@ const IconContainer = styled.div`
   display: flex;
   align-items: center;
   margin-left: 12px;
-  gap: 12px;
 `;
 
-const TrashIcon = styled.div`
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-  
-  &:hover {
-    opacity: 0.7;
-  }
-  
-  svg path {
-    transition: fill 0.2s ease;
-  }
-  
-  &:hover svg path {
-    fill: #6C6C6C;
-  }
-`;
-
-const CheckIcon = styled.div`
+const RegisterButton = styled.button`
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  background-color: ${props => props.active ? "#F0F4FF" : "#F7F8FA"};
+  color: ${props => props.active ? palette.primary : "#8C8C8C"};
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
   cursor: ${props => props.active ? 'pointer' : 'default'};
-  transition: transform 0.2s ease;
-  width: 24px;
-  height: 24px;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2px;
   
   &:hover {
-    transform: ${props => props.active ? 'scale(1.1)' : 'none'};
+    background-color: ${props => props.active ? "#E6EDFF" : "#F7F8FA"};
   }
 `;
 

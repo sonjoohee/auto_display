@@ -77,6 +77,22 @@ const MandalArtGraph = () => {
               hasOutline={true}
             >
               {button.text}
+              {button.isCenter && (
+                <BackNavigationText>
+                  <BackIcon viewBox="0 0 12 13" width="12" height="13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clipPath="url(#clip0_42_615)">
+                      <path d="M0.929993 9.44996H7.94999C8.77747 9.44996 9.57105 9.12125 10.1562 8.53613C10.7413 7.95102 11.07 7.15744 11.07 6.32996C11.07 5.50249 10.7413 4.7089 10.1562 4.12379C9.57105 3.53867 8.77747 3.20996 7.94999 3.20996H5.60999" stroke="#8C8C8C" strokeWidth="0.78" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M3.26999 7.10986L0.929993 9.44986L3.26999 11.7899" stroke="#8C8C8C" strokeWidth="0.78" strokeLinecap="round" strokeLinejoin="round"/>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_42_615">
+                        <rect width="12" height="12" fill="white" transform="translate(0 0.5)"/>
+                      </clipPath>
+                    </defs>
+                  </BackIcon>
+                  되돌아가기
+                </BackNavigationText>
+              )}
             </MandalartButton>
           ))}
         </MandalartGrid>
@@ -131,6 +147,7 @@ const MandalartButton = styled.div`
   }};
   border-radius: 8px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 16px;
@@ -160,6 +177,20 @@ const MandalartButton = styled.div`
       return '';
     }}
   }
+`;
+
+const BackNavigationText = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+  font-family: "Pretendard", sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #8C8C8C;
+`;
+
+const BackIcon = styled.svg`
+  margin-right: 4px;
 `;
 
 export default MandalArtGraph; 
