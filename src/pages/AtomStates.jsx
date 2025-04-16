@@ -588,6 +588,13 @@ export const QUICK_SURVEY_REPORT = atom([]);
 export const QUICK_SURVEY_STATIC_DATA = atom({});
 export const QUICK_SURVEY_INTERVIEW_MODE_TYPE = atom("");
 
+
+//Education Tool
+
+export const CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS = atom([]);
+export const CUSTOMER_JOURNEY_MAP_PERSONA = atom([]);
+export const CUSTOMER_JOURNEY_MAP_REPORT = atom([]);
+
 //!saas
 // 프로젝트 생성 페이지
 export const PROJECT_CREATE_INFO = atom({});
