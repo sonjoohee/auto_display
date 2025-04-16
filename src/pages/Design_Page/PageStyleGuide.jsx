@@ -68,6 +68,7 @@ import KanoModelGraph from "../../components/Charts/KanoModelGraph";
 import MandalArtGraph from "../../components/Charts/MandalArtGraph";
 import WriteSelfCard from "../../components/Charts/WriteSelfCard";
 import IdeaGenerationTag from "../../components/Charts/IdeaGenerationTag";
+import ParetoCurveGraph from "../../components/Charts/ParetoCurveGraph";
 
 const PageStyleGuide  = () => {
   const [activeSection, setActiveSection] = useState('');
@@ -82,6 +83,18 @@ const PageStyleGuide  = () => {
   const [showWarning, setShowWarning] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [rangeValue, setRangeValue] = useState(50);
+
+  // ParetoCurveGraph에 사용할 더미데이터
+  const paretoDummyData = [
+    { name: "품질 문제", value: 75 },
+    { name: "배송 지연", value: 50 },
+    { name: "가격 불만", value: 35 },
+    { name: "결제 오류", value: 20 },
+    { name: "재고 부족", value: 15 },
+    { name: "서비스 불량", value: 10 },
+    { name: "앱 오류", value: 8 },
+    { name: "기타", value: 5 }
+  ];
 
   const handleWarningClose = () => {
     setShowWarning(false);
@@ -169,6 +182,7 @@ const PageStyleGuide  = () => {
           <MandalArtGraph />
           <WriteSelfCard />
           <IdeaGenerationTag text="경험 기반 쇼핑 큐레이션" />
+          <ParetoCurveGraph data={paretoDummyData} />
         </FlexContainer>
       </ChartComponentsWrap>
       
