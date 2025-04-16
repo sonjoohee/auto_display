@@ -4243,10 +4243,10 @@ export const EducationToolsRequest = async (
   data,
   isLoggedIn
 ) => {
-  if (!isLoggedIn) {
-    console.error("로그인이 필요합니다.");
-    return null;
-  }
+  // if (!isLoggedIn) {
+  //   console.error("로그인이 필요합니다.");
+  //   return null;
+  // }
 
   try {
 

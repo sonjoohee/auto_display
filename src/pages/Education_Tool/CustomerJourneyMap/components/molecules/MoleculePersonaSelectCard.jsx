@@ -27,23 +27,23 @@ const MoleculePersonaSelectCard = ({
   onPersonaSelect,
 }) => {
   const navigate = useNavigate();
-  console.log(selectedPersonas)
+
   const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
   const [activeTabState, setActiveTabState] = useState("macro_segment");
 
-  // 컴포넌트 마운트 시 초기 unselected 리스트 설정
-  useEffect(() => {
-    if (filteredPersonaList && filteredPersonaList.length > 0) {
-      setPersonaList({
-        selected: [],
-        unselected: [
-          // ...customPersonaList,
-          // ...businessPersonaList,
-          ...filteredPersonaList,
-        ],
-      });
-    }
-  }, [filteredPersonaList]);
+  // // 컴포넌트 마운트 시 초기 unselected 리스트 설정
+  // useEffect(() => {
+  //   if (filteredPersonaList && filteredPersonaList.length > 0) {
+  //     setPersonaList({
+  //       selected: [],
+  //       unselected: [
+  //         // ...customPersonaList,
+  //         // ...businessPersonaList,
+  //         ...filteredPersonaList,
+  //       ],
+  //     });
+  //   }
+  // }, [filteredPersonaList]);
 
   const handleTabClick = (tabName) => {
     setActiveTabState(tabName);
@@ -203,17 +203,15 @@ const MoleculePersonaSelectCard = ({
           })
 
           .map((persona) => {
-            // 현재 persona가 선태된 상태인지 확인 (personaList.selected 에서 조회)
-            const isSelected = personaList.selected.some(
-              (p) => p._id === persona._id
-            );
+            // 여기를 수정: personaList.selected 대신 selectedPersonas 사용
+            const isSelected = selectedPersonas?._id === persona._id;
 
             return (
               <>
                 <ListBoxItem
                   key={persona._id}
                   selected={isSelected}
-                  anySelected={personaList.selected.length > 0}
+                  anySelected={selectedPersonas !== null}
                   interviewType={interviewType}
                 >
                   <Persona
@@ -259,9 +257,7 @@ const MoleculePersonaSelectCard = ({
                         Fill={true}
                         onClick={() => handlePersonaSelect(persona)}
                       >
-                        <Sub2 color="primary">
-                          {interviewType === "single" ? "선택됨" : "선택됨"}
-                        </Sub2>
+                        <Sub2 color="primary">선택됨</Sub2>
                       </Button>
                     ) : (
                       <Button
@@ -269,15 +265,8 @@ const MoleculePersonaSelectCard = ({
                         PrimaryLightest={false}
                         Fill={false}
                         onClick={() => handlePersonaSelect(persona)}
-                        disabled={
-                          interviewType === "multiple" &&
-                          personaList.selected.length >= 5 &&
-                          !isSelected
-                        }
                       >
-                        <Sub2 color="gray500">
-                          {interviewType === "single" ? "선택" : "추가"}
-                        </Sub2>
+                        <Sub2 color="gray500">선택</Sub2>
                       </Button>
                     )}
                   </ListButton>

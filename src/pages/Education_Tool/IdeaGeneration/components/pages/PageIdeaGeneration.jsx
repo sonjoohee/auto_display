@@ -46,6 +46,10 @@ import {
   DESIGN_ANALYSIS_FILE_ID,
   PROJECT_SAAS,
   DESIGN_ANALYSIS_BUSINESS_TITLE,
+  IDEA_GENERATION_START_POSITION,
+  IDEA_GENERATION_IDEA_LIST,
+  CUSTOMER_JOURNEY_MAP_REPORT,
+  CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -68,16 +72,19 @@ import {
   InterviewXDesignEmotionScaleRequest,
   createToolOnServer,
   updateToolOnServer,
+  EducationToolsRequest,
+  getFindToolListOnServerSaas
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
 import AnalysisItem from "../molecules/MoleculeAnalysisItem";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
-import MoleculeDeleteForm from "../../../../../pages/Education_Tool/public/MoleculeDeleteForm";
-
+import MoleculeDeleteForm from "../../../public/MoleculeDeleteForm";
+import MandalArtGraph from "../../../../../components/Charts/MandalArtGraph";
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
+import MoleculeTagList from "../molecules/MoleculeTagList";
 
-const PageIdeaGenerate = () => {
+const PageIdeaGeneration = () => {
 
   const navigate = useNavigate();
 
@@ -106,7 +113,14 @@ const PageIdeaGenerate = () => {
   const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
     DESIGN_ANALYSIS_FILE_ID
   );
+  const [ideaGenerationStartPosition, setIdeaGenerationStartPosition] = useAtom(IDEA_GENERATION_START_POSITION);
+  const [ideaGenerationIdeaList, setIdeaGenerationIdeaList] = useAtom(IDEA_GENERATION_IDEA_LIST);
+  const [customerJourneyMapReport, setCustomerJourneyMapReport] = useAtom(CUSTOMER_JOURNEY_MAP_REPORT);
+  const [customerJourneyMapSelectedPersona, setCustomerJourneyMapSelectedPersona] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA);
+
   const [showPopupSave, setShowPopupSave] = useState(false);
+  const [isContentLoading, setIsContentLoading] = useState(false);
+  const [customerJourneyList, setCustomerJourneyList] = useState([]);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [activeTab, setActiveTab] = useState(1);
@@ -147,7 +161,9 @@ const PageIdeaGenerate = () => {
   });
   const [descriptionLength, setDescriptionLength] = useState(0);
   const [projectDescription, setProjectDescription] = useState("");
-
+  const [selectedProblems, setSelectedProblems] = useState([]);
+  const [isFirstLoad, setIsFirstLoad] = useState(true); // 첫 로딩 체크를 위한 상태
+  const [selectedJourneyMapData, setSelectedJourneyMapData] = useState([]);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -160,6 +176,7 @@ const PageIdeaGenerate = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
+
    
     if (designAnalysisBusinessInfo.length === 0) {
       const projectAnalysis =
@@ -261,6 +278,43 @@ const PageIdeaGenerate = () => {
     setToolLoading(false);
   }, [toolLoading]);
 
+  
+  // 고객핵심가치분석 리스트 가져오기
+  useEffect(() => {
+    const getAllTargetDiscovery = async () => {
+      try {
+        let page = 1;
+        const size = 10;
+        let allItems = [];
+
+        const response = await getFindToolListOnServerSaas(
+          projectSaas?._id ?? "",
+          "ix_customer_journey_map_direction_education",
+          isLoggedIn
+        );
+
+        const newItems = (response || []).filter(
+          (item) =>
+            item?.type === "ix_customer_journey_map_direction_education" &&
+            item?.completedStep === 3
+        );
+
+        allItems = [...allItems, ...newItems];
+
+
+        setCustomerJourneyList(allItems);
+      } catch (error) {
+        setCustomerJourneyList([]); // Set empty array on error
+      }
+    };
+
+
+
+
+
+    getAllTargetDiscovery();
+  }, [isLoggedIn, projectSaas]);
+
   const handleCheckboxChange = (personaId) => {
     if (toolSteps >= 2) return;
     setSelectedPersonas((prev) => {
@@ -301,213 +355,252 @@ const PageIdeaGenerate = () => {
       }
     };
 
+  const handleTagsChange = (selected) => {
+    setSelectedProblems(selected);
+  };
+
   const handleSubmitProblem = async () => {
-    // setIsLoading(true);
     try {
-      // const timeStamp = new Date().getTime();
+    
 
-      // // 비즈니스 데이터 추가
-      // const Data = {
-      //   business: businessDescription,
-      //   tool_id: "image_" + timeStamp,
-      //   image: uploadedFiles[0],
-      // };
+      //     // 빈 문자열이나 공백만 있는 항목 제거
+    // const validItems = targetCustomer.filter(item => item.trim() !== "");
+    
+    // if (validItems.length === 0) {
+    //   // 유효한 항목이 없는 경우 처리
+    //   return;
+    // }
 
-      // setDesignAnalysisFileId(["image_" + timeStamp]);
+    // // API 요청 데이터 구성
+    // const Data = {
+    //   problems: validItems,
+    //   // 필요한 경우 추가 데이터
+    //   // business_id: currentBusinessId,
+    //   // timestamp: new Date().getTime(),
+    // };
 
-      // // API 요청
-      // const response = await InterviewXDesignEmotionAnalysisRequest(
-      //   Data,
-      //   isLoggedIn
-      // );
-      // if (
-      //   !response?.response.design_emotion_analysis ||
-      //   !Array.isArray(response.response.design_emotion_analysis) ||
-      //   response.response.design_emotion_analysis.length === 0
-      // ) {
-      //   setShowPopupError(true);
-      //   return;
-      // }
+    // // API 호출
+    // // const response = await EducationToolsRequest (
+    // //  Data,
+    // //   isLoggedIn
+    // // );
 
-      // const responseToolId = await createToolOnServer(
-      //   {
-      //     projectId: project._id,
-      //     type: "ix_design_emotion_analysis",
-      //   },
-      //   isLoggedIn
-      // );
+    
+  const DUMMY_PROBLEMS = [
+    {
+      id: 1,
+      name: "사용자 경험 개선 필요",
+      description: "현재 UI가 사용자 친화적이지 않음"
+    },
+    {
+      id: 2,
+      name: "성능 최적화 필요",
+      description: "페이지 로딩 속도가 느림"
+    },
+    {
+      id: 3,
+      name: "모바일 대응 미흡",
+      description: "모바일에서 사용성이 좋지 않음"
+    },
+    {
+      id: 4,
+      name: "데이터 동기화 문제",
+      description: "실시간 업데이트가 원활하지 않음"
+    },
+    {
+      id: 5,
+      name: "보안 강화 필요",
+      description: "데이터 보안 수준 향상 필요"
+    },
+    {
+      id: 6,
+      name: "검색 기능 개선",
+      description: "검색 결과의 정확도가 낮음"
+    },
+    {
+      id: 7,
+      name: "에러 처리 미흡",
+      description: "사용자 친화적인 에러 메시지 필요"
+    },
+    {
+      id: 8,
+      name: "접근성 개선 필요",
+      description: "장애인 사용자를 위한 기능 부족"
+    },
+    {
+      id: 9,
+      name: "모바일 대응 미흡",
+      description: "모바일에서 사용성이 좋지 않음"
+    },
+    {
+      id: 10,
+      name: "모바일 대응 미흡",
+      description: "모바일에서 사용성이 좋지 않음"
+    }
+  ];
+ 
+  setIdeaGenerationStartPosition(DUMMY_PROBLEMS);
 
-      // setToolId(responseToolId);
-      // setToolSteps(1);
+    // setIdeaGenerationStartPosition(selectedProblems);
 
-      // // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
-      // setDesignAnalysisEmotionAnalysis(
-      //   response.response.design_emotion_analysis
-      // );
-      // setDesignAnalysisBusinessInfo(businessDescription);
-      // setDesignAnalysisBusinessTitle(businessDescriptionTitle);
-      // // setDesignAnalysisUploadedFiles(uploadedFiles);
-      // setFileNames(uploadedFiles.map((file) => file.name));
 
-      // await updateToolOnServer(
-      //   responseToolId,
-      //   {
-      //     completedStep: 1,
-      //     designEmotionAnalysis: response.response.design_emotion_analysis,
-      //     business: businessDescription,
-      //     imageName: uploadedFiles.map((file) => ({
-      //       id: "image_" + timeStamp,
-      //       name: file.name,
-      //     })),
-      //   },
-      //   isLoggedIn
-      // );
+
+      // API 호출 로직...
 
       handleNextStep(1);
+
     } catch (error) {
+      console.error("Error submitting problems:", error);
       setShowPopupError(true);
-      if (error.response) {
-        switch (error.response.status) {
-          case 500:
-            setShowPopupError(true);
-            break;
-          case 504:
-            setShowPopupError(true);
-            break;
-          default:
-            setShowPopupError(true);
-            break;
-        }
-      } else {
-        setShowPopupError(true);
-      }
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const handleSubmitPersonas = async () => {
+  const handleSubmitTheme = async () => {
     handleNextStep(2);
     setToolSteps(2);
     try {
-      const selectedPersonaData = designAnalysisEmotionAnalysis.filter(
-        (persona, index) => selectedPersonas.includes(index)
-      );
-      setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
+      
+      // const selectedPersonaData = designAnalysisEmotionAnalysis.filter(
+      //   (persona, index) => selectedPersonas.includes(index)
+      // );
+      // setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
 
-      await updateToolOnServer(
-        toolId,
-        {
-          completedStep: 2,
-          designSelectedPersona: selectedPersonaData,
-        },
-        isLoggedIn
-      );
-      setIsLoadingReport(true);
+      // await updateToolOnServer(
+      //   toolId,
+      //   {
+      //     completedStep: 2,
+      //     designSelectedPersona: selectedPersonaData,
+      //   },
+      //   isLoggedIn
+      // );
+      // setIsLoadingReport(true);
 
-      // 선택된 페르소나가 하나일 경우에만 시나리오 요청
-      if (selectedPersonaData.length > 0) {
-        const persona = selectedPersonaData[0]; // 첫 번째 페르소나 선택
-        try {
-          const apiRequestData = {
-            business: designAnalysisBusinessInfo,
-            design_emotion_selected_field: persona.name,
-            design_emotion_analysis: persona,
-          };
+      // // 선택된 페르소나가 하나일 경우에만 시나리오 요청
+      // if (selectedPersonaData.length > 0) {
+      //   const persona = selectedPersonaData[0]; // 첫 번째 페르소나 선택
+      //   try {
+      //     const apiRequestData = {
+      //       business: designAnalysisBusinessInfo,
+      //       design_emotion_selected_field: persona.name,
+      //       design_emotion_analysis: persona,
+      //     };
 
-          let response = await InterviewXDesignEmotionTargetRequest(
-            apiRequestData,
-            isLoggedIn
-          );
+      //     let response = await InterviewXDesignEmotionTargetRequest(
+      //       apiRequestData,
+      //       isLoggedIn
+      //     );
 
-          const maxAttempts = 10;
-          let attempt = 0;
+      //     const maxAttempts = 10;
+      //     let attempt = 0;
 
-          while (
-            !response?.response?.design_emotion_target ||
-            typeof response.response.design_emotion_target !== "object" ||
-            Object.keys(response?.response?.design_emotion_target).length ===
-              0 ||
-            !response?.response?.design_emotion_target?.hasOwnProperty(
-              "target_emotion"
-            ) ||
-            !response?.response?.design_emotion_target?.hasOwnProperty(
-              "design_perspectives"
-            ) ||
-            !response?.response?.design_emotion_target?.hasOwnProperty(
-              "designer_guidelines"
-            )
-          ) {
-            if (attempt >= maxAttempts) {
-              setShowPopupError(true);
-              return;
-            }
+      //     while (
+      //       !response?.response?.design_emotion_target ||
+      //       typeof response.response.design_emotion_target !== "object" ||
+      //       Object.keys(response?.response?.design_emotion_target).length ===
+      //         0 ||
+      //       !response?.response?.design_emotion_target?.hasOwnProperty(
+      //         "target_emotion"
+      //       ) ||
+      //       !response?.response?.design_emotion_target?.hasOwnProperty(
+      //         "design_perspectives"
+      //       ) ||
+      //       !response?.response?.design_emotion_target?.hasOwnProperty(
+      //         "designer_guidelines"
+      //       )
+      //     ) {
+      //       if (attempt >= maxAttempts) {
+      //         setShowPopupError(true);
+      //         return;
+      //       }
 
-            response = await InterviewXDesignEmotionTargetRequest(
-              apiRequestData,
-              isLoggedIn
-            );
+      //       response = await InterviewXDesignEmotionTargetRequest(
+      //         apiRequestData,
+      //         isLoggedIn
+      //       );
 
-            attempt++;
-          }
+      //       attempt++;
+      //     }
 
-          setDesignAnalysisEmotionTarget(
-            response.response.design_emotion_target
-          );
+      //     setDesignAnalysisEmotionTarget(
+      //       response.response.design_emotion_target
+      //     );
 
-          const oceanData = {
-            tool_id: designAnalysisFileId[0],
-            business: designAnalysisBusinessInfo,
-            design_emotion_selected_field: persona.name,
-            design_emotion_target: response?.response?.design_emotion_target,
-          };
+      //     const oceanData = {
+      //       tool_id: designAnalysisFileId[0],
+      //       business: designAnalysisBusinessInfo,
+      //       design_emotion_selected_field: persona.name,
+      //       design_emotion_target: response?.response?.design_emotion_target,
+      //     };
 
-          attempt = 0;
-          let oceanResponse = null;
+      //     attempt = 0;
+      //     let oceanResponse = null;
 
-          while (
-            !oceanResponse ||
-            typeof oceanResponse.response.design_emotion_scale !== "object" ||
-            Object.keys(oceanResponse?.response?.design_emotion_scale)
-              .length === 0 ||
-            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
-              "conclusion"
-            ) ||
-            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
-              "evaluation_analysis"
-            ) ||
-            !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
-              "sd_scale_analysis"
-            )
-          ) {
-            if (attempt >= maxAttempts) {
-              setShowPopupError(true);
-              return;
-            }
+      //     while (
+      //       !oceanResponse ||
+      //       typeof oceanResponse.response.design_emotion_scale !== "object" ||
+      //       Object.keys(oceanResponse?.response?.design_emotion_scale)
+      //         .length === 0 ||
+      //       !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
+      //         "conclusion"
+      //       ) ||
+      //       !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
+      //         "evaluation_analysis"
+      //       ) ||
+      //       !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
+      //         "sd_scale_analysis"
+      //       )
+      //     ) {
+      //       if (attempt >= maxAttempts) {
+      //         setShowPopupError(true);
+      //         return;
+      //       }
 
-            oceanResponse = await InterviewXDesignEmotionScaleRequest(
-              oceanData,
-              isLoggedIn
-            );
+      //       oceanResponse = await InterviewXDesignEmotionScaleRequest(
+      //         oceanData,
+      //         isLoggedIn
+      //       );
 
-            attempt++;
-          }
-          setDesignAnalysisEmotionScale(
-            oceanResponse.response.design_emotion_scale
-          );
+      //       attempt++;
+      //     }
+      //     setDesignAnalysisEmotionScale(
+      //       oceanResponse.response.design_emotion_scale
+      //     );
 
-          await updateToolOnServer(
-            toolId,
-            {
-              completedStep: 3,
-              designEmotionTarget: response.response.design_emotion_target,
-              designEmotionScale: oceanResponse.response.design_emotion_scale,
-              designSelectedPersona: selectedPersonaData,
-            },
-            isLoggedIn
-          );
-        } catch (error) {}
-      }
+      //     await updateToolOnServer(
+      //       toolId,
+      //       {
+      //         completedStep: 3,
+      //         designEmotionTarget: response.response.design_emotion_target,
+      //         designEmotionScale: oceanResponse.response.design_emotion_scale,
+      //         designSelectedPersona: selectedPersonaData,
+      //       },
+      //       isLoggedIn
+      //     );
+      //   } catch (error) {}
+      // }
+
+
+const DUMMY_IDEAS = [
+  {
+    id: 1,
+    title: "Idea 1. 소비자 중요 가치 분석",
+    content: [
+      "설명: 장인의 오리엔트를 실시간으로 분석하고, AI가 최적의 정소 결정의 방법을 선택하여 자동으로 청소하는 로봇 시스템.",
+      "기술 활용: 병원 진료 데이터를 기반으로 알레르기 유발 물질, 공기 중 유해 성분 등을 분석하고, 맞춤형 청소 설정을 제공."
+    ]
+  },
+  {
+    id: 2,
+    title: "Idea 2. 소비자 중요 가치 분석",
+    content: [
+      "설명: 장인의 오리엔트를 실시간으로 분석하고, AI가 최적의 정소 결정의 방법을 선택하여 자동으로 청소하는 로봇 시스템.",
+      "기술 활용: 병원 진료 데이터를 기반으로 알레르기 유발 물질, 공기 중 유해 성분 등을 분석하고, 맞춤형 청소 설정을 제공."
+    ]
+  },
+  // ... 더 많은 아이디어 추가 가능
+];
+
+setIdeaGenerationIdeaList(DUMMY_IDEAS);
 
       // setToolStep(3);
     } catch (error) {
@@ -533,19 +626,69 @@ const PageIdeaGenerate = () => {
   };
 
   
-  const handlePurposeSelect = (purpose, selectBoxId) => {
-    setSelectedPurposes((prev) => ({
-      ...(prev || {}),
-      [selectBoxId]: purpose || "",
-    }));
-    handleContactInputChange("purpose", purpose || "");
-    setSelectBoxStates((prev) => ({
-      ...(prev || {}),
-      [selectBoxId]: false,
-    }));
+  // const handlePurposeSelect = (purpose, selectBoxId) => {
 
-    if (selectBoxId === "customerList") {
-      setBusinessDescription(purpose || "");
+  //   setSelectedPurposes((prev) => ({
+  //     ...(prev || {}),
+  //     [selectBoxId]: purpose || "",
+  //   }));
+  //   handleContactInputChange("purpose", purpose || "");
+  //   setSelectBoxStates((prev) => ({
+  //     ...(prev || {}),
+  //     [selectBoxId]: false,
+  //   }));
+
+  //   if (selectBoxId === "customerList") {
+  //     setBusinessDescription(purpose || "");
+  //   }
+
+  // };
+
+  const handlePurposeSelect = async (purpose, selectBoxId, item) => {
+    setIsContentLoading(true);
+    
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    try {
+      if (selectBoxId === "customerList" && item) {
+        setSelectedJourneyMapData(item);
+        console.log("Selected Journey Map Data:", item);
+
+        setBusinessDescription(purpose || "");
+        
+        const data = {
+          type: "ix_idea_generation_problem_education",
+          customer_journey_map_persona: item.customerJourneyMapSelectedPersona,
+          customer_journey_map_report: item.customerJourneyMapReport,
+        };
+        console.log(data);
+
+        const response = await EducationToolsRequest({
+          data,
+          isLoggedIn
+        });
+
+        console.log("API Response:", response);
+      }
+
+      setSelectedPurposes((prev) => ({
+        ...(prev || {}),
+        [selectBoxId]: purpose || "",
+      }));
+      
+      handleContactInputChange("purpose", purpose || "");
+      setSelectBoxStates((prev) => ({
+        ...(prev || {}),
+        [selectBoxId]: false,
+      }));
+
+    } catch (error) {
+      console.error("Error in handlePurposeSelect:", error);
+      setShowPopupError(true);
+    } finally {
+      setTimeout(() => {
+        setIsContentLoading(false);
+      }, 500);
     }
   };
 
@@ -615,7 +758,7 @@ const PageIdeaGenerate = () => {
     const detectRefresh = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
-      if (currentUrl.toLowerCase().includes("designanalysis")) {
+      if (currentUrl.toLowerCase().includes("ideageneration")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         const lastUrl = sessionStorage.getItem("lastUrl");
 
@@ -669,6 +812,41 @@ const PageIdeaGenerate = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
+
+  // // activeTab이 1로 변경될 때 API 호출
+  // useEffect(() => {
+  //   const fetchProblemData = async () => {
+  //     // if (activeTab === 1 && isFirstLoad) {
+  //       setIsLoading(true);
+  //       try {
+
+  //         const data = {
+  //           type: "ix_idea_generation_problem_education",
+  //           customer_journey_map_persona : customerJourneyMapSelectedPersona,
+  //           customer_journey_map_report : customerJourneyMapReport,
+  //         }
+
+  //         console.log(data);
+         
+  //         // API 호출
+  //         const response = await EducationToolsRequest({
+  //          data, isLoggedIn
+  //         });
+
+  //         console.log(response);
+
+  //       } catch (error) {
+  //         console.error("Error fetching problem data:", error);
+  //         setShowPopupError(true);
+  //       } finally {
+  //         setIsLoading(false);
+  //         setIsFirstLoad(false); // 첫 로딩 완료 표시
+  //       }
+  //     }
+  //   // };
+
+  //   fetchProblemData();
+  // }, []); // activeTab이 변경될 때마다 실행
 
   return (
     <>
@@ -789,7 +967,7 @@ const PageIdeaGenerate = () => {
 
                       {selectBoxStates.customerList && (
                         <SelectBoxList dropUp={dropUpStates.customerList}>
-                          {customerValueList.length === 0 ? (
+                          {customerJourneyList.length === 0 ? (
                             <SelectBoxItem
                               disabled={toolSteps >= 1}
                        
@@ -799,25 +977,19 @@ const PageIdeaGenerate = () => {
                               </Body2>
                             </SelectBoxItem>
                           ) : (
-                            customerValueList.map((item, index) => (
+                            customerJourneyList.map((item, index) => (
                               <SelectBoxItem
                                 disabled={toolSteps >= 1}
                                 key={index}
                                 onClick={() => {
+                                  console.log("Selected Item:", item);
                                   handlePurposeSelect(
                                     `${item.updateDate.split(":")[0]}:${
                                       item.updateDate.split(":")[1]
                                     } 고객 핵심 가치 분석기 - 
-                                    ${
-                                      item.selectedCustomerValuePersona.length
-                                    }명
-                                    페르소나 분석`,
-                                    "customerList"
-                                  );
-                                  setTargetCustomer(
-                                    item.customerValueClustering.map(
-                                      (subItem) => subItem.cluster_name
-                                    )
+                                    ${item.customerJourneyMapSelectedPersona.personaName || '페르소나'} 분석`,
+                                    "customerList",
+                                    item
                                   );
                                 }}
                               >
@@ -825,8 +997,7 @@ const PageIdeaGenerate = () => {
                                   {item.updateDate.split(":")[0]}:
                                   {item.updateDate.split(":")[1]} 고객 핵심 가치
                                   분석기 -
-                                  {item.selectedCustomerValuePersona.length}명
-                                  페르소나 분석
+                                  {item.customerJourneyMapSelectedPersona.personaName || '페르소나'} 분석
                                 </Body2>
                               </SelectBoxItem>
                             ))
@@ -836,38 +1007,56 @@ const PageIdeaGenerate = () => {
                     </SelectBox>
                   </TabContent5Item>
                       
+
                   <TabContent5Item required>
-                    <div className="title">
-                      <Body1 color="gray700">문제점 & 니즈 리스트 (최소 8개 이상 작성 필요)</Body1>
-                      <Body1 color="red">*</Body1>
-                    </div>
-
-                      <MoleculeDeleteForm
-                        items={targetCustomer || []}  // 안전 체크 추가
-                        setItems={setTargetCustomer || []}
-                        disabled={toolSteps >= 1}
-                        maxItems={13}
-                        placeholder="문제점 작성"
-                        initialItemCount={8}
-                      />
+                    {isContentLoading ? (
+                     <div
+                     style={{
+                       width: "100%",
+                       display: "flex",
+                       justifyContent: "center",
+                       minHeight: "200px",
+                       alignItems: "center",
+                     }}
+                   >
+                     <AtomPersonaLoader message="문제점 & 니즈 리스트를 불러오고 있어요..." />
+                   </div>
+                    ) : (
+                      <>
+                        <div className="title">
+                          <Body1 color="gray700">문제점 & 니즈 리스트 (최소 8개 이상 작성 필요)</Body1>
+                        </div>
+                        <MoleculeDeleteForm
+                          items={targetCustomer || []}
+                          setItems={setTargetCustomer || []}
+                          disabled={toolSteps >= 1}
+                          maxItems={13}
+                          placeholder="문제점 작성"
+                          initialItemCount={8}
+                        />
+                 
+                        
+                      </>
+                    )}
                   </TabContent5Item>
+                  
                     </div>
-
                     <Button
-                      Other
-                      Primary
-                      Fill
-                      Round
-                      onClick={handleSubmitProblem}
-                      // disabled={!isRequiredFieldsFilled() || toolSteps >= 1}
-                      // targetCustomer.filter(item => item.trim() !== '').length < 8  // 8개 미만이면 비활성화
-                    >
-                      아이디어 발상으로 전환
-                    </Button>
+                            Other
+                            Primary
+                            Fill
+                            Round
+                            onClick={handleSubmitProblem}
+                            // disabled={!isRequiredFieldsFilled() || toolSteps >= 1}
+                          >
+                            아이디어 발상으로 전환
+                          </Button>
+                   
                   </>
                 )}
               </TabContent5>
-            )}
+              )}
+      
 
             {activeTab === 2 && completedSteps.includes(1) && (
               <TabContent5>
@@ -899,28 +1088,18 @@ const PageIdeaGenerate = () => {
                         </Body1>
                       </Title>
 
-                      <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                        {designAnalysisEmotionAnalysis.length > 0 ? (
-                          designAnalysisEmotionAnalysis.map(
-                            (persona, index) => {
-                              return (
-                                <MoleculeDesignItem
-                                  FlexStart
-                                  key={index}
-                                  id={index}
-                                  title={persona.name}
-                                  subtitle={persona.reason}
-                                  isSelected={selectedPersonas.includes(index)}
-                                  onSelect={() => handleCheckboxChange(index)}
-                                  disabled={toolSteps >= 2 ? true : false}
-                                />
-                              );
-                            }
-                          )
-                        ) : (
-                          <Body3 color="gray700">데이터가 없습니다.</Body3>
-                        )}
-                      </CardGroupWrap>
+                      {/* {selectedProblems.length > 0 ? ( */}
+                     <CardGroupWrap column style={{ marginBottom: "140px" }}>
+                     <MoleculeTagList
+                       items={ideaGenerationStartPosition.map(problem => problem.name)}  // name만 전달
+                       onTagsChange={handleTagsChange}
+                       disabled={toolSteps >= 2}
+                     />
+                   </CardGroupWrap>
+                    {/* ) : (
+                      <Body3 color="gray700">데이터가 없습니다.</Body3>
+                    )} */}
+
 
                       <div className="content">
                     <TabContent5Item required>
@@ -933,9 +1112,9 @@ const PageIdeaGenerate = () => {
                       <FormBox Large>
                         <CustomTextarea
                           Edit
-                          rows={6}
+                          rows={4}
                           placeholder='보유 기술을 입력하시면, 아이디어가 더 잘나와요 '
-                          maxLength={100}
+                          maxLength={150}
                           status="valid"
                           value={projectDescription}
                           onChange={(e) => {
@@ -966,7 +1145,7 @@ const PageIdeaGenerate = () => {
                       Primary
                       Fill
                       Round
-                      onClick={handleSubmitPersonas}
+                      onClick={handleSubmitTheme}
                       // disabled={!isRequiredFieldsFilled() || toolSteps >= 1}
                       // targetCustomer.filter(item => item.trim() !== '').length < 8  // 8개 미만이면 비활성화
                     >
@@ -991,141 +1170,49 @@ const PageIdeaGenerate = () => {
                   </div>
                 ) : (
                   <>
-                    <BgBoxItem primaryLightest>
-                      <H3 color="gray800">디자인 감성 분석</H3>
+                    <div className="title">
+                      <H3 color="gray800">Idea Generation Theme</H3>
                       <Body3 color="gray800">
-                        디자인이 사용자에게 전달하는 감정을 분석하고, 시각적
-                        커뮤니케이션 효과를 극대화하세요
+                      문제와 니즈를 창의적 해결 주제로 전환하여, 아이디어 발상의 방향을 정해주세요.
                       </Body3>
-                    </BgBoxItem>
+                    </div>
 
-                    <InsightAnalysis>
-                      <div className="title">
-                        <div>
-                          <TabWrapType4>
-                            <TabButtonType4
-                              active={activeDesignTab === "emotion"}
-                              onClick={() => setActiveDesignTab("emotion")}
-                            >
-                              디자인 목표 감성
-                            </TabButtonType4>
-                            <TabButtonType4
-                              active={activeDesignTab === "scale"}
-                              onClick={() => setActiveDesignTab("scale")}
-                            >
-                              감정 스케일 매핑
-                            </TabButtonType4>
-                          </TabWrapType4>
-                        </div>
-                        {/* <Button Primary onClick={() => setShowPopupSave(true)}>
-                          리포트 저장하기
-                        </Button> */}
-                      </div>
-                    </InsightAnalysis>
+                    <div className="content">
+                    <Title>
+                        <Body1 color="gray700">
+                        아이디어 시작점을 선택하세요 (8개 선택가능) 
+                        </Body1>
+                      </Title>
 
-                    <InsightAnalysis>
-                      <div className="title">
-                        <H4 color="gray800" align="left">
-                          {activeDesignTab === "emotion" ? (
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: `${project?.projectTitle}가(${selectedDesignAnalysisEmotionAnalysis?.[0]?.name})
-                            에서 궁극적으로 달성하고자하는 주요 목표 감성은 ${designAnalysisEmotionTarget?.target_emotion} `,
-                              }}
-                            />
-                          ) : (
-                            `${designAnalysisEmotionScale?.conclusion}`
-                          )}
-                        </H4>
-                      </div>
+                      {/* {selectedProblems.length > 0 ? ( */}
+                     <CardGroupWrap column style={{ marginBottom: "140px" }}>
+                     <MandalArtGraph
+                      //  items={ideaGenerationStartPosition.map(problem => problem.name)}  // name만 전달
+                      //  onTagsChange={handleTagsChange}
+                      //  disabled={toolSteps >= 2}
+                     />
+                   </CardGroupWrap>
+                    {/* ) : (
+                      <Body3 color="gray700">데이터가 없습니다.</Body3>
+                    )} */}
+
 
                       <div className="content">
-                        {activeDesignTab === "emotion" ? (
-                          <Body3 color="gray700">
-                            {designAnalysisEmotionTarget?.designer_guidelines}
-                          </Body3>
-                        ) : (
-                          <>
-                            <Body3 color="gray700">
-                              강점 :{" "}
-                              {
-                                designAnalysisEmotionScale?.evaluation_analysis
-                                  ?.strengths
-                              }
-                            </Body3>
-                            <Body3 color="gray700">
-                              약점 및 개선 방향:{" "}
-                              {
-                                designAnalysisEmotionScale?.evaluation_analysis
-                                  ?.weaknesses
-                              }
-                            </Body3>
-                          </>
-                        )}
-                      </div>
-                    </InsightAnalysis>
+                      <IdeaContainer>
+                      {ideaGenerationIdeaList.map((idea) => (
+                        <IdeaBox key={idea.id}>
+                          <IdeaTitle>{idea.title}</IdeaTitle>
+                          <IdeaContent>
+                            {idea.content.map((text, index) => (
+                              <IdeaText key={index}>• {text}</IdeaText>
+                            ))}
+                          </IdeaContent>
+                        </IdeaBox>
+                      ))}
+                </IdeaContainer>
+                  </div>
 
-                    {activeDesignTab === "emotion" && (
-                      <InsightAnalysis style={{ marginBottom: "240px" }}>
-                        <Sub3 color="gray700" align="left">
-                          💡 %는 해당 비즈니스에서 차지하는 중요도를 의미합니다.
-                        </Sub3>
-                        <CardGroupWrap column $isExpanded={state.isExpanded}>
-                          {designAnalysisEmotionTarget?.design_perspectives?.map(
-                            (perspective, index) => (
-                              <AnalysisItem
-                                business={designAnalysisBusinessInfo}
-                                key={index}
-                                percentage={perspective.weight + "%"}
-                                title={perspective.name}
-                                subtitle={perspective.features
-                                  .map((feature) => feature.title)
-                                  .join(", ")}
-                                details={perspective}
-                              />
-                            )
-                          )}
-                        </CardGroupWrap>
-                      </InsightAnalysis>
-                    )}
-
-                    {activeDesignTab === "scale" && (
-                      <InsightAnalysis style={{ marginBottom: "240px" }}>
-                        <OCEANRangeWrap report>
-                          {/* OCEAN 값 슬라이더 */}
-                          {designAnalysisEmotionScale?.sd_scale_analysis?.map(
-                            (item, index) => (
-                              <div key={index}>
-                                <Body3 color="gray800" align="right">
-                                  {item.opposite_emotion}
-                                </Body3>
-                                <RangeSlider
-                                  type="range"
-                                  min="1"
-                                  max="7"
-                                  step="1"
-                                  value={item.score}
-                                  // disabled={true}
-                                  // style={{ flex: "2" }}
-                                />
-                                <Body3 color="gray800" align="left">
-                                  {item.target_emotion}
-                                </Body3>
-                              </div>
-                            )
-                          )}
-                        </OCEANRangeWrap>
-                      </InsightAnalysis>
-                    )}
-
-                    {/* <Button
-                      Small
-                      Primary
-                      onClick={() => setShowPopupSave(true)}
-                      style={{ whiteSpace: "nowrap" }}
-                    >
-                      리포트 저장하기
-                    </Button> */}
+                    </div>
                   </>
                 )}
               </TabContent5>
@@ -1175,7 +1262,7 @@ const PageIdeaGenerate = () => {
   );
 };
 
-export default PageIdeaGenerate;
+export default PageIdeaGeneration;
 
 const DesignAnalysisWrap = styled.div`
   display: flex;
@@ -1301,4 +1388,87 @@ const ButtonGroup = styled.div`
 
 const EditButtonGroup = styled(ButtonGroup)`
   justify-content: end;
+`;
+
+
+const InsightContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid #e0e4e8;
+  border-radius: 10px;
+  padding: 16px;
+`;
+
+const InsightSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-bottom: 1px solid #e0e4e8;
+  padding-bottom: 16px;
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+`;
+
+
+const IdeaContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  padding: 20px;
+`;
+
+const IdeaBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: ${palette.white};
+  border: 1px solid ${palette.outlineGray};
+  border-radius: 8px;
+  text-align: left;
+`;
+
+const IdeaTitle = styled.h3`
+  font-family: 'Pretendard', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: ${palette.gray800};
+  margin: 0;
+`;
+
+const IdeaContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const IdeaText = styled.p`
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: ${palette.gray600};
+  margin: 0;
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  background: ${palette.white};
+  border-radius: 10px;
+  padding: 24px;
+  margin-top: 16px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  margin-bottom: 140px;
 `;

@@ -592,8 +592,12 @@ export const QUICK_SURVEY_INTERVIEW_MODE_TYPE = atom("");
 //Education Tool
 
 export const CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS = atom([]);
-export const CUSTOMER_JOURNEY_MAP_PERSONA = atom([]);
+export const CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA = atom({});
 export const CUSTOMER_JOURNEY_MAP_REPORT = atom([]);
+export const CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION = atom([]);
+
+export const IDEA_GENERATION_START_POSITION = atom([]);
+export const IDEA_GENERATION_IDEA_LIST = atom([]);
 
 //!saas
 // 프로젝트 생성 페이지
