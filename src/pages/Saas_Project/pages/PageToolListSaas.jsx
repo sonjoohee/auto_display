@@ -1618,6 +1618,191 @@ const PageToolListSaas = () => {
                       </div>
                     </div>
                   </ExploreCard>,
+
+                  // Edu 툴 추가
+                    <ExploreCard Report key="report-1">
+                    <span>
+                      <images.GridReport color={palette.gray700} />
+                      Report
+                    </span>
+                    <p>
+                      <img src={images.ImgExplore14} alt="" />
+                    </p>
+                    <Body1 color="gray800">
+                      <em>준비중</em>
+                      고객 여정 맵
+                    </Body1>
+
+                    <div
+                      className="overlay"
+                      onClick={() => {
+                        navigate("/CustomerJourneyMap");
+                      }}
+                    >
+                      <span>
+                        <images.GridReport color={palette.white} />
+                        Report
+                      </span>
+
+                      <div className="text">
+                        <Body1 color="white">
+                          <em>준비중</em>고객 여정 지도
+                        </Body1>
+                        <Caption1 color="white" align="left">
+                          고객의 구매 경로를 시각화하여 비즈니스 개선 방향을 제시해드려요
+                        </Caption1>
+                        <i />
+                      </div>
+                    </div>
+                  </ExploreCard>,
+
+                    <ExploreCard Report key="report-1">
+                    <span>
+                      <images.GridReport color={palette.gray700} />
+                      Report
+                    </span>
+                    <p>
+                      <img src={images.ImgExplore14} alt="" />
+                    </p>
+                    <Body1 color="gray800">
+                      <em>준비중</em>
+                      아이디어 발상
+                    </Body1>
+
+                    <div
+                      className="overlay"
+                      onClick={() => {
+                        navigate("/IdeaGenerate");
+                      }}
+                    >
+                      <span>
+                        <images.GridReport color={palette.white} />
+                        Report
+                      </span>
+
+                      <div className="text">
+                        <Body1 color="white">
+                          <em>준비중</em>아이디어 발상
+                        </Body1>
+                        <Caption1 color="white" align="left">
+                          비즈니스 아이디어를 생성하고 평가하는 툴
+                        </Caption1>
+                        <i />
+                      </div>
+                    </div>
+                  </ExploreCard>,
+
+                    <ExploreCard Report key="report-1">
+                    <span>
+                      <images.GridReport color={palette.gray700} />
+                      Report
+                    </span>
+                    <p>
+                      <img src={images.ImgExplore14} alt="" />
+                    </p>
+                    <Body1 color="gray800">
+                      <em>준비중</em>
+                      Kano Model
+                    </Body1>
+
+                    <div
+                      className="overlay"
+                      onClick={() => {
+                        navigate("/KanoModel");
+                      }}
+                    >
+                      <span>
+                        <images.GridReport color={palette.white} />
+                        Report
+                      </span>
+
+                      <div className="text">
+                        <Body1 color="white">
+                          <em>준비중</em>칸 모델
+                        </Body1>
+                        <Caption1 color="white" align="left">
+                          고객의 만족도와 비즈니스 성과를 분석하여 개선 방향을 제시해드려요
+                        </Caption1>
+                        <i />
+                      </div>
+                    </div>
+                  </ExploreCard>,
+
+
+                  <ExploreCard Report key="report-1">
+                  <span>
+                    <images.GridReport color={palette.gray700} />
+                    Report
+                  </span>
+                  <p>
+                    <img src={images.ImgExplore14} alt="" />
+                  </p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    아이디어 평가
+                  </Body1>
+
+                  <div
+                    className="overlay"
+                    onClick={() => {
+                      navigate("/IdeaEvaluate");
+                    }}
+                  >
+                    <span>
+                      <images.GridReport color={palette.white} />
+                      Report
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white">
+                        <em>준비중</em>아이디어 평가
+                      </Body1>
+                      <Caption1 color="white" align="left">
+                        아이디어를 평가하고 개선 방향을 제시해드려요
+                      </Caption1>
+                      <i />
+                    </div>
+                  </div>
+                  </ExploreCard>,
+
+
+                  <ExploreCard Report key="report-1">
+                  <span>
+                    <images.GridReport color={palette.gray700} />
+                    Report
+                  </span>
+                  <p>
+                    <img src={images.ImgExplore14} alt="" />
+                  </p>
+                  <Body1 color="gray800">
+                    <em>준비중</em>
+                    NPS
+                  </Body1>
+
+                  <div
+                    className="overlay"
+                    onClick={() => {
+                      navigate("/NPS");
+                    }}
+                  >
+                    <span>
+                      <images.GridReport color={palette.white} />
+                      Report
+                    </span>
+
+                    <div className="text">
+                      <Body1 color="white">
+                        <em>준비중</em>NPS
+                      </Body1>
+                      <Caption1 color="white" align="left">
+                        고객의 만족도와 비즈니스 성과를 분석하여 개선 방향을 제시해드려요
+                      </Caption1>
+                      <i />
+                    </div>
+                  </div>
+                  </ExploreCard>,
+
+               
                   <ExploreCard
                     Report
                     Ready

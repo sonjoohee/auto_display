@@ -59,6 +59,13 @@ import PageIdeaGenerator from "./pages/Tool/IdeaGenerator/components/pages/PageI
 import PageDesignAnalysis from "./pages/Tool/DesignEmotionAnalyzer/components/pages/PageDesignAnalysis";
 import PageDesignSuitability from "./pages/Persona/components/pages/PageDesignSuitability";
 
+import PageCustomerJourneyMap from "./pages/Education_Tool/CustomerJourneyMap/components/pages/PageCustomerJourneyMap";
+import PageKanoModel from "./pages/Education_Tool/KanoModel/components/pages/PageKanoModel";
+import PageIdeaGenerate from "./pages/Education_Tool/IdeaGenerate/components/pages/PageIdeaGenerate";
+import PageNps from "./pages/Education_Tool/Nps/components/pages/PageNps";
+import PageIdeaEvaluate from "./pages/Education_Tool/IdeaEvaluate/components/pages/PageIdeaEvaluate";
+
+
 import PageMyProfile from "./pages/Persona/components/pages/PageMyProfile";
 
 import PageTerms from "./pages/PageTerms";
@@ -539,6 +546,51 @@ function App() {
             element={
               <RequireToken>
                 <PageDesignAnalysis />
+              </RequireToken>
+            }
+          ></Route>
+
+          <Route
+            path="/CustomerJourneyMap"
+            element={
+              <RequireToken>
+                <PageCustomerJourneyMap />
+              </RequireToken>
+            }
+          ></Route>
+          
+          <Route
+            path="/IdeaGenerate"
+            element={
+              <RequireToken>
+                <PageIdeaGenerate />
+              </RequireToken>
+            }
+          ></Route>
+           
+           <Route
+            path="/KanoModel"
+            element={
+              <RequireToken>
+                <PageKanoModel />
+              </RequireToken>
+            }
+          ></Route>
+
+          <Route
+            path="/Nps"
+            element={
+              <RequireToken>
+                <PageNps />
+              </RequireToken>
+            }
+          ></Route>
+
+          <Route
+            path="/IdeaEvaluate"
+            element={
+              <RequireToken>
+                <PageIdeaEvaluate />
               </RequireToken>
             }
           ></Route>
