@@ -65,7 +65,6 @@ import PageIdeaGeneration from "./pages/Education_Tool/IdeaGeneration/components
 import PageNps from "./pages/Education_Tool/Nps/components/pages/PageNps";
 import PageIdeaEvaluate from "./pages/Education_Tool/IdeaEvaluate/components/pages/PageIdeaEvaluate";
 
-
 import PageMyProfile from "./pages/Persona/components/pages/PageMyProfile";
 
 import PageTerms from "./pages/PageTerms";
@@ -101,6 +100,7 @@ import PagePersona4SingleLive from "./pages/Persona/components/pages/PagePersona
 // 로그인, 회원가입
 import OrganismLogin from "./pages/Global/organisms/OrganismLogin";
 import OrganismSignin from "./pages/Global/organisms/OrganismSignin";
+import OrganismSigninEducation from "./pages/Global/organisms/OrganismSigninEducation";
 
 // 테스트 라우트 추가
 import PageMarketingNoItemsShare from "./pages/Marketing/components/pages/PageMarketingNoItemsShare";
@@ -113,7 +113,6 @@ import PageToolListSaas from "./pages/Saas_Project/pages/PageToolListSaas";
 // 프로젝트 라우터
 import AtomProjectRouter from "./pages/Global/atoms/AtomProjectRouter";
 import PagePsstReport from "./pages/Tool/psst_report/components/pages/PagePsstReport";
-
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태를 위한 아톰
@@ -558,7 +557,7 @@ function App() {
               </RequireToken>
             }
           ></Route>
-          
+
           <Route
             path="/IdeaGeneration"
             element={
@@ -567,8 +566,8 @@ function App() {
               </RequireToken>
             }
           ></Route>
-           
-           <Route
+
+          <Route
             path="/KanoModel"
             element={
               <RequireToken>
@@ -651,6 +650,10 @@ function App() {
             }
           />
 
+          <Route
+            path="/SigninEducation"
+            element={<OrganismSigninEducation />}
+          />
           <Route
             path="/ProjectCreate"
             element={
@@ -767,12 +770,7 @@ function App() {
             }
           />
 
-          <Route
-            path="/style_guide"
-            element={
-              <PageStyleGuide />
-            }
-          />
+          <Route path="/style_guide" element={<PageStyleGuide />} />
 
           {/* 테스트 페이지 */}
           <Route path="/DesignLens" element={<DesignLens />} />
