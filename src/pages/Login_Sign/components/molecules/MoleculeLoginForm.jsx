@@ -9,11 +9,7 @@ import { isValidEmail } from "../atoms/AtomValidation";
 import { UserCreditInfo } from "../../../../utils/indexedDB";
 import { CustomInput } from "../../../../assets/styles/InputStyle";
 import images from "../../../../assets/styles/Images";
-import {
-  EMAIL,
-  ERROR_STATUS,
-  ACCESSABLE_EXPERT,
-} from "../../../AtomStates";
+import { EMAIL, ERROR_STATUS, ACCESSABLE_EXPERT } from "../../../AtomStates";
 import {
   IS_LOGGED_IN,
   LOGIN_SUCCESS,
@@ -24,6 +20,7 @@ import {
   USER_MEMBERSHIP,
   IS_SIGNUP_POPUP_OPEN,
   USER_CREDITS,
+  EDUCATION_STATE,
 } from "../../../../pages/AtomStates";
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
@@ -33,23 +30,23 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
   const [, setUserCredits] = useAtom(USER_CREDITS);
   const [email, setEmail] = useAtom(EMAIL);
   const [, setUserMembership] = useAtom(USER_MEMBERSHIP);
+  const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
   const [password, setPassword] = useState("");
   const [errorStatus, setErrorStatus] = useAtom(ERROR_STATUS);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
-  const [, setUserName] = useAtom(USER_NAME); 
-  const [, setUserEmail] = useAtom(USER_EMAIL); 
-  const [isMarketing, ] = useAtom(IS_MARKETING);
-  const [conversationId, ] = useAtom(CONVERSATION_ID);
+  const [, setUserName] = useAtom(USER_NAME);
+  const [, setUserEmail] = useAtom(USER_EMAIL);
+  const [isMarketing] = useAtom(IS_MARKETING);
+  const [conversationId] = useAtom(CONVERSATION_ID);
 
   const [showMobileWarning, setShowMobileWarning] = useState(false);
   const [, setAccessableExpert] = useAtom(ACCESSABLE_EXPERT);
-  const [isSignPopupOpen, ] = useAtom(IS_SIGNUP_POPUP_OPEN); // 회원가입 팝업 상태 관리
+  const [isSignPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN); // 회원가입 팝업 상태 관리
   const [isPasswordRestPopupOpen, setIsPasswordRestPopupOpen] = useState(false); // 비밀번호 리셋 팝업 상태 관리
   const [, setIsExitPopupOpen] = useState(false);
-
 
   useEffect(() => {
     setErrorStatus("");
@@ -184,10 +181,12 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           setUserName(userInfo.name);
           setUserEmail(userInfo.email);
           setUserMembership(userInfo.membership);
+          setEducationState(userInfo.education_state);
           sessionStorage.setItem("userName", userInfo.name);
           sessionStorage.setItem("userEmail", userInfo.email);
           sessionStorage.setItem("userMembership", userInfo.membership);
           sessionStorage.setItem("userCreatedAt", userInfo.signup_date); // 서버 토큰 저장
+          sessionStorage.setItem("educationState", userInfo.education_state);
           const accessToken = sessionStorage.getItem("accessToken");
           if (accessToken) {
             const userCreditValue = await UserCreditInfo(true);
@@ -234,8 +233,6 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
     navigate("/Project");
   };
 
-  
-
   // const handleSignupClick = (e) => {
   //   e.preventDefault();
   //   setIsSignupPopupOpen(true);
@@ -260,7 +257,6 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
   //   setSignupPassword("");
   //   setConfirmPassword("");
   // };
-
 
   const handlePasswordRestClick = () => {
     setIsPasswordRestPopupOpen(true); // 비밀번호 리셋 팝업 열기

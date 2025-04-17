@@ -45,6 +45,7 @@ import {
   CREDIT_CREATE_MULTIMODAL,
   CREDIT_CREATE_INTERVIEW,
   CREDIT_CREATE_PROJECT,
+  EDUCATION_STATE,
 } from "../../AtomStates";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 
@@ -74,6 +75,7 @@ const PageProject = () => {
   const [, setAccessDashboard] = useAtom(ACCESS_DASHBOARD);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectList, setProjectList] = useAtom(PROJECT_LIST);
+  const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
 
   const [isWarningPopupOpen, setIsWarningPopupOpen] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
@@ -110,6 +112,8 @@ const PageProject = () => {
             setCreditCreateProject(response.create_project);
           }
         }
+        setEducationState(sessionStorage.getItem("educationState"));
+        console.log("🚀 ~ fetchCreditInfo ~ educationState:", educationState);
       } catch (error) {
         console.error("Failed to fetch credit info:", error);
       }

@@ -32,6 +32,8 @@ import {
   PROJECT_ID,
   PROJECT_CREATE_INFO,
   PROJECT_TOTAL_INFO,
+  PROJECT_EDUCATION_STATE,
+  PROJECT_EDUCATION_CODE,
 } from "../../AtomStates";
 import images from "../../../assets/styles/Images";
 import { H2, Sub3, Body1, Body2 } from "../../../assets/styles/Typography";
@@ -54,7 +56,12 @@ const PageProjectCreate = () => {
   const [, setprojectId] = useAtom(PROJECT_ID);
   const [projectCreateInfo, setProjectCreateInfo] =
     useAtom(PROJECT_CREATE_INFO);
-
+  const [projectEducationState, setProjectEducationState] = useAtom(
+    PROJECT_EDUCATION_STATE
+  );
+  const [projectEducationCode, setProjectEducationCode] = useAtom(
+    PROJECT_EDUCATION_CODE
+  );
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [showPopupError, setShowPopupError] = useState(false);
@@ -268,6 +275,8 @@ const PageProjectCreate = () => {
             name: file.name,
           })),
           thumbnail: getRandomThumbnail(),
+          projectEducationState: projectEducationState,
+          projectEducationCode: projectEducationCode,
         };
         setProjectTotalInfo(projectTotalData);
       } catch (error) {
@@ -304,7 +313,6 @@ const PageProjectCreate = () => {
     }
     // 탭 2의 경우 파일 업로드 여부 확인
     else if (activeTab === 2) {
-
       return fileNames.length > 0;
     }
     // 다른 탭의 경우
@@ -329,12 +337,10 @@ const PageProjectCreate = () => {
         }
         return prev;
       });
-    
     } else if (status === "removed") {
       setUploadedFiles((prev) => prev.filter((f) => f.name !== file.name));
       setFileNames((prev) => prev.filter((name) => name !== file.name));
     }
-
 
     // 파일 크기를 KB 또는 MB 단위로 변환
     const size = file.size;
@@ -421,6 +427,8 @@ const PageProjectCreate = () => {
           targetCountry: response.target_country,
           projectAnalysis: response.response.project_analysis,
           thumbnail: getRandomThumbnail(),
+          projectEducationState: projectEducationState,
+          projectEducationCode: projectEducationCode,
         };
         setProjectTotalInfo(projectTotalData);
       } catch (error) {
@@ -457,7 +465,8 @@ const PageProjectCreate = () => {
 
   const handleCreateProject = async () => {
     // 필수 필드 검사
-    if (!projectTotalInfo.projectTitle ||
+    if (
+      !projectTotalInfo.projectTitle ||
       !projectTotalInfo.projectDescription ||
       !projectTotalInfo.businessModel ||
       !projectTotalInfo.industryType ||
@@ -465,23 +474,26 @@ const PageProjectCreate = () => {
       !projectTotalInfo.projectAnalysis?.business_analysis ||
       !projectTotalInfo.projectAnalysis?.target_customer ||
       // 건너뛰기 하지 않은 경우에만 파일 관련 검증
-      (!isSkipped && (!projectTotalInfo.files || 
-        !projectTotalInfo.projectAnalysis?.file_analysis))
-  ) {
-    setShowPopupError2(true);
-    return;
-  }
+      (!isSkipped &&
+        (!projectTotalInfo.files ||
+          !projectTotalInfo.projectAnalysis?.file_analysis))
+      //교육 여부 확인용
+    ) {
+      setShowPopupError2(true);
+      return;
+    }
 
     try {
       const newProjectId = await createProjectOnServerSaas(
         projectTotalInfo,
+        //교육 여부 확인""
         isLoggedIn
       );
       setprojectId(newProjectId);
       navigate(`/Project`, { replace: true });
     } catch (error) {
       setShowPopupError(true);
-      console.error('프로젝트 생성 오류:', error);
+      console.error("프로젝트 생성 오류:", error);
     }
   };
 
@@ -1141,133 +1153,130 @@ const PageProjectCreate = () => {
               </TabContent5>
             )}
 
-            {activeTab === 2  && (
+            {activeTab === 2 && (
               <TabContent5>
-             
-                  <>
-                    <div className="content">
-                      <H2 color="gray800" align="left">
-                        정확한 프로젝트 분석을 위해 관련 문서, 데이터, 보고서
-                        등을 업로드해주세요.
-                      </H2>
+                <>
+                  <div className="content">
+                    <H2 color="gray800" align="left">
+                      정확한 프로젝트 분석을 위해 관련 문서, 데이터, 보고서 등을
+                      업로드해주세요.
+                    </H2>
 
-                      <TabContent5Item required>
-                        <div className="title">
-                          <Body1 color="gray700">파일 업로드 (20MB)</Body1>
-                        </div>
-                        <Dropzone
-                          onChangeStatus={handleChangeStatus}
-                          maxFiles={5}
-                          multiple={true}
-                          canRemove={true}
-                          canRestart={false}
-                          disabled={completedSteps.includes(2)} 
-                          accept="image/*, application/pdf"
-                          maxSizeBytes={20 * 1024 * 1024}
-                          inputWithFilesContent={
-                            <>
-                              <img src={images.ImagePrimary} alt="" />
-                              {fileNames.length === 0 && (
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    gap: "12px",
-                                  }}
-                                >
-                                  <div>
-                                    <Body2 color="gray800">
-                                      업로드하려는 파일을 드래그하여 놓아주세요
-                                    </Body2>
-                                    <Sub3 color="gray500">
-                                      jpg, png, PDF 파일만 업로드가 가능합니다
-                                      (20MB 이하)
-                                    </Sub3>
-                                  </div>
-                                  <div className="browse-button">
-                                    파일 찾아보기
-                                  </div>
-                                </div>
-                              )}
-                              {fileNames.length > 0 && (
+                    <TabContent5Item required>
+                      <div className="title">
+                        <Body1 color="gray700">파일 업로드 (20MB)</Body1>
+                      </div>
+                      <Dropzone
+                        onChangeStatus={handleChangeStatus}
+                        maxFiles={5}
+                        multiple={true}
+                        canRemove={true}
+                        canRestart={false}
+                        disabled={completedSteps.includes(2)}
+                        accept="image/*, application/pdf"
+                        maxSizeBytes={20 * 1024 * 1024}
+                        inputWithFilesContent={
+                          <>
+                            <img src={images.ImagePrimary} alt="" />
+                            {fileNames.length === 0 && (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "center",
+                                  gap: "12px",
+                                }}
+                              >
                                 <div>
-                                  {fileNames.map((name, index) => (
-                                   <Body2 key={index} color="gray700">
-                                      {name}
-                                    </Body2>
-                                  ))}
+                                  <Body2 color="gray800">
+                                    업로드하려는 파일을 드래그하여 놓아주세요
+                                  </Body2>
+                                  <Sub3 color="gray500">
+                                    jpg, png, PDF 파일만 업로드가 가능합니다
+                                    (20MB 이하)
+                                  </Sub3>
                                 </div>
-                              )}
-                            </>
-                          }
-                          inputContent={
-                            <>
-                              <img src={images.ImagePrimary} alt="" />
-                              {fileNames.length === 0 && (
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    gap: "12px",
-                                  }}
-                                >
-                                  <div>
-                                    <Body2 color="gray800">
-                                      업로드하려는 파일을 드래그하여 놓아주세요
-                                    </Body2>
-                                    <Sub3 color="gray500">
-                                      jpg, png, PDF 파일만 업로드가 가능합니다
-                                      (20MB 이하)
-                                    </Sub3>
-                                  </div>
-                                  <div className="browse-button">
-                                    파일 찾아보기
-                                  </div>
+                                <div className="browse-button">
+                                  파일 찾아보기
                                 </div>
-                              )}
-                              {fileNames.length > 0 && (
-                                <div>
-                                  {fileNames.map((name, index) => (
-                                      <Body2 key={index} color="gray700">
-                                      {name}
-                                    </Body2>
-                                  ))}
-                                </div>
-                              )}
-                            </>
-                          }
-                          styles={StyledDropzone}
-                        />
-                      </TabContent5Item>
-                    </div>
-
-                    <ButtonWrap>
-                      <Body1
-                        color="gray500"
-                        onClick={!completedSteps.includes(2) ? handleSkip : null}
-                        // disabled={completedSteps.length >= 2}
-                      >
-                        건너뛰기
-                      </Body1>
-
-                      <Button
-                        DbExLarge
-                        Primary
-                        Fill
-                        style={{ minWidth: "190px" }}
-                        onClick={handleSubmitBusinessInfo}
-                        disabled={
-                          !isRequiredFieldsFilled() ||
-                          completedSteps.includes(2)
+                              </div>
+                            )}
+                            {fileNames.length > 0 && (
+                              <div>
+                                {fileNames.map((name, index) => (
+                                  <Body2 key={index} color="gray700">
+                                    {name}
+                                  </Body2>
+                                ))}
+                              </div>
+                            )}
+                          </>
                         }
-                      >
-                        다음
-                      </Button>
-                    </ButtonWrap>
-                  </>
-                
+                        inputContent={
+                          <>
+                            <img src={images.ImagePrimary} alt="" />
+                            {fileNames.length === 0 && (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "center",
+                                  gap: "12px",
+                                }}
+                              >
+                                <div>
+                                  <Body2 color="gray800">
+                                    업로드하려는 파일을 드래그하여 놓아주세요
+                                  </Body2>
+                                  <Sub3 color="gray500">
+                                    jpg, png, PDF 파일만 업로드가 가능합니다
+                                    (20MB 이하)
+                                  </Sub3>
+                                </div>
+                                <div className="browse-button">
+                                  파일 찾아보기
+                                </div>
+                              </div>
+                            )}
+                            {fileNames.length > 0 && (
+                              <div>
+                                {fileNames.map((name, index) => (
+                                  <Body2 key={index} color="gray700">
+                                    {name}
+                                  </Body2>
+                                ))}
+                              </div>
+                            )}
+                          </>
+                        }
+                        styles={StyledDropzone}
+                      />
+                    </TabContent5Item>
+                  </div>
+
+                  <ButtonWrap>
+                    <Body1
+                      color="gray500"
+                      onClick={!completedSteps.includes(2) ? handleSkip : null}
+                      // disabled={completedSteps.length >= 2}
+                    >
+                      건너뛰기
+                    </Body1>
+
+                    <Button
+                      DbExLarge
+                      Primary
+                      Fill
+                      style={{ minWidth: "190px" }}
+                      onClick={handleSubmitBusinessInfo}
+                      disabled={
+                        !isRequiredFieldsFilled() || completedSteps.includes(2)
+                      }
+                    >
+                      다음
+                    </Button>
+                  </ButtonWrap>
+                </>
               </TabContent5>
             )}
 
@@ -1326,15 +1335,14 @@ const PageProjectCreate = () => {
                                   ))}
                             </Body2> */}
                             <Body2 color="gray800">
-                              {isSkipped ? "-" : (
-                                uploadedFiles.length === 0
-                                  ? "-"
-                                  :  uploadedFiles.map((file) => (
+                              {isSkipped
+                                ? "-"
+                                : uploadedFiles.length === 0
+                                ? "-"
+                                : uploadedFiles.map((file) => (
                                     <div key={file.id}>{file.name}</div>
-                                    ))
-                              )}
+                                  ))}
                             </Body2>
-                         
                           </li>
                         </ListBoxGroup>
                       </SummaryWrap>
@@ -1498,21 +1506,19 @@ const PageProjectCreate = () => {
       )}
 
       {showPopupError2 && (
-              <PopupWrap
-                Warning
-                title="다시 입력해 주세요."
-                message="현재 입력하신 정보는 프로젝트를 생성할 수 없습니다."
-                buttonType="Outline"
-                confirmText="확인"
-                isModal={false}
-                onConfirm={() => {
-                  setShowPopupError2(false);
-                  navigate('/Project', { replace: true });
-                }}
-                
-              />
-            )}
-
+        <PopupWrap
+          Warning
+          title="다시 입력해 주세요."
+          message="현재 입력하신 정보는 프로젝트를 생성할 수 없습니다."
+          buttonType="Outline"
+          confirmText="확인"
+          isModal={false}
+          onConfirm={() => {
+            setShowPopupError2(false);
+            navigate("/Project", { replace: true });
+          }}
+        />
+      )}
 
       {showPopupSave && (
         <PopupWrap

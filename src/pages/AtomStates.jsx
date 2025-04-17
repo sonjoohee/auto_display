@@ -18,6 +18,7 @@ export const SIGN_UP_STATUS = atom("active");
 export const USER_NAME = atom("");
 export const USER_EMAIL = atom("");
 export const USER_MEMBERSHIP = atom("");
+export const EDUCATION_STATE = atom(false);
 
 // 사용자 데이터 상태
 export const CURRENT_USER_STATUS = atom(null);
@@ -588,7 +589,6 @@ export const QUICK_SURVEY_REPORT = atom([]);
 export const QUICK_SURVEY_STATIC_DATA = atom({});
 export const QUICK_SURVEY_INTERVIEW_MODE_TYPE = atom("");
 
-
 //Education Tool
 
 export const CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS = atom([]);
@@ -603,6 +603,8 @@ export const IDEA_GENERATION_IDEA_LIST = atom([]);
 // 프로젝트 생성 페이지
 export const PROJECT_CREATE_INFO = atom({});
 export const PROJECT_TOTAL_INFO = atom({});
+export const PROJECT_EDUCATION_STATE = atom("basic");
+export const PROJECT_EDUCATION_CODE = atom("");
 
 export const PROJECT_PERSONA_LIST = atom([]);
 
