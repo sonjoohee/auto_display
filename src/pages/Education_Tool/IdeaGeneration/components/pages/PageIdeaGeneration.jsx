@@ -55,7 +55,8 @@ import {
   PERSONA_LIST_SAAS,
   IDEA_GENERATION_MANDALART_DATA,
   IDEA_GENERATION_PROBLEM_LIST_TITLE,
-  IDEA_GENERATION_SELECTED_START_POSITION
+  IDEA_GENERATION_SELECTED_START_POSITION,
+  IDEA_GENERATION_SELECTED_MANDALART
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -141,6 +142,7 @@ const PageIdeaGeneration = () => {
   const [ideaGenerationProblemListTitle, setIdeaGenerationProblemListTitle] = useAtom(
     IDEA_GENERATION_PROBLEM_LIST_TITLE
   );
+  const [ideaGenerationSelectedMandalart, setIdeaGenerationSelectedMandalart] = useAtom(IDEA_GENERATION_SELECTED_MANDALART);
 
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [isContentLoading, setIsContentLoading] = useState(false);
@@ -299,6 +301,15 @@ const PageIdeaGeneration = () => {
     setToolLoading(false);
   }, [toolLoading]);
 
+
+  const business = {
+    business: businessDescription,
+    target: project?.projectAnalysis?.target_customer || "",
+    business_model: project?.businessModel || "",
+    sector: project?.industryType || "",
+    country: project?.targetCountry || "",
+  };
+
   // 고객핵심가치분석 리스트 가져오기
   useEffect(() => {
     const getAllTargetDiscovery = async () => {
@@ -395,23 +406,71 @@ const PageIdeaGeneration = () => {
         // 유효한 항목이 없는 경우 처리
         return;
       }
+
+      // // API 요청 데이터 구성
+      // const Data = {
+      //   type : "ix_idea_generation_keyword_education",
+      //   info: customerJourneyMapSelectedPersona,
+      //   problem_needs : validItems,
+      //   is_load:  true
+      // };
+
+      // // API 호출
+      // const response = await EducationToolsRequest (
+      //  Data,
+      //   isLoggedIn
+      // );
+      // console.log(response);
       
-      // API 요청 데이터 구성
-      const Data = {
-        type : "ix_idea_generation_keyword_education",
-        info: customerJourneyMapSelectedPersona,
-        problem_needs : validItems,
-        is_load:  true
-      };  
 
-      // API 호출
-      const response = await EducationToolsRequest (
-       Data,
-        isLoggedIn
-      );
-      console.log(response);
+      // setIdeaGenerationStartPosition(response.response.idea_generation_keyword_education);
 
-      setIdeaGenerationStartPosition(response.response.idea_generation_keyword_education);
+       const dummydata  = 
+       [
+       {
+        "problem": "배송 및 설치 과정의 불안감, 구매 후 관리 및 지원 부재에 대한 우려",
+        "content": [
+          {
+            "idea": "안심 배송 시스템",
+            "description": "제품의 안전한 배송을 보장하고, 배송 과정에 대한 정보를 실시간으로 제공합니다. (예: 배송 추적, 파손 보험, 안심 포장) 사용자는 배송 과정에 대한 불안감을 해소하고, 안심하고 제품을 받을 수 있습니다.",
+            "problem": "배송 및 설치 과정의 불안감, 구매 후 관리 및 지원 부재에 대한 우려",
+          },
+          {
+            "idea": "설치 서비스 연계",
+            "description": "제품 설치 서비스를 제공하거나, 신뢰할 수 있는 설치 업체와 연계하여, 사용자들이 제품 설치에 대한 어려움을 덜도록 합니다. 설치 과정에 대한 안내, 문제 발생 시의 지원 등을 제공합니다.",
+            "problem": "배송 및 설치 과정의 불안감, 구매 후 관리 및 지원 부재에 대한 우려",
+          },
+          {
+            "idea": "사후 관리 및 AS 지원",
+            "description": "제품 구매 후에도 지속적인 관리 및 AS 지원을 제공합니다. 제품 사용 팁, 관리 방법, 문제 발생 시의 대처법 등을 제공하고, AS 접수 및 처리 과정을 간소화합니다.",
+            "problem": "배송 및 설치 과정의 불안감, 구매 후 관리 및 지원 부재에 대한 우려",
+          }
+        ]
+      },
+        {
+          "problem": "배송 및 설=리 및 지원 부재에 대한 우려",
+          "content": [
+            {
+              "idea": "안심 배=스템",
+              "description": "제품의 안전한 배송을 보장하고, 배송 과정에 대한 정보를 실시간으로 제공합니다. (예: 배송 추적, 파손 보험, 안심 포장) 사용자는 배송 과정에 대한 불안감을 해소하고, 안심하고 제품을 받을 수 있습니다.",
+              "problem": "배송 및 설치 과정의 불안감, 구매 후 관리 및 지원 부재에 대한 우려",
+            },
+            {
+              "idea": "설치 서비===스 연계",
+              "description": "제품 설치 서비스를 제공하거나, 신뢰할 수 있는 설치 업체와 연계하여, 사용자들이 제품 설치에 대한 어려움을 덜도록 합니다. 설치 과정에 대한 안내, 문제 발생 시의 지원 등을 제공합니다.",
+              "problem": "배송 및 설치 과정의 불안감, 구매 후 관리 및 지원 부재에 대한 우려",
+            },
+            {
+              "idea": "사후 및 AS 지원",
+              "description": "제품 구매 후에도 지속적인 관리 및 AS 지원을 제공합니다. 제품 사용 팁, 관리 방법, 문제 발생 시의 대처법 등을 제공하고, AS 접수 및 처리 과정을 간소화합니다.",
+              "problem": "배송 및 설치 과정의 불안감, 구매 후 관리 및 지원 부재에 대한 우려",
+            }
+          ]
+        }
+
+       ]
+
+      setIdeaGenerationStartPosition(dummydata);
 
       // API 호출 로직...
       setIsLoading(false);
@@ -430,6 +489,8 @@ const PageIdeaGeneration = () => {
 
   };
 
+
+  console.log("ideaGenerationStartPosition", ideaGenerationStartPosition);
 
 
   const handlePurposeSelect = async (purpose, selectBoxId, item) => {
@@ -487,15 +548,15 @@ const PageIdeaGeneration = () => {
       }
    
 
-    // await updateToolOnServer(
+      // await updateToolOnServer(
     //   responseToolId,
-    //   {
+      //   {
     //    selectedPurposes: selectedPurposes,
     //    ideaGenerationProblemList: ideaGenerationProblemList,
     //    ideaGenerationProblemListTitle: ideaGenerationProblemListTitle,
-    //   },
-    //   isLoggedIn
-    // );
+      //   },
+      //   isLoggedIn
+      // );
 
   
     } catch (error) {
@@ -513,16 +574,39 @@ const PageIdeaGeneration = () => {
     setToolSteps(3);
     setIsLoadingReport(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const persona_group = personaListSaas
+  .filter(persona => persona?.favorite === true)
+  .map(persona => ({
+    personaName: persona.personaName,
+    personaCharacteristics: persona.personaCharacteristics,
+    type: persona.type,
+    age: persona.age,
+    gender: persona.gender,
+    job: persona.job,
+    keywords: persona.keywords
+  }));
 
   try {
+    console.log("ideaGenerationStartPosition", ideaGenerationStartPosition);
+    console.log("ideaGenerationSelectedStartPosition", ideaGenerationSelectedStartPosition);
 
-    // const data = {
-    //   type: "ix_idea_generation_mandalart_education",
-    //   idea_generation_start_position: ideaGenerationStartPosition,
-    //   project_description: projectDescription,
+    const Data = {
+      type: "ix_idea_generation_interview_education",
+      business:business,
+      idea_theme: ideaGenerationSelectedStartPosition,
+      persona_group:persona_group,
+    }
+   
+
+    const data = {
+      type: "ix_idea_generation_mandalart_education",
+      idea_generation_start_position: ideaGenerationStartPosition,
+     idea_generation_selected_start_position: ideaGenerationSelectedStartPosition,
+      project_description: projectDescription,
   
-    // };
+    };
 
     // const apiResults = [];
 
@@ -708,29 +792,29 @@ const PageIdeaGeneration = () => {
   // 나중에는 여기서 API 호출하고 응답을 저장
   setIdeaGenerationMandalArtData(dummyMandalartData);
 
-  
-  const DUMMY_IDEAS = [
-    {
-      id: 1,
-      title: "Idea 1. 소비자 중요 가치 분석",
-      content: [
-        "설명: 장인의 오리엔트를 실시간으로 분석하고, AI가 최적의 정소 결정의 방법을 선택하여 자동으로 청소하는 로봇 시스템.",
-        "기술 활용: 병원 진료 데이터를 기반으로 알레르기 유발 물질, 공기 중 유해 성분 등을 분석하고, 맞춤형 청소 설정을 제공.",
-      ],
-    },
-    {
-      id: 2,
-      title: "Idea 2. 소비자 중요 가치 분석",
-      content: [
-        "설명: 장인의 오리엔트를 실시간으로 분석하고, AI가 최적의 정소 결정의 방법을 선택하여 자동으로 청소하는 로봇 시스템.",
-        "기술 활용: 병원 진료 데이터를 기반으로 알레르기 유발 물질, 공기 중 유해 성분 등을 분석하고, 맞춤형 청소 설정을 제공.",
-      ],
-    },
-    // ... 더 많은 아이디어 추가 가능
-  ];
 
-  setIdeaGenerationIdeaList(DUMMY_IDEAS);
-    
+      const DUMMY_IDEAS = [
+        {
+          id: 1,
+          title: "Idea 1. 소비자 중요 가치 분석",
+          content: [
+            "설명: 장인의 오리엔트를 실시간으로 분석하고, AI가 최적의 정소 결정의 방법을 선택하여 자동으로 청소하는 로봇 시스템.",
+            "기술 활용: 병원 진료 데이터를 기반으로 알레르기 유발 물질, 공기 중 유해 성분 등을 분석하고, 맞춤형 청소 설정을 제공.",
+          ],
+        },
+        {
+          id: 2,
+          title: "Idea 2. 소비자 중요 가치 분석",
+          content: [
+            "설명: 장인의 오리엔트를 실시간으로 분석하고, AI가 최적의 정소 결정의 방법을 선택하여 자동으로 청소하는 로봇 시스템.",
+            "기술 활용: 병원 진료 데이터를 기반으로 알레르기 유발 물질, 공기 중 유해 성분 등을 분석하고, 맞춤형 청소 설정을 제공.",
+          ],
+        },
+        // ... 더 많은 아이디어 추가 가능
+      ];
+
+      setIdeaGenerationIdeaList(DUMMY_IDEAS);
+
     // setIdeaGenerationMandalArt();
   };
 
@@ -1099,13 +1183,23 @@ const PageIdeaGeneration = () => {
 
                       {/* {selectedProblems.length > 0 ? ( */}
                       <CardGroupWrap column >
-                        <MoleculeTagList
+                        {/* <MoleculeTagList
                           items={ideaGenerationStartPosition.map(
                             (problem) => problem.title
                           )} // name만 전달
                           // onTagsChange={handleTagsChange}
                           disabled={toolSteps >= 2}
-                        />
+                        /> */}
+                       
+
+                          <MoleculeTagList
+                            items={ideaGenerationStartPosition  // 배열이라고 가정
+                              .map(item => item.content)  // 각 객체의 content 배열 추출
+                              .flat()  // 모든 content 배열을 하나로 합침
+                            }
+                          />
+
+
                       </CardGroupWrap>
                       {/* ) : (
                       <Body3 color="gray700">데이터가 없습니다.</Body3>
@@ -1154,7 +1248,7 @@ const PageIdeaGeneration = () => {
                   Fill
                   Round
                   onClick={handleSubmitTheme}
-                  // disabled={!isRequiredFieldsFilled() || toolSteps >= 1}
+                  // disabled={ideaGenerationSelectedStartPosition.length < 8}
                   // targetCustomer.filter(item => item.trim() !== '').length < 8  // 8개 미만이면 비활성화
                 >다음
                 </Button>
@@ -1239,65 +1333,79 @@ const PageIdeaGeneration = () => {
 
             {activeTab === 4 && completedSteps.includes(3) && (
               <TabContent5 Small>
-              {isLoadingReport ? (
-                <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    minHeight: "200px",
-                    alignItems: "center",
-                  }}
-                >
-                  <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
-                </div>
-              ) : (
-                <>
-                  <div className="title">
-                    <H3 color="gray800">Idea Generation Theme</H3>
-                    <Body3 color="gray800">
-                      문제와 니즈를 창의적 해결 주제로 전환하여, 아이디어
-                      발상의 방향을 정해주세요.
-                    </Body3>
+                {isLoadingReport ? (
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      minHeight: "200px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
                   </div>
+                ) : (
+                  <>
+                    <div className="title">
+                      <H3 color="gray800">Idea Generation Theme</H3>
+                      <Body3 color="gray800">
+                        문제와 니즈를 창의적 해결 주제로 전환하여, 아이디어
+                        발상의 방향을 정해주세요.
+                      </Body3>
+                    </div>
 
-                  <div className="content">
-                    <Title>
-                      <Body1 color="gray700">
-                        아이디어 시작점을 선택하세요 (8개 선택가능)
-                      </Body1>
-                    </Title>
+                    <div className="content">
+                      <Title>
+                        <Body1 color="gray700">
+                          아이디어 시작점을 선택하세요 (8개 선택가능)
+                        </Body1>
+                      </Title>
 
-                    {/* {selectedProblems.length > 0 ? ( */}
+                      {/* {selectedProblems.length > 0 ? ( */}
                     <CardGroupWrap column >
                       <MoleculeMandalArtGraph
                       mandalartData={ideaGenerationMandalArtData}
                       // onSelectIdea={handleIdeaSelect}
-                      />
-                    </CardGroupWrap>
-                    {/* ) : (
-                    <Body3 color="gray700">데이터가 없습니다.</Body3>
-                  )} */}
+                        />
+                      </CardGroupWrap>
+                      {/* ) : (
+                      <Body3 color="gray700">데이터가 없습니다.</Body3>
+                    )} */}
 
-                    <div className="content">
-                      
-                      <IdeaContainer>
-                        {ideaGenerationIdeaList.map((idea) => (
-                          <IdeaBox key={idea.id}>
-                            <IdeaTitle>{idea.title}</IdeaTitle>
-                            <IdeaContent>
-                              {idea.content.map((text, index) => (
-                                <IdeaText key={index}>• {text}</IdeaText>
-                              ))}
-                            </IdeaContent>
-                          </IdeaBox>
-                        ))}
-                      </IdeaContainer>
+                      <div className="content">
+                      {ideaGenerationSelectedMandalart.length > 0 ? (
+                         <IdeaContainer>
+                         
+                           <IdeaBox >
+                             {/* <IdeaTitle>{idea.title}</IdeaTitle> */}
+                             <IdeaContent>
+                             각 아이디어 주제를 클릭해보세요. 주제별로 연관된 아이디어 8가지가 제시됩니다. 
+                             </IdeaContent>
+                           </IdeaBox>
+                       </IdeaContainer>
+
+                        ) : (
+
+
+                        <IdeaContainer>
+                          {ideaGenerationIdeaList.map((idea) => (
+                            <IdeaBox key={idea.id}>
+                              <IdeaTitle>{idea.title}</IdeaTitle>
+                              <IdeaContent>
+                                {idea.content.map((text, index) => (
+                                  <IdeaText key={index}>• {text}</IdeaText>
+                                ))}
+                              </IdeaContent>
+                            </IdeaBox>
+                          ))}
+                        </IdeaContainer>
+                      )}
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
-            </TabContent5>
+                  </>
+                )}
+              </TabContent5>
             )}
           </DesignAnalysisWrap>
         </MainContent>
