@@ -18,7 +18,7 @@ const ParetoCurveGraph = ({
     { name: "항목 7", value: 4 },
     { name: "항목 8", value: 2 }
   ],
-  width = 600,
+  width = 720,
   height = 520,
   animate = true,
   animationDuration = 1000
@@ -66,7 +66,7 @@ const ParetoCurveGraph = ({
     svg.selectAll("*").remove();
 
     // 마진 설정
-    const margin = { top: 40, right: 80, bottom: 60, left: 60 };
+    const margin = { top: 40, right: 92, bottom: 60, left: 60 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -79,17 +79,35 @@ const ParetoCurveGraph = ({
     const x = d3.scaleBand()
       .domain(processedData.map(d => d.stageLabel))
       .range([0, innerWidth])
-      .padding(0.3);
+      .padding(0.55);
 
     const y1 = d3.scaleLinear()
       .domain([0, d3.max(processedData, d => d.cumulativeValue) * 1.1])
       .nice()
       .range([innerHeight, 0]);
 
+    // y2 스케일을 y1 스케일에 맞게 조정
     const y2 = d3.scaleLinear()
-      .domain([0, 100])
-      .nice()
+      .domain([0, 100]) // 백분율 범위 (0% ~ 100%)
       .range([innerHeight, 0]);
+
+    // 매핑 함수 추가
+    // 누적 값과 백분율 간의 매핑 테이블
+    const valueToPercentMapping = [
+      { value: 0, percent: 0 },
+      { value: 50, percent: 20 },
+      { value: 100, percent: 40 },
+      { value: 150, percent: 60 },
+      { value: 200, percent: 80 },
+      // 100%에 대한 값은 최대값의 5/4로 추정
+      { value: 250, percent: 100 }
+    ];
+
+    // 사용자 정의 백분율 Y축 스케일
+    const customY2 = d3.scaleLinear()
+      .domain(valueToPercentMapping.map(d => d.percent))
+      .range(valueToPercentMapping.map(d => y1(d.value)))
+      .clamp(true);
 
     // 축 생성
     const xAxis = d3.axisBottom(x)
@@ -99,20 +117,31 @@ const ParetoCurveGraph = ({
       .ticks(5)
       .tickSize(-innerWidth);
 
-    const y2Axis = d3.axisRight(y2)
+    // Y축 추가 (오른쪽 - 백분율) - 수정된 부분
+    const y2Axis = d3.axisRight(customY2)
       .ticks(5)
       .tickSize(0)
       .tickFormat(d => `${d}%`);
 
-    // X축 추가
+    // X축 추가 - 위치 수정 및 특정 라인만 실선으로 변경
     g.append("g")
       .attr("class", "x-axis")
       .attr("transform", `translate(0, ${innerHeight})`)
       .call(xAxis)
-      .selectAll("text")
-      .attr("font-size", "16px")
-      .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
-      .attr("fill", palette.gray700);
+      .call(g => {
+        // X축 레이블 위치 조정 (16px 아래로)
+        g.selectAll("text")
+          .attr("font-size", "16px")
+          .attr("font-family", "Pretendard, Poppins")
+          .attr("fill", palette.gray700)
+          .attr("dy", "20px"); // 기존 위치에서 16px 아래로 이동
+        
+        // X축 도메인 라인(하단 실선)을 진한 색상으로 설정
+        g.select(".domain")
+          .attr("stroke", palette.gray700)
+          .attr("stroke-width", 1)
+          .attr("stroke-dasharray", null); // 점선 제거, 실선으로 변경
+      });
 
     // Y축 추가 (왼쪽 - 값)
     g.append("g")
@@ -130,7 +159,7 @@ const ParetoCurveGraph = ({
     g.selectAll(".y-axis path")
       .attr("stroke", "none");
 
-    // Y축 추가 (오른쪽 - 백분율)
+    // Y축 추가 (오른쪽 - 백분율) - 수정된 부분
     g.append("g")
       .attr("class", "y-axis-percentage")
       .attr("transform", `translate(${innerWidth}, 0)`)
@@ -139,7 +168,7 @@ const ParetoCurveGraph = ({
       .attr("font-size", "16px")
       .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
       .attr("fill", palette.gray700)
-      .attr("dx", "12px");
+      .attr("dx", "4px");
 
     // 축 제목 추가
     g.append("text")
@@ -156,7 +185,7 @@ const ParetoCurveGraph = ({
     g.append("text")
       .attr("class", "y-axis-percentage-title")
       .attr("transform", "rotate(-90)")
-      .attr("y", innerWidth + 50)
+      .attr("y", innerWidth + 62)
       .attr("x", -innerHeight / 2)
       .attr("text-anchor", "middle")
       .attr("font-size", "16px")
@@ -174,15 +203,15 @@ const ParetoCurveGraph = ({
       .attr("width", x.bandwidth())
       .attr("y", innerHeight)
       .attr("height", 0)
-      .attr("fill", palette.primary)
+      .attr("fill", "#A3C3FF")
       .attr("rx", 2)
       .attr("ry", 2);
 
-    // 파레토 라인 생성 함수
+    // 파레토 라인 생성 함수 수정
     const createLine = (dataSlice) => {
       return d3.line()
         .x(d => x(d.stageLabel) + x.bandwidth() / 2)
-        .y(d => y2(d.cumulativePercentage))
+        .y(d => customY2(d.cumulativePercentage)) // 수정된 스케일 사용
         .curve(d3.curveMonotoneX)(dataSlice);
     };
 
@@ -190,52 +219,65 @@ const ParetoCurveGraph = ({
     const path = g.append("path")
       .attr("class", "line")
       .attr("fill", "none")
-      .attr("stroke", palette.gray900)
+      .attr("style", `stroke: ${palette.gray800} !important`)
       .attr("stroke-width", 2)
       .attr("d", createLine([]))
       .attr("opacity", 1);
 
-    // 라인 점 생성
+    // 라인 점 생성 - 수정된 부분
     const points = g.selectAll(".point")
       .data(processedData)
       .enter()
       .append("circle")
       .attr("class", "point")
       .attr("cx", d => x(d.stageLabel) + x.bandwidth() / 2)
-      .attr("cy", d => y2(d.cumulativePercentage))
+      .attr("cy", d => customY2(d.cumulativePercentage)) // 수정된 스케일 사용
       .attr("r", 5)
-      .attr("fill", palette.gray900)
+      .attr("fill", palette.gray800)
       .attr("opacity", 0);
 
-    // 누적 값 텍스트 추가
+    // 누적 값 텍스트 추가 - 조건부 위치 및 색상 설정
     const valueTexts = g.selectAll(".value-text")
       .data(processedData)
       .enter()
       .append("text")
       .attr("class", "value-text")
       .attr("x", d => x(d.stageLabel) + x.bandwidth() / 2)
-      .attr("y", d => y1(d.cumulativeValue) - 10)
       .attr("text-anchor", "middle")
       .attr("font-size", "14px")
       .attr("font-weight", "bold")
       .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
-      .attr("fill", palette.gray800)
       .attr("opacity", 0)
+      .each(function(d) {
+        const barHeight = innerHeight - y1(d.cumulativeValue);
+        const text = d3.select(this);
+        
+        if (barHeight >= 40) { // 바 높이가 충분히 높을 때만 내부에 배치
+          text
+            .attr("y", y1(d.cumulativeValue) + 20)
+            .attr("fill", palette.white);
+        } else {
+          // 바가 너무 낮으면 바 위에 표시
+          text
+            .attr("y", y1(d.cumulativeValue) - 10)
+            .attr("fill", palette.gray800);
+        }
+      })
       .text(d => d.cumulativeValue.toFixed(0));
 
-    // 백분율 텍스트 추가
+    // 백분율 텍스트 추가 - 수정된 부분
     const percentTexts = g.selectAll(".percent-text")
       .data(processedData)
       .enter()
       .append("text")
       .attr("class", "percent-text")
-      .attr("x", d => x(d.stageLabel) + x.bandwidth() / 2)
-      .attr("y", d => y2(d.cumulativePercentage) - 10)
-      .attr("text-anchor", "middle")
+      .attr("x", d => x(d.stageLabel) + x.bandwidth() / 2 + 5)
+      .attr("y", d => customY2(d.cumulativePercentage) - 10) // 수정된 스케일 사용
+      .attr("text-anchor", "start")
       .attr("font-size", "14px")
       .attr("font-weight", "bold")
       .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
-      .attr("fill", palette.gray900)
+      .attr("fill", palette.gray800)
       .attr("opacity", 0)
       .text(d => `${d.cumulativePercentage.toFixed(0)}%`);
 
@@ -273,7 +315,21 @@ const ParetoCurveGraph = ({
           .transition()
           .delay(delay + duration * 0.7)
           .duration(duration * 0.3)
-          .attr("opacity", 1);
+          .attr("opacity", 1)
+          .each(function(d) {
+            const barHeight = innerHeight - y1(d.cumulativeValue);
+            const text = d3.select(this);
+            
+            if (barHeight >= 40) {
+              text
+                .attr("y", y1(d.cumulativeValue) + 20)
+                .attr("fill", palette.white);
+            } else {
+              text
+                .attr("y", y1(d.cumulativeValue) - 10)
+                .attr("fill", palette.gray800);
+            }
+          });
         
         // 백분율 텍스트 표시
         percentTexts.filter((d, j) => j === i)
@@ -299,6 +355,16 @@ const ParetoCurveGraph = ({
       setIsInitialRender(false);
     }
 
+    // X축 위치에 실선 추가
+    g.append("line")
+      .attr("x1", 0)
+      .attr("y1", innerHeight)
+      .attr("x2", innerWidth)
+      .attr("y2", innerHeight)
+      .attr("stroke", palette.gray700)
+      .attr("stroke-width", 1)
+      .attr("stroke-dasharray", null);
+
   }, [processedData, width, height, animate, animationDuration, isInitialRender]);
 
   return (
@@ -312,7 +378,7 @@ export default ParetoCurveGraph;
 
 // 스타일 컴포넌트
 const GraphContainer = styled.div`
-  width: 600px;
+  width: 720px;
   height: 520px;
   position: relative;
   padding: 10px;
@@ -321,4 +387,5 @@ const GraphContainer = styled.div`
   background-color: ${palette.white};
   border-radius: 8px;
   font-family: 'Pretendard', 'Poppins', sans-serif;
+  color: ${palette.gray800};
 `; 

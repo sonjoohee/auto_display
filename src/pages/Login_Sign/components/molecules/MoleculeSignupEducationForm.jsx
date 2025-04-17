@@ -1,5 +1,5 @@
 // MoleculeSignupForm.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useAtom } from "jotai";
 import { useNavigate, Link } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
@@ -56,6 +56,9 @@ const MoleculeSignupEducationForm = () => {
 
   const [isEmailValid, setIsEmailValid] = useState(false); // 이메일 유효성 상태 추가
   const [EmailError, setEmailError] = useState("");
+
+  // 교육 코드 입력 상자에 대한 ref 추가
+  const codeInputRefs = useRef([]);
 
   useEffect(() => {
     setErrorStatus("");
@@ -286,6 +289,27 @@ const MoleculeSignupEducationForm = () => {
     }
   };
 
+  // 교육 코드 입력 처리 함수
+  const handleCodeInputChange = (e, index) => {
+    const value = e.target.value;
+    
+    // 숫자만 허용
+    if (value && /^[0-9]$/.test(value)) {
+      // 다음 입력 상자로 포커스 이동
+      if (index < 4) {
+        codeInputRefs.current[index + 1].focus();
+      }
+    }
+  };
+  
+  // 백스페이스 키 처리 함수
+  const handleCodeInputKeyDown = (e, index) => {
+    // 백스페이스 키를 누르고 현재 입력 상자가 비어있을 때 이전 입력 상자로 포커스 이동
+    if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+      codeInputRefs.current[index - 1].focus();
+    }
+  };
+
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -445,7 +469,171 @@ const MoleculeSignupEducationForm = () => {
               )}
             </div>
           </ScrollWrap>
-          <div>교육 코드 추가</div>
+          <div style={{ fontSize: "12px", fontWeight: 500, color: "#212529", marginBottom: "8px", marginTop: "32px", textAlign: "left" }}>코드입력</div>
+          <div style={{ width: "610px", marginBottom: "20px", marginTop: "8px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <input 
+                type="text" 
+                maxLength="1" 
+                inputMode="numeric" 
+                pattern="[0-9]*" 
+                style={{ 
+                  width: "102.8px", 
+                  height: "102px", 
+                  borderRadius: "8px", 
+                  border: "1px solid #E0E4EB", 
+                  backgroundColor: "#FFFFFF", 
+                  textAlign: "center", 
+                  fontSize: "24px", 
+                  lineHeight: "150%", 
+                  letterSpacing: "0%", 
+                  color: "#323232", 
+                  outline: "none" 
+                }}
+                onChange={(e) => {
+                  handleCodeInputChange(e, 0);
+                  e.target.style.border = e.target.value ? "none" : "1px solid #E0E4EB";
+                }}
+                onKeyDown={(e) => handleCodeInputKeyDown(e, 0)}
+                ref={(el) => (codeInputRefs.current[0] = el)}
+                onFocus={(e) => e.target.style.backgroundColor = "#F7F8FA"}
+                onBlur={(e) => {
+                  if (e.target.value === "") {
+                    e.target.style.backgroundColor = "#FFFFFF";
+                    e.target.style.border = "1px solid #E0E4EB";
+                  }
+                }}
+              />
+              <input 
+                type="text" 
+                maxLength="1" 
+                inputMode="numeric" 
+                pattern="[0-9]*" 
+                style={{ 
+                  width: "102.8px", 
+                  height: "102px", 
+                  borderRadius: "8px", 
+                  border: "1px solid #E0E4EB", 
+                  backgroundColor: "#FFFFFF", 
+                  textAlign: "center", 
+                  fontSize: "24px", 
+                  lineHeight: "150%", 
+                  letterSpacing: "0%", 
+                  color: "#323232", 
+                  outline: "none" 
+                }}
+                onChange={(e) => {
+                  handleCodeInputChange(e, 1);
+                  e.target.style.border = e.target.value ? "none" : "1px solid #E0E4EB";
+                }}
+                onKeyDown={(e) => handleCodeInputKeyDown(e, 1)}
+                ref={(el) => (codeInputRefs.current[1] = el)}
+                onFocus={(e) => e.target.style.backgroundColor = "#F7F8FA"}
+                onBlur={(e) => {
+                  if (e.target.value === "") {
+                    e.target.style.backgroundColor = "#FFFFFF";
+                    e.target.style.border = "1px solid #E0E4EB";
+                  }
+                }}
+              />
+              <input 
+                type="text" 
+                maxLength="1" 
+                inputMode="numeric" 
+                pattern="[0-9]*" 
+                style={{ 
+                  width: "102.8px", 
+                  height: "102px", 
+                  borderRadius: "8px", 
+                  border: "1px solid #E0E4EB", 
+                  backgroundColor: "#FFFFFF", 
+                  textAlign: "center", 
+                  fontSize: "24px", 
+                  lineHeight: "150%", 
+                  letterSpacing: "0%", 
+                  color: "#323232", 
+                  outline: "none" 
+                }}
+                onChange={(e) => {
+                  handleCodeInputChange(e, 2);
+                  e.target.style.border = e.target.value ? "none" : "1px solid #E0E4EB";
+                }}
+                onKeyDown={(e) => handleCodeInputKeyDown(e, 2)}
+                ref={(el) => (codeInputRefs.current[2] = el)}
+                onFocus={(e) => e.target.style.backgroundColor = "#F7F8FA"}
+                onBlur={(e) => {
+                  if (e.target.value === "") {
+                    e.target.style.backgroundColor = "#FFFFFF";
+                    e.target.style.border = "1px solid #E0E4EB";
+                  }
+                }}
+              />
+              <input 
+                type="text" 
+                maxLength="1" 
+                inputMode="numeric" 
+                pattern="[0-9]*" 
+                style={{ 
+                  width: "102.8px", 
+                  height: "102px", 
+                  borderRadius: "8px", 
+                  border: "1px solid #E0E4EB", 
+                  backgroundColor: "#FFFFFF", 
+                  textAlign: "center", 
+                  fontSize: "24px", 
+                  lineHeight: "150%", 
+                  letterSpacing: "0%", 
+                  color: "#323232", 
+                  outline: "none" 
+                }}
+                onChange={(e) => {
+                  handleCodeInputChange(e, 3);
+                  e.target.style.border = e.target.value ? "none" : "1px solid #E0E4EB";
+                }}
+                onKeyDown={(e) => handleCodeInputKeyDown(e, 3)}
+                ref={(el) => (codeInputRefs.current[3] = el)}
+                onFocus={(e) => e.target.style.backgroundColor = "#F7F8FA"}
+                onBlur={(e) => {
+                  if (e.target.value === "") {
+                    e.target.style.backgroundColor = "#FFFFFF";
+                    e.target.style.border = "1px solid #E0E4EB";
+                  }
+                }}
+              />
+              <input 
+                type="text" 
+                maxLength="1" 
+                inputMode="numeric" 
+                pattern="[0-9]*" 
+                style={{ 
+                  width: "102.8px", 
+                  height: "102px", 
+                  borderRadius: "8px", 
+                  border: "1px solid #E0E4EB", 
+                  backgroundColor: "#FFFFFF", 
+                  textAlign: "center", 
+                  fontSize: "24px", 
+                  lineHeight: "150%", 
+                  letterSpacing: "0%", 
+                  color: "#323232", 
+                  outline: "none" 
+                }}
+                onChange={(e) => {
+                  handleCodeInputChange(e, 4);
+                  e.target.style.border = e.target.value ? "none" : "1px solid #E0E4EB";
+                }}
+                onKeyDown={(e) => handleCodeInputKeyDown(e, 4)}
+                ref={(el) => (codeInputRefs.current[4] = el)}
+                onFocus={(e) => e.target.style.backgroundColor = "#F7F8FA"}
+                onBlur={(e) => {
+                  if (e.target.value === "") {
+                    e.target.style.backgroundColor = "#FFFFFF";
+                    e.target.style.border = "1px solid #E0E4EB";
+                  }
+                }}
+              />
+            </div>
+          </div>
 
           <TermsAndConditions>
             <input
