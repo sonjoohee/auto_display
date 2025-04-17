@@ -23,7 +23,7 @@ const MoleculePersonaSelectCard = ({
   filteredPersonaList,
   selectedPersonas,
   onPersonaSelect,
-  hideSelectButton = false
+  hideSelectButton = false,
 }) => {
   const navigate = useNavigate();
 
@@ -73,7 +73,6 @@ const MoleculePersonaSelectCard = ({
       onPersonaSelect(persona);
     }
   };
-
 
   return (
     <CardGroupWrap>
@@ -142,11 +141,11 @@ const MoleculePersonaSelectCard = ({
       {filteredPersonaList &&
         filteredPersonaList
           // 활성 탭에 따라 페르소나 필터링
-        
+
           .filter((persona) => {
-              if (activeTabState === "my_favorite") {
-                return persona?.favorite === true;
-              }
+            if (activeTabState === "my_favorite") {
+              return persona?.favorite === true;
+            }
             // 다른 탭에서는 personaType에 따라 필터링하고, favorite이 false인 경우 제외
             if (activeTabState === "macro_segment") {
               return (
@@ -199,7 +198,7 @@ const MoleculePersonaSelectCard = ({
                     <img
                       src={
                         personaImages[persona.imageKey] ||
-                        (persona.gender === "남성" 
+                        (persona.gender === "남성"
                           ? personaImages.persona_m_20_01 // 남성 기본 이미지
                           : personaImages.persona_f_20_01) // 여성 기본 이미지
                       }
@@ -253,10 +252,7 @@ const MoleculePersonaSelectCard = ({
             );
           })}{" "}
       {activeTabState === "my_favorite" &&
-        !filteredPersonaList.some(
-          (persona) =>
-            persona.favorite === true && persona.status === "complete"
-        ) && (
+        !filteredPersonaList.some((persona) => persona.favorite === true) && (
           <>
             <div style={{ height: "16px" }}></div>
             <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>

@@ -2687,7 +2687,6 @@ export const InterviewXDesignEmotionAnalysisRequest = async (
     formData.append("tool_id", data.tool_id); // 다른 데이터 추가
     formData.append("type", "ix_design_emotion_analysis"); // 다른 데이터 추가
 
-
     const token = sessionStorage.getItem("accessToken");
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
@@ -3625,6 +3624,31 @@ export const getProjectListSaasByIdFromIndexedDB = async (isLoggedIn) => {
   }
 };
 
+//교육 프로젝트 리스트 조회 api
+export const getProjectListSaasEducationByIdFromIndexedDB = async (
+  educationCode,
+  isLoggedIn
+) => {
+  if (isLoggedIn) {
+    // 사용자 로그인 시 서버에서 데이터 가져오기
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+      const response = await axios.get(
+        `https://wishresearch.kr/project/listSaasEducation/${educationCode}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching project list from server:", error);
+      return null;
+    }
+  }
+};
+
 // !===============================================
 // !페르소나 관련
 // !===============================================
@@ -4092,13 +4116,8 @@ export const InterviewXMyPersonaGeneratorRequest = async (data) => {
   }
 };
 
-
-
 //psst 보고서
-export const InterviewXPsstMultimodalRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXPsstMultimodalRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -4112,7 +4131,6 @@ export const InterviewXPsstMultimodalRequest = async (
     formData.append("business", data.business); // 다른 데이터 추가
     formData.append("tool_id", data.tool_id); // 다른 데이터 추가
     formData.append("type", "ix_psst_multimodal"); // 다른 데이터 추가
-
 
     const token = sessionStorage.getItem("accessToken");
     if (!token) {
@@ -4146,20 +4164,14 @@ export const InterviewXPsstMultimodalRequest = async (
   }
 };
 
-
-
 //psst  상세 분석
-export const InterviewXPsstAnalysisRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXPsstAnalysisRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
   }
 
   try {
-
     const token = sessionStorage.getItem("accessToken");
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
@@ -4193,17 +4205,13 @@ export const InterviewXPsstAnalysisRequest = async (
 };
 
 //퀙서베이 질문 생성
-export const InterviewXQuickSurveyRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const InterviewXQuickSurveyRequest = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
   }
 
   try {
-
     const token = sessionStorage.getItem("accessToken");
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");
@@ -4236,20 +4244,14 @@ export const InterviewXQuickSurveyRequest = async (
   }
 };
 
-
-
 //퀙서베이 질문 생성
-export const EducationToolsRequest = async (
-  data,
-  isLoggedIn
-) => {
+export const EducationToolsRequest = async (data, isLoggedIn) => {
   // if (!isLoggedIn) {
   //   console.error("로그인이 필요합니다.");
   //   return null;
   // }
 
   try {
-
     const token = sessionStorage.getItem("accessToken");
     if (!token) {
       throw new Error("액세스 토큰이 존재하지 않습니다.");

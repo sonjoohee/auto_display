@@ -150,6 +150,7 @@ import {
   QUICK_SURVEY_REPORT,
   QUICK_SURVEY_STATIC_DATA,
   QUICK_SURVEY_INTERVIEW_MODE_TYPE,
+  PROJECT_EDUCATION_STATE,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -175,6 +176,7 @@ const PageToolListSaas = () => {
   }, []);
 
   const navigate = useNavigate();
+  const [projectEducationState] = useAtom(PROJECT_EDUCATION_STATE);
 
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [, setToolLoading] = useAtom(TOOL_LOADING);
@@ -1065,761 +1067,587 @@ const PageToolListSaas = () => {
                 활용하여 최적의 전략을 도출할 수 있습니다.
               </Body3>
             </ToolListTitle>
-
             <ExploreWrap>
-              <TabWrapType4>
-                <TabButtonType4Main
-                  isActive={activeTab === "all"}
-                  onClick={() => setActiveTab("all")}
-                >
-                  <Caption1 color="gray700">All</Caption1>
-                </TabButtonType4Main>
-                <TabButtonType4Main
-                  isActive={activeTab === "interview"}
-                  onClick={() => setActiveTab("interview")}
-                >
-                  <Caption1 color="gray700">AI Person Interview</Caption1>
-                </TabButtonType4Main>
-                <TabButtonType4Main
-                  isActive={activeTab === "research"}
-                  onClick={() => setActiveTab("research")}
-                >
-                  <Caption1 color="gray700">Research Tool</Caption1>
-                </TabButtonType4Main>
-                <TabButtonType4Main
-                  isActive={activeTab === "expert"}
-                  onClick={() => setActiveTab("expert")}
-                >
-                  <Caption1 color="gray700">Business Expert</Caption1>
-                </TabButtonType4Main>
-                <TabButtonType4Main
-                  isActive={activeTab === "report"}
-                  onClick={() => setActiveTab("report")}
-                >
-                  <Caption1 color="gray700">Report</Caption1>
-                </TabButtonType4Main>
-              </TabWrapType4>
+              {projectEducationState === "basic" ? (
+                <TabWrapType4>
+                  <TabButtonType4Main
+                    isActive={activeTab === "all"}
+                    onClick={() => setActiveTab("all")}
+                  >
+                    <Caption1 color="gray700">All</Caption1>
+                  </TabButtonType4Main>
+                  <TabButtonType4Main
+                    isActive={activeTab === "interview"}
+                    onClick={() => setActiveTab("interview")}
+                  >
+                    <Caption1 color="gray700">AI Person Interview</Caption1>
+                  </TabButtonType4Main>
+                  <TabButtonType4Main
+                    isActive={activeTab === "research"}
+                    onClick={() => setActiveTab("research")}
+                  >
+                    <Caption1 color="gray700">Research Tool</Caption1>
+                  </TabButtonType4Main>
+                  <TabButtonType4Main
+                    isActive={activeTab === "expert"}
+                    onClick={() => setActiveTab("expert")}
+                  >
+                    <Caption1 color="gray700">Business Expert</Caption1>
+                  </TabButtonType4Main>
+                  <TabButtonType4Main
+                    isActive={activeTab === "report"}
+                    onClick={() => setActiveTab("report")}
+                  >
+                    <Caption1 color="gray700">Report</Caption1>
+                  </TabButtonType4Main>
+                </TabWrapType4>
+              ) : (
+                <></>
+              )}
 
               <ExploreList>
-                {[
-                  // Expert 카드들
+                {projectEducationState === "basic" ? (
+                  <>
+                    {[
+                      // Expert 카드들
 
-                  <ExploreCard AiPersona key="analysis-1">
-                    <span>
-                      <images.GridCircle color={palette.gray700} />
-                      Interveiw
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore12} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>
-                      심층 인터뷰 룸
-                    </Body1>
-
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        navigate("/Persona3Single");
-                      }}
-                    >
-                      <span>
-                        <images.GridCircle color={palette.white} />
-                        Interveiw
-                      </span>
-
-                      <div className="text">
-                        <Body1 color="white">
+                      <ExploreCard AiPersona key="analysis-1">
+                        <span>
+                          <images.GridCircle color={palette.gray700} />
+                          Interveiw
+                        </span>
+                        <p>
+                          <img src={images.ImgExplore12} alt="" />
+                        </p>
+                        <Body1 color="gray800">
                           <em>준비중</em>
                           심층 인터뷰 룸
                         </Body1>
-                        <Caption1 color="white" align="left">
-                          1:1 인터뷰를 통해 개별 사용자의 심층적인 인사이트와
-                          핵심 니즈를 탐색하는 도구
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
 
-                  <ExploreCard AiPersona key="analysis-2">
-                    <span>
-                      <images.GridCircle color={palette.gray700} />
-                      Interveiw
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore13} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>
-                      그룹 인터뷰 룸
-                    </Body1>
+                        <div
+                          className="overlay"
+                          onClick={() => {
+                            navigate("/Persona3Single");
+                          }}
+                        >
+                          <span>
+                            <images.GridCircle color={palette.white} />
+                            Interveiw
+                          </span>
 
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        navigate("/Persona3Multiple");
-                      }}
-                    >
-                      <span>
-                        <images.GridCircle color={palette.white} />
-                        Interveiw
-                      </span>
+                          <div className="text">
+                            <Body1 color="white">
+                              <em>준비중</em>
+                              심층 인터뷰 룸
+                            </Body1>
+                            <Caption1 color="white" align="left">
+                              1:1 인터뷰를 통해 개별 사용자의 심층적인
+                              인사이트와 핵심 니즈를 탐색하는 도구
+                            </Caption1>
+                            <i />
+                          </div>
+                        </div>
+                      </ExploreCard>,
 
-                      <div className="text">
-                        <Body1 color="white">
+                      <ExploreCard AiPersona key="analysis-2">
+                        <span>
+                          <images.GridCircle color={palette.gray700} />
+                          Interveiw
+                        </span>
+                        <p>
+                          <img src={images.ImgExplore13} alt="" />
+                        </p>
+                        <Body1 color="gray800">
                           <em>준비중</em>
                           그룹 인터뷰 룸
                         </Body1>
-                        <Caption1 color="white" align="left">
-                          소규모 그룹과의 대화를 통해 다양한 관점을 수집하고
-                          핵심 인사이트를 도출하는 도구
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
 
-                  <ExploreCard AiPersona key="analysis-3">
-                    <span>
-                      <images.GridCircle color={palette.gray700} />
-                      Interveiw
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore15} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>퀵 서베이
-                    </Body1>
+                        <div
+                          className="overlay"
+                          onClick={() => {
+                            navigate("/Persona3Multiple");
+                          }}
+                        >
+                          <span>
+                            <images.GridCircle color={palette.white} />
+                            Interveiw
+                          </span>
 
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        navigate("/QuickSurvey");
-                      }}
-                    >
-                      <span>
-                        <images.GridCircle color={palette.white} />
-                        Interveiw
-                      </span>
+                          <div className="text">
+                            <Body1 color="white">
+                              <em>준비중</em>
+                              그룹 인터뷰 룸
+                            </Body1>
+                            <Caption1 color="white" align="left">
+                              소규모 그룹과의 대화를 통해 다양한 관점을 수집하고
+                              핵심 인사이트를 도출하는 도구
+                            </Caption1>
+                            <i />
+                          </div>
+                        </div>
+                      </ExploreCard>,
 
-                      <div className="text">
-                        <Body1 color="white">
+                      <ExploreCard AiPersona key="analysis-3">
+                        <span>
+                          <images.GridCircle color={palette.gray700} />
+                          Interveiw
+                        </span>
+                        <p>
+                          <img src={images.ImgExplore15} alt="" />
+                        </p>
+                        <Body1 color="gray800">
                           <em>준비중</em>퀵 서베이
                         </Body1>
-                        <Caption1 color="white" align="left">
-                          핵심 페르소나 그룹의 빠른 의견을 수집하고 인사이트를
-                          도출할 수 있는 빠른 리서치 도구
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
 
-                  <ExploreCard Research key="research-1" {...{ Ready: false }}>
-                    <span>
-                      <images.GridTool color={palette.gray700} />
-                      Tool
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore05} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>
-                      타겟 탐색기
-                    </Body1>
+                        <div
+                          className="overlay"
+                          onClick={() => {
+                            navigate("/QuickSurvey");
+                          }}
+                        >
+                          <span>
+                            <images.GridCircle color={palette.white} />
+                            Interveiw
+                          </span>
 
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        hadleToolSelect("1");
-                      }}
-                    >
-                      <span>
-                        <images.GridTool color={palette.white} />
-                        Tool
-                      </span>
+                          <div className="text">
+                            <Body1 color="white">
+                              <em>준비중</em>퀵 서베이
+                            </Body1>
+                            <Caption1 color="white" align="left">
+                              핵심 페르소나 그룹의 빠른 의견을 수집하고
+                              인사이트를 도출할 수 있는 빠른 리서치 도구
+                            </Caption1>
+                            <i />
+                          </div>
+                        </div>
+                      </ExploreCard>,
 
-                      <div className="text">
-                        <Body1 color="white">
-                          <em>준비중</em>타겟 탐색기
+                      <ExploreCard
+                        Research
+                        key="research-1"
+                        {...{ Ready: false }}
+                      >
+                        <span>
+                          <images.GridTool color={palette.gray700} />
+                          Tool
+                        </span>
+                        <p>
+                          <img src={images.ImgExplore05} alt="" />
+                        </p>
+                        <Body1 color="gray800">
+                          <em>준비중</em>
+                          타겟 탐색기
                         </Body1>
-                        <Caption1 color="white" align="left">
-                          맥락적 조사 및 시나리오 분석 기법을 활용해 제품 및
-                          서비스의 잠재고객 탐색 툴
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
 
-                  <ExploreCard
-                    Research
-                    key="research-2"
-                    // {...(!accessableExpert && { Ready: true })}
-                  >
-                    <span>
-                      <images.GridTool color={palette.gray700} />
-                      Tool
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore06} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>
-                      고객 핵심 가치 분석기
-                    </Body1>
+                        <div
+                          className="overlay"
+                          onClick={() => {
+                            hadleToolSelect("1");
+                          }}
+                        >
+                          <span>
+                            <images.GridTool color={palette.white} />
+                            Tool
+                          </span>
 
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        hadleToolSelect("2");
-                      }}
-                    >
-                      <span>
-                        <images.GridTool color={palette.white} />
-                        Tool
-                      </span>
+                          <div className="text">
+                            <Body1 color="white">
+                              <em>준비중</em>타겟 탐색기
+                            </Body1>
+                            <Caption1 color="white" align="left">
+                              맥락적 조사 및 시나리오 분석 기법을 활용해 제품 및
+                              서비스의 잠재고객 탐색 툴
+                            </Caption1>
+                            <i />
+                          </div>
+                        </div>
+                      </ExploreCard>,
 
-                      <div className="text">
-                        <Body1 color="white">
-                          <em>준비중</em>고객 핵심 가치 분석기
+                      <ExploreCard
+                        Research
+                        key="research-2"
+                        // {...(!accessableExpert && { Ready: true })}
+                      >
+                        <span>
+                          <images.GridTool color={palette.gray700} />
+                          Tool
+                        </span>
+                        <p>
+                          <img src={images.ImgExplore06} alt="" />
+                        </p>
+                        <Body1 color="gray800">
+                          <em>준비중</em>
+                          고객 핵심 가치 분석기
                         </Body1>
-                        <Caption1 color="white" align="left">
-                          고객여정맵을 기반으로 핵심 구매 요인을 도출하고 고객
-                          중심의 경쟁력을 강화하는 툴
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
 
-                  <ExploreCard
-                    Research
-                    // Ready
-                    key="research-3"
-                    // {...(!accessableExpert && { Ready: true })}
-                  >
-                    <span>
-                      <images.GridTool color={palette.gray700} />
-                      Tool
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore07} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>
-                      아이디어 생성기
-                    </Body1>
+                        <div
+                          className="overlay"
+                          onClick={() => {
+                            hadleToolSelect("2");
+                          }}
+                        >
+                          <span>
+                            <images.GridTool color={palette.white} />
+                            Tool
+                          </span>
 
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        hadleToolSelect("3");
-                      }}
-                    >
-                      <span>
-                        <images.GridTool color={palette.white} />
-                        Tool
-                      </span>
+                          <div className="text">
+                            <Body1 color="white">
+                              <em>준비중</em>고객 핵심 가치 분석기
+                            </Body1>
+                            <Caption1 color="white" align="left">
+                              고객여정맵을 기반으로 핵심 구매 요인을 도출하고
+                              고객 중심의 경쟁력을 강화하는 툴
+                            </Caption1>
+                            <i />
+                          </div>
+                        </div>
+                      </ExploreCard>,
 
-                      <div className="text">
-                        <Body1 color="white">
-                          <em>준비중</em>아이디어 생성기
+                      <ExploreCard
+                        Research
+                        // Ready
+                        key="research-3"
+                        // {...(!accessableExpert && { Ready: true })}
+                      >
+                        <span>
+                          <images.GridTool color={palette.gray700} />
+                          Tool
+                        </span>
+                        <p>
+                          <img src={images.ImgExplore07} alt="" />
+                        </p>
+                        <Body1 color="gray800">
+                          <em>준비중</em>
+                          아이디어 생성기
                         </Body1>
-                        <Caption1 color="white" align="left">
-                          만다라트 기법을 활용하여 창의적이고 구조적인
-                          아이디어를 발산하고 구체화 하는 툴
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
 
-                  <ExploreCard
-                    Research
-                    // {...(!accessableExpert && { Ready: true })}
-                    key="research-4"
-                  >
-                    <span>
-                      <images.GridTool color={palette.gray700} />
-                      Tool
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore10} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>
-                      디자인 감성 분석기
-                    </Body1>
+                        <div
+                          className="overlay"
+                          onClick={() => {
+                            hadleToolSelect("3");
+                          }}
+                        >
+                          <span>
+                            <images.GridTool color={palette.white} />
+                            Tool
+                          </span>
 
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        hadleToolSelect("4");
-                      }}
-                    >
-                      <span>
-                        <images.GridTool color={palette.white} />
-                        Tool
-                      </span>
+                          <div className="text">
+                            <Body1 color="white">
+                              <em>준비중</em>아이디어 생성기
+                            </Body1>
+                            <Caption1 color="white" align="left">
+                              만다라트 기법을 활용하여 창의적이고 구조적인
+                              아이디어를 발산하고 구체화 하는 툴
+                            </Caption1>
+                            <i />
+                          </div>
+                        </div>
+                      </ExploreCard>,
 
-                      <div className="text">
-                        <Body1 color="white">
-                          <em>준비중</em>디자인 감성 분석기
+                      <ExploreCard
+                        Research
+                        // {...(!accessableExpert && { Ready: true })}
+                        key="research-4"
+                      >
+                        <span>
+                          <images.GridTool color={palette.gray700} />
+                          Tool
+                        </span>
+                        <p>
+                          <img src={images.ImgExplore10} alt="" />
+                        </p>
+                        <Body1 color="gray800">
+                          <em>준비중</em>
+                          디자인 감성 분석기
                         </Body1>
-                        <Caption1 color="white" align="left">
-                          디자인 분야별 평가 기준을 적용해 감성적인 특징을
-                          정량적으로 분석하는 툴
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
 
-                  // <ExploreCard Research Ready key="research-5">
-                  //   <span>
-                  //     <images.LightningChargeFill color={palette.gray700} />
-                  //     Tool
-                  //   </span>
-                  //   <p>
-                  //     <img src={images.ImgExplore11} alt="" />
-                  //   </p>
-                  //   <Body1 color="gray800">
-                  //     <em>준비중</em>
-                  //     디자인 적합성 분석기
-                  //   </Body1>
+                        <div
+                          className="overlay"
+                          onClick={() => {
+                            hadleToolSelect("4");
+                          }}
+                        >
+                          <span>
+                            <images.GridTool color={palette.white} />
+                            Tool
+                          </span>
 
-                  //   <div
-                  //     className="overlay"
-                  //     onClick={() => {
-                  //       setIsComingSoon(true);
-                  //     }}
-                  //   >
-                  //     <span>
-                  //       <images.LightningChargeFill color={palette.white} />
-                  //       Tool
-                  //     </span>
+                          <div className="text">
+                            <Body1 color="white">
+                              <em>준비중</em>디자인 감성 분석기
+                            </Body1>
+                            <Caption1 color="white" align="left">
+                              디자인 분야별 평가 기준을 적용해 감성적인 특징을
+                              정량적으로 분석하는 툴
+                            </Caption1>
+                            <i />
+                          </div>
+                        </div>
+                      </ExploreCard>,
 
-                  //     <div className="text">
-                  //       <Body1 color="white">
-                  //         <em>준비중</em>디자인 적합성 분석기
-                  //       </Body1>
-                  //       <Caption1 color="white" align="left">
-                  //         이미지가 마케팅 활용에 적합한지 다양한 기준으로 평가하여
-                  //         적합성을 판단하는 툴
-                  //       </Caption1>
-                  //       <i />
-                  //     </div>
-                  //   </div>
-                  // </ExploreCard>,
+                      // <ExploreCard Research Ready key="research-5">
+                      //   <span>
+                      //     <images.LightningChargeFill color={palette.gray700} />
+                      //     Tool
+                      //   </span>
+                      //   <p>
+                      //     <img src={images.ImgExplore11} alt="" />
+                      //   </p>
+                      //   <Body1 color="gray800">
+                      //     <em>준비중</em>
+                      //     디자인 적합성 분석기
+                      //   </Body1>
 
-                  <ExploreCard
-                    Expert
-                    // Ready
-                    key="expert-1"
-                    // {...(!accessableExpert && { Ready: true })}
-                  >
-                    <span>
-                      <images.LightningChargeFill color={palette.gray700} />
-                      Expert
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore01} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>
-                      전략 컨설턴트
-                    </Body1>
+                      //   <div
+                      //     className="overlay"
+                      //     onClick={() => {
+                      //       setIsComingSoon(true);
+                      //     }}
+                      //   >
+                      //     <span>
+                      //       <images.LightningChargeFill color={palette.white} />
+                      //       Tool
+                      //     </span>
 
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        handledExpertSelect("1");
-                      }}
-                    >
-                      <span>
-                        <images.LightningChargeFill color={palette.white} />
+                      //     <div className="text">
+                      //       <Body1 color="white">
+                      //         <em>준비중</em>디자인 적합성 분석기
+                      //       </Body1>
+                      //       <Caption1 color="white" align="left">
+                      //         이미지가 마케팅 활용에 적합한지 다양한 기준으로 평가하여
+                      //         적합성을 판단하는 툴
+                      //       </Caption1>
+                      //       <i />
+                      //     </div>
+                      //   </div>
+                      // </ExploreCard>,
+
+                      <ExploreCard
                         Expert
-                      </span>
-
-                      <div className="text">
-                        <Body1 color="white">
+                        // Ready
+                        key="expert-1"
+                        // {...(!accessableExpert && { Ready: true })}
+                      >
+                        <span>
+                          <images.LightningChargeFill color={palette.gray700} />
+                          Expert
+                        </span>
+                        <p>
+                          <img src={images.ImgExplore01} alt="" />
+                        </p>
+                        <Body1 color="gray800">
                           <em>준비중</em>
                           전략 컨설턴트
                         </Body1>
-                        <Caption1 color="white" align="left">
-                          차별화된 비즈니스 전략과 리스크 분석을 통해 시장
-                          경쟁력을 강화하는 방법을 제시드려요
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
 
-                  <ExploreCard
-                    Expert
-                    // Ready
-                    key="expert-2"
-                    // {...(!accessableExpert && { Ready: true })}
-                  >
-                    <span>
-                      <images.LightningChargeFill color={palette.gray700} />
-                      Expert
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore02} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>
-                      가격 분석 전문가
-                    </Body1>
+                        <div
+                          className="overlay"
+                          onClick={() => {
+                            handledExpertSelect("1");
+                          }}
+                        >
+                          <span>
+                            <images.LightningChargeFill color={palette.white} />
+                            Expert
+                          </span>
 
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        handledExpertSelect("7");
-                      }}
-                    >
-                      <span>
-                        <images.LightningChargeFill color={palette.white} />
+                          <div className="text">
+                            <Body1 color="white">
+                              <em>준비중</em>
+                              전략 컨설턴트
+                            </Body1>
+                            <Caption1 color="white" align="left">
+                              차별화된 비즈니스 전략과 리스크 분석을 통해 시장
+                              경쟁력을 강화하는 방법을 제시드려요
+                            </Caption1>
+                            <i />
+                          </div>
+                        </div>
+                      </ExploreCard>,
+
+                      <ExploreCard
                         Expert
-                      </span>
-
-                      <div className="text">
-                        <Body1 color="white">
-                          <em>준비중</em>가격 분석 전문가
+                        // Ready
+                        key="expert-2"
+                        // {...(!accessableExpert && { Ready: true })}
+                      >
+                        <span>
+                          <images.LightningChargeFill color={palette.gray700} />
+                          Expert
+                        </span>
+                        <p>
+                          <img src={images.ImgExplore02} alt="" />
+                        </p>
+                        <Body1 color="gray800">
+                          <em>준비중</em>
+                          가격 분석 전문가
                         </Body1>
-                        <Caption1 color="white" align="left">
-                          시장 데이터 기반 최적 가격을 분석하여 수익성과
-                          경쟁력을 극대화할 수 있어요 (제품 한정)
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
 
-                  <ExploreCard
-                    Expert
-                    // Ready
-                    key="expert-3"
-                    // {...(!accessableExpert && { Ready: true })}
-                  >
-                    <span>
-                      <images.LightningChargeFill color={palette.gray700} />
-                      Expert
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore03} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>
-                      BM 전문가
-                    </Body1>
+                        <div
+                          className="overlay"
+                          onClick={() => {
+                            handledExpertSelect("7");
+                          }}
+                        >
+                          <span>
+                            <images.LightningChargeFill color={palette.white} />
+                            Expert
+                          </span>
 
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        handledExpertSelect("9");
-                      }}
-                    >
-                      <span>
-                        <images.LightningChargeFill color={palette.white} />
+                          <div className="text">
+                            <Body1 color="white">
+                              <em>준비중</em>가격 분석 전문가
+                            </Body1>
+                            <Caption1 color="white" align="left">
+                              시장 데이터 기반 최적 가격을 분석하여 수익성과
+                              경쟁력을 극대화할 수 있어요 (제품 한정)
+                            </Caption1>
+                            <i />
+                          </div>
+                        </div>
+                      </ExploreCard>,
+
+                      <ExploreCard
                         Expert
-                      </span>
-
-                      <div className="text">
-                        <Body1 color="white">
-                          <em>준비중</em>BM 전문가
+                        // Ready
+                        key="expert-3"
+                        // {...(!accessableExpert && { Ready: true })}
+                      >
+                        <span>
+                          <images.LightningChargeFill color={palette.gray700} />
+                          Expert
+                        </span>
+                        <p>
+                          <img src={images.ImgExplore03} alt="" />
+                        </p>
+                        <Body1 color="gray800">
+                          <em>준비중</em>
+                          BM 전문가
                         </Body1>
-                        <Caption1 color="white" align="left">
-                          비즈니스 모델을 설계하고 최적화하여 지속 가능한 수익
-                          구조를 구축하는 방향을 설정해드려요{" "}
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
 
-                  <ExploreCard
-                    Expert
-                    // Ready
-                    key="expert-4"
-                    // {...(!accessableExpert && { Ready: true })}
-                  >
-                    <span>
-                      <images.LightningChargeFill color={palette.gray700} />
-                      Expert
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore04} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>
-                      그로스 해커
-                    </Body1>
+                        <div
+                          className="overlay"
+                          onClick={() => {
+                            handledExpertSelect("9");
+                          }}
+                        >
+                          <span>
+                            <images.LightningChargeFill color={palette.white} />
+                            Expert
+                          </span>
 
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        handledExpertSelect("6");
-                      }}
-                    >
-                      <span>
-                        <images.LightningChargeFill color={palette.white} />
+                          <div className="text">
+                            <Body1 color="white">
+                              <em>준비중</em>BM 전문가
+                            </Body1>
+                            <Caption1 color="white" align="left">
+                              비즈니스 모델을 설계하고 최적화하여 지속 가능한
+                              수익 구조를 구축하는 방향을 설정해드려요{" "}
+                            </Caption1>
+                            <i />
+                          </div>
+                        </div>
+                      </ExploreCard>,
+
+                      <ExploreCard
                         Expert
-                      </span>
-
-                      <div className="text">
-                        <Body1 color="white">
-                          <em>준비중</em>그로스 해커
+                        // Ready
+                        key="expert-4"
+                        // {...(!accessableExpert && { Ready: true })}
+                      >
+                        <span>
+                          <images.LightningChargeFill color={palette.gray700} />
+                          Expert
+                        </span>
+                        <p>
+                          <img src={images.ImgExplore04} alt="" />
+                        </p>
+                        <Body1 color="gray800">
+                          <em>준비중</em>
+                          그로스 해커
                         </Body1>
-                        <Caption1 color="white" align="left">
-                          사용자 여정을 분석하여 각 마케팅 퍼널 단계별 최적의
-                          전략을 도출하고 실행 방안을 제시드려요
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
-                  <ExploreCard Report key="report-1">
-                    <span>
-                      <images.GridReport color={palette.gray700} />
-                      Report
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore14} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>
-                      보고서 생성기
-                    </Body1>
 
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        navigate("/PsstReport");
-                      }}
-                    >
-                      <span>
-                        <images.GridReport color={palette.white} />
+                        <div
+                          className="overlay"
+                          onClick={() => {
+                            handledExpertSelect("6");
+                          }}
+                        >
+                          <span>
+                            <images.LightningChargeFill color={palette.white} />
+                            Expert
+                          </span>
+
+                          <div className="text">
+                            <Body1 color="white">
+                              <em>준비중</em>그로스 해커
+                            </Body1>
+                            <Caption1 color="white" align="left">
+                              사용자 여정을 분석하여 각 마케팅 퍼널 단계별
+                              최적의 전략을 도출하고 실행 방안을 제시드려요
+                            </Caption1>
+                            <i />
+                          </div>
+                        </div>
+                      </ExploreCard>,
+                      <ExploreCard Report key="report-1">
+                        <span>
+                          <images.GridReport color={palette.gray700} />
+                          Report
+                        </span>
+                        <p>
+                          <img src={images.ImgExplore14} alt="" />
+                        </p>
+                        <Body1 color="gray800">
+                          <em>준비중</em>
+                          보고서 생성기
+                        </Body1>
+
+                        <div
+                          className="overlay"
+                          onClick={() => {
+                            navigate("/PsstReport");
+                          }}
+                        >
+                          <span>
+                            <images.GridReport color={palette.white} />
+                            Report
+                          </span>
+
+                          <div className="text">
+                            <Body1 color="white">
+                              <em>준비중</em>보고서 생성기
+                            </Body1>
+                            <Caption1 color="white" align="left">
+                              여러가지 기획서 및 계획서를 원하는 사업 타입에
+                              맞춰 작성을 도와주는 툴
+                            </Caption1>
+                            <i />
+                          </div>
+                        </div>
+                      </ExploreCard>,
+                      <ExploreCard
                         Report
-                      </span>
-
-                      <div className="text">
-                        <Body1 color="white">
-                          <em>준비중</em>보고서 생성기
-                        </Body1>
-                        <Caption1 color="white" align="left">
-                          여러가지 기획서 및 계획서를 원하는 사업 타입에 맞춰
-                          작성을 도와주는 툴
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
-
-                  // Edu 툴 추가
-                    <ExploreCard Report key="report-1">
-                    <span>
-                      <images.GridReport color={palette.gray700} />
-                      Report
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore14} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>
-                      고객 여정 맵
-                    </Body1>
-
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        navigate("/CustomerJourneyMap");
-                      }}
-                    >
-                      <span>
-                        <images.GridReport color={palette.white} />
-                        Report
-                      </span>
-
-                      <div className="text">
-                        <Body1 color="white">
-                          <em>준비중</em>고객 여정 지도
-                        </Body1>
-                        <Caption1 color="white" align="left">
-                          고객의 구매 경로를 시각화하여 비즈니스 개선 방향을 제시해드려요
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
-
-                    <ExploreCard Report key="report-1">
-                    <span>
-                      <images.GridReport color={palette.gray700} />
-                      Report
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore14} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>
-                      아이디어 발상
-                    </Body1>
-
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        navigate("/IdeaGeneration");
-                      }}
-                    >
-                      <span>
-                        <images.GridReport color={palette.white} />
-                        Report
-                      </span>
-
-                      <div className="text">
-                        <Body1 color="white">
-                          <em>준비중</em>아이디어 발상
-                        </Body1>
-                        <Caption1 color="white" align="left">
-                          비즈니스 아이디어를 생성하고 평가하는 툴
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
-
-                    <ExploreCard Report key="report-1">
-                    <span>
-                      <images.GridReport color={palette.gray700} />
-                      Report
-                    </span>
-                    <p>
-                      <img src={images.ImgExplore14} alt="" />
-                    </p>
-                    <Body1 color="gray800">
-                      <em>준비중</em>
-                      Kano Model
-                    </Body1>
-
-                    <div
-                      className="overlay"
-                      onClick={() => {
-                        navigate("/KanoModel");
-                      }}
-                    >
-                      <span>
-                        <images.GridReport color={palette.white} />
-                        Report
-                      </span>
-
-                      <div className="text">
-                        <Body1 color="white">
-                          <em>준비중</em>칸 모델
-                        </Body1>
-                        <Caption1 color="white" align="left">
-                          고객의 만족도와 비즈니스 성과를 분석하여 개선 방향을 제시해드려요
-                        </Caption1>
-                        <i />
-                      </div>
-                    </div>
-                  </ExploreCard>,
-
-
-                  <ExploreCard Report key="report-1">
-                  <span>
-                    <images.GridReport color={palette.gray700} />
-                    Report
-                  </span>
-                  <p>
-                    <img src={images.ImgExplore14} alt="" />
-                  </p>
-                  <Body1 color="gray800">
-                    <em>준비중</em>
-                    아이디어 평가
-                  </Body1>
-
-                  <div
-                    className="overlay"
-                    onClick={() => {
-                      navigate("/IdeaEvaluate");
-                    }}
-                  >
-                    <span>
-                      <images.GridReport color={palette.white} />
-                      Report
-                    </span>
-
-                    <div className="text">
-                      <Body1 color="white">
-                        <em>준비중</em>아이디어 평가
-                      </Body1>
-                      <Caption1 color="white" align="left">
-                        아이디어를 평가하고 개선 방향을 제시해드려요
-                      </Caption1>
-                      <i />
-                    </div>
-                  </div>
-                  </ExploreCard>,
-
-
-                  <ExploreCard Report key="report-1">
-                  <span>
-                    <images.GridReport color={palette.gray700} />
-                    Report
-                  </span>
-                  <p>
-                    <img src={images.ImgExplore14} alt="" />
-                  </p>
-                  <Body1 color="gray800">
-                    <em>준비중</em>
-                    NPS
-                  </Body1>
-
-                  <div
-                    className="overlay"
-                    onClick={() => {
-                      navigate("/NPS");
-                    }}
-                  >
-                    <span>
-                      <images.GridReport color={palette.white} />
-                      Report
-                    </span>
-
-                    <div className="text">
-                      <Body1 color="white">
-                        <em>준비중</em>NPS
-                      </Body1>
-                      <Caption1 color="white" align="left">
-                        고객의 만족도와 비즈니스 성과를 분석하여 개선 방향을 제시해드려요
-                      </Caption1>
-                      <i />
-                    </div>
-                  </div>
-                  </ExploreCard>,
-
-               
-                  <ExploreCard
-                    Report
-                    Ready
-                    key="report-2"
-                    style={{ cursor: "default" }}
-                  >
-                    <span>
-                      <images.LightningChargeFill color={palette.gray700} />
-                      Report
-                    </span>
-                    <p>
-                      <img src={images.ImgExploreNoData} alt="" />
-                    </p>
-                    <div style={{ height: "10px" }}></div>
-                    <Body1 color="gray300">Coming Soon</Body1>
-                  </ExploreCard>,
-
+                        Ready
+                        key="report-2"
+                        style={{ cursor: "default" }}
+                      >
+                        <span>
+                          <images.LightningChargeFill color={palette.gray700} />
+                          Report
+                        </span>
+                        <p>
+                          <img src={images.ImgExploreNoData} alt="" />
+                        </p>
+                        <div style={{ height: "10px" }}></div>
+                        <Body1 color="gray300">Coming Soon</Body1>
+                      </ExploreCard>,
+                    ].filter(filterCards)}
+                  </>
+                ) : (
                   // <ExploreCard Research key="research-4">
                   //   <span>
                   //     <images.LightningChargeFill color={palette.gray700} />
@@ -1919,7 +1747,205 @@ const PageToolListSaas = () => {
                   //     </div>
                   //   </div>
                   // </ExploreCard>,
-                ].filter(filterCards)}
+
+                  // Edu 툴 추가
+                  <>
+                    <ExploreCard Report key="report-1">
+                      <span>
+                        <images.GridReport color={palette.gray700} />
+                        Report
+                      </span>
+                      <p>
+                        <img src={images.ImgExplore14} alt="" />
+                      </p>
+                      <Body1 color="gray800">
+                        <em>준비중</em>
+                        고객 여정 맵
+                      </Body1>
+
+                      <div
+                        className="overlay"
+                        onClick={() => {
+                          navigate("/CustomerJourneyMap");
+                        }}
+                      >
+                        <span>
+                          <images.GridReport color={palette.white} />
+                          Report
+                        </span>
+
+                        <div className="text">
+                          <Body1 color="white">
+                            <em>준비중</em>고객 여정 지도
+                          </Body1>
+                          <Caption1 color="white" align="left">
+                            고객의 구매 경로를 시각화하여 비즈니스 개선 방향을
+                            제시해드려요
+                          </Caption1>
+                          <i />
+                        </div>
+                      </div>
+                    </ExploreCard>
+                    <ExploreCard Report key="report-1">
+                      <span>
+                        <images.GridReport color={palette.gray700} />
+                        Report
+                      </span>
+                      <p>
+                        <img src={images.ImgExplore14} alt="" />
+                      </p>
+                      <Body1 color="gray800">
+                        <em>준비중</em>
+                        아이디어 발상
+                      </Body1>
+
+                      <div
+                        className="overlay"
+                        onClick={() => {
+                          navigate("/IdeaGeneration");
+                        }}
+                      >
+                        <span>
+                          <images.GridReport color={palette.white} />
+                          Report
+                        </span>
+
+                        <div className="text">
+                          <Body1 color="white">
+                            <em>준비중</em>아이디어 발상
+                          </Body1>
+                          <Caption1 color="white" align="left">
+                            비즈니스 아이디어를 생성하고 평가하는 툴
+                          </Caption1>
+                          <i />
+                        </div>
+                      </div>
+                    </ExploreCard>
+                    <ExploreCard Report key="report-1">
+                      <span>
+                        <images.GridReport color={palette.gray700} />
+                        Report
+                      </span>
+                      <p>
+                        <img src={images.ImgExplore14} alt="" />
+                      </p>
+                      <Body1 color="gray800">
+                        <em>준비중</em>
+                        Kano Model
+                      </Body1>
+
+                      <div
+                        className="overlay"
+                        onClick={() => {
+                          navigate("/KanoModel");
+                        }}
+                      >
+                        <span>
+                          <images.GridReport color={palette.white} />
+                          Report
+                        </span>
+
+                        <div className="text">
+                          <Body1 color="white">
+                            <em>준비중</em>칸 모델
+                          </Body1>
+                          <Caption1 color="white" align="left">
+                            고객의 만족도와 비즈니스 성과를 분석하여 개선 방향을
+                            제시해드려요
+                          </Caption1>
+                          <i />
+                        </div>
+                      </div>
+                    </ExploreCard>
+                    <ExploreCard Report key="report-1">
+                      <span>
+                        <images.GridReport color={palette.gray700} />
+                        Report
+                      </span>
+                      <p>
+                        <img src={images.ImgExplore14} alt="" />
+                      </p>
+                      <Body1 color="gray800">
+                        <em>준비중</em>
+                        아이디어 평가
+                      </Body1>
+
+                      <div
+                        className="overlay"
+                        onClick={() => {
+                          navigate("/IdeaEvaluate");
+                        }}
+                      >
+                        <span>
+                          <images.GridReport color={palette.white} />
+                          Report
+                        </span>
+
+                        <div className="text">
+                          <Body1 color="white">
+                            <em>준비중</em>아이디어 평가
+                          </Body1>
+                          <Caption1 color="white" align="left">
+                            아이디어를 평가하고 개선 방향을 제시해드려요
+                          </Caption1>
+                          <i />
+                        </div>
+                      </div>
+                    </ExploreCard>
+                    <ExploreCard Report key="report-1">
+                      <span>
+                        <images.GridReport color={palette.gray700} />
+                        Report
+                      </span>
+                      <p>
+                        <img src={images.ImgExplore14} alt="" />
+                      </p>
+                      <Body1 color="gray800">
+                        <em>준비중</em>
+                        NPS
+                      </Body1>
+
+                      <div
+                        className="overlay"
+                        onClick={() => {
+                          navigate("/NPS");
+                        }}
+                      >
+                        <span>
+                          <images.GridReport color={palette.white} />
+                          Report
+                        </span>
+
+                        <div className="text">
+                          <Body1 color="white">
+                            <em>준비중</em>NPS
+                          </Body1>
+                          <Caption1 color="white" align="left">
+                            고객의 만족도와 비즈니스 성과를 분석하여 개선 방향을
+                            제시해드려요
+                          </Caption1>
+                          <i />
+                        </div>
+                      </div>
+                    </ExploreCard>
+                    <ExploreCard
+                      Report
+                      Ready
+                      key="report-2"
+                      style={{ cursor: "default" }}
+                    >
+                      <span>
+                        <images.LightningChargeFill color={palette.gray700} />
+                        Report
+                      </span>
+                      <p>
+                        <img src={images.ImgExploreNoData} alt="" />
+                      </p>
+                      <div style={{ height: "10px" }}></div>
+                      <Body1 color="gray300">Coming Soon</Body1>
+                    </ExploreCard>
+                  </>
+                )}
               </ExploreList>
             </ExploreWrap>
           </ToolListWrap>

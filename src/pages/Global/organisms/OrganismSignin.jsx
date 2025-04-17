@@ -5,21 +5,16 @@ import {
   ContentsWrap,
   MainContent,
 } from "../../../assets/styles/BusinessAnalysisStyle";
-import {
-  H1,
-} from "../../../assets/styles/Typography";
+import { H1 } from "../../../assets/styles/Typography";
 import MoleculeSignupForm from "../../Login_Sign/components/molecules/MoleculeSignupForm";
 
 const OrganismSignin = () => {
-
   return (
     <>
       <ContentsWrap>
-
-
         <MainContent Wide>
           <LoginWrap>
-            <H1>Sign in</H1>
+            <H1>Sign up</H1>
             <MoleculeSignupForm />
           </LoginWrap>
         </MainContent>
