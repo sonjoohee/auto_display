@@ -69,7 +69,7 @@ import MandalArtGraph from "../../components/Charts/MandalArtGraph";
 import WriteSelfCard from "../../components/Charts/WriteSelfCard";
 import IdeaGenerationTag from "../../components/Charts/IdeaGenerationTag";
 import ParetoCurveGraph from "../../components/Charts/ParetoCurveGraph";
-
+import BusinessModelPopup from "../../components/Charts/BusinessModelPopup";
 const PageStyleGuide  = () => {
   const [activeSection, setActiveSection] = useState('');
   const [isChecked, setIsChecked] = useState(false);
@@ -86,14 +86,14 @@ const PageStyleGuide  = () => {
 
   // ParetoCurveGraph에 사용할 더미데이터
   const paretoDummyData = [
-    { name: "품질 문제", value: 75 },
-    { name: "배송 지연", value: 50 },
-    { name: "가격 불만", value: 35 },
-    { name: "결제 오류", value: 20 },
-    { name: "재고 부족", value: 15 },
-    { name: "서비스 불량", value: 10 },
-    { name: "앱 오류", value: 8 },
-    { name: "기타", value: 5 }
+    { name: "고고품질 문제", value: 75 },
+    { name: "많은 배송 지연", value: 50 },
+    { name: "겁나게 비싸서 사기 힘든 높은 가격 불만", value: 35 },
+    { name: "이은결제 오류", value: 20 },
+    { name: "어머나 재고 부족", value: 15 },
+    { name: "기존의 서비스 불량", value: 10 },
+    { name: "수 많은 앱 오류", value: 8 },
+    { name: "비싼 통기타", value: 5 }
   ];
 
   const handleWarningClose = () => {
@@ -178,11 +178,12 @@ const PageStyleGuide  = () => {
           <ImportanceButtonLevel />
           <QuickSurveyCard />
           <KanoModelGraph />
-          <QuckSurveyPopup isOpen={true} />
+          <QuckSurveyPopup />
           <MandalArtGraph />
           <WriteSelfCard />
           <IdeaGenerationTag text="경험 기반 쇼핑 큐레이션" />
           <ParetoCurveGraph data={paretoDummyData} />
+          <BusinessModelPopup isOpen={true} />
         </FlexContainer>
       </ChartComponentsWrap>
       
