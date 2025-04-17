@@ -59,17 +59,14 @@ import {
 import {
   createToolOnServer,
   updateToolOnServer,
-  InterviewXPsstMultimodalRequest,
-  InterviewXPsstAnalysisRequest,
   EducationToolsRequest,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
 // import MoleculeFileUpload from "../molecules/MoleculeFileUpload";
 import MoleculeAnalysisResults from "../molecules/MoleculeAnalysisResults";
-import MoleculePersonaSelectCard from "../molecules/MoleculePersonaSelectCard";
+import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
 import MoleculeWriteCard from "../molecules/MoleculeWriteCard";
-
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
 const prepareMarkdown = (text) => {
@@ -160,8 +157,8 @@ const PageCustomerJourneyMap = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  console.log(customerJourneyMapSelectedDirection);
-  console.log(selectedMoment);
+  // console.log(customerJourneyMapSelectedDirection);
+  // console.log(selectedMoment);
 
   useEffect(() => {
     const interviewLoading = async () => {
@@ -276,6 +273,7 @@ const PageCustomerJourneyMap = () => {
       business: business,
       persona: selectedCustomer,
     };
+ 
     setCustomerJourneyMapSelectedPersona(selectedCustomer);
 
     let response = await EducationToolsRequest(data, isLoggedIn);
@@ -634,23 +632,9 @@ const PageCustomerJourneyMap = () => {
                       </ListBoxGroup>
                     </div>
 
-                    {personaListSaas &&
-                    personaListSaas.some(
-                      (persona) => persona?.status === "complete"
-                    ) ? (
-                      // <MoleculePersonaSelectCard
-                      //   filteredPersonaList={personaListSaas}
-                      //   // businessPersonaList={allBusinessPersonas.filter(
-                      //   //   (persona) => persona?.status === "complete"
-                      //   // )}
-                      //   // customPersonaList={customPersonaList}
-                      //   selectedPersonas={selectedPersonas}
-                      //   onPersonaSelect={setSelectedPersonas}
-                      // />
+                    {personaListSaas.length > 0 ? (
                       <MoleculePersonaSelectCard
-                        filteredPersonaList={personaListSaas.filter(
-                          (persona) => persona?.status === "complete"
-                        )}
+                        filteredPersonaList={personaListSaas}
                         selectedPersonas={selectedPersonas}
                         onPersonaSelect={(persona) => {
                           setSelectedPersonas(persona);
