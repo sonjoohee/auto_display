@@ -2,27 +2,40 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { palette } from "../../../../../assets/styles/Palette";
 // import MoleculeEmptyState from "../molecules/MoleculeEmptyState";
-import { IDEA_GENERATION_SELECTED_START_POSITION , PROJECT_SAAS} from "../../../../AtomStates";
+import { IDEA_GENERATION_SELECTED_START_POSITION , PROJECT_SAAS, IDEA_GENERATION_SELECTED_MANDALART} from "../../../../AtomStates";
 import { useAtom } from "jotai";
 
 const MoleculeMandalArtGraph = ({ mandalartData }) => {
   const [selectedItem, setSelectedItem] = useState(null);
-  const [ideaGenerationSelectedStartPosition, setIdeaGenerationSelectedStartPosition] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
+  const [ideaGenerationSelectedStartPosition] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
+  const [ideaGenerationSelectedMandalart, setIdeaGenerationSelectedMandalart] = useAtom(IDEA_GENERATION_SELECTED_MANDALART);
   const [projectSaas] = useAtom(PROJECT_SAAS);
-  console.log("projectSaas", projectSaas)
+
   // if (!mandalartData) {
   //   return <MoleculeEmptyState />;
   // }
 
   const mandalartButtons = [
-    ...mandalartData.items.slice(0, 4),
-    // projectSaas.projectTitle,
-    mandalartData.center,
-    ...mandalartData.items.slice(4)
+    ...ideaGenerationSelectedStartPosition.slice(0, 4).map((item, index) => ({
+      id: index + 1,
+      text: item.idea,
+      isCenter: false
+    })),
+    {
+      id: 0,
+      text: projectSaas?.projectTitle || '아이디어 발상',
+      isCenter: true
+    },
+    ...ideaGenerationSelectedStartPosition.slice(4).map((item, index) => ({
+      id: index + 5,
+      text: item.idea,
+      isCenter: false
+    }))
   ];
 
   const handleItemClick = (itemId) => {
     setSelectedItem(itemId);
+    setIdeaGenerationSelectedMandalart(itemId);
     console.log("itemId", itemId);
   };
 

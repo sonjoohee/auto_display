@@ -602,6 +602,7 @@ export const IDEA_GENERATION_START_POSITION = atom([]);
 export const IDEA_GENERATION_IDEA_LIST = atom([]);
 export const IDEA_GENERATION_MANDALART_DATA = atom([]);
 export const IDEA_GENERATION_SELECTED_START_POSITION = atom([]);
+export const IDEA_GENERATION_SELECTED_MANDALART = atom(null);
 
 export const KANO_MODEL_IDEA_GENERATION = atom([]);
 export const KANO_MODEL_SELECTED_IDEA = atom(null);

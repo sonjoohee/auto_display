@@ -11,6 +11,8 @@ import { Button } from "../../../assets/styles/ButtonStyle";
 import {
   ContentsWrap,
   MainContent,
+  TabContent5Item,
+  TabContent5
 } from "../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../assets/styles/Images";
 import {
@@ -19,6 +21,9 @@ import {
   Sub1,
   Caption1,
   Sub3,
+  Body2,
+  Body1,
+  H3
 } from "../../../assets/styles/Typography";
 import {
   getProjectListSaasByIdFromIndexedDB,
@@ -46,6 +51,8 @@ import {
   CREDIT_CREATE_INTERVIEW,
   CREDIT_CREATE_PROJECT,
   EDUCATION_STATE,
+  PROJECT_EDUCATION_STATE,
+  PROJECT_EDUCATION_CODE
 } from "../../AtomStates";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 
@@ -76,6 +83,8 @@ const PageProject = () => {
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectList, setProjectList] = useAtom(PROJECT_LIST);
   const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
+  const [projectEducationState, setProjectEducationState] = useAtom(PROJECT_EDUCATION_STATE);
+  const [projectEducationCode, setProjectEducationCode] = useAtom(PROJECT_EDUCATION_CODE);
 
   const [isWarningPopupOpen, setIsWarningPopupOpen] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
@@ -83,6 +92,7 @@ const PageProject = () => {
   const [deletedProjects, setDeletedProjects] = useState([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isTrashModalOpen, setIsTrashModalOpen] = useState(false);
+  const [showProjectList, setShowProjectList] = useState(false);
   const handleWarningClose = () => {
     setIsWarningPopupOpen(false);
     setShowWarning(false);
@@ -264,6 +274,10 @@ const PageProject = () => {
     setShowWarning(true);
   };
 
+  const confirmProjectType = () => {
+    setShowProjectList(true);
+  };
+
   return (
     <>
       <ContentsWrap>
@@ -271,50 +285,202 @@ const PageProject = () => {
 
         <MoleculeHeader />
 
-        <MainContent Wide1030>
-          <ProjectWrap>
-            <HeaderWrap>
-              <div>
-                <H1 color="gray800" align="left">
-                  Project
-                </H1>
-                <div style={{ height: "10px" }}></div>
-                <Body3 color="gray700" align="left">
-                  AI를 활용한 효율적인 프로젝트 인사이트를 관리하세요
-                </Body3>
-              </div>
-              <div
-                style={{ display: "flex", flexDirection: "row", gap: "10px" }}
-              >
-                <Button
-                  ExLarge
-                  Primary
-                  Fill
-                  onClick={() => setIsWarningPopupOpen(true)}
-                >
-                  <Sub1 color="white">새 프로젝트</Sub1>
-                </Button>
-                <Button Outline onClick={() => setIsTrashModalOpen(true)}>
-                  <img src={images.Trash} alt="" />
-                  <Caption1 color="gray700">임시 삭제함</Caption1>
-                </Button>
-              </div>
-            </HeaderWrap>
+        {educationState ? (
+          !showProjectList ? (
+            // 교육 모드 초기 화면
+            <MainContent Wide1030>
+              <ProjectWrap style={{marginTop: "200px"}}>
+               <TabContent5 >
+               <div className="content">
+            
 
-            <ProjectListWrap>
-              <ProjectList>
-                {sampleProjects.map((project) => (
-                  <OrganismProjectItem
-                    key={project._id}
-                    project={project}
-                    onDelete={() => handleProjectDelete(project)}
-                  />
-                ))}
-                <OrganismProjectItem isNoData={true} />
-              </ProjectList>
-            </ProjectListWrap>
-          </ProjectWrap>
-        </MainContent>
+              <div className="title">
+                    <H3 color="gray800">회원 유형을 선택해주세요</H3>
+                  
+                  </div>
+              <InterviewModeSelection>
+                <InterviewModeCard
+                  isActive={projectEducationState === "basic"}
+                  onClick={() => setProjectEducationState("basic")}
+                >
+                  <CardContent>
+                    <img
+                      src={images.InterviewModeSelfQuestion}
+                      alt="basic"
+                    />
+                    <div>
+                      <Body2 color="gray700">일반 회원으로 사용합니다</Body2>
+                      <Body3
+                        style={{ marginTop: "10px" }}
+                        color="gray500"
+                      >
+                        InterviewX를 개인적인 목적으로 사용합니다
+                      </Body3>
+                    </div>
+                  </CardContent>
+                  <CheckboxWrapper>
+                    <CheckCircle
+                      as="input"
+                      type="radio"
+                      id="basic"
+                      name="projectEducationState"
+                      checked={projectEducationState === "basic"}
+                      onChange={() =>
+                        setProjectEducationState("basic")
+                      }
+                    />
+                  </CheckboxWrapper>
+                </InterviewModeCard>
+
+                <InterviewModeCard
+                  isActive={projectEducationState === "education"}
+                  onClick={() => {
+                    setProjectEducationState("education");
+                    setProjectEducationCode("edu_000001");
+                  }}
+                >
+                  <CardContent>
+                    <img
+                      src={images.InterviewModeModerator}
+                      alt="education"
+                    />
+                    <div>
+                      <Body2 color="gray700">
+                      교육용으로 사용합니다
+                      </Body2>
+                      <Body3
+                        style={{ marginTop: "10px" }}
+                        color="gray500"
+                      >
+                        "부산디자인진흥원 프로그램 명"으로 사용합니다
+                      </Body3>
+                    </div>
+                  </CardContent>
+                  <CheckboxWrapper>
+                    <CheckCircle
+                      as="input"
+                      type="radio"
+                      id="education"
+                      name="projectEducationState"
+                      checked={projectEducationState === "education"}
+                      onChange={() => {
+                        setProjectEducationState("education");
+                        setProjectEducationCode("edu_000001");
+                      }}
+                    />
+                  </CheckboxWrapper>
+                </InterviewModeCard>
+              </InterviewModeSelection>
+              </div>
+
+              <Button
+                      Other
+                      Primary
+                      Fill
+                      disabled={!projectEducationState}
+                      onClick={confirmProjectType}
+                    >
+                      확인
+                    </Button>
+            
+              </TabContent5>
+              </ProjectWrap>
+             
+              </MainContent>
+          ) : (
+            // 교육 모드에서 확인 버튼 클릭 후 화면
+            <MainContent Wide1030>
+              <ProjectWrap>
+                <HeaderWrap>
+                  <div>
+                    <H1 color="gray800" align="left">
+                      Project
+                    </H1>
+                    <div style={{ height: "10px" }}></div>
+                    <Body3 color="gray700" align="left">
+                      AI를 활용한 효율적인 프로젝트 인사이트를 관리하세요
+                    </Body3>
+                  </div>
+                  <div
+                    style={{ display: "flex", flexDirection: "row", gap: "10px" }}
+                  >
+                    <Button
+                      ExLarge
+                      Primary
+                      Fill
+                      onClick={() => setIsWarningPopupOpen(true)}
+                    >
+                      <Sub1 color="white">새 프로젝트</Sub1>
+                    </Button>
+                    <Button Outline onClick={() => setIsTrashModalOpen(true)}>
+                      <img src={images.Trash} alt="" />
+                      <Caption1 color="gray700">임시 삭제함</Caption1>
+                    </Button>
+                  </div>
+                </HeaderWrap>
+
+                <ProjectListWrap>
+                  <ProjectList>
+                    {sampleProjects.map((project) => (
+                      <OrganismProjectItem
+                        key={project._id}
+                        project={project}
+                        onDelete={() => handleProjectDelete(project)}
+                      />
+                    ))}
+                    <OrganismProjectItem isNoData={true} />
+                  </ProjectList>
+                </ProjectListWrap>
+              </ProjectWrap>
+            </MainContent>
+          )
+        ) : (
+          // 일반 모드 화면
+          <MainContent Wide1030>
+            <ProjectWrap>
+              <HeaderWrap>
+                <div>
+                  <H1 color="gray800" align="left">
+                    Project
+                  </H1>
+                  <div style={{ height: "10px" }}></div>
+                  <Body3 color="gray700" align="left">
+                    AI를 활용한 효율적인 프로젝트 인사이트를 관리하세요
+                  </Body3>
+                </div>
+                <div
+                  style={{ display: "flex", flexDirection: "row", gap: "10px" }}
+                >
+                  <Button
+                    ExLarge
+                    Primary
+                    Fill
+                    onClick={() => setIsWarningPopupOpen(true)}
+                  >
+                    <Sub1 color="white">새 프로젝트</Sub1>
+                  </Button>
+                  <Button Outline onClick={() => setIsTrashModalOpen(true)}>
+                    <img src={images.Trash} alt="" />
+                    <Caption1 color="gray700">임시 삭제함</Caption1>
+                  </Button>
+                </div>
+              </HeaderWrap>
+
+              <ProjectListWrap>
+                <ProjectList>
+                  {sampleProjects.map((project) => (
+                    <OrganismProjectItem
+                      key={project._id}
+                      project={project}
+                      onDelete={() => handleProjectDelete(project)}
+                    />
+                  ))}
+                  <OrganismProjectItem isNoData={true} />
+                </ProjectList>
+              </ProjectListWrap>
+            </ProjectWrap>
+          </MainContent>
+        )}
       </ContentsWrap>
       {showWarning && (
         <PopupWrap
@@ -441,4 +607,140 @@ export const BgBoxItem = styled.div`
   border: ${(props) =>
     props.NoOutline ? "0" : `1px solid ${palette.outlineGray}`};
   background: ${(props) => (props.white ? palette.white : palette.chatGray)};
+`;
+
+const InterviewModeSelection = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 30px;
+
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 20px;
+  }
+`;
+
+const InterviewModeCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  padding-top: 30px;
+  border-radius: 10px;
+  border: 1px solid
+    ${(props) => (props.isActive ? palette.primary : palette.outlineGray)};
+  cursor: pointer;
+  background-color: ${(props) =>
+    props.isActive ? "rgba(34, 111, 255, 0.05)" : "white"};
+  position: relative;
+  width: calc(50% - 10px);
+
+  &:hover {
+    border-color: ${palette.primary};
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+  }
+`;
+
+const CardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+
+  img {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 4px;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+  }
+`;
+
+const CheckboxWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+  margin-left: 0;
+`;
+
+const CustomizationWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  cursor: pointer;
+
+  > div {
+    width: 100%;
+  }
+
+  button span {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid ${palette.gray700};
+
+    &::before,
+    &::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 1px;
+      background: ${palette.gray700};
+      content: "";
+    }
+
+    &::after {
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
+  }
+`;
+
+export const CheckCircle = styled.input`
+  appearance: none;
+  display: block !important;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  background-image: ${(props) =>
+    props.checked
+      ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='12' fill='%23226FFF'/%3E%3Cpath d='M6.76562 12.4155L9.9908 15.6365L17.2338 8.36426' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`
+      : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11.5' stroke='%23E0E4EB'/%3E%3C/svg%3E")`};
+  transition: background-image 0.3s ease-in-out;
+
+  + label {
+    cursor: pointer;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+
+    + label {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
 `;
