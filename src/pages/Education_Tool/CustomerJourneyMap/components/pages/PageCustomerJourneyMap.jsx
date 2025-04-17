@@ -273,7 +273,7 @@ const PageCustomerJourneyMap = () => {
       business: business,
       persona: selectedCustomer,
     };
- 
+
     setCustomerJourneyMapSelectedPersona(selectedCustomer);
 
     let response = await EducationToolsRequest(data, isLoggedIn);
@@ -643,8 +643,11 @@ const PageCustomerJourneyMap = () => {
                       />
                     ) : (
                       <BoxWrap
+                        Hover
                         NoData
-                        style={{ height: "300px" }}
+                        style={{
+                          height: "300px",
+                        }}
                         onClick={() => navigate("/AiPersona")}
                       >
                         <img src={images.PeopleFillPrimary2} alt="" />
@@ -879,7 +882,8 @@ const PageCustomerJourneyMap = () => {
                     }}
                   >
                     <AtomPersonaLoader
-                      message={`결과보고서를 작성하고 있습니다.\n1분 정도 소요 될 수 있어요.`}
+                      message={`결과보고서를 작성하고 있습니다.
+                        1분 정도 소요 될 수 있어요.`}
                     />
                   </div>
                 ) : (

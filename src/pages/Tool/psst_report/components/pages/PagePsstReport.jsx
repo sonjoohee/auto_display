@@ -146,20 +146,19 @@ const PagePsstReport = () => {
 
         // 활성 탭 설정 (기본값 1)
         // setActiveTab(Math.min((toolStep ?? 1) +1 , 3));
-      if (toolStep === undefined || toolStep === 1) {
-        setActiveTab(1);
-        setToolSteps(0);
-        setCompletedSteps([]);
-      } else {
-        setActiveTab(Math.min(toolStep, 3));
-        setToolSteps(toolStep);
-        const completedStepsArray = [];
-        for (let i = 1; i <= toolStep; i++) {
-          completedStepsArray.push(i);
+        if (toolStep === undefined || toolStep === 1) {
+          setActiveTab(1);
+          setToolSteps(0);
+          setCompletedSteps([]);
+        } else {
+          setActiveTab(Math.min(toolStep, 3));
+          setToolSteps(toolStep);
+          const completedStepsArray = [];
+          for (let i = 1; i <= toolStep; i++) {
+            completedStepsArray.push(i);
+          }
+          setCompletedSteps(completedStepsArray);
         }
-        setCompletedSteps(completedStepsArray);
-      }      
-        
 
         if (fileNames) {
           setFileNames(fileNames ?? []);
@@ -184,7 +183,6 @@ const PagePsstReport = () => {
           );
         }
 
-      
         if (selectedTemplete) {
           setSelectedTemplete(selectedTemplete ?? []);
         }
@@ -414,11 +412,10 @@ const PagePsstReport = () => {
         let attempts = 0;
 
         while (
-          attempts < maxAttempts && (
-          !firstResponse ||
-          firstResponse?.repsponse === null ||
-          !firstResponse?.response?.psst_index_multimodal 
-        )
+          attempts < maxAttempts &&
+          (!firstResponse ||
+            firstResponse?.repsponse === null ||
+            !firstResponse?.response?.psst_index_multimodal)
         ) {
           firstResponse = await InterviewXPsstMultimodalRequest(
             Data,
@@ -431,7 +428,7 @@ const PagePsstReport = () => {
           setShowPopupError(true);
           return;
         }
-  
+
         setProjectAnalysisMultimodal(
           firstResponse.response.psst_index_multimodal
         );
@@ -556,21 +553,18 @@ const PagePsstReport = () => {
         const maxAttempts = 10;
         let attempts = 0;
 
-        while (
-          attempts < maxAttempts && (
-          (!response || !response?.response) )
-        ) {
+        while (attempts < maxAttempts && (!response || !response?.response)) {
           response = await InterviewXPsstAnalysisRequest(
             apiRequestData,
-          isLoggedIn
-        );
+            isLoggedIn
+          );
           attempts++;
         }
         if (attempts >= maxAttempts) {
           setShowPopupError(true);
           return;
         }
-      
+
         setIsLoadingReport(false);
 
         await updateToolOnServer(
@@ -866,7 +860,7 @@ const PagePsstReport = () => {
                           selectedTemplete.length !== 0 ||
                           isCreateReportIndex ||
                           isLoading ||
-                          projectAnalysisMultimodal.length >0
+                          projectAnalysisMultimodal.length > 0
                         }
                       >
                         목차 분석 시작
@@ -1071,7 +1065,8 @@ const PagePsstReport = () => {
                     }}
                   >
                     <AtomPersonaLoader
-                      message={`결과보고서를 작성하고 있습니다.\n1분 정도 소요 될 수 있어요.`}
+                      message={`결과보고서를 작성하고 있습니다.
+                        1분 정도 소요 될 수 있어요.`}
                     />
                   </div>
                 ) : (

@@ -12,7 +12,7 @@ import {
   ContentsWrap,
   MainContent,
   TabContent5Item,
-  TabContent5
+  TabContent5,
 } from "../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../assets/styles/Images";
 import {
@@ -23,10 +23,11 @@ import {
   Sub3,
   Body2,
   Body1,
-  H3
+  H3,
 } from "../../../assets/styles/Typography";
 import {
   getProjectListSaasByIdFromIndexedDB,
+  getProjectListSaasEducationByIdFromIndexedDB,
   updateProjectOnServer,
   getProjectDeleteListOnServer,
   CreditInfo,
@@ -52,7 +53,7 @@ import {
   CREDIT_CREATE_PROJECT,
   EDUCATION_STATE,
   PROJECT_EDUCATION_STATE,
-  PROJECT_EDUCATION_CODE
+  PROJECT_EDUCATION_CODE,
 } from "../../AtomStates";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 
@@ -83,8 +84,12 @@ const PageProject = () => {
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectList, setProjectList] = useAtom(PROJECT_LIST);
   const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
-  const [projectEducationState, setProjectEducationState] = useAtom(PROJECT_EDUCATION_STATE);
-  const [projectEducationCode, setProjectEducationCode] = useAtom(PROJECT_EDUCATION_CODE);
+  const [projectEducationState, setProjectEducationState] = useAtom(
+    PROJECT_EDUCATION_STATE
+  );
+  const [projectEducationCode, setProjectEducationCode] = useAtom(
+    PROJECT_EDUCATION_CODE
+  );
 
   const [isWarningPopupOpen, setIsWarningPopupOpen] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
@@ -123,7 +128,6 @@ const PageProject = () => {
           }
         }
         setEducationState(sessionStorage.getItem("educationState"));
-        console.log("🚀 ~ fetchCreditInfo ~ educationState:", educationState);
       } catch (error) {
         console.error("Failed to fetch credit info:", error);
       }
@@ -230,10 +234,37 @@ const PageProject = () => {
 
     const loadProjectList = async () => {
       try {
-        const savedProjectListInfo = await getProjectListSaasByIdFromIndexedDB(
-          true
-        );
+        let savedProjectListInfo;
 
+        if (projectEducationState === "education") {
+          console.log(
+            "🚀 ~ loadProjectList ~ projectEducationState:",
+            projectEducationState
+          );
+
+          console.log(
+            "🚀 ~ loadProjectList ~ projectEducationCode:",
+            projectEducationCode
+          );
+          savedProjectListInfo =
+            await getProjectListSaasEducationByIdFromIndexedDB(
+              projectEducationCode,
+              true
+            );
+        } else {
+          console.log(
+            "🚀 ~ loadProjectList ~ projectEducationState:",
+            projectEducationState
+          );
+
+          console.log(
+            "🚀 ~ loadProjectList ~ projectEducationCode:",
+            projectEducationCode
+          );
+          savedProjectListInfo = await getProjectListSaasByIdFromIndexedDB(
+            true
+          );
+        }
         if (savedProjectListInfo) {
           // saas 타입 프로젝트만 필터링
           const filteredSaasProjects = savedProjectListInfo.filter(
@@ -263,7 +294,7 @@ const PageProject = () => {
       } catch (error) {}
     };
     loadProjectList();
-  }, [refreshTrigger]); // refreshTrigger가 변경될 때마다 데이터 다시 로드
+  }, [refreshTrigger, projectEducationState]); // refreshTrigger가 변경될 때마다 데이터 다시 로드
 
   // 샘플 프로젝트 데이터
   const sampleProjects = projectList;
@@ -289,104 +320,100 @@ const PageProject = () => {
           !showProjectList ? (
             // 교육 모드 초기 화면
             <MainContent Wide1030>
-              <ProjectWrap style={{marginTop: "200px"}}>
-               <TabContent5 >
-               <div className="content">
-            
+              <ProjectWrap style={{ marginTop: "200px" }}>
+                <TabContent5>
+                  <div className="content">
+                    <div className="title">
+                      <H3 color="gray800">회원 유형을 선택해주세요</H3>
+                    </div>
+                    <InterviewModeSelection>
+                      <InterviewModeCard
+                        isActive={projectEducationState === "basic"}
+                        onClick={() => {
+                          setProjectEducationState("basic");
+                          setProjectEducationCode("");
+                        }}
+                      >
+                        <CardContent>
+                          <img
+                            src={images.InterviewModeSelfQuestion}
+                            alt="basic"
+                          />
+                          <div>
+                            <Body2 color="gray700">
+                              일반 회원으로 사용합니다
+                            </Body2>
+                            <Body3
+                              style={{ marginTop: "10px" }}
+                              color="gray500"
+                            >
+                              InterviewX를 개인적인 목적으로 사용합니다
+                            </Body3>
+                          </div>
+                        </CardContent>
+                        <CheckboxWrapper>
+                          <CheckCircle
+                            as="input"
+                            type="radio"
+                            id="basic"
+                            name="projectEducationState"
+                            checked={projectEducationState === "basic"}
+                            onChange={() => setProjectEducationState("basic")}
+                          />
+                        </CheckboxWrapper>
+                      </InterviewModeCard>
 
-              <div className="title">
-                    <H3 color="gray800">회원 유형을 선택해주세요</H3>
-                  
+                      <InterviewModeCard
+                        isActive={projectEducationState === "education"}
+                        onClick={() => {
+                          setProjectEducationState("education");
+                          setProjectEducationCode("edu_000001");
+                        }}
+                      >
+                        <CardContent>
+                          <img
+                            src={images.InterviewModeModerator}
+                            alt="education"
+                          />
+                          <div>
+                            <Body2 color="gray700">교육용으로 사용합니다</Body2>
+                            <Body3
+                              style={{ marginTop: "10px" }}
+                              color="gray500"
+                            >
+                              "부산디자인진흥원 프로그램 명"으로 사용합니다
+                            </Body3>
+                          </div>
+                        </CardContent>
+                        <CheckboxWrapper>
+                          <CheckCircle
+                            as="input"
+                            type="radio"
+                            id="education"
+                            name="projectEducationState"
+                            checked={projectEducationState === "education"}
+                            onChange={() => {
+                              setProjectEducationState("education");
+                              setProjectEducationCode("edu_000001");
+                            }}
+                          />
+                        </CheckboxWrapper>
+                      </InterviewModeCard>
+                    </InterviewModeSelection>
                   </div>
-              <InterviewModeSelection>
-                <InterviewModeCard
-                  isActive={projectEducationState === "basic"}
-                  onClick={() => setProjectEducationState("basic")}
-                >
-                  <CardContent>
-                    <img
-                      src={images.InterviewModeSelfQuestion}
-                      alt="basic"
-                    />
-                    <div>
-                      <Body2 color="gray700">일반 회원으로 사용합니다</Body2>
-                      <Body3
-                        style={{ marginTop: "10px" }}
-                        color="gray500"
-                      >
-                        InterviewX를 개인적인 목적으로 사용합니다
-                      </Body3>
-                    </div>
-                  </CardContent>
-                  <CheckboxWrapper>
-                    <CheckCircle
-                      as="input"
-                      type="radio"
-                      id="basic"
-                      name="projectEducationState"
-                      checked={projectEducationState === "basic"}
-                      onChange={() =>
-                        setProjectEducationState("basic")
-                      }
-                    />
-                  </CheckboxWrapper>
-                </InterviewModeCard>
 
-                <InterviewModeCard
-                  isActive={projectEducationState === "education"}
-                  onClick={() => {
-                    setProjectEducationState("education");
-                    setProjectEducationCode("edu_000001");
-                  }}
-                >
-                  <CardContent>
-                    <img
-                      src={images.InterviewModeModerator}
-                      alt="education"
-                    />
-                    <div>
-                      <Body2 color="gray700">
-                      교육용으로 사용합니다
-                      </Body2>
-                      <Body3
-                        style={{ marginTop: "10px" }}
-                        color="gray500"
-                      >
-                        "부산디자인진흥원 프로그램 명"으로 사용합니다
-                      </Body3>
-                    </div>
-                  </CardContent>
-                  <CheckboxWrapper>
-                    <CheckCircle
-                      as="input"
-                      type="radio"
-                      id="education"
-                      name="projectEducationState"
-                      checked={projectEducationState === "education"}
-                      onChange={() => {
-                        setProjectEducationState("education");
-                        setProjectEducationCode("edu_000001");
-                      }}
-                    />
-                  </CheckboxWrapper>
-                </InterviewModeCard>
-              </InterviewModeSelection>
-              </div>
-
-              <Button
-                      Other
-                      Primary
-                      Fill
-                      disabled={!projectEducationState}
-                      onClick={confirmProjectType}
-                    >
-                      확인
-                    </Button>
-            
-              </TabContent5>
+                  <Button
+                    Other
+                    Primary
+                    Fill
+                    disabled={!projectEducationState}
+                    onClick={confirmProjectType}
+                  >
+                    확인
+                  </Button>
+                </TabContent5>
               </ProjectWrap>
-             
-              </MainContent>
+            </MainContent>
           ) : (
             // 교육 모드에서 확인 버튼 클릭 후 화면
             <MainContent Wide1030>
@@ -402,7 +429,11 @@ const PageProject = () => {
                     </Body3>
                   </div>
                   <div
-                    style={{ display: "flex", flexDirection: "row", gap: "10px" }}
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "10px",
+                    }}
                   >
                     <Button
                       ExLarge

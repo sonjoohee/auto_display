@@ -14,7 +14,7 @@ const OrganismSigninEducation = () => {
       <ContentsWrap>
         <MainContent Wide>
           <LoginWrap>
-            <H1>교육 회원가입</H1>
+            <H1>Sign up</H1>
             <MoleculeSignupEducationForm />
           </LoginWrap>
         </MainContent>
