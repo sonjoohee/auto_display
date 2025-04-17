@@ -228,7 +228,7 @@ export const CustomInput = styled.input`
   }
 
   &:disabled {
-    background: ${palette.gray100};
+    background: ${props => props.fix ? 'white' : palette.gray100};
     cursor: not-allowed;
 
     &:hover {

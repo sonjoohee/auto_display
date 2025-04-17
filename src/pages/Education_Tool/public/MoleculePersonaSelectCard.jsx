@@ -1,49 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { Body1, Body2, Sub2 } from "../../../../../assets/styles/Typography";
-import { Button } from "../../../../../assets/styles/ButtonStyle";
+import { Body1, Body2, Sub2 } from "../../../assets/styles/Typography";
+import { Button } from "../../../assets/styles/ButtonStyle";
 import {
   Persona,
   UniqueTag,
-} from "../../../../../assets/styles/BusinessAnalysisStyle";
-import { palette } from "../../../../../assets/styles/Palette";
-import personaImages from "../../../../../assets/styles/PersonaImages";
+} from "../../../assets/styles/BusinessAnalysisStyle";
+import { palette } from "../../../assets/styles/Palette";
+import personaImages from "../../../assets/styles/PersonaImages";
 import { useAtom } from "jotai";
-import { PERSONA_LIST } from "../../../../AtomStates";
+import { PERSONA_LIST } from "../../../AtomStates";
 import {
   TabWrapType3,
   TabButtonType3,
   BoxWrap,
-} from "../../../../../assets/styles/BusinessAnalysisStyle";
-import images from "../../../../../assets/styles/Images";
+} from "../../../assets/styles/BusinessAnalysisStyle";
+import images from "../../../assets/styles/Images";
 
 const MoleculePersonaSelectCard = ({
   interviewType,
   filteredPersonaList,
-  // businessPersonaList,
-  // customPersonaList,
   selectedPersonas,
   onPersonaSelect,
+  hideSelectButton = false
 }) => {
   const navigate = useNavigate();
 
-  const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
-  const [activeTabState, setActiveTabState] = useState("macro_segment");
-
-  // // 컴포넌트 마운트 시 초기 unselected 리스트 설정
-  // useEffect(() => {
-  //   if (filteredPersonaList && filteredPersonaList.length > 0) {
-  //     setPersonaList({
-  //       selected: [],
-  //       unselected: [
-  //         // ...customPersonaList,
-  //         // ...businessPersonaList,
-  //         ...filteredPersonaList,
-  //       ],
-  //     });
-  //   }
-  // }, [filteredPersonaList]);
+  // const [personaList, setPersonaList] = useAtom(PERSONA_LIST);
+  const [activeTabState, setActiveTabState] = useState("my_favorite");
 
   const handleTabClick = (tabName) => {
     setActiveTabState(tabName);
@@ -90,19 +75,10 @@ const MoleculePersonaSelectCard = ({
   };
 
 
-  const isSelected = (personaId) => {
-    if (interviewType === "single" || interviewType === "singleLive") {
-      return selectedPersonas === personaId;
-    }
-    return (
-      Array.isArray(selectedPersonas) && selectedPersonas.includes(personaId)
-    );
-  };
-
   return (
     <CardGroupWrap>
       <TabWrapType3 Border>
-        {/* <TabButtonType3
+        <TabButtonType3
           className={activeTabState === "my_favorite" ? "active" : ""}
           onClick={() => handleTabClick("my_favorite")}
           isActive={activeTabState === "my_favorite"}
@@ -112,9 +88,9 @@ const MoleculePersonaSelectCard = ({
               : { color: "#999999" }
           }
         >
-          Favorite
-        </TabButtonType3> */}
-        <TabButtonType3
+          저장된 페르소나
+        </TabButtonType3>
+        {/* <TabButtonType3
           className={activeTabState === "macro_segment" ? "active" : ""}
           onClick={() => handleTabClick("macro_segment")}
           isActive={activeTabState === "macro_segment"}
@@ -161,16 +137,16 @@ const MoleculePersonaSelectCard = ({
           }
         >
           My Persona
-        </TabButtonType3>
+        </TabButtonType3> */}
       </TabWrapType3>
       {filteredPersonaList &&
         filteredPersonaList
           // 활성 탭에 따라 페르소나 필터링
-          .filter((persona) => persona.status === "complete")
+        
           .filter((persona) => {
-            // if (activeTabState === "my_favorite") {
-            //   return persona?.favorite === true;
-            // }
+              if (activeTabState === "my_favorite") {
+                return persona?.favorite === true;
+              }
             // 다른 탭에서는 personaType에 따라 필터링하고, favorite이 false인 경우 제외
             if (activeTabState === "macro_segment") {
               return (
@@ -249,27 +225,29 @@ const MoleculePersonaSelectCard = ({
                       </PersonaInfo>
                     </ListSubtitle>
                   </ListText>
-                  <ListButton>
-                    {isSelected ? (
-                      <Button
-                        Medium
-                        PrimaryLightest={true}
-                        Fill={true}
-                        onClick={() => handlePersonaSelect(persona)}
-                      >
-                        <Sub2 color="primary">선택됨</Sub2>
-                      </Button>
-                    ) : (
-                      <Button
-                        Medium
-                        PrimaryLightest={false}
-                        Fill={false}
-                        onClick={() => handlePersonaSelect(persona)}
-                      >
-                        <Sub2 color="gray500">선택</Sub2>
-                      </Button>
-                    )}
-                  </ListButton>
+                  {!hideSelectButton && (
+                    <ListButton>
+                      {isSelected ? (
+                        <Button
+                          Medium
+                          PrimaryLightest={true}
+                          Fill={true}
+                          onClick={() => handlePersonaSelect(persona)}
+                        >
+                          <Sub2 color="primary">선택됨</Sub2>
+                        </Button>
+                      ) : (
+                        <Button
+                          Medium
+                          PrimaryLightest={false}
+                          Fill={false}
+                          onClick={() => handlePersonaSelect(persona)}
+                        >
+                          <Sub2 color="gray500">선택</Sub2>
+                        </Button>
+                      )}
+                    </ListButton>
+                  )}
                 </ListBoxItem>
               </>
             );

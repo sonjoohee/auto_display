@@ -31,6 +31,7 @@ import {
   RangeSlider,
   Title,
   ListBoxGroup,
+  BoxWrap,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
   IS_LOGGED_IN,
@@ -50,6 +51,11 @@ import {
   IDEA_GENERATION_IDEA_LIST,
   CUSTOMER_JOURNEY_MAP_REPORT,
   CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA,
+  IDEA_GENERATION_PROBLEM_LIST,
+  PERSONA_LIST_SAAS,
+  IDEA_GENERATION_MANDALART_DATA,
+  IDEA_GENERATION_PROBLEM_LIST_TITLE,
+  IDEA_GENERATION_SELECTED_START_POSITION
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -65,6 +71,7 @@ import {
   Body1,
   Body2,
   Body3,
+  Caption1,
 } from "../../../../../assets/styles/Typography";
 import {
   InterviewXDesignEmotionAnalysisRequest,
@@ -83,6 +90,8 @@ import MoleculeDeleteForm from "../../../public/MoleculeDeleteForm";
 import MandalArtGraph from "../../../../../components/Charts/MandalArtGraph";
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 import MoleculeTagList from "../molecules/MoleculeTagList";
+import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
+import MoleculeMandalArtGraph from "../molecules/MoleculeMandalArtGraph";
 
 const PageIdeaGeneration = () => {
   const navigate = useNavigate();
@@ -95,9 +104,11 @@ const PageIdeaGeneration = () => {
   const [, setDesignAnalysisBusinessTitle] = useAtom(
     DESIGN_ANALYSIS_BUSINESS_TITLE
   );
+  const [personaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(
     DESIGN_ANALYSIS_BUSINESS_INFO
   );
+  const [ideaGenerationSelectedStartPosition, setIdeaGenerationSelectedStartPosition] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
   const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] =
     useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS);
   const [
@@ -120,13 +131,16 @@ const PageIdeaGeneration = () => {
   const [ideaGenerationIdeaList, setIdeaGenerationIdeaList] = useAtom(
     IDEA_GENERATION_IDEA_LIST
   );
-  const [customerJourneyMapReport, setCustomerJourneyMapReport] = useAtom(
-    CUSTOMER_JOURNEY_MAP_REPORT
+
+  const [ideaGenerationProblemList, setIdeaGenerationProblemList] = useAtom(
+    IDEA_GENERATION_PROBLEM_LIST
   );
-  const [
-    customerJourneyMapSelectedPersona,
-    setCustomerJourneyMapSelectedPersona,
-  ] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA);
+  const [ideaGenerationMandalArtData, setIdeaGenerationMandalArtData] = useAtom(
+    IDEA_GENERATION_MANDALART_DATA
+  );
+  const [ideaGenerationProblemListTitle, setIdeaGenerationProblemListTitle] = useAtom(
+    IDEA_GENERATION_PROBLEM_LIST_TITLE
+  );
 
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [isContentLoading, setIsContentLoading] = useState(false);
@@ -153,16 +167,13 @@ const PageIdeaGeneration = () => {
   const [targetCustomer, setTargetCustomer] = useState([]);
   const [toolSteps, setToolSteps] = useState(0);
   const [selectedPurposes, setSelectedPurposes] = useState({
-    customerList: "",
-    analysisScope: "",
+    customerList: ""
   });
   const [selectBoxStates, setSelectBoxStates] = useState({
-    customerList: false,
-    analysisScope: false,
+    customerList: false
   });
   const [dropUpStates, setDropUpStates] = useState({
-    customerList: false,
-    analysisScope: false,
+    customerList: false
   });
   const [, setContactForm] = useState({
     email: "",
@@ -171,9 +182,11 @@ const PageIdeaGeneration = () => {
   });
   const [descriptionLength, setDescriptionLength] = useState(0);
   const [projectDescription, setProjectDescription] = useState("");
-  const [selectedProblems, setSelectedProblems] = useState([]);
+  const [selectedStartPosition, setSelectedStartPosition] = useState([]);
   const [isFirstLoad, setIsFirstLoad] = useState(true); // 첫 로딩 체크를 위한 상태
   const [selectedJourneyMapData, setSelectedJourneyMapData] = useState([]);
+  const[customerJourneyMapSelectedPersona, setCustomerJourneyMapSelectedPersona] = useState([]);
+  const[customerJourneyMapReport, setCustomerJourneyMapReport] = useState([]);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -296,23 +309,24 @@ const PageIdeaGeneration = () => {
 
         const response = await getFindToolListOnServerSaas(
           projectSaas?._id ?? "",
-          "ix_customer_journey_map_education",
+          "ix_customer_journey_map_direction_education",
           isLoggedIn
         );
 
         const newItems = (response || []).filter(
           (item) =>
-            item?.type === "ix_customer_journey_map_education" &&
+            item?.type === "ix_customer_journey_map_direction_education" &&
             item?.completedStep === 3
         );
 
         allItems = [...allItems, ...newItems];
-
+  
         setCustomerJourneyList(allItems);
       } catch (error) {
         setCustomerJourneyList([]); // Set empty array on error
       }
     };
+
 
     getAllTargetDiscovery();
   }, [isLoggedIn, projectSaas]);
@@ -358,91 +372,49 @@ const PageIdeaGeneration = () => {
   };
 
   const handleTagsChange = (selected) => {
-    setSelectedProblems(selected);
+    setSelectedStartPosition(selected);
   };
 
   const handleSubmitProblem = async () => {
     try {
-      //     // 빈 문자열이나 공백만 있는 항목 제거
-      // const validItems = targetCustomer.filter(item => item.trim() !== "");
+    setIsLoading(true);
+      await updateToolOnServer(
+        toolId,
+        {
+          completedStep: 1,
+          selectedPurposes: selectedPurposes,
+          ideaGenerationProblemList: ideaGenerationProblemList,
+          ideaGenerationProblemListTitle: ideaGenerationProblemListTitle,
+        },
+        isLoggedIn
+      );  
+          // 빈 문자열이나 공백만 있는 항목 제거
+      const validItems = ideaGenerationProblemList.filter(item => item.trim() !== "");
 
-      // if (validItems.length === 0) {
-      //   // 유효한 항목이 없는 경우 처리
-      //   return;
-      // }
+      if (validItems.length === 0) {
+        // 유효한 항목이 없는 경우 처리
+        return;
+      }
+      
+      // API 요청 데이터 구성
+      const Data = {
+        type : "ix_idea_generation_keyword_education",
+        info: customerJourneyMapSelectedPersona,
+        problem_needs : validItems,
+        is_load:  true
+      };  
 
-      // // API 요청 데이터 구성
-      // const Data = {
-      //   problems: validItems,
-      //   // 필요한 경우 추가 데이터
-      //   // business_id: currentBusinessId,
-      //   // timestamp: new Date().getTime(),
-      // };
+      // API 호출
+      const response = await EducationToolsRequest (
+       Data,
+        isLoggedIn
+      );
+      console.log(response);
 
-      // // API 호출
-      // // const response = await EducationToolsRequest (
-      // //  Data,
-      // //   isLoggedIn
-      // // );
-
-      const DUMMY_PROBLEMS = [
-        {
-          id: 1,
-          name: "사용자 경험 개선 필요",
-          description: "현재 UI가 사용자 친화적이지 않음",
-        },
-        {
-          id: 2,
-          name: "성능 최적화 필요",
-          description: "페이지 로딩 속도가 느림",
-        },
-        {
-          id: 3,
-          name: "모바일 대응 미흡",
-          description: "모바일에서 사용성이 좋지 않음",
-        },
-        {
-          id: 4,
-          name: "데이터 동기화 문제",
-          description: "실시간 업데이트가 원활하지 않음",
-        },
-        {
-          id: 5,
-          name: "보안 강화 필요",
-          description: "데이터 보안 수준 향상 필요",
-        },
-        {
-          id: 6,
-          name: "검색 기능 개선",
-          description: "검색 결과의 정확도가 낮음",
-        },
-        {
-          id: 7,
-          name: "에러 처리 미흡",
-          description: "사용자 친화적인 에러 메시지 필요",
-        },
-        {
-          id: 8,
-          name: "접근성 개선 필요",
-          description: "장애인 사용자를 위한 기능 부족",
-        },
-        {
-          id: 9,
-          name: "모바일 대응 미흡",
-          description: "모바일에서 사용성이 좋지 않음",
-        },
-        {
-          id: 10,
-          name: "모바일 대응 미흡",
-          description: "모바일에서 사용성이 좋지 않음",
-        },
-      ];
-
-      setIdeaGenerationStartPosition(DUMMY_PROBLEMS);
-
-      // setIdeaGenerationStartPosition(selectedProblems);
+      setIdeaGenerationStartPosition(response.response.idea_generation_keyword_education);
 
       // API 호출 로직...
+      setIsLoading(false);
 
       handleNextStep(1);
     } catch (error) {
@@ -450,202 +422,46 @@ const PageIdeaGeneration = () => {
       setShowPopupError(true);
     }
   };
+ 
 
   const handleSubmitTheme = async () => {
     handleNextStep(2);
     setToolSteps(2);
-    try {
-      // const selectedPersonaData = designAnalysisEmotionAnalysis.filter(
-      //   (persona, index) => selectedPersonas.includes(index)
-      // );
-      // setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
 
-      // await updateToolOnServer(
-      //   toolId,
-      //   {
-      //     completedStep: 2,
-      //     designSelectedPersona: selectedPersonaData,
-      //   },
-      //   isLoggedIn
-      // );
-      // setIsLoadingReport(true);
-
-      // // 선택된 페르소나가 하나일 경우에만 시나리오 요청
-      // if (selectedPersonaData.length > 0) {
-      //   const persona = selectedPersonaData[0]; // 첫 번째 페르소나 선택
-      //   try {
-      //     const apiRequestData = {
-      //       business: designAnalysisBusinessInfo,
-      //       design_emotion_selected_field: persona.name,
-      //       design_emotion_analysis: persona,
-      //     };
-
-      //     let response = await InterviewXDesignEmotionTargetRequest(
-      //       apiRequestData,
-      //       isLoggedIn
-      //     );
-
-      //     const maxAttempts = 10;
-      //     let attempt = 0;
-
-      //     while (
-      //       !response?.response?.design_emotion_target ||
-      //       typeof response.response.design_emotion_target !== "object" ||
-      //       Object.keys(response?.response?.design_emotion_target).length ===
-      //         0 ||
-      //       !response?.response?.design_emotion_target?.hasOwnProperty(
-      //         "target_emotion"
-      //       ) ||
-      //       !response?.response?.design_emotion_target?.hasOwnProperty(
-      //         "design_perspectives"
-      //       ) ||
-      //       !response?.response?.design_emotion_target?.hasOwnProperty(
-      //         "designer_guidelines"
-      //       )
-      //     ) {
-      //       if (attempt >= maxAttempts) {
-      //         setShowPopupError(true);
-      //         return;
-      //       }
-
-      //       response = await InterviewXDesignEmotionTargetRequest(
-      //         apiRequestData,
-      //         isLoggedIn
-      //       );
-
-      //       attempt++;
-      //     }
-
-      //     setDesignAnalysisEmotionTarget(
-      //       response.response.design_emotion_target
-      //     );
-
-      //     const oceanData = {
-      //       tool_id: designAnalysisFileId[0],
-      //       business: designAnalysisBusinessInfo,
-      //       design_emotion_selected_field: persona.name,
-      //       design_emotion_target: response?.response?.design_emotion_target,
-      //     };
-
-      //     attempt = 0;
-      //     let oceanResponse = null;
-
-      //     while (
-      //       !oceanResponse ||
-      //       typeof oceanResponse.response.design_emotion_scale !== "object" ||
-      //       Object.keys(oceanResponse?.response?.design_emotion_scale)
-      //         .length === 0 ||
-      //       !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
-      //         "conclusion"
-      //       ) ||
-      //       !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
-      //         "evaluation_analysis"
-      //       ) ||
-      //       !oceanResponse?.response?.design_emotion_scale?.hasOwnProperty(
-      //         "sd_scale_analysis"
-      //       )
-      //     ) {
-      //       if (attempt >= maxAttempts) {
-      //         setShowPopupError(true);
-      //         return;
-      //       }
-
-      //       oceanResponse = await InterviewXDesignEmotionScaleRequest(
-      //         oceanData,
-      //         isLoggedIn
-      //       );
-
-      //       attempt++;
-      //     }
-      //     setDesignAnalysisEmotionScale(
-      //       oceanResponse.response.design_emotion_scale
-      //     );
-
-      //     await updateToolOnServer(
-      //       toolId,
-      //       {
-      //         completedStep: 3,
-      //         designEmotionTarget: response.response.design_emotion_target,
-      //         designEmotionScale: oceanResponse.response.design_emotion_scale,
-      //         designSelectedPersona: selectedPersonaData,
-      //       },
-      //       isLoggedIn
-      //     );
-      //   } catch (error) {}
-      // }
-
-      const DUMMY_IDEAS = [
-        {
-          id: 1,
-          title: "Idea 1. 소비자 중요 가치 분석",
-          content: [
-            "설명: 장인의 오리엔트를 실시간으로 분석하고, AI가 최적의 정소 결정의 방법을 선택하여 자동으로 청소하는 로봇 시스템.",
-            "기술 활용: 병원 진료 데이터를 기반으로 알레르기 유발 물질, 공기 중 유해 성분 등을 분석하고, 맞춤형 청소 설정을 제공.",
-          ],
-        },
-        {
-          id: 2,
-          title: "Idea 2. 소비자 중요 가치 분석",
-          content: [
-            "설명: 장인의 오리엔트를 실시간으로 분석하고, AI가 최적의 정소 결정의 방법을 선택하여 자동으로 청소하는 로봇 시스템.",
-            "기술 활용: 병원 진료 데이터를 기반으로 알레르기 유발 물질, 공기 중 유해 성분 등을 분석하고, 맞춤형 청소 설정을 제공.",
-          ],
-        },
-        // ... 더 많은 아이디어 추가 가능
-      ];
-
-      setIdeaGenerationIdeaList(DUMMY_IDEAS);
-
-      // setToolStep(3);
-    } catch (error) {
-      setShowPopupError(true);
-      if (error.response) {
-        switch (error.response.status) {
-          case 500:
-            setShowPopupError(true);
-            break;
-          case 504:
-            setShowPopupError(true);
-            break;
-          default:
-            setShowPopupError(true);
-            break;
-        }
-      } else {
-        setShowPopupError(true);
-      }
-    } finally {
-      setIsLoadingReport(false);
-    }
   };
 
-  // const handlePurposeSelect = (purpose, selectBoxId) => {
 
-  //   setSelectedPurposes((prev) => ({
-  //     ...(prev || {}),
-  //     [selectBoxId]: purpose || "",
-  //   }));
-  //   handleContactInputChange("purpose", purpose || "");
-  //   setSelectBoxStates((prev) => ({
-  //     ...(prev || {}),
-  //     [selectBoxId]: false,
-  //   }));
-
-  //   if (selectBoxId === "customerList") {
-  //     setBusinessDescription(purpose || "");
-  //   }
-
-  // };
 
   const handlePurposeSelect = async (purpose, selectBoxId, item) => {
     setIsContentLoading(true);
+
+    const responseToolId = await createToolOnServer(
+      {
+        projectId: project._id,
+        type: "ix_idea_generation_problem_education",
+      },
+      isLoggedIn
+    );
+    setToolId(responseToolId);
+
+
+    setSelectedPurposes((prev) => ({
+      ...(prev || {}),
+      [selectBoxId]: purpose || "",
+    }));
+
+    handleContactInputChange("purpose", purpose || "");
+    setSelectBoxStates((prev) => ({
+      ...(prev || {}),
+      [selectBoxId]: false,
+    }));
 
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     try {
       if (selectBoxId === "customerList" && item) {
         setSelectedJourneyMapData(item);
-        console.log("Selected Journey Map Data:", item);
+        // console.log("Selected Journey Map Data:", item);
 
         setBusinessDescription(purpose || "");
 
@@ -654,26 +470,34 @@ const PageIdeaGeneration = () => {
           customer_journey_map_persona: item.customerJourneyMapSelectedPersona,
           customer_journey_map_report: item.customerJourneyMapReport,
         };
-        console.log(data);
 
-        const response = await EducationToolsRequest({
+        setCustomerJourneyMapSelectedPersona(item.customerJourneyMapSelectedPersona);
+        setCustomerJourneyMapReport(item.customerJourneyMapReport);
+    
+        const response = await EducationToolsRequest(
           data,
-          isLoggedIn,
-        });
+          isLoggedIn
+        );
 
-        console.log("API Response:", response);
+        setIdeaGenerationProblemList(response.response.idea_generation_problem_education);
+        setIdeaGenerationProblemList(
+          response.response.idea_generation_problem_education.map(item => item.title)
+        );
+
       }
+   
 
-      setSelectedPurposes((prev) => ({
-        ...(prev || {}),
-        [selectBoxId]: purpose || "",
-      }));
+    // await updateToolOnServer(
+    //   responseToolId,
+    //   {
+    //    selectedPurposes: selectedPurposes,
+    //    ideaGenerationProblemList: ideaGenerationProblemList,
+    //    ideaGenerationProblemListTitle: ideaGenerationProblemListTitle,
+    //   },
+    //   isLoggedIn
+    // );
 
-      handleContactInputChange("purpose", purpose || "");
-      setSelectBoxStates((prev) => ({
-        ...(prev || {}),
-        [selectBoxId]: false,
-      }));
+  
     } catch (error) {
       console.error("Error in handlePurposeSelect:", error);
       setShowPopupError(true);
@@ -682,6 +506,232 @@ const PageIdeaGeneration = () => {
         setIsContentLoading(false);
       }, 500);
     }
+  };
+
+  const handleMandalArt = async () => {
+    handleNextStep(3);
+    setToolSteps(3);
+    setIsLoadingReport(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  try {
+
+    // const data = {
+    //   type: "ix_idea_generation_mandalart_education",
+    //   idea_generation_start_position: ideaGenerationStartPosition,
+    //   project_description: projectDescription,
+  
+    // };
+
+    // const apiResults = [];
+
+   // 8번의 API 호출을 순차적으로 실행
+  //  for (let i = 0; i < 8; i++) {
+  //   const response = await EducationToolsRequest({
+  //     ...baseData,
+  //     position: i + 1  // API 호출마다 다른 position 값 전달
+  //   }, isLoggedIn);
+    
+  //   apiResults.push(response.response.idea_generation_mandalart_education);
+  // }
+
+    // 결과를 만달아트 형식으로 구성
+    // const mandalartData = {
+    //   center: {
+    //     id: 5,
+    //     text: projectDescription, // 또는 적절한 중심 주제
+    //     isCenter: true
+    //   },
+    //   items: apiResults.map((result, index) => ({
+    //     id: index + 1,
+    //     text: result.mainIdea, // API 응답에서 적절한 필드 사용
+    //     isCenter: false,
+    //     subItems: result.subIdeas.map((subIdea, subIndex) => ({
+    //       id: subIndex + 1,
+    //       text: subIdea,
+    //       isCenter: subIndex === 4 ? true : false
+    //     }))
+    //   }))
+    // };
+
+    // setIdeaGenerationMandalArtData(mandalartData);
+
+
+  } catch (error) {
+    console.error("Error in handleMandalArt:", error);
+    setShowPopupError(true);
+  } finally {
+    setIsLoadingReport(false);
+  }
+
+
+    // API 호출 대신 더미데이터 생성
+  const dummyMandalartData = {
+    center: {
+      id: 5,
+      text: "사용자 경험 개선",
+      isCenter: true
+    },
+    items: [
+      {
+        id: 1,
+        text: "UI/UX 개선",
+        isCenter: false,
+        subItems: [
+          { id: 1, text: "직관적인 네비게이션 구현" },
+          { id: 2, text: "사용자 피드백 시스템 도입" },
+          { id: 3, text: "모바일 최적화" },
+          { id: 4, text: "접근성 향상" },
+          { id: 5, text: "UI/UX 개선", isCenter: true },
+          { id: 6, text: "사용자 행동 분석" },
+          { id: 7, text: "디자인 시스템 구축" },
+          { id: 8, text: "성능 최적화" },
+          { id: 9, text: "에러 처리 개선" }
+        ]
+      },
+      {
+        id: 2,
+        text: "성능 최적화",
+        isCenter: false,
+        subItems: [
+          { id: 1, text: "로딩 시간 단축" },
+          { id: 2, text: "캐시 시스템 도입" },
+          { id: 3, text: "이미지 최적화" },
+          { id: 4, text: "코드 스플리팅" },
+          { id: 5, text: "성능 최적화", isCenter: true },
+          { id: 6, text: "데이터베이스 최적화" },
+          { id: 7, text: "CDN 활용" },
+          { id: 8, text: "서버 응답 시간 개선" },
+          { id: 9, text: "리소스 관리" }
+        ]
+      },
+      {
+        id: 3,
+        text: "보안 강화",
+        isCenter: false,
+        subItems: [
+          { id: 1, text: "암호화 시스템 강화" },
+          { id: 2, text: "인증 시스템 개선" },
+          { id: 3, text: "보안 감사 실시" },
+          { id: 4, text: "취약점 분석" },
+          { id: 5, text: "보안 강화", isCenter: true },
+          { id: 6, text: "접근 권한 관리" },
+          { id: 7, text: "데이터 백업 시스템" },
+          { id: 8, text: "보안 모니터링" },
+          { id: 9, text: "사고 대응 체계" }
+        ]
+      },
+      {
+        id: 4,
+        text: "데이터 동기화",
+        isCenter: false,
+        subItems: [
+          { id: 1, text: "실시간 동기화" },
+          { id: 2, text: "충돌 해결 시스템" },
+          { id: 3, text: "백업 자동화" },
+          { id: 4, text: "버전 관리" },
+          { id: 5, text: "데이터 동기화", isCenter: true },
+          { id: 6, text: "데이터 정합성 검증" },
+          { id: 7, text: "동기화 로그 관리" },
+          { id: 8, text: "오프라인 지원" },
+          { id: 9, text: "에러 복구 시스템" }
+        ]
+      },
+      {
+        id: 6,
+        text: "사용자 지원",
+        isCenter: false,
+        subItems: [
+          { id: 1, text: "챗봇 시스템 도입" },
+          { id: 2, text: "FAQ 시스템 개선" },
+          { id: 3, text: "실시간 상담" },
+          { id: 4, text: "피드백 관리" },
+          { id: 5, text: "사용자 지원", isCenter: true },
+          { id: 6, text: "매뉴얼 제작" },
+          { id: 7, text: "교육 자료 제공" },
+          { id: 8, text: "커뮤니티 관리" },
+          { id: 9, text: "지원 품질 관리" }
+        ]
+      },
+      {
+        id: 7,
+        text: "기능 확장",
+        isCenter: false,
+        subItems: [
+          { id: 1, text: "신규 기능 개발" },
+          { id: 2, text: "API 확장" },
+          { id: 3, text: "서드파티 연동" },
+          { id: 4, text: "customization" },
+          { id: 5, text: "기능 확장", isCenter: true },
+          { id: 6, text: "플러그인 시스템" },
+          { id: 7, text: "확장성 설계" },
+          { id: 8, text: "마이그레이션 도구" },
+          { id: 9, text: "버전 관리" }
+        ]
+      },
+      {
+        id: 8,
+        text: "분석 도구",
+        isCenter: false,
+        subItems: [
+          { id: 1, text: "사용자 행동 분석" },
+          { id: 2, text: "성능 모니터링" },
+          { id: 3, text: "에러 트래킹" },
+          { id: 4, text: "통계 대시보드" },
+          { id: 5, text: "분석 도구", isCenter: true },
+          { id: 6, text: "리포트 자동화" },
+          { id: 7, text: "데이터 시각화" },
+          { id: 8, text: "예측 분석" },
+          { id: 9, text: "커스텀 분석" }
+        ]
+      },
+      {
+        id: 9,
+        text: "테스트 자동화",
+        isCenter: false,
+        subItems: [
+          { id: 1, text: "단위 테스트" },
+          { id: 2, text: "통합 테스트" },
+          { id: 3, text: "E2E 테스트" },
+          { id: 4, text: "성능 테스트" },
+          { id: 5, text: "테스트 자동화", isCenter: true },
+          { id: 6, text: "테스트 케이스 관리" },
+          { id: 7, text: "CI/CD 통합" },
+          { id: 8, text: "리그레션 테스트" },
+          { id: 9, text: "테스트 보고서" }
+        ]
+      }
+    ]
+  };
+
+  // 나중에는 여기서 API 호출하고 응답을 저장
+  setIdeaGenerationMandalArtData(dummyMandalartData);
+
+  
+  const DUMMY_IDEAS = [
+    {
+      id: 1,
+      title: "Idea 1. 소비자 중요 가치 분석",
+      content: [
+        "설명: 장인의 오리엔트를 실시간으로 분석하고, AI가 최적의 정소 결정의 방법을 선택하여 자동으로 청소하는 로봇 시스템.",
+        "기술 활용: 병원 진료 데이터를 기반으로 알레르기 유발 물질, 공기 중 유해 성분 등을 분석하고, 맞춤형 청소 설정을 제공.",
+      ],
+    },
+    {
+      id: 2,
+      title: "Idea 2. 소비자 중요 가치 분석",
+      content: [
+        "설명: 장인의 오리엔트를 실시간으로 분석하고, AI가 최적의 정소 결정의 방법을 선택하여 자동으로 청소하는 로봇 시스템.",
+        "기술 활용: 병원 진료 데이터를 기반으로 알레르기 유발 물질, 공기 중 유해 성분 등을 분석하고, 맞춤형 청소 설정을 제공.",
+      ],
+    },
+    // ... 더 많은 아이디어 추가 가능
+  ];
+
+  setIdeaGenerationIdeaList(DUMMY_IDEAS);
+    
+    // setIdeaGenerationMandalArt();
   };
 
   const handleContactInputChange = (field, value) => {
@@ -718,28 +768,9 @@ const PageIdeaGeneration = () => {
     }
   };
 
-  const handleEditBusinessClick = () => {
-    setIsEditingBusiness(true);
-  };
 
-  const handleSaveBusinessClick = () => {
-    setIsEditingBusiness(false);
-  };
-
-  const handleUndoBusinessClick = () => {
-    const originalText =
-      (project?.projectAnalysis.business_analysis
-        ? project?.projectAnalysis.business_analysis
-        : "") +
-      (project?.projectAnalysis.business_analysis &&
-      project?.projectAnalysis.file_analysis
-        ? "\n"
-        : "") +
-      (project?.projectAnalysis.file_analysis
-        ? project?.projectAnalysis.file_analysis
-        : "");
-
-    setBusinessDescription(originalText);
+  const handleIdeaSelect = (selectedIdea) => {
+    console.log("selectedIdea", selectedIdea);
   };
 
   useEffect(() => {
@@ -802,40 +833,6 @@ const PageIdeaGeneration = () => {
     };
   }, [navigate]);
 
-  // // activeTab이 1로 변경될 때 API 호출
-  // useEffect(() => {
-  //   const fetchProblemData = async () => {
-  //     // if (activeTab === 1 && isFirstLoad) {
-  //       setIsLoading(true);
-  //       try {
-
-  //         const data = {
-  //           type: "ix_idea_generation_problem_education",
-  //           customer_journey_map_persona : customerJourneyMapSelectedPersona,
-  //           customer_journey_map_report : customerJourneyMapReport,
-  //         }
-
-  //         console.log(data);
-
-  //         // API 호출
-  //         const response = await EducationToolsRequest({
-  //          data, isLoggedIn
-  //         });
-
-  //         console.log(response);
-
-  //       } catch (error) {
-  //         console.error("Error fetching problem data:", error);
-  //         setShowPopupError(true);
-  //       } finally {
-  //         setIsLoading(false);
-  //         setIsFirstLoad(false); // 첫 로딩 완료 표시
-  //       }
-  //     }
-  //   // };
-
-  //   fetchProblemData();
-  // }, []); // activeTab이 변경될 때마다 실행
 
   return (
     <>
@@ -855,7 +852,7 @@ const PageIdeaGeneration = () => {
                 disabled={isLoading || isLoadingReport}
               >
                 <span>01</span>
-                <div className="text">
+                <div className="text" style={{whiteSpace: "nowrap"}}>
                   <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     문제 정의
                   </Body1>
@@ -870,7 +867,7 @@ const PageIdeaGeneration = () => {
                 }
               >
                 <span>02</span>
-                <div className="text">
+                <div className="text" style={{whiteSpace: "nowrap"}}>
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     아이디어 키워드 도출
                   </Body1>
@@ -888,9 +885,24 @@ const PageIdeaGeneration = () => {
                 }
               >
                 <span>03</span>
-                <div className="text">
+                <div className="text" style={{whiteSpace: "nowrap"}}>
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     아이디어 발상
+                  </Body1>
+                </div>
+              </TabButtonType5>
+              <TabButtonType5
+                isActive={activeTab >= 4}
+                onClick={() => completedSteps.includes(3) && setActiveTab(4)}
+                disabled={
+                  !completedSteps.includes(3) ||
+                  isLoading 
+                }
+              >
+                <span>04</span>
+                <div className="text" style={{whiteSpace: "nowrap"}}>
+                  <Body1 color={activeTab >= 4 ? "gray700" : "gray300"}>
+                    최종 인사이트 분석
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -921,7 +933,7 @@ const PageIdeaGeneration = () => {
                     </div>
 
                     <div className="content">
-                      <TabContent5Item borderBottom>
+                      <TabContent5Item >
                         <div className="title">
                           <Body1 color="gray700">문제점 & 니즈 가져오기 </Body1>
                         </div>
@@ -936,7 +948,7 @@ const PageIdeaGeneration = () => {
                             }
                             style={{
                               cursor:
-                                toolSteps >= 1 ? "not-allowed" : "pointer",
+                                toolSteps >= 1  || isContentLoading ? "not-allowed" : "pointer",
                             }}
                           >
                             <Body2
@@ -973,10 +985,9 @@ const PageIdeaGeneration = () => {
                               ) : (
                                 customerJourneyList.map((item, index) => (
                                   <SelectBoxItem
-                                    disabled={toolSteps >= 1}
+                                    disabled={toolSteps >= 1 || isContentLoading}
                                     key={index}
                                     onClick={() => {
-                                      console.log("Selected Item:", item);
                                       handlePurposeSelect(
                                         `${item.updateDate.split(":")[0]}:${
                                           item.updateDate.split(":")[1]
@@ -1027,12 +1038,13 @@ const PageIdeaGeneration = () => {
                               </Body1>
                             </div>
                             <MoleculeDeleteForm
-                              items={targetCustomer || []}
-                              setItems={setTargetCustomer || []}
+                              items={ideaGenerationProblemList || []}
+                              setItems={setIdeaGenerationProblemList}
                               disabled={toolSteps >= 1}
                               maxItems={13}
                               placeholder="문제점 작성"
                               initialItemCount={8}
+                              edit={false}  
                             />
                           </>
                         )}
@@ -1045,6 +1057,7 @@ const PageIdeaGeneration = () => {
                       Round
                       onClick={handleSubmitProblem}
                       // disabled={!isRequiredFieldsFilled() || toolSteps >= 1}
+                      disabled = {isContentLoading }
                     >
                       아이디어 발상으로 전환
                     </Button>
@@ -1080,17 +1093,17 @@ const PageIdeaGeneration = () => {
                     <div className="content">
                       <Title>
                         <Body1 color="gray700">
-                          아이디어 시작점을 선택하세요 (8개 선택가능)
+                          아이디어 시작점을 선택하세요 (8개 선택필수)
                         </Body1>
                       </Title>
 
                       {/* {selectedProblems.length > 0 ? ( */}
-                      <CardGroupWrap column style={{ marginBottom: "140px" }}>
+                      <CardGroupWrap column >
                         <MoleculeTagList
                           items={ideaGenerationStartPosition.map(
-                            (problem) => problem.name
+                            (problem) => problem.title
                           )} // name만 전달
-                          onTagsChange={handleTagsChange}
+                          // onTagsChange={handleTagsChange}
                           disabled={toolSteps >= 2}
                         />
                       </CardGroupWrap>
@@ -1123,11 +1136,11 @@ const PageIdeaGeneration = () => {
                               }}
                               // disabled={completedSteps.includes(2) ||  Object.keys(quickSurveyAnalysis).length > 0 }
                               disabled={
-                                completedSteps.includes(2) || toolSteps >= 1
+                                completedSteps.includes(2) || toolSteps >= 2
                               }
                             />
                             <Body2 color="gray300" align="right">
-                              {descriptionLength} / 100
+                              {descriptionLength} / 150
                             </Body2>
                           </FormBox>
                         </TabContent5Item>
@@ -1143,8 +1156,7 @@ const PageIdeaGeneration = () => {
                   onClick={handleSubmitTheme}
                   // disabled={!isRequiredFieldsFilled() || toolSteps >= 1}
                   // targetCustomer.filter(item => item.trim() !== '').length < 8  // 8개 미만이면 비활성화
-                >
-                  아이디어 발상으로 전환
+                >다음
                 </Button>
               </TabContent5>
             )}
@@ -1166,50 +1178,126 @@ const PageIdeaGeneration = () => {
                 ) : (
                   <>
                     <div className="title">
-                      <H3 color="gray800">Idea Generation Theme</H3>
+                      <H3 color="gray800">Participating Persona</H3>
                       <Body3 color="gray800">
-                        문제와 니즈를 창의적 해결 주제로 전환하여, 아이디어
-                        발상의 방향을 정해주세요.
+                      함께 아이디에이션에 참여하는 페르소나들을 확인해보세요
                       </Body3>
                     </div>
 
                     <div className="content">
-                      <Title>
-                        <Body1 color="gray700">
-                          아이디어 시작점을 선택하세요 (8개 선택가능)
-                        </Body1>
-                      </Title>
+                      
+                      {personaListSaas.length > 0 ? (
+                      <MoleculePersonaSelectCard
+                        filteredPersonaList={personaListSaas}
+                        hideSelectButton={true}
+                      
+                      />
+                    ) : (
+                      <BoxWrap
+                        NoData
+                        style={{ height: "300px" }}
+                        onClick={() => navigate("/AiPersona")}
+                      >
+                        <img src={images.PeopleFillPrimary2} alt="" />
 
-                      {/* {selectedProblems.length > 0 ? ( */}
-                      <CardGroupWrap column style={{ marginBottom: "140px" }}>
-                        <MandalArtGraph
-                        //  items={ideaGenerationStartPosition.map(problem => problem.name)}  // name만 전달
-                        //  onTagsChange={handleTagsChange}
-                        //  disabled={toolSteps >= 2}
-                        />
-                      </CardGroupWrap>
-                      {/* ) : (
-                      <Body3 color="gray700">데이터가 없습니다.</Body3>
-                    )} */}
+                        <Body2 color="gray700" align="center !important">
+                          현재 대화가 가능한 활성 페르소나가 없습니다
+                          <br />
+                          페르소나 생성 요청을 진행하여 페르소나를
+                          활성화해주세요
+                        </Body2>
 
-                      <div className="content">
-                        <IdeaContainer>
-                          {ideaGenerationIdeaList.map((idea) => (
-                            <IdeaBox key={idea.id}>
-                              <IdeaTitle>{idea.title}</IdeaTitle>
-                              <IdeaContent>
-                                {idea.content.map((text, index) => (
-                                  <IdeaText key={index}>• {text}</IdeaText>
-                                ))}
-                              </IdeaContent>
-                            </IdeaBox>
-                          ))}
-                        </IdeaContainer>
-                      </div>
+                        <Button
+                          Medium
+                          Outline
+                          Fill
+                          onClick={() => navigate("/AiPersona")}
+                        >
+                          <Caption1 color="gray700">
+                            AI Person 생성 요청
+                          </Caption1>
+                        </Button>
+                      </BoxWrap>
+                    )}
+    
                     </div>
                   </>
                 )}
+
+                <Button
+                  Other
+                  Primary
+                  Fill
+                  Round
+                  onClick={handleMandalArt}
+                  // disabled={toolSteps > 3}
+                >
+                  아이디에이션 시작하기
+                </Button>
               </TabContent5>
+            )}
+
+            {activeTab === 4 && completedSteps.includes(3) && (
+              <TabContent5 Small>
+              {isLoadingReport ? (
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    minHeight: "200px",
+                    alignItems: "center",
+                  }}
+                >
+                  <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
+                </div>
+              ) : (
+                <>
+                  <div className="title">
+                    <H3 color="gray800">Idea Generation Theme</H3>
+                    <Body3 color="gray800">
+                      문제와 니즈를 창의적 해결 주제로 전환하여, 아이디어
+                      발상의 방향을 정해주세요.
+                    </Body3>
+                  </div>
+
+                  <div className="content">
+                    <Title>
+                      <Body1 color="gray700">
+                        아이디어 시작점을 선택하세요 (8개 선택가능)
+                      </Body1>
+                    </Title>
+
+                    {/* {selectedProblems.length > 0 ? ( */}
+                    <CardGroupWrap column >
+                      <MoleculeMandalArtGraph
+                      mandalartData={ideaGenerationMandalArtData}
+                      // onSelectIdea={handleIdeaSelect}
+                      />
+                    </CardGroupWrap>
+                    {/* ) : (
+                    <Body3 color="gray700">데이터가 없습니다.</Body3>
+                  )} */}
+
+                    <div className="content">
+                      
+                      <IdeaContainer>
+                        {ideaGenerationIdeaList.map((idea) => (
+                          <IdeaBox key={idea.id}>
+                            <IdeaTitle>{idea.title}</IdeaTitle>
+                            <IdeaContent>
+                              {idea.content.map((text, index) => (
+                                <IdeaText key={index}>• {text}</IdeaText>
+                              ))}
+                            </IdeaContent>
+                          </IdeaBox>
+                        ))}
+                      </IdeaContainer>
+                    </div>
+                  </div>
+                </>
+              )}
+            </TabContent5>
             )}
           </DesignAnalysisWrap>
         </MainContent>

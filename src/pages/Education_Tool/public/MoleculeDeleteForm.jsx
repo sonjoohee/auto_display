@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Button } from '../../../assets/styles/ButtonStyle';
 import { Body2 } from '../../../assets/styles/Typography';
@@ -6,6 +6,7 @@ import {
     CustomInput,
   } from "../../../assets/styles/InputStyle";
 import images from "../../../assets/styles/Images";
+
 const MoleculeDeleteForm = ({
   items = [],
   setItems,
@@ -13,11 +14,18 @@ const MoleculeDeleteForm = ({
   maxItems = 10,
   placeholder = "핵심 가치를 작성해주세요 (예: 안전한 송금 등)",
   addButtonText = "+ 추가하기",
-  initialItemCount = 7  // 기본값 7로 설정
+  initialItemCount = 7,
+  edit = true
 }) => {
+  const [initialItems, setInitialItems] = useState([]);
+
   useEffect(() => {
     if (!items.length) {
-      setItems(new Array(initialItemCount).fill(""));
+      const newItems = new Array(initialItemCount).fill("");
+      setItems(newItems);
+      setInitialItems(newItems); // 초기 아이템 저장
+    } else {
+      setInitialItems(items); // 이미 있는 아이템도 초기 아이템으로 저장
     }
   }, []);
 
@@ -34,7 +42,7 @@ const MoleculeDeleteForm = ({
   };
 
   const handleAdd = () => {
-    setItems(prev => [...(prev || []), ""]);
+    setItems(prev => [...prev, ""]);
   };
 
   return (
@@ -42,11 +50,12 @@ const MoleculeDeleteForm = ({
       {items.map((item, index) => (
         <DeleteFormWrap key={index}>
           <CustomInput
-            disabled={disabled}
+            disabled={!edit && index < initialItems.length} // 초기 아이템만 edit에 영향 받음
             type="text"
             placeholder={placeholder}
             value={item}
             onChange={(e) => handleChange(index, e.target.value)}
+            fix
           />
           <DeleteButton
             onClick={() => handleDelete(index)}
@@ -66,8 +75,6 @@ const MoleculeDeleteForm = ({
     </FormContainer>
   );
 };
-
-export default MoleculeDeleteForm;
 
 // // Styled Components
 // const DeleteFormWrap = styled.div`
@@ -111,3 +118,5 @@ const DeleteButton = styled.button`
     cursor: not-allowed;
   }
 `;
+
+export default MoleculeDeleteForm;
