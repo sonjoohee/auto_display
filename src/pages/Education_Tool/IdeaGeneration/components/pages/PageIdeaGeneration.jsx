@@ -1003,7 +1003,7 @@ const PageIdeaGeneration = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="이미지를 분석하고 있어요..." />
+                    <AtomPersonaLoader message="문제점 & 니즈 분석하고 있어요..." />
                   </div>
                 ) : (
                   <>
@@ -1078,7 +1078,7 @@ const PageIdeaGeneration = () => {
                                       handlePurposeSelect(
                                         `${item.updateDate.split(":")[0]}:${
                                           item.updateDate.split(":")[1]
-                                        } 고객 핵심 가치 분석기 - 
+                                        } - 고객 핵심 가치 분석기 - 
                                     ${
                                       item.customerJourneyMapSelectedPersona
                                         .personaName || "페르소나"
