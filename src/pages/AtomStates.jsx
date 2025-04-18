@@ -596,6 +596,7 @@ export const CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA = atom({});
 export const CUSTOMER_JOURNEY_MAP_REPORT = atom([]);
 export const CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION = atom([]);
 
+export const IDEA_GENERATION_SELECTED_PURPOSE = atom({});
 export const IDEA_GENERATION_PROBLEM_LIST = atom([]);
 export const IDEA_GENERATION_PROBLEM_LIST_TITLE = atom([]);
 export const IDEA_GENERATION_START_POSITION = atom([]);
@@ -603,9 +604,13 @@ export const IDEA_GENERATION_IDEA_LIST = atom([]);
 export const IDEA_GENERATION_MANDALART_DATA = atom([]);
 export const IDEA_GENERATION_SELECTED_START_POSITION = atom([]);
 export const IDEA_GENERATION_SELECTED_MANDALART = atom(null);
+export const IDEA_GENERATION_POSSSESSION_TECH = atom("");
 
 export const KANO_MODEL_IDEA_GENERATION = atom([]);
 export const KANO_MODEL_SELECTED_IDEA = atom(null);
+
+export const IDEA_EVALUATE_LIST = atom([]);
+export const IDEA_EVALUATE_SELECTED_LIST = atom([]);
 
 //!saas
 // 프로젝트 생성 페이지
