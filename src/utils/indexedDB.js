@@ -1240,6 +1240,47 @@ export const UserCreditInfo = async (isLoggedIn) => {
   }
 };
 
+// 유저 교육 상태 조회
+export const UserEducationStateInfo = async (isLoggedIn) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.get(
+      "https://wishresearch.kr/api/user/userEducationInfo/",
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    if (
+      error.response &&
+      error.response.data &&
+      error.response.data.state === "Fail"
+    ) {
+      return error.response.data;
+    }
+
+    console.error("유저 교육 상태 정보 조회 오류 발생:", error);
+    console.error("오류 상세:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
 // 크레딧 사용전 사용 확인
 export const UserCreditCheck = async (data, isLoggedIn) => {
   if (!isLoggedIn) {
