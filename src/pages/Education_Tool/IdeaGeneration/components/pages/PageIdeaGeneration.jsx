@@ -1185,7 +1185,7 @@ const PageIdeaGeneration = () => {
                       </Title>
 
                       {/* {selectedProblems.length > 0 ? ( */}
-                      <CardGroupWrap column>
+                      <CardGroupWrap ideaGeneration>
                         {/* <MoleculeTagList
                           items={ideaGenerationStartPosition.map(
                             (problem) => problem.title

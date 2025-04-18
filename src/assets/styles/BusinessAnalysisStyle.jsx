@@ -2459,20 +2459,20 @@ export const ListBoxGroup = styled.ul`
 
 export const CardGroupWrap = styled.div`
   display: flex;
-  flex-direction: ${(props) => (props.column ? "column" : "row")};
+  flex-direction: ${(props) => (props.column || props.ideaGeneration ? "column" : "row")};
   gap: 15px !important;
   flex-wrap: ${(props) => (props.rowW50 ? "nowrap" : "wrap")};
   width: 100%;
-  margin-bottom: ${(props) => (props.column || props.rowW50 ? "0" : "140px")};
+  margin-bottom: ${(props) => (props.column || props.rowW50 || props.ideaGeneration ? "0" : "140px")};
 
   > div {
     flex: ${(props) =>
-      props.column ? "1" : props.rowW50 ? "1 1 50%" : "0 0 calc(24.8% - 10px)"};
+      props.column || props.ideaGeneration ? "1" : props.rowW50 ? "1 1 50%" : "0 0 calc(24.8% - 10px)"};
     max-width: ${(props) =>
-      props.column ? "100%" : props.rowW50 ? "50%" : "calc(24.8% - 10px)"};
+      props.column || props.ideaGeneration ? "100%" : props.rowW50 ? "50%" : "calc(24.8% - 10px)"};
     width: 100%;
     justify-content: ${(props) =>
-      props.column || props.rowW50 ? "space-between" : "flex-start"};
+      props.column || props.rowW50 ? "space-between" : props.ideaGeneration ? "left" : "flex-start"};
   }
 `;
 

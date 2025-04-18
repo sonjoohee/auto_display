@@ -18,10 +18,15 @@ const QuckSurveyPopup = ({
   // 팝업 상태 관리
   const [isVisible, setIsVisible] = useState(isOpen);
   const [questionText, setQuestionText] = useState("");
-  const [options, setOptions] = useState(["", ""]);
+  const [options, setOptions] = useState(["", "", "", "", ""]);
   
   // AI로 다듬기 버튼 상태 관리
   const [showAiButton, setShowAiButton] = useState(false);
+  
+  // 새로운 입력 영역 상태 관리
+  const [showInputArea, setShowInputArea] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [itemList, setItemList] = useState([]);
   
   // isOpen props가 변경될 때 상태 업데이트
   useEffect(() => {
@@ -38,27 +43,44 @@ const QuckSurveyPopup = ({
   }, [questionText, options]);
 
   // 옵션 추가
-  const addOption = () => {
+  const handleAddOption = () => {
     if (options.length < 5) {
       setOptions([...options, ""]);
     }
   };
 
   // 옵션 텍스트 변경
-  const handleOptionChange = (index, value) => {
+  const handleChangeOption = (e, index) => {
     const newOptions = [...options];
-    newOptions[index] = value;
+    newOptions[index] = e.target.value;
     setOptions(newOptions);
   };
 
   // 옵션 삭제 함수 추가
   const handleDeleteOption = (index) => {
-    // 옵션이 2개 이하면 삭제하지 않음
-    if (options.length <= 2) return;
-    
-    const newOptions = [...options];
-    newOptions.splice(index, 1);
-    setOptions(newOptions);
+    if (options.length > 1) {
+      const newOptions = [...options];
+      newOptions.splice(index, 1);
+      setOptions(newOptions);
+    }
+  };
+
+  // 입력 영역 토글
+  const toggleInputArea = () => {
+    setShowInputArea(!showInputArea);
+    if (showInputArea) {
+      setInputValue("");
+    }
+  };
+  
+  // 아이템 추가
+  const addItem = () => {
+    const trimmedValue = inputValue.trim();
+    if (trimmedValue) {
+      setItemList([...itemList, trimmedValue]);
+      setInputValue("");
+      // Keep the input area open after adding an item
+    }
   };
 
   // AI로 다듬기 함수 
@@ -70,6 +92,11 @@ const QuckSurveyPopup = ({
   // 팝업 닫기 처리
   const handleClose = () => {
     setIsVisible(false);
+    setQuestionText("");
+    setOptions(["", "", "", "", ""]);
+    setShowInputArea(false);
+    setInputValue("");
+    setItemList([]);
     if (onClose) {
       onClose();
     }
@@ -90,11 +117,14 @@ const QuckSurveyPopup = ({
 
     onSave({
       question: questionText,
-      options: filledOptions
+      options: filledOptions,
+      items: itemList // 새로 추가된 아이템 목록 전달
     });
     
     handleClose();
   };
+
+  const createButtonActive = questionText.trim() !== "" && options.every(opt => opt.trim() !== "");
 
   if (!isVisible) return null;
 
@@ -128,10 +158,10 @@ const QuckSurveyPopup = ({
                 <InputField 
                   placeholder="핵심 가치를 작성해주세요 (예: 안전한 송금 등)"
                   value={option}
-                  onChange={(e) => handleOptionChange(index, e.target.value)}
+                  onChange={(e) => handleChangeOption(e, index)}
                 />
                 {/* 옵션이 2개 초과일 때만 삭제 아이콘 표시 */}
-                {options.length > 2 && (
+                {options.length > 1 && (
                   <DeleteButton onClick={() => handleDeleteOption(index)}>
                     <img src={images.Trash} alt="삭제" />
                   </DeleteButton>
@@ -139,11 +169,43 @@ const QuckSurveyPopup = ({
               </OptionItemWrapper>
             ))}
             {options.length < 5 && (
-              <AddOptionButton onClick={addOption}>
+              <AddOptionButton onClick={handleAddOption}>
                 + 추가 하기 (최대 5개)
               </AddOptionButton>
             )}
           </OptionsContainer>
+          
+          {/* 새로운 아이템 섹션 */}
+          <SectionTitle style={{ marginTop: '24px' }}>추가 항목</SectionTitle>
+          <AddButton onClick={toggleInputArea}>
+            + 추가 하기
+          </AddButton>
+          
+          {showInputArea && (
+            <InputAreaContainer>
+              <InputField 
+                placeholder="추가할 항목을 입력하세요"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    addItem();
+                  }
+                }}
+              />
+              <CheckButton onClick={addItem}>
+                <CheckIcon />
+              </CheckButton>
+            </InputAreaContainer>
+          )}
+          
+          {itemList.length > 0 && (
+            <ItemListContainer>
+              {itemList.map((item, index) => (
+                <ItemBox key={index}>{item}</ItemBox>
+              ))}
+            </ItemListContainer>
+          )}
         </PopupContent>
         
         <Spacer />
@@ -160,7 +222,13 @@ const QuckSurveyPopup = ({
               </AiRefineButton>
             )}
           </div>
-          <CreateButton onClick={handleSave}>
+          <CreateButton 
+            onClick={handleSave}
+            style={{ 
+              backgroundColor: createButtonActive ? palette.primary : palette.gray300,
+              cursor: createButtonActive ? "pointer" : "default"
+            }}
+          >
             질문 기반 서베이 생성
           </CreateButton>
         </ButtonContainer>
@@ -184,6 +252,13 @@ const MagicWandIcon = () => (
 const CloseButtonIcon = () => (
   <svg width="16" height="22" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path fill-rule="evenodd" clip-rule="evenodd" d="M15.6767 2.47245C16.1079 2.02132 16.1079 1.28988 15.6767 0.838745C15.2455 0.387609 14.5464 0.387609 14.1152 0.838745L7.99942 7.23754L1.8846 0.839765C1.45341 0.388629 0.754327 0.388629 0.323143 0.839765C-0.10804 1.2909 -0.10804 2.02234 0.323144 2.47347L6.43797 8.87124L1.03279 14.5265C0.601602 14.9777 0.601602 15.7091 1.03279 16.1602C1.46397 16.6114 2.16306 16.6114 2.59424 16.1602L7.99943 10.505L13.4056 16.1613C13.8368 16.6124 14.5359 16.6124 14.967 16.1613C15.3982 15.7101 15.3982 14.9787 14.967 14.5276L9.56088 8.87124L15.6767 2.47245Z" fill="#666666"/>
+  </svg>
+);
+
+// CheckIcon SVG 컴포넌트 추가
+const CheckIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 12L10 17L19 8" stroke="#226FFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
@@ -293,7 +368,7 @@ const OptionsContainer = styled.div`
   flex-direction: column;
   align-self: stretch;
   gap: 8px;
-  height: 237px;
+  height: 160px;
   box-sizing: border-box;
   overflow: hidden;
 `;
@@ -320,6 +395,66 @@ const AddOptionButton = styled.div`
   }
 `;
 
+// 추가 버튼
+const AddButton = styled.button`
+  background: none;
+  border: 1px solid ${palette.outlineGray};
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: ${palette.gray700};
+  margin-top: 8px;
+  
+  &:hover {
+    background-color: ${palette.gray50};
+  }
+`;
+
+// 입력 영역 컨테이너
+const InputAreaContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 12px;
+  gap: 8px;
+`;
+
+// 체크 버튼
+const CheckButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+// 아이템 리스트 컨테이너
+const ItemListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 16px;
+  gap: 8px;
+`;
+
+// 아이템 박스
+const ItemBox = styled.div`
+  padding: 8px 12px;
+  background-color: ${palette.gray50};
+  border-radius: 8px;
+  font-size: 14px;
+  color: ${palette.gray900};
+`;
+
 const Divider = styled.div`
   width: 100%;
   height: 1px;
@@ -335,22 +470,22 @@ const ButtonContainer = styled.div`
 `;
 
 const CreateButton = styled.button`
-  width: 220px;
-  height: 40px;
-  border-radius: 4px;
-  background-color: ${palette.gray300};
-  font-family: "Pretendard", "Poppins";
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 1.2em;
-  letter-spacing: -0.03em;
+  width: 200px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${palette.primary};
   color: ${palette.white};
   border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-
+  transition: all 0.2s ease;
+  
   &:hover {
-    background-color: ${palette.primary};
+    background-color: ${palette.primaryLight};
   }
 `;
 
@@ -395,14 +530,6 @@ const DeleteButton = styled.button`
   &:hover {
     opacity: 0.7;
   }
-`;
-
-// AI로 다듬기 버튼용 컨테이너
-const AiRefineButtonContainer = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
 `;
 
 // AI로 다듬기 버튼 스타일

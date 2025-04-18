@@ -6,6 +6,7 @@ import { Body1, Body2, Caption1 } from "../../assets/styles/Typography";
 import { useAtom } from "jotai";
 import { QUICK_SURVEY_STATIC_DATA } from "../../pages/AtomStates";
 import images from "../../assets/styles/Images";
+import { CheckBoxButton, RadioButton } from "../../assets/styles/InputStyle";
 
 const businessModelItems = [
   { id: 1, title: "고객 세그먼트", value: "1고객 세그먼트" },
@@ -118,9 +119,8 @@ const BusinessModelPopup = ({
   const [selectedOption, setSelectedOption] = useState(null);
   const [currentModel, setCurrentModel] = useState(businessModelItems.find(item => item.id === currentModelId) || businessModelItems[2]);
   const [userOptions, setUserOptions] = useState([]);
-  const [showAddInput, setShowAddInput] = useState(false);
-  const [newOptionText, setNewOptionText] = useState("");
-  const [userOptionCount, setUserOptionCount] = useState(0); // 사용자가 추가한 총 항목 수 추적
+  const [inputFields, setInputFields] = useState([]); // 입력 필드 관리
+  const [inputValues, setInputValues] = useState({}); // 입력 값 관리
   
   // isOpen props가 변경될 때 상태 업데이트
   useEffect(() => {
@@ -133,9 +133,8 @@ const BusinessModelPopup = ({
     setCurrentModel(model);
     setSelectedOption(null); // 모델 변경 시 선택 초기화
     setUserOptions([]); // 사용자 정의 옵션 초기화
-    setShowAddInput(false); // 입력 영역 초기화
-    setNewOptionText(""); // 입력 텍스트 초기화
-    setUserOptionCount(0); // 사용자 정의 옵션 카운트 초기화
+    setInputFields([]); // 입력 필드 초기화
+    setInputValues({}); // 입력 값 초기화
   }, [currentModelId]);
   
   // 팝업 닫기 처리
@@ -143,9 +142,8 @@ const BusinessModelPopup = ({
     setIsVisible(false);
     setSelectedOption(null);
     setUserOptions([]);
-    setShowAddInput(false);
-    setNewOptionText("");
-    setUserOptionCount(0);
+    setInputFields([]);
+    setInputValues({});
     if (onClose) {
       onClose();
     }
@@ -156,25 +154,36 @@ const BusinessModelPopup = ({
     setSelectedOption(option);
   };
 
-  // 옵션 추가하기 버튼 클릭 처리
-  const handleAddOptionClick = () => {
-    setShowAddInput(true);
+  // 새 입력 필드 추가
+  const handleAddInputField = () => {
+    // 3개 모두 추가된 상태가 아니라면 입력 필드 추가
+    if (userOptions.length < 3) {
+      const newId = Date.now(); // 고유 ID 생성
+      setInputFields([...inputFields, newId]);
+      setInputValues({...inputValues, [newId]: ""}); // 새 입력 필드의 값 초기화
+    }
   };
 
-  // 새 옵션 텍스트 변경 처리
-  const handleNewOptionChange = (e) => {
-    setNewOptionText(e.target.value);
+  // 입력 필드 값 변경 처리
+  const handleInputChange = (id, value) => {
+    setInputValues({...inputValues, [id]: value});
   };
 
   // 체크 버튼 클릭 시 사용자 정의 옵션 추가
-  const handleAddNewOption = () => {
-    if (newOptionText.trim() !== "") {
-      if (userOptionCount < 3) { // 최대 3개까지만 추가 가능
-        setUserOptions([...userOptions, newOptionText.trim()]);
-        setNewOptionText("");
-        setShowAddInput(false);
-        setUserOptionCount(prev => prev + 1); // 사용자 옵션 카운트 증가
-      }
+  const handleAddUserOption = (id) => {
+    const value = inputValues[id]?.trim();
+    if (value) {
+      // 새로운 옵션 추가
+      const newUserOptions = [...userOptions, value];
+      setUserOptions(newUserOptions);
+      
+      // 입력 필드 제거
+      setInputFields(inputFields.filter(fieldId => fieldId !== id));
+      
+      // 필드 값 상태에서도 제거
+      const newInputValues = { ...inputValues };
+      delete newInputValues[id];
+      setInputValues(newInputValues);
     }
   };
 
@@ -195,11 +204,17 @@ const BusinessModelPopup = ({
   };
 
   // 엔터키 입력시 옵션 추가
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleAddNewOption();
+  const handleKeyDown = (id, e) => {
+    if (e.key === 'Enter' && inputValues[id]?.trim()) {
+      handleAddUserOption(id);
     }
   };
+
+  // 입력 필드 값이 존재하는지 확인하는 함수
+  const isInputFieldEmpty = (id) => !inputValues[id]?.trim();
+
+  // 사용자 추가 옵션과 현재 입력 필드를 합쳐서 3개일 때 버튼 숨김
+  const hideAddButton = userOptions.length + inputFields.length >= 3;
 
   if (!isVisible) return null;
 
@@ -208,7 +223,7 @@ const BusinessModelPopup = ({
       <PopupContainer>
         <PopupHeader>
           <HeaderTitle>
-            <ModelNumber>{currentModel.id}</ModelNumber>
+            <NumberCircle>{currentModel.id}</NumberCircle>
             <HeaderTitleText>{currentModel.title}</HeaderTitleText>
           </HeaderTitle>
           <CloseButton onClick={handleClose}>
@@ -228,9 +243,14 @@ const BusinessModelPopup = ({
                 onClick={() => handleOptionSelect(option)}
               >
                 <OptionFlex>
-                  <RadioButton isSelected={selectedOption === option}>
-                    {selectedOption === option && <RadioButtonCheckmark />}
-                  </RadioButton>
+                  <div>
+                    <RadioButton 
+                      id={`radio-default-${index}`}
+                      name="modelOptionGroup"
+                      checked={selectedOption === option}
+                      onChange={() => handleOptionSelect(option)}
+                    />
+                  </div>
                   <OptionText>{option}</OptionText>
                 </OptionFlex>
               </OptionItem>
@@ -243,35 +263,50 @@ const BusinessModelPopup = ({
                 onClick={() => handleOptionSelect(option)}
               >
                 <OptionFlex>
-                  <RadioButton isSelected={selectedOption === option}>
-                    {selectedOption === option && <RadioButtonCheckmark />}
-                  </RadioButton>
+                  <div>
+                    <RadioButton 
+                      id={`radio-user-${index}`}
+                      name="modelOptionGroup"
+                      checked={selectedOption === option}
+                      onChange={() => handleOptionSelect(option)}
+                    />
+                  </div>
                   <OptionText>{option}</OptionText>
                 </OptionFlex>
               </OptionItem>
             ))}
             
-            {/* 새 옵션 입력 영역 */}
-            {showAddInput && (
-              <OptionItem as="div">
+            {/* 입력 필드 영역 */}
+            {inputFields.map(id => (
+              <OptionItem key={`input-${id}`} as="div">
                 <OptionFlex>
                   <InputField 
                     placeholder={`${currentModel.title} 항목을 직접 입력하세요`}
-                    value={newOptionText}
-                    onChange={handleNewOptionChange}
-                    onKeyDown={handleKeyDown}
+                    value={inputValues[id] || ""}
+                    onChange={(e) => handleInputChange(id, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(id, e)}
                     autoFocus
                   />
-                  <CheckButton onClick={handleAddNewOption}>
-                    <CheckIcon />
+                  <CheckButton 
+                    onClick={() => handleAddUserOption(id)}
+                    disabled={isInputFieldEmpty(id)}
+                    active={!isInputFieldEmpty(id)}
+                  >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 12L10 17L19 8" 
+                        stroke={isInputFieldEmpty(id) ? "#E0E4EB" : "#226FFF"} 
+                        strokeWidth="2" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round"/>
+                    </svg>
                   </CheckButton>
                 </OptionFlex>
               </OptionItem>
-            )}
+            ))}
             
-            {/* 추가하기 버튼 - 총 3개 추가되면 숨김 */}
-            {!showAddInput && userOptionCount < 3 && (
-              <AddOptionItem onClick={handleAddOptionClick}>
+            {/* 직접 추가하기 버튼 - 3개가 모두 추가된 후에만 숨김 */}
+            {!hideAddButton && (
+              <AddOptionItem onClick={handleAddInputField}>
                 + 직접 추가하기 (최대 3개)
               </AddOptionItem>
             )}
@@ -297,30 +332,6 @@ const BusinessModelPopup = ({
   );
 };
 
-// CheckIcon SVG 컴포넌트
-const CheckIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M2 9L6.99821 14L15.995 5" stroke="#226FFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-// RadioButton SVG 컴포넌트들
-const RadioButton = ({ isSelected, children }) => (
-  <RadioButtonWrapper>
-    <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {isSelected ? (
-        <>
-          <circle cx="10" cy="10.5" r="10" fill="#226FFF"/>
-          <path d="M5.63806 10.8463L8.3257 13.5305L14.3615 7.47021" stroke="white" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-        </>
-      ) : (
-        <circle cx="10" cy="10.5" r="9.58333" stroke="#E0E4EB" strokeWidth="0.833333"/>
-      )}
-    </svg>
-    {children}
-  </RadioButtonWrapper>
-);
-
 // CloseButtonIcon SVG 컴포넌트
 const CloseButtonIcon = () => (
   <svg width="16" height="22" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -336,8 +347,6 @@ const CloseButton = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-export default BusinessModelPopup;
 
 // 스타일 컴포넌트
 const PopupOverlay = styled.div`
@@ -355,7 +364,7 @@ const PopupOverlay = styled.div`
 
 const PopupContainer = styled.div`
   width: 640px;
-  height: 600px;
+  height: 576px;
   background: ${palette.white};
   border-radius: 10px;
   display: flex;
@@ -375,30 +384,39 @@ const HeaderTitle = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 12px;
+  gap: 0;
 `;
 
-const ModelNumber = styled.div`
+const NumberCircle = styled.div`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #323232;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
   font-family: "Pretendard", "Poppins";
-  font-size: 20px;
+  font-size: 12px;
   font-weight: 600;
-  color: ${palette.primary};
+  color: white;
+  flex-shrink: 0;
 `;
 
 const HeaderTitleText = styled.div`
   font-family: "Pretendard", "Poppins";
   font-size: 20px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.3em;
   letter-spacing: -0.03em;
-  color: ${palette.gray800};
+  color: #666666;
 `;
 
 const PopupContent = styled.div`
   display: flex;
   flex-direction: column;
   align-self: stretch;
-  gap: 24px;
+  gap: 0;
   width: 100%;
 `;
 
@@ -448,7 +466,12 @@ const OptionItem = styled.div`
   }
 `;
 
-const AddOptionItem = styled(OptionItem)`
+const AddOptionItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border: 1px solid ${palette.outlineGray};
   background-color: ${palette.gray100};
   color: ${palette.gray300};
   font-family: "Pretendard", "Poppins";
@@ -458,6 +481,15 @@ const AddOptionItem = styled(OptionItem)`
   
   &:hover {
     background-color: ${palette.gray200};
+    border-color: ${palette.outlineGray}; /* 호버 시 테두리 색상 변경 없음 */
+  }
+  
+  /* 명시적으로 아웃라인 제거 */
+  outline: none !important;
+  
+  &:focus, &:active {
+    outline: none !important;
+    border-color: ${palette.outlineGray}; /* 포커스/활성화 시에도 테두리 색상 변경 없음 */
   }
 `;
 
@@ -467,21 +499,6 @@ const OptionFlex = styled.div`
   gap: 12px;
   width: 100%;
   position: relative;
-`;
-
-const RadioButtonWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-`;
-
-const RadioButtonCheckmark = styled.div`
-  width: 10px;
-  height: 10px;
-  background-color: white;
-  border-radius: 50%;
-  position: absolute;
 `;
 
 const OptionText = styled.div`
@@ -496,21 +513,31 @@ const CheckButton = styled.button`
   right: 0;
   background: none;
   border: none;
-  cursor: pointer;
   padding: 0;
-  width: 36px;
-  height: 36px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: ${props => props.active ? 'pointer' : 'default'};
   
-  &:hover {
-    opacity: 0.7;
+  /* 아웃라인 제거 */
+  outline: none !important;
+  
+  &:focus, &:active {
+    outline: none !important;
+  }
+  
+  svg {
+    /* 체크 아이콘 자체에 마진 제거 */
+    display: block;
+    margin: 0;
+    padding: 0;
   }
 `;
 
 const InputField = styled.input`
-  width: 100%;
+  width: calc(100% - 24px); /* 체크버튼 공간 확보 */
   height: 100%;
   padding: 0;
   border: none;
@@ -575,3 +602,5 @@ const BottomSpacer = styled.div`
   width: 100%;
   height: 30px; // 리스트 영역에서 줄인 30px 만큼 하단 여백 추가
 `;
+
+export default BusinessModelPopup; 
