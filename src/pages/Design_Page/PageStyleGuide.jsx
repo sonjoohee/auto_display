@@ -70,6 +70,8 @@ import WriteSelfCard from "../../components/Charts/WriteSelfCard";
 import IdeaGenerationTag from "../../components/Charts/IdeaGenerationTag";
 import ParetoCurveGraph from "../../components/Charts/ParetoCurveGraph";
 import BusinessModelPopup from "../../components/Charts/BusinessModelPopup";
+import WaitLongLodingBar from "../../components/Charts/WaitLongLodingBar";
+import BusinessModelGraph from "../../components/Charts/BusinessModelGraph";
 const PageStyleGuide  = () => {
   const [activeSection, setActiveSection] = useState('');
   const [isChecked, setIsChecked] = useState(false);
@@ -184,6 +186,8 @@ const PageStyleGuide  = () => {
           <IdeaGenerationTag text="경험 기반 쇼핑 큐레이션" />
           <ParetoCurveGraph data={paretoDummyData} />
           <BusinessModelPopup isOpen={true} />
+          <WaitLongLodingBar />
+          <BusinessModelGraph />
         </FlexContainer>
       </ChartComponentsWrap>
       

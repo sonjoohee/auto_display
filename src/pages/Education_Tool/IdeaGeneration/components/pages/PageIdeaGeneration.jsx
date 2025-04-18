@@ -992,16 +992,17 @@ const PageIdeaGeneration = () => {
                       </Title>
 
                       {/* {selectedProblems.length > 0 ? ( */}
-                      <CardGroupWrap 
-                        column 
-                        style={{ 
-                          display: 'flex', 
-                          justifyContent: 'center', 
-                          alignItems: 'center',
-                          width: '100%',
-                          height: '100%'
-                        }}
-                      >
+
+                      <CardGroupWrap ideaGeneration>
+                        {/* <MoleculeTagList
+                          items={ideaGenerationStartPosition.map(
+                            (problem) => problem.title
+                          )} // name만 전달
+                          // onTagsChange={handleTagsChange}
+                          disabled={toolSteps >= 2}
+                        /> */}
+
+
                         <MoleculeTagList
                           items={
                             ideaGenerationStartPosition 
