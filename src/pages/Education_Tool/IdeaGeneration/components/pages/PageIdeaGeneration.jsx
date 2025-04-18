@@ -57,6 +57,8 @@ import {
   IDEA_GENERATION_PROBLEM_LIST_TITLE,
   IDEA_GENERATION_SELECTED_START_POSITION,
   IDEA_GENERATION_SELECTED_MANDALART,
+  IDEA_GENERATION_POSSSESSION_TECH,
+  IDEA_GENERATION_SELECTED_PURPOSE,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -81,16 +83,13 @@ import {
   getFindToolListOnServerSaas,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
-import Dropzone from "react-dropzone-uploader";
-import AnalysisItem from "../molecules/MoleculeAnalysisItem";
-import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
 import MoleculeDeleteForm from "../../../public/MoleculeDeleteForm";
 import MandalArtGraph from "../../../../../components/Charts/MandalArtGraph";
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 import MoleculeTagList from "../molecules/MoleculeTagList";
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
 import MoleculeMandalArtGraph from "../molecules/MoleculeMandalArtGraph";
-
+import OrganismToastPopupQuickSurveyComplete from "../molecules/OrganismToastPopupQuickSurveyComplete";
 const PageIdeaGeneration = () => {
   const navigate = useNavigate();
 
@@ -102,6 +101,7 @@ const PageIdeaGeneration = () => {
   const [, setDesignAnalysisBusinessTitle] = useAtom(
     DESIGN_ANALYSIS_BUSINESS_TITLE
   );
+
   const [personaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(
     DESIGN_ANALYSIS_BUSINESS_INFO
@@ -123,14 +123,17 @@ const PageIdeaGeneration = () => {
     DESIGN_ANALYSIS_EMOTION_SCALE
   );
   const [designAnalysisFileNames] = useAtom(DESIGN_ANALYSIS_FILE_NAMES);
-  const [designAnalysisFileId, setDesignAnalysisFileId] = useAtom(
-    DESIGN_ANALYSIS_FILE_ID
-  );
   const [ideaGenerationStartPosition, setIdeaGenerationStartPosition] = useAtom(
     IDEA_GENERATION_START_POSITION
   );
   const [ideaGenerationIdeaList, setIdeaGenerationIdeaList] = useAtom(
     IDEA_GENERATION_IDEA_LIST
+  );
+  const [ideaGenerationPossessionTech, setIdeaGenerationPossessionTech] = useAtom(
+    IDEA_GENERATION_POSSSESSION_TECH
+  );
+  const [ideaGenerationSelectedPurpose, setIdeaGenerationSelectedPurpose] = useAtom(
+    IDEA_GENERATION_SELECTED_PURPOSE
   );
 
   const [ideaGenerationProblemList, setIdeaGenerationProblemList] = useAtom(
@@ -185,13 +188,13 @@ const PageIdeaGeneration = () => {
   const [descriptionLength, setDescriptionLength] = useState(0);
   const [projectDescription, setProjectDescription] = useState("");
   const [selectedStartPosition, setSelectedStartPosition] = useState([]);
-  const [isFirstLoad, setIsFirstLoad] = useState(true); // 첫 로딩 체크를 위한 상태
   const [selectedJourneyMapData, setSelectedJourneyMapData] = useState([]);
   const [
     customerJourneyMapSelectedPersona,
     setCustomerJourneyMapSelectedPersona,
   ] = useState([]);
   const [customerJourneyMapReport, setCustomerJourneyMapReport] = useState([]);
+  const [showToast, setShowToast] = useState(false);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -201,11 +204,12 @@ const PageIdeaGeneration = () => {
     window.scrollTo(0, 0);
   }, []);
 
+// console.log("ideaGenerationSelectedStartPosition", ideaGenerationSelectedStartPosition);
+// console.log("toolSteps", toolSteps);
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
 
-      if (designAnalysisBusinessInfo.length === 0) {
         const projectAnalysis =
           (project?.projectAnalysis.business_analysis
             ? project?.projectAnalysis.business_analysis
@@ -223,24 +227,45 @@ const PageIdeaGeneration = () => {
           setBusinessDescriptionTitle(projectTitle);
           setBusinessDescription(projectAnalysis);
         }
-      }
 
       if (toolLoading) {
-        const projectTitle = project?.projectTitle;
+        // const projectTitle = project?.projectTitle;
         // 비즈니스 정보 설정 (Step 1)
-        if (project) {
-          setBusinessDescriptionTitle(projectTitle);
-        }
+        // if (project) {
+        //   setBusinessDescriptionTitle(projectTitle);
+        // }
 
         // 활성 탭 설정 (기본값 1)
-        setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
+        setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
         setToolSteps(toolStep ?? 1);
 
         // 비즈니스 정보 설정 (Step 1)
-        if (designAnalysisBusinessInfo) {
-          setBusinessDescription(designAnalysisBusinessInfo ?? "");
-          setFileNames(designAnalysisFileNames);
+        // if (designAnalysisBusinessInfo) {
+        //   setBusinessDescription(designAnalysisBusinessInfo ?? "");
+        // }
+
+        if (Object.keys(ideaGenerationSelectedPurpose).length > 0) {
+          setSelectedPurposes(ideaGenerationSelectedPurpose ?? {});
         }
+        if (ideaGenerationProblemList) {
+          setIdeaGenerationProblemList(ideaGenerationProblemList ?? []);
+        }
+        if (ideaGenerationProblemListTitle) {
+          setIdeaGenerationProblemListTitle(ideaGenerationProblemListTitle ?? []);
+        }
+        if (ideaGenerationStartPosition) {
+          setIdeaGenerationStartPosition(ideaGenerationStartPosition ?? []);
+        }
+        if (ideaGenerationSelectedStartPosition) {
+          setIdeaGenerationSelectedStartPosition(ideaGenerationSelectedStartPosition ?? []);
+        }
+        if (ideaGenerationPossessionTech) {
+          setIdeaGenerationPossessionTech(ideaGenerationPossessionTech ?? "");
+        }
+        if (ideaGenerationMandalArtData) {
+          setIdeaGenerationMandalArtData(ideaGenerationMandalArtData ?? []);
+        }
+      
 
         // 완료된 단계 설정
         const completedStepsArray = [];
@@ -249,53 +274,6 @@ const PageIdeaGeneration = () => {
         }
         setCompletedSteps(completedStepsArray);
 
-        // 페르소나 설정 (Step 2)
-        if (
-          Array.isArray(designAnalysisEmotionAnalysis) &&
-          Array.isArray(selectedDesignAnalysisEmotionAnalysis)
-        ) {
-          // 이미 선택된 페르소나들의 인덱스 찾기
-          const selectedIndices = (designAnalysisEmotionAnalysis ?? [])
-            .map((persona, index) => {
-              return (selectedDesignAnalysisEmotionAnalysis ?? []).some(
-                (target) => target?.name === persona?.name
-              )
-                ? index
-                : -1;
-            })
-            .filter((index) => index !== -1);
-
-          // selectedPersonas 상태 업데이트
-          setSelectedPersonas(selectedIndices);
-
-          // 선택된 페르소나 데이터 설정
-          const selectedPersonaData = selectedIndices
-            .map((index) => designAnalysisEmotionAnalysis?.[index])
-            .filter(Boolean);
-
-          setSelectedDesignAnalysisEmotionAnalysis(selectedPersonaData);
-        }
-
-        // 추가된 조건 체크
-        if (
-          Object.keys(designAnalysisEmotionTarget).length === 0 &&
-          !designAnalysisEmotionScale.length &&
-          completedStepsArray.length === 2
-        ) {
-          // designAnalysisEmotionTarget이 빈 객체이고, designAnalysisEmotionScale이 빈 배열인 경우
-          setActiveTab(2);
-          setToolSteps(1);
-          setCompletedSteps(completedStepsArray.slice(0, -1));
-        } else {
-          if (designAnalysisEmotionTarget) {
-            setDesignAnalysisEmotionTarget(designAnalysisEmotionTarget ?? {});
-          }
-
-          if (designAnalysisEmotionScale) {
-            setDesignAnalysisEmotionScale(designAnalysisEmotionScale ?? {});
-          }
-        }
-        setToolStep(0);
 
         return;
       }
@@ -333,7 +311,7 @@ const PageIdeaGeneration = () => {
         );
 
         allItems = [...allItems, ...newItems];
-
+  
         setCustomerJourneyList(allItems);
       } catch (error) {
         setCustomerJourneyList([]); // Set empty array on error
@@ -343,17 +321,17 @@ const PageIdeaGeneration = () => {
     getAllTargetDiscovery();
   }, [isLoggedIn, projectSaas]);
 
-  const handleCheckboxChange = (personaId) => {
-    if (toolSteps >= 2) return;
-    setSelectedPersonas((prev) => {
-      // 하나만 선택되도록 변경, 다른 항목 선택 시 해당 항목으로 변경
-      if (prev.includes(personaId)) {
-        return []; // 이미 선택된 항목을 다시 클릭하면 선택 해제
-      } else {
-        return [personaId]; // 새 항목 선택
-      }
-    });
-  };
+  // const handleCheckboxChange = (personaId) => {
+  //   if (toolSteps >= 2) return;
+  //   setSelectedPersonas((prev) => {
+  //     // 하나만 선택되도록 변경, 다른 항목 선택 시 해당 항목으로 변경
+  //     if (prev.includes(personaId)) {
+  //       return []; // 이미 선택된 항목을 다시 클릭하면 선택 해제
+  //     } else {
+  //       return [personaId]; // 새 항목 선택
+  //     }
+  //   });
+  // };
 
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -362,18 +340,18 @@ const PageIdeaGeneration = () => {
     setShowPopupError(false);
   };
 
-  // 필수 필드가 모두 입력되었는지 확인하는 함수
-  const isRequiredFieldsFilled = () => {
-    return businessDescription.trim().length > 0 && uploadedFiles.length > 0;
-  };
+  // // 필수 필드가 모두 입력되었는지 확인하는 함수
+  // const isRequiredFieldsFilled = () => {
+  //   return businessDescription.trim().length > 0 && uploadedFiles.length > 0;
+  // };
 
-  // 비즈니스 설명 입력 핸들러
-  const handleBusinessDescriptionChange = (e) => {
-    const input = e.target.value;
-    if (input.length <= 500) {
-      setBusinessDescription(input);
-    }
-  };
+  // // 비즈니스 설명 입력 핸들러
+  // const handleBusinessDescriptionChange = (e) => {
+  //   const input = e.target.value;
+  //   if (input.length <= 500) {
+  //     setBusinessDescription(input);
+  //   }
+  // };
 
   // handleInputChange 함수 수정
   const handleInputChange = (field, value) => {
@@ -383,9 +361,9 @@ const PageIdeaGeneration = () => {
     }
   };
 
-  const handleTagsChange = (selected) => {
-    setSelectedStartPosition(selected);
-  };
+  // const handleTagsChange = (selected) => {
+  //   setSelectedStartPosition(selected);
+  // };
 
   const handleSubmitProblem = async () => {
     try {
@@ -420,74 +398,16 @@ const PageIdeaGeneration = () => {
 
       // API 호출
       const response = await EducationToolsRequest(Data, isLoggedIn);
-      console.log(response);
+    
 
       setIdeaGenerationStartPosition(
         response.response.idea_generation_keyword_education
       );
 
-      // const dummydata = [
-      //   {
-      //     problem:
-      //       "배송 및 설치 과정의 불안감, 구매 후 관리 및 지원 부재에 대한 우려",
-      //     content: [
-      //       {
-      //         idea: "안심 배송 시스템",
-      //         description:
-      //           "제품의 안전한 배송을 보장하고, 배송 과정에 대한 정보를 실시간으로 제공합니다. (예: 배송 추적, 파손 보험, 안심 포장) 사용자는 배송 과정에 대한 불안감을 해소하고, 안심하고 제품을 받을 수 있습니다.",
-      //         problem:
-      //           "배송 및 설치 과정의 불안감, 구매 후 관리 및 지원 부재에 대한 우려",
-      //       },
-      //       {
-      //         idea: "설치 서비스 연계",
-      //         description:
-      //           "제품 설치 서비스를 제공하거나, 신뢰할 수 있는 설치 업체와 연계하여, 사용자들이 제품 설치에 대한 어려움을 덜도록 합니다. 설치 과정에 대한 안내, 문제 발생 시의 지원 등을 제공합니다.",
-      //         problem:
-      //           "배송 및 설치 과정의 불안감, 구매 후 관리 및 지원 부재에 대한 우려",
-      //       },
-      //       {
-      //         idea: "사후 관리 및 AS 지원",
-      //         description:
-      //           "제품 구매 후에도 지속적인 관리 및 AS 지원을 제공합니다. 제품 사용 팁, 관리 방법, 문제 발생 시의 대처법 등을 제공하고, AS 접수 및 처리 과정을 간소화합니다.",
-      //         problem:
-      //           "배송 및 설치 과정의 불안감, 구매 후 관리 및 지원 부재에 대한 우려",
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     problem: "배송 및 설=리 및 지원 부재에 대한 우려",
-      //     content: [
-      //       {
-      //         idea: "안심 배=스템",
-      //         description:
-      //           "제품의 안전한 배송을 보장하고, 배송 과정에 대한 정보를 실시간으로 제공합니다. (예: 배송 추적, 파손 보험, 안심 포장) 사용자는 배송 과정에 대한 불안감을 해소하고, 안심하고 제품을 받을 수 있습니다.",
-      //         problem:
-      //           "배송 및 설치 과정의 불안감, 구매 후 관리 및 지원 부재에 대한 우려",
-      //       },
-      //       {
-      //         idea: "설치 서비===스 연계",
-      //         description:
-      //           "제품 설치 서비스를 제공하거나, 신뢰할 수 있는 설치 업체와 연계하여, 사용자들이 제품 설치에 대한 어려움을 덜도록 합니다. 설치 과정에 대한 안내, 문제 발생 시의 지원 등을 제공합니다.",
-      //         problem:
-      //           "배송 및 설치 과정의 불안감, 구매 후 관리 및 지원 부재에 대한 우려",
-      //       },
-      //       {
-      //         idea: "사후 및 AS 지원",
-      //         description:
-      //           "제품 구매 후에도 지속적인 관리 및 AS 지원을 제공합니다. 제품 사용 팁, 관리 방법, 문제 발생 시의 대처법 등을 제공하고, AS 접수 및 처리 과정을 간소화합니다.",
-      //         problem:
-      //           "배송 및 설치 과정의 불안감, 구매 후 관리 및 지원 부재에 대한 우려",
-      //       },
-      //     ],
-      //   },
-      // ];
-
-      // setIdeaGenerationStartPosition(dummydata);
-
-      // API 호출 로직...
       setIsLoading(false);
 
       handleNextStep(1);
+      setToolSteps(1);
     } catch (error) {
       console.error("Error submitting problems:", error);
       setShowPopupError(true);
@@ -497,9 +417,20 @@ const PageIdeaGeneration = () => {
   const handleSubmitTheme = async () => {
     handleNextStep(2);
     setToolSteps(2);
+
+    await updateToolOnServer(
+      toolId,
+      {
+        completedStep: 2,
+        ideaGenerationStartPosition: ideaGenerationStartPosition,
+        ideaGenerationSelectedStartPosition: ideaGenerationSelectedStartPosition,
+        possessionTech: projectDescription
+      
+      },
+      isLoggedIn
+    );
   };
 
-  console.log("ideaGenerationStartPosition", ideaGenerationStartPosition);
 
   const handlePurposeSelect = async (purpose, selectBoxId, item) => {
     setIsContentLoading(true);
@@ -529,7 +460,7 @@ const PageIdeaGeneration = () => {
     try {
       if (selectBoxId === "customerList" && item) {
         setSelectedJourneyMapData(item);
-        // console.log("Selected Journey Map Data:", item);
+    
 
         setBusinessDescription(purpose || "");
 
@@ -580,74 +511,111 @@ const PageIdeaGeneration = () => {
     setToolSteps(3);
     setIsLoadingReport(true);
 
-    // await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const persona_group = personaListSaas
       .filter((persona) => persona?.favorite === true)
       .map((persona) => ({
-        personaName: persona.personaName,
+        name: persona.personaName,
         personaCharacteristics: persona.personaCharacteristics,
         type: persona.type,
         age: persona.age,
         gender: persona.gender,
         job: persona.job,
         keywords: persona.keywords,
+      
+      }));
+
+      const persona_group_interview = personaListSaas
+      .filter((persona) => persona?.favorite === true)
+      .map((persona) => ({
+        name: persona.personaName,
+        age: persona.age,
+        gender: persona.gender,
+        job: persona.job,
+        keywords: persona.keywords,
+        imageKey: persona.imageKey,
       }));
 
     try {
-      console.log("ideaGenerationStartPosition", ideaGenerationStartPosition);
-      console.log(
-        "ideaGenerationSelectedStartPosition",
-        ideaGenerationSelectedStartPosition
+
+      const apiResults = [];
+
+      //8번의 API 호출을 순차적으로 실행
+       for (let i = 0; i < 8; i++) {
+
+        const Data = {
+          type: "ix_idea_generation_interview_education",
+          business: business,
+          idea_theme: ideaGenerationSelectedStartPosition,
+          persona_group: persona_group,
+        };
+
+        const interviewResponse = await EducationToolsRequest(Data, isLoggedIn);
+        
+
+        const data = {
+          type: "ix_idea_generation_report_education",
+          business: business,
+          idea_content: ideaGenerationSelectedStartPosition[i], // i 인덱스의 아이템만 선택
+          interview_list: interviewResponse.response.idea_generation_interview_education,
+        };
+
+        let reportResponse = await EducationToolsRequest(data, isLoggedIn);
+
+        let reportRetryCount = 0;
+        const reportMaxRetries = 10;
+        while (reportRetryCount < reportMaxRetries) {
+          if (!reportResponse?.response?.idea_generation_report_education || 
+            !reportResponse?.response?.idea_generation_report_education?.core_ideas ||
+            !reportResponse?.response?.idea_generation_report_education?.detailed_execution_ideas ||
+            !reportResponse?.response?.idea_generation_report_education?.additional_execution_ideas
+
+          ) {
+         
+            reportResponse = await EducationToolsRequest(data, isLoggedIn);
+            reportRetryCount++;
+          } 
+          if (reportRetryCount >= reportMaxRetries) {
+            setShowPopupError(true);
+            return;
+          }
+        }
+
+        const reportData = reportResponse.response.idea_generation_report_education;
+
+
+        reportData.core_ideas = reportData?.core_ideas?.map(coreIdea => {
+          // persona_name과 일치하는 persona 찾기
+          const matchingPersona = persona_group_interview.find(
+            persona => persona.name === coreIdea.persona_name
+          );
+
+          return {
+            ...coreIdea,
+            // 매칭된 persona의 정보 추가
+            age: matchingPersona?.age,
+            gender: matchingPersona?.gender,
+            job: matchingPersona?.job,
+            keywords: matchingPersona?.keywords,
+            imageKey: matchingPersona?.imageKey,
+          };
+        })
+
+        apiResults.push(reportData);
+
+      }
+
+      setIdeaGenerationMandalArtData(apiResults);
+
+      await updateToolOnServer(
+        toolId,
+        {
+          completedStep: 4,
+          ideaGenerationMandalArtData: apiResults,
+        },
+        isLoggedIn
       );
 
-      const Data = {
-        type: "ix_idea_generation_interview_education",
-        business: business,
-        idea_theme: ideaGenerationSelectedStartPosition,
-        persona_group: persona_group,
-      };
-
-      const data = {
-        type: "ix_idea_generation_mandalart_education",
-        idea_generation_start_position: ideaGenerationStartPosition,
-        idea_generation_selected_start_position:
-          ideaGenerationSelectedStartPosition,
-        project_description: projectDescription,
-      };
-
-      // const apiResults = [];
-
-      // 8번의 API 호출을 순차적으로 실행
-      //  for (let i = 0; i < 8; i++) {
-      //   const response = await EducationToolsRequest({
-      //     ...baseData,
-      //     position: i + 1  // API 호출마다 다른 position 값 전달
-      //   }, isLoggedIn);
-
-      //   apiResults.push(response.response.idea_generation_mandalart_education);
-      // }
-
-      // 결과를 만달아트 형식으로 구성
-      // const mandalartData = {
-      //   center: {
-      //     id: 5,
-      //     text: projectDescription, // 또는 적절한 중심 주제
-      //     isCenter: true
-      //   },
-      //   items: apiResults.map((result, index) => ({
-      //     id: index + 1,
-      //     text: result.mainIdea, // API 응답에서 적절한 필드 사용
-      //     isCenter: false,
-      //     subItems: result.subIdeas.map((subIdea, subIndex) => ({
-      //       id: subIndex + 1,
-      //       text: subIdea,
-      //       isCenter: subIndex === 4 ? true : false
-      //     }))
-      //   }))
-      // };
-
-      // setIdeaGenerationMandalArtData(mandalartData);
     } catch (error) {
       console.error("Error in handleMandalArt:", error);
       setShowPopupError(true);
@@ -655,171 +623,6 @@ const PageIdeaGeneration = () => {
       setIsLoadingReport(false);
     }
 
-    // API 호출 대신 더미데이터 생성
-    const dummyMandalartData = {
-      center: {
-        id: 5,
-        text: "사용자 경험 개선",
-        isCenter: true,
-      },
-      items: [
-        {
-          id: 1,
-          text: "UI/UX 개선",
-          isCenter: false,
-          subItems: [
-            { id: 1, text: "직관적인 네비게이션 구현" },
-            { id: 2, text: "사용자 피드백 시스템 도입" },
-            { id: 3, text: "모바일 최적화" },
-            { id: 4, text: "접근성 향상" },
-            { id: 5, text: "UI/UX 개선", isCenter: true },
-            { id: 6, text: "사용자 행동 분석" },
-            { id: 7, text: "디자인 시스템 구축" },
-            { id: 8, text: "성능 최적화" },
-            { id: 9, text: "에러 처리 개선" },
-          ],
-        },
-        {
-          id: 2,
-          text: "성능 최적화",
-          isCenter: false,
-          subItems: [
-            { id: 1, text: "로딩 시간 단축" },
-            { id: 2, text: "캐시 시스템 도입" },
-            { id: 3, text: "이미지 최적화" },
-            { id: 4, text: "코드 스플리팅" },
-            { id: 5, text: "성능 최적화", isCenter: true },
-            { id: 6, text: "데이터베이스 최적화" },
-            { id: 7, text: "CDN 활용" },
-            { id: 8, text: "서버 응답 시간 개선" },
-            { id: 9, text: "리소스 관리" },
-          ],
-        },
-        {
-          id: 3,
-          text: "보안 강화",
-          isCenter: false,
-          subItems: [
-            { id: 1, text: "암호화 시스템 강화" },
-            { id: 2, text: "인증 시스템 개선" },
-            { id: 3, text: "보안 감사 실시" },
-            { id: 4, text: "취약점 분석" },
-            { id: 5, text: "보안 강화", isCenter: true },
-            { id: 6, text: "접근 권한 관리" },
-            { id: 7, text: "데이터 백업 시스템" },
-            { id: 8, text: "보안 모니터링" },
-            { id: 9, text: "사고 대응 체계" },
-          ],
-        },
-        {
-          id: 4,
-          text: "데이터 동기화",
-          isCenter: false,
-          subItems: [
-            { id: 1, text: "실시간 동기화" },
-            { id: 2, text: "충돌 해결 시스템" },
-            { id: 3, text: "백업 자동화" },
-            { id: 4, text: "버전 관리" },
-            { id: 5, text: "데이터 동기화", isCenter: true },
-            { id: 6, text: "데이터 정합성 검증" },
-            { id: 7, text: "동기화 로그 관리" },
-            { id: 8, text: "오프라인 지원" },
-            { id: 9, text: "에러 복구 시스템" },
-          ],
-        },
-        {
-          id: 6,
-          text: "사용자 지원",
-          isCenter: false,
-          subItems: [
-            { id: 1, text: "챗봇 시스템 도입" },
-            { id: 2, text: "FAQ 시스템 개선" },
-            { id: 3, text: "실시간 상담" },
-            { id: 4, text: "피드백 관리" },
-            { id: 5, text: "사용자 지원", isCenter: true },
-            { id: 6, text: "매뉴얼 제작" },
-            { id: 7, text: "교육 자료 제공" },
-            { id: 8, text: "커뮤니티 관리" },
-            { id: 9, text: "지원 품질 관리" },
-          ],
-        },
-        {
-          id: 7,
-          text: "기능 확장",
-          isCenter: false,
-          subItems: [
-            { id: 1, text: "신규 기능 개발" },
-            { id: 2, text: "API 확장" },
-            { id: 3, text: "서드파티 연동" },
-            { id: 4, text: "customization" },
-            { id: 5, text: "기능 확장", isCenter: true },
-            { id: 6, text: "플러그인 시스템" },
-            { id: 7, text: "확장성 설계" },
-            { id: 8, text: "마이그레이션 도구" },
-            { id: 9, text: "버전 관리" },
-          ],
-        },
-        {
-          id: 8,
-          text: "분석 도구",
-          isCenter: false,
-          subItems: [
-            { id: 1, text: "사용자 행동 분석" },
-            { id: 2, text: "성능 모니터링" },
-            { id: 3, text: "에러 트래킹" },
-            { id: 4, text: "통계 대시보드" },
-            { id: 5, text: "분석 도구", isCenter: true },
-            { id: 6, text: "리포트 자동화" },
-            { id: 7, text: "데이터 시각화" },
-            { id: 8, text: "예측 분석" },
-            { id: 9, text: "커스텀 분석" },
-          ],
-        },
-        {
-          id: 9,
-          text: "테스트 자동화",
-          isCenter: false,
-          subItems: [
-            { id: 1, text: "단위 테스트" },
-            { id: 2, text: "통합 테스트" },
-            { id: 3, text: "E2E 테스트" },
-            { id: 4, text: "성능 테스트" },
-            { id: 5, text: "테스트 자동화", isCenter: true },
-            { id: 6, text: "테스트 케이스 관리" },
-            { id: 7, text: "CI/CD 통합" },
-            { id: 8, text: "리그레션 테스트" },
-            { id: 9, text: "테스트 보고서" },
-          ],
-        },
-      ],
-    };
-
-    // 나중에는 여기서 API 호출하고 응답을 저장
-    setIdeaGenerationMandalArtData(dummyMandalartData);
-
-    const DUMMY_IDEAS = [
-      {
-        id: 1,
-        title: "Idea 1. 소비자 중요 가치 분석",
-        content: [
-          "설명: 장인의 오리엔트를 실시간으로 분석하고, AI가 최적의 정소 결정의 방법을 선택하여 자동으로 청소하는 로봇 시스템.",
-          "기술 활용: 병원 진료 데이터를 기반으로 알레르기 유발 물질, 공기 중 유해 성분 등을 분석하고, 맞춤형 청소 설정을 제공.",
-        ],
-      },
-      {
-        id: 2,
-        title: "Idea 2. 소비자 중요 가치 분석",
-        content: [
-          "설명: 장인의 오리엔트를 실시간으로 분석하고, AI가 최적의 정소 결정의 방법을 선택하여 자동으로 청소하는 로봇 시스템.",
-          "기술 활용: 병원 진료 데이터를 기반으로 알레르기 유발 물질, 공기 중 유해 성분 등을 분석하고, 맞춤형 청소 설정을 제공.",
-        ],
-      },
-      // ... 더 많은 아이디어 추가 가능
-    ];
-
-    setIdeaGenerationIdeaList(DUMMY_IDEAS);
-
-    // setIdeaGenerationMandalArt();
   };
 
   const handleContactInputChange = (field, value) => {
@@ -856,9 +659,13 @@ const PageIdeaGeneration = () => {
     }
   };
 
-  const handleIdeaSelect = (selectedIdea) => {
-    console.log("selectedIdea", selectedIdea);
+
+  const handleEnterInterviewRoom = () => {
+    // setSelectedOption(null);
+    // setSelectedOptionIndex(null);
+    setShowToast(true);
   };
+
 
   useEffect(() => {
     // 새로고침 감지 함수
@@ -1003,7 +810,7 @@ const PageIdeaGeneration = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="이미지를 분석하고 있어요..." />
+                    <AtomPersonaLoader message="문제점 & 니즈 분석하고 있어요..." />
                   </div>
                 ) : (
                   <>
@@ -1078,7 +885,7 @@ const PageIdeaGeneration = () => {
                                       handlePurposeSelect(
                                         `${item.updateDate.split(":")[0]}:${
                                           item.updateDate.split(":")[1]
-                                        } 고객 핵심 가치 분석기 - 
+                                        } - 고객 핵심 가치 분석기 - 
                                     ${
                                       item.customerJourneyMapSelectedPersona
                                         .personaName || "페르소나"
@@ -1136,6 +943,7 @@ const PageIdeaGeneration = () => {
                           </>
                         )}
                       </TabContent5Item>
+                        
                     </div>
                     <Button
                       Other
@@ -1143,8 +951,7 @@ const PageIdeaGeneration = () => {
                       Fill
                       Round
                       onClick={handleSubmitProblem}
-                      // disabled={!isRequiredFieldsFilled() || toolSteps >= 1}
-                      disabled={isContentLoading}
+                      disabled={isContentLoading || toolSteps >= 1}
                     >
                       아이디어 발상으로 전환
                     </Button>
@@ -1185,6 +992,7 @@ const PageIdeaGeneration = () => {
                       </Title>
 
                       {/* {selectedProblems.length > 0 ? ( */}
+
                       <CardGroupWrap ideaGeneration>
                         {/* <MoleculeTagList
                           items={ideaGenerationStartPosition.map(
@@ -1194,17 +1002,19 @@ const PageIdeaGeneration = () => {
                           disabled={toolSteps >= 2}
                         /> */}
 
+
                         <MoleculeTagList
                           items={
-                            ideaGenerationStartPosition // 배열이라고 가정
-                              .map((item) => item.content) // 각 객체의 content 배열 추출
+                            ideaGenerationStartPosition 
+                              .map((item) => item.content) 
                               .flat() // 모든 content 배열을 하나로 합침
                           }
+                          disabled={toolSteps >= 2}
+                          // isSelected={ideaGenerationSelectedStartPosition}
+                          // setIsSelected={setIdeaGenerationSelectedStartPosition}
                         />
                       </CardGroupWrap>
-                      {/* ) : (
-                      <Body3 color="gray700">데이터가 없습니다.</Body3>
-                    )} */}
+                
 
                       <div className="content">
                         <TabContent5Item required>
@@ -1229,7 +1039,7 @@ const PageIdeaGeneration = () => {
                                 );
                                 setDescriptionLength(e.target.value.length);
                               }}
-                              // disabled={completedSteps.includes(2) ||  Object.keys(quickSurveyAnalysis).length > 0 }
+      
                               disabled={
                                 completedSteps.includes(2) || toolSteps >= 2
                               }
@@ -1249,8 +1059,8 @@ const PageIdeaGeneration = () => {
                   Fill
                   Round
                   onClick={handleSubmitTheme}
-                  // disabled={ideaGenerationSelectedStartPosition.length < 8}
-                  // targetCustomer.filter(item => item.trim() !== '').length < 8  // 8개 미만이면 비활성화
+                  disabled={ideaGenerationSelectedStartPosition.length < 8 || toolSteps >= 2}
+                  
                 >
                   다음
                 </Button>
@@ -1323,7 +1133,7 @@ const PageIdeaGeneration = () => {
                   Fill
                   Round
                   onClick={handleMandalArt}
-                  // disabled={toolSteps > 3}
+                  disabled={toolSteps >= 3}
                 >
                   아이디에이션 시작하기
                 </Button>
@@ -1361,19 +1171,31 @@ const PageIdeaGeneration = () => {
                         </Body1>
                       </Title>
 
-                      {/* {selectedProblems.length > 0 ? ( */}
-                      <CardGroupWrap column>
-                        <MoleculeMandalArtGraph
-                          mandalartData={ideaGenerationMandalArtData}
-                          // onSelectIdea={handleIdeaSelect}
-                        />
-                      </CardGroupWrap>
-                      {/* ) : (
-                      <Body3 color="gray700">데이터가 없습니다.</Body3>
-                    )} */}
+          
+                        <div style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          width: '100%',
+                          minHeight: '100%'  // 페이지 높이의 80% 정도로 설정
+                        }}>
+                          <MoleculeMandalArtGraph
+                            mandalartData={ideaGenerationMandalArtData}
+                          />
+                        </div>
+                
+                      
+                    </div>
+                    <Button Primary onClick={handleEnterInterviewRoom}>
+                            <img
+                              src={images.ReportSearch}
+                              alt="인터뷰 스크립트 보기"
+                            />
+                            응답자 의견 확인
+                          </Button>
 
-                      <div className="content">
-                        {ideaGenerationSelectedMandalart.length > 0 ? (
+                          <div className="content">
+                        {ideaGenerationSelectedMandalart?.length === 0 ? (
                           <IdeaContainer>
                             <IdeaBox>
                               {/* <IdeaTitle>{idea.title}</IdeaTitle> */}
@@ -1385,23 +1207,35 @@ const PageIdeaGeneration = () => {
                           </IdeaContainer>
                         ) : (
                           <IdeaContainer>
-                            {ideaGenerationIdeaList.map((idea) => (
-                              <IdeaBox key={idea.id}>
-                                <IdeaTitle>{idea.title}</IdeaTitle>
-                                <IdeaContent>
-                                  {idea.content.map((text, index) => (
-                                    <IdeaText key={index}>• {text}</IdeaText>
-                                  ))}
-                                </IdeaContent>
-                              </IdeaBox>
-                            ))}
-                          </IdeaContainer>
+                          {/* {ideaGenerationMandalArtData[ideaGenerationSelectedMandalart - 1]?.additional_execution_ideas.map((idea, index) => ( */}
+                            <IdeaBox >
+                              <IdeaTitle>기타 의견</IdeaTitle>
+                              {/* <IdeaTitle>{idea.idea_title}</IdeaTitle> */}
+                              <IdeaContent>
+                              {ideaGenerationMandalArtData[ideaGenerationSelectedMandalart - 1]?.additional_execution_ideas.map((idea, index) => (
+                              <IdeaText>• {idea.idea_title} : {idea.idea_description}</IdeaText>
+                              ))}
+                              </IdeaContent>
+                            </IdeaBox>
+                          {/* ))} */}
+                        </IdeaContainer>
                         )}
                       </div>
-                    </div>
+                       
                   </>
                 )}
               </TabContent5>
+            )}
+
+            
+          {showToast && (
+              <OrganismToastPopupQuickSurveyComplete
+                isActive={showToast}
+                onClose={() => setShowToast(false)}
+                isComplete={true}
+                // selectedOption={selectedOption}
+                // selectedOptionIndex={selectedOptionIndex}
+              />
             )}
           </DesignAnalysisWrap>
         </MainContent>

@@ -66,6 +66,7 @@ import {
   InterviewXQuickSurveyRequest,
   createToolOnServer,
   updateToolOnServer,
+  EducationToolsRequest,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
@@ -88,6 +89,8 @@ import OrganismToastPopupQuickSurveyComplete from "../organisms/OrganismToastPop
 import MolculeQuickSurveyPopup from "../molecules/MolculeQuickSurveyPopup";
 import MoleculeDeleteForm from "../../../../../pages/Education_Tool/public/MoleculeDeleteForm";
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
+import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
+
 
 const PageKanoModel = () => {
   const navigate = useNavigate();
@@ -194,6 +197,8 @@ const PageKanoModel = () => {
   const [isCustomLoading, setIsCustomLoading] = useState(false);
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const [selectedIdea, setSelectedIdea] = useState([]);
+  // 상태 추가
+  const [showAnalysisList, setShowAnalysisList] = useState(false);
 
   const project = projectSaas;
 
@@ -376,14 +381,18 @@ const PageKanoModel = () => {
     setToolLoading(false);
   }, [toolLoading]);
 
-  // const handleCheckboxChange = (personaId) => {
-  //   if (toolSteps >= 2) return;
-  //   setSelectedQuestion((prev) => {
-  //     // 하나만 선택되도록 변경, 다른 항목 선택 시 해당 항목으로 변경
-  //     if (prev.includes(personaId)) {
-  //       return []; // 이미 선택된 항목을 다시 클릭하면 선택 해제
+
+
+  // const handleCheckboxChange = (ideaId) => {
+  //   setSelectedIdea((prev) => {
+  //     if (prev.includes(ideaId)) {
+  //       setSelectedKanoModelIdea(null); // 선택 해제 시 데이터도 초기화
+  //       return [];
   //     } else {
-  //       return [personaId]; // 새 항목 선택
+  //       // 선택된 moment의 전체 데이터 저장
+  //       const selectedData = kanoModelIdeaGeneration[ideaId];
+  //       setSelectedKanoModelIdea(selectedData);
+  //       return [ideaId];
   //     }
   //   });
   // };
@@ -391,16 +400,25 @@ const PageKanoModel = () => {
   const handleCheckboxChange = (ideaId) => {
     setSelectedIdea((prev) => {
       if (prev.includes(ideaId)) {
-        setSelectedKanoModelIdea(null); // 선택 해제 시 데이터도 초기화
-        return [];
+        // 이미 선택된 아이템이면 제거
+        const newSelected = prev.filter(id => id !== ideaId);
+        // 선택된 데이터들 업데이트
+        const selectedDataList = newSelected.map(id => kanoModelIdeaGeneration[id]);
+        setSelectedKanoModelIdea(selectedDataList);
+        return newSelected;
       } else {
-        // 선택된 moment의 전체 데이터 저장
-        const selectedData = kanoModelIdeaGeneration[ideaId];
-        setSelectedKanoModelIdea(selectedData);
-        return [ideaId];
+        // 새로운 아이템 추가
+        const newSelected = [...prev, ideaId];
+        // 선택된 데이터들 업데이트
+        const selectedDataList = newSelected.map(id => kanoModelIdeaGeneration[id]);
+        setSelectedKanoModelIdea(selectedDataList);
+        return newSelected;
       }
     });
   };
+
+  // console.log("selectedKanoModelIdea", selectedKanoModelIdea);
+  // console.log("selectedIdea", selectedIdea);
 
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -461,76 +479,61 @@ const PageKanoModel = () => {
   
 
   const handleGetIdea = async () => {
-    // quickSurveyAnalysis가 비어있을 때만 API 호출
-    if (!Object.keys(quickSurveyAnalysis).length) {
-      setIsLoading(true);
-      try {
-        // 비즈니스 데이터 추가
-        const Data = {
-          type: "ix_quick_survey_question",
-          business: businessDescription,
-          goal: projectDescription,
-        };
+    setIsLoading(true);
 
-        setQuickSurveyProjectDescription(projectDescription);
+    try {
+      // await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const Data = {
+        type: "ix_kano_model_product_analysis_education",
+        business: business,
+      };
 
-        // API 요청
-        let response;
-        let retryCount = 0;
-        const maxRetries = 10;
+      const response = await EducationToolsRequest(Data, isLoggedIn);
 
-        while (retryCount < maxRetries) {
-          try {
-            response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+      console.log(response);
+      setKanoModelIdeaList(response.response.kano_model_product_analysis_education);
 
-            // 응답 형식 검증
-            if (
-              response.response &&
-              response.response.quick_survey_question &&
-              response.response.quick_survey_question.ab_test &&
-              response.response.quick_survey_question.importance &&
-              response.response.quick_survey_question.nps &&
-              response.response.quick_survey_question.single_choice
-            ) {
-              break; // 올바른 응답 형식이면 루프 종료
-            }
+      const allFeatures = [
+        ...(response.response.kano_model_product_analysis_education.basic_features?.map(item => ({ name: item.feature_name })) || []),
+        ...(response.response.kano_model_product_analysis_education.additional_features?.map(item => ({ name: item.feature_name })) || []),
+        ...(response.response.kano_model_product_analysis_education.future_trends?.map(item => ({ name: item.trend_name })) || [])
+      ];
+      
+      setKanoModelIdeaList(allFeatures);
 
-            retryCount++;
-          } catch (error) {
-            retryCount++;
-            if (retryCount >= maxRetries) throw error;
-          }
-        }
-
-        if (retryCount >= maxRetries) {
-          throw new Error(
-            "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
-          );
-        }
-
-        const responseToolId = await createToolOnServer(
-          {
-            projectId: project._id,
-            type: "ix_quick_survey_question",
-          },
-          isLoggedIn
-        );
-
-        setToolId(responseToolId);
-
-        setQuickSurveyAnalysis(response.response.quick_survey_question);
-
-        await updateToolOnServer(
-          responseToolId,
-          {
-            quickSurveyAnalysis: response.response.quick_survey_question,
-            business: business,
-            goal: projectDescription,
-          },
-          isLoggedIn
-        );
-
-        setIsLoading(false);
+      // const dummyKanoData = {
+      //   basic_features: [
+      //     { feature_name: "간편한 주문 프로세스", description: "3단계 이내의 주문 완성" },
+      //     { feature_name: "실시간 배달 추적", description: "GPS 기반 실시간 위치 확인" },
+      //     { feature_name: "다양한 결제 수단", description: "카드, 계좌이체, 간편결제 지원" },
+      //     { feature_name: "메뉴 사진 제공", description: "고품질 실제 메뉴 사진 제공" },
+      //     { feature_name: "기본 리뷰 시스템", description: "별점과 텍스트 리뷰 작성 기능" }
+      //   ],
+      //   additional_features: [
+      //     { feature_name: "AI 메뉴 추천", description: "개인 취향 기반 맞춤 추천" },
+      //     { feature_name: "선호 메뉴 저장", description: "자주 주문하는 메뉴 즐겨찾기" },
+      //     { feature_name: "포인트 적립/사용", description: "주문금액의 5% 포인트 적립" },
+      //     { feature_name: "주문 예약 기능", description: "원하는 시간에 배달 예약" },
+      //     { feature_name: "단체 주문 기능", description: "여러 메뉴 한번에 주문" }
+      //   ],
+      //   future_trends: [
+      //     { trend_name: "음성 주문 시스템", description: "AI 음성인식 기반 주문" },
+      //     { trend_name: "AR 메뉴 미리보기", description: "실제 크기로 메뉴 확인" },
+      //     { trend_name: "자율주행 배달", description: "로봇을 통한 무인 배달" },
+      //     { trend_name: "개인맞춤 영양분석", description: "주문 메뉴의 영양정보 제공" }
+      //   ]
+      // };
+      
+      // // 모든 기능을 하나의 배열로 합치기
+      // const allFeatures = [
+      //   ...dummyKanoData.basic_features.map(item => ({ name: item.feature_name })),
+      //   ...dummyKanoData.additional_features.map(item => ({ name: item.feature_name })),
+      //   ...dummyKanoData.future_trends.map(item => ({ name: item.trend_name }))
+      // ];
+      
+      // setKanoModelIdeaGeneration(allFeatures);
+      setIsLoading(false);
       } catch (error) {
         setShowPopupError(true);
         if (error.response) {
@@ -551,60 +554,20 @@ const PageKanoModel = () => {
       } finally {
         setIsLoading(false);
       }
-    } else {
-      handleNextStep(1);
-      setIsLoading(true);
+    } 
 
-      const Data = {
-        type: "ix_quick_survey_custom_guide",
-        business: business,
-        goal: projectDescription,
-      };
-      let response;
-      let retryCount = 0;
-      const maxRetries = 10;
 
-      while (retryCount < maxRetries) {
-        response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
-
-        // 응답 형식 확인
-        if (
-          response.response &&
-          response.response.quick_survey_custom_guide &&
-          Array.isArray(response.response.quick_survey_custom_guide) &&
-          response.response.quick_survey_custom_guide.length === 3
-        ) {
-          break;
-        }
-
-        retryCount++;
-        if (retryCount >= maxRetries) {
-          throw new Error(
-            "응답 형식이 올바르지 않습니다. 최대 재시도 횟수를 초과했습니다."
-          );
-        }
-      }
-
-      setQuickSurveyCustomGuide(response.response.quick_survey_custom_guide);
-
-      setQuickSurveySurveyMethod(quickSurveyAnalysis[selectedQuestion]);
-      setQuickSurveySelectedQuestion(selectedQuestion);
-
-      await updateToolOnServer(
-        toolId,
-        {
-          selectedQuestion: selectedQuestion,
-          surveyMethod: quickSurveyAnalysis[selectedQuestion],
-          quickSurveyCustomGuide: response.response.quick_survey_custom_guide,
-          completedStep: 1,
-        },
-        isLoggedIn
-      );
-      setIsLoading(false);
-      setToolSteps(1);
-    }
+    
+  const handleSubmitIdea = () => {
+    setShowAnalysisList(true);
   };
 
+  const handleSubmitIdeaList = () => {
+    handleNextStep(1);
+    setShowAnalysisList(false);
+  };
+
+ 
 
 
   useEffect(() => {
@@ -1204,11 +1167,11 @@ const PageKanoModel = () => {
                 <span>01</span>
                 <div className="text">
                   <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
-                    목적 및 문항
+                   아이디어 선별
                   </Body1>
-                  <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
+                  {/* <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     Question Select
-                  </Body1>
+                  </Body1> */}
                 </div>
               </TabButtonType5>
               <TabButtonType5
@@ -1259,68 +1222,8 @@ const PageKanoModel = () => {
                     </Body3>
                   </div>
 
-       
-
                   <div className="content">
-                      
-                  {kanoModelIdeaGeneration.length > 0 ? (
-                      kanoModelIdeaGeneration?.map((idea, index) => {
-                        return (
-                          <MoleculeDesignItem
-                            FlexStart
-                            key={index}
-                            id={index}
-                            title={idea.name}
-                            isSelected={selectedIdea.includes(index)}
-                            onSelect={() => handleCheckboxChange(index)}
-                          />
-                        );
-                      })
-                    ) : (
-                      <BoxWrap
-                        NoData
-                        style={{ height: "300px" }}
-                        // onClick={() => navigate("/AiPersona")}
-                        onClick={handleGetIdea}
 
-                      >
-                        <img src={images.PeopleFillPrimary2} alt="" />
-
-                        <Body2 color="gray700" align="center !important">
-                        아이디어 발상 단계를 통해 도출된 아이디어를 통합하세요
-                        </Body2>
-
-                        <Button
-                          Medium
-                          Outline
-                          Fill
-                          // onClick={() => navigate("/AiPersona")}
-                          onClick={handleGetIdea}
-                        >
-                          <Caption1 color="gray700">
-                            아이디어 가져오기
-                          </Caption1>
-                        </Button>
-                      </BoxWrap>
-                    )}
-    
-                    </div>
-                    <div className="content">
-                  <TabContent5Item required>
-                    <div className="title">
-                      <Body1 color="gray700">분석 아이디어 리스트 (최소 7개 이상 작성 필요)</Body1>
-                      <Body1 color="red">*</Body1>
-                    </div>
-
-                      <MoleculeDeleteForm
-                        items={kanoModelIdeaList || []}  // 안전 체크 추가
-                        setItems={setKanoModelIdeaList}
-                        disabled={toolSteps >= 1}
-                        maxItems={10}
-                        placeholder="핵심 가치를 작성해주세요 (예: 안전한 송금 등)"
-                      />
-                  </TabContent5Item>
-                  </div>
                   {isLoading ? (
                     <div
                       style={{
@@ -1334,81 +1237,79 @@ const PageKanoModel = () => {
                       <AtomPersonaLoader message="로딩 중..." />
                     </div>
                   ) : (
+
                     <>
-                      {quickSurveyAnalysis &&
-                        Object.keys(quickSurveyAnalysis).length > 0 && (
-                          <div className="content">
+                      {!showAnalysisList ? (
+                        // 아이디어 선택 화면
+                        <>
+                          {kanoModelIdeaGeneration.length > 0 ? (
                             <>
-                              <div className="title">
-                                <Body1
-                                  color="gray700"
-                                  style={{
-                                    textAlign: "left",
-                                    marginBottom: "-20px",
-                                  }}
-                                >
-                                  💡문항 선택
-                                </Body1>
+                              <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
+                                <Body1 color="gray700">Kano Model 평가에 포함할 아이디어를 선택해 주세요. (복수 선택)</Body1>
                               </div>
-                              {/* 로딩 후 보여질 컴포넌트 */}
-                              {Object.entries(quickSurveyAnalysis).map(
-                                ([key, value]) => {
-                                  const getTitleByKey = {
-                                    ab_test: "A/B 테스트",
-                                    importance: "경험 평가 질문",
-                                    nps: "NPS 질문",
-                                    single_choice: "단일 선택형",
-                                    custom_question: "커스텀 질문",
-                                  };
-
-                                  return (
-                                    <MoleculeDesignItem
-                                      FlexStart
-                                      key={key}
-                                      id={key}
-                                      title={getTitleByKey[key]}
-                                      question={quickSurveyAnalysis}
-                                      subtitle={value.question}
-                                      // details={getDetails(value)}
-                                      isSelected={selectedQuestion.includes(
-                                        key
-                                      )}
-                                      onSelect={() => handleCheckboxChange(key)}
-                                      disabled={toolSteps >= 1}
-                                      onAnswerChange={handleAnswerChange}
-                                    />
-                                  );
-                                }
-                              )}
-
+                              {kanoModelIdeaGeneration.map((idea, index) => (
+                                <MoleculeItemSelectCard
+                                  FlexStart
+                                  key={index}
+                                  id={index}
+                                  title={idea.name}
+                                  isSelected={selectedIdea.includes(index)}
+                                  onSelect={() => handleCheckboxChange(index)}
+                                />
+                              ))}
                               <div>
-                                {/* {!quickSurveyCustomQuestion || quickSurveyCustomQuestion.length === 0 && ( */}
-                                {!quickSurveyAnalysis.custom_question && (
-                                  <CustomButton
-                                    onClick={() => setIsCustomPopupOpen(true)}
-                                    disabled={toolSteps >= 1}
-                                  >
-                                    <ButtonContent>
-                                      <PlusIconWrapper>
-                                        <PlusIcon>+</PlusIcon>
-                                        <ButtonTitle>직접 생성하기</ButtonTitle>
-                                      </PlusIconWrapper>
-                                    </ButtonContent>
-                                  </CustomButton>
-                                )}
+                               
                               </div>
                             </>
+                          ) : (
+                            // 데이터가 없을 때의 UI
+                            <BoxWrap
+                              NoData
+                              style={{ height: "300px" }}
+                              onClick={() => navigate("/IdeaGeneration")}
+                            >
+                              <img src={images.PeopleFillPrimary2} alt="" />
+                              <Body2 color="gray700" align="center !important">
+                                아이디어 발상 단계를 통해 도출된 아이디어를 통합하세요
+                              </Body2>
+                              <Button
+                                Medium
+                                Outline
+                                Fill
+                                onClick={(e) => {
+                                  e.stopPropagation(); // BoxWrap의 onClick과 중복 실행 방지
+                                  handleGetIdea();
+                                }}
+                              >
+                                <Caption1 color="gray700">
+                                  아이디어 가져오기
+                                </Caption1>
+                              </Button>
+                            </BoxWrap>
+                          )}
+                        </>
+                      ) : (
+                        // 분석 아이디어 리스트 화면
+                        <>
+                          <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
+                            <Body1 color="gray700">아이디어 도출 과정을 통해 선정된 아이디어 리스트 </Body1>
                           </div>
-                        )}
-
-                      <MolculeQuickSurveyPopup
-                        isOpen={isCustomPopupOpen}
-                        isLoading={isCustomLoading}
-                        onClose={handleCloseCustomPopup}
-                        onAiRefine={handleAiRefine}
-                        onSave={handleSaveCustomSurvey}
-                        aiResponse={quickSurveyCustomQuestion} // AI 응답 전달
-                      />
+                          <MoleculeDeleteForm
+                            items={kanoModelIdeaList || []}
+                            setItems={setKanoModelIdeaList}
+                            disabled={toolSteps >= 1}
+                            maxItems={10}
+                            placeholder="핵심 가치를 작성해주세요 (예: 안전한 송금 등)"
+                          />
+                        </>
+                        
+                      )}
+                    </>
+                  )}
+    
+                    </div>
+                
+                    <>
 
                       {/* 버튼들을 content div 바깥으로 이동 */}
                       { kanoModelIdeaGeneration.length > 0 ? (
@@ -1419,18 +1320,23 @@ const PageKanoModel = () => {
                             justifyContent: "flex-end",
                           }}
                         >
-                        
                           <Button
                             Other
                             Primary
                             Fill
                             Round
-                            onClick={handleGetIdea}
-                            disabled={
-                              selectedQuestion.length === 0 || toolSteps >= 1
-                            }
+                            onClick={() => {
+                              if (kanoModelIdeaList.length > 0) {
+                                handleSubmitIdeaList();
+                              } else {
+                                handleSubmitIdea();
+                              }
+                            }}
+                            // disabled={
+                            //   selectedQuestion.length === 0 || toolSteps >= 1
+                            // }
                           >
-                            apfhd
+                            아이디어 방향성으로 전환
                           </Button>
                         </div>
                       ) : (
@@ -1441,13 +1347,13 @@ const PageKanoModel = () => {
                           Fill
                           Round
                           onClick={handleGetIdea}
-                          disabled={!Array.isArray(kanoModelIdeaList) || kanoModelIdeaList.some(item => !item?.trim())}
+                          // disabled={!Array.isArray(kanoModelIdeaList) || kanoModelIdeaList.some(item => !item?.trim())}
                         >
                           llll
                         </Button>
                       )}
                     </>
-                  )}
+                
                 </>
               </TabContent5>
             )}
@@ -1532,36 +1438,10 @@ const PageKanoModel = () => {
                         Primary
                         Fill
                         Round
-                        onClick={() => {
-                          if (quickSurveyPersonaGroup.length > 0) {
-                            handleSubmitReport(); //마지막 보고서 함수
-                          } else {
-                            if (
-                              interviewModeType === "selfQuestion" ||
-                              (interviewModeType === "moderator" &&
-                                quickSurveyPresetData &&
-                                quickSurveyPresetData.length > 0)
-                            ) {
-                              handleSubmitSelfSelect();
-                            }
-                          }
-                        }}
+                        onClick={handleSubmitReport}
+                         
                         disabled={
-                          toolSteps >= 3 ||
-                          !interviewModeType ||
-                          (interviewModeType === "moderator" &&
-                            (!selectedPresetCards ||
-                              !Object.values(selectedPresetCards).some(
-                                (value) => value
-                              )) &&
-                            !quickSurveyPersonaGroup.length > 0) ||
-                          (interviewModeType === "selfQuestion" &&
-                            (!recruitingCondition ||
-                              recruitingCondition.trim() === "" ||
-                              !selectedValues ||
-                              Object.values(selectedValues).every(
-                                (value) => !value
-                              )))
+                          toolSteps >= 3 
                         }
                       >
                         다음

@@ -163,6 +163,14 @@ import {
   CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA,
   CUSTOMER_JOURNEY_MAP_REPORT,
   CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION,
+  IDEA_GENERATION_PROBLEM_LIST,
+  IDEA_GENERATION_PROBLEM_LIST_TITLE,
+  IDEA_GENERATION_START_POSITION,
+  IDEA_GENERATION_MANDALART_DATA,
+  IDEA_GENERATION_SELECTED_START_POSITION,
+  IDEA_GENERATION_SELECTED_MANDALART,
+  IDEA_GENERATION_POSSSESSION_TECH,
+  IDEA_GENERATION_SELECTED_PURPOSE,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -399,6 +407,15 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setCustomerJourneyMapSelectedPersona] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA);
   const [, setCustomerJourneyMapReport] = useAtom(CUSTOMER_JOURNEY_MAP_REPORT);
   const [, setCustomerJourneyMapSelectedDirection] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION);
+
+  const [, setIdeaGenerationSelectedPurpose] = useAtom(IDEA_GENERATION_SELECTED_PURPOSE);
+  const [, setIdeaGenerationProblemList] = useAtom(IDEA_GENERATION_PROBLEM_LIST);
+  const [, setIdeaGenerationProblemListTitle] = useAtom(IDEA_GENERATION_PROBLEM_LIST_TITLE);
+  const [, setIdeaGenerationStartPosition] = useAtom(IDEA_GENERATION_START_POSITION);
+  const [, setIdeaGenerationMandalartData] = useAtom(IDEA_GENERATION_MANDALART_DATA);
+  const [, setIdeaGenerationSelectedStartPosition] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
+  const [, setIdeaGenerationSelectedMandalart] = useAtom(IDEA_GENERATION_SELECTED_MANDALART);
+  const [, setIdeaGenerationPossessionTech] = useAtom(IDEA_GENERATION_POSSSESSION_TECH);
 
   const saveConversation = (data) => {};
 
@@ -1000,6 +1017,36 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setCustomerJourneyMapSelectedDirection(chatData?.selectedDirection || []);
 
 
+        //! 아이디어 발상상
+        setToolStep(1);
+        setIdeaGenerationSelectedPurpose([]);
+        setIdeaGenerationProblemList([]);
+        setIdeaGenerationProblemListTitle([]);
+        setIdeaGenerationStartPosition([]);
+        setIdeaGenerationMandalartData([]);
+        setIdeaGenerationSelectedStartPosition([]);
+        setIdeaGenerationSelectedMandalart(null);
+        setIdeaGenerationPossessionTech("");
+        setToolLoading(false);
+        setToolStep(chatData?.completedStep);
+        setToolId(chatData?.id);  
+        setIdeaGenerationSelectedPurpose(chatData?.selectedPurposes || {});
+        setIdeaGenerationProblemList(chatData?.ideaGenerationProblemList || []);  
+        setIdeaGenerationProblemListTitle(chatData?.ideaGenerationProblemListTitle || []);  
+        setIdeaGenerationStartPosition(chatData?.ideaGenerationStartPosition || []);  
+        setIdeaGenerationMandalartData(chatData?.ideaGenerationMandalArtData || []);  
+        setIdeaGenerationSelectedStartPosition(chatData?.ideaGenerationSelectedStartPosition || []);  
+        setIdeaGenerationPossessionTech(chatData?.possessionTech || "");
+
+
+
+
+        // export const IDEA_GENERATION_PROBLEM_LIST = atom([]);
+        // export const IDEA_GENERATION_PROBLEM_LIST_TITLE = atom([]);
+        // export const IDEA_GENERATION_START_POSITION = atom([]);
+        // export const IDEA_GENERATION_IDEA_LIST = atom([]);
+        // export const IDEA_GENERATION_MANDALART_DATA = atom([]);
+        // export const IDEA_GENERATION_SELECTED_START_POSITION = atom([]);
 
 
         // 페이지를 대화가 이어지는 형태로 전환
@@ -1026,6 +1073,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         } else if (chatData.type === "ix_customer_journey_map_direction_education") {
           setToolLoading(true);
           navigate("/CustomerJourneyMap");
+        } else if (chatData.type === "ix_idea_generation_education") {
+          setToolLoading(true);
+          navigate("/IdeaGeneration");
         }
       } catch (error) {}
     } else if (conversationType === "interviewSingle") {

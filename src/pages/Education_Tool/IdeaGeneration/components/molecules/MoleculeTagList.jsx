@@ -12,6 +12,9 @@ const IdeaGenerationTag = ({ text, onClick, initialSelected = false, disabled = 
   const [isSelected, setIsSelected] = useState(initialSelected);
 
   const handleClick = (e) => {
+    if (disabled) {
+      return;
+    }
     if (!disabled || isSelected) {  // 선택된 상태면 해제 가능하도록 수정
       const newSelected = !isSelected;
       setIsSelected(newSelected);
@@ -47,102 +50,44 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
   const [ideaGenerationSelectedStartPosition, setIdeaGenerationSelectedStartPosition] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
   const [addedTagsCount, setAddedTagsCount] = useState(0);
 
-  // const handleTagClick = (index, isSelected) => {
-  //   console.log("Click event:", { index, isSelected, currentTags: selectedTags });
-
-  //   if (isSelected) {
-  //     // 태그 선택 해제 시
-  //     const newSelectedTags = selectedTags.filter(i => i !== index);
-  //     setSelectedTags(newSelectedTags);
-
-  //     setIdeaGenerationSelectedStartPosition(prev => {
-  //       const selectedItems = newSelectedTags.map(tagIndex => items[tagIndex]);
-  //       return selectedItems; // 선택된 태그들의 텍스트 배열을 직접 저장
-  //     });
-
-  //     console.log("After deselection:", {
-  //       newSelectedTags,
-  //       item: items[index],
-  //       selectedItems: newSelectedTags.map(tagIndex => items[tagIndex]) // 선택된 모든 태그의 텍스트
-  //     });
+  // 컴포넌트 마운트 시와 ideaGenerationSelectedStartPosition 변경 시 선택 상태 동기화
+  useEffect(() => {
+    if (items && ideaGenerationSelectedStartPosition) {
+      const selectedIndexes = items
+        .map((item, index) => 
+          ideaGenerationSelectedStartPosition.some(
+            selected => selected.idea === item.idea
+          ) ? index : -1
+        )
+        .filter(index => index !== -1);
       
-  //   } else {
-  //     // 태그 선택 시
-  //     if (selectedTags.length < MAX_SELECTIONS) {
-  //       const newSelectedTags = [...selectedTags, index];
-  //       setSelectedTags(newSelectedTags);
-        
-
-  //       setIdeaGenerationSelectedStartPosition(prev => {
-  //         if (prev.length < MAX_SELECTIONS) {
-  //           const selectedItems = newSelectedTags.map(tagIndex => items[tagIndex]);
-  //           return selectedItems; // 선택된 태그들의 텍스트 배열을 직접 저장
-  //         }
-  //         return prev;
-  //       });
-        
-  //       console.log("After selection:", {
-  //         newSelectedTags,
-  //         item: items[index],
-  //         selectedItems: newSelectedTags.map(tagIndex => items[tagIndex]) // 선택된 모든 태그의 텍스트
-  //       });
-  //     }
-  //   }
-  // };
-
+      setSelectedTags(selectedIndexes);
+    }
+  }, [items, ideaGenerationSelectedStartPosition]);
 
   const handleTagClick = (index, isSelected) => {
-    console.log("Click event:", { index, isSelected, currentTags: selectedTags });
-  
+    if (disabled) {
+      return;
+    }
+
     if (isSelected) {
       // 태그 선택 해제 시
       const newSelectedTags = selectedTags.filter(i => i !== index);
       setSelectedTags(newSelectedTags);
-  
-      setIdeaGenerationSelectedStartPosition(prev => {
-        const selectedItems = newSelectedTags.map(tagIndex => items[tagIndex]);
-        return selectedItems; // 선택된 태그들의 전체 데이터(idea, description, problem) 저장
-      });
-  
-      console.log("After deselection:", {
-        newSelectedTags,
-        item: items[index],
-        selectedItems: newSelectedTags.map(tagIndex => ({
-          idea: items[tagIndex].idea,
-          description: items[tagIndex].description,
-          problem: items[tagIndex].problem
-        }))
-      });
-      
+
+      setIdeaGenerationSelectedStartPosition(
+        newSelectedTags.map(tagIndex => items[tagIndex])
+      );
     } else {
       // 태그 선택 시
-      if (selectedTags.length < MAX_SELECTIONS) {
+      if (!disabled && selectedTags.length < MAX_SELECTIONS) {
         const newSelectedTags = [...selectedTags, index];
         setSelectedTags(newSelectedTags);
         
-        setIdeaGenerationSelectedStartPosition(prev => {
-          if (prev.length < MAX_SELECTIONS) {
-            const selectedItems = newSelectedTags.map(tagIndex => ({
-              idea: items[tagIndex].idea,
-              description: items[tagIndex].description,
-              problem: items[tagIndex].problem
-            }));
-            return selectedItems; // 선택된 태그들의 전체 데이터 저장
-          }
-          return prev;
-        });
-        
-        console.log("After selection:", {
-          newSelectedTags,
-          item: items[index],
-          selectedItems: newSelectedTags.map(tagIndex => ({
-            idea: items[tagIndex].idea,
-            description: items[tagIndex].description,
-            problem: items[tagIndex].problem
-          }))
-        });
+        setIdeaGenerationSelectedStartPosition(
+          newSelectedTags.map(tagIndex => items[tagIndex])
+        );
       }
-    
     }
   };
 
@@ -172,59 +117,50 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
   };
 
   const handleAddTag = () => {
+    // console.log("options", options);
     const validOptions = options.filter(option => option.trim());
-
-    // 새 태그 생성
-    const newTags = validOptions.map(option => ({
-      id: Date.now(), // 고유한 ID 생성
-      title: option,
-      description: ""
+    // console.log("validOptions", validOptions);
+    
+    const newTags = validOptions.map((option, index) => ({
+      problem: "사용자 요청",
+      content: [{
+        id: Date.now() + index,
+        idea: option,
+        description: "사용자 요청"
+      }]
     }));
 
+    // console.log('Adding new tags:', newTags);
 
-    // 상태 업데이트
     setIdeaGenerationStartPosition(prev => {
-      const updated = [...prev, ...newTags];
+      const prevArray = Array.isArray(prev) ? prev : [];
+      const updated = [...prevArray, ...newTags];
+   
       return updated;
     });
 
     setAddedTagsCount(prev => prev + validOptions.length);
-    
-    // 팝업 닫기 전에 상태 확인
     setOptions([""]);
     setIsPopupOpen(false);
   };
 
   return (
     <>
-      {/* <TagListContainer>
-        {items.map((item, index) => (
-          <IdeaGenerationTag
-            key={index}
-            text={item.idea}
-            onClick={(e, isSelected) => handleTagClick(index, isSelected)}
-            initialSelected={selectedTags.includes(index)}
-            disabled={!selectedTags.includes(index) && selectedTags.length >= MAX_SELECTIONS}
-          />
-        ))}
-        {!disabled && addedTagsCount < 3 && (
-          <AddButton onClick={() => setIsPopupOpen(true)}>
-            <PlusIcon>+</PlusIcon>
-            <span>추가하기</span>
-          </AddButton>
-        )}
-      </TagListContainer> */}
+    
 
 <TagListContainer>
-  {items.map((item, index) => (
-    <IdeaGenerationTag
-      key={index}
-      text={item.idea}  // content의 idea 필드를 표시
-      onClick={(e, isSelected) => handleTagClick(index, isSelected)}
-      initialSelected={selectedTags.includes(index)}
-      disabled={!selectedTags.includes(index) && selectedTags.length >= MAX_SELECTIONS}
-    />
-  ))}
+  {Array.isArray(items) && items.filter(Boolean).map((item, index) => {
+
+    return (
+      <IdeaGenerationTag
+        key={item.id}
+        text={item.idea || ''}
+        onClick={(e, isSelected) => handleTagClick(index, isSelected)}
+        initialSelected={selectedTags.includes(index)}
+        disabled={!selectedTags.includes(index) && selectedTags.length >= MAX_SELECTIONS}
+      />
+    );
+  })}
   {!disabled && addedTagsCount < 3 && (
     <AddButton onClick={() => setIsPopupOpen(true)}>
       <PlusIcon>+</PlusIcon>

@@ -1,19 +1,17 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { palette } from "../../../../../assets/styles/Palette";
-// import MoleculeEmptyState from "../molecules/MoleculeEmptyState";
-import { IDEA_GENERATION_SELECTED_START_POSITION , PROJECT_SAAS, IDEA_GENERATION_SELECTED_MANDALART} from "../../../../AtomStates";
+import { IDEA_GENERATION_SELECTED_START_POSITION , 
+        PROJECT_SAAS, 
+        IDEA_GENERATION_SELECTED_MANDALART} from "../../../../AtomStates";
 import { useAtom } from "jotai";
 
 const MoleculeMandalArtGraph = ({ mandalartData }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [ideaGenerationSelectedStartPosition] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
-  const [ideaGenerationSelectedMandalart, setIdeaGenerationSelectedMandalart] = useAtom(IDEA_GENERATION_SELECTED_MANDALART);
+  const [, setIdeaGenerationSelectedMandalart] = useAtom(IDEA_GENERATION_SELECTED_MANDALART);
   const [projectSaas] = useAtom(PROJECT_SAAS);
 
-  // if (!mandalartData) {
-  //   return <MoleculeEmptyState />;
-  // }
 
   const mandalartButtons = [
     ...ideaGenerationSelectedStartPosition.slice(0, 4).map((item, index) => ({
@@ -36,19 +34,43 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
   const handleItemClick = (itemId) => {
     setSelectedItem(itemId);
     setIdeaGenerationSelectedMandalart(itemId);
-    console.log("itemId", itemId);
+    // console.log("itemId", itemId);
   };
 
   const handleBackClick = () => {
     setSelectedItem(null);
   };
 
-  console.log(ideaGenerationSelectedStartPosition)
-  const selectedButton = mandalartData.items.find(item => item.id === selectedItem);
+
 
   const generateDetailButtons = () => {
-    if (!selectedButton) return [];
-    return selectedButton.subItems;
+    if (!selectedItem || !mandalartData) return [];
+    
+    // 선택된 아이템의 데이터 찾기
+    const selectedData = mandalartData[selectedItem - 1];
+    // console.log("selectedData", selectedData);
+    if (!selectedData?.detailed_execution_ideas) return [];
+  
+    // detailed_execution_ideas에서 idea_title만 사용
+    const detailButtons = selectedData.detailed_execution_ideas.map((item, index) => ({
+      id: index + 1,
+      text: item.idea_title,
+      isCenter: false
+    }));
+  
+    // 중앙 버튼을 5번째 위치에 삽입
+    const centerButton = {
+      id: 0,
+      text: "되돌아가기",
+      isCenter: true
+    };
+  
+    // 앞의 4개 버튼 + 중앙 버튼 + 나머지 버튼들
+    return [
+      ...detailButtons.slice(0, 4),
+      centerButton,
+      ...detailButtons.slice(4)
+    ];
   };
 
   return (

@@ -31,6 +31,7 @@ import {
   updateProjectOnServer,
   getProjectDeleteListOnServer,
   CreditInfo,
+  UserEducationStateInfo,
 } from "../../../utils/indexedDB";
 import OrganismProjectItem from "../components/organisms/OrganismProjectItem";
 import {
@@ -108,6 +109,9 @@ const PageProject = () => {
       try {
         if (isLoggedIn) {
           const response = await CreditInfo(isLoggedIn);
+          const educationStateResponse = await UserEducationStateInfo(
+            isLoggedIn
+          );
 
           if (response) {
             // console.log("🚀 ~ fetchCreditInfo ~ response:", response);
@@ -126,8 +130,14 @@ const PageProject = () => {
             setCreditCreateInterview(response.create_interview);
             setCreditCreateProject(response.create_project);
           }
+          if (educationStateResponse) {
+            setEducationState(educationStateResponse.education_state);
+            sessionStorage.setItem(
+              "educationState",
+              educationStateResponse.education_state
+            );
+          }
         }
-        setEducationState(sessionStorage.getItem("educationState"));
       } catch (error) {
         console.error("Failed to fetch credit info:", error);
       }
@@ -237,30 +247,12 @@ const PageProject = () => {
         let savedProjectListInfo;
 
         if (projectEducationState === "education") {
-          console.log(
-            "🚀 ~ loadProjectList ~ projectEducationState:",
-            projectEducationState
-          );
-
-          console.log(
-            "🚀 ~ loadProjectList ~ projectEducationCode:",
-            projectEducationCode
-          );
           savedProjectListInfo =
             await getProjectListSaasEducationByIdFromIndexedDB(
               projectEducationCode,
               true
             );
         } else {
-          console.log(
-            "🚀 ~ loadProjectList ~ projectEducationState:",
-            projectEducationState
-          );
-
-          console.log(
-            "🚀 ~ loadProjectList ~ projectEducationCode:",
-            projectEducationCode
-          );
           savedProjectListInfo = await getProjectListSaasByIdFromIndexedDB(
             true
           );
