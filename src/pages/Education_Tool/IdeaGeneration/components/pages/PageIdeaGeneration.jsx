@@ -564,22 +564,27 @@ const PageIdeaGeneration = () => {
 
         let reportRetryCount = 0;
         const reportMaxRetries = 10;
-        while (reportRetryCount < reportMaxRetries) {
-          if (!reportResponse?.response?.idea_generation_report_education || 
+        while (reportRetryCount < reportMaxRetries &&
+           (!reportResponse ||
+            !reportResponse?.response ||
+            !reportResponse?.response?.idea_generation_report_education || 
             !reportResponse?.response?.idea_generation_report_education?.core_ideas ||
             !reportResponse?.response?.idea_generation_report_education?.detailed_execution_ideas ||
-            !reportResponse?.response?.idea_generation_report_education?.additional_execution_ideas
+            !reportResponse?.response?.idea_generation_report_education?.additional_execution_ideas )
 
           ) {
          
             reportResponse = await EducationToolsRequest(data, isLoggedIn);
             reportRetryCount++;
+            console.log("while문 돌아가는지 확인")
+           
           } 
-          if (reportRetryCount >= reportMaxRetries) {
+         
+            if (reportRetryCount >= reportMaxRetries) {
             setShowPopupError(true);
             return;
           }
-        }
+        
 
         const reportData = reportResponse.response.idea_generation_report_education;
 
@@ -1195,7 +1200,8 @@ const PageIdeaGeneration = () => {
                           </Button>
 
                           <div className="content">
-                        {ideaGenerationSelectedMandalart?.length === 0 ? (
+                        {(!ideaGenerationMandalArtData[ideaGenerationSelectedMandalart - 1]?.additional_execution_ideas || 
+                          ideaGenerationMandalArtData[ideaGenerationSelectedMandalart - 1]?.additional_execution_ideas?.length === 0) ? (
                           <IdeaContainer>
                             <IdeaBox>
                               {/* <IdeaTitle>{idea.title}</IdeaTitle> */}
