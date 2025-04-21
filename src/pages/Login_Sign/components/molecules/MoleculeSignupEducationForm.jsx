@@ -163,6 +163,8 @@ const MoleculeSignupEducationForm = () => {
         }
       }
     } catch (error) {
+      console.log("🚀 ~ handleSignup ~ error response:", response);
+      // setErrorStatus(error);
       setErrorStatus("서버와의 통신 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false); // 로딩 상태 종료
@@ -600,9 +602,10 @@ const MoleculeSignupEducationForm = () => {
               !confirmPassword ||
               !phoneNumber ||
               !termsAccepted ||
-              isCommercialEmail ||
-              !educationCodeError ||
-              projectEducationCode.length !== 5
+              isCommercialEmail
+              // ||
+              // !!educationCodeError ||
+              // projectEducationCode.length !== 5
             }
           >
             {isLoading ? "메일을 전송 중입니다..." : "회원가입"}
