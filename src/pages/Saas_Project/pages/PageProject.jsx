@@ -313,14 +313,23 @@ const PageProject = () => {
         <MainContent Wide1030>
           <ProjectWrap>
             <HeaderWrap>
-              <div>
-                <H1 color="gray800" align="left">
-                  Project
-                </H1>
-                <div style={{ height: "10px" }}></div>
-                <Body3 color="gray700" align="left">
-                  AI를 활용한 효율적인 프로젝트 인사이트를 관리하세요
-                </Body3>
+              <div
+                style={{ display: "flex", flexDirection: "row", gap: "10px" }}
+              >
+                {sessionStorage.getItem("educationState") === "true" && (
+                  <LogoCard>
+                    <img src={images.dcbLogo} alt="logo" />
+                  </LogoCard>
+                )}
+                <div>
+                  <H1 color="gray800" align="left">
+                    Project
+                  </H1>
+                  <div style={{ height: "10px" }}></div>
+                  <Body3 color="gray700" align="left">
+                    AI를 활용한 효율적인 프로젝트 인사이트를 관리하세요
+                  </Body3>
+                </div>
               </div>
               <div
                 style={{ display: "flex", flexDirection: "row", gap: "10px" }}
@@ -818,4 +827,16 @@ export const CheckCircle = styled.input`
       opacity: 0.5;
     }
   }
+`;
+
+const LogoCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 5px;
+  border: 1px solid ${palette.outlineGray};
+  background: ${palette.white};
 `;

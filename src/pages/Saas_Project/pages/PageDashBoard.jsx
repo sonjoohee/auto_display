@@ -14,6 +14,7 @@ import {
   ProjectTag,
   ListBoxGroup,
 } from "../../../assets/styles/BusinessAnalysisStyle";
+
 import images from "../../../assets/styles/Images";
 import {
   H1,
@@ -400,16 +401,34 @@ const PageDashBoard = () => {
         <MainContent Wide1030>
           <DashBoardWrap>
             <DashBoardItem>
-              <div className="title">
-                <H1 color="gray800" align="left">
-                  Dash Board
-                </H1>
-
-                {/* <Button ExLarge Primary Fill>
-                  <Sub2 color="white">팀원 초대</Sub2>
-                </Button> */}
-              </div>
-
+              {sessionStorage.getItem("educationState") === "true" ? (
+                <div
+                  style={{ display: "flex", flexDirection: "row", gap: "10px" }}
+                >
+                  <LogoCard>
+                    <img src={images.dcbLogo} alt="logo" />
+                  </LogoCard>
+                  <div>
+                    <H1 color="gray800" align="left">
+                      Dash Board
+                    </H1>
+                    <div style={{ height: "10px" }}></div>
+                    <Body3 color="gray700" align="left">
+                      내 비즈니스와 교육 과정을 한곳에서 관리하세요.
+                    </Body3>
+                    {/* <Button ExLarge Primary Fill>
+                    <Sub2 color="white">팀원 초대</Sub2>
+                  </Button> */}
+                  </div>
+                </div>
+              ) : (
+                <div className="title">
+                  <H1 color="gray800" align="left">
+                    Dash Board
+                  </H1>
+                  <div style={{ height: "10px" }}></div>
+                </div>
+              )}
               <Card>
                 <CardTitle>
                   <div>
@@ -943,6 +962,18 @@ const Card = styled.div`
   gap: 20px;
   padding: 32px 24px;
   border-radius: 15px;
+  border: 1px solid ${palette.outlineGray};
+  background: ${palette.white};
+`;
+
+const LogoCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 5px;
   border: 1px solid ${palette.outlineGray};
   background: ${palette.white};
 `;

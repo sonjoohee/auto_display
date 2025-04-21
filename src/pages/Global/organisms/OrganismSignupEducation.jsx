@@ -8,13 +8,13 @@ import {
 import { H1 } from "../../../assets/styles/Typography";
 import MoleculeSignupEducationForm from "../../Login_Sign/components/molecules/MoleculeSignupEducationForm";
 
-const OrganismSigninEducation = () => {
+const OrganismSignupEducation = () => {
   return (
     <>
       <ContentsWrap>
         <MainContent Wide>
           <LoginWrap>
-            <H1>Sign up</H1>
+            <H1>Sign up Education</H1>
             <MoleculeSignupEducationForm />
           </LoginWrap>
         </MainContent>
@@ -23,7 +23,7 @@ const OrganismSigninEducation = () => {
   );
 };
 
-export default OrganismSigninEducation;
+export default OrganismSignupEducation;
 
 const LoginWrap = styled.div`
   display: flex;

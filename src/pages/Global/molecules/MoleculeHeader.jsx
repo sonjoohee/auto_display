@@ -352,7 +352,16 @@ const MoleculeHeader = () => {
         {isLoggedIn && (
           <div className="gnb">
             {(isRootPage || isBlogPage) && (
-              <Sub2 style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
+              <Sub2
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  if (sessionStorage.getItem("educationState") === "true") {
+                    navigate("/DCB-education");
+                  } else {
+                    navigate("/");
+                  }
+                }}
+              >
                 서비스 소개
               </Sub2>
             )}

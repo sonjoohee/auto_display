@@ -1182,75 +1182,84 @@ const PageAiPersona = () => {
         <MainContent Wide1030>
           <AiPersonaWrap>
             <AiPersonaTitle>
-              <div>
-                <H1 color="gray800" align="left">
-                  AI Persona
-                  <TooltipButtonType2
-                    onClick={() =>
-                      setShowPersonaTypeTooltip(!showPersonaTypeTooltip)
-                    }
-                  >
-                    {showPersonaTypeTooltip && (
-                      <TooltipContent>
-                        <TooltipHeader>
-                          <Body2 color="gray800" align="left">
-                            페르소나 종류 알아보기
-                          </Body2>
-                          <span
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setShowPersonaTypeTooltip(false);
-                            }}
-                          />
-                        </TooltipHeader>
+              <div
+                style={{ display: "flex", flexDirection: "row", gap: "10px" }}
+              >
+                {sessionStorage.getItem("educationState") === "true" && (
+                  <LogoCard>
+                    <img src={images.dcbLogo} alt="logo" />
+                  </LogoCard>
+                )}
+                <div>
+                  <H1 color="gray800" align="left">
+                    AI Persona
+                    <TooltipButtonType2
+                      onClick={() =>
+                        setShowPersonaTypeTooltip(!showPersonaTypeTooltip)
+                      }
+                    >
+                      {showPersonaTypeTooltip && (
+                        <TooltipContent>
+                          <TooltipHeader>
+                            <Body2 color="gray800" align="left">
+                              페르소나 종류 알아보기
+                            </Body2>
+                            <span
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setShowPersonaTypeTooltip(false);
+                              }}
+                            />
+                          </TooltipHeader>
 
-                        <TooltipBody>
-                          <div>
-                            <Sub1 color="gray800">Macro Segment</Sub1>
-                            <Sub3 color="gray700" align="left">
-                              제품/서비스의 주요 특성에 따라 나뉜 비슷한 특성의
-                              고객 그룹을 제시합니다. 제품의 성격에 맞는 크고
-                              대표적인 사용자 군을 확인할 수 있어요.
-                            </Sub3>
-                          </div>
+                          <TooltipBody>
+                            <div>
+                              <Sub1 color="gray800">Macro Segment</Sub1>
+                              <Sub3 color="gray700" align="left">
+                                제품/서비스의 주요 특성에 따라 나뉜 비슷한
+                                특성의 고객 그룹을 제시합니다. 제품의 성격에
+                                맞는 크고 대표적인 사용자 군을 확인할 수 있어요.
+                              </Sub3>
+                            </div>
 
-                          <div>
-                            <Sub1 color="gray800">Unique User</Sub1>
-                            <Sub3 color="gray700" align="left">
-                              제품을 일반적인 방식과 다르게, 자신만의 방식으로
-                              활용하는 특별한 사용자를 제시합니다. 창의적이고
-                              독특한 사용 사례를 통해 새로운 인사이트를 얻을 수
-                              있어요.
-                            </Sub3>
-                          </div>
+                            <div>
+                              <Sub1 color="gray800">Unique User</Sub1>
+                              <Sub3 color="gray700" align="left">
+                                제품을 일반적인 방식과 다르게, 자신만의 방식으로
+                                활용하는 특별한 사용자를 제시합니다. 창의적이고
+                                독특한 사용 사례를 통해 새로운 인사이트를 얻을
+                                수 있어요.
+                              </Sub3>
+                            </div>
 
-                          <div>
-                            <Sub1 color="gray800">Key Stakeholder</Sub1>
-                            <Sub3 color="gray700" align="left">
-                              제품이나 프로젝트에 직접적인 영향을 주는 전문가 및
-                              주요 의사결정자를 제시합니다. 기획부터 운영까지,
-                              중요한 의견과 판단을 내릴 수 있는 핵심
-                              인물들이에요.
-                            </Sub3>
-                          </div>
+                            <div>
+                              <Sub1 color="gray800">Key Stakeholder</Sub1>
+                              <Sub3 color="gray700" align="left">
+                                제품이나 프로젝트에 직접적인 영향을 주는 전문가
+                                및 주요 의사결정자를 제시합니다. 기획부터
+                                운영까지, 중요한 의견과 판단을 내릴 수 있는 핵심
+                                인물들이에요.
+                              </Sub3>
+                            </div>
 
-                          <div>
-                            <Sub1 color="gray800">My Persona</Sub1>
-                            <Sub3 color="gray700" align="left">
-                              원하는 사용자 유형을 입력하면, 그에 적합한
-                              페르소나를 자동으로 제시합니다. 아이디어 단계에서
-                              목표 사용자를 빠르게 그려볼 수 있어요.
-                            </Sub3>
-                          </div>
-                        </TooltipBody>
-                      </TooltipContent>
-                    )}
-                  </TooltipButtonType2>
-                </H1>
-                <div style={{ height: "10px" }}></div>
-                <Body3 color="gray700" align="left">
-                  AI Persona를 탐색하고, 비즈니스에 맞는 인사이트를 찾아보세요
-                </Body3>
+                            <div>
+                              <Sub1 color="gray800">My Persona</Sub1>
+                              <Sub3 color="gray700" align="left">
+                                원하는 사용자 유형을 입력하면, 그에 적합한
+                                페르소나를 자동으로 제시합니다. 아이디어
+                                단계에서 목표 사용자를 빠르게 그려볼 수 있어요.
+                              </Sub3>
+                            </div>
+                          </TooltipBody>
+                        </TooltipContent>
+                      )}
+                    </TooltipButtonType2>
+                  </H1>
+                  <div style={{ height: "10px" }}></div>
+                  <Body3 color="gray700" align="left">
+                    AI Persona를 탐색하고, 비즈니스에 맞는 인사이트를 찾아보세요
+                  </Body3>
+                </div>
               </div>
 
               {/* <Button
@@ -3425,4 +3434,16 @@ const TooltipBody = styled.div`
     color: ${palette.gray700};
     text-align: left;
   }
+`;
+
+const LogoCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 5px;
+  border: 1px solid ${palette.outlineGray};
+  background: ${palette.white};
 `;
