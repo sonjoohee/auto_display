@@ -530,9 +530,10 @@ const PageIdeaEvaluate = () => {
   };
 
   const handleCuratedIdea = async () => {
+    setIsLoading(true);
     // quickSurveyAnalysis가 비어있을 때만 API 호출
     if (!ideaEvaluateSelectedList.length > 0) {
-      setIsLoading(true);
+   
       try {
         // 비즈니스 데이터 추가
         // const Data = {
