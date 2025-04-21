@@ -1,27 +1,48 @@
 import React from "react";
 import styled from "styled-components";
 import { palette } from "../../assets/styles/Palette";
+import { useAtom } from "jotai";
+import { KANO_MODEL_EVALUATION } from "../../pages/AtomStates";
 
 /**
  * 카노 모델(Kano Model) 그래프 컴포넌트
  * x축: 충족도(불충족 -> 충족)
  * y축: 만족도(불만족 -> 만족)
  */
-const KanoModelGraph = ({
-  data = [],
-  satisfactionLabels = {
-    veryHigh: "매우 높음",
-    high: "높음",
-    neutral: "중립",
-    low: "낮음",
-    veryLow: "매우 낮음"
-  },
-  fulfillmentLabels = {
-    fulfilled: "완전 충족",
-    adequate: "중간",
-    unfulfilled: "미충족"
-  }
-}) => {
+const KanoModelGraph = () => {
+  const [kanoModelEvaluation] = useAtom(KANO_MODEL_EVALUATION);
+
+  // 라벨 정의
+  const satisfactionLabels = {
+    veryHigh: "매우 만족",
+    high: "만족",
+    neutral: "보통",
+    low: "불만족",
+    veryLow: "매우 불만족"
+  };
+
+  const fulfillmentLabels = {
+    fulfilled: "충족",
+    adequate: "보통",
+    unfulfilled: "불충족"
+  };
+
+  // 데이터 변환 함수
+  const transformKanoData = (data) => {
+    if (!data || !Array.isArray(data)) return [];
+    
+    return data.map(persona => {
+      return persona.answers.map(answer => ({
+        x: ((5 - answer.negative_answer) / 4) * 100,
+        y: ((answer.positive_answer - 1) / 4) * 100,
+        title: answer.idea_title,
+        size: 8
+      }));
+    }).flat();
+  };
+
+  const graphData = transformKanoData(kanoModelEvaluation);
+
   return (
     <GraphContainer>
       {/* 그래프 영역 */}
@@ -83,12 +104,12 @@ const KanoModelGraph = ({
         <BottomCircleLabel position={75} align="right">{fulfillmentLabels.fulfilled}</BottomCircleLabel>
         
         {/* 데이터 포인트 */}
-        {data.map((point, index) => (
+        {graphData.map((point, index) => (
           <DataPoint 
             key={index}
             x={point.x}
             y={point.y}
-            size={point.size || 8}
+            size={point.size}
           />
         ))}
         
