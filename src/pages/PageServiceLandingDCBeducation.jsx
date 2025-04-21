@@ -178,7 +178,7 @@ const PageServiceLandingDCBeducation = () => {
             style={{
               width: "300px",
               marginTop: "100px",
-              marginBottom: "-100px",
+              marginBottom: "-130px",
             }}
             src={Landingimages.dcbXalmaden}
             alt="DCB X Almaden"
@@ -190,7 +190,7 @@ const PageServiceLandingDCBeducation = () => {
             <br />
             수립 실습
           </h2>
-          <p>AI와 함께 새로운 시장 기회를 탐색하세요</p>
+          <p>{""}</p>
           <Button
             // type="button"
             style={{
@@ -290,7 +290,7 @@ const PageServiceLandingDCBeducation = () => {
             <Button
               // type="button"
               style={{
-                paddingTop: "10px",
+                paddingTop: "6.5px",
                 background: "linear-gradient(to right, #E6007E, #B70D7F)",
               }}
               onClick={() => {

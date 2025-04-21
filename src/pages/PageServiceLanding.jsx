@@ -368,7 +368,7 @@ const PageServiceLanding = () => {
             </h3>
             <Button
               // type="button"
-              style={{ paddingTop: "10px" }}
+              style={{ paddingTop: "6.5px" }}
               onClick={() => {
                 sessionStorage.setItem("educationState", "false");
                 navigate("/Project");
