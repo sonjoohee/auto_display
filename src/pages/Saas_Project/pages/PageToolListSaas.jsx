@@ -1858,7 +1858,7 @@ const PageToolListSaas = () => {
 
                         <div className="text">
                           <Body1 color="white">
-                            <em>준비중</em>칸 모델
+                            <em>준비중</em>카노 모델
                           </Body1>
                           <Caption1 color="white" align="left">
                             고객의 만족도와 비즈니스 성과를 분석하여 개선 방향을
@@ -1933,7 +1933,8 @@ const PageToolListSaas = () => {
                             <em>준비중</em>
                           </Body1>
                           <Caption1 color="white" align="left">
-                            컨셉 정의를 통해 비즈니스 아이디어를 정의하고 평가해드려요
+                            컨셉 정의를 통해 비즈니스 아이디어를 정의하고
+                            평가해드려요
                           </Caption1>
                           <i />
                         </div>
