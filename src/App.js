@@ -64,6 +64,7 @@ import PageKanoModel from "./pages/Education_Tool/KanoModel/components/pages/Pag
 import PageIdeaGeneration from "./pages/Education_Tool/IdeaGeneration/components/pages/PageIdeaGeneration";
 import PageNps from "./pages/Education_Tool/Nps/components/pages/PageNps";
 import PageIdeaEvaluate from "./pages/Education_Tool/IdeaEvaluate/components/pages/PageIdeaEvaluate";
+import PageConceptDefinition from "./pages/Education_Tool/ConceptDefinition/components/pages/PageConceptDefinition";
 
 import PageMyProfile from "./pages/Persona/components/pages/PageMyProfile";
 
@@ -599,6 +600,15 @@ function App() {
             element={
               <RequireToken>
                 <PageIdeaEvaluate />
+              </RequireToken>
+            }
+          ></Route>
+
+          <Route
+            path="/ConceptDefinition"
+            element={
+              <RequireToken>
+                <PageConceptDefinition />
               </RequireToken>
             }
           ></Route>

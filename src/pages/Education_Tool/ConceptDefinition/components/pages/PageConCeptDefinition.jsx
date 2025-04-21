@@ -20,7 +20,12 @@ import {
   BgBoxItem,
   DropzoneStyles,
   ListBoxGroup,
+  PersonaGroup,
+  BoxWrap,
+  TabContent5Item,
+  Persona,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
+import personaImages from "../../../../../assets/styles/PersonaImages";
 import {
   IS_LOGGED_IN,
   TOOL_ID,
@@ -36,12 +41,15 @@ import {
   PSST_SELECTED_TEMPLETE,
   PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION,
   PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE,
+  PERSONA_LIST_SAAS,
 } from "../../../../AtomStates";
+import images from "../../../../../assets/styles/Images";
 import {
   H3,
   Body1,
   Body2,
   Body3,
+  Caption1,
 } from "../../../../../assets/styles/Typography";
 import {
   createToolOnServer,
@@ -53,6 +61,8 @@ import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
 import MoleculeFileUpload from "../molecules/MoleculeFileUpload";
 import MoleculeAnalysisResults from "../molecules/MoleculeAnalysisResults";
+import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
+import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
 
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
@@ -86,6 +96,7 @@ const PageConceptDefinition = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [personaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -124,6 +135,9 @@ const PageConceptDefinition = () => {
   const [toolSteps, setToolSteps] = useState(0);
   const [isCreateReportIndex, setIsCreateReportIndex] = useState(false);
   const [hideIndexButton, setHideIndexButton] = useState(false);
+  const [selectedPersonas, setSelectedPersonas] = useState(null);
+  const [selectedValue, setSelectedValue] = useState([]);
+  const [conceptDefinitionValue, setConceptDefinitionValue] = useState([]);
   // 초기 상태를 빈 배열로 설정
 
   const [currentLoadingIndex, setCurrentLoadingIndex] = useState(1);
@@ -234,7 +248,7 @@ const PageConceptDefinition = () => {
     }
   };
 
-  const handleSubmitBusinessInfo = async () => {
+  const handleSubmitPersona = async () => {
     setIsLoading(true);
     handleNextStep(1);
     setToolSteps(1);
@@ -799,156 +813,123 @@ const PageConceptDefinition = () => {
               <TabContent5>
                 <>
                   <div className="title">
-                    <H3 color="gray800">File Upload</H3>
+                    <H3 color="gray800">Persona Selection</H3>
                     <Body3 color="gray800">
-                      어떤 계획을 만들고 싶으신가요? 관련 파일을 업로드해주세요.
+                    컨셉정의서를 작성할 타겟 페르소나를 선택하세요
                     </Body3>
                   </div>
-                  {uploadedFiles?.length === 0 ? (
-                    <div className="content">
-                      <MoleculeFileUpload
-                        fileNames={fileNames ?? []}
-                        handleChangeStatus={handleChangeStatus}
-                        toolSteps={toolSteps}
-                      />
-                    </div>
-                  ) : (
-                    <div className="content">
+
+                  <div className="content">
+                    <div>
                       <ListBoxGroup>
                         <li>
-                          <Body2 color="gray500">
-                            {uploadedFiles.length > 0
-                              ? "파일 명"
-                              : "리포트 방식"}
-                          </Body2>
-                          <Body2 color="gray800">
-                            {fileNames.length > 0
-                              ? fileNames
-                              : selectedTemplete.length > 0 &&
-                                Templete[selectedTemplete[0]].name}
-                          </Body2>
-                        </li>
-                        <li style={{ alignItems: "flex-start" }}>
-                          <Body2 color="gray500">주요 내용</Body2>
-                          <Body2
-                            color="gray800"
-                            style={{ textAlign: "left" }}
-                            dangerouslySetInnerHTML={{
-                              __html:
-                                uploadedFiles.length > 0
-                                  ? projectAnalysisMultimodalDescription
-                                  : selectedTemplete.length > 0 &&
-                                    Templete[selectedTemplete[0]].reason,
-                            }}
-                          />
+                          <Body2 color="gray500">페르소나 선택</Body2>
+                          {selectedPersonas ? (
+                            <PersonaGroup>
+                              {Array.isArray(selectedPersonas) ? (
+                                <>
+                                  {selectedPersonas.length > 3 && (
+                                    <span>+{selectedPersonas.length - 3}</span>
+                                  )}
+                                  {selectedPersonas
+                                    .slice(0, 3)
+                                    .map((persona, index) => (
+                                      <Persona key={index} size="Small" Round>
+                                        <img
+                                          src={
+                                            personaImages[persona.imageKey] ||
+                                            (persona.gender === "남성"
+                                              ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                              : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                          }
+                                          alt={persona.persona}
+                                        />
+                                      </Persona>
+                                    ))}
+                                </>
+                              ) : (
+                                <Persona size="Small" Round>
+                                  <img
+                                    src={
+                                      personaImages[
+                                        selectedPersonas.imageKey
+                                      ] ||
+                                      (selectedPersonas.gender === "남성"
+                                        ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                        : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                    }
+                                    alt={selectedPersonas.persona}
+                                  />
+                                </Persona>
+                              )}
+                            </PersonaGroup>
+                          ) : (
+                            <Body2 color="gray300">
+                              페르소나가 선택되지 않았습니다. 하단에서
+                              페르소나를 선택해 주세요!(1명 선택 가능)
+                            </Body2>
+                          )}
                         </li>
                       </ListBoxGroup>
                     </div>
-                  )}
-                  {uploadedFiles?.length > 0 &&
-                    !hideIndexButton &&
-                    !toolSteps && (
-                      <Button
-                        Other
-                        Primary
-                        Fill
-                        Round
-                        onClick={handleSubmitReportIndex}
-                        disabled={
-                          toolSteps >= 1 ||
-                          fileNames?.length === 0 ||
-                          selectedTemplete.length !== 0 ||
-                          isCreateReportIndex ||
-                          isLoading ||
-                          projectAnalysisMultimodal.length > 0
-                        }
+
+                    {personaListSaas.length > 0 ? (
+                      <MoleculePersonaSelectCard
+                        filteredPersonaList={personaListSaas}
+                        selectedPersonas={selectedPersonas}
+                        onPersonaSelect={(persona) => {
+                          setSelectedPersonas(persona);
+                          // 필요한 경우 여기서 추가 로직 수행
+                        }}
+                      />
+                    ) : (
+                      <BoxWrap
+                        Hover
+                        NoData
+                        style={{
+                          height: "300px",
+                        }}
+                        onClick={() => navigate("/AiPersona")}
                       >
-                        목차 분석 시작
-                      </Button>
-                    )}
-                  {isLoading && uploadedFiles.length > 0 ? (
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                        minHeight: "200px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <AtomPersonaLoader message="계획서 목차를 분석하고 있어요." />
-                    </div>
-                  ) : (
-                    <>
-                      <div className="content">
-                        {uploadedFiles.length > 0 ? (
-                          <InsightAnalysis>
-                            <div
-                              className="markdown-body"
-                              style={{
-                                textAlign: "left",
-                              }}
-                            >
-                              <Markdown>
-                                {prepareMarkdown(
-                                  projectAnalysisMultimodal ?? ""
-                                )}
-                              </Markdown>
-                            </div>
-                          </InsightAnalysis>
-                        ) : (
-                          <></>
-                        )}
-                      </div>
-                    </>
-                  )}
+                        <img src={images.PeopleFillPrimary2} alt="" />
 
-                  {!isCreateReportIndex &&
-                    !isLoading &&
-                    uploadedFiles?.length === 0 && (
-                      <div className="content">
-                        <div className="title">
-                          <Body1
-                            color="gray700"
-                            style={{ textAlign: "left", marginBottom: "-20px" }}
-                          >
-                            📝 사업계획서, 처음이라면 목적별 템플릿부터
-                            시작하세요​
-                          </Body1>
-                        </div>
-                        <CardGroupWrap column style={{ marginBottom: "40px" }}>
-                          {Templete.map((item, index) => (
-                            <MoleculeDesignItem
-                              style={{ marginBottom: "10px" }}
-                              FlexStart
-                              key={index}
-                              id={index}
-                              title={item.name}
-                              subtitle={item.reason}
-                              isSelected={selectedTemplete.includes(index)}
-                              onSelect={() => handleCheckboxChange(index)}
-                              disabled={toolSteps >= 1 ? true : false}
-                            />
-                          ))}
-                        </CardGroupWrap>
-                      </div>
-                    )}
+                        <Body2 color="gray700" align="center !important">
+                          현재 대화가 가능한 활성 페르소나가 없습니다
+                          <br />
+                          페르소나 생성 요청을 진행하여 페르소나를
+                          활성화해주세요
+                        </Body2>
 
-                  {(isCreateReportIndex || selectedTemplete.length !== 0) && (
+                        <Button
+                          Medium
+                          Outline
+                          Fill
+                          onClick={() => navigate("/AiPersona")}
+                        >
+                          <Caption1 color="gray700">
+                            AI Person 생성 요청
+                          </Caption1>
+                        </Button>
+                      </BoxWrap>
+                    )}
+                  </div>
+      
+
+                  
                     <Button
                       Other
                       Primary
                       Fill
                       Round
-                      onClick={handleSubmitBusinessInfo}
-                      disabled={
-                        toolSteps >= 1 ||
-                        (!isCreateReportIndex && selectedTemplete.length === 0)
-                      }
+                      onClick={handleSubmitPersona}
+                      // disabled={
+                      //   toolSteps >= 1 ||
+                      //   (!isCreateReportIndex && selectedTemplete.length === 0)
+                      // }
                     >
                       다음
                     </Button>
-                  )}
+         
                 </>
               </TabContent5>
             )}
@@ -970,7 +951,7 @@ const PageConceptDefinition = () => {
                 ) : (
                   <>
                     <div className="title">
-                      <H3 color="gray800">Analyze Contents</H3>
+                      <H3 color="gray800">Core Value Analysis</H3>
                       <Body3 color="gray800">
                         {uploadedFiles.length > 0
                           ? "업로드한 파일을 분석해 계획서의 구조와 주요 정보를 정리합니다."
@@ -981,29 +962,62 @@ const PageConceptDefinition = () => {
                     <div className="content">
                       <ListBoxGroup>
                         <li>
-                          <Body2 color="gray500">
-                            {uploadedFiles.length > 0
-                              ? "파일 명"
-                              : "리포트 방식"}
-                          </Body2>
-                          <Body2 color="gray800">
-                            {fileNames.length > 0
-                              ? fileNames
-                              : selectedTemplete.length > 0 &&
-                                Templete[selectedTemplete[0]].name}
-                          </Body2>
+                        <Body2 color="gray500">페르소나 선택</Body2>
+                          {selectedPersonas ? (
+                            <PersonaGroup>
+                              {Array.isArray(selectedPersonas) ? (
+                                <>
+                                  {selectedPersonas.length > 3 && (
+                                    <span>+{selectedPersonas.length - 3}</span>
+                                  )}
+                                  {selectedPersonas
+                                    .slice(0, 3)
+                                    .map((persona, index) => (
+                                      <Persona key={index} size="Small" Round>
+                                        <img
+                                          src={
+                                            personaImages[persona.imageKey] ||
+                                            (persona.gender === "남성"
+                                              ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                              : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                          }
+                                          alt={persona.persona}
+                                        />
+                                      </Persona>
+                                    ))}
+                                </>
+                              ) : (
+                                <Persona size="Small" Round>
+                                  <img
+                                    src={
+                                      personaImages[
+                                        selectedPersonas.imageKey
+                                      ] ||
+                                      (selectedPersonas.gender === "남성"
+                                        ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                        : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                    }
+                                    alt={selectedPersonas.persona}
+                                  />
+                                </Persona>
+                              )}
+                            </PersonaGroup>
+                          ) : (
+                            <Body2 color="gray300">
+                              페르소나가 선택되지 않았습니다. 하단에서
+                              페르소나를 선택해 주세요!(1명 선택 가능)
+                            </Body2>
+                          )}
                         </li>
                         <li style={{ alignItems: "flex-start" }}>
-                          <Body2 color="gray500">주요 내용</Body2>
+                          <Body2 color="gray500">핵심 가치 선택</Body2>
                           <Body2
                             color="gray800"
                             style={{ textAlign: "left" }}
                             dangerouslySetInnerHTML={{
                               __html:
                                 uploadedFiles.length > 0
-                                  ? projectAnalysisMultimodalDescription
-                                  : selectedTemplete.length > 0 &&
-                                    Templete[selectedTemplete[0]].reason,
+
                             }}
                           />
                         </li>
@@ -1025,12 +1039,23 @@ const PageConceptDefinition = () => {
                           </div>
                         </InsightAnalysis>
                       ) : (
-                        <MoleculeAnalysisResults
-                          analysisResults={analysisResults}
-                          currentLoadingIndex={currentLoadingIndex}
-                          hasUploadedFiles={uploadedFiles.length > 0}
-                          toolSteps={toolSteps}
-                        />
+                        <>
+                          <div className="title">
+                        <Body1 color="gray700" style={{textAlign: "left"}}>
+                        Kano Model 평가에 포함할 아이디어를 선택해 주세요. (복수 선택)
+                        </Body1>
+                        </div>
+                        {conceptDefinitionValue.map((value, index) => (
+                        <MoleculeItemSelectCard
+                        FlexStart
+                        key={index}
+                        id={index}
+                        title={value.name}
+                        isSelected={selectedValue.includes(index)}
+                        onSelect={() => handleCheckboxChange(index)}
+                      />
+                      ))}
+                      </>
                       )}
                     </div>
                     <Button

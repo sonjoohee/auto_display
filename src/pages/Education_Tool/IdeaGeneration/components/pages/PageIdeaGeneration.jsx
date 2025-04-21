@@ -576,7 +576,6 @@ const PageIdeaGeneration = () => {
          
             reportResponse = await EducationToolsRequest(data, isLoggedIn);
             reportRetryCount++;
-            console.log("while문 돌아가는지 확인")
            
           } 
          

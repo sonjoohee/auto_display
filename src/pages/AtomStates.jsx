@@ -607,10 +607,16 @@ export const IDEA_GENERATION_SELECTED_MANDALART = atom(null);
 export const IDEA_GENERATION_POSSSESSION_TECH = atom("");
 
 export const KANO_MODEL_IDEA_GENERATION = atom([]);
+export const KANO_MODEL_IDEA_GENERATION_NAME = atom([]);
 export const KANO_MODEL_SELECTED_IDEA = atom(null);
+export const KANO_MODEL_PRODUCT_ANALYSIS = atom([]);
+export const KANO_MODEL_CLUSTERING = atom([]);
+export const KANO_MODEL_EVALUATION = atom([]);
 
 export const IDEA_EVALUATE_LIST = atom([]);
 export const IDEA_EVALUATE_SELECTED_LIST = atom([]);
+
+export const NPS_CONCEPT_DEFINITION = atom([]);
 
 //!saas
 // 프로젝트 생성 페이지

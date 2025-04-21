@@ -207,6 +207,9 @@ const PageIdeaEvaluate = () => {
   const [isCustomPopupOpen, setIsCustomPopupOpen] = useState(false);
   const [isCustomLoading, setIsCustomLoading] = useState(false);
   const [customerJourneyList, setCustomerJourneyList] = useState([]);
+  const [selectedKanoModelData, setSelectedKanoModelData] = useState([]);
+  const [showKanoModelList, setshowKanoModelList] = useState(false);
+  
   const customerListRef = useRef(null);
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -402,13 +405,14 @@ const PageIdeaEvaluate = () => {
 
         const response = await getFindToolListOnServerSaas(
           projectSaas?._id ?? "",
-          "ix_customer_journey_map_education",
+          "ix_kano_model_product_analysis_education",
           isLoggedIn
         );
 
+
         const newItems = (response || []).filter(
           (item) =>
-            item?.type === "ix_customer_journey_map_education" &&
+            item?.type === "ix_kano_model_product_analysis_education" &&
             item?.completedStep === 3
         );
 
@@ -498,7 +502,7 @@ const PageIdeaEvaluate = () => {
   //   }
   // };
 
-  const handlePurposeSelect = (purpose, selectBoxId) => {
+  const handlePurposeSelect = (purpose, selectBoxId,item) => {
     setSelectedPurposes((prev) => ({
       ...(prev || {}),
       [selectBoxId]: purpose || "",
@@ -512,7 +516,10 @@ const PageIdeaEvaluate = () => {
     if (selectBoxId === "customerList") {
       setBusinessDescription(purpose || "");
     }
+    setSelectedKanoModelData(item);
   };
+
+  console.log(selectedKanoModelData)
 
   const handleFormChange = (field, value) => {
     setCustomPersonaForm((prev) => ({
@@ -530,148 +537,13 @@ const PageIdeaEvaluate = () => {
   };
 
   const handleCuratedIdea = async () => {
-    setIsLoading(true);
-    // quickSurveyAnalysis가 비어있을 때만 API 호출
-    if (!ideaEvaluateSelectedList.length > 0) {
-   
-      try {
-        // 비즈니스 데이터 추가
-        // const Data = {
-        //   type: "ix_quick_survey_question",
-        //   business: businessDescription,
-        //   goal: projectDescription,
-        // };
-
-        // setQuickSurveyProjectDescription(projectDescription);
-
-        // // API 요청
-        // let response;
-        // let retryCount = 0;
-        // const maxRetries = 10;
-
-        // while (retryCount < maxRetries) {
-        //   try {
-        //     response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
-
-        //     // 응답 형식 검증
-        //     if (
-        //       response.response &&
-        //       response.response.quick_survey_question &&
-        //       response.response.quick_survey_question.ab_test &&
-        //       response.response.quick_survey_question.importance &&
-        //       response.response.quick_survey_question.nps &&
-        //       response.response.quick_survey_question.single_choice
-        //     ) {
-        //       break; // 올바른 응답 형식이면 루프 종료
-        //     }
-
-        //     retryCount++;
-        //   } catch (error) {
-        //     retryCount++;
-        //     if (retryCount >= maxRetries) throw error;
-        //   }
-        // }
-
-        // if (retryCount >= maxRetries) {
-        //   throw new Error(
-        //     "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
-        //   );
-        // }
-
-        // const responseToolId = await createToolOnServer(
-        //   {
-        //     projectId: project._id,
-        //     type: "ix_quick_survey_question",
-        //   },
-        //   isLoggedIn
-        // );
-
-        // setToolId(responseToolId);
-
-        // setQuickSurveyAnalysis(response.response.quick_survey_question);
-
-        // await updateToolOnServer(
-        //   responseToolId,
-        //   {
-        //     quickSurveyAnalysis: response.response.quick_survey_question,
-        //     business: business,
-        //     goal: projectDescription,
-        //   },
-        //   isLoggedIn
-        // );
-
-        const dummyKanoEvaluationData = {
-          attractive_features: [  // 매력적 속성
-            {
-              feature_name: "맵기 단계 시각화 기능",
-              description: "스코빌 지수를 그래프로 보여주어 맵기 정도를 직관적으로 이해할 수 있게 함"
-            },
-            {
-              feature_name: "챌린지 성공 리워드",
-              description: "챌린지 성공 시 특별 할인 쿠폰과 한정판 굿즈 제공"
-            }
-          ],
-          one_dimensional_features: [  // 일원적 속성
-            {
-              feature_name: "맵기 조절 옵션",
-              description: "개인 취향에 맞게 맵기를 세밀하게 조절할 수 있는 기능"
-            },
-            {
-              feature_name: "실시간 배달 추적",
-              description: "주문한 음식의 실시간 위치 확인 가능"
-            },
-            {
-              feature_name: "리뷰 시스템",
-              description: "상세한 리뷰와 평점 제공"
-            },
-            {
-              feature_name: "간편 결제",
-              description: "다양한 결제 수단과 빠른 결제 프로세스"
-            },
-            {
-              feature_name: "포인트 적립",
-              description: "주문금액의 일정 비율 포인트 적립"
-            }
-          ],
-          must_be_features: [  // 당연적 속성
-            {
-              feature_name: "정확한 배달",
-              description: "주문한 메뉴가 정확하게 배달"
-            },
-            {
-              feature_name: "품질 유지",
-              description: "배달 과정에서 음식 품질 유지"
-            }
-          ]
-        };
-        
-        // API 응답 대신 더미데이터 사용
-        setIdeaEvaluateList(dummyKanoEvaluationData);
-
-        setIsLoading(false);
-      } catch (error) {
-        setShowPopupError(true);
-        if (error.response) {
-          switch (error.response.status) {
-            case 500:
-              setShowPopupError(true);
-              break;
-            case 504:
-              setShowPopupError(true);
-              break;
-            default:
-              setShowPopupError(true);
-              break;
-          }
-        } else {
-          setShowPopupError(true);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    } else {
-      handleNextStep(1);
-      setIsLoading(true);
+    
+    if(!ideaEvaluateSelectedList.length > 0){
+      setshowKanoModelList(true)
+    }
+      else{
+        handleNextStep(1);
+        setIsLoading(true);
 
       const Data = {
         type: "ix_quick_survey_custom_guide",
@@ -1333,6 +1205,7 @@ const PageIdeaEvaluate = () => {
     setQuickSurveyCustomQuestion(null); // aiResponse 초기화
   };
 
+  console.log(ideaEvaluateList)
   return (
     <>
       <DropzoneStyles />
@@ -1414,7 +1287,7 @@ const PageIdeaEvaluate = () => {
 
                       <TabContent5Item>
                         <div className="title">
-                          <Body1 color="gray700">핵심 가치 가져오기 </Body1>
+                          <Body1 color="gray700">kano기반 아이디어 선택 </Body1>
                         </div>
 
                         <SelectBox ref={customerListRef}>
@@ -1474,11 +1347,8 @@ const PageIdeaEvaluate = () => {
                                       handlePurposeSelect(
                                         `${item.updateDate.split(":")[0]}:${
                                           item.updateDate.split(":")[1]
-                                        } - 고객 핵심 가치 분석기 - 
-                                    ${
-                                      item.customerJourneyMapSelectedPersona
-                                        .personaName || "페르소나"
-                                    } 분석`,
+                                        } - kano기반 아이디어 선택기 
+                                    `,
                                         "customerList",
                                         item
                                       );
@@ -1486,11 +1356,8 @@ const PageIdeaEvaluate = () => {
                                   >
                                     <Body2 color="gray700" align="left">
                                       {item.updateDate.split(":")[0]}:
-                                      {item.updateDate.split(":")[1]} 고객 핵심
-                                      가치 분석기 -
-                                      {item.customerJourneyMapSelectedPersona
-                                        .personaName || "페르소나"}{" "}
-                                      분석
+                                      {item.updateDate.split(":")[1]} kano기반 아이디어 선택기 
+                                     
                                     </Body2>
                                   </SelectBoxItem>
                                 ))
@@ -1513,91 +1380,101 @@ const PageIdeaEvaluate = () => {
                     >
                       <AtomPersonaLoader message="로딩 중..." />
                     </div>
+                  ) : !showKanoModelList ? (
+                    <BoxWrap
+                      NoData
+                      style={{ height: "300px" }}
+                    >
+                      <img src={images.PeopleFillPrimary2} alt="" />
+                      <Body2 color="gray700" align="center !important">
+                      Kano Model 결과가 보여집니다.
+                      </Body2>
+                     
+                    </BoxWrap>
                   ) : (
-              
-                      <BoxWrap
-                          NoData
-                          style={{ height: "300px" }}
-                          // onClick={handleGetIdea}
-                        >
-                          <img src={images.PeopleFillPrimary2} alt="" />
-                          <Body2 color="gray700" align="center !important">
-                          Kano Model 가져오기
-                          </Body2>
-                          <Button
-                            Medium
-                            Outline
-                            Fill
-                            onClick={(e) => {
-                              e.stopPropagation(); // BoxWrap의 onClick과 중복 실행 방지
-                              // handleGetIdea();
-                            }}
-                          >
-                            {/* <Caption1 color="gray700">
-                              아이디어 가져오기
-                            </Caption1> */}
-                          </Button>
-                        </BoxWrap>
+                    <div className="content" style={{marginTop: "40px"}}>
+                      {/* Attractive Features 섹션 */}
+                      <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
+                                <Body1 color="gray800">Attractive (매력적 속성)</Body1>
+                       </div>
+                       
+                        {selectedKanoModelData.
+                          kanoModelClustering.attractive.map((idea, index) => (
+                          <MoleculeItemSelectCard
+                            FlexStart
+                            key={`attractive-${index}`}
+                            id={`attractive-${index}`}
+                            title={idea.name}
+                            isSelected={ideaEvaluateSelectedList.includes(`attractive-${index}`)}
+                            onSelect={() => handleCheckboxChange(`attractive-${index}`)}
+                          />
+                        ))}
 
-                        )}
+                        <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
+                                <Body1 color="gray800">One-Dimensional (일차원 속성) </Body1>
+                         </div>
+                      {selectedKanoModelData.
+                          kanoModelClustering.one_dimensional.map((idea, index) => (
+                          <MoleculeItemSelectCard
+                            FlexStart
+                            key={`one-dimensional-${index}`}
+                            id={`one-dimensional-${index}`}
+                            title={idea.name}
+                            isSelected={ideaEvaluateSelectedList.includes(`one-dimensional-${index}`)}
+                            onSelect={() => handleCheckboxChange(`one-dimensional-${index}`)}
+                          />
+                        ))}
+                 
 
-                        {ideaEvaluateList.length > 0 && (
-                          <div className="content">
-                              {ideaEvaluateList.map((idea, index) => (
-                                <MoleculeItemSelectCard
-                                  FlexStart
-                                  key={index}
-                                  id={index}
-                                  title={idea.name}
-                                  isSelected={ideaEvaluateSelectedList.includes(index)}
-                                  onSelect={() => handleCheckboxChange(index)}
-                                />
-                              ))}
-                          </div>
-                        )}
-
-                    
-                    </TabContent5Item>
-                  </div>
-                  
-                    <>
-                      
-                      {quickSurveyAnalysis &&
-                      Object.keys(quickSurveyAnalysis).length > 0 ? (
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: "8px",
-                            justifyContent: "flex-end",
-                          }}
-                        >
-                        
-                          <Button
-                            Other
-                            Primary
-                            Fill
-                            Round
-                            onClick={handleCuratedIdea}
-                            // disabled={
-                            //   selectedQuestion.length === 0 || toolSteps >= 1
-                            // }
-                          >
-                            다음
-                          </Button>
+                         <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
+                                <Body1 color="gray800">Must-Be (당연적 속성)  </Body1>
                         </div>
-                      ) : (
+                      
+                       {selectedKanoModelData.
+                          kanoModelClustering.must_be.map((idea, index) => (
+                          <MoleculeItemSelectCard
+                            FlexStart
+                            key={`must-be-${index}`}
+                            id={`must-be-${index}`}
+                            title={idea.name}
+                            isSelected={ideaEvaluateSelectedList.includes(`must-be-${index}`)}
+                            onSelect={() => handleCheckboxChange(`must-be-${index}`)}
+                          />
+                        ))}
+
+                        
+                       <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
+                                <Body1 color="gray800">Reverse (반대 속성)  </Body1>
+                       </div>
+                      
+                       {selectedKanoModelData.
+                          kanoModelClustering.reverse.map((idea, index) => (
+                          <MoleculeItemSelectCard
+                            FlexStart
+                            key={`reverse-${index}`}
+                            id={`reverse-${index}`}
+                            title={idea.name}
+                            isSelected={ideaEvaluateSelectedList.includes(`reverse-${index}`)}
+                            onSelect={() => handleCheckboxChange(`one-dimensional-${index}`)}
+                          />
+                        ))}
+               
+                      </div> 
+               
+                  )}
+                    </TabContent5Item>
+                  </div>   
                         <Button
                           Other
                           Primary
                           Fill
                           Round
                           onClick={handleCuratedIdea}
-                          // disabled={!projectDescription || toolSteps >= 1}
+                          disabled={selectedKanoModelData.length === 0 || toolSteps >= 1}
                         >
-                          다음ㄴㄴㄴ
+                          아이디어 방향성으로 전환
                         </Button>
-                      )}
-                    </>
+             
                   
                 </>
               </TabContent5>

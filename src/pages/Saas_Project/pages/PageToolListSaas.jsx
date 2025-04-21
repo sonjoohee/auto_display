@@ -1903,6 +1903,42 @@ const PageToolListSaas = () => {
                         </div>
                       </div>
                     </ExploreCard>
+
+                    <ExploreCard Report key="report-1">
+                      <span>
+                        <images.GridReport color={palette.gray700} />
+                        Report
+                      </span>
+                      <p>
+                        <img src={images.ImgExplore14} alt="" />
+                      </p>
+                      <Body1 color="gray800">
+                        <em>준비중</em>
+                        컨셉 정의
+                      </Body1>
+
+                      <div
+                        className="overlay"
+                        onClick={() => {
+                          navigate("/ConceptDefinition");
+                        }}
+                      >
+                        <span>
+                          <images.GridReport color={palette.white} />
+                          Report
+                        </span>
+
+                        <div className="text">
+                          <Body1 color="white">
+                            <em>준비중</em>
+                          </Body1>
+                          <Caption1 color="white" align="left">
+                            컨셉 정의를 통해 비즈니스 아이디어를 정의하고 평가해드려요
+                          </Caption1>
+                          <i />
+                        </div>
+                      </div>
+                    </ExploreCard>
                     <ExploreCard Report key="report-1">
                       <span>
                         <images.GridReport color={palette.gray700} />
