@@ -130,12 +130,15 @@ const PageProject = () => {
             setCreditCreateInterview(response.create_interview);
             setCreditCreateProject(response.create_project);
           }
+          sessionStorage.setItem(
+            "educationState",
+            educationStateResponse.education_state
+          );
+          setEducationState(educationStateResponse.education_state);
+
           if (educationStateResponse) {
-            setEducationState(educationStateResponse.education_state);
-            sessionStorage.setItem(
-              "educationState",
-              educationStateResponse.education_state
-            );
+            setProjectEducationState("education");
+            setProjectEducationCode("edu_000001");
           }
         }
       } catch (error) {
@@ -246,7 +249,8 @@ const PageProject = () => {
       try {
         let savedProjectListInfo;
 
-        if (projectEducationState === "education") {
+        if (sessionStorage.getItem("educationState") === "true") {
+          // if (projectEducationState === "education") {
           savedProjectListInfo =
             await getProjectListSaasEducationByIdFromIndexedDB(
               projectEducationCode,
@@ -304,6 +308,54 @@ const PageProject = () => {
   return (
     <>
       <ContentsWrap>
+        <OrganismIncNavigation />
+        <MoleculeHeader />
+        <MainContent Wide1030>
+          <ProjectWrap>
+            <HeaderWrap>
+              <div>
+                <H1 color="gray800" align="left">
+                  Project
+                </H1>
+                <div style={{ height: "10px" }}></div>
+                <Body3 color="gray700" align="left">
+                  AI를 활용한 효율적인 프로젝트 인사이트를 관리하세요
+                </Body3>
+              </div>
+              <div
+                style={{ display: "flex", flexDirection: "row", gap: "10px" }}
+              >
+                <Button
+                  ExLarge
+                  Primary
+                  Fill
+                  onClick={() => setIsWarningPopupOpen(true)}
+                >
+                  <Sub1 color="white">새 프로젝트</Sub1>
+                </Button>
+                <Button Outline onClick={() => setIsTrashModalOpen(true)}>
+                  <img src={images.Trash} alt="" />
+                  <Caption1 color="gray700">임시 삭제함</Caption1>
+                </Button>
+              </div>
+            </HeaderWrap>
+
+            <ProjectListWrap>
+              <ProjectList>
+                {sampleProjects.map((project) => (
+                  <OrganismProjectItem
+                    key={project._id}
+                    project={project}
+                    onDelete={() => handleProjectDelete(project)}
+                  />
+                ))}
+                <OrganismProjectItem isNoData={true} />
+              </ProjectList>
+            </ProjectListWrap>
+          </ProjectWrap>
+        </MainContent>
+      </ContentsWrap>
+      {/* <ContentsWrap>
         <OrganismIncNavigation />
 
         <MoleculeHeader />
@@ -504,7 +556,7 @@ const PageProject = () => {
             </ProjectWrap>
           </MainContent>
         )}
-      </ContentsWrap>
+      </ContentsWrap> */}
       {showWarning && (
         <PopupWrap
           Warning
