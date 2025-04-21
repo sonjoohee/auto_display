@@ -11,6 +11,12 @@ import { Button } from "../../../../../assets/styles/ButtonStyle";
 import Markdown from "markdown-to-jsx";
 import PopupWrap from "../../../../../assets/styles/Popup";
 import {
+  SelectBox,
+  SelectBoxItem,
+  SelectBoxTitle,
+  SelectBoxList,
+} from "../../../../../assets/styles/InputStyle";
+import {
   ContentsWrap,
   MainContent,
   TabWrapType5,
@@ -138,6 +144,15 @@ const PageConceptDefinition = () => {
   const [selectedPersonas, setSelectedPersonas] = useState(null);
   const [selectedValue, setSelectedValue] = useState([]);
   const [conceptDefinitionValue, setConceptDefinitionValue] = useState([]);
+  const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
+  const [selectedPurposes, setSelectedPurposes] = useState({
+    customerList: "",
+    analysisScope: "",
+  });
+
+  const [selectBoxStates, setSelectBoxStates] = useState({
+    customerList: false,
+  });
   // 초기 상태를 빈 배열로 설정
 
   const [currentLoadingIndex, setCurrentLoadingIndex] = useState(1);
@@ -681,6 +696,23 @@ const PageConceptDefinition = () => {
     setBusinessDescription(originalText);
   };
 
+  const handlePurposeSelect = (purpose, selectBoxId) => {
+    setSelectedPurposes((prev) => ({
+      ...prev,
+      [selectBoxId]: purpose,
+    }));
+
+    setSelectBoxStates((prev) => ({
+      ...prev,
+      [selectBoxId]: false,
+    }));
+
+    // if (selectBoxId === "customerList") {
+    //   setSelectedBusiness(purpose);
+    //   setBusinessDescription(purpose);
+    // }
+  };
+
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
@@ -960,7 +992,182 @@ const PageConceptDefinition = () => {
                     </div>
 
                     <div className="content">
-                      <ListBoxGroup>
+                    <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
+                        <div className="selectBoxWrap">
+                          <Body2 color="gray500" style={{ width: "110px" }}>
+                            페르소나 선택
+                          </Body2>
+                          {selectedPersonas ? (
+                            <PersonaGroup>
+                              {Array.isArray(selectedPersonas) ? (
+                                <>
+                                  {selectedPersonas.length > 3 && (
+                                    <span>+{selectedPersonas.length - 3}</span>
+                                  )}
+                                  {selectedPersonas
+                                    .slice(0, 3)
+                                    .map((persona, index) => (
+                                      <Persona key={index} size="Small" Round>
+                                        <img
+                                          src={
+                                            personaImages[persona.imageKey] ||
+                                            (persona.gender === "남성"
+                                              ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                              : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                          }
+                                          alt={persona.persona}
+                                        />
+                                      </Persona>
+                                    ))}
+                                </>
+                              ) : (
+                                <Persona size="Small" Round>
+                                  <img
+                                    src={
+                                      personaImages[
+                                        selectedPersonas.imageKey
+                                      ] ||
+                                      (selectedPersonas.gender === "남성"
+                                        ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                        : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                    }
+                                    alt={selectedPersonas.persona}
+                                  />
+                                </Persona>
+                              )}
+                            </PersonaGroup>
+                          ) : (
+                            <Body2 color="gray300">
+                              페르소나가 선택되지 않았습니다. 하단에서
+                              페르소나를 선택해 주세요!(1명 선택 가능)
+                            </Body2>
+                          )}
+                        </div>
+                        <div className="selectBoxWrap">
+                          <Body2 color="gray500" style={{ width: "110px" }}>
+                            여정 분석 범위
+                          </Body2>
+                          <SelectBox style={{ paddingRight: "20px" }}>
+                            <SelectBoxTitle
+                              onClick={() =>
+                                toolSteps >= 1
+                                  ? null
+                                  : setIsSelectBoxOpen(!isSelectBoxOpen)
+                              }
+                              None
+                              style={{
+                                cursor:
+                                  toolSteps >= 1 ? "not-allowed" : "pointer",
+                              }}
+                            >
+                              {selectedPurposes?.analysisScope ? (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "4px",
+                                    paddingLeft: "20px",
+                                  }}
+                                >
+                                  <Body1 color="gray700" align="left">
+                                    {
+                                      selectedPurposes?.analysisScope?.split(
+                                        "|"
+                                      )[0]
+                                    }{" "}
+                                    |
+                                  </Body1>
+                                  <Body2 color="gray700" align="left">
+                                    {
+                                      selectedPurposes?.analysisScope?.split(
+                                        "|"
+                                      )[1]
+                                    }
+                                  </Body2>
+                                </div>
+                              ) : (
+                                <Body2
+                                  color="gray300"
+                                  style={{ paddingLeft: "20px" }}
+                                >
+                                  고객 여정 맵의 분석 방향성을 선택하세요
+                                </Body2>
+                              )}
+                              <images.ChevronDown
+                                width="24px"
+                                height="24px"
+                                color={
+                                  toolSteps >= 1
+                                    ? palette.gray300
+                                    : palette.gray500
+                                }
+                                style={{
+                                  transform: isSelectBoxOpen
+                                    ? "rotate(180deg)"
+                                    : "rotate(0deg)",
+                                  transition: "transform 0.3s ease",
+                                }}
+                              />
+                            </SelectBoxTitle>
+
+                            {isSelectBoxOpen && (
+                              <SelectBoxList>
+                                <SelectBoxItem
+                                  onClick={() => {
+                                    handlePurposeSelect(
+                                      "시간 흐름 기반 여정 분석 | 제품/서비스의 전체적인 사용자 여정을 기반으로 분석",
+                                      "analysisScope"
+                                    );
+                                    setIsSelectBoxOpen(false);
+                                  }}
+                                >
+                                  <Body1 color="gray700" align="left">
+                                    시간 흐름 기반 여정 분석 |{" "}
+                                  </Body1>
+                                  <Body2 color="gray700" align="left">
+                                    제품/서비스의 전체적인 사용자 여정을
+                                    기반으로 분석
+                                  </Body2>
+                                </SelectBoxItem>
+                                <SelectBoxItem
+                                  onClick={() => {
+                                    handlePurposeSelect(
+                                      "상황 중심 여정 분석 | 특정 이벤트나 고객 경험을 중심으로 여정 분석",
+                                      "analysisScope"
+                                    );
+                                    setIsSelectBoxOpen(false);
+                                  }}
+                                >
+                                  <Body1 color="gray700" align="left">
+                                    상황 중심 여정 분석 |{" "}
+                                  </Body1>
+                                  <Body2 color="gray700" align="left">
+                                    특정 이벤트나 고객 경험을 중심으로 여정 분석
+                                  </Body2>
+                                </SelectBoxItem>
+                                <SelectBoxItem
+                                  onClick={() => {
+                                    handlePurposeSelect(
+                                      "목적 기반 여정 분석 | 고객이 제품/서비스를 사용하여 달성하려는 목표를 중심으로 여정 분석",
+                                      "analysisScope"
+                                    );
+                                    setIsSelectBoxOpen(false);
+                                  }}
+                                >
+                                  <Body1 color="gray700" align="left">
+                                    목적 기반 여정 분석 |{" "}
+                                  </Body1>
+                                  <Body2 color="gray700" align="left">
+                                    고객이 제품/서비스를 사용하여 달성하려는
+                                    목표를 중심으로 여정 분석
+                                  </Body2>
+                                </SelectBoxItem>
+                              </SelectBoxList>
+                            )}
+                          </SelectBox>
+                        </div>
+                      </BoxWrap>
+                      {/* <ListBoxGroup>
                         <li>
                         <Body2 color="gray500">페르소나 선택</Body2>
                           {selectedPersonas ? (
@@ -1021,7 +1228,7 @@ const PageConceptDefinition = () => {
                             }}
                           />
                         </li>
-                      </ListBoxGroup>
+                      </ListBoxGroup> */}
 
                       {uploadedFiles.length > 0 ? (
                         <InsightAnalysis>
