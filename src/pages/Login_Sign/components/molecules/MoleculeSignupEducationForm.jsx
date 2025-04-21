@@ -136,6 +136,7 @@ const MoleculeSignupEducationForm = () => {
             email: signUpEmail,
             password: signUpPassword,
             phone_number: phoneNumber,
+            education_state: true,
             // education_code: projectEducationCode,
             education_code: "edu_000001",
             education_auth_code: educationAuthCode,
