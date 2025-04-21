@@ -372,6 +372,7 @@ const PageStorageBox = () => {
                   <H1 color="gray800" align="left">
                     Knowledge Archive
                   </H1>
+                  <div style={{ height: "10px" }}></div>
                   <Body3 color="gray700" align="left">
                     해당 프로젝트를 통해 수집한 리포트들을 한 곳에 모아두었어요
                   </Body3>
