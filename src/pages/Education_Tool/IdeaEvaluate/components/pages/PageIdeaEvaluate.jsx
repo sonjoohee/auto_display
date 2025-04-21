@@ -52,6 +52,7 @@ import {
   PERSONA_LIST_SAAS,
   IDEA_EVALUATE_SELECTED_LIST,
   IDEA_EVALUATE_LIST,
+  IDEA_EVALUATE_COMPARISON_EDUCATION,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -73,6 +74,7 @@ import {
   createToolOnServer,
   updateToolOnServer,
   getFindToolListOnServerSaas,
+  EducationToolsRequest,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
@@ -95,6 +97,7 @@ import OrganismToastPopupQuickSurveyComplete from "../organisms/OrganismToastPop
 import MolculeQuickSurveyPopup from "../molecules/MolculeQuickSurveyPopup";
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
 import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
+import ParetoCurveGraph from "../../../../../components/Charts/ParetoCurveGraph";
 
 const PageIdeaEvaluate = () => {
   const navigate = useNavigate();
@@ -108,6 +111,7 @@ const PageIdeaEvaluate = () => {
   const [quickSurveyAnalysis, setQuickSurveyAnalysis] = useAtom(
     QUICK_SURVEY_ANALYSIS
   );
+  const [ideaEvaluateComparisonEducation, setIdeaEvaluateComparisonEducation] = useAtom(IDEA_EVALUATE_COMPARISON_EDUCATION)
   const [quickSurveySelectedQuestion, setQuickSurveySelectedQuestion] = useAtom(
     QUICK_SURVEY_SELECTED_QUESTION
   );
@@ -209,6 +213,8 @@ const PageIdeaEvaluate = () => {
   const [customerJourneyList, setCustomerJourneyList] = useState([]);
   const [selectedKanoModelData, setSelectedKanoModelData] = useState([]);
   const [showKanoModelList, setshowKanoModelList] = useState(false);
+  const [ideaEvaluateSelect, setIdeaEvaluateSelect] = useState([]);
+  const [graphData, setGraphData] = useState([]);
   
   const customerListRef = useRef(null);
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -440,30 +446,54 @@ const PageIdeaEvaluate = () => {
   // };
 
 
-  
+  // const handleCheckboxChange = (ideaId) => {
+  //   setIdeaEvaluateSelect((prev) => {
+  //     if (prev.includes(ideaId)) {
+  //       // 이미 선택된 아이템이면 제거
+  //       const newSelected = prev.filter(id => id !== ideaId);
+  //       // 선택된 데이터들 업데이트
+  //       const selectedDataList = newSelected.map(id => ideaEvaluateList[id]);
+  //       setIdeaEvaluateSelectedList(selectedDataList);
+  //       return newSelected;
+  //     } else {
+  //       // 새로운 아이템 추가
+  //       const newSelected = [...prev, ideaId];
+  //       // 선택된 데이터들 업데이트
+  //       const selectedDataList = newSelected.map(id => ideaEvaluateList[id]);
+  //       setIdeaEvaluateSelectedList(selectedDataList);
+  //       return newSelected;
+  //     }
+  //   });
+  // };
+
 
   const handleCheckboxChange = (ideaId) => {
-    setIdeaEvaluateSelectedList((prev) => {
+    setIdeaEvaluateSelect((prev) => {
       if (prev.includes(ideaId)) {
         // 이미 선택된 아이템이면 제거
         const newSelected = prev.filter(id => id !== ideaId);
-        // 선택된 데이터들 업데이트
-        const selectedDataList = newSelected.map(id => ideaEvaluateList[id]);
-        setIdeaEvaluateSelectedList(selectedDataList);
         return newSelected;
       } else {
         // 새로운 아이템 추가
         const newSelected = [...prev, ideaId];
-        // 선택된 데이터들 업데이트
-        const selectedDataList = newSelected.map(id => ideaEvaluateList[id]);
-        setIdeaEvaluateSelectedList(selectedDataList);
         return newSelected;
       }
+    });
+  
+    // 선택된 아이템들의 실제 데이터를 가져옴
+    setIdeaEvaluateSelectedList((prev) => {
+      const selectedItems = ideaEvaluateSelect.map(ideaId => {
+        const [category, index] = ideaId.split('-');
+        const categoryKey = category.replace('-', '_');
+        return selectedKanoModelData.kanoModelClustering[categoryKey][parseInt(index)];
+      });
+      return selectedItems;
     });
   };
 
 
-  // 다음 단계로 이동하는 함수
+
+// 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
     setCompletedSteps([...completedSteps, currentStep]);
     setActiveTab(currentStep + 1);
@@ -477,30 +507,6 @@ const PageIdeaEvaluate = () => {
     }));
   };
 
-  // const handlePurposeSelect = (value, type) => {
-  //   setSelectedValues((prev) => ({
-  //     ...prev,
-  //     [type]: value,
-  //   }));
-  //   setSelectBoxStates((prev) => ({
-  //     ...prev,
-  //     [type]: false,
-  //   }));
-
-  //   // customPersonaForm도 함께 업데이트
-  //   if (type === "gender") {
-  //     handleFormChange(
-  //       "gender",
-  //       value === "남성" ? "male" : value === "여성" ? "female" : "상관없음" // "상관없음" 케이스 추가
-  //     );
-  //   } else if (type === "age") {
-  //     handleFormChange("age", value.split(", "));
-  //   } else if (type === "residence") {
-  //     handleFormChange("residence", value.split(", "));
-  //   } else if (type === "income") {
-  //     handleFormChange("income", value.split(", "));
-  //   }
-  // };
 
   const handlePurposeSelect = (purpose, selectBoxId,item) => {
     setSelectedPurposes((prev) => ({
@@ -519,17 +525,10 @@ const PageIdeaEvaluate = () => {
     setSelectedKanoModelData(item);
   };
 
-  console.log(selectedKanoModelData)
 
-  const handleFormChange = (field, value) => {
-    setCustomPersonaForm((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
 
   const business = {
-    business: businessDescription,
+    business_analysis: businessDescription,
     target: project?.projectAnalysis?.target_customer || "",
     business_model: project?.businessModel || "",
     sector: project?.industryType || "",
@@ -543,54 +542,26 @@ const PageIdeaEvaluate = () => {
     }
       else{
         handleNextStep(1);
-        setIsLoading(true);
 
-      const Data = {
-        type: "ix_quick_survey_custom_guide",
-        business: business,
-        goal: projectDescription,
-      };
-      let response;
-      let retryCount = 0;
-      const maxRetries = 10;
-
-      while (retryCount < maxRetries) {
-        response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
-
-        // 응답 형식 확인
-        if (
-          response.response &&
-          response.response.quick_survey_custom_guide &&
-          Array.isArray(response.response.quick_survey_custom_guide) &&
-          response.response.quick_survey_custom_guide.length === 3
-        ) {
-          break;
-        }
-
-        retryCount++;
-        if (retryCount >= maxRetries) {
-          throw new Error(
-            "응답 형식이 올바르지 않습니다. 최대 재시도 횟수를 초과했습니다."
-          );
-        }
-      }
-
-      setQuickSurveyCustomGuide(response.response.quick_survey_custom_guide);
-
-      setQuickSurveySurveyMethod(quickSurveyAnalysis[selectedQuestion]);
-      setQuickSurveySelectedQuestion(selectedQuestion);
+        const responseToolId = await createToolOnServer(
+          {
+            projectId: project._id,
+            type: "ix_idea_evaluation_comparison_education",
+          },
+          isLoggedIn
+        );
+        setToolId(responseToolId);
 
       await updateToolOnServer(
-        toolId,
+        responseToolId,
         {
-          selectedQuestion: selectedQuestion,
-          surveyMethod: quickSurveyAnalysis[selectedQuestion],
-          quickSurveyCustomGuide: response.response.quick_survey_custom_guide,
+          selectedKanoModelIdea: selectedKanoModelData,
+          ideaEvaluateSelectedList: ideaEvaluateSelectedList,
           completedStep: 1,
         },
         isLoggedIn
       );
-      setIsLoading(false);
+
       setToolSteps(1);
     }
   };
@@ -609,221 +580,7 @@ const PageIdeaEvaluate = () => {
     setQuickSurveyCustomQuestion([]);
   };
 
-  const handleSubmitSelfSelect = async () => {
-    // setToolSteps(2);
-    setIsLoadingDetailSetting(true);
-
-    try {
-      let Data;
-
-      if (interviewModeType === "selfQuestion") {
-        const detail_info = {
-          gender: customPersonaForm.gender || "상관없음",
-          age:
-            customPersonaForm.age?.length > 0
-              ? customPersonaForm.age
-              : ["상관없음"],
-          residence:
-            customPersonaForm.residence?.length > 0
-              ? customPersonaForm.residence
-              : ["상관없음"],
-          income:
-            customPersonaForm.income?.length > 0
-              ? customPersonaForm.income
-              : ["상관없음"],
-        };
-        Data = {
-          type: "ix_quick_survey_persona_group",
-          business: business,
-          goal: projectDescription,
-          recruitment_criteria: recruitingCondition || "상관없음",
-          survey_method: quickSurveyAnalysis[selectedQuestion],
-          detail_info: detail_info,
-        };
-      } else {
-        // 선택된 카드의 ID 찾기
-        // const selectedCardId = Object.entries(selectedPresetCards).find(([_, isSelected]) => isSelected)?.[0];
-
-        // const selectedPersona = quickSurveyPresetData.find(persona => persona._id === selectedCardId);
-        Data = {
-          type: "ix_quick_survey_persona_group",
-          business: business,
-          goal: projectDescription,
-          survey_method: quickSurveyAnalysis[selectedQuestion],
-          // recruitment_criteria: selectedPersona?.original_description || "",
-          recruitment_criteria: selectedPersona?.personaName || "",
-        };
-      }
-
-      let response;
-      let retryCount = 0;
-      const maxRetries = 10;
-
-      while (retryCount < maxRetries) {
-        try {
-          response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
-
-          // 응답 형식 검증
-          if (
-            response.response &&
-            response.response.quick_survey_persona_group &&
-            Array.isArray(response.response.quick_survey_persona_group) &&
-            response.response.quick_survey_persona_group.length > 0 &&
-            response.response.quick_survey_persona_group[0].name &&
-            response.response.quick_survey_persona_group[0].gender &&
-            response.response.quick_survey_persona_group[0].age &&
-            response.response.quick_survey_persona_group[0].job &&
-            response.response.quick_survey_persona_group[0].profile &&
-            response.response.quick_survey_persona_group[0].insight
-          ) {
-            break; // 올바른 응답 형식이면 루프 종료
-          }
-
-          retryCount++;
-        } catch (error) {
-          retryCount++;
-          if (retryCount >= maxRetries) {
-            throw error; // 최대 재시도 횟수 초과 시 에러 던지기
-          }
-        }
-      }
-
-      const personaGroupWithImage =
-        response.response.quick_survey_persona_group.map((persona) => ({
-          ...persona,
-          imageKey: `persona_${persona.gender === "남성" ? "m" : "f"}_${
-            Math.floor(
-              (persona.age ? parseInt(persona.age.replace("세", "")) : 20) / 10
-            ) * 10
-          }_${String(Math.floor(Math.random() * 10) + 1).padStart(2, "0")}`,
-        }));
-
-      setquickSurveyPersonaGroup(personaGroupWithImage);
-
-      // setquickSurveyPersonaGroup(response.response.quick_survey_persona_group)
-
-      await updateToolOnServer(
-        toolId,
-        {
-          detailInfo: customPersonaForm,
-          recruitmentCriteria:
-            interviewModeType === "selfQuestion"
-              ? recruitingCondition
-              : selectedPersona?.original_description,
-          personaGroup: personaGroupWithImage,
-          interviewModeType: interviewModeType,
-          completedStep: 2,
-        },
-        isLoggedIn
-      );
-    } catch (error) {
-      setShowPopupError(true);
-      if (error.response) {
-        switch (error.response.status) {
-          case 500:
-            setShowPopupError(true);
-            break;
-          case 504:
-            setShowPopupError(true);
-            break;
-          default:
-            setShowPopupError(true);
-            break;
-        }
-      } else {
-        setShowPopupError(true);
-      }
-    } finally {
-      setIsLoadingDetailSetting(false);
-    }
-  };
-
-  const handlePresetPersona = async () => {
-    // setToolSteps(2);
-    setIsLoadingPreset(true);
-    try {
-      const Data = {
-        type: "ix_quick_survey_preset",
-        business: business,
-        goal: projectDescription,
-        survey_method: {
-          question: quickSurveyAnalysis[selectedQuestion].question,
-          follow_up: quickSurveyAnalysis[selectedQuestion].follow_up,
-        },
-      };
-
-      let response;
-      let retryCount = 0;
-      const maxRetries = 10;
-
-      while (retryCount < maxRetries) {
-        try {
-          response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
-
-          // 응답 형식 확인
-          if (
-            response?.response?.quick_survey_preset?.low_user_group &&
-            response?.response?.quick_survey_preset?.general_user_group &&
-            response?.response?.quick_survey_preset?.high_user_group
-          ) {
-            break; // 올바른 형식이면 루프 종료
-          }
-
-          retryCount++;
-        } catch (error) {
-          retryCount++;
-        }
-      }
-
-      if (retryCount >= maxRetries) {
-        throw new Error(
-          "최대 재시도 횟수를 초과했습니다. 응답 형식이 올바르지 않습니다."
-        );
-      }
-
-      // 여기서 데이터 가공
-      const allPersonas = [
-        ...response.response.quick_survey_preset.low_user_group,
-        ...response.response.quick_survey_preset.general_user_group,
-        ...response.response.quick_survey_preset.high_user_group,
-      ].map((persona, index) => ({
-        _id: String(index + 1),
-        personaName: persona.preset_name,
-        personaCharacteristics: persona.preset_description,
-        status: "complete",
-        original_description: persona.preset_description, // recruitment_criteria용으로 원본 저장
-      }));
-
-      setQuickSurveyPresetData(allPersonas);
-
-      await updateToolOnServer(
-        toolId,
-        {
-          quickSurveyPresetData: allPersonas,
-        },
-        isLoggedIn
-      );
-    } catch (error) {
-      setShowPopupError(true);
-      if (error.response) {
-        switch (error.response.status) {
-          case 500:
-            setShowPopupError(true);
-            break;
-          case 504:
-            setShowPopupError(true);
-            break;
-          default:
-            setShowPopupError(true);
-            break;
-        }
-      } else {
-        setShowPopupError(true);
-      }
-    } finally {
-      setIsLoadingPreset(false);
-    }
-  };
+ 
 
   const handleSubmitReport = async () => {
     handleNextStep(2);
@@ -831,126 +588,75 @@ const PageIdeaEvaluate = () => {
     setIsLoadingReport(true);
 
     try {
+
+      const persona_group = personaListSaas
+      .filter((persona) => persona?.favorite === true)
+      .map((persona) => ({
+        personaName: persona.personaName,
+        personaCharacteristics: persona.personaCharacteristics,
+        type: persona.type,
+        age: persona.age,
+        gender: persona.gender,
+        job: persona.job,
+        keywords: persona.keywords,
+        userExperience: persona.userExperience,
+        consumptionPattern: persona.consumptionPattern,
+        interests: persona.interests,
+        lifestyle: persona.lifestyle,
+      
+      }));
+
       const Data = {
-        type: "ix_quick_survey_interview",
+        type: "ix_idea_evaluation_comparison_education",
         business: business,
-        survey_method: {
-          ...quickSurveyAnalysis[selectedQuestion],
-          type: selectedQuestion.toString(),
-        },
-        persona_group: quickSurveyPersonaGroup,
+        idea_list: ideaEvaluateSelectedList, 
+        persona: persona_group,
       };
 
-      let response;
-      let retryCount = 0;
-      const maxRetries = 10;
+      let response = await EducationToolsRequest (Data, isLoggedIn);
+    
+      setIdeaEvaluateComparisonEducation(response.response.idea_evaluation_comparison_education)
 
-      while (retryCount < maxRetries) {
-        try {
-          response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+      // let response;
+      // let retryCount = 0; 
+      // const maxRetries = 10;
 
-          // 응답 형식 검증
-          if (
-            response.response &&
-            response.response.quick_survey_interview &&
-            Array.isArray(response.response.quick_survey_interview) &&
-            response.response.quick_survey_interview.length > 0
-          ) {
-            break; // 올바른 응답 형식이면 루프 종료
-          }
+      // while (retryCount < maxRetries) {
+      //   try {
+      //     response = await EducationToolsRequest(Data, isLoggedIn);
 
-          retryCount++;
-        } catch (error) {
-          retryCount++;
-          if (retryCount >= maxRetries) throw error;
-        }
-      }
+      //     // 응답 형식 검증
+      //     if (
+      //       response.response &&
+      //       response.response.idea_evaluation_comparison_education &&
+      //       Array.isArray(response.response.idea_evaluation_comparison_education) &&
+      //       response.response.idea_evaluation_comparison_education.length > 0
+      //     ) {
+      //       break; // 올바른 응답 형식이면 루프 종료
+      //     }
 
-      if (retryCount >= maxRetries) {
-        throw new Error(
-          "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
-        );
-      }
+      //     retryCount++;
+      //   } catch (error) {
+      //     retryCount++;
+      //     if (retryCount >= maxRetries) throw error;
+      //   }
+      // }
 
-      const combinedInterviews = response.response.quick_survey_interview.map(
-        (interview, index) => {
-          const matchedPersona = quickSurveyPersonaGroup.find(
-            (persona, pIndex) =>
-              pIndex === index && persona.name === interview.persona_name
-          );
+      // if (retryCount >= maxRetries) {
+      //   throw new Error(
+      //     "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
+      //   );
+      // }
 
-          if (matchedPersona) {
-            const { name, ...personaInfoWithoutName } = matchedPersona;
-            return {
-              ...interview,
-              ...personaInfoWithoutName,
-            };
-          }
-          return interview;
-        }
-      );
-
-      setQuickSurveyInterview(combinedInterviews);
-
-      const reportData = {
-        type: "ix_quick_survey_report",
-        business: business,
-        goal: projectDescription,
-        survey_method: {
-          ...quickSurveyAnalysis[selectedQuestion],
-          type: selectedQuestion.toString(),
-        },
-        persona_group: quickSurveyPersonaGroup,
-        quick_survey_interview: response.response.quick_survey_interview,
-      };
-
-      let responseReport;
-      let reportRetryCount = 0;
-      const reportMaxRetries = 10;
-
-      while (reportRetryCount < reportMaxRetries) {
-        try {
-          responseReport = await InterviewXQuickSurveyRequest(
-            reportData,
-            isLoggedIn
-          );
-
-          // 응답 형식 검증
-          if (
-            responseReport.response &&
-            responseReport.response.quick_survey_report &&
-            responseReport.response.statistics_data
-          ) {
-            break; // 올바른 응답 형식이면 루프 종료
-          }
-          reportRetryCount++;
-        } catch (error) {
-          reportRetryCount++;
-          if (reportRetryCount >= reportMaxRetries) throw error;
-        }
-      }
-
-      if (reportRetryCount >= reportMaxRetries) {
-        throw new Error(
-          "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
-        );
-      }
-
-      setQuickSurveyReport(responseReport.response.quick_survey_report);
-
-      setQuickSurveyStaticData(responseReport.response.statistics_data);
-      setQuickSurveyStaticDataState(responseReport.response.statistics_data);
       await updateToolOnServer(
         toolId,
         {
-          // quickSurveyInterview: response.response.quick_survey_interview,
-          quickSurveyInterview: combinedInterviews,
-          quickSurveyReport: responseReport.response.quick_survey_report,
-          quickSurveyStaticData: responseReport.response.statistics_data,
+          ideaEvaluateComparisonEducation: response.response.idea_evaluation_comparison_education,
           completedStep: 3,
         },
         isLoggedIn
       );
+
 
       setToolSteps(3);
       setCompletedSteps([...completedSteps, 3]);
@@ -976,28 +682,7 @@ const PageIdeaEvaluate = () => {
     }
   };
 
-  const handlePresetCardSelection = (personaId) => {
-    const newSelectedCards = { ...selectedPresetCards };
-    // 현재 선택 상태 확인
-    const isCurrentlySelected = newSelectedCards[personaId];
-
-    // 모든 카드 선택 해제
-    Object.keys(newSelectedCards).forEach((key) => {
-      newSelectedCards[key] = false;
-    });
-
-    // 현재 카드가 선택되지 않은 상태였다면 선택
-    if (!isCurrentlySelected) {
-      newSelectedCards[personaId] = true;
-      const persona = quickSurveyPresetData.find((p) => p._id === personaId);
-      setSelectedPersona(persona);
-    } else {
-      // 이미 선택된 카드를 다시 클릭하면 선택 해제
-      setSelectedPersona(null);
-    }
-
-    setSelectedPresetCards(newSelectedCards);
-  };
+ 
 
   const handleEnterInterviewRoom = () => {
     setSelectedOption(null);
@@ -1111,20 +796,6 @@ const PageIdeaEvaluate = () => {
     }
   };
 
-  const getQuestionTitle = (type) => {
-    switch (type) {
-      case "ab_test":
-        return "[A/B 테스트]";
-      case "importance":
-        return "[경험 평가 질문]";
-      case "nps":
-        return "[NPS 질문]";
-      case "single_choice":
-        return "[단일 선택형]";
-      default:
-        return "";
-    }
-  };
 
   const handleAnswerChange = (id, option) => {
     setQuickSurveyAnalysis((prev) => ({
@@ -1136,76 +807,31 @@ const PageIdeaEvaluate = () => {
     }));
   };
 
-  // AI 다듬기 처리 함수
-  const handleAiRefine = async (data) => {
-    setIsCustomLoading(true);
 
-    const options_length = data.options.length;
-
-    try {
-      data = {
-        type: "ix_quick_survey_custom_question",
-        business: business,
-        goal: projectDescription,
-        user_question: data.questionText,
-        user_options: data.options,
-      };
-
-      // API 호출
-      const response = await InterviewXQuickSurveyRequest(data, isLoggedIn);
-
-      // 응답에서 받은 옵션 중 사용자가 입력한 옵션 수만큼만 사용
-      const refinedQuestion = response.response.quick_survey_custom_question;
-      const limitedOptions = refinedQuestion.options.slice(0, options_length);
-
-      setQuickSurveyCustomQuestion({
-        question: refinedQuestion.question,
-        options: limitedOptions,
+  useEffect(() => {
+    if (ideaEvaluateComparisonEducation && ideaEvaluateComparisonEducation.length > 0) {
+      // 각 아이디어별 선택된 횟수를 카운트
+      const ideaCount = {};
+      
+      ideaEvaluateComparisonEducation.forEach(comparison => {
+        const selectedIdea = comparison.selected_idea;
+        ideaCount[selectedIdea] = (ideaCount[selectedIdea] || 0) + 1;
       });
-    } catch (error) {
-      console.error("AI 다듬기 실패:", error);
-      // 에러 처리
-    } finally {
-      setIsCustomLoading(false);
+  
+      // 파레토 그래프용 데이터 형식으로 변환
+      const paretoData = Object.entries(ideaCount)
+        .map(([name, value]) => ({
+          name,
+          value
+        }))
+        .sort((a, b) => b.value - a.value); // 값이 큰 순서대로 정렬
+  
+      // 파레토 그래프 데이터 설정
+      setGraphData(paretoData);
     }
-  };
+  }, [ideaEvaluateComparisonEducation]);
+  
 
-  // 저장 처리 함수
-  const handleSaveCustomSurvey = async (data) => {
-    try {
-      // API 호출
-
-      // 기존 quickSurveyAnalysis에 추가
-      setQuickSurveyAnalysis((prev) => ({
-        ...prev,
-        [`custom_question`]: data,
-      }));
-
-      setIsCustomPopupOpen(false);
-      setQuickSurveyCustomQuestion(data);
-
-      await updateToolOnServer(
-        toolId,
-        {
-          quickSurveyAnalysis: {
-            ...quickSurveyAnalysis,
-            [`custom_question`]: data,
-          },
-        },
-        isLoggedIn
-      );
-    } catch (error) {
-      console.error("커스텀 설문 저장 실패:", error);
-      // 에러 처리
-    }
-  };
-
-  const handleCloseCustomPopup = () => {
-    setIsCustomPopupOpen(false);
-    setQuickSurveyCustomQuestion(null); // aiResponse 초기화
-  };
-
-  console.log(ideaEvaluateList)
   return (
     <>
       <DropzoneStyles />
@@ -1405,12 +1031,12 @@ const PageIdeaEvaluate = () => {
                             key={`attractive-${index}`}
                             id={`attractive-${index}`}
                             title={idea.name}
-                            isSelected={ideaEvaluateSelectedList.includes(`attractive-${index}`)}
+                            isSelected={ideaEvaluateSelect.includes(`attractive-${index}`)}
                             onSelect={() => handleCheckboxChange(`attractive-${index}`)}
                           />
                         ))}
 
-                        <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
+                        <div className="title" style={{textAlign: "left", marginBottom: "-20px",marginTop: "20px"}}>
                                 <Body1 color="gray800">One-Dimensional (일차원 속성) </Body1>
                          </div>
                       {selectedKanoModelData.
@@ -1420,13 +1046,13 @@ const PageIdeaEvaluate = () => {
                             key={`one-dimensional-${index}`}
                             id={`one-dimensional-${index}`}
                             title={idea.name}
-                            isSelected={ideaEvaluateSelectedList.includes(`one-dimensional-${index}`)}
-                            onSelect={() => handleCheckboxChange(`one-dimensional-${index}`)}
+                            isSelected={ideaEvaluateSelect.includes(`one_dimensional-${index}`)}
+                            onSelect={() => handleCheckboxChange(`one_dimensional-${index}`)}
                           />
                         ))}
                  
 
-                         <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
+                         <div className="title" style={{textAlign: "left", marginBottom: "-20px",marginTop: "20px"}}>
                                 <Body1 color="gray800">Must-Be (당연적 속성)  </Body1>
                         </div>
                       
@@ -1437,13 +1063,13 @@ const PageIdeaEvaluate = () => {
                             key={`must-be-${index}`}
                             id={`must-be-${index}`}
                             title={idea.name}
-                            isSelected={ideaEvaluateSelectedList.includes(`must-be-${index}`)}
-                            onSelect={() => handleCheckboxChange(`must-be-${index}`)}
+                            isSelected={ideaEvaluateSelect.includes(`must_be-${index}`)}
+                            onSelect={() => handleCheckboxChange(`must_be-${index}`)}
                           />
                         ))}
 
                         
-                       <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
+                       <div className="title" style={{textAlign: "left", marginBottom: "-20px",marginTop: "20px"}}>
                                 <Body1 color="gray800">Reverse (반대 속성)  </Body1>
                        </div>
                       
@@ -1454,8 +1080,8 @@ const PageIdeaEvaluate = () => {
                             key={`reverse-${index}`}
                             id={`reverse-${index}`}
                             title={idea.name}
-                            isSelected={ideaEvaluateSelectedList.includes(`reverse-${index}`)}
-                            onSelect={() => handleCheckboxChange(`one-dimensional-${index}`)}
+                            isSelected={ideaEvaluateSelect.includes(`reverse-${index}`)}
+                            onSelect={() => handleCheckboxChange(`reverse-${index}`)}
                           />
                         ))}
                
@@ -1470,7 +1096,11 @@ const PageIdeaEvaluate = () => {
                           Fill
                           Round
                           onClick={handleCuratedIdea}
-                          disabled={selectedKanoModelData.length === 0 || toolSteps >= 1}
+                          disabled={
+                            ideaEvaluateSelect.length === 0 
+                              ? (selectedKanoModelData.length === 0 || toolSteps >= 1)
+                              : (ideaEvaluateSelect.length < 7 || toolSteps >= 1)
+                          }
                         >
                           아이디어 방향성으로 전환
                         </Button>
@@ -1505,6 +1135,43 @@ const PageIdeaEvaluate = () => {
                   </div>
 
                   <div className="content">
+
+                    
+                  <ListBoxGroup>
+                        <li>
+                          <Body2 color="gray500" style={{whiteSpace: "nowrap", marginBottom: "8px", marginRight: "50px"}}>평가할 아이디어 리스트</Body2>
+                          <div style={{ display: "flex", flexDirection: "column" }}>
+                            <span style={{ color: "#8C8C8C", marginBottom: "4px" }}>
+                              {ideaEvaluateSelectedList.map((idea, index) => {
+                                const isLast = index === ideaEvaluateSelectedList.length - 1;
+                                const text = idea.name;
+                                
+                                // 전체 텍스트가 30자를 넘으면 말줄임표 처리
+                                const totalText = ideaEvaluateSelectedList
+                                  .slice(0, index + 1)
+                                  .map(i => i.name)
+                                  .join(", ");
+                                
+                                if (totalText.length > 50 && !isLast) {
+                                  return null;  // 30자 넘어가면 더 이상 표시하지 않음
+                                }
+                                
+                                if (totalText.length > 50) {
+                                  return text + "...";  // 마지막 아이템에서 말줄임표 추가
+                                }
+                                
+                                return text + (isLast ? "" : ", ");  // 마지막이 아니면 쉼표 추가
+                              })}
+                            </span>
+                          </div>
+                        </li>
+                      </ListBoxGroup>
+
+                      <div className="title">
+                            <Body1 color="gray800" style={{textAlign: "left", marginBottom: "-20px" }}>
+                            Kano Model 평가 참여 페르소나 (AI 페르소나 Favorite에서 설정 가능) 
+                            </Body1>
+                            </div>
                     
                     {personaListSaas.length > 0 ? (
                     <MoleculePersonaSelectCard
@@ -1561,35 +1228,11 @@ const PageIdeaEvaluate = () => {
                       Fill
                       Round
                       onClick={() => {
-                        if (quickSurveyPersonaGroup.length > 0) {
                           handleSubmitReport(); //마지막 보고서 함수
-                        } else {
-                          if (
-                            interviewModeType === "selfQuestion" ||
-                            (interviewModeType === "moderator" &&
-                              quickSurveyPresetData &&
-                              quickSurveyPresetData.length > 0)
-                          ) {
-                            handleSubmitSelfSelect();
-                          }
-                        }
                       }}
                       disabled={
-                        toolSteps >= 3 ||
-                        !interviewModeType ||
-                        (interviewModeType === "moderator" &&
-                          (!selectedPresetCards ||
-                            !Object.values(selectedPresetCards).some(
-                              (value) => value
-                            )) &&
-                          !quickSurveyPersonaGroup.length > 0) ||
-                        (interviewModeType === "selfQuestion" &&
-                          (!recruitingCondition ||
-                            recruitingCondition.trim() === "" ||
-                            !selectedValues ||
-                            Object.values(selectedValues).every(
-                              (value) => !value
-                            )))
+                        toolSteps >= 3 
+        
                       }
                     >
                       다음
@@ -1656,98 +1299,15 @@ const PageIdeaEvaluate = () => {
                       <InsightAnalysis>
                         <div className="title">
                           <H4 color="gray800" align="left">
-                            Q. {quickSurveyAnalysis[selectedQuestion].question}
+                            아이디어 파레토 커브
                           </H4>
                         </div>
 
                         {activeDesignTab === "emotion" && (
                           <>
-                            {/* 각 질문 유형에 맞는 그래프 렌더링 */}
-                            {selectedQuestion[0] === "ab_test" && ( // null 또는 undefined가 아닌지 확인 // 비어있지 않은 객체인지 확인
-                              // quickSurveyStaticDataState &&
-                              // typeof quickSurveyStaticDataState === "object" && // 객체 타입인지 확인
-                              // Object.keys(quickSurveyStaticData).length > 0 &&
-                              <ABGraph
-                                onOptionSelect={setSelectedOption}
-                                onOptionSelectIndex={setSelectedOptionIndex}
-                                onBarClick={() => setShowToast(true)}
-                              />
-                            )}
-
-                            {selectedQuestion[0] === "custom_question" &&
-                              quickSurveyAnalysis[selectedQuestion]?.options
-                                ?.length === 2 && (
-                                // quickSurveyStaticDataState &&
-                                // typeof quickSurveyStaticDataState === "object" &&
-                                // Object.keys(quickSurveyStaticDataState).length >
-                                //   0 &&
-                                <BarChartLikertScale2
-                                  onOptionSelect={setSelectedOption}
-                                  onOptionSelectIndex={setSelectedOptionIndex}
-                                  onBarClick={() => setShowToast(true)}
-                                />
-                              )}
-                            {selectedQuestion[0] === "custom_question" &&
-                              quickSurveyAnalysis[selectedQuestion]?.options
-                                ?.length === 3 && (
-                                // quickSurveyStaticDataState &&
-                                // typeof quickSurveyStaticDataState === "object" &&
-                                // Object.keys(quickSurveyStaticDataState).length >
-                                //   0 &&
-                                <BarChartLikertScale3
-                                  onOptionSelect={setSelectedOption}
-                                  onOptionSelectIndex={setSelectedOptionIndex}
-                                  onBarClick={() => setShowToast(true)}
-                                />
-                              )}
-                            {selectedQuestion[0] === "custom_question" &&
-                              quickSurveyAnalysis[selectedQuestion]?.options
-                                ?.length === 4 && (
-                                // quickSurveyStaticDataState &&
-                                // typeof quickSurveyStaticDataState === "object" &&
-                                // Object.keys(quickSurveyStaticDataState).length >
-                                //   0 &&
-                                <BarChartLikertScale4
-                                  onOptionSelect={setSelectedOption}
-                                  onOptionSelectIndex={setSelectedOptionIndex}
-                                  onBarClick={() => setShowToast(true)}
-                                />
-                              )}
-
-                            {(selectedQuestion[0] === "importance" ||
-                              selectedQuestion[0] === "single_choice" ||
-                              (selectedQuestion[0] === "custom_question" &&
-                                quickSurveyAnalysis[selectedQuestion]?.options
-                                  ?.length === 5)) && (
-                              // quickSurveyStaticDataState &&
-                              // typeof quickSurveyStaticDataState === "object" &&
-                              // Object.keys(quickSurveyStaticDataState).length >
-                              //   0 &&
-                              <div
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  width: "100%",
-                                }}
-                              >
-                                <BarChartLikertScale5
-                                  onOptionSelect={setSelectedOption}
-                                  onOptionSelectIndex={setSelectedOptionIndex}
-                                  onBarClick={() => setShowToast(true)}
-                                />
-                              </div>
-                            )}
-                            {selectedQuestion[0] === "nps" && (
-                              // quickSurveyStaticDataState &&
-                              // typeof quickSurveyStaticDataState === "object" &&
-                              // Object.keys(quickSurveyStaticDataState).length >
-                              //   0 &&
-                              <BarChartLikertScale11
-                                onOptionSelect={setSelectedOption}
-                                onOptionSelectIndex={setSelectedOptionIndex}
-                                onBarClick={() => setShowToast(true)}
-                              />
-                            )}
+                        <ParetoCurveGraph data={graphData} />
+                           
+                           
 
                             {/* Insight 섹션 */}
                             <div className="content">
@@ -2353,3 +1913,4 @@ const PlusIcon = styled.span`
   font-size: 16px;
   color: ${palette.gray700};
 `;
+
