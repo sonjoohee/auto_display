@@ -162,6 +162,11 @@ const PageAiPersona = () => {
   const [showPersonaTypeTooltip, setShowPersonaTypeTooltip] = useState(false);
   const [showUniqueUserTooltip, setShowUniqueUserTooltip] = useState(false);
 
+  // 즐겨찾기된 페르소나 개수 계산
+  const favoriteCount = personaListSaas.filter(
+    (persona) => persona?.favorite === true
+  ).length;
+
   const handleEditClose = () => {
     setIsEditPopupOpen(false);
   };
@@ -1338,6 +1343,8 @@ const PageAiPersona = () => {
                     }
                   >
                     Favorite
+                    {sessionStorage.getItem("educationState") === "true" &&
+                      ` (${favoriteCount} / 20)`}
                   </TabButtonType3>
                 </TabWrapType3>
 

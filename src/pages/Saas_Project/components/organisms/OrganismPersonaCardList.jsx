@@ -65,6 +65,7 @@ const OrganismPersonaCardList = ({
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [filteredPersonaData, setFilteredPersonaData] = useState([]);
+  const [showFavoriteLimitPopup, setShowFavoriteLimitPopup] = useState(false);
   const eventState = true;
   const trialState = false;
   const eventTitle = "이벤트 제목";
@@ -115,6 +116,17 @@ const OrganismPersonaCardList = ({
   // 즐겨찾기 토글 함수
   const toggleFavorite = async (persona) => {
     if (!persona) return;
+
+    const isEducation = sessionStorage.getItem("educationState") === "true";
+    const currentFavoriteCount = personaData.filter(
+      (p) => p.favorite === true
+    ).length;
+
+    // 교육 상태이고, 즐겨찾기 수가 20개 이상이며, 현재 페르소나를 즐겨찾기 하려는 경우
+    if (isEducation && currentFavoriteCount >= 20 && !persona.favorite) {
+      setShowFavoriteLimitPopup(true);
+      return;
+    }
 
     try {
       // ID가 없는 경우 처리
@@ -661,6 +673,23 @@ const OrganismPersonaCardList = ({
           isModal={false}
           onCancel={() => setShowCreditPopup(false)}
           onConfirm={() => setShowCreditPopup(false)}
+        />
+      )}
+
+      {showFavoriteLimitPopup && (
+        <PopupWrap
+          Warning
+          title="즐겨찾기 제한"
+          message={
+            <>
+              교육 프로젝트에서는 즐겨찾기를 최대 20개까지 추가할 수 있습니다.
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => setShowFavoriteLimitPopup(false)}
+          onConfirm={() => setShowFavoriteLimitPopup(false)}
         />
       )}
     </>
