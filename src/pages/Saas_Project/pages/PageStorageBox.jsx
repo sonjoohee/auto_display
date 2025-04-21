@@ -360,13 +360,22 @@ const PageStorageBox = () => {
         <MainContent Wide1030>
           <StorageBoxWrap>
             <StorageBoxTitle>
-              <div>
-                <H1 color="gray800" align="left">
-                  Knowledge Archive
-                </H1>
-                <Body3 color="gray700" align="left">
-                  해당 프로젝트를 통해 수집한 리포트들을 한 곳에 모아두었어요
-                </Body3>
+              <div
+                style={{ display: "flex", flexDirection: "row", gap: "10px" }}
+              >
+                {sessionStorage.getItem("educationState") === "true" && (
+                  <LogoCard>
+                    <img src={images.dcbLogo} alt="logo" />
+                  </LogoCard>
+                )}
+                <div>
+                  <H1 color="gray800" align="left">
+                    Knowledge Archive
+                  </H1>
+                  <Body3 color="gray700" align="left">
+                    해당 프로젝트를 통해 수집한 리포트들을 한 곳에 모아두었어요
+                  </Body3>
+                </div>
               </div>
               <Button Outline onClick={() => setIsTrashModalOpen(true)}>
                 <img src={images.Trash} alt="" />
@@ -613,4 +622,16 @@ export const TabButtonType4 = styled(TabButton)`
       : `
       background: ${palette.white};
     `}
+`;
+
+const LogoCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 5px;
+  border: 1px solid ${palette.outlineGray};
+  background: ${palette.white};
 `;

@@ -21,12 +21,12 @@ import {
   IS_SIGNUP_POPUP_OPEN,
   USER_CREDITS,
   EDUCATION_STATE,
-} from "../../../../pages/AtomStates";
+} from "../../../AtomStates";
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 import MoleculeResetPasswordPopup from "./MoleculeResetPasswordPopup";
 
-const MoleculeLoginForm = ({ onClosePopup }) => {
+const MoleculeLoginEducationForm = ({ onClosePopup }) => {
   const [, setUserCredits] = useAtom(USER_CREDITS);
   const [email, setEmail] = useAtom(EMAIL);
   const [, setUserMembership] = useAtom(USER_MEMBERSHIP);
@@ -217,88 +217,6 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
       setErrorStatus("로그인 중 오류가 발생했습니다.");
     }
   };
-  // const validateEmail = (email) => {
-  //   if (!isValidEmail(email)) {
-  //     setErrorStatus("유효한 이메일 주소를 입력해주세요.");
-  //     setIsEmailValid(false);
-  //     setIsCommercialEmail(false);
-  //     return;
-  //   }
-
-  //   // 상용 이메일 체크 로직 추가
-  //   const commonEmailDomains = [
-  //     "gmail.com",
-  //     "yahoo.com",
-  //     "yahoo.co.jp",
-  //     "hotmail.com",
-  //     "outlook.com",
-  //     "aol.com",
-  //     "zoho.com",
-  //     "mail.com",
-  //     "mail.ru",
-  //     "gmx.com",
-  //     "yandex.com",
-  //     "protonmail.com",
-  //     "icloud.com",
-  //     "fastmail.com",
-  //     "hushmail.com",
-  //     "inbox.com",
-  //     "lycos.com",
-  //     "rediffmail.com",
-  //     "mail.ru",
-  //     "qq.com",
-  //     "163.com",
-  //     "126.com",
-  //     "sina.com",
-  //     "sohu.com",
-  //     "yeah.net",
-  //     "21cn.com",
-  //     "tom.com",
-  //     "foxmail.com",
-  //     "live.com",
-  //     "msn.com",
-  //     "naver.com",
-  //     "daum.net",
-  //     "nate.com",
-  //     "kakao.com",
-  //     "hanmail.net",
-  //     "korea.com",
-  //     "hanmir.com",
-  //     "empal.com",
-  //     "hitel.net",
-  //     "kebi.com",
-  //     "netian.com",
-  //     "dreamwiz.com",
-  //     "tistory.com",
-  //     "naver.com",
-  //     "daum.net",
-  //     "nate.com",
-  //     "orgio.net",
-  //     "wail.co.kr",
-  //     "lycos.co.kr",
-  //     "chol.com",
-  //     "chollian.net",
-  //     "intizen.com",
-  //     "freechal.com",
-  //     "teramail.com",
-  //     "metq.com",
-  //     "paran.com",
-  //     "cyworld.com",
-  //     "hanafos.com",
-  //     "unitel.co.kr",
-  //   ];
-  //   const emailDomain = email.split("@")[1];
-  //   if (commonEmailDomains.includes(emailDomain)) {
-  //     setErrorStatus("상용 이메일은 사용할 수 없습니다.");
-  //     setIsEmailValid(false);
-  //     setIsCommercialEmail(true);
-  //     return;
-  //   }
-
-  //   setIsEmailValid(true);
-  //   setIsCommercialEmail(false);
-  //   setErrorStatus("");
-  // };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -408,22 +326,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
 
             <JoinWrap>
               <p>아직 회원이 아니신가요?</p>
-              <a
-                style={{
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  const educationState =
-                    sessionStorage.getItem("educationState");
-                  if (educationState === "true") {
-                    window.location.href = "/SignupEducation";
-                  } else {
-                    window.location.href = "/Signin";
-                  }
-                }}
-              >
-                회원가입하기
-              </a>
+              <Link to="/Signin">회원가입하기</Link>
             </JoinWrap>
           </LoginFormContainer>
         )}
@@ -461,7 +364,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
     </>
   );
 };
-export default MoleculeLoginForm;
+export default MoleculeLoginEducationForm;
 
 const LoginFormContainer = styled.div`
   width: 100%;

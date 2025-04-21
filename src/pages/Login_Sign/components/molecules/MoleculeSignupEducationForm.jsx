@@ -47,6 +47,9 @@ const MoleculeSignupEducationForm = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [isCommercialEmail, setIsCommercialEmail] = useState(false);
+  const [codeChars, setCodeChars] = useState(["", "", "", "", ""]);
+  const [educationCode, setEducationCode] = useState("");
+  const [educationCodeError, setEducationCodeError] = useState("");
 
   const navigate = useNavigate();
 
@@ -63,6 +66,24 @@ const MoleculeSignupEducationForm = () => {
   useEffect(() => {
     setErrorStatus("");
   }, [setErrorStatus]);
+
+  useEffect(() => {
+    const newCode = codeChars.join("");
+    setEducationCode(newCode);
+
+    if (newCode.length === 5) {
+      const alphanumericRegex = /^[a-zA-Z0-9]{5}$/;
+      if (alphanumericRegex.test(newCode)) {
+        setEducationCodeError("");
+      } else {
+        setEducationCodeError("교육 코드는 5자리 영문 또는 숫자여야 합니다.");
+      }
+    } else if (newCode.length > 0 && newCode.length < 5) {
+      setEducationCodeError("교육 코드는 5자리여야 합니다.");
+    } else {
+      setEducationCodeError("");
+    }
+  }, [codeChars]);
 
   const validateForm = () => {
     if (!signUpName || !signUpEmail || !signUpPassword || !confirmPassword) {
@@ -260,12 +281,12 @@ const MoleculeSignupEducationForm = () => {
       "unitel.co.kr",
     ];
     const emailDomain = email.split("@")[1];
-    if (commonEmailDomains.includes(emailDomain)) {
-      setErrorStatus("상용 이메일은 사용할 수 없습니다.");
-      setIsEmailValid(false);
-      setIsCommercialEmail(true);
-      return;
-    }
+    // if (commonEmailDomains.includes(emailDomain)) {
+    //   setErrorStatus("상용 이메일은 사용할 수 없습니다.");
+    //   setIsEmailValid(false);
+    //   setIsCommercialEmail(true);
+    //   return;
+    // }
 
     setIsEmailValid(true);
     setIsCommercialEmail(false);
@@ -289,24 +310,30 @@ const MoleculeSignupEducationForm = () => {
     }
   };
 
-  // 교육 코드 입력 처리 함수
   const handleCodeInputChange = (e, index) => {
     const value = e.target.value;
-    
-    // 숫자만 허용
-    if (value && /^[0-9]$/.test(value)) {
-      // 다음 입력 상자로 포커스 이동
-      if (index < 4) {
-        codeInputRefs.current[index + 1].focus();
+    const alphanumericRegex = /^[a-zA-Z0-9]?$/;
+
+    if (alphanumericRegex.test(value)) {
+      const newCodeChars = [...codeChars];
+      newCodeChars[index] = value;
+      setCodeChars(newCodeChars);
+
+      if (value && index < 4) {
+        setTimeout(() => {
+          if (codeInputRefs.current[index + 1]) {
+            codeInputRefs.current[index + 1].focus();
+          }
+        }, 0);
       }
     }
   };
-  
-  // 백스페이스 키 처리 함수
+
   const handleCodeInputKeyDown = (e, index) => {
-    // 백스페이스 키를 누르고 현재 입력 상자가 비어있을 때 이전 입력 상자로 포커스 이동
-    if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
-      codeInputRefs.current[index - 1].focus();
+    if (e.key === "Backspace" && codeChars[index] === "" && index > 0) {
+      if (codeInputRefs.current[index - 1]) {
+        codeInputRefs.current[index - 1].focus();
+      }
     }
   };
 
@@ -347,12 +374,12 @@ const MoleculeSignupEducationForm = () => {
                     중복확인
                   </Button>
                 </div>
-                {
+                {/* {
                   <Helptext color="gray600" align="left">
                     공용 도메인(기업, 학교, 기관) 이메일만 사용 가능하며, 상용
                     이메일(gmail, naver, daum 등)은 사용할 수 없습니다.
                   </Helptext>
-                }
+                } */}
                 {errorStatus && (
                   <ErrorMessage style={{ color: "red", fontSize: "0.8rem" }}>
                     {errorStatus}
@@ -367,14 +394,22 @@ const MoleculeSignupEducationForm = () => {
                 )}
               </div>
 
-              <SignInfo>
+              {/* <SignInfo>
                 <img src={images.ExclamationCircle} alt="info" />
                 <Body3 color="gray500">
                   사내 메일 인증이 불가능한 경우나 기업 메일이 없는 사업장 및
                   기관은 info@userconnect.kr 메일을 통해 가입 문의해 주세요.
                 </Body3>
-              </SignInfo>
+              </SignInfo> */}
             </div>
+
+            {/* <SignInfo>
+              <img src={images.ExclamationCircle} alt="info" />
+              <Body3 color="gray500">
+                사내 메일 인증이 불가능한 경우나 기업 메일이 없는 사업장 및
+                기관은 info@userconnect.kr 메일을 통해 가입 문의해 주세요.
+              </Body3>
+            </SignInfo> */}
 
             <div>
               <label htmlFor="signUpPassword">
@@ -469,170 +504,73 @@ const MoleculeSignupEducationForm = () => {
               )}
             </div>
           </ScrollWrap>
-          <div style={{ fontSize: "12px", fontWeight: 500, color: "#212529", marginBottom: "8px", marginTop: "32px", textAlign: "left" }}>코드입력</div>
-          <div style={{ width: "610px", marginBottom: "20px", marginTop: "8px" }}>
+          <div
+            style={{
+              fontSize: "12px",
+              fontWeight: 500,
+              color: "#212529",
+              marginBottom: "8px",
+              marginTop: "32px",
+              textAlign: "left",
+            }}
+          >
+            <label htmlFor="educationCode">
+              교육 코드<span>*</span>
+            </label>
+          </div>
+          <div
+            style={{ width: "610px", marginBottom: "20px", marginTop: "8px" }}
+          >
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <input 
-                type="text" 
-                maxLength="1" 
-                inputMode="numeric" 
-                pattern="[0-9]*" 
-                style={{ 
-                  width: "102.8px", 
-                  height: "102px", 
-                  borderRadius: "8px", 
-                  border: "1px solid #E0E4EB", 
-                  backgroundColor: "#FFFFFF", 
-                  textAlign: "center", 
-                  fontSize: "24px", 
-                  lineHeight: "150%", 
-                  letterSpacing: "0%", 
-                  color: "#323232", 
-                  outline: "none" 
-                }}
-                onChange={(e) => {
-                  handleCodeInputChange(e, 0);
-                  e.target.style.border = e.target.value ? "none" : "1px solid #E0E4EB";
-                }}
-                onKeyDown={(e) => handleCodeInputKeyDown(e, 0)}
-                ref={(el) => (codeInputRefs.current[0] = el)}
-                onFocus={(e) => e.target.style.backgroundColor = "#F7F8FA"}
-                onBlur={(e) => {
-                  if (e.target.value === "") {
-                    e.target.style.backgroundColor = "#FFFFFF";
-                    e.target.style.border = "1px solid #E0E4EB";
-                  }
-                }}
-              />
-              <input 
-                type="text" 
-                maxLength="1" 
-                inputMode="numeric" 
-                pattern="[0-9]*" 
-                style={{ 
-                  width: "102.8px", 
-                  height: "102px", 
-                  borderRadius: "8px", 
-                  border: "1px solid #E0E4EB", 
-                  backgroundColor: "#FFFFFF", 
-                  textAlign: "center", 
-                  fontSize: "24px", 
-                  lineHeight: "150%", 
-                  letterSpacing: "0%", 
-                  color: "#323232", 
-                  outline: "none" 
-                }}
-                onChange={(e) => {
-                  handleCodeInputChange(e, 1);
-                  e.target.style.border = e.target.value ? "none" : "1px solid #E0E4EB";
-                }}
-                onKeyDown={(e) => handleCodeInputKeyDown(e, 1)}
-                ref={(el) => (codeInputRefs.current[1] = el)}
-                onFocus={(e) => e.target.style.backgroundColor = "#F7F8FA"}
-                onBlur={(e) => {
-                  if (e.target.value === "") {
-                    e.target.style.backgroundColor = "#FFFFFF";
-                    e.target.style.border = "1px solid #E0E4EB";
-                  }
-                }}
-              />
-              <input 
-                type="text" 
-                maxLength="1" 
-                inputMode="numeric" 
-                pattern="[0-9]*" 
-                style={{ 
-                  width: "102.8px", 
-                  height: "102px", 
-                  borderRadius: "8px", 
-                  border: "1px solid #E0E4EB", 
-                  backgroundColor: "#FFFFFF", 
-                  textAlign: "center", 
-                  fontSize: "24px", 
-                  lineHeight: "150%", 
-                  letterSpacing: "0%", 
-                  color: "#323232", 
-                  outline: "none" 
-                }}
-                onChange={(e) => {
-                  handleCodeInputChange(e, 2);
-                  e.target.style.border = e.target.value ? "none" : "1px solid #E0E4EB";
-                }}
-                onKeyDown={(e) => handleCodeInputKeyDown(e, 2)}
-                ref={(el) => (codeInputRefs.current[2] = el)}
-                onFocus={(e) => e.target.style.backgroundColor = "#F7F8FA"}
-                onBlur={(e) => {
-                  if (e.target.value === "") {
-                    e.target.style.backgroundColor = "#FFFFFF";
-                    e.target.style.border = "1px solid #E0E4EB";
-                  }
-                }}
-              />
-              <input 
-                type="text" 
-                maxLength="1" 
-                inputMode="numeric" 
-                pattern="[0-9]*" 
-                style={{ 
-                  width: "102.8px", 
-                  height: "102px", 
-                  borderRadius: "8px", 
-                  border: "1px solid #E0E4EB", 
-                  backgroundColor: "#FFFFFF", 
-                  textAlign: "center", 
-                  fontSize: "24px", 
-                  lineHeight: "150%", 
-                  letterSpacing: "0%", 
-                  color: "#323232", 
-                  outline: "none" 
-                }}
-                onChange={(e) => {
-                  handleCodeInputChange(e, 3);
-                  e.target.style.border = e.target.value ? "none" : "1px solid #E0E4EB";
-                }}
-                onKeyDown={(e) => handleCodeInputKeyDown(e, 3)}
-                ref={(el) => (codeInputRefs.current[3] = el)}
-                onFocus={(e) => e.target.style.backgroundColor = "#F7F8FA"}
-                onBlur={(e) => {
-                  if (e.target.value === "") {
-                    e.target.style.backgroundColor = "#FFFFFF";
-                    e.target.style.border = "1px solid #E0E4EB";
-                  }
-                }}
-              />
-              <input 
-                type="text" 
-                maxLength="1" 
-                inputMode="numeric" 
-                pattern="[0-9]*" 
-                style={{ 
-                  width: "102.8px", 
-                  height: "102px", 
-                  borderRadius: "8px", 
-                  border: "1px solid #E0E4EB", 
-                  backgroundColor: "#FFFFFF", 
-                  textAlign: "center", 
-                  fontSize: "24px", 
-                  lineHeight: "150%", 
-                  letterSpacing: "0%", 
-                  color: "#323232", 
-                  outline: "none" 
-                }}
-                onChange={(e) => {
-                  handleCodeInputChange(e, 4);
-                  e.target.style.border = e.target.value ? "none" : "1px solid #E0E4EB";
-                }}
-                onKeyDown={(e) => handleCodeInputKeyDown(e, 4)}
-                ref={(el) => (codeInputRefs.current[4] = el)}
-                onFocus={(e) => e.target.style.backgroundColor = "#F7F8FA"}
-                onBlur={(e) => {
-                  if (e.target.value === "") {
-                    e.target.style.backgroundColor = "#FFFFFF";
-                    e.target.style.border = "1px solid #E0E4EB";
-                  }
-                }}
-              />
+              {[0, 1, 2, 3, 4].map((index) => (
+                <input
+                  key={index}
+                  type="text"
+                  maxLength="1"
+                  inputMode="text"
+                  style={{
+                    width: "102.8px",
+                    height: "102px",
+                    borderRadius: "8px",
+                    border: codeChars[index] ? "none" : "1px solid #E0E4EB",
+                    backgroundColor: codeChars[index] ? "#F7F8FA" : "#FFFFFF",
+                    textAlign: "center",
+                    fontSize: "24px",
+                    lineHeight: "150%",
+                    letterSpacing: "0%",
+                    color: "#323232",
+                    outline: "none",
+                    opacity: index > 0 && !codeChars[index - 1] ? 0.5 : 1,
+                    cursor:
+                      index > 0 && !codeChars[index - 1]
+                        ? "not-allowed"
+                        : "text",
+                  }}
+                  value={codeChars[index]}
+                  onChange={(e) => handleCodeInputChange(e, index)}
+                  onKeyDown={(e) => handleCodeInputKeyDown(e, index)}
+                  ref={(el) => (codeInputRefs.current[index] = el)}
+                  disabled={index > 0 && !codeChars[index - 1]}
+                  onFocus={(e) => {
+                    e.target.style.backgroundColor = "#F7F8FA";
+                    e.target.select();
+                  }}
+                  onBlur={(e) => {
+                    if (e.target.value === "") {
+                      e.target.style.backgroundColor = "#FFFFFF";
+                      e.target.style.border = "1px solid #E0E4EB";
+                    }
+                  }}
+                />
+              ))}
             </div>
+            {educationCodeError && (
+              <ErrorMessage
+                style={{ color: "red", textAlign: "left", marginTop: "8px" }}
+              >
+                {educationCodeError}
+              </ErrorMessage>
+            )}
           </div>
 
           <TermsAndConditions>
@@ -665,7 +603,9 @@ const MoleculeSignupEducationForm = () => {
               !confirmPassword ||
               !phoneNumber ||
               !termsAccepted ||
-              isCommercialEmail
+              isCommercialEmail ||
+              !!educationCodeError ||
+              educationCode.length !== 5
             }
           >
             {isLoading ? "메일을 전송 중입니다..." : "회원가입"}

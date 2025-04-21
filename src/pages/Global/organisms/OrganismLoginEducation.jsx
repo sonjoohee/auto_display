@@ -7,7 +7,7 @@ import {
 } from "../../../assets/styles/BusinessAnalysisStyle";
 import MoleculeLoginPopup from "../../Login_Sign/components/molecules/MoleculeLoginPopup";
 import { H1 } from "../../../assets/styles/Typography";
-import MoleculeLoginForm from "../../Login_Sign/components/molecules/MoleculeLoginForm";
+import MoleculeLoginEducationForm from "../../Login_Sign/components/molecules/MoleculeLoginEducationForm";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 
 const OrganismIncLogin = () => {
@@ -23,8 +23,8 @@ const OrganismIncLogin = () => {
       <ContentsWrap>
         <MainContent Wide>
           <LoginWrap>
-            <H1>Log in</H1>
-            <MoleculeLoginForm />
+            <H1>Log in Education</H1>
+            <MoleculeLoginEducationForm />
           </LoginWrap>
         </MainContent>
       </ContentsWrap>

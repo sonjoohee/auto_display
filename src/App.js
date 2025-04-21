@@ -71,6 +71,7 @@ import PageTerms from "./pages/PageTerms";
 import PagePolicy from "./pages/PagePolicy";
 
 import PageServiceLanding from "./pages/PageServiceLanding";
+import PageServiceLandingDCBeducation from "./pages/PageServiceLandingDCBeducation";
 import PageBlog from "./pages/PageBlog";
 
 import PageToolList from "./pages/Persona/components/pages/PageToolList";
@@ -100,7 +101,7 @@ import PagePersona4SingleLive from "./pages/Persona/components/pages/PagePersona
 // 로그인, 회원가입
 import OrganismLogin from "./pages/Global/organisms/OrganismLogin";
 import OrganismSignin from "./pages/Global/organisms/OrganismSignin";
-import OrganismSigninEducation from "./pages/Global/organisms/OrganismSigninEducation";
+import OrganismSignupEducation from "./pages/Global/organisms/OrganismSignupEducation";
 
 // 테스트 라우트 추가
 import PageMarketingNoItemsShare from "./pages/Marketing/components/pages/PageMarketingNoItemsShare";
@@ -339,6 +340,14 @@ function App() {
             element={
               // <RequireToken>
               <PageServiceLanding />
+              // </RequireToken>
+            }
+          />
+          <Route
+            path="/DCB-education"
+            element={
+              // <RequireToken>
+              <PageServiceLandingDCBeducation />
               // </RequireToken>
             }
           />
@@ -651,8 +660,12 @@ function App() {
           />
 
           <Route
-            path="/SigninEducation"
-            element={<OrganismSigninEducation />}
+            path="/SignupEducation"
+            element={
+              <RedirectIfLoggedIn>
+                <OrganismSignupEducation />
+              </RedirectIfLoggedIn>
+            }
           />
 
           <Route

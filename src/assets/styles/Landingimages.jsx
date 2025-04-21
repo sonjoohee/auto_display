@@ -49,7 +49,11 @@ import ImgLanding11 from "../images/Landing/img_landing11.png";
 import ImgLanding12 from "../images/Landing/img_landing12.png";
 import ImgLanding13 from "../images/Landing/img_landing13.png";
 
+import dcbXalmaden from "../images/Landing/dcbXalmaden.png";
+
 const Landingimages = {
+  dcbXalmaden,
+
   Img01,
   Img02,
   Img03,
@@ -100,6 +104,6 @@ const Landingimages = {
   ImgLanding11,
   ImgLanding12,
   ImgLanding13,
-}
+};
 
 export default Landingimages;
