@@ -17,10 +17,9 @@ import {
   SIGN_UP_STATUS,
   ERROR_STATUS,
   SUCCESS_STATUS,
-  CONVERSATION_ID,
   IS_LOGIN_POPUP_OPEN,
   IS_SIGNUP_POPUP_OPEN,
-  IS_MARKETING,
+  PROJECT_EDUCATION_CODE,
 } from "../../../AtomStates";
 import MoleculeSignupPopup from "./MoleculeSignupPopup";
 import images from "../../../../assets/styles/Images";
@@ -42,13 +41,14 @@ const MoleculeSignupEducationForm = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSignupSuccessful, setSignupSuccessful] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isMarketing] = useAtom(IS_MARKETING);
-  const [conversationId] = useAtom(CONVERSATION_ID);
+  const [projectEducationCode, setProjectEducationCode] = useAtom(
+    PROJECT_EDUCATION_CODE
+  );
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [isCommercialEmail, setIsCommercialEmail] = useState(false);
   const [codeChars, setCodeChars] = useState(["", "", "", "", ""]);
-  const [educationCode, setEducationCode] = useState("");
+  const [educationAuthCode, setEducationAuthCode] = useState("");
   const [educationCodeError, setEducationCodeError] = useState("");
 
   const navigate = useNavigate();
@@ -69,7 +69,7 @@ const MoleculeSignupEducationForm = () => {
 
   useEffect(() => {
     const newCode = codeChars.join("");
-    setEducationCode(newCode);
+    setEducationAuthCode(newCode);
 
     if (newCode.length === 5) {
       const alphanumericRegex = /^[a-zA-Z0-9]{5}$/;
@@ -86,7 +86,13 @@ const MoleculeSignupEducationForm = () => {
   }, [codeChars]);
 
   const validateForm = () => {
-    if (!signUpName || !signUpEmail || !signUpPassword || !confirmPassword) {
+    if (
+      !signUpName ||
+      !signUpEmail ||
+      !signUpPassword ||
+      !confirmPassword ||
+      educationAuthCode.length < 5
+    ) {
       setErrorStatus("모든 필드를 입력해주세요.");
       return false;
     }
@@ -120,22 +126,9 @@ const MoleculeSignupEducationForm = () => {
     setIsLoading(true); // 로딩 상태 시작
 
     try {
-      if (isMarketing) {
-        response = await fetch(
-          "https://wishresearch.kr/api/user/signup_marketing/",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: signUpName,
-              email: signUpEmail,
-              password: signUpPassword,
-              chatGetId: conversationId,
-            }),
-          }
-        );
-      } else {
-        response = await fetch("https://wishresearch.kr/api/user/signup/", {
+      response = await fetch(
+        "https://wishresearch.kr/api/user/education_signup/",
+        {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -143,11 +136,14 @@ const MoleculeSignupEducationForm = () => {
             email: signUpEmail,
             password: signUpPassword,
             phone_number: phoneNumber,
+            // education_code: projectEducationCode,
+            education_code: "edu_000001",
+            education_auth_code: educationAuthCode,
             role: signUpRole,
             status: signUpStatus,
           }),
-        });
-      }
+        }
+      );
 
       if (response.ok) {
         setSignupSuccessful(true); // 회원가입 성공 상태 설정
@@ -604,8 +600,8 @@ const MoleculeSignupEducationForm = () => {
               !phoneNumber ||
               !termsAccepted ||
               isCommercialEmail ||
-              !!educationCodeError ||
-              educationCode.length !== 5
+              !educationCodeError ||
+              projectEducationCode.length !== 5
             }
           >
             {isLoading ? "메일을 전송 중입니다..." : "회원가입"}

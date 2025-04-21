@@ -847,7 +847,7 @@ const PageConceptDefinition = () => {
                   <div className="title">
                     <H3 color="gray800">Persona Selection</H3>
                     <Body3 color="gray800">
-                    컨셉정의서를 작성할 타겟 페르소나를 선택하세요
+                      컨셉정의서를 작성할 타겟 페르소나를 선택하세요
                     </Body3>
                   </div>
 
@@ -945,23 +945,20 @@ const PageConceptDefinition = () => {
                       </BoxWrap>
                     )}
                   </div>
-      
 
-                  
-                    <Button
-                      Other
-                      Primary
-                      Fill
-                      Round
-                      onClick={handleSubmitPersona}
-                      // disabled={
-                      //   toolSteps >= 1 ||
-                      //   (!isCreateReportIndex && selectedTemplete.length === 0)
-                      // }
-                    >
-                      다음
-                    </Button>
-         
+                  <Button
+                    Other
+                    Primary
+                    Fill
+                    Round
+                    onClick={handleSubmitPersona}
+                    // disabled={
+                    //   toolSteps >= 1 ||
+                    //   (!isCreateReportIndex && selectedTemplete.length === 0)
+                    // }
+                  >
+                    다음
+                  </Button>
                 </>
               </TabContent5>
             )}
@@ -1169,7 +1166,7 @@ const PageConceptDefinition = () => {
                       </BoxWrap>
                       {/* <ListBoxGroup>
                         <li>
-                        <Body2 color="gray500">페르소나 선택</Body2>
+                          <Body2 color="gray500">페르소나 선택</Body2>
                           {selectedPersonas ? (
                             <PersonaGroup>
                               {Array.isArray(selectedPersonas) ? (
@@ -1222,9 +1219,7 @@ const PageConceptDefinition = () => {
                             color="gray800"
                             style={{ textAlign: "left" }}
                             dangerouslySetInnerHTML={{
-                              __html:
-                                uploadedFiles.length > 0
-
+                              __html: uploadedFiles.length > 0,
                             }}
                           />
                         </li>
@@ -1248,21 +1243,25 @@ const PageConceptDefinition = () => {
                       ) : (
                         <>
                           <div className="title">
-                        <Body1 color="gray700" style={{textAlign: "left"}}>
-                        Kano Model 평가에 포함할 아이디어를 선택해 주세요. (복수 선택)
-                        </Body1>
-                        </div>
-                        {conceptDefinitionValue.map((value, index) => (
-                        <MoleculeItemSelectCard
-                        FlexStart
-                        key={index}
-                        id={index}
-                        title={value.name}
-                        isSelected={selectedValue.includes(index)}
-                        onSelect={() => handleCheckboxChange(index)}
-                      />
-                      ))}
-                      </>
+                            <Body1
+                              color="gray700"
+                              style={{ textAlign: "left" }}
+                            >
+                              Kano Model 평가에 포함할 아이디어를 선택해 주세요.
+                              (복수 선택)
+                            </Body1>
+                          </div>
+                          {conceptDefinitionValue.map((value, index) => (
+                            <MoleculeItemSelectCard
+                              FlexStart
+                              key={index}
+                              id={index}
+                              title={value.name}
+                              isSelected={selectedValue.includes(index)}
+                              onSelect={() => handleCheckboxChange(index)}
+                            />
+                          ))}
+                        </>
                       )}
                     </div>
                     <Button
