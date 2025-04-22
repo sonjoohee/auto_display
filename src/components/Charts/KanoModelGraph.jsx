@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { palette } from "../../assets/styles/Palette";
 import { useAtom } from "jotai";
-import { KANO_MODEL_EVALUATION } from "../../pages/AtomStates";
+import { KANO_MODEL_GRAPH_DATA } from "../../pages/AtomStates";
 
 /**
  * 카노 모델(Kano Model) 그래프 컴포넌트
@@ -10,109 +10,129 @@ import { KANO_MODEL_EVALUATION } from "../../pages/AtomStates";
  * y축: 만족도(불만족 -> 만족)
  */
 const KanoModelGraph = () => {
-  const [kanoModelEvaluation] = useAtom(KANO_MODEL_EVALUATION);
+  const [kanoModelGraphData] = useAtom(KANO_MODEL_GRAPH_DATA);
 
   // 라벨 정의
-  const satisfactionLabels = {
-    veryHigh: "매우 만족",
-    high: "만족",
-    neutral: "보통",
-    low: "불만족",
-    veryLow: "매우 불만족"
-  };
+  // const satisfactionLabels = {
+  //   veryHigh: "매우 만족",
+  //   high: "만족",
+  //   neutral: "보통",
+  //   low: "불만족",
+  //   veryLow: "매우 불만족",
+  // };
 
-  const fulfillmentLabels = {
-    fulfilled: "충족",
-    adequate: "보통",
-    unfulfilled: "불충족"
-  };
+  // const fulfillmentLabels = {
+  //   fulfilled: "충족",
+  //   adequate: "보통",
+  //   unfulfilled: "불충족",
+  // };
 
   // 데이터 변환 함수
-  const transformKanoData = (data) => {
-    if (!data || !Array.isArray(data)) return [];
-    
-    return data.map(persona => {
-      return persona.answers.map(answer => ({
-        x: ((5 - answer.negative_answer) / 4) * 100,
-        y: ((answer.positive_answer - 1) / 4) * 100,
-        title: answer.idea_title,
-        size: 8
-      }));
-    }).flat();
+  // const transformKanoData = (kanoModelGraphData) => {
+  //   console.log(
+  //     "🚀 ~ transformKanoData ~ kanoModelGraphData:",
+  //     kanoModelGraphData
+  //   );
+  //   if (!kanoModelGraphData || !Array.isArray(kanoModelGraphData)) return [];
+
+  //   return kanoModelGraphData
+  //     .map((data) => {
+  //       return {
+  //         x: data.CSP,
+  //         y: data.CSM,
+  //         title: Object.keys(data),
+  //         size: 8,
+  //       };
+  //     })
+  //     .flat();
+  // };
+  const transformKanoData = (kanoModelGraphData) => {
+    // 입력 데이터가 객체이고 null이 아닌지 확인합니다.
+    if (
+      !kanoModelGraphData ||
+      typeof kanoModelGraphData !== "object" ||
+      Array.isArray(kanoModelGraphData)
+    ) {
+      return [];
+    }
+
+    // Object.entries를 사용하여 객체를 [key, value] 쌍의 배열로 변환합니다.
+    return Object.entries(kanoModelGraphData).map(([title, data]) => {
+      // CSP 값은 0 ~ 1 범위를 0 ~ 100 범위로 변환합니다.
+      const xValue = data.CSP * 100;
+      // CSM 값은 절대값을 취하고 백분율로 변환합니다.
+      const yValue = Math.abs(data.CSM) * 100;
+
+      return {
+        x: xValue,
+        y: yValue,
+        title: title,
+        size: 8,
+      };
+    });
   };
 
-  const graphData = transformKanoData(kanoModelEvaluation);
+  const transformAverageKanoData = (kanoModelGraphData) => {
+    // 입력 데이터가 유효한 객체인지 확인합니다.
+    if (
+      !kanoModelGraphData ||
+      typeof kanoModelGraphData !== "object" ||
+      Array.isArray(kanoModelGraphData)
+    ) {
+      return { avgCSP: 0, avgCSM: 0 }; // 유효하지 않으면 기본값 반환
+    }
+
+    const dataEntries = Object.values(kanoModelGraphData);
+    const numberOfEntries = dataEntries.length;
+
+    // 데이터가 없는 경우 기본값 반환
+    if (numberOfEntries === 0) {
+      return { avgCSP: 0, avgCSM: 0 };
+    }
+
+    // CSP와 CSM 값의 합계를 계산합니다.
+    const sumCSP = dataEntries.reduce((sum, data) => sum + data.CSP, 0);
+    const sumCSM = dataEntries.reduce(
+      (sum, data) => sum + Math.abs(data.CSM),
+      0
+    );
+
+    // 평균을 계산하고 백분율로 변환합니다.
+    const avgCSP = (sumCSP / numberOfEntries) * 100;
+    const avgCSM = (sumCSM / numberOfEntries) * 100;
+
+    return { avgCSP, avgCSM };
+  };
+
+  const graphData = transformKanoData(kanoModelGraphData);
+  const averageKanoData = transformAverageKanoData(kanoModelGraphData);
 
   return (
     <GraphContainer>
       {/* 그래프 영역 */}
       <GraphArea>
-        {/* 수직 그리드 라인 - 점선 */}
-        <GridLineVertical position={25} />
-        <GridLineVertical position={75} />
-        
-        {/* 수평 그리드 라인 - 점선 */}
-        <GridLineHorizontal position={25} />
-        <GridLineHorizontal position={75} />
-        
+        {/* 평균 CSP 값으로 수직 기준선 그리기 */}
+        <GridLineVertical position={averageKanoData.avgCSP} />
+        {/* 평균 CSM 값으로 수평 기준선 그리기 */}
+        <GridLineHorizontal position={averageKanoData.avgCSM} />
+
         {/* 좌측 실선 라인 (위로 확장) */}
         <LeftAxisLine />
-        
+
         {/* 좌측 상단 화살표 */}
         <LeftAxisArrow />
-        
+
         {/* 하단 실선 라인 (우측으로 확장) */}
         <BottomAxisLine />
-        
+
         {/* 우측 하단 화살표 */}
         <RightAxisArrow />
-        
-        {/* '적당한' 위측 원 기준의 실선 */}
-        <CenterVerticalLine />
-        
-        {/* '적당한' 위측 원 기준의 세로 실선 화살표 */}
-        <CenterVerticalArrow />
-        
-        {/* '보통' 우측 원 기준의 가로 실선 */}
-        <MidLevelHorizontalLine />
-        
-        {/* '보통' 우측 원 기준의 가로 실선 화살표 */}
-        <MidLevelHorizontalArrow />
-        
-        {/* 좌측 라인 원 */}
-        <LeftAxisCircle position={0} />
-        <LeftAxisCircle position={25} />
-        <LeftAxisCircle position={50} />
-        <LeftAxisCircle position={75} />
-        <LeftAxisCircle position={100} />
-        
-        {/* 좌측 원 옆 텍스트 */}
-        <AxisCircleLabel position={0}>{satisfactionLabels.veryLow}</AxisCircleLabel>
-        <AxisCircleLabel position={25}>{satisfactionLabels.low}</AxisCircleLabel>
-        <AxisCircleLabel position={50}>{satisfactionLabels.neutral}</AxisCircleLabel>
-        <AxisCircleLabel position={75}>{satisfactionLabels.high}</AxisCircleLabel>
-        <AxisCircleLabel position={100}>{satisfactionLabels.veryHigh}</AxisCircleLabel>
-        
-        {/* 하단 원 */}
-        <BottomAxisCircle position={25} />
-        <BottomAxisCircle position={50} />
-        <BottomAxisCircle position={75} />
-        
-        {/* 하단 원 옆 텍스트 */}
-        <BottomCircleLabel position={25} align="left">{fulfillmentLabels.unfulfilled}</BottomCircleLabel>
-        <BottomCircleLabel position={50} align="center">{fulfillmentLabels.adequate}</BottomCircleLabel>
-        <BottomCircleLabel position={75} align="right">{fulfillmentLabels.fulfilled}</BottomCircleLabel>
-        
+
         {/* 데이터 포인트 */}
         {graphData.map((point, index) => (
-          <DataPoint 
-            key={index}
-            x={point.x}
-            y={point.y}
-            size={point.size}
-          />
+          <DataPoint key={index} x={point.x} y={point.y} size={point.size} />
         ))}
-        
+
         {/* 곡선과 대각선 주석 처리 (임시로 화면에서 제거) */}
         {/* <GraphPath1 /> */}
         {/* <GraphPath2 /> */}
@@ -251,19 +271,19 @@ const BottomCircleLabel = styled.div`
   color: ${palette.gray800};
   white-space: nowrap;
   z-index: 4; /* SVG 라인 위에 표시되도록 z-index 증가 */
-  
+
   ${(props) => {
-    if (props.align === 'left') {
+    if (props.align === "left") {
       return `
         transform: translateX(0);
         text-align: left;
       `;
-    } else if (props.align === 'center') {
+    } else if (props.align === "center") {
       return `
         transform: translateX(-50%);
         text-align: center;
       `;
-    } else if (props.align === 'right') {
+    } else if (props.align === "right") {
       return `
         transform: translateX(-100%);
         text-align: right;
@@ -296,9 +316,9 @@ const LeftAxisArrow = styled.div`
   z-index: 3;
   transform: rotate(-90deg);
   transform-origin: center;
-  
+
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     width: 10px;
     height: 2px;
@@ -307,9 +327,9 @@ const LeftAxisArrow = styled.div`
     right: 0;
     transform: translateY(-3px) rotate(45deg);
   }
-  
+
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     width: 10px;
     height: 2px;
@@ -328,9 +348,9 @@ const RightAxisArrow = styled.div`
   width: 10px;
   height: 10px;
   z-index: 3;
-  
+
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     width: 10px;
     height: 2px;
@@ -339,9 +359,9 @@ const RightAxisArrow = styled.div`
     right: 0;
     transform: translateY(-3px) rotate(45deg);
   }
-  
+
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     width: 10px;
     height: 2px;
@@ -385,9 +405,9 @@ const MidLevelHorizontalArrow = styled.div`
   height: 10px;
   z-index: 3;
   transform: translateY(-50%) rotate(0deg); /* 우측 방향으로 회전 (90도 회전) */
-  
+
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     width: 10px;
     height: 2px;
@@ -396,9 +416,9 @@ const MidLevelHorizontalArrow = styled.div`
     right: 0;
     transform: translateY(-3px) rotate(45deg);
   }
-  
+
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     width: 10px;
     height: 2px;
@@ -418,9 +438,9 @@ const CenterVerticalArrow = styled.div`
   height: 10px;
   z-index: 3;
   transform: translateX(-50%); /* 중앙 정렬 */
-  
+
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     width: 10px;
     height: 2px;
@@ -429,9 +449,9 @@ const CenterVerticalArrow = styled.div`
     left: 0;
     transform: translateX(-3px) rotate(-45deg);
   }
-  
+
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     width: 10px;
     height: 2px;
@@ -444,25 +464,25 @@ const CenterVerticalArrow = styled.div`
 
 // 그래프 내부 SVG 경로 1 (파란 곡선)
 const GraphPath1 = () => (
-  <svg 
-    width="55%" 
-    height="45%" 
-    viewBox="0 0 264 168" 
-    fill="none" 
+  <svg
+    width="55%"
+    height="45%"
+    viewBox="0 0 264 168"
+    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     style={{
-      position: 'absolute',
-      top: '0',
-      right: '0',
+      position: "absolute",
+      top: "0",
+      right: "0",
       zIndex: 10,
-      pointerEvents: 'none',
-      transform: 'translate(-65%, -10%)', // 세로 중앙 정렬
+      pointerEvents: "none",
+      transform: "translate(-65%, -10%)", // 세로 중앙 정렬
     }}
   >
-    <path 
-      fillRule="evenodd" 
-      clipRule="evenodd" 
-      d="M254.194 0L263.957 20.9287L256.419 20.2705C249.982 85.6635 238.643 123.68 202.185 144.426C183.949 154.803 159.79 160.638 127.699 163.929C95.5747 167.223 55.0952 168 4 168C1.79086 168 0 166.209 0 164C0 161.791 1.79086 160 4 160C55.1018 160 95.2106 159.218 126.883 155.971C158.589 152.719 181.434 147.03 198.229 137.473C230.81 118.933 241.997 85.004 248.449 19.5744L240.95 18.9196L254.194 0Z" 
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M254.194 0L263.957 20.9287L256.419 20.2705C249.982 85.6635 238.643 123.68 202.185 144.426C183.949 154.803 159.79 160.638 127.699 163.929C95.5747 167.223 55.0952 168 4 168C1.79086 168 0 166.209 0 164C0 161.791 1.79086 160 4 160C55.1018 160 95.2106 159.218 126.883 155.971C158.589 152.719 181.434 147.03 198.229 137.473C230.81 118.933 241.997 85.004 248.449 19.5744L240.95 18.9196L254.194 0Z"
       fill="#8FB5FF"
     />
   </svg>
@@ -470,24 +490,24 @@ const GraphPath1 = () => (
 
 // 그래프 내부 SVG 경로 2 (대각선)
 const GraphPath2 = () => (
-  <svg 
-    width="90%" 
-    height="100%" 
-    viewBox="0 0 396 336" 
-    fill="none" 
+  <svg
+    width="90%"
+    height="100%"
+    viewBox="0 0 396 336"
+    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     style={{
-      position: 'absolute',
-      top: '-5%', // 위쪽으로 이동
-      left: '10%',
+      position: "absolute",
+      top: "-5%", // 위쪽으로 이동
+      left: "10%",
       zIndex: 5,
-      pointerEvents: 'none',
+      pointerEvents: "none",
     }}
   >
-    <path 
-      fillRule="evenodd" 
-      clipRule="evenodd" 
-      d="M395.342 0.5L372.618 4.61689L377.754 10.6796L2.07474 328.927C0.389124 330.355 0.180227 332.879 1.60816 334.565C3.03609 336.25 5.56012 336.459 7.24574 335.031L382.925 16.7838L387.545 22.2381L395.342 0.5Z" 
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M395.342 0.5L372.618 4.61689L377.754 10.6796L2.07474 328.927C0.389124 330.355 0.180227 332.879 1.60816 334.565C3.03609 336.25 5.56012 336.459 7.24574 335.031L382.925 16.7838L387.545 22.2381L395.342 0.5Z"
       fill="#D2DDFF"
     />
   </svg>
@@ -495,25 +515,25 @@ const GraphPath2 = () => (
 
 // 그래프 내부 SVG 경로 3 (회색 곡선)
 const GraphPath3 = () => (
-  <svg 
-    width="85%" 
-    height="65%" 
-    viewBox="0 0 368 200" 
-    fill="none" 
+  <svg
+    width="85%"
+    height="65%"
+    viewBox="0 0 368 200"
+    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     style={{
-      position: 'absolute',
-      top: '105%', // 매우 불만족의 원(100%) 위치에 맞춤
-      left: '15%', // 우측으로 이동
+      position: "absolute",
+      top: "105%", // 매우 불만족의 원(100%) 위치에 맞춤
+      left: "15%", // 우측으로 이동
       zIndex: 5,
-      pointerEvents: 'none',
-      transform: 'translate(-5%, -100%)', // 하단 정렬
+      pointerEvents: "none",
+      transform: "translate(-5%, -100%)", // 하단 정렬
     }}
   >
-    <path 
-      fillRule="evenodd" 
-      clipRule="evenodd" 
-      d="M367.435 11.7057L347.338 0.328125L347.402 7.89693C252.432 9.73162 191.901 25.0026 142.014 55.5068C92.1774 85.9799 53.3143 131.481 1.38662 192.62C-0.0434732 194.304 0.162194 196.828 1.84597 198.258C3.52976 199.688 6.05406 199.483 7.48415 197.799C59.6277 136.405 97.6561 92.0069 146.187 62.332C194.406 32.8481 253.343 17.7241 347.47 15.8971L347.534 23.4213L367.435 11.7057Z" 
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M367.435 11.7057L347.338 0.328125L347.402 7.89693C252.432 9.73162 191.901 25.0026 142.014 55.5068C92.1774 85.9799 53.3143 131.481 1.38662 192.62C-0.0434732 194.304 0.162194 196.828 1.84597 198.258C3.52976 199.688 6.05406 199.483 7.48415 197.799C59.6277 136.405 97.6561 92.0069 146.187 62.332C194.406 32.8481 253.343 17.7241 347.47 15.8971L347.534 23.4213L367.435 11.7057Z"
       fill="#E0E4EB"
     />
   </svg>
