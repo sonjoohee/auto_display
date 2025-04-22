@@ -163,6 +163,7 @@ import {
   CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA,
   CUSTOMER_JOURNEY_MAP_REPORT,
   CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION,
+  CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX,
   IDEA_GENERATION_PROBLEM_LIST,
   IDEA_GENERATION_PROBLEM_LIST_TITLE,
   IDEA_GENERATION_START_POSITION,
@@ -171,6 +172,16 @@ import {
   IDEA_GENERATION_SELECTED_MANDALART,
   IDEA_GENERATION_POSSSESSION_TECH,
   IDEA_GENERATION_SELECTED_PURPOSE,
+  KANO_MODEL_SELECTED_IDEA,
+  KANO_MODEL_CLUSTERING,
+  KANO_MODEL_CLUSTERING_NAME,
+  KANO_MODEL_EVALUATION,
+  KANO_MODEL_PRODUCT_ANALYSIS,
+  KANO_MODEL_GRAPH_DATA,
+  IDEA_EVALUATE_LIST,
+  IDEA_EVALUATE_SELECTED_LIST,
+  IDEA_EVALUATE_COMPARISON_EDUCATION,
+  IDEA_EVALUATE_SELECTED_KANO_MODEL,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -407,6 +418,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setCustomerJourneyMapSelectedPersona] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA);
   const [, setCustomerJourneyMapReport] = useAtom(CUSTOMER_JOURNEY_MAP_REPORT);
   const [, setCustomerJourneyMapSelectedDirection] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION);
+  const [, setCustomerJourneyMapSelectedDirectionIndex] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX);
 
   const [, setIdeaGenerationSelectedPurpose] = useAtom(IDEA_GENERATION_SELECTED_PURPOSE);
   const [, setIdeaGenerationProblemList] = useAtom(IDEA_GENERATION_PROBLEM_LIST);
@@ -416,6 +428,18 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setIdeaGenerationSelectedStartPosition] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
   const [, setIdeaGenerationSelectedMandalart] = useAtom(IDEA_GENERATION_SELECTED_MANDALART);
   const [, setIdeaGenerationPossessionTech] = useAtom(IDEA_GENERATION_POSSSESSION_TECH);
+
+  const [,   setSelectedKanoModelIdea] = useAtom(KANO_MODEL_SELECTED_IDEA);
+  const [, setKanoModelClustering] = useAtom(KANO_MODEL_CLUSTERING);
+  const [, setKanoModelClusteringName] = useAtom(KANO_MODEL_CLUSTERING_NAME);
+  const [, setKanoModelEvaluation] = useAtom(KANO_MODEL_EVALUATION);
+  const [, setKanoModelProductAnalysis] = useAtom(KANO_MODEL_PRODUCT_ANALYSIS);
+  const [, setKanoModelGraphData] = useAtom(KANO_MODEL_GRAPH_DATA);
+
+  const [, setIdeaEvaluateSelectedKanoModel] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL);
+  const [, setIdeaEvaluateList] = useAtom(IDEA_EVALUATE_LIST);
+  const [, setIdeaEvaluateSelectedList] = useAtom(IDEA_EVALUATE_SELECTED_LIST);
+  const [, setIdeaEvaluateComparisonEducation] = useAtom(IDEA_EVALUATE_COMPARISON_EDUCATION);
 
   const saveConversation = (data) => {};
 
@@ -453,6 +477,14 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           return "보고서 생성기";
         case "ix_quick_survey_question":
           return "퀵 서베이";
+        case "ix_customer_journey_map_education":
+          return "고객 여정 맵 분석기";
+        case "ix_idea_generation_education":
+          return "아이디어 발상";
+        case "ix_kano_model_education":
+          return "Kano Model";
+        case "ix_idea_evaluation_education":
+          return "아이디어 평가";
         default:
           return tool.type;
       }
@@ -540,6 +572,14 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           );
         case "ix_quick_survey_question":
           return tool.goal || "상세 내용 없음";
+        case "ix_customer_journey_map_education":
+          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+        case "ix_idea_generation_education":
+          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+        case "ix_kano_model_education":
+          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+        case "ix_idea_evaluation_education":
+          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
         default:
           return tool.type;
       }
@@ -593,6 +633,14 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         case "ix_psst_multimodal":
           return tool.completedStep === 3 ? "완료" : "진행중";
         case "ix_quick_survey_question":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        case "ix_customer_journey_map_education":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        case "ix_idea_generation_education":
+          return tool.completedStep === 4 ? "완료" : "진행중";
+        case "ix_kano_model_education":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        case "ix_idea_evaluation_education":
           return tool.completedStep === 3 ? "완료" : "진행중";
         default:
           return "-";
@@ -1015,9 +1063,10 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setCustomerJourneyMapSelectedPersona(chatData?.customerJourneyMapSelectedPersona || {});
         setCustomerJourneyMapReport(chatData?.customerJourneyMapReport || []);
         setCustomerJourneyMapSelectedDirection(chatData?.selectedDirection || []);
+        setCustomerJourneyMapSelectedDirectionIndex(chatData?.selectedDirectionIndex || 0);
 
 
-        //! 아이디어 발상상
+        //! 아이디어 발상
         setToolStep(1);
         setIdeaGenerationSelectedPurpose([]);
         setIdeaGenerationProblemList([]);
@@ -1038,15 +1087,37 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setIdeaGenerationSelectedStartPosition(chatData?.ideaGenerationSelectedStartPosition || []);  
         setIdeaGenerationPossessionTech(chatData?.possessionTech || "");
 
+        //!Kano Model
+        setToolStep(1);
+        setSelectedKanoModelIdea([]);
+        setKanoModelClustering([]);
+        setKanoModelClusteringName([]);
+        setKanoModelEvaluation([]);
+        setKanoModelProductAnalysis([]);
+        setToolLoading(false);
+        setToolStep(chatData?.completedStep);
+        setToolId(chatData?.id);
+        setSelectedKanoModelIdea(chatData?.kanoModelSelectedIdea || []);
+        setKanoModelClustering(chatData?.kanoModelClustering || []);
+        setKanoModelClusteringName(chatData?.kanoModelClusteringName || []);
+        setKanoModelEvaluation(chatData?.kanoModelEvaluation || []);
+        setKanoModelProductAnalysis(chatData?.kanoModelProductAnalysis || []);
+        setKanoModelGraphData(chatData?.kanoModelGraphData || []);
 
+        //!아이디어 평가
+        setToolStep(1);
+        setIdeaEvaluateList([]);
+        setIdeaEvaluateSelectedList([]);
+        setIdeaEvaluateComparisonEducation([]);
+        setIdeaEvaluateSelectedKanoModel({});
+        setToolLoading(false);
+        setToolStep(chatData?.completedStep);
+        setToolId(chatData?.id);
+        setIdeaEvaluateList(chatData?.ideaEvaluateList || []);
+        setIdeaEvaluateSelectedList(chatData?.ideaEvaluateSelectedList || []);
+        setIdeaEvaluateComparisonEducation(chatData?.ideaEvaluateComparisonEducation || []);
+        setIdeaEvaluateSelectedKanoModel(chatData?.selectedKanoModelIdea || {});
 
-
-        // export const IDEA_GENERATION_PROBLEM_LIST = atom([]);
-        // export const IDEA_GENERATION_PROBLEM_LIST_TITLE = atom([]);
-        // export const IDEA_GENERATION_START_POSITION = atom([]);
-        // export const IDEA_GENERATION_IDEA_LIST = atom([]);
-        // export const IDEA_GENERATION_MANDALART_DATA = atom([]);
-        // export const IDEA_GENERATION_SELECTED_START_POSITION = atom([]);
 
 
         // 페이지를 대화가 이어지는 형태로 전환
@@ -1070,12 +1141,18 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         } else if (chatData.type === "ix_quick_survey_question") {
           setToolLoading(true);
           navigate("/QuickSurvey");
-        } else if (chatData.type === "ix_customer_journey_map_direction_education") {
+        } else if (chatData.type === "ix_customer_journey_map_education") {
           setToolLoading(true);
           navigate("/CustomerJourneyMap");
         } else if (chatData.type === "ix_idea_generation_education") {
           setToolLoading(true);
           navigate("/IdeaGeneration");
+        } else if (chatData.type === "ix_kano_model_education") {
+          setToolLoading(true);
+          navigate("/KanoModel");
+        } else if (chatData.type === "ix_idea_evaluation_education") {
+          setToolLoading(true);
+          navigate("/IdeaEvaluation");
         }
       } catch (error) {}
     } else if (conversationType === "interviewSingle") {

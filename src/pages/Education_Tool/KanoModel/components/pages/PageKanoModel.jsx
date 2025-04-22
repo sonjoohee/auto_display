@@ -55,7 +55,9 @@ import {
   KANO_MODEL_IDEA_GENERATION_NAME,
   KANO_MODEL_PRODUCT_ANALYSIS,
   KANO_MODEL_CLUSTERING,
-  KANO_MODEL_EVALUATION
+  KANO_MODEL_EVALUATION,
+  KANO_MODEL_CLUSTERING_NAME,
+  KANO_MODEL_GRAPH_DATA
 } from "../../../../AtomStates";
 import {
   H4,
@@ -157,9 +159,12 @@ const PageKanoModel = () => {
   const [kanoModelEvaluation, setKanoModelEvaluation] = useAtom(
     KANO_MODEL_EVALUATION
   );
-  // const [quickSurveyCustomQuestion, setQuickSurveyCustomQuestion] = useAtom(
-  //   QUICK_SURVEY_CUSTOM_QUESTION
-  // );
+  const [kanoModelClusteringName, setKanoModelClusteringName] = useAtom(
+    KANO_MODEL_CLUSTERING_NAME
+  );
+  const [kanoModelGraphData, setKanoModelGraphData] = useAtom(
+    KANO_MODEL_GRAPH_DATA
+  );
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
@@ -237,6 +242,9 @@ const PageKanoModel = () => {
     };
   }, [showToast]);
 
+
+  console.log("kanoModelEvaluation", kanoModelEvaluation);
+
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
@@ -260,32 +268,30 @@ const PageKanoModel = () => {
       if (toolLoading) {
 
         // 비즈니스 정보 설정 (Step 1)
-        if (quickSurveyProjectDescription) {
-          setProjectDescription(quickSurveyProjectDescription);
+        if (selectedKanoModelIdea) {
+          setSelectedKanoModelIdea(selectedKanoModelIdea);
         }
 
-        if (
-          quickSurveyAnalysis &&
-          Object.keys(quickSurveyAnalysis || {}).length > 0
-        ) {
-          setQuickSurveyAnalysis(quickSurveyAnalysis);
+        if (kanoModelClustering) {
+          setKanoModelClustering(kanoModelClustering);
+        }
+        if (kanoModelClusteringName) {
+          setKanoModelClusteringName(kanoModelClusteringName);
         }
         if (
-          quickSurveyAnalysis.custom_question &&
-          quickSurveyAnalysis.custom_question.length > 0
+          kanoModelEvaluation &&
+          kanoModelEvaluation.length > 0
         ) {
-          setQuickSurveyCustomQuestion(quickSurveyAnalysis.custom_question);
+          setKanoModelEvaluation(kanoModelEvaluation);
         }
-        if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0) {
-          setQuickSurveySurveyMethod(quickSurveySurveyMethod);
+        if (kanoModelProductAnalysis && kanoModelProductAnalysis.length > 0) {
+          setKanoModelProductAnalysis(kanoModelProductAnalysis);
+        }
+        if (kanoModelGraphData && kanoModelGraphData.length > 0) {
+          setKanoModelGraphData(kanoModelGraphData);
         }
 
-        if (
-          quickSurveySelectedQuestion &&
-          quickSurveySelectedQuestion.length > 0
-        ) {
-          setSelectedQuestion(quickSurveySelectedQuestion);
-        }
+      
 
         // 활성 탭 설정 (기본값 1)
         if (toolStep === undefined || toolStep === 1) {
@@ -301,135 +307,46 @@ const PageKanoModel = () => {
           }
           setCompletedSteps(completedStepsArray);
         }
-        // setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
-        // setToolSteps(toolStep ?? 1);
-
-        // 완료된 단계 설정
-        // const completedStepsArray = [];
-        // for (let i = 1; i <= (toolStep ?? 1); i++) {
-        //   completedStepsArray.push(i);
-        // }
-        // setCompletedSteps(completedStepsArray);
-
-        // 페르소나 설정 (Step 2)
-
-        // if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0) {
-        //   setQuickSurveySurveyMethod(quickSurveySurveyMethod);
-        // }
-
-        if (
-          quickSurveyInterviewModeType &&
-          quickSurveyInterviewModeType.length > 0
-        ) {
-          setInterviewModeType(quickSurveyInterviewModeType);
-        }
-
-        if (
-          quickSurveyDetailInfo &&
-          Object.keys(quickSurveyDetailInfo || {}).length > 0
-        ) {
-          // customPersonaForm 설정
-          setCustomPersonaForm(quickSurveyDetailInfo);
-
-          // selectedValues용으로 데이터 가공
-          const processedValues = {
-            gender:
-              quickSurveyDetailInfo?.gender === "male"
-                ? "남성"
-                : quickSurveyDetailInfo?.gender === "female"
-                ? "여성"
-                : quickSurveyDetailInfo?.gender || "", // "상관없음"은 그대로
-
-            age: Array.isArray(quickSurveyDetailInfo?.age)
-              ? quickSurveyDetailInfo?.age[0] === "상관없음"
-                ? "상관없음"
-                : quickSurveyDetailInfo?.age.join(", ")
-              : "",
-
-            residence: Array.isArray(quickSurveyDetailInfo?.residence)
-              ? quickSurveyDetailInfo?.residence[0] === "상관없음"
-                ? "상관없음"
-                : quickSurveyDetailInfo?.residence.join(", ")
-              : "",
-
-            income: Array.isArray(quickSurveyDetailInfo.income)
-              ? quickSurveyDetailInfo.income[0] === "상관없음"
-                ? "상관없음"
-                : quickSurveyDetailInfo.income.join(", ")
-              : "",
-          };
-
-          setSelectedValues(processedValues);
-        }
-
-        if (
-          quickSurveyRecruitingCondition &&
-          quickSurveyRecruitingCondition.length > 0
-        ) {
-          setRecruitingCondition(quickSurveyRecruitingCondition);
-        }
-
-        if (quickSurveyPersonaGroup && quickSurveyPersonaGroup.length > 0) {
-          setquickSurveyPersonaGroup(quickSurveyPersonaGroup);
-        }
-
-        if (quickSurveyInterview && quickSurveyInterview.length > 0) {
-          setQuickSurveyInterview(quickSurveyInterview);
-        }
-
-        if (quickSurveyReport && quickSurveyReport.length > 0) {
-          setQuickSurveyReport(quickSurveyReport);
-        }
-        if (
-          quickSurveyStaticData &&
-          Object.keys(quickSurveyStaticData).length > 0
-        ) {
-          setQuickSurveyStaticData(quickSurveyStaticData);
-          setQuickSurveyStaticDataState(quickSurveyStaticData);
-        }
+      
       }
     };
     interviewLoading();
     setToolLoading(false);
   }, [toolLoading]);
 
-    // 고객핵심가치분석 리스트 가져오기
 
-
-      const handleGetIdea = async () => {
-        setIsLoading(true);
-        try {
-          let page = 1;
-          const size = 10;
-          let allItems = [];
   
-          const response = await getFindToolListOnServerSaas(
-            projectSaas?._id ?? "",
-            "ix_idea_generation_education",
-            isLoggedIn
-          );
-  
-          const newItems = (response || []).filter(
-            (item) =>
-              item?.type === "ix_idea_generation_education" &&
-              item?.completedStep === 4
-          );
-  
-          allItems = [...allItems, ...newItems];
-          console.log("allItems", allItems)
-    
-          setKanoModelIdeaGeneration(allItems);
 
+// 고객핵심가치분석 리스트 가져오기
+useEffect(() => {
+  const getAllTargetDiscovery = async () => {
+    try {
+      let page = 1;
+      const size = 10;
+      let allItems = [];
 
-        } catch (error) {
-          setKanoModelIdeaGenerationName([]); // Set empty array on error
-        } finally {
-          setIsLoading(false);
-        }
-      };
-  
-      // getAllTargetDiscovery();
+      const response = await getFindToolListOnServerSaas(
+        projectSaas?._id ?? "",
+        "ix_idea_generation_education",
+        isLoggedIn
+      );
 
+      const newItems = (response || []).filter(
+        (item) =>
+          item?.type === "ix_idea_generation_education" &&
+          item?.completedStep === 4
+      );
+
+      allItems = [...allItems, ...newItems];
+
+      setKanoModelIdeaGeneration(allItems);
+    } catch (error) {
+      setKanoModelIdeaGeneration([]); // Set empty array on error
+    }
+  };
+
+  getAllTargetDiscovery();
+}, [isLoggedIn, projectSaas]);
 
 
   const handleCheckboxChange = (ideaId) => {
@@ -461,14 +378,6 @@ const PageKanoModel = () => {
   };
 
 
-  const handleFormChange = (field, value) => {
-    setCustomPersonaForm((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-  
-
   const business = {
     business: businessDescription,
     target: project?.projectAnalysis?.target_customer || "",
@@ -479,39 +388,128 @@ const PageKanoModel = () => {
 
   
 
+  const handleSubmitIdeaList = async () => {
+    // handleNextStep(1);
+    setIsLoading(true);
+    // setShowAnalysisList(true);
+    try {
+      const clusteringData = {
+        type: "ix_kano_model_clustering_education",
+        idea_list:  selectedKanoModelIdea
+      };
 
+      let responseReport = await EducationToolsRequest(clusteringData, isLoggedIn);
 
-  useEffect(() => {
-    if (shouldRegenerate && Object.keys(quickSurveyAnalysis).length === 0) {
-      handleGetIdea();
-      setShouldRegenerate(false); // 리셋
+      let reportRetryCount = 0;
+      const reportMaxRetries = 10;
+  
+  
+      // while (reportRetryCount < reportMaxRetries) {
+      //   try {
+      //     responseReport = await EducationToolsRequest(
+      //       reportData,
+      //       isLoggedIn
+      //     );
+  
+      //     // 응답 형식 검증
+      //     if (
+      //       responseReport.response &&
+      //       responseReport.response.quick_survey_report &&
+      //       responseReport.response.statistics_data
+      //     ) {
+      //       break; // 올바른 응답 형식이면 루프 종료
+      //     }
+      //     reportRetryCount++;
+      //   } catch (error) {
+      //     reportRetryCount++;
+      //     if (reportRetryCount >= reportMaxRetries) throw error;
+      //   }
+      // }
+  
+      if (reportRetryCount >= reportMaxRetries) {
+        throw new Error(
+          "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
+        );
+      }
+
+      setKanoModelClustering(responseReport.response.kano_model_evaluation_education )
+      setKanoModelClusteringName(Object.values(responseReport.response.kano_model_evaluation_education || {}).reduce((acc, category) => {
+        // 각 카테고리의 아이템들에서 name만 추출하여 배열에 추가
+        return [...acc, ...category.map(item => item.name)];
+      }, []))
+ 
+
+      const responseToolId = await createToolOnServer(
+        {
+          type: "ix_kano_model_education",
+          projectId: project._id,
+          completedStep: 1,
+          kanoModelSelectedIdea: selectedKanoModelIdea,
+          kanoModelClustering: responseReport.response.kano_model_evaluation_education,
+          kanoModelClusteringName:Object.values(responseReport.response.kano_model_evaluation_education || {}).reduce((acc, category) => {
+            // 각 카테고리의 아이템들에서 name만 추출하여 배열에 추가
+            return [...acc, ...category.map(item => item.name)];
+          }, [])
+          },
+          isLoggedIn
+        );
+      
+         setToolId(responseToolId);
+      
+    } catch (error) {
+      setShowPopupError(true);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowPopupError(true);
+            break;
+          case 504:
+            setShowPopupError(true);
+            break;
+          default:
+            setShowPopupError(true);
+            break;
+        }
+      } else {
+        setShowPopupError(true);
+      }
+    } finally {
+      setIsLoading(false);
     }
-  }, [quickSurveyAnalysis, shouldRegenerate]);
-
-  const handleRegenerate = () => {
-    setShouldRegenerate(true);
-    setSelectedQuestion([]); // 재생성 flag 설정
-    setQuickSurveyAnalysis({});
-    setQuickSurveyCustomQuestion([]);
   };
 
-  const handleSubmitIdeaList = async () => {
-    handleNextStep(1);
-    setShowAnalysisList(false);
-    const responseToolId = await createToolOnServer(
-      {
-        type: "ix_kano_model_product_analysis_education",
-        projectId: project._id,
-        completedStep: 1,
-        kanoModelSelectedIdea: selectedKanoModelIdea,
-        },
-        isLoggedIn
-      );
-    setToolSteps(1);
-    setToolId(responseToolId);
-  }
 
+const handleSubmitClustering = async () => {
 
+  handleNextStep(1);
+  setToolSteps(1);
+
+  // const updatedClustering = { ...kanoModelClustering };
+  
+  // // 각 카테고리 순회
+  // Object.keys(updatedClustering).forEach(category => {
+  //   if (Array.isArray(updatedClustering[category])) {
+  //     // 해당 카테고리의 아이템 중 kanoModelClusteringName에 포함된 이름만 남김
+  //     updatedClustering[category] = updatedClustering[category].filter(
+  //       item => kanoModelClusteringName.includes(item.name)
+  //     );
+  //   }
+  // });
+  
+  // // 업데이트된 상태 설정
+  // setKanoModelClustering(updatedClustering);
+
+  await updateToolOnServer(
+    toolId,
+    {
+      completedStep: 2,
+      // kanoModelClusteringName: kanoModelClusteringName,
+      // kanoModelClustering: kanoModelClustering,
+      },
+      isLoggedIn
+    );
+
+}
 
   const handleSubmitReport = async () => {
       await updateToolOnServer(
@@ -532,82 +530,10 @@ const PageKanoModel = () => {
         business: business,
       };
 
-
       let response = await EducationToolsRequest(Data, isLoggedIn);
-
-      // let retryCount = 0;
-      // const maxRetries = 10;
-
-      // while (retryCount < maxRetries) {
-      //   try {
-      //     response = await EducationToolsRequest(Data, isLoggedIn);
-
-      //     // 응답 형식 검증
-      //     // if (
-      //     //   response.response &&
-      //     //   response.response.quick_survey_interview &&
-      //     //   Array.isArray(response.response.quick_survey_interview) &&
-      //     //   response.response.quick_survey_interview.length > 0
-      //     // ) {
-      //     //   break; // 올바른 응답 형식이면 루프 종료
-      //     // }
-
-      //     retryCount++;
-      //   } catch (error) {
-      //     retryCount++;
-      //     if (retryCount >= maxRetries) throw error;
-      //   }
-      // }
-
-      // if (retryCount >= maxRetries) {
-      //   throw new Error(
-      //     "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
-      //   );
-      // }
 
       setKanoModelProductAnalysis(response.response.kano_model_product_analysis_education)
   
-      const clusteringData = {
-        type: "ix_kano_model_clustering_education",
-        idea_list:  selectedKanoModelIdea
-      };
-
-      let responseReport = await EducationToolsRequest(clusteringData, isLoggedIn);
-
-
-      let reportRetryCount = 0;
-      const reportMaxRetries = 10;
-
-
-      // while (reportRetryCount < reportMaxRetries) {
-      //   try {
-      //     responseReport = await EducationToolsRequest(
-      //       reportData,
-      //       isLoggedIn
-      //     );
-
-      //     // 응답 형식 검증
-      //     if (
-      //       responseReport.response &&
-      //       responseReport.response.quick_survey_report &&
-      //       responseReport.response.statistics_data
-      //     ) {
-      //       break; // 올바른 응답 형식이면 루프 종료
-      //     }
-      //     reportRetryCount++;
-      //   } catch (error) {
-      //     reportRetryCount++;
-      //     if (reportRetryCount >= reportMaxRetries) throw error;
-      //   }
-      // }
-
-      if (reportRetryCount >= reportMaxRetries) {
-        throw new Error(
-          "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
-        );
-      }
-
-      setKanoModelClustering(responseReport.response.kano_model_evaluation_education )
 
       const persona_group = personaListSaas
       .filter((persona) => persona?.favorite === true)
@@ -626,36 +552,72 @@ const PageKanoModel = () => {
       
       }));
 
-      const evaluteData = {
-        type: "ix_kano_model_evaluation_education",
-        business_analysis: response.response.kano_model_product_analysis_education,
-        persona_group:persona_group,
-        idea_list: responseReport.response.kano_model_evaluation_education,
 
+      let allResponseEvalute = [];
+
+      for (let i = 0; i < 5; i++) {
+        // 페르소나 그룹을 4명씩 나누어 인덱스 계산
+        const startIndex = i * 4;
+        const endIndex = Math.min(startIndex + 4, persona_group.length); // 배열 범위를 넘지 않도록 처리
+        
+        // 현재 루프에서 사용할 4명의 페르소나 그룹
+        const currentPersonaGroup = persona_group.slice(startIndex, endIndex);
+        
+        // API 요청 데이터 구성
+        const evaluteData = {
+          type: "ix_kano_model_evaluation_education",
+          business_analysis: response.response.kano_model_product_analysis_education,
+          persona_group: currentPersonaGroup, // 현재 루프의 4명 페르소나 그룹
+          idea_list: kanoModelClustering
+        };
+      
+        
+        let responseEvalute = await EducationToolsRequest(evaluteData, isLoggedIn);
+
+        let evaluteRetryCount = 0;
+        const evaluteMaxRetries = 10;
+          while (evaluteRetryCount < evaluteMaxRetries &&
+            (!responseEvalute ||
+             !responseEvalute?.response ||
+             !responseEvalute?.response?.kano_model_evaluation_education ||
+             !Array.isArray(responseEvalute?.response?.kano_model_evaluation_education)
+            )
+           ) {
+             responseEvalute = await EducationToolsRequest(evaluteData, isLoggedIn);
+             evaluteRetryCount++;
+            
+           }
+             if (evaluteRetryCount >= evaluteMaxRetries) {
+             setShowPopupError(true);
+             return;
+           }
+         
+        // 여기에 API 호출 코드 추가
+        allResponseEvalute.push(responseEvalute.response.kano_model_evaluation_education);
+      }
+       
+      // 여기서 배열을 평탄화
+      const flattenedEvaluation = allResponseEvalute.flat();
+
+      setKanoModelEvaluation(flattenedEvaluation)
+      // setKanoModelEvaluation(responseEvalute.response.kano_model_evaluation_education)
+
+      const kanoModelData = {
+        type: "ix_kano_model_coefficients_education",
+        kano_evaluation_data : flattenedEvaluation,
       }
 
-      let responseEvalute = await EducationToolsRequest(evaluteData, isLoggedIn);
-      // let responseEvalute;
-      // let evaluteRetryCount = 0;
-      // const evaluteMaxRetries = 10;
+      let responseKanoModel = await EducationToolsRequest(kanoModelData, isLoggedIn);
+      console.log("responseKanoModel", responseKanoModel);
 
-      // while (evaluteRetryCount < evaluteMaxRetries) {
-      //   try {   
-      //     responseEvalute = await EducationToolsRequest(evaluteData, isLoggedIn);
-      //   } catch (error) {
-      //     evaluteRetryCount++;
-      //     if (evaluteRetryCount >= evaluteMaxRetries) throw error;
-      //   }
-      // } 
-      setKanoModelEvaluation(responseEvalute.response.kano_model_evaluation_education)
-      
+      setKanoModelGraphData(responseKanoModel.response.kano_coefficients_result)
 
       await updateToolOnServer(
         toolId,
         {
           kanoModelProductAnalysis: response.response.kano_model_product_analysis_education,
-          kanoModelEvaluation: responseEvalute.response.kano_model_evaluation_education,
-          kanoModelClustering: responseReport.response.kano_model_evaluation_education,
+          kanoModelEvaluation: flattenedEvaluation,
+          kanoModelGraphData: responseKanoModel.response.kano_coefficients_result,
           completedStep: 3,
         },
         isLoggedIn
@@ -684,7 +646,6 @@ const PageKanoModel = () => {
       setIsLoadingReport(false);
     }
   };
-
 
 
   const handleEnterInterviewRoom = () => {
@@ -797,9 +758,9 @@ const PageKanoModel = () => {
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     페르소나 선택 및 확인
                   </Body1>
-                  <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
+                  {/* <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Participating Persona
-                  </Body1>
+                  </Body1> */}
                 </div>
               </TabButtonType5>
               <TabButtonType5
@@ -849,10 +810,31 @@ const PageKanoModel = () => {
                   ) : (
 
                     <>
-                      {!showAnalysisList ? (
+                      { kanoModelClusteringName.length === 0 ? (
                         // 아이디어 선택 화면
                         <>
-                          {kanoModelIdeaGeneration.length > 0 ? (
+                          {(kanoModelIdeaGeneration.length === 0) ? (
+                            <BoxWrap
+                              NoData
+                              style={{ height: "300px" }}
+                              onClick={() => navigate("/IdeaGeneration")}
+                            >
+                              <img src={images.PeopleFillPrimary2} alt="" />
+                              <Body2 color="gray700" align="center !important">
+                                아이디어 발상 단계를 통해 도출된 아이디어를 통합하세요
+                              </Body2>
+                              <Button
+                                Medium
+                                Outline
+                                Fill
+                                onClick={() => navigate("/IdeaGeneration")}
+                              >
+                                <Caption1 color="gray700">
+                                  아이디어 가져오기
+                                </Caption1>
+                              </Button>
+                            </BoxWrap>
+                          ) : (
                             <>
                               <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
                                 <Body1 color="gray700">Kano Model 평가에 포함할 아이디어를 선택해 주세요. (복수 선택)</Body1>
@@ -867,52 +849,28 @@ const PageKanoModel = () => {
                                   onSelect={() => handleCheckboxChange(index)}
                                 />
                               ))}
-                              <div>
-                               
-                              </div>
                             </>
-                          ) : (
-                                    // 데이터가 없을 때의 UI
-                              <BoxWrap
-                                NoData
-                                style={{ height: "300px" }}
-                                      onClick={handleGetIdea}
-                              >
-                                <img src={images.PeopleFillPrimary2} alt="" />
-                                <Body2 color="gray700" align="center !important">
-                                아이디어 발상 단계를 통해 도출된 아이디어를 통합하세요
-                                </Body2>
-                                <Button
-                                  Medium
-                                  Outline
-                                  Fill
-                                  onClick={handleGetIdea}
-                        >
-                          <Caption1 color="gray700">
-                            아이디어 가져오기
-                          </Caption1>
-                        </Button>
-                      </BoxWrap>
-                    )}
+                          )}
                         </>
                       ) : (
                         // 분석 아이디어 리스트 화면
                         <>
                           <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
                             <Body1 color="gray700">아이디어 도출 과정을 통해 선정된 아이디어 리스트 </Body1>
-                    </div>
-                      <MoleculeDeleteForm
-                            items={kanoModelIdeaList || []}
-                            setItems={setKanoModelIdeaList}
-                        disabled={toolSteps >= 1}
-                        maxItems={10}
-                        placeholder="핵심 가치를 작성해주세요 (예: 안전한 송금 등)"
-                      />
-                        </>
-                        
-                      )}
-                    </>
-                  )}
+                          </div>
+                            <MoleculeDeleteForm
+                            items={kanoModelClusteringName}
+                            setItems={setKanoModelClusteringName}
+                              disabled={toolSteps >= 1}
+                              maxItems={20}
+                              placeholder="아이디어를 작성해주세요 (예: 안전한 송금 등)"
+                              edit={false}
+                            />
+                              </>
+                              
+                            )}
+                          </>
+                        )}
     
                               </div>
                     <>
@@ -931,10 +889,14 @@ const PageKanoModel = () => {
                             Fill
                             Round
                             onClick={() => {
+                              if( kanoModelClustering.length === 0 ){
                                 handleSubmitIdeaList();
+                              } else {
+                                handleSubmitClustering();
+                              }
                            
                             }}
-                              disabled={toolSteps >= 1 || selectedIdea.length === 0}
+                              disabled={toolSteps > 1 || selectedKanoModelIdea.length === 0 || isLoading }
                           >
                             아이디어 방향성으로 전환
                           </Button>
@@ -991,38 +953,20 @@ const PageKanoModel = () => {
                             </Body1>
                             </div>
                       
-                      {personaListSaas.length > 0 ? (
+                      {personaListSaas.filter(item => item.favorite === true).length >= 20 ? (
                       <MoleculePersonaSelectCard
                         filteredPersonaList={personaListSaas}
                         hideSelectButton={true}
                       
                       />
                     ) : (
-                      <BoxWrap
-                        NoData
-                        style={{ height: "300px" }}
-                        onClick={() => navigate("/AiPersona")}
-                      >
-                        <img src={images.PeopleFillPrimary2} alt="" />
-
-                        <Body2 color="gray700" align="center !important">
-                          현재 대화가 가능한 활성 페르소나가 없습니다
-                          <br />
-                          페르소나 생성 요청을 진행하여 페르소나를
-                          활성화해주세요
-                        </Body2>
-
-                        <Button
-                          Medium
-                          Outline
-                          Fill
-                          onClick={() => navigate("/AiPersona")}
-                        >
-                          <Caption1 color="gray700">
-                            AI Person 생성 요청
-                          </Caption1>
-                        </Button>
-                      </BoxWrap>
+                      <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
+                      <img src={images.PeopleStarFillPrimary} alt="" />
+                      <Body2 color="gray500" align="center !important">
+                        즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실
+                        수 있습니다. {personaListSaas.filter(item => item.favorite === true).length}
+                      </Body2>
+                    </BoxWrap>
                     )}
     
                     </div>
@@ -1048,7 +992,7 @@ const PageKanoModel = () => {
                         onClick={handleSubmitReport}
                          
                         disabled={
-                          toolSteps >= 3 
+                          toolSteps >= 3 || personaListSaas.filter(item => item.favorite === true).length < 20
                         }
                       >
                        Kano Model 평가 받기

@@ -151,6 +151,12 @@ import {
   QUICK_SURVEY_STATIC_DATA,
   QUICK_SURVEY_INTERVIEW_MODE_TYPE,
   PROJECT_EDUCATION_STATE,
+  IDEA_GENERATION_PROBLEM_LIST,
+  KANO_MODEL_SELECTED_IDEA,
+  KANO_MODEL_CLUSTERING,
+  KANO_MODEL_CLUSTERING_NAME,
+  KANO_MODEL_EVALUATION,
+  KANO_MODEL_PRODUCT_ANALYSIS,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -440,6 +446,14 @@ const PageToolListSaas = () => {
   const [, setQuickSurveyInterviewModeType] = useAtom(
     QUICK_SURVEY_INTERVIEW_MODE_TYPE
   );
+  const [, setIdeaGenerationProblemList] = useAtom(
+    IDEA_GENERATION_PROBLEM_LIST
+  );
+  const [, setSelectedKanoModelIdea] = useAtom(KANO_MODEL_SELECTED_IDEA);
+  const [, setKanoModelClustering] = useAtom(KANO_MODEL_CLUSTERING);
+  const [, setKanoModelClusteringName] = useAtom(KANO_MODEL_CLUSTERING_NAME);
+  const [, setKanoModelEvaluation] = useAtom(KANO_MODEL_EVALUATION);
+  const [, setKanoModelProductAnalysis] = useAtom(KANO_MODEL_PRODUCT_ANALYSIS);
 
   // 초기화 useEffect
   useEffect(() => {
@@ -607,6 +621,17 @@ const PageToolListSaas = () => {
     setQuickSurveyReport([]);
     setQuickSurveyStaticData([]);
     setQuickSurveyInterviewModeType("");
+
+    //idea generation education 초기화
+    setIdeaGenerationProblemList([]);
+
+    //kano model education 초기화
+    setSelectedKanoModelIdea([]);
+    setKanoModelClustering([]);
+    setKanoModelClusteringName([]);
+    setKanoModelEvaluation([]);
+    setKanoModelProductAnalysis([]);
+
   }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   useEffect(() => {

@@ -24,6 +24,7 @@ const MoleculePersonaSelectCard = ({
   selectedPersonas,
   onPersonaSelect,
   hideSelectButton = false,
+  disabled = false,
 }) => {
   const navigate = useNavigate();
 
@@ -66,6 +67,7 @@ const MoleculePersonaSelectCard = ({
 
   const handlePersonaSelect = (persona) => {
     // 현재 선택된 페르소나와 동일한 페르소나를 클릭한 경우 선택 해제
+    if (disabled) return;
     if (selectedPersonas?._id === persona._id) {
       onPersonaSelect(null);
     } else {
@@ -252,7 +254,7 @@ const MoleculePersonaSelectCard = ({
             );
           })}{" "}
       {activeTabState === "my_favorite" &&
-        !filteredPersonaList.some((persona) => persona.favorite === true) && (
+        filteredPersonaList.filter((persona) => persona.favorite === true).length < 20 && (
           <>
             <div style={{ height: "16px" }}></div>
             <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>

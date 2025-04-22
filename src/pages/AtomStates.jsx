@@ -595,7 +595,8 @@ export const QUICK_SURVEY_INTERVIEW_MODE_TYPE = atom("");
 export const CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS = atom([]);
 export const CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA = atom({});
 export const CUSTOMER_JOURNEY_MAP_REPORT = atom([]);
-export const CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION = atom([]);
+export const CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION = atom([]);  
+export const CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX = atom(0);
 
 export const IDEA_GENERATION_SELECTED_PURPOSE = atom({});
 export const IDEA_GENERATION_PROBLEM_LIST = atom([]);
@@ -612,8 +613,11 @@ export const KANO_MODEL_IDEA_GENERATION_NAME = atom([]);
 export const KANO_MODEL_SELECTED_IDEA = atom(null);
 export const KANO_MODEL_PRODUCT_ANALYSIS = atom([]);
 export const KANO_MODEL_CLUSTERING = atom([]);
+export const KANO_MODEL_CLUSTERING_NAME = atom([]);
 export const KANO_MODEL_EVALUATION = atom([]);
+export const KANO_MODEL_GRAPH_DATA = atom([]);
 
+export const IDEA_EVALUATE_SELECTED_KANO_MODEL = atom({});
 export const IDEA_EVALUATE_LIST = atom([]);
 export const IDEA_EVALUATE_SELECTED_LIST = atom([]);
 export const IDEA_EVALUATE_COMPARISON_EDUCATION = atom([]);
