@@ -120,7 +120,7 @@ const PageCustomerJourneyMap = () => {
     window.scrollTo(0, 0);
   }, []);
 
-
+console.log("customerJourneyMapMomentAnalysis", customerJourneyMapMomentAnalysis)
   useEffect(() => {
     const interviewLoading = async () => {
       if (toolLoading) {
@@ -195,6 +195,9 @@ const PageCustomerJourneyMap = () => {
       }
     });
   };
+
+  console.log("selectedMomentData", selectedMomentData)
+  console.log("selectedMoment", selectedMoment)
 
   const business = {
     business: businessDescription,
@@ -354,7 +357,8 @@ const PageCustomerJourneyMap = () => {
         toolId,
         {
           selectedDirection: selectedMomentData,
-          selectedDirectionIndex: selectedMoment
+          selectedDirectionIndex: selectedMoment,
+          customerJourneyMapMomentAnalysis: customerJourneyMapMomentAnalysis,
         },
         isLoggedIn
       );
@@ -476,7 +480,7 @@ const PageCustomerJourneyMap = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
-
+console.log("selectedPersonas", selectedPersonas)
   return (
     <>
       <DropzoneStyles />
@@ -592,14 +596,20 @@ const PageCustomerJourneyMap = () => {
                             </PersonaGroup>
                           ) : (
                             <Body2 color="gray300">
-                              페르소나가 선택되지 않았습니다. 하단에서
-                              페르소나를 선택해 주세요!(1명 선택 가능)
+                              아래 리스트에서 페르소나를 선택해주세요 (1명 선택가능) 
                             </Body2>
                           )}
                         </li>
                       </ListBoxGroup>
                     </div>
 
+                    <TabContent5Item style={{marginTop: "20px"}}>
+
+                    <div className="title">
+                          <Body1 color="gray800">
+                          고객 여정  분석을 진행할 페르소나를 선택해주세요 (AI 페르소나 Favorite에서 리스트 설정 가능) 
+                          </Body1>
+                        </div>
                     {personaListSaas.filter(item => item.favorite === true).length >= 20 ? (
                       <MoleculePersonaSelectCard
                         filteredPersonaList={personaListSaas}
@@ -619,8 +629,10 @@ const PageCustomerJourneyMap = () => {
                       </Body2>
                     </BoxWrap>
                     )}
-                  </div>
+                      </TabContent5Item>
 
+                  </div>
+                
                   <Button
                     Other
                     Primary
@@ -685,6 +697,7 @@ const PageCustomerJourneyMap = () => {
                                         />
                                       </Persona>
                                     ))}
+                                  
                                 </>
                               ) : (
                                 <Persona size="Small" Round>
@@ -729,9 +742,9 @@ const PageCustomerJourneyMap = () => {
                           </Body2>
                         </li>
                       </ListBoxGroup>
-                      <TabContent5Item>
+                      <TabContent5Item style={{marginTop: "20px"}}>
                         <div className="title">
-                          <Body1 color="gray700">
+                          <Body1 color="gray800">
                             어떤 순간을 고객 여정으로 분석하시겠습니까?{" "}
                           </Body1>
                         </div>

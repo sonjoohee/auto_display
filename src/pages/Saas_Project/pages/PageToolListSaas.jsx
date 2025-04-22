@@ -157,6 +157,11 @@ import {
   KANO_MODEL_CLUSTERING_NAME,
   KANO_MODEL_EVALUATION,
   KANO_MODEL_PRODUCT_ANALYSIS,
+  CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA,
+  CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS,
+  CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION,
+  CUSTOMER_JOURNEY_MAP_REPORT,
+  CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -454,6 +459,12 @@ const PageToolListSaas = () => {
   const [, setKanoModelClusteringName] = useAtom(KANO_MODEL_CLUSTERING_NAME);
   const [, setKanoModelEvaluation] = useAtom(KANO_MODEL_EVALUATION);
   const [, setKanoModelProductAnalysis] = useAtom(KANO_MODEL_PRODUCT_ANALYSIS);
+  const [, setCustomerJourneyMapSelectedPersona] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA);  
+  const [, setCustomerJourneyMapMomentAnalysis] = useAtom(CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS);
+  const [, setCustomerJourneyMapSelectedDirection] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION);
+  const [, setCustomerJourneyMapReport] = useAtom(CUSTOMER_JOURNEY_MAP_REPORT);
+  const [, setCustomerJourneyMapSelectedDirectionIndex] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX);
+
 
   // 초기화 useEffect
   useEffect(() => {
@@ -621,6 +632,13 @@ const PageToolListSaas = () => {
     setQuickSurveyReport([]);
     setQuickSurveyStaticData([]);
     setQuickSurveyInterviewModeType("");
+
+    //customer journey map 초기화
+    setCustomerJourneyMapSelectedPersona([]);
+    setCustomerJourneyMapMomentAnalysis([]);
+    setCustomerJourneyMapSelectedDirection([]);
+    setCustomerJourneyMapReport([]);
+    setCustomerJourneyMapSelectedDirectionIndex([]);
 
     //idea generation education 초기화
     setIdeaGenerationProblemList([]);

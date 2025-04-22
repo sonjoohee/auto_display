@@ -54,6 +54,8 @@ import {
   IDEA_EVALUATE_LIST,
   IDEA_EVALUATE_COMPARISON_EDUCATION,
   IDEA_EVALUATE_SELECTED_KANO_MODEL,
+  IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX,
+  IDEA_EVALUATE_SELECTED_LIST_INDEX,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -112,6 +114,7 @@ const PageIdeaEvaluate = () => {
   const [quickSurveyAnalysis, setQuickSurveyAnalysis] = useAtom(
     QUICK_SURVEY_ANALYSIS
   );
+  const [ideaEvaluateSelectedListIndex, setIdeaEvaluateSelectedListIndex] = useAtom(IDEA_EVALUATE_SELECTED_LIST_INDEX);
   const [ideaEvaluateComparisonEducation, setIdeaEvaluateComparisonEducation] = useAtom(IDEA_EVALUATE_COMPARISON_EDUCATION)
   const [quickSurveySelectedQuestion, setQuickSurveySelectedQuestion] = useAtom(
     QUICK_SURVEY_SELECTED_QUESTION
@@ -154,6 +157,7 @@ const PageIdeaEvaluate = () => {
   // const [quickSurveyCustomQuestion, setQuickSurveyCustomQuestion] = useAtom(
   //   QUICK_SURVEY_CUSTOM_QUESTION
   // );
+  const [ideaEvaluateSelectedKanoModelIndex, setIdeaEvaluateSelectedKanoModelIndex] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
@@ -246,6 +250,13 @@ const PageIdeaEvaluate = () => {
     };
   }, [showToast]);
 
+
+
+
+  console.log("ideaEvaluateSelectedList", ideaEvaluateSelectedList);
+  console.log("ideaEvaluateSelectedListIndex", ideaEvaluateSelectedListIndex);
+
+
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
@@ -269,11 +280,23 @@ const PageIdeaEvaluate = () => {
       if (toolLoading) {
 
         // 비즈니스 정보 설정 (Step 1)
+        if (Object.keys(ideaEvaluateSelectedKanoModel).length > 0) {
+          setSelectedKanoModelData(ideaEvaluateSelectedKanoModel);
+          setshowKanoModelList(true);
+        
+        }
+        if (Object.keys(ideaEvaluateSelectedKanoModelIndex).length > 0) {
+          setSelectedPurposes(ideaEvaluateSelectedKanoModelIndex);
+          
+        }
         if (ideaEvaluateList && ideaEvaluateList.length > 0) {
           setIdeaEvaluateList(ideaEvaluateList);
         }
         if (ideaEvaluateSelectedList && ideaEvaluateSelectedList.length > 0) {
           setIdeaEvaluateSelectedList(ideaEvaluateSelectedList);
+        }
+        if (Object.keys(ideaEvaluateSelectedListIndex).length > 0) {
+          setIdeaEvaluateSelect(ideaEvaluateSelectedListIndex);
         }
 
         if (ideaEvaluateComparisonEducation && ideaEvaluateComparisonEducation.length > 0) {
@@ -542,8 +565,10 @@ const PageIdeaEvaluate = () => {
         responseToolId,
         {
           selectedKanoModelIdea: selectedKanoModelData,
+          selectedKanoModelIdeaIndex: selectedPurposes,
           ideaEvaluateSelectedList: ideaEvaluateSelectedList,
-          completedStep: 1,
+          ideaEvaluateSelectedListIndex: ideaEvaluateSelect,
+          completedStep: 2,
         },
         isLoggedIn
       );
@@ -600,39 +625,27 @@ const PageIdeaEvaluate = () => {
       };
 
       let response = await EducationToolsRequest (Data, isLoggedIn);
-    
+
+       let retryCount = 0;
+      const maxRetries = 10;
+        while (retryCount < maxRetries &&
+          (!response ||
+           !response?.response ||
+           !response?.response?.idea_evaluation_comparison_education ||
+           !Array.isArray(response?.response?.idea_evaluation_comparison_education)
+          )
+         ) {
+           response = await EducationToolsRequest(Data, isLoggedIn);
+           maxRetries++;
+          
+         }
+           if (retryCount >= maxRetries) {
+           setShowPopupError(true);
+           return;
+         }
+
       setIdeaEvaluateComparisonEducation(response.response.idea_evaluation_comparison_education)
-
-      // let response;
-      // let retryCount = 0; 
-      // const maxRetries = 10;
-
-      // while (retryCount < maxRetries) {
-      //   try {
-      //     response = await EducationToolsRequest(Data, isLoggedIn);
-
-      //     // 응답 형식 검증
-      //     if (
-      //       response.response &&
-      //       response.response.idea_evaluation_comparison_education &&
-      //       Array.isArray(response.response.idea_evaluation_comparison_education) &&
-      //       response.response.idea_evaluation_comparison_education.length > 0
-      //     ) {
-      //       break; // 올바른 응답 형식이면 루프 종료
-      //     }
-
-      //     retryCount++;
-      //   } catch (error) {
-      //     retryCount++;
-      //     if (retryCount >= maxRetries) throw error;
-      //   }
-      // }
-
-      // if (retryCount >= maxRetries) {
-      //   throw new Error(
-      //     "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
-      //   );
-      // }
+      
 
       await updateToolOnServer(
         toolId,
@@ -1019,6 +1032,7 @@ const PageIdeaEvaluate = () => {
                             title={idea.name}
                             isSelected={ideaEvaluateSelect.includes(`attractive-${index}`)}
                             onSelect={() => handleCheckboxChange(`attractive-${index}`)}
+                            disabled={toolSteps >= 1}
                           />
                         ))}
 
@@ -1034,6 +1048,7 @@ const PageIdeaEvaluate = () => {
                             title={idea.name}
                             isSelected={ideaEvaluateSelect.includes(`one_dimensional-${index}`)}
                             onSelect={() => handleCheckboxChange(`one_dimensional-${index}`)}
+                            disabled={toolSteps >= 1}
                           />
                         ))}
                  
@@ -1051,6 +1066,7 @@ const PageIdeaEvaluate = () => {
                             title={idea.name}
                             isSelected={ideaEvaluateSelect.includes(`must_be-${index}`)}
                             onSelect={() => handleCheckboxChange(`must_be-${index}`)}
+                            disabled={toolSteps >= 1}
                           />
                         ))}
 
@@ -1068,6 +1084,7 @@ const PageIdeaEvaluate = () => {
                             title={idea.name}
                             isSelected={ideaEvaluateSelect.includes(`reverse-${index}`)}
                             onSelect={() => handleCheckboxChange(`reverse-${index}`)}
+                            disabled={toolSteps >= 1}
                           />
                         ))}
                
@@ -1159,38 +1176,20 @@ const PageIdeaEvaluate = () => {
                             </Body1>
                             </div>
                     
-                    {personaListSaas.length > 0 ? (
+                  {personaListSaas.filter(item => item.favorite === true).length >= 20 ? (
                     <MoleculePersonaSelectCard
                       filteredPersonaList={personaListSaas}
                       hideSelectButton={true}
                     
                     />
                   ) : (
-                    <BoxWrap
-                      NoData
-                      style={{ height: "300px" }}
-                      onClick={() => navigate("/AiPersona")}
-                    >
-                      <img src={images.PeopleFillPrimary2} alt="" />
-
-                      <Body2 color="gray700" align="center !important">
-                        현재 대화가 가능한 활성 페르소나가 없습니다
-                        <br />
-                        페르소나 생성 요청을 진행하여 페르소나를
-                        활성화해주세요
-                      </Body2>
-
-                      <Button
-                        Medium
-                        Outline
-                        Fill
-                        onClick={() => navigate("/AiPersona")}
-                      >
-                        <Caption1 color="gray700">
-                          AI Person 생성 요청
-                        </Caption1>
-                      </Button>
-                    </BoxWrap>
+                    <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
+                    <img src={images.PeopleStarFillPrimary} alt="" />
+                    <Body2 color="gray500" align="center !important">
+                      즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실
+                      수 있습니다. {personaListSaas.filter(item => item.favorite === true).length}
+                    </Body2>
+                  </BoxWrap>
                   )}
   
                   </div>
@@ -1217,7 +1216,7 @@ const PageIdeaEvaluate = () => {
                           handleSubmitReport(); //마지막 보고서 함수
                       }}
                       disabled={
-                        toolSteps >= 3 
+                        toolSteps >= 3 || personaListSaas.filter(item => item.favorite === true).length < 20
         
                       }
                     >

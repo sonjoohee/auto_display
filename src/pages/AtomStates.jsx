@@ -618,8 +618,10 @@ export const KANO_MODEL_EVALUATION = atom([]);
 export const KANO_MODEL_GRAPH_DATA = atom([]);
 
 export const IDEA_EVALUATE_SELECTED_KANO_MODEL = atom({});
+export const IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX = atom({});
 export const IDEA_EVALUATE_LIST = atom([]);
 export const IDEA_EVALUATE_SELECTED_LIST = atom([]);
+export const IDEA_EVALUATE_SELECTED_LIST_INDEX = atom({});
 export const IDEA_EVALUATE_COMPARISON_EDUCATION = atom([]);
 
 export const NPS_CONCEPT_DEFINITION = atom([]);

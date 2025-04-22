@@ -15,7 +15,8 @@ const MoleculeDeleteForm = ({
   placeholder = "핵심 가치를 작성해주세요 (예: 안전한 송금 등)",
   addButtonText = "+ 추가하기",
   initialItemCount = 7,
-  edit = true
+  edit = true,
+  showTool = true
 }) => {
   const [initialItems, setInitialItems] = useState([]);
 
@@ -38,7 +39,6 @@ const MoleculeDeleteForm = ({
   };
 
   const handleDelete = (index) => {
-    console.log("index", index);
     setItems(prev => prev.filter((_, i) => i !== index));
   };
 
@@ -58,7 +58,7 @@ const MoleculeDeleteForm = ({
             onChange={(e) => handleChange(index, e.target.value)}
             fix
           />
-          {edit && (
+          {showTool && (
             <DeleteButton 
               onClick={() => handleDelete(index)}
               disabled={disabled}
@@ -66,7 +66,7 @@ const MoleculeDeleteForm = ({
           )}
         </DeleteFormWrap>
       ))}
-      {items.length < maxItems && !disabled && edit && (
+      {items.length < maxItems && !disabled && showTool && (
         <Button
           DbExLarge
           More
