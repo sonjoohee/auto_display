@@ -1079,7 +1079,7 @@ const PageToolListSaas = () => {
               </div>
             </ToolListTitle>
             <ExploreWrap>
-              {projectEducationState === "basic" ? (
+              {sessionStorage.getItem("educationState") === "false" ? (
                 <TabWrapType4>
                   <TabButtonType4Main
                     isActive={activeTab === "all"}
@@ -1117,7 +1117,7 @@ const PageToolListSaas = () => {
               )}
 
               <ExploreList>
-                {projectEducationState === "basic" ? (
+                {sessionStorage.getItem("educationState") === "false" ? (
                   <>
                     {[
                       // Expert 카드들
@@ -1759,7 +1759,7 @@ const PageToolListSaas = () => {
                   //   </div>
                   // </ExploreCard>,
 
-                  // Edu 툴 추가
+                  // !Edu 툴 추가
                   <>
                     <ExploreCard Report key="report-1">
                       <span>
