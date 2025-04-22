@@ -79,7 +79,7 @@ const MoleculePersonaSelectCard = ({
   return (
     <CardGroupWrap>
       <TabWrapType3 Border>
-        <TabButtonType3
+        {/* <TabButtonType3
           className={activeTabState === "my_favorite" ? "active" : ""}
           onClick={() => handleTabClick("my_favorite")}
           isActive={activeTabState === "my_favorite"}
@@ -90,7 +90,7 @@ const MoleculePersonaSelectCard = ({
           }
         >
           저장된 페르소나
-        </TabButtonType3>
+        </TabButtonType3> */}
         {/* <TabButtonType3
           className={activeTabState === "macro_segment" ? "active" : ""}
           onClick={() => handleTabClick("macro_segment")}

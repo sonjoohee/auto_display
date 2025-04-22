@@ -44,7 +44,7 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [questionText, setQuestionText] = useState('');
-  const [options, setOptions] = useState(['']);
+  const [options, setOptions] = useState(['', '']);
   const MAX_SELECTIONS = 8;
   const [ideaGenerationStartPosition, setIdeaGenerationStartPosition] = useAtom(IDEA_GENERATION_START_POSITION);
   const [ideaGenerationSelectedStartPosition, setIdeaGenerationSelectedStartPosition] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
@@ -64,6 +64,12 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
       setSelectedTags(selectedIndexes);
     }
   }, [items, ideaGenerationSelectedStartPosition]);
+
+  useEffect(() => {
+    if (!options || options.length < 2) {
+      setOptions(['', '']);
+    }
+  }, []);
 
   const handleTagClick = (index, isSelected) => {
     if (disabled) {
@@ -173,7 +179,7 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
         <PopupOverlay>
           <PopupContainer>
             <PopupHeader>
-              <HeaderTitle>직접 설정하기</HeaderTitle>
+              <HeaderTitle>직접 생성하기</HeaderTitle>
               <CloseButton onClick={handleClose}>
                 ×
               </CloseButton>
@@ -188,7 +194,7 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
             ) : (
               <>
                 <PopupContent>
-                  <SectionTitle>태그 문항 추가 (남은 추가 가능 개수: {3 - addedTagsCount}개)</SectionTitle>
+                  <SectionTitle style={{textAlign: "left", marginBottom: "-10px"}}>태그 문항 추가 (최대 3가지 태그 문항 추가 가능)</SectionTitle>
                   <OptionsContainer>
                     {options.map((option, index) => (
                       <OptionItemWrapper key={index}>
@@ -214,8 +220,15 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
                 <Divider />
 
                 <ButtonContainer>
-                  <CreateButton onClick={handleAddTag}>
-                  아이디어 기반 태그 생성
+                  <CreateButton 
+                    onClick={handleAddTag} 
+                    disabled={
+                      addedTagsCount >= 3 || 
+                      options.some(option => !option.trim()) || // 하나라도 비어있으면 비활성화
+                      options.length === 0 // 옵션이 없어도 비활성화
+                    }
+                  >
+                    아이디어 기반 태그 생성
                   </CreateButton>
                 </ButtonContainer>
               </>
@@ -404,7 +417,7 @@ const InputField = styled.input`
   border: 1px solid ${palette.outlineGray};
   border-radius: 10px;
   font-size: 16px;
-  color: ${palette.gray800};
+  // color: ${palette.gray800};
 
   &::placeholder {
     color: ${palette.gray300};
@@ -486,13 +499,15 @@ const ButtonContainer = styled.div`
 const CreateButton = styled.button`
   height: 40px;
   padding: 0 24px;
-  background: ${palette.primary};
+  background: ${props => props.disabled ? palette.gray200 : palette.primary};
   color: white;
   border: none;
   border-radius: 4px;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
+  opacity: ${props => props.disabled ? 0.5 : 1};
+
 
   &:hover {
     background: ${palette.primaryDark};
