@@ -26,27 +26,19 @@ import {
   TabContent5Item,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../../assets/styles/Images";
-
 import {
   IS_LOGGED_IN,
   TOOL_ID,
   TOOL_STEP,
   TOOL_LOADING,
-  PSST_FILE_ID,
   PROJECT_SAAS,
   PSST_BUSINESS_INFO,
-  PROJECT_ANALYSIS_MULTIMODAL,
-  PSST_ANALYSIS_RESULTS,
-  PSST_FILE_NAMES,
-  PSST_REPORT,
-  PSST_SELECTED_TEMPLETE,
-  PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION,
-  PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE,
   PERSONA_LIST_SAAS,
   CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS,
   CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA,
   CUSTOMER_JOURNEY_MAP_REPORT,
   CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION,
+  CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX,
 } from "../../../../AtomStates";
 import personaImages from "../../../../../assets/styles/PersonaImages";
 import {
@@ -54,7 +46,6 @@ import {
   Body1,
   Body2,
   Body3,
-  Caption1,
 } from "../../../../../assets/styles/Typography";
 import {
   createToolOnServer,
@@ -63,8 +54,6 @@ import {
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
-// import MoleculeFileUpload from "../molecules/MoleculeFileUpload";
-import MoleculeAnalysisResults from "../molecules/MoleculeAnalysisResults";
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
 import MoleculeWriteCard from "../molecules/MoleculeWriteCard";
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
@@ -83,30 +72,11 @@ const PageCustomerJourneyMap = () => {
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
-
   const [psstBusinessInfo, setPsstBusinessInfo] = useAtom(PSST_BUSINESS_INFO);
-  const [, setPsstFileId] = useAtom(PSST_FILE_ID);
-  const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useAtom(
-    PROJECT_ANALYSIS_MULTIMODAL
-  );
   const [
     customerJourneyMapSelectedPersona,
     setCustomerJourneyMapSelectedPersona,
   ] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA);
-  const [
-    projectAnalysisMultimodalKeyMessage,
-    setProjectAnalysisMultimodalKeyMessage,
-  ] = useAtom(PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE);
-  const [
-    projectAnalysisMultimodalDescription,
-    setProjectAnalysisMultimodalDescription,
-  ] = useAtom(PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION);
-  const [analysisResults, setAnalysisResults] = useAtom(PSST_ANALYSIS_RESULTS);
-  const [fileNames, setFileNames] = useAtom(PSST_FILE_NAMES);
-  const [psstReport, setPsstReport] = useAtom(PSST_REPORT);
-  const [selectedTemplete, setSelectedTemplete] = useAtom(
-    PSST_SELECTED_TEMPLETE
-  );
   const [personaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [
     customerJourneyMapMomentAnalysis,
@@ -114,10 +84,13 @@ const PageCustomerJourneyMap = () => {
   ] = useAtom(CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS);
   const [
     customerJourneyMapSelectedDirection,
-    setCustomerJourneyMapSelectedDirection,
+    ,
   ] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION);
   const [customerJourneyMapReport, setCustomerJourneyMapReport] = useAtom(
     CUSTOMER_JOURNEY_MAP_REPORT
+  );
+  const [customerJourneyMapSelectedDirectionIndex, ] = useAtom(
+    CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX
   );
 
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -126,7 +99,6 @@ const PageCustomerJourneyMap = () => {
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [isEditingBusiness, setIsEditingBusiness] = useState(false);
@@ -134,18 +106,9 @@ const PageCustomerJourneyMap = () => {
   const [isCreateReportIndex, setIsCreateReportIndex] = useState(false);
   const [hideIndexButton, setHideIndexButton] = useState(false);
   const [selectedPersonas, setSelectedPersonas] = useState(null);
-  const [selectedPersonaButtons, setSelectedPersonaButtons] = useState({});
-  const [selectedPersonasSaas, setSelectedPersonasSaas] = useState([]);
-  // 초기 상태를 빈 배열로 설정
-
-  const [currentLoadingIndex, setCurrentLoadingIndex] = useState(1);
   const [selectedMoment, setSelectedMoment] = useState([]);
-
   const [showCustomForm, setShowCustomForm] = useState(false);
-  const [customItems, setCustomItems] = useState(Array(7).fill(""));
-
   const [inputValue, setInputValue] = useState("");
-
   const [customItemCount, setCustomItemCount] = useState(0);
   const [selectedMomentData, setSelectedMomentData] = useState(null);
 
@@ -157,8 +120,6 @@ const PageCustomerJourneyMap = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // console.log(customerJourneyMapSelectedDirection);
-  // console.log(selectedMoment);
 
   useEffect(() => {
     const interviewLoading = async () => {
@@ -190,7 +151,10 @@ const PageCustomerJourneyMap = () => {
           );
         }
         if (customerJourneyMapSelectedDirection) {
-          setSelectedMoment(customerJourneyMapSelectedDirection ?? []);
+          setSelectedMomentData(customerJourneyMapSelectedDirection ?? []);
+        }
+        if (customerJourneyMapSelectedDirectionIndex) {
+          setSelectedMoment(customerJourneyMapSelectedDirectionIndex ?? []);
         }
         if (customerJourneyMapReport) {
           setCustomerJourneyMapReport(customerJourneyMapReport ?? []);
@@ -252,6 +216,8 @@ const PageCustomerJourneyMap = () => {
     handleNextStep(1);
     setToolSteps(1);
 
+
+    try {
     // 선택된 페르소나에서 필요한 필드만 추출
     const selectedCustomer = {
       personaName: selectedPersonas?.personaName || "",
@@ -318,7 +284,7 @@ const PageCustomerJourneyMap = () => {
     // 상태 업데이트
     setCustomerJourneyMapMomentAnalysis(transformedData);
 
-    try {
+   
       const responseToolId = await createToolOnServer(
         {
           projectId: project._id,
@@ -333,13 +299,15 @@ const PageCustomerJourneyMap = () => {
         {
           customerJourneyMapMomentAnalysis: transformedData,
           customerJourneyMapSelectedPersona: selectedPersonas,
+          completedStep: 2,
         },
         isLoggedIn
       );
 
       setToolSteps(2);
       setIsLoading(false);
-    } catch (error) {
+    
+    }catch (error) {
       setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
@@ -385,8 +353,8 @@ const PageCustomerJourneyMap = () => {
       await updateToolOnServer(
         toolId,
         {
-          completedStep: 2,
           selectedDirection: selectedMomentData,
+          selectedDirectionIndex: selectedMoment
         },
         isLoggedIn
       );
@@ -632,7 +600,7 @@ const PageCustomerJourneyMap = () => {
                       </ListBoxGroup>
                     </div>
 
-                    {personaListSaas.length > 0 ? (
+                    {personaListSaas.filter(item => item.favorite === true).length >= 20 ? (
                       <MoleculePersonaSelectCard
                         filteredPersonaList={personaListSaas}
                         selectedPersonas={selectedPersonas}
@@ -640,36 +608,16 @@ const PageCustomerJourneyMap = () => {
                           setSelectedPersonas(persona);
                           // 필요한 경우 여기서 추가 로직 수행
                         }}
+                        disabled={toolSteps >= 1}
                       />
                     ) : (
-                      <BoxWrap
-                        Hover
-                        NoData
-                        style={{
-                          height: "300px",
-                        }}
-                        onClick={() => navigate("/AiPersona")}
-                      >
-                        <img src={images.PeopleFillPrimary2} alt="" />
-
-                        <Body2 color="gray700" align="center !important">
-                          현재 대화가 가능한 활성 페르소나가 없습니다
-                          <br />
-                          페르소나 생성 요청을 진행하여 페르소나를
-                          활성화해주세요
-                        </Body2>
-
-                        <Button
-                          Medium
-                          Outline
-                          Fill
-                          onClick={() => navigate("/AiPersona")}
-                        >
-                          <Caption1 color="gray700">
-                            AI Person 생성 요청
-                          </Caption1>
-                        </Button>
-                      </BoxWrap>
+                      <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
+                      <img src={images.PeopleStarFillPrimary} alt="" />
+                      <Body2 color="gray500" align="center !important">
+                        즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실
+                        수 있습니다. {personaListSaas.filter(item => item.favorite === true).length}
+                      </Body2>
+                    </BoxWrap>
                     )}
                   </div>
 
@@ -679,7 +627,7 @@ const PageCustomerJourneyMap = () => {
                     Fill
                     Round
                     onClick={handleSubmitPersona}
-                    disabled={toolSteps >= 1 || getSelectedCount() === 0}
+                    disabled={toolSteps >= 1 || getSelectedCount() === 0 || personaListSaas.filter(item => item.favorite === true).length <20}
                   >
                     다음
                   </Button>
@@ -802,6 +750,7 @@ const PageCustomerJourneyMap = () => {
                                   title={moment.name}
                                   isSelected={selectedMoment.includes(index)}
                                   onSelect={() => handleCheckboxChange(index)}
+                                  disabled={toolSteps > 2}
                                 />
                               );
                             }
@@ -810,21 +759,6 @@ const PageCustomerJourneyMap = () => {
                         <div style={{ marginBottom: "140px", width: "100%" }}>
                           {customItemCount < 3 && (
                             <>
-                              {/* {showCustomForm && (
-                            <InputContainer>
-                              <InputField 
-                                placeholder="직접 입력"
-                                value={inputValue}
-                                onChange={handleInputChange}
-                              />
-                              <RegisterButton 
-                                onClick={addCustomMoment}
-                                disabled={!inputValue.trim().length > 0}
-                              >
-                                등록
-                              </RegisterButton>
-                            </InputContainer>
-                          )} */}
                               {showCustomForm && (
                                 <MoleculeWriteCard
                                   placeholder="직접 입력"

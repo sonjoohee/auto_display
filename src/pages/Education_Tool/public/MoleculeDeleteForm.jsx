@@ -38,6 +38,7 @@ const MoleculeDeleteForm = ({
   };
 
   const handleDelete = (index) => {
+    console.log("index", index);
     setItems(prev => prev.filter((_, i) => i !== index));
   };
 
@@ -57,13 +58,15 @@ const MoleculeDeleteForm = ({
             onChange={(e) => handleChange(index, e.target.value)}
             fix
           />
-          <DeleteButton
-            onClick={() => handleDelete(index)}
-            disabled={disabled}
-          />
+          {edit && (
+            <DeleteButton 
+              onClick={() => handleDelete(index)}
+              disabled={disabled}
+            />
+          )}
         </DeleteFormWrap>
       ))}
-      {items.length < maxItems && !disabled && (
+      {items.length < maxItems && !disabled && edit && (
         <Button
           DbExLarge
           More

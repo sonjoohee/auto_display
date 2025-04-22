@@ -53,6 +53,7 @@ import {
   IDEA_EVALUATE_SELECTED_LIST,
   IDEA_EVALUATE_LIST,
   IDEA_EVALUATE_COMPARISON_EDUCATION,
+  IDEA_EVALUATE_SELECTED_KANO_MODEL,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -142,6 +143,7 @@ const PageIdeaEvaluate = () => {
   const [quickSurveyStaticData, setQuickSurveyStaticData] = useAtom(
     QUICK_SURVEY_STATIC_DATA
   );
+  const [ideaEvaluateSelectedKanoModel, setIdeaEvaluateSelectedKanoModel] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL);
   const [ideaEvaluateSelectedList, setIdeaEvaluateSelectedList] = useAtom(IDEA_EVALUATE_SELECTED_LIST);
   const [ideaEvaluateList, setIdeaEvaluateList] = useAtom(IDEA_EVALUATE_LIST);
   const [quickSurveyProjectDescription, setQuickSurveyProjectDescription] =
@@ -267,31 +269,15 @@ const PageIdeaEvaluate = () => {
       if (toolLoading) {
 
         // 비즈니스 정보 설정 (Step 1)
-        if (quickSurveyProjectDescription) {
-          setProjectDescription(quickSurveyProjectDescription);
+        if (ideaEvaluateList && ideaEvaluateList.length > 0) {
+          setIdeaEvaluateList(ideaEvaluateList);
+        }
+        if (ideaEvaluateSelectedList && ideaEvaluateSelectedList.length > 0) {
+          setIdeaEvaluateSelectedList(ideaEvaluateSelectedList);
         }
 
-        if (
-          quickSurveyAnalysis &&
-          Object.keys(quickSurveyAnalysis || {}).length > 0
-        ) {
-          setQuickSurveyAnalysis(quickSurveyAnalysis);
-        }
-        if (
-          quickSurveyAnalysis.custom_question &&
-          quickSurveyAnalysis.custom_question.length > 0
-        ) {
-          setQuickSurveyCustomQuestion(quickSurveyAnalysis.custom_question);
-        }
-        if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0) {
-          setQuickSurveySurveyMethod(quickSurveySurveyMethod);
-        }
-
-        if (
-          quickSurveySelectedQuestion &&
-          quickSurveySelectedQuestion.length > 0
-        ) {
-          setSelectedQuestion(quickSurveySelectedQuestion);
+        if (ideaEvaluateComparisonEducation && ideaEvaluateComparisonEducation.length > 0) {
+          setIdeaEvaluateComparisonEducation(ideaEvaluateComparisonEducation);
         }
 
         // 활성 탭 설정 (기본값 1)
@@ -411,14 +397,14 @@ const PageIdeaEvaluate = () => {
 
         const response = await getFindToolListOnServerSaas(
           projectSaas?._id ?? "",
-          "ix_kano_model_product_analysis_education",
+          "ix_kano_model_education",
           isLoggedIn
         );
 
 
         const newItems = (response || []).filter(
           (item) =>
-            item?.type === "ix_kano_model_product_analysis_education" &&
+            item?.type === "ix_kano_model_education" &&
             item?.completedStep === 3
         );
 
@@ -546,7 +532,7 @@ const PageIdeaEvaluate = () => {
         const responseToolId = await createToolOnServer(
           {
             projectId: project._id,
-            type: "ix_idea_evaluation_comparison_education",
+            type: "ix_idea_evaluation_education",
           },
           isLoggedIn
         );
@@ -939,7 +925,7 @@ const PageIdeaEvaluate = () => {
                               }
                             >
                               {selectedPurposes.customerList ||
-                                "직접 문제점을 작성합니다."}
+                                "Kano Model 결과를 불러 올 수 있습니다"}
                             </Body2>
                             <images.ChevronDown
                               width="24px"
@@ -1286,13 +1272,13 @@ const PageIdeaEvaluate = () => {
                               </TabButtonType4>
                             </TabWrapType4>
                           </div>
-                          <Button Primary onClick={handleEnterInterviewRoom}>
+                          {/* <Button Primary onClick={handleEnterInterviewRoom}>
                             <img
                               src={images.ReportSearch}
                               alt="인터뷰 스크립트 보기"
                             />
                             응답자 의견 확인
-                          </Button>
+                          </Button> */}
                         </div>
                       </InsightAnalysis>
 

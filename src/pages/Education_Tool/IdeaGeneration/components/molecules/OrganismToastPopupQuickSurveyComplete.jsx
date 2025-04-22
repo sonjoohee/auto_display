@@ -177,9 +177,9 @@ const OrganismToastPopupQuickSurveyComplete = ({
   const renderInterviewItemsComplete = () => {
     return (
       <InterviewItem status={"Complete"}>
-        <QuestionWrap status={"Complete"} isOpen={visibleAnswers}>
+        {/* <QuestionWrap status={"Complete"} isOpen={visibleAnswers}> */}
           {/* <QuestionText>Q. {quickSurveySurveyMethod?.question}</QuestionText> */}
-        </QuestionWrap>
+        {/* </QuestionWrap> */}
         {visibleAnswers && <AnswerWrap>{renderAnswersComplete()}</AnswerWrap>}
       </InterviewItem>
     );
@@ -383,6 +383,7 @@ const InterviewItem = styled.div`
   gap: 20px;
   width: 100%;
   padding: 10px;
+  padding-top: 0px;
   // padding: 20px;
   // padding-top:10px;
   border-radius: 10px;
