@@ -900,6 +900,8 @@ const PageKanoModel = () => {
                               maxItems={20}
                               placeholder="아이디어를 작성해주세요 (예: 안전한 송금 등)"
                               edit={false}
+                              showTool={false}
+
                             />
                           </>
                         )}

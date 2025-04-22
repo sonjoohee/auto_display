@@ -182,6 +182,8 @@ import {
   IDEA_EVALUATE_SELECTED_LIST,
   IDEA_EVALUATE_COMPARISON_EDUCATION,
   IDEA_EVALUATE_SELECTED_KANO_MODEL,
+  IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX,
+  IDEA_EVALUATE_SELECTED_LIST_INDEX,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -437,9 +439,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setKanoModelGraphData] = useAtom(KANO_MODEL_GRAPH_DATA);
 
   const [, setIdeaEvaluateSelectedKanoModel] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL);
+  const [, setIdeaEvaluateSelectedKanoModelIndex] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX);
   const [, setIdeaEvaluateList] = useAtom(IDEA_EVALUATE_LIST);
   const [, setIdeaEvaluateSelectedList] = useAtom(IDEA_EVALUATE_SELECTED_LIST);
   const [, setIdeaEvaluateComparisonEducation] = useAtom(IDEA_EVALUATE_COMPARISON_EDUCATION);
+  const [, setIdeaEvaluateSelectedListIndex] = useAtom(IDEA_EVALUATE_SELECTED_LIST_INDEX);
 
   const saveConversation = (data) => {};
 
@@ -1108,15 +1112,19 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setToolStep(1);
         setIdeaEvaluateList([]);
         setIdeaEvaluateSelectedList([]);
+        setIdeaEvaluateSelectedListIndex({});
         setIdeaEvaluateComparisonEducation([]);
         setIdeaEvaluateSelectedKanoModel({});
+        setIdeaEvaluateSelectedKanoModelIndex({});
         setToolLoading(false);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setIdeaEvaluateList(chatData?.ideaEvaluateList || []);
         setIdeaEvaluateSelectedList(chatData?.ideaEvaluateSelectedList || []);
         setIdeaEvaluateComparisonEducation(chatData?.ideaEvaluateComparisonEducation || []);
+        setIdeaEvaluateSelectedListIndex(chatData?. ideaEvaluateSelectedListIndex || {});
         setIdeaEvaluateSelectedKanoModel(chatData?.selectedKanoModelIdea || {});
+        setIdeaEvaluateSelectedKanoModelIndex(chatData?.selectedKanoModelIdeaIndex || []);
 
 
 
@@ -1152,7 +1160,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           navigate("/KanoModel");
         } else if (chatData.type === "ix_idea_evaluation_education") {
           setToolLoading(true);
-          navigate("/IdeaEvaluation");
+          navigate("/IdeaEvaluate");
         }
       } catch (error) {}
     } else if (conversationType === "interviewSingle") {
