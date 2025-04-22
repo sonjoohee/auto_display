@@ -989,7 +989,7 @@ const PageConceptDefinition = () => {
                     </div>
 
                     <div className="content">
-                    <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
+                      <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
                         <div className="selectBoxWrap">
                           <Body2 color="gray500" style={{ width: "110px" }}>
                             페르소나 선택
