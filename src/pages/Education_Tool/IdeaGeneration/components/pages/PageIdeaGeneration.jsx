@@ -94,7 +94,7 @@ const PageIdeaGeneration = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
-  const [toolStep, ] = useAtom(TOOL_STEP);
+  const [toolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
@@ -107,13 +107,10 @@ const PageIdeaGeneration = () => {
     IDEA_GENERATION_START_POSITION
   );
 
-  const [ideaGenerationPossessionTech, setIdeaGenerationPossessionTech] = useAtom(
-    IDEA_GENERATION_POSSSESSION_TECH
-  );
-  const [ideaGenerationSelectedPurpose, setIdeaGenerationSelectedPurpose] = useAtom(
-    IDEA_GENERATION_SELECTED_PURPOSE
-  );
-
+  const [ideaGenerationPossessionTech, setIdeaGenerationPossessionTech] =
+    useAtom(IDEA_GENERATION_POSSSESSION_TECH);
+  const [ideaGenerationSelectedPurpose, setIdeaGenerationSelectedPurpose] =
+    useAtom(IDEA_GENERATION_SELECTED_PURPOSE);
 
   const [ideaGenerationProblemList, setIdeaGenerationProblemList] = useAtom(
     IDEA_GENERATION_PROBLEM_LIST
@@ -171,7 +168,6 @@ const PageIdeaGeneration = () => {
     window.scrollTo(0, 0);
   }, []);
 
-
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
@@ -195,11 +191,9 @@ const PageIdeaGeneration = () => {
       }
 
       if (toolLoading) {
-
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
         setToolSteps(toolStep ?? 1);
-
 
         if (Object.keys(ideaGenerationSelectedPurpose).length > 0) {
           setSelectedPurposes(ideaGenerationSelectedPurpose ?? {});
@@ -226,7 +220,6 @@ const PageIdeaGeneration = () => {
         if (ideaGenerationMandalArtData) {
           setIdeaGenerationMandalArtData(ideaGenerationMandalArtData ?? []);
         }
-
 
         // 완료된 단계 설정
         const completedStepsArray = [];
@@ -281,14 +274,12 @@ const PageIdeaGeneration = () => {
     getAllTargetDiscovery();
   }, [isLoggedIn, projectSaas]);
 
-
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
     setCompletedSteps([...completedSteps, currentStep]);
     setActiveTab(currentStep + 1);
     setShowPopupError(false);
   };
-
 
   // handleInputChange 함수 수정
   const handleInputChange = (field, value) => {
@@ -297,7 +288,6 @@ const PageIdeaGeneration = () => {
       setProjectDescription(value);
     }
   };
-
 
   const handleSubmitProblem = async () => {
     handleNextStep(1);
@@ -330,7 +320,8 @@ const PageIdeaGeneration = () => {
         toolId,
         {
           completedStep: 1,
-          ideaGenerationStartPosition: response.response.idea_generation_keyword_education,
+          ideaGenerationStartPosition:
+            response.response.idea_generation_keyword_education,
         },
         isLoggedIn
       );
@@ -415,15 +406,14 @@ const PageIdeaGeneration = () => {
 
       await updateToolOnServer(
         responseToolId,
-        {    
-        completedStep: 0,
-         selectedPurposes: selectedPurposes,
-         ideaGenerationProblemList: ideaGenerationProblemList,
-         ideaGenerationProblemListTitle: ideaGenerationProblemListTitle,
+        {
+          completedStep: 0,
+          selectedPurposes: selectedPurposes,
+          ideaGenerationProblemList: ideaGenerationProblemList,
+          ideaGenerationProblemListTitle: ideaGenerationProblemListTitle,
         },
         isLoggedIn
       );
-
     } catch (error) {
       console.error("Error in handlePurposeSelect:", error);
       setShowPopupError(true);
@@ -492,29 +482,27 @@ const PageIdeaGeneration = () => {
           reportRetryCount < reportMaxRetries &&
           (!reportResponse ||
             !reportResponse?.response ||
+            !reportResponse?.response?.idea_generation_report_education ||
+            !reportResponse?.response?.idea_generation_report_education
+              ?.core_ideas ||
+            !reportResponse?.response?.idea_generation_report_education
+              ?.detailed_execution_ideas ||
+            !reportResponse?.response?.idea_generation_report_education
+              ?.additional_execution_ideas)
+        ) {
+          reportResponse = await EducationToolsRequest(data, isLoggedIn);
+          reportRetryCount++;
+        }
 
-            !reportResponse?.response?.idea_generation_report_education || 
-            !reportResponse?.response?.idea_generation_report_education?.core_ideas ||
-            !reportResponse?.response?.idea_generation_report_education?.detailed_execution_ideas ||
-            !reportResponse?.response?.idea_generation_report_education?.additional_execution_ideas )
+        if (reportRetryCount >= reportMaxRetries) {
+          setShowPopupError(true);
+          return;
+        }
 
-          ) {
-         
-            reportResponse = await EducationToolsRequest(data, isLoggedIn);
-            reportRetryCount++;
-           
-          } 
-         
-            if (reportRetryCount >= reportMaxRetries) {
-            setShowPopupError(true);
-            return;
-          }
-        
+        const reportData =
+          reportResponse.response.idea_generation_report_education;
 
-        const reportData = reportResponse.response.idea_generation_report_education;
-
-        reportData.core_ideas = reportData?.core_ideas?.map(coreIdea => {
-
+        reportData.core_ideas = reportData?.core_ideas?.map((coreIdea) => {
           // persona_name과 일치하는 persona 찾기
           const matchingPersona = persona_group_interview.find(
             (persona) => persona.name === coreIdea.persona_name
@@ -794,7 +782,12 @@ const PageIdeaGeneration = () => {
                           {selectBoxStates.customerList && (
                             <SelectBoxList dropUp={dropUpStates.customerList}>
                               {customerJourneyList.length === 0 ? (
-                                <SelectBoxItem disabled={toolSteps >= 1 || ideaGenerationProblemList.length > 0}>
+                                <SelectBoxItem
+                                  disabled={
+                                    toolSteps >= 1 ||
+                                    ideaGenerationProblemList.length > 0
+                                  }
+                                >
                                   <Body2 color="gray300" align="left">
                                     직접 문제점을 작성합니다.
                                   </Body2>
@@ -1012,19 +1005,30 @@ const PageIdeaGeneration = () => {
                     </div>
 
                     <div className="content">
-                    {personaListSaas.filter(item => item.favorite === true).length >= 20 ? (
+                      {personaListSaas.filter((item) => item.favorite === true)
+                        .length >= 20 ? (
                         <MoleculePersonaSelectCard
                           filteredPersonaList={personaListSaas}
                           hideSelectButton={true}
                         />
                       ) : (
-                        <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
-                        <img src={images.PeopleStarFillPrimary} alt="" />
-                        <Body2 color="gray500" align="center !important">
-                          즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실
-                          수 있습니다. {personaListSaas.filter(item => item.favorite === true).length}
-                        </Body2>
-                      </BoxWrap>
+                        <BoxWrap
+                          Hover
+                          NoData
+                          Border
+                          onClick={() => navigate("/AiPersona")}
+                        >
+                          <img src={images.PeopleStarFillPrimary} alt="" />
+                          <Body2 color="gray500" align="center !important">
+                            즐겨찾기를 하시면 관심 있는 페르소나를 해당
+                            페이지에서 확인하실 수 있습니다.{" "}
+                            {
+                              personaListSaas.filter(
+                                (item) => item.favorite === true
+                              ).length
+                            }
+                          </Body2>
+                        </BoxWrap>
                       )}
                     </div>
                   </>
@@ -1036,7 +1040,11 @@ const PageIdeaGeneration = () => {
                   Fill
                   Round
                   onClick={handleMandalArt}
-                  disabled={toolSteps >= 3 || personaListSaas.filter(item => item.favorite === true).length < 20}
+                  disabled={
+                    toolSteps >= 3 ||
+                    personaListSaas.filter((item) => item.favorite === true)
+                      .length < 20
+                  }
                 >
                   아이디에이션 시작하기
                 </Button>

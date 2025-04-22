@@ -57,7 +57,7 @@ import {
   KANO_MODEL_CLUSTERING,
   KANO_MODEL_EVALUATION,
   KANO_MODEL_CLUSTERING_NAME,
-  KANO_MODEL_GRAPH_DATA
+  KANO_MODEL_GRAPH_DATA,
 } from "../../../../AtomStates";
 import {
   H4,
@@ -98,7 +98,6 @@ import MoleculeDeleteForm from "../../../../../pages/Education_Tool/public/Molec
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
 import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
 import KanoModelGraph from "../../../../../components/Charts/KanoModelGraph";
-
 
 const PageKanoModel = () => {
   const navigate = useNavigate();
@@ -242,9 +241,6 @@ const PageKanoModel = () => {
     };
   }, [showToast]);
 
-
-  console.log("kanoModelEvaluation", kanoModelEvaluation);
-
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
@@ -266,7 +262,6 @@ const PageKanoModel = () => {
       }
 
       if (toolLoading) {
-
         // 비즈니스 정보 설정 (Step 1)
         if (selectedKanoModelIdea) {
           setSelectedKanoModelIdea(selectedKanoModelIdea);
@@ -278,20 +273,20 @@ const PageKanoModel = () => {
         if (kanoModelClusteringName) {
           setKanoModelClusteringName(kanoModelClusteringName);
         }
-        if (
-          kanoModelEvaluation &&
-          kanoModelEvaluation.length > 0
-        ) {
+        if (kanoModelEvaluation && kanoModelEvaluation.length > 0) {
           setKanoModelEvaluation(kanoModelEvaluation);
         }
         if (kanoModelProductAnalysis && kanoModelProductAnalysis.length > 0) {
           setKanoModelProductAnalysis(kanoModelProductAnalysis);
         }
         if (kanoModelGraphData && kanoModelGraphData.length > 0) {
+          console.log(
+            "🚀 ~ interviewLoading ~ kanoModelGraphData:",
+            kanoModelGraphData
+          );
+
           setKanoModelGraphData(kanoModelGraphData);
         }
-
-      
 
         // 활성 탭 설정 (기본값 1)
         if (toolStep === undefined || toolStep === 1) {
@@ -307,68 +302,66 @@ const PageKanoModel = () => {
           }
           setCompletedSteps(completedStepsArray);
         }
-      
       }
     };
     interviewLoading();
     setToolLoading(false);
   }, [toolLoading]);
 
+  // 고객핵심가치분석 리스트 가져오기
+  useEffect(() => {
+    const getAllTargetDiscovery = async () => {
+      try {
+        let page = 1;
+        const size = 10;
+        let allItems = [];
 
-  
+        const response = await getFindToolListOnServerSaas(
+          projectSaas?._id ?? "",
+          "ix_idea_generation_education",
+          isLoggedIn
+        );
 
-// 고객핵심가치분석 리스트 가져오기
-useEffect(() => {
-  const getAllTargetDiscovery = async () => {
-    try {
-      let page = 1;
-      const size = 10;
-      let allItems = [];
+        const newItems = (response || []).filter(
+          (item) =>
+            item?.type === "ix_idea_generation_education" &&
+            item?.completedStep === 4
+        );
 
-      const response = await getFindToolListOnServerSaas(
-        projectSaas?._id ?? "",
-        "ix_idea_generation_education",
-        isLoggedIn
-      );
+        allItems = [...allItems, ...newItems];
 
-      const newItems = (response || []).filter(
-        (item) =>
-          item?.type === "ix_idea_generation_education" &&
-          item?.completedStep === 4
-      );
+        setKanoModelIdeaGeneration(allItems);
+      } catch (error) {
+        setKanoModelIdeaGeneration([]); // Set empty array on error
+      }
+    };
 
-      allItems = [...allItems, ...newItems];
-
-      setKanoModelIdeaGeneration(allItems);
-    } catch (error) {
-      setKanoModelIdeaGeneration([]); // Set empty array on error
-    }
-  };
-
-  getAllTargetDiscovery();
-}, [isLoggedIn, projectSaas]);
-
+    getAllTargetDiscovery();
+  }, [isLoggedIn, projectSaas]);
 
   const handleCheckboxChange = (ideaId) => {
     setSelectedIdea((prev) => {
       if (prev.includes(ideaId)) {
         // 이미 선택된 아이템이면 제거
-        const newSelected = prev.filter(id => id !== ideaId);
+        const newSelected = prev.filter((id) => id !== ideaId);
         // 선택된 데이터들 업데이트
-        const selectedDataList = newSelected.map(id => kanoModelIdeaGeneration[id]);
+        const selectedDataList = newSelected.map(
+          (id) => kanoModelIdeaGeneration[id]
+        );
         setSelectedKanoModelIdea(selectedDataList);
         return newSelected;
       } else {
         // 새로운 아이템 추가
         const newSelected = [...prev, ideaId];
         // 선택된 데이터들 업데이트
-        const selectedDataList = newSelected.map(id => kanoModelIdeaGeneration[id]);
+        const selectedDataList = newSelected.map(
+          (id) => kanoModelIdeaGeneration[id]
+        );
         setSelectedKanoModelIdea(selectedDataList);
         return newSelected;
       }
     });
   };
-
 
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -376,7 +369,6 @@ useEffect(() => {
     setActiveTab(currentStep + 1);
     setShowPopupError(false);
   };
-
 
   const business = {
     business: businessDescription,
@@ -386,8 +378,6 @@ useEffect(() => {
     country: project?.targetCountry || "",
   };
 
-  
-
   const handleSubmitIdeaList = async () => {
     // handleNextStep(1);
     setIsLoading(true);
@@ -395,22 +385,24 @@ useEffect(() => {
     try {
       const clusteringData = {
         type: "ix_kano_model_clustering_education",
-        idea_list:  selectedKanoModelIdea
+        idea_list: selectedKanoModelIdea,
       };
 
-      let responseReport = await EducationToolsRequest(clusteringData, isLoggedIn);
+      let responseReport = await EducationToolsRequest(
+        clusteringData,
+        isLoggedIn
+      );
 
       let reportRetryCount = 0;
       const reportMaxRetries = 10;
-  
-  
+
       // while (reportRetryCount < reportMaxRetries) {
       //   try {
       //     responseReport = await EducationToolsRequest(
       //       reportData,
       //       isLoggedIn
       //     );
-  
+
       //     // 응답 형식 검증
       //     if (
       //       responseReport.response &&
@@ -425,19 +417,24 @@ useEffect(() => {
       //     if (reportRetryCount >= reportMaxRetries) throw error;
       //   }
       // }
-  
+
       if (reportRetryCount >= reportMaxRetries) {
         throw new Error(
           "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
         );
       }
 
-      setKanoModelClustering(responseReport.response.kano_model_evaluation_education )
-      setKanoModelClusteringName(Object.values(responseReport.response.kano_model_evaluation_education || {}).reduce((acc, category) => {
-        // 각 카테고리의 아이템들에서 name만 추출하여 배열에 추가
-        return [...acc, ...category.map(item => item.name)];
-      }, []))
- 
+      setKanoModelClustering(
+        responseReport.response.kano_model_evaluation_education
+      );
+      setKanoModelClusteringName(
+        Object.values(
+          responseReport.response.kano_model_evaluation_education || {}
+        ).reduce((acc, category) => {
+          // 각 카테고리의 아이템들에서 name만 추출하여 배열에 추가
+          return [...acc, ...category.map((item) => item.name)];
+        }, [])
+      );
 
       const responseToolId = await createToolOnServer(
         {
@@ -445,17 +442,19 @@ useEffect(() => {
           projectId: project._id,
           completedStep: 1,
           kanoModelSelectedIdea: selectedKanoModelIdea,
-          kanoModelClustering: responseReport.response.kano_model_evaluation_education,
-          kanoModelClusteringName:Object.values(responseReport.response.kano_model_evaluation_education || {}).reduce((acc, category) => {
+          kanoModelClustering:
+            responseReport.response.kano_model_evaluation_education,
+          kanoModelClusteringName: Object.values(
+            responseReport.response.kano_model_evaluation_education || {}
+          ).reduce((acc, category) => {
             // 각 카테고리의 아이템들에서 name만 추출하여 배열에 추가
-            return [...acc, ...category.map(item => item.name)];
-          }, [])
-          },
-          isLoggedIn
-        );
-      
-         setToolId(responseToolId);
-      
+            return [...acc, ...category.map((item) => item.name)];
+          }, []),
+        },
+        isLoggedIn
+      );
+
+      setToolId(responseToolId);
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
@@ -478,48 +477,45 @@ useEffect(() => {
     }
   };
 
+  const handleSubmitClustering = async () => {
+    handleNextStep(1);
+    setToolSteps(1);
 
-const handleSubmitClustering = async () => {
+    // const updatedClustering = { ...kanoModelClustering };
 
-  handleNextStep(1);
-  setToolSteps(1);
+    // // 각 카테고리 순회
+    // Object.keys(updatedClustering).forEach(category => {
+    //   if (Array.isArray(updatedClustering[category])) {
+    //     // 해당 카테고리의 아이템 중 kanoModelClusteringName에 포함된 이름만 남김
+    //     updatedClustering[category] = updatedClustering[category].filter(
+    //       item => kanoModelClusteringName.includes(item.name)
+    //     );
+    //   }
+    // });
 
-  // const updatedClustering = { ...kanoModelClustering };
-  
-  // // 각 카테고리 순회
-  // Object.keys(updatedClustering).forEach(category => {
-  //   if (Array.isArray(updatedClustering[category])) {
-  //     // 해당 카테고리의 아이템 중 kanoModelClusteringName에 포함된 이름만 남김
-  //     updatedClustering[category] = updatedClustering[category].filter(
-  //       item => kanoModelClusteringName.includes(item.name)
-  //     );
-  //   }
-  // });
-  
-  // // 업데이트된 상태 설정
-  // setKanoModelClustering(updatedClustering);
+    // // 업데이트된 상태 설정
+    // setKanoModelClustering(updatedClustering);
 
-  await updateToolOnServer(
-    toolId,
-    {
-      completedStep: 2,
-      // kanoModelClusteringName: kanoModelClusteringName,
-      // kanoModelClustering: kanoModelClustering,
+    await updateToolOnServer(
+      toolId,
+      {
+        completedStep: 2,
+        // kanoModelClusteringName: kanoModelClusteringName,
+        // kanoModelClustering: kanoModelClustering,
+      },
+      isLoggedIn
+    );
+  };
+
+  const handleSubmitReport = async () => {
+    await updateToolOnServer(
+      toolId,
+      {
+        completedStep: 2,
       },
       isLoggedIn
     );
 
-}
-
-  const handleSubmitReport = async () => {
-      await updateToolOnServer(
-        toolId,
-        {
-        completedStep: 2,
-        },
-        isLoggedIn
-      );
-  
     handleNextStep(2);
     // setToolSteps(2);
     setIsLoadingReport(true);
@@ -532,26 +528,25 @@ const handleSubmitClustering = async () => {
 
       let response = await EducationToolsRequest(Data, isLoggedIn);
 
-      setKanoModelProductAnalysis(response.response.kano_model_product_analysis_education)
-  
+      setKanoModelProductAnalysis(
+        response.response.kano_model_product_analysis_education
+      );
 
       const persona_group = personaListSaas
-      .filter((persona) => persona?.favorite === true)
-      .map((persona) => ({
-        personaName: persona.personaName,
-        personaCharacteristics: persona.personaCharacteristics,
-        type: persona.type,
-        age: persona.age,
-        gender: persona.gender,
-        job: persona.job,
-        keywords: persona.keywords,
-        userExperience: persona.userExperience,
-        consumptionPattern: persona.consumptionPattern,
-        interests: persona.interests,
-        lifestyle: persona.lifestyle,
-      
-      }));
-
+        .filter((persona) => persona?.favorite === true)
+        .map((persona) => ({
+          personaName: persona.personaName,
+          personaCharacteristics: persona.personaCharacteristics,
+          type: persona.type,
+          age: persona.age,
+          gender: persona.gender,
+          job: persona.job,
+          keywords: persona.keywords,
+          userExperience: persona.userExperience,
+          consumptionPattern: persona.consumptionPattern,
+          interests: persona.interests,
+          lifestyle: persona.lifestyle,
+        }));
 
       let allResponseEvalute = [];
 
@@ -559,65 +554,80 @@ const handleSubmitClustering = async () => {
         // 페르소나 그룹을 4명씩 나누어 인덱스 계산
         const startIndex = i * 4;
         const endIndex = Math.min(startIndex + 4, persona_group.length); // 배열 범위를 넘지 않도록 처리
-        
+
         // 현재 루프에서 사용할 4명의 페르소나 그룹
         const currentPersonaGroup = persona_group.slice(startIndex, endIndex);
-        
+
         // API 요청 데이터 구성
         const evaluteData = {
           type: "ix_kano_model_evaluation_education",
-          business_analysis: response.response.kano_model_product_analysis_education,
+          business_analysis:
+            response.response.kano_model_product_analysis_education,
           persona_group: currentPersonaGroup, // 현재 루프의 4명 페르소나 그룹
-          idea_list: kanoModelClustering
+          idea_list: kanoModelClustering,
         };
-      
-        
-        let responseEvalute = await EducationToolsRequest(evaluteData, isLoggedIn);
+
+        let responseEvalute = await EducationToolsRequest(
+          evaluteData,
+          isLoggedIn
+        );
 
         let evaluteRetryCount = 0;
         const evaluteMaxRetries = 10;
-          while (evaluteRetryCount < evaluteMaxRetries &&
-            (!responseEvalute ||
-             !responseEvalute?.response ||
-             !responseEvalute?.response?.kano_model_evaluation_education ||
-             !Array.isArray(responseEvalute?.response?.kano_model_evaluation_education)
-            )
-           ) {
-             responseEvalute = await EducationToolsRequest(evaluteData, isLoggedIn);
-             evaluteRetryCount++;
-            
-           }
-             if (evaluteRetryCount >= evaluteMaxRetries) {
-             setShowPopupError(true);
-             return;
-           }
-         
+        while (
+          evaluteRetryCount < evaluteMaxRetries &&
+          (!responseEvalute ||
+            !responseEvalute?.response ||
+            !responseEvalute?.response?.kano_model_evaluation_education ||
+            !Array.isArray(
+              responseEvalute?.response?.kano_model_evaluation_education
+            ))
+        ) {
+          responseEvalute = await EducationToolsRequest(
+            evaluteData,
+            isLoggedIn
+          );
+          evaluteRetryCount++;
+        }
+        if (evaluteRetryCount >= evaluteMaxRetries) {
+          setShowPopupError(true);
+          return;
+        }
+
         // 여기에 API 호출 코드 추가
-        allResponseEvalute.push(responseEvalute.response.kano_model_evaluation_education);
+        allResponseEvalute.push(
+          responseEvalute.response.kano_model_evaluation_education
+        );
       }
-       
+
       // 여기서 배열을 평탄화
       const flattenedEvaluation = allResponseEvalute.flat();
 
-      setKanoModelEvaluation(flattenedEvaluation)
+      setKanoModelEvaluation(flattenedEvaluation);
       // setKanoModelEvaluation(responseEvalute.response.kano_model_evaluation_education)
 
       const kanoModelData = {
         type: "ix_kano_model_coefficients_education",
-        kano_evaluation_data : flattenedEvaluation,
-      }
+        kano_evaluation_data: flattenedEvaluation,
+      };
 
-      let responseKanoModel = await EducationToolsRequest(kanoModelData, isLoggedIn);
-      console.log("responseKanoModel", responseKanoModel);
+      let responseKanoModel = await EducationToolsRequest(
+        kanoModelData,
+        isLoggedIn
+      );
 
-      setKanoModelGraphData(responseKanoModel.response.kano_coefficients_result)
+      setKanoModelGraphData(
+        responseKanoModel.response.kano_coefficients_result
+      );
 
       await updateToolOnServer(
         toolId,
         {
-          kanoModelProductAnalysis: response.response.kano_model_product_analysis_education,
+          kanoModelProductAnalysis:
+            response.response.kano_model_product_analysis_education,
           kanoModelEvaluation: flattenedEvaluation,
-          kanoModelGraphData: responseKanoModel.response.kano_coefficients_result,
+          kanoModelGraphData:
+            responseKanoModel.response.kano_coefficients_result,
           completedStep: 3,
         },
         isLoggedIn
@@ -646,7 +656,6 @@ const handleSubmitClustering = async () => {
       setIsLoadingReport(false);
     }
   };
-
 
   const handleEnterInterviewRoom = () => {
     setSelectedOption(null);
@@ -717,7 +726,6 @@ const handleSubmitClustering = async () => {
     };
   }, [navigate]);
 
-
   return (
     <>
       <DropzoneStyles />
@@ -738,7 +746,7 @@ const handleSubmitClustering = async () => {
                 <span>01</span>
                 <div className="text">
                   <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
-                   아이디어 선별
+                    아이디어 선별
                   </Body1>
                   {/* <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     Question Select
@@ -766,7 +774,10 @@ const handleSubmitClustering = async () => {
               <TabButtonType5
                 Num3
                 isActive={activeTab >= 3}
-                onClick={() =>(( completedSteps.includes(2) || completedSteps.includes(3)) && setActiveTab(3))}
+                onClick={() =>
+                  (completedSteps.includes(2) || completedSteps.includes(3)) &&
+                  setActiveTab(3)
+                }
                 disabled={
                   !completedSteps.includes(3) || isLoading || isLoadingReport
                 }
@@ -789,121 +800,145 @@ const handleSubmitClustering = async () => {
                   <div className="title">
                     <H3 color="gray800">Idea Mining</H3>
                     <Body3 color="gray800">
-                    발산된 아이디어를 정리하고, 최종 20개의 아이디어를 추려보세요
+                      발산된 아이디어를 정리하고, 최종 20개의 아이디어를
+                      추려보세요
                     </Body3>
                   </div>
 
                   <div className="content">
-                      
-                  {isLoading ? (
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                        minHeight: "200px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <AtomPersonaLoader message="로딩 중..." />
-                    </div>
-                  ) : (
-
-                    <>
-                      { kanoModelClusteringName.length === 0 ? (
-                        // 아이디어 선택 화면
-                        <>
-                          {(kanoModelIdeaGeneration.length === 0) ? (
-                            <BoxWrap
-                              NoData
-                              style={{ height: "300px" }}
-                              onClick={() => navigate("/IdeaGeneration")}
-                            >
-                              <img src={images.PeopleFillPrimary2} alt="" />
-                              <Body2 color="gray700" align="center !important">
-                                아이디어 발상 단계를 통해 도출된 아이디어를 통합하세요
-                              </Body2>
-                              <Button
-                                Medium
-                                Outline
-                                Fill
+                    {isLoading ? (
+                      <div
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "center",
+                          minHeight: "200px",
+                          alignItems: "center",
+                        }}
+                      >
+                        <AtomPersonaLoader message="로딩 중..." />
+                      </div>
+                    ) : (
+                      <>
+                        {kanoModelClusteringName.length === 0 ? (
+                          // 아이디어 선택 화면
+                          <>
+                            {kanoModelIdeaGeneration.length === 0 ? (
+                              <BoxWrap
+                                NoData
+                                style={{ height: "300px" }}
                                 onClick={() => navigate("/IdeaGeneration")}
                               >
-                                <Caption1 color="gray700">
-                                  아이디어 가져오기
-                                </Caption1>
-                              </Button>
-                            </BoxWrap>
-                          ) : (
-                            <>
-                              <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
-                                <Body1 color="gray700">Kano Model 평가에 포함할 아이디어를 선택해 주세요. (복수 선택)</Body1>
-                              </div>
-                              {kanoModelIdeaGeneration.map((idea, index) => (
-                                <MoleculeItemSelectCard
-                                  FlexStart
-                                  key={index}
-                                  id={index}
-                                  title={`${idea.updateDate.split(":")[0]}:${idea.updateDate.split(":")[1]} - 아이디어 발상 - ${idea.title || "아이디어"}`}
-                                  isSelected={selectedIdea.includes(index)}
-                                  onSelect={() => handleCheckboxChange(index)}
-                                />
-                              ))}
-                            </>
-                          )}
-                        </>
-                      ) : (
-                        // 분석 아이디어 리스트 화면
-                        <>
-                          <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
-                            <Body1 color="gray700">아이디어 도출 과정을 통해 선정된 아이디어 리스트 </Body1>
-                          </div>
+                                <img src={images.PeopleFillPrimary2} alt="" />
+                                <Body2
+                                  color="gray700"
+                                  align="center !important"
+                                >
+                                  아이디어 발상 단계를 통해 도출된 아이디어를
+                                  통합하세요
+                                </Body2>
+                                <Button
+                                  Medium
+                                  Outline
+                                  Fill
+                                  onClick={() => navigate("/IdeaGeneration")}
+                                >
+                                  <Caption1 color="gray700">
+                                    아이디어 가져오기
+                                  </Caption1>
+                                </Button>
+                              </BoxWrap>
+                            ) : (
+                              <>
+                                <div
+                                  className="title"
+                                  style={{
+                                    textAlign: "left",
+                                    marginBottom: "-20px",
+                                  }}
+                                >
+                                  <Body1 color="gray700">
+                                    Kano Model 평가에 포함할 아이디어를 선택해
+                                    주세요. (복수 선택)
+                                  </Body1>
+                                </div>
+                                {kanoModelIdeaGeneration.map((idea, index) => (
+                                  <MoleculeItemSelectCard
+                                    FlexStart
+                                    key={index}
+                                    id={index}
+                                    title={`${idea.updateDate.split(":")[0]}:${
+                                      idea.updateDate.split(":")[1]
+                                    } - 아이디어 발상 - ${
+                                      idea.title || "아이디어"
+                                    }`}
+                                    isSelected={selectedIdea.includes(index)}
+                                    onSelect={() => handleCheckboxChange(index)}
+                                  />
+                                ))}
+                              </>
+                            )}
+                          </>
+                        ) : (
+                          // 분석 아이디어 리스트 화면
+                          <>
+                            <div
+                              className="title"
+                              style={{
+                                textAlign: "left",
+                                marginBottom: "-20px",
+                              }}
+                            >
+                              <Body1 color="gray700">
+                                아이디어 도출 과정을 통해 선정된 아이디어 리스트{" "}
+                              </Body1>
+                            </div>
                             <MoleculeDeleteForm
-                            items={kanoModelClusteringName}
-                            setItems={setKanoModelClusteringName}
+                              items={kanoModelClusteringName}
+                              setItems={setKanoModelClusteringName}
                               disabled={toolSteps >= 1}
                               maxItems={20}
                               placeholder="아이디어를 작성해주세요 (예: 안전한 송금 등)"
                               edit={false}
                             />
-                              </>
-                              
-                            )}
                           </>
                         )}
-    
-                              </div>
-                    <>
-                      {/* 버튼들을 content div 바깥으로 이동 */}
-                        {kanoModelIdeaGeneration.length > 0 && (
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: "8px",
-                            justifyContent: "flex-end",
+                      </>
+                    )}
+                  </div>
+                  <>
+                    {/* 버튼들을 content div 바깥으로 이동 */}
+                    {kanoModelIdeaGeneration.length > 0 && (
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "8px",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <Button
+                          Other
+                          Primary
+                          Fill
+                          Round
+                          onClick={() => {
+                            if (kanoModelClustering.length === 0) {
+                              handleSubmitIdeaList();
+                            } else {
+                              handleSubmitClustering();
+                            }
                           }}
+                          disabled={
+                            toolSteps > 1 ||
+                            selectedKanoModelIdea.length === 0 ||
+                            isLoading
+                          }
                         >
-                          <Button
-                            Other   
-                            Primary
-                            Fill
-                            Round
-                            onClick={() => {
-                              if( kanoModelClustering.length === 0 ){
-                                handleSubmitIdeaList();
-                              } else {
-                                handleSubmitClustering();
-                              }
-                           
-                            }}
-                              disabled={toolSteps > 1 || selectedKanoModelIdea.length === 0 || isLoading }
-                          >
-                            아이디어 방향성으로 전환
-                          </Button>
-                        </div>
-                      )}
-                    </>
-                
+                          아이디어 방향성으로 전환
+                        </Button>
+                      </div>
+                    )}
+                  </>
                 </>
               </TabContent5>
             )}
@@ -933,14 +968,34 @@ const handleSubmitClustering = async () => {
                     </div>
 
                     <div className="content">
-
-                    <ListBoxGroup>
+                      <ListBoxGroup>
                         <li>
-                          <Body2 color="gray500" style={{whiteSpace: "nowrap", marginBottom: "8px", marginRight: "50px"}}>평가할 아이디어 리스트</Body2>
-                          <div style={{ display: "flex", flexDirection: "column" }}>
+                          <Body2
+                            color="gray500"
+                            style={{
+                              whiteSpace: "nowrap",
+                              marginBottom: "8px",
+                              marginRight: "50px",
+                            }}
+                          >
+                            평가할 아이디어 리스트
+                          </Body2>
+                          <div
+                            style={{ display: "flex", flexDirection: "column" }}
+                          >
                             {selectedKanoModelIdea.map((idea, index) => (
-                              <span key={index} style={{ color: "#8C8C8C", marginBottom: "4px" }}>
-                                {`${idea.updateDate.split(":")[0]}:${idea.updateDate.split(":")[1]} - 아이디어 발상 - ${idea.title || "아이디어"}`}
+                              <span
+                                key={index}
+                                style={{
+                                  color: "#8C8C8C",
+                                  marginBottom: "4px",
+                                }}
+                              >
+                                {`${idea.updateDate.split(":")[0]}:${
+                                  idea.updateDate.split(":")[1]
+                                } - 아이디어 발상 - ${
+                                  idea.title || "아이디어"
+                                }`}
                               </span>
                             ))}
                           </div>
@@ -948,27 +1003,40 @@ const handleSubmitClustering = async () => {
                       </ListBoxGroup>
 
                       <div className="title">
-                            <Body1 color="gray800" style={{textAlign: "left", marginBottom: "-20px" }}>
-                            Kano Model 평가 참여 페르소나 (AI 페르소나 Favorite에서 설정 가능) 
-                            </Body1>
-                            </div>
-                      
-                      {personaListSaas.filter(item => item.favorite === true).length >= 20 ? (
-                      <MoleculePersonaSelectCard
-                        filteredPersonaList={personaListSaas}
-                        hideSelectButton={true}
-                      
-                      />
-                    ) : (
-                      <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
-                      <img src={images.PeopleStarFillPrimary} alt="" />
-                      <Body2 color="gray500" align="center !important">
-                        즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실
-                        수 있습니다. {personaListSaas.filter(item => item.favorite === true).length}
-                      </Body2>
-                    </BoxWrap>
-                    )}
-    
+                        <Body1
+                          color="gray800"
+                          style={{ textAlign: "left", marginBottom: "-20px" }}
+                        >
+                          Kano Model 평가 참여 페르소나 (AI 페르소나
+                          Favorite에서 설정 가능)
+                        </Body1>
+                      </div>
+
+                      {personaListSaas.filter((item) => item.favorite === true)
+                        .length >= 20 ? (
+                        <MoleculePersonaSelectCard
+                          filteredPersonaList={personaListSaas}
+                          hideSelectButton={true}
+                        />
+                      ) : (
+                        <BoxWrap
+                          Hover
+                          NoData
+                          Border
+                          onClick={() => navigate("/AiPersona")}
+                        >
+                          <img src={images.PeopleStarFillPrimary} alt="" />
+                          <Body2 color="gray500" align="center !important">
+                            즐겨찾기를 하시면 관심 있는 페르소나를 해당
+                            페이지에서 확인하실 수 있습니다.{" "}
+                            {
+                              personaListSaas.filter(
+                                (item) => item.favorite === true
+                              ).length
+                            }
+                          </Body2>
+                        </BoxWrap>
+                      )}
                     </div>
 
                     {isLoadingDetailSetting || isLoadingPreset ? (
@@ -990,12 +1058,14 @@ const handleSubmitClustering = async () => {
                         Fill
                         Round
                         onClick={handleSubmitReport}
-                         
                         disabled={
-                          toolSteps >= 3 || personaListSaas.filter(item => item.favorite === true).length < 20
+                          toolSteps >= 3 ||
+                          personaListSaas.filter(
+                            (item) => item.favorite === true
+                          ).length < 20
                         }
                       >
-                       Kano Model 평가 받기
+                        Kano Model 평가 받기
                       </Button>
                     )}
                   </>
@@ -1023,13 +1093,13 @@ const handleSubmitClustering = async () => {
                       <BgBoxItem primaryLightest>
                         <H3 color="gray800">KANO Model 결과</H3>
                         <Body3 color="gray800">
-                        아이디어별 만족 유형을 분석한 결과입니다. 페르소나가 느낀 매력, 기본, 무관심 요소를 확인해보세요
+                          아이디어별 만족 유형을 분석한 결과입니다. 페르소나가
+                          느낀 매력, 기본, 무관심 요소를 확인해보세요
                         </Body3>
                       </BgBoxItem>
 
                       <InsightAnalysis>
-                      <KanoModelGraph  />
-                      
+                        <KanoModelGraph />
                       </InsightAnalysis>
                     </>
                   )}
@@ -1485,7 +1555,6 @@ const PlusIcon = styled.span`
   font-size: 16px;
   color: ${palette.gray700};
 `;
-
 
 const ValueMap = styled.div`
   display: flex;
