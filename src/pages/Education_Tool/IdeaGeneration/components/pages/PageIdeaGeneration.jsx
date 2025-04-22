@@ -94,40 +94,17 @@ const PageIdeaGeneration = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
-  const [toolStep, setToolStep] = useAtom(TOOL_STEP);
+  const [toolStep, ] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
-  const [, setDesignAnalysisBusinessTitle] = useAtom(
-    DESIGN_ANALYSIS_BUSINESS_TITLE
-  );
-
   const [personaListSaas] = useAtom(PERSONA_LIST_SAAS);
-  const [designAnalysisBusinessInfo, setDesignAnalysisBusinessInfo] = useAtom(
-    DESIGN_ANALYSIS_BUSINESS_INFO
-  );
   const [
     ideaGenerationSelectedStartPosition,
     setIdeaGenerationSelectedStartPosition,
   ] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
-  const [designAnalysisEmotionAnalysis, setDesignAnalysisEmotionAnalysis] =
-    useAtom(DESIGN_ANALYSIS_EMOTION_ANALYSIS);
-  const [
-    selectedDesignAnalysisEmotionAnalysis,
-    setSelectedDesignAnalysisEmotionAnalysis,
-  ] = useAtom(DESIGN_ANALYSIS_SELECTED_PERSONA);
-  const [designAnalysisEmotionTarget, setDesignAnalysisEmotionTarget] = useAtom(
-    DESIGN_ANALYSIS_EMOTION_TARGET
-  );
-  const [designAnalysisEmotionScale, setDesignAnalysisEmotionScale] = useAtom(
-    DESIGN_ANALYSIS_EMOTION_SCALE
-  );
-  const [designAnalysisFileNames] = useAtom(DESIGN_ANALYSIS_FILE_NAMES);
   const [ideaGenerationStartPosition, setIdeaGenerationStartPosition] = useAtom(
     IDEA_GENERATION_START_POSITION
-  );
-  const [ideaGenerationIdeaList, setIdeaGenerationIdeaList] = useAtom(
-    IDEA_GENERATION_IDEA_LIST
   );
   const [ideaGenerationPossessionTech, setIdeaGenerationPossessionTech] = useAtom(
     IDEA_GENERATION_POSSSESSION_TECH
@@ -151,25 +128,14 @@ const PageIdeaGeneration = () => {
   const [isContentLoading, setIsContentLoading] = useState(false);
   const [customerJourneyList, setCustomerJourneyList] = useState([]);
   const [showPopupError, setShowPopupError] = useState(false);
-  const [selectedPersonas, setSelectedPersonas] = useState([]);
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
   const customerListRef = useRef(null);
-  const [fileNames, setFileNames] = useState([]);
-  const [activeDesignTab, setActiveDesignTab] = useState("emotion");
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   const [businessDescriptionTitle, setBusinessDescriptionTitle] = useState("");
-  const [customerValueList, setCustomerValueList] = useState([]);
-  const [state] = useState({
-    isExpanded: false,
-    showQuestions: false,
-  });
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
-  const [isEditingBusiness, setIsEditingBusiness] = useState(false);
-  const [targetCustomer, setTargetCustomer] = useState([]);
   const [toolSteps, setToolSteps] = useState(0);
   const [selectedPurposes, setSelectedPurposes] = useState({
     customerList: "",
@@ -187,7 +153,6 @@ const PageIdeaGeneration = () => {
   });
   const [descriptionLength, setDescriptionLength] = useState(0);
   const [projectDescription, setProjectDescription] = useState("");
-  const [selectedStartPosition, setSelectedStartPosition] = useState([]);
   const [selectedJourneyMapData, setSelectedJourneyMapData] = useState([]);
   const [
     customerJourneyMapSelectedPersona,
@@ -204,8 +169,7 @@ const PageIdeaGeneration = () => {
     window.scrollTo(0, 0);
   }, []);
 
-// console.log("ideaGenerationSelectedStartPosition", ideaGenerationSelectedStartPosition);
-// console.log("toolSteps", toolSteps);
+
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
@@ -229,20 +193,11 @@ const PageIdeaGeneration = () => {
         }
 
       if (toolLoading) {
-        // const projectTitle = project?.projectTitle;
-        // 비즈니스 정보 설정 (Step 1)
-        // if (project) {
-        //   setBusinessDescriptionTitle(projectTitle);
-        // }
 
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
         setToolSteps(toolStep ?? 1);
 
-        // 비즈니스 정보 설정 (Step 1)
-        // if (designAnalysisBusinessInfo) {
-        //   setBusinessDescription(designAnalysisBusinessInfo ?? "");
-        // }
 
         if (Object.keys(ideaGenerationSelectedPurpose).length > 0) {
           setSelectedPurposes(ideaGenerationSelectedPurpose ?? {});
@@ -260,12 +215,12 @@ const PageIdeaGeneration = () => {
           setIdeaGenerationSelectedStartPosition(ideaGenerationSelectedStartPosition ?? []);
         }
         if (ideaGenerationPossessionTech) {
-          setIdeaGenerationPossessionTech(ideaGenerationPossessionTech ?? "");
+          setProjectDescription(ideaGenerationPossessionTech ?? "");
         }
         if (ideaGenerationMandalArtData) {
           setIdeaGenerationMandalArtData(ideaGenerationMandalArtData ?? []);
         }
-      
+    
 
         // 완료된 단계 설정
         const completedStepsArray = [];
@@ -321,17 +276,6 @@ const PageIdeaGeneration = () => {
     getAllTargetDiscovery();
   }, [isLoggedIn, projectSaas]);
 
-  // const handleCheckboxChange = (personaId) => {
-  //   if (toolSteps >= 2) return;
-  //   setSelectedPersonas((prev) => {
-  //     // 하나만 선택되도록 변경, 다른 항목 선택 시 해당 항목으로 변경
-  //     if (prev.includes(personaId)) {
-  //       return []; // 이미 선택된 항목을 다시 클릭하면 선택 해제
-  //     } else {
-  //       return [personaId]; // 새 항목 선택
-  //     }
-  //   });
-  // };
 
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -340,18 +284,6 @@ const PageIdeaGeneration = () => {
     setShowPopupError(false);
   };
 
-  // // 필수 필드가 모두 입력되었는지 확인하는 함수
-  // const isRequiredFieldsFilled = () => {
-  //   return businessDescription.trim().length > 0 && uploadedFiles.length > 0;
-  // };
-
-  // // 비즈니스 설명 입력 핸들러
-  // const handleBusinessDescriptionChange = (e) => {
-  //   const input = e.target.value;
-  //   if (input.length <= 500) {
-  //     setBusinessDescription(input);
-  //   }
-  // };
 
   // handleInputChange 함수 수정
   const handleInputChange = (field, value) => {
@@ -361,23 +293,11 @@ const PageIdeaGeneration = () => {
     }
   };
 
-  // const handleTagsChange = (selected) => {
-  //   setSelectedStartPosition(selected);
-  // };
 
   const handleSubmitProblem = async () => {
+    handleNextStep(1);
     try {
       setIsLoading(true);
-      await updateToolOnServer(
-        toolId,
-        {
-          completedStep: 1,
-          selectedPurposes: selectedPurposes,
-          ideaGenerationProblemList: ideaGenerationProblemList,
-          ideaGenerationProblemListTitle: ideaGenerationProblemListTitle,
-        },
-        isLoggedIn
-      );
       // 빈 문자열이나 공백만 있는 항목 제거
       const validItems = ideaGenerationProblemList.filter(
         (item) => item.trim() !== ""
@@ -387,26 +307,29 @@ const PageIdeaGeneration = () => {
         // 유효한 항목이 없는 경우 처리
         return;
       }
-
-      // API 요청 데이터 구성
       const Data = {
         type: "ix_idea_generation_keyword_education",
         info: customerJourneyMapSelectedPersona,
         problem_needs: validItems,
         is_load: true,
       };
-
-      // API 호출
-      const response = await EducationToolsRequest(Data, isLoggedIn);
     
+      const response = await EducationToolsRequest(Data, isLoggedIn);
 
       setIdeaGenerationStartPosition(
         response.response.idea_generation_keyword_education
       );
 
       setIsLoading(false);
+      await updateToolOnServer(
+        toolId,
+        {
+          completedStep: 1,
+          ideaGenerationStartPosition: response.response.idea_generation_keyword_education,
+        },
+        isLoggedIn
+      );
 
-      handleNextStep(1);
       setToolSteps(1);
     } catch (error) {
       console.error("Error submitting problems:", error);
@@ -487,15 +410,17 @@ const PageIdeaGeneration = () => {
         );
       }
 
-      // await updateToolOnServer(
-      //   responseToolId,
-      //   {
-      //    selectedPurposes: selectedPurposes,
-      //    ideaGenerationProblemList: ideaGenerationProblemList,
-      //    ideaGenerationProblemListTitle: ideaGenerationProblemListTitle,
-      //   },
-      //   isLoggedIn
-      // );
+      await updateToolOnServer(
+        responseToolId,
+        {    
+        completedStep: 0,
+         selectedPurposes: selectedPurposes,
+         ideaGenerationProblemList: ideaGenerationProblemList,
+         ideaGenerationProblemListTitle: ideaGenerationProblemListTitle,
+        },
+        isLoggedIn
+      );
+
     } catch (error) {
       console.error("Error in handlePurposeSelect:", error);
       setShowPopupError(true);
@@ -586,7 +511,6 @@ const PageIdeaGeneration = () => {
         
 
         const reportData = reportResponse.response.idea_generation_report_education;
-
 
         reportData.core_ideas = reportData?.core_ideas?.map(coreIdea => {
           // persona_name과 일치하는 persona 찾기
@@ -873,7 +797,7 @@ const PageIdeaGeneration = () => {
                           {selectBoxStates.customerList && (
                             <SelectBoxList dropUp={dropUpStates.customerList}>
                               {customerJourneyList.length === 0 ? (
-                                <SelectBoxItem disabled={toolSteps >= 1}>
+                                <SelectBoxItem disabled={toolSteps >= 1 || ideaGenerationProblemList.length > 0}>
                                   <Body2 color="gray300" align="left">
                                     직접 문제점을 작성합니다.
                                   </Body2>
@@ -976,7 +900,7 @@ const PageIdeaGeneration = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="맞춤 페르소나를 찾고 있어요..." />
+                    <AtomPersonaLoader message="아이디어 키워드 도출 중..." />
                   </div>
                 ) : (
                   <>
@@ -1095,37 +1019,19 @@ const PageIdeaGeneration = () => {
                     </div>
 
                     <div className="content">
-                      {personaListSaas.length > 0 ? (
+                    {personaListSaas.filter(item => item.favorite === true).length >= 20 ? (
                         <MoleculePersonaSelectCard
                           filteredPersonaList={personaListSaas}
                           hideSelectButton={true}
                         />
                       ) : (
-                        <BoxWrap
-                          NoData
-                          style={{ height: "300px" }}
-                          onClick={() => navigate("/AiPersona")}
-                        >
-                          <img src={images.PeopleFillPrimary2} alt="" />
-
-                          <Body2 color="gray700" align="center !important">
-                            현재 대화가 가능한 활성 페르소나가 없습니다
-                            <br />
-                            페르소나 생성 요청을 진행하여 페르소나를
-                            활성화해주세요
-                          </Body2>
-
-                          <Button
-                            Medium
-                            Outline
-                            Fill
-                            onClick={() => navigate("/AiPersona")}
-                          >
-                            <Caption1 color="gray700">
-                              AI Person 생성 요청
-                            </Caption1>
-                          </Button>
-                        </BoxWrap>
+                        <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
+                        <img src={images.PeopleStarFillPrimary} alt="" />
+                        <Body2 color="gray500" align="center !important">
+                          즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실
+                          수 있습니다. {personaListSaas.filter(item => item.favorite === true).length}
+                        </Body2>
+                      </BoxWrap>
                       )}
                     </div>
                   </>
@@ -1137,7 +1043,7 @@ const PageIdeaGeneration = () => {
                   Fill
                   Round
                   onClick={handleMandalArt}
-                  disabled={toolSteps >= 3}
+                  disabled={toolSteps >= 3 || personaListSaas.filter(item => item.favorite === true).length < 20}
                 >
                   아이디에이션 시작하기
                 </Button>
