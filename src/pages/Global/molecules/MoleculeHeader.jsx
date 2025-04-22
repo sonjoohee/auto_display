@@ -409,12 +409,7 @@ const MoleculeHeader = () => {
                   <div className="title">
                     <Sub1 color="gray700">크레딧 내역</Sub1>
                     {isLoggedInState &&
-                      (sessionStorage.getItem("userEmail") ===
-                        "pg_card@userconnect.kr" ||
-                        sessionStorage.getItem("userEmail") ===
-                          "sungeun_lee@userconnect.kr" ||
-                        sessionStorage.getItem("userEmail") ===
-                          "pixelweb@naver.com") && (
+                      sessionStorage.getItem("adminState") === "true" && (
                         <button onClick={() => navigate("/Payment")}>
                           <Caption2 color="primary">충전하기</Caption2>
                         </button>

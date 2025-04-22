@@ -95,7 +95,6 @@ const MoleculeGoogleLoginForm = () => {
           setUserMembership(userInfo.membership);
           sessionStorage.setItem("userMembership", userInfo.membership);
           sessionStorage.setItem("userCreatedAt", userInfo.signup_date);
-
         } else {
           console.error("유저 정보를 불러오는 중 오류가 발생했습니다.");
         }
@@ -107,33 +106,33 @@ const MoleculeGoogleLoginForm = () => {
       const userName = user.displayName;
       const userEmail = user.email;
 
-      if (userEmail === "yspark@userconnect.kr" 
-        || userEmail === "jsjun0319@hanyang.ac.kr"
-        || userEmail === "sjjjang00@gmail.com"
-        || userEmail === "sungeun_lee@userconnect.kr"
-        || userEmail === "okhyund@userconnect.kr"
-        || userEmail === "hsb4557@naver.com"
-        || userEmail === "choi9110@nate.com"
-        || userEmail === "gusrms2346@naver.com"
-        || userEmail === "08doyun@naver.com"
-        || userEmail === "ehdbs08@hanyang.ac.kr"
-        || userEmail === "suauncle@gmail.com"
-        || userEmail === "pleasure4ur@gmail.com"
-        || userEmail === "r_pleasure4u@naver.com"
-        || userEmail === "lhm1186@naver.com"
-        || userEmail === "pixelweb@naver.com"
-        || userEmail === "hyeeun@userconnect.kr"
-        || userEmail === "pasrk0821@naver.com"
-        || userEmail === "okhyund@gmail.com"
-        || userEmail === "sunbin12325@gmail.com"
-        || userEmail === "yspark.uc@gmail.com"
-        || userEmail === "uvaluator@naver.com"
-        || userEmail === "jungmin_lee@userconnect.kr"
-        || userEmail === "syyoon@userconnect.kr"
-        || userEmail === "star7613son@gmail.com"
-      ) {
-      setAccessableExpert(true);
-    }
+      //   if (userEmail === "yspark@userconnect.kr"
+      //     || userEmail === "jsjun0319@hanyang.ac.kr"
+      //     || userEmail === "sjjjang00@gmail.com"
+      //     || userEmail === "sungeun_lee@userconnect.kr"
+      //     || userEmail === "okhyund@userconnect.kr"
+      //     || userEmail === "hsb4557@naver.com"
+      //     || userEmail === "choi9110@nate.com"
+      //     || userEmail === "gusrms2346@naver.com"
+      //     || userEmail === "08doyun@naver.com"
+      //     || userEmail === "ehdbs08@hanyang.ac.kr"
+      //     || userEmail === "suauncle@gmail.com"
+      //     || userEmail === "pleasure4ur@gmail.com"
+      //     || userEmail === "r_pleasure4u@naver.com"
+      //     || userEmail === "lhm1186@naver.com"
+      //     || userEmail === "pixelweb@naver.com"
+      //     || userEmail === "hyeeun@userconnect.kr"
+      //     || userEmail === "pasrk0821@naver.com"
+      //     || userEmail === "okhyund@gmail.com"
+      //     || userEmail === "sunbin12325@gmail.com"
+      //     || userEmail === "yspark.uc@gmail.com"
+      //     || userEmail === "uvaluator@naver.com"
+      //     || userEmail === "jungmin_lee@userconnect.kr"
+      //     || userEmail === "syyoon@userconnect.kr"
+      //     || userEmail === "star7613son@gmail.com"
+      //   ) {
+      //   setAccessableExpert(true);
+      // }
 
       sessionStorage.setItem("userName", userName); // 서버 토큰 저장
       sessionStorage.setItem("userEmail", userEmail); // 서버 토큰 저장
