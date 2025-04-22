@@ -21,6 +21,7 @@ import {
   IS_SIGNUP_POPUP_OPEN,
   USER_CREDITS,
   EDUCATION_STATE,
+  ADMIN_STATE,
 } from "../../../AtomStates";
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
@@ -31,6 +32,7 @@ const MoleculeLoginEducationForm = ({ onClosePopup }) => {
   const [email, setEmail] = useAtom(EMAIL);
   const [, setUserMembership] = useAtom(USER_MEMBERSHIP);
   const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
+  const [adminState, setAdminState] = useAtom(ADMIN_STATE);
   const [password, setPassword] = useState("");
   const [errorStatus, setErrorStatus] = useAtom(ERROR_STATUS);
   const [showPassword, setShowPassword] = useState(false);
@@ -149,44 +151,46 @@ const MoleculeLoginEducationForm = ({ onClosePopup }) => {
           const userInfo = await userInfoResponse.json();
           // console.log("🚀 ~ handleLogin ~ userInfo:", userInfo);
 
-          if (
-            userInfo.email === "yspark@userconnect.kr" ||
-            userInfo.email === "jsjun0319@hanyang.ac.kr" ||
-            userInfo.email === "sjjjang00@gmail.com" ||
-            userInfo.email === "sungeun_lee@userconnect.kr" ||
-            userInfo.email === "okhyund@userconnect.kr" ||
-            userInfo.email === "hsb4557@naver.com" ||
-            userInfo.email === "choi9110@nate.com" ||
-            userInfo.email === "gusrms2346@naver.com" ||
-            userInfo.email === "08doyun@naver.com" ||
-            userInfo.email === "ehdbs08@hanyang.ac.kr" ||
-            userInfo.email === "suauncle@gmail.com" ||
-            userInfo.email === "pleasure4ur@gmail.com" ||
-            userInfo.email === "r_pleasure4u@naver.com" ||
-            userInfo.email === "lhm1186@naver.com" ||
-            userInfo.email === "pixelweb@naver.com" ||
-            userInfo.email === "hyeeun@userconnect.kr" ||
-            userInfo.email === "pasrk0821@naver.com" ||
-            userInfo.email === "okhyund@gmail.com" ||
-            userInfo.email === "sunbin12325@gmail.com" ||
-            userInfo.email === "yspark.uc@gmail.com" ||
-            userInfo.email === "uvaluator@naver.com" ||
-            userInfo.email === "jungmin_lee@userconnect.kr" ||
-            userInfo.email === "syyoon@userconnect.kr" ||
-            userInfo.email === "star7613son@gmail.com"
-          ) {
-            setAccessableExpert(true);
-          }
+          // if (
+          //   userInfo.email === "yspark@userconnect.kr" ||
+          //   userInfo.email === "jsjun0319@hanyang.ac.kr" ||
+          //   userInfo.email === "sjjjang00@gmail.com" ||
+          //   userInfo.email === "sungeun_lee@userconnect.kr" ||
+          //   userInfo.email === "okhyund@userconnect.kr" ||
+          //   userInfo.email === "hsb4557@naver.com" ||
+          //   userInfo.email === "choi9110@nate.com" ||
+          //   userInfo.email === "gusrms2346@naver.com" ||
+          //   userInfo.email === "08doyun@naver.com" ||
+          //   userInfo.email === "ehdbs08@hanyang.ac.kr" ||
+          //   userInfo.email === "suauncle@gmail.com" ||
+          //   userInfo.email === "pleasure4ur@gmail.com" ||
+          //   userInfo.email === "r_pleasure4u@naver.com" ||
+          //   userInfo.email === "lhm1186@naver.com" ||
+          //   userInfo.email === "pixelweb@naver.com" ||
+          //   userInfo.email === "hyeeun@userconnect.kr" ||
+          //   userInfo.email === "pasrk0821@naver.com" ||
+          //   userInfo.email === "okhyund@gmail.com" ||
+          //   userInfo.email === "sunbin12325@gmail.com" ||
+          //   userInfo.email === "yspark.uc@gmail.com" ||
+          //   userInfo.email === "uvaluator@naver.com" ||
+          //   userInfo.email === "jungmin_lee@userconnect.kr" ||
+          //   userInfo.email === "syyoon@userconnect.kr" ||
+          //   userInfo.email === "star7613son@gmail.com"
+          // ) {
+          //   setAccessableExpert(true);
+          // }
           // 유저 정보 저장
           setUserName(userInfo.name);
           setUserEmail(userInfo.email);
           setUserMembership(userInfo.membership);
           setEducationState(userInfo.education_state);
+          setAdminState(userInfo.is_admin);
           sessionStorage.setItem("userName", userInfo.name);
           sessionStorage.setItem("userEmail", userInfo.email);
           sessionStorage.setItem("userMembership", userInfo.membership);
           sessionStorage.setItem("userCreatedAt", userInfo.signup_date); // 서버 토큰 저장
           sessionStorage.setItem("educationState", userInfo.education_state);
+          sessionStorage.setItem("adminState", userInfo.is_admin);
           const accessToken = sessionStorage.getItem("accessToken");
           if (accessToken) {
             const userCreditValue = await UserCreditInfo(true);

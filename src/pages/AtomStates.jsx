@@ -19,6 +19,7 @@ export const USER_NAME = atom("");
 export const USER_EMAIL = atom("");
 export const USER_MEMBERSHIP = atom("");
 export const EDUCATION_STATE = atom(false);
+export const ADMIN_STATE = atom(false);
 
 // 사용자 데이터 상태
 export const CURRENT_USER_STATUS = atom(null);

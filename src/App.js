@@ -147,37 +147,37 @@ function App() {
 
   const [accessableExpert, setAccessableExpert] = useAtom(ACCESSABLE_EXPERT);
 
-  useEffect(() => {
-    const userEmail = sessionStorage.getItem("userEmail");
-    if (
-      userEmail === "yspark@userconnect.kr" ||
-      userEmail === "jsjun0319@hanyang.ac.kr" ||
-      userEmail === "sjjjang00@gmail.com" ||
-      userEmail === "sungeun_lee@userconnect.kr" ||
-      userEmail === "okhyund@userconnect.kr" ||
-      userEmail === "hsb4557@naver.com" ||
-      userEmail === "choi9110@nate.com" ||
-      userEmail === "gusrms2346@naver.com" ||
-      userEmail === "08doyun@naver.com" ||
-      userEmail === "ehdbs08@hanyang.ac.kr" ||
-      userEmail === "suauncle@gmail.com" ||
-      userEmail === "pleasure4ur@gmail.com" ||
-      userEmail === "r_pleasure4u@naver.com" ||
-      userEmail === "lhm1186@naver.com" ||
-      userEmail === "pixelweb@naver.com" ||
-      userEmail === "hyeeun@userconnect.kr" ||
-      userEmail === "pasrk0821@naver.com" ||
-      userEmail === "okhyund@gmail.com" ||
-      userEmail === "sunbin12325@gmail.com" ||
-      userEmail === "yspark.uc@gmail.com" ||
-      userEmail === "uvaluator@naver.com" ||
-      userEmail === "jungmin_lee@userconnect.kr" ||
-      userEmail === "syyoon@userconnect.kr" ||
-      userEmail === "star7613son@gmail.com"
-    ) {
-      setAccessableExpert(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const userEmail = sessionStorage.getItem("userEmail");
+  //   if (
+  //     userEmail === "yspark@userconnect.kr" ||
+  //     userEmail === "jsjun0319@hanyang.ac.kr" ||
+  //     userEmail === "sjjjang00@gmail.com" ||
+  //     userEmail === "sungeun_lee@userconnect.kr" ||
+  //     userEmail === "okhyund@userconnect.kr" ||
+  //     userEmail === "hsb4557@naver.com" ||
+  //     userEmail === "choi9110@nate.com" ||
+  //     userEmail === "gusrms2346@naver.com" ||
+  //     userEmail === "08doyun@naver.com" ||
+  //     userEmail === "ehdbs08@hanyang.ac.kr" ||
+  //     userEmail === "suauncle@gmail.com" ||
+  //     userEmail === "pleasure4ur@gmail.com" ||
+  //     userEmail === "r_pleasure4u@naver.com" ||
+  //     userEmail === "lhm1186@naver.com" ||
+  //     userEmail === "pixelweb@naver.com" ||
+  //     userEmail === "hyeeun@userconnect.kr" ||
+  //     userEmail === "pasrk0821@naver.com" ||
+  //     userEmail === "okhyund@gmail.com" ||
+  //     userEmail === "sunbin12325@gmail.com" ||
+  //     userEmail === "yspark.uc@gmail.com" ||
+  //     userEmail === "uvaluator@naver.com" ||
+  //     userEmail === "jungmin_lee@userconnect.kr" ||
+  //     userEmail === "syyoon@userconnect.kr" ||
+  //     userEmail === "star7613son@gmail.com"
+  //   ) {
+  //     setAccessableExpert(true);
+  //   }
+  // }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -236,8 +236,13 @@ function App() {
           });
         } catch (error) {
           sessionStorage.removeItem("accessToken");
+          sessionStorage.removeItem("adminState");
+          sessionStorage.removeItem("educationState");
+          sessionStorage.removeItem("lastUrl");
+          sessionStorage.removeItem("userCreatedAt");
           sessionStorage.removeItem("userName");
           sessionStorage.removeItem("userEmail");
+          sessionStorage.removeItem("userMembership");
           sessionStorage.removeItem("isSocialLogin");
           localStorage.removeItem("userName");
           localStorage.removeItem("userEmail");
@@ -263,9 +268,14 @@ function App() {
             // 서버가 응답하지 않거나 에러 발생 시 서버 다운 처리
             setIsServerDown(true);
 
-            sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
+            sessionStorage.removeItem("accessToken");
+            sessionStorage.removeItem("adminState");
+            sessionStorage.removeItem("educationState");
+            sessionStorage.removeItem("lastUrl");
+            sessionStorage.removeItem("userCreatedAt");
             sessionStorage.removeItem("userName");
             sessionStorage.removeItem("userEmail");
+            sessionStorage.removeItem("userMembership");
             sessionStorage.removeItem("isSocialLogin");
             localStorage.removeItem("userName");
             localStorage.removeItem("userEmail");

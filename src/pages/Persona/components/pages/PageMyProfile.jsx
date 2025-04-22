@@ -255,22 +255,7 @@ const PageMyProfile = () => {
               </H2>
 
               <ButtonGroup>
-                {sessionStorage.getItem("userEmail") ===
-                  "sungeun_lee@userconnect.kr" ||
-                sessionStorage.getItem("userEmail") ===
-                  "jsjun0319@hanyang.ac.kr" ||
-                sessionStorage.getItem("userEmail") ===
-                  "okhyund@userconnect.kr" ||
-                sessionStorage.getItem("userEmail") === "choi9110@nate.com" ||
-                sessionStorage.getItem("userEmail") === "lhm1186@naver.com" ||
-                sessionStorage.getItem("userEmail") ===
-                  "star7613son@gmail.com" ||
-                sessionStorage.getItem("userEmail") ===
-                  "sunbin12325@gmail.com" ||
-                sessionStorage.getItem("userEmail") ===
-                  "yspark@userconnect.kr" ||
-                sessionStorage.getItem("userEmail") === "yspark.uc@gmail.com" ||
-                sessionStorage.getItem("userEmail") === "pixelweb@naver.com" ? (
+                {sessionStorage.getItem("adminState") === "true" ? (
                   <>
                     <Button Primary onClick={() => navigate("/Project")}>
                       <images.CoinSmall
@@ -301,18 +286,7 @@ const PageMyProfile = () => {
                     </Button>
                   </>
                 ) : null}
-                {(sessionStorage.getItem("userEmail") ===
-                  "pg_card@userconnect.kr" ||
-                  sessionStorage.getItem("userEmail") ===
-                    "sungeun_lee@userconnect.kr" ||
-                  sessionStorage.getItem("userEmail") ===
-                    "yspark@userconnect.kr" ||
-                  sessionStorage.getItem("userEmail") ===
-                    "yspark.uc@gmail.com" ||
-                  sessionStorage.getItem("userEmail") === "choi9110@nate.com" ||
-                  sessionStorage.getItem("userEmail") === "lhm1186@naver.com" ||
-                  sessionStorage.getItem("userEmail") ===
-                    "pixelweb@naver.com") && (
+                {sessionStorage.getItem("adminState") === "true" && (
                   <Button Primary onClick={() => navigate("/Payment")}>
                     <images.CoinSmall
                       width="12px"
@@ -386,12 +360,7 @@ const PageMyProfile = () => {
                 </div>
               </ProfileInfo>
 
-              {(sessionStorage.getItem("userEmail") ===
-                "pg_card@userconnect.kr" ||
-                sessionStorage.getItem("userEmail") ===
-                  "sungeun_lee@userconnect.kr" ||
-                sessionStorage.getItem("userEmail") ===
-                  "pixelweb@naver.com") && (
+              {sessionStorage.getItem("adminState") === "true" && (
                 <Button
                   Large
                   Outline
