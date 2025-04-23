@@ -1235,7 +1235,17 @@ const PageIdeaGeneration = () => {
                         />
                       </div>
                     </div>
-                    <Button Primary onClick={handleEnterInterviewRoom}>
+
+                    <Button
+                      Primary
+                      onClick={handleEnterInterviewRoom}
+                      style={{
+                        visibility:
+                          ideaGenerationSelectedMandalart === 0
+                            ? "hidden"
+                            : "visible",
+                      }} // 메인에서는 가리고 세부 보기에선 보여주기
+                    >
                       <img
                         src={images.ReportSearch}
                         alt="인터뷰 스크립트 보기"
