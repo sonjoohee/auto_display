@@ -188,7 +188,7 @@ const PageNps = () => {
     residence: "",
     income: "",
   });
-  const [interviewModeType, setInterviewModeType] = useState("explantion");
+  const [interviewModeType, setInterviewModeType] = useState("explanation");
   const [isLoadingPreset, setIsLoadingPreset] = useState(false);
   const [selectedPresetCards, setSelectedPresetCards] = useState({});
   const [shouldRegenerate, setShouldRegenerate] = useState(false);
@@ -393,21 +393,21 @@ const PageNps = () => {
 
         const response = await getFindToolListOnServerSaas(
           projectSaas?._id ?? "",
-          "ix_kano_model_education",
+          "ix_concept_definition_education",
           isLoggedIn
         );
 
         const newItems = (response || []).filter(
           (item) =>
-            item?.type === "ix_kano_model_education" &&
+            item?.type === "ix_concept_definition_education" &&
             item?.completedStep === 3
         );
 
         allItems = [...allItems, ...newItems];
 
-        setConceptList(allItems);
+        setNpsConceptDefinition(allItems);
       } catch (error) {
-        setConceptList([]); // Set empty array on error
+        setNpsConceptDefinition([]); // Set empty array on error
       }
     };
 
@@ -473,6 +473,10 @@ const PageNps = () => {
     }));
   };
 
+  
+      
+
+
   const business = {
     business: businessDescription,
     target: project?.projectAnalysis?.target_customer || "",
@@ -483,8 +487,8 @@ const PageNps = () => {
 
   const handleSubmitConcept = async () => {
     // quickSurveyAnalysis가 비어있을 때만 API 호출
-    handleNextStep(1);
-    if (!Object.keys(quickSurveyAnalysis).length) {
+    // handleNextStep(1);
+    if (uploadedFiles.length > 0) {
       setIsLoading(true);
       try {
         // 비즈니스 데이터 추가
@@ -493,6 +497,15 @@ const PageNps = () => {
           business: businessDescription,
           goal: projectDescription,
         };
+        // const timeStamp = new Date().getTime();
+        // const Data = {
+        //   business: business,
+        //   tool_id: "file_" + timeStamp,
+        //   files: uploadedFiles,
+        // };
+
+    // setPsstFileId(["file_" + timeStamp]);
+        setFileNames(uploadedFiles.map((file) => file.name));
 
         setQuickSurveyProjectDescription(projectDescription);
 
@@ -574,7 +587,7 @@ const PageNps = () => {
         setIsLoading(false);
       }
     } else {
-      handleNextStep(1);
+      // handleNextStep(1);
       setIsLoading(true);
 
       const Data = {
@@ -1087,7 +1100,7 @@ const PageNps = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
       // console.log("currentUrl", currentUrl);
-      if (currentUrl.toLowerCase().includes("quicksurvey")) {
+      if (currentUrl.toLowerCase().includes("NPS")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         // console.log("세션 스토리지에서 마지막 URL 가져오기");
 
@@ -1441,22 +1454,21 @@ const PageNps = () => {
 
 
                     {interviewModeType === "conceptBoard" && (
-                      uploadedFiles?.length === 0 ? (
+                     
                         <div className="content">
+                          {/* <div className="title"> 
+                            <Body1 color="gray700"> 
+                            NPS 평가를 받을 컨셉보드를 업로드해주세요
+                            </Body1>
+                          </div> */}
+                         
                           <MoleculeFileUpload
                             fileNames={fileNames ?? []}
                             handleChangeStatus={handleChangeStatus}
                             toolSteps={toolSteps}
                           />
-                        </div>
-                      ) : (
-                        <div className="content">
-                          <div className="title"> 
-                            <Body1 color="gray700"> 
-                            NPS 평가를 받을 컨셉보드를 업로드해주세요
-                            </Body1>
-                          </div>
-                          <ListBoxGroup>
+                
+                          {/* <ListBoxGroup>
                             <li>
                               <Body2 color="gray500">
                                 {uploadedFiles.length > 0 ? "파일 명" : "리포트 방식"}
@@ -1479,22 +1491,22 @@ const PageNps = () => {
                                                 }}
                                               />
                             </li>
-                          </ListBoxGroup>
+                          </ListBoxGroup> */}
                         </div>
-                      )
+                      
                     )}
 
                     {interviewModeType === "explanation" && (
                       <>
                        <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
-                       <Body1 color="gray700">Kano Model 평가에 포함할 아이디어를 선택해 주세요. (복수 선택)</Body1>
+                       <Body1 color="gray700">NPS 평가를 받을 컨셉정의서를 선택해주세요. </Body1>
                      </div>
                      {npsConceptDefinition.map((idea, index) => (
                        <MoleculeItemSelectCard
                          FlexStart
                          key={index}
                          id={index}
-                         title={idea.name}
+                         title={idea.name}s
                          isSelected={selectedConcept.includes(index)}
                          onSelect={() => handleCheckboxChange(index)}
                        />
@@ -1584,7 +1596,7 @@ const PageNps = () => {
 
                         <li>
                           <Body2 color="gray500">페르소나 선택</Body2>
-                          <Body2 color="gray800">
+                          <Body2 color="gray500">
                           NPS는 favorite 페르소나를 기반으로 무작위 패널 100명을 섭외하여 진행합니다.  
                           </Body2>
                         </li>
@@ -1594,7 +1606,7 @@ const PageNps = () => {
                   <div className="content">
                   <TabContent5Item style={{ marginTop: "20px" }}>
                   <div className="title">
-                            <Body1 color="gray700" style={{textAlign: "left"}}>
+                            <Body1 color="gray800" style={{textAlign: "left"}}>
                             Favorite 페르소나 리스트  
                             </Body1>
                             </div>

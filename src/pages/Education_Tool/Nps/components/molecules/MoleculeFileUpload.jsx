@@ -12,7 +12,7 @@ const MoleculeFileUpload = ({
   return (
     <TabContent5Item required>
       <div className="title">
-        <Body1 color="gray700">파일 업로드 (20MB)</Body1>
+        <Body1 color="gray700">NPS 평가를 받을 컨셉보드를 업로드해주세요</Body1>
       </div>
       <Dropzone
         onChangeStatus={handleChangeStatus}

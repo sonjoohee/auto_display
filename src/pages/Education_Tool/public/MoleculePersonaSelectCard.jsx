@@ -86,7 +86,7 @@ const MoleculePersonaSelectCard = ({
       {filteredPersonaList &&
         filteredPersonaList
           // 활성 탭에 따라 페르소나 필터링
-
+        .filter((persona) => persona.favorite === true)
           .map((persona) => {
             const isSelected = Array.isArray(selectedPersonas)
               ? selectedPersonas.some((p) => p._id === persona._id)

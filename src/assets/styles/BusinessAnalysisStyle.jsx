@@ -519,6 +519,7 @@ export const TabContent5 = styled.div`
   width: 100%;
   max-width: ${(props) => (props.Small ? "820px" : "100%")};
   margin: 0 auto;
+  margin-bottom: 320px;
 
   .title {
     display: flex;

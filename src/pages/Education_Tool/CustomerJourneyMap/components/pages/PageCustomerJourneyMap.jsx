@@ -340,6 +340,7 @@ const PageCustomerJourneyMap = () => {
       setInputValue("");
       setCustomItemCount((prev) => prev + 1);
     }
+    setShowCustomForm(false);
   };
 
   const handleReportRequest = async () => {
@@ -653,7 +654,7 @@ const PageCustomerJourneyMap = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="로딩중..." />
+                    <AtomPersonaLoader message="인상적인 터치포인트를 찾고 있어요!" />
                   </div>
                 ) : (
                   <>
@@ -736,7 +737,7 @@ const PageCustomerJourneyMap = () => {
                           </Body2>
                         </li>
                       </ListBoxGroup>
-                      <TabContent5Item style={{marginTop: "20px"}}>
+                      <TabContent5Item style={{marginTop: "20px", marginBottom: "-80px"}}>
                         <div className="title">
                           <Body1 color="gray800">
                             어떤 순간을 고객 여정으로 분석하시겠습니까?{" "}
@@ -801,7 +802,7 @@ const PageCustomerJourneyMap = () => {
                       Fill
                       Round
                       onClick={handleReportRequest}
-                      disabled={toolSteps > 2 || selectedMoment.length === 0}
+                      disabled={toolSteps > 2 || selectedMoment.length === 0} 
                     >
                       다음
                     </Button>
@@ -814,18 +815,15 @@ const PageCustomerJourneyMap = () => {
               <TabContent5 Small>
                 {isLoadingReport ? (
                   <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      minHeight: "200px",
-                      alignItems: "center",
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    minHeight: "200px",
+                    alignItems: "center"
                     }}
                   >
-                    <AtomPersonaLoader
-                      message={`결과보고서를 작성하고 있습니다.
-                        1분 정도 소요 될 수 있어요.`}
-                    />
+                     <AtomPersonaLoader message="페르소나 중심의 여정을 분석하고 있어요 (1분 정도 걸려요)"/>
                   </div>
                 ) : (
                   <>
