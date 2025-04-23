@@ -99,7 +99,7 @@ const KanoModelGraph = () => {
 
     // 평균을 계산하고 백분율로 변환합니다.
     const avgCSP = (sumCSP / numberOfEntries) * 100;
-    const avgCSM = (sumCSM / numberOfEntries) * 100;
+    const avgCSM = ((numberOfEntries - sumCSM) / numberOfEntries) * 100;
 
     return { avgCSP, avgCSM };
   };
