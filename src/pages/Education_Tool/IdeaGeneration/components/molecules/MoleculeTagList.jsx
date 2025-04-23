@@ -3,22 +3,31 @@ import styled from "styled-components";
 import { palette } from "../../../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import images from "../../../../../assets/styles/Images";
-import { useAtom } from 'jotai';
-import { IDEA_GENERATION_START_POSITION, IDEA_GENERATION_SELECTED_START_POSITION } from '../../../../AtomStates';
+import { useAtom } from "jotai";
+import {
+  IDEA_GENERATION_START_POSITION,
+  IDEA_GENERATION_SELECTED_START_POSITION,
+} from "../../../../AtomStates";
 
 // IdeaGenerationTag 컴포넌트
 
-const IdeaGenerationTag = ({ text, onClick, initialSelected = false, disabled = false }) => {
+const IdeaGenerationTag = ({
+  text,
+  onClick,
+  initialSelected = false,
+  disabled = false,
+}) => {
   const [isSelected, setIsSelected] = useState(initialSelected);
 
   const handleClick = (e) => {
     if (disabled) {
       return;
     }
-    if (!disabled || isSelected) {  // 선택된 상태면 해제 가능하도록 수정
+    if (!disabled || isSelected) {
+      // 선택된 상태면 해제 가능하도록 수정
       const newSelected = !isSelected;
       setIsSelected(newSelected);
-      onClick(e, isSelected);  // 현재 상태를 전달
+      onClick(e, isSelected); // 현재 상태를 전달
     }
   };
 
@@ -27,10 +36,12 @@ const IdeaGenerationTag = ({ text, onClick, initialSelected = false, disabled = 
   }, [initialSelected]);
 
   return (
+
     <TagContainer selected={isSelected} onClick={handleClick} disabled={disabled && !isSelected}>
       {/* {isSelected && (
         <CheckIcon width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M1.77777 8.49989L6.22063 12.9443L14.2178 4.94434" stroke="white" strokeWidth="1.77778" strokeLinecap="round" strokeLinejoin="round"/>
+
         </CheckIcon>
       )} */}
       <TagText selected={isSelected}>{text}</TagText>
@@ -43,31 +54,38 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [questionText, setQuestionText] = useState('');
-  const [options, setOptions] = useState(['', '']);
+  const [questionText, setQuestionText] = useState("");
+  const [options, setOptions] = useState(["", ""]);
   const MAX_SELECTIONS = 8;
-  const [ideaGenerationStartPosition, setIdeaGenerationStartPosition] = useAtom(IDEA_GENERATION_START_POSITION);
-  const [ideaGenerationSelectedStartPosition, setIdeaGenerationSelectedStartPosition] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
+  const [ideaGenerationStartPosition, setIdeaGenerationStartPosition] = useAtom(
+    IDEA_GENERATION_START_POSITION
+  );
+  const [
+    ideaGenerationSelectedStartPosition,
+    setIdeaGenerationSelectedStartPosition,
+  ] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
   const [addedTagsCount, setAddedTagsCount] = useState(0);
 
   // 컴포넌트 마운트 시와 ideaGenerationSelectedStartPosition 변경 시 선택 상태 동기화
   useEffect(() => {
     if (items && ideaGenerationSelectedStartPosition) {
       const selectedIndexes = items
-        .map((item, index) => 
+        .map((item, index) =>
           ideaGenerationSelectedStartPosition.some(
-            selected => selected.idea === item.idea
-          ) ? index : -1
+            (selected) => selected.theme === item.theme
+          )
+            ? index
+            : -1
         )
-        .filter(index => index !== -1);
-      
+        .filter((index) => index !== -1);
+
       setSelectedTags(selectedIndexes);
     }
   }, [items, ideaGenerationSelectedStartPosition]);
 
   useEffect(() => {
     if (!options || options.length < 2) {
-      setOptions(['', '']);
+      setOptions(["", ""]);
     }
   }, []);
 
@@ -78,20 +96,20 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
 
     if (isSelected) {
       // 태그 선택 해제 시
-      const newSelectedTags = selectedTags.filter(i => i !== index);
+      const newSelectedTags = selectedTags.filter((i) => i !== index);
       setSelectedTags(newSelectedTags);
 
       setIdeaGenerationSelectedStartPosition(
-        newSelectedTags.map(tagIndex => items[tagIndex])
+        newSelectedTags.map((tagIndex) => items[tagIndex])
       );
     } else {
       // 태그 선택 시
       if (!disabled && selectedTags.length < MAX_SELECTIONS) {
         const newSelectedTags = [...selectedTags, index];
         setSelectedTags(newSelectedTags);
-        
+
         setIdeaGenerationSelectedStartPosition(
-          newSelectedTags.map(tagIndex => items[tagIndex])
+          newSelectedTags.map((tagIndex) => items[tagIndex])
         );
       }
     }
@@ -99,13 +117,13 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
 
   const handleClose = () => {
     setIsPopupOpen(false);
-    setQuestionText('');
-    setOptions(['', '']);
+    setQuestionText("");
+    setOptions(["", ""]);
   };
 
   const addOption = () => {
     if (options.length < 5) {
-      setOptions([...options, '']);
+      setOptions([...options, ""]);
     }
   };
 
@@ -124,65 +142,66 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
 
   const handleAddTag = () => {
     // console.log("options", options);
-    const validOptions = options.filter(option => option.trim());
+    const validOptions = options.filter((option) => option.trim());
     // console.log("validOptions", validOptions);
-    
+
     const newTags = validOptions.map((option, index) => ({
       problem: "사용자 요청",
-      content: [{
-        id: Date.now() + index,
-        idea: option,
-        description: "사용자 요청"
-      }]
+      content: [
+        {
+          id: Date.now() + index,
+          idea: option,
+          description: "사용자 요청",
+        },
+      ],
     }));
 
     // console.log('Adding new tags:', newTags);
 
-    setIdeaGenerationStartPosition(prev => {
+    setIdeaGenerationStartPosition((prev) => {
       const prevArray = Array.isArray(prev) ? prev : [];
       const updated = [...prevArray, ...newTags];
-   
+
       return updated;
     });
 
-    setAddedTagsCount(prev => prev + validOptions.length);
+    setAddedTagsCount((prev) => prev + validOptions.length);
     setOptions([""]);
     setIsPopupOpen(false);
   };
 
   return (
     <>
-    
-
-<TagListContainer>
-  {Array.isArray(items) && items.filter(Boolean).map((item, index) => {
-
-    return (
-      <IdeaGenerationTag
-        key={item.id}
-        text={item.idea || ''}
-        onClick={(e, isSelected) => handleTagClick(index, isSelected)}
-        initialSelected={selectedTags.includes(index)}
-        disabled={!selectedTags.includes(index) && selectedTags.length >= MAX_SELECTIONS}
-      />
-    );
-  })}
-  {!disabled && addedTagsCount < 3 && (
-    <AddButton onClick={() => setIsPopupOpen(true)}>
-      <PlusIcon>+</PlusIcon>
-      <span>추가하기</span>
-    </AddButton>
-  )}
-</TagListContainer>
+      <TagListContainer>
+        {Array.isArray(items) &&
+          items.filter(Boolean).map((item, index) => {
+            return (
+              <IdeaGenerationTag
+                key={item.id}
+                text={item.theme || ""}
+                onClick={(e, isSelected) => handleTagClick(index, isSelected)}
+                initialSelected={selectedTags.includes(index)}
+                disabled={
+                  !selectedTags.includes(index) &&
+                  selectedTags.length >= MAX_SELECTIONS
+                }
+              />
+            );
+          })}
+        {!disabled && addedTagsCount < 3 && (
+          <AddButton onClick={() => setIsPopupOpen(true)}>
+            <PlusIcon>+</PlusIcon>
+            <span>추가하기</span>
+          </AddButton>
+        )}
+      </TagListContainer>
 
       {isPopupOpen && (
         <PopupOverlay>
           <PopupContainer>
             <PopupHeader>
               <HeaderTitle>직접 생성하기</HeaderTitle>
-              <CloseButton onClick={handleClose}>
-                ×
-              </CloseButton>
+              <CloseButton onClick={handleClose}>×</CloseButton>
             </PopupHeader>
 
             <HeaderSpacer />
@@ -194,21 +213,29 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
             ) : (
               <>
                 <PopupContent>
-                  <SectionTitle style={{textAlign: "left", marginBottom: "-10px"}}>태그 문항 추가 (최대 3가지 태그 문항 추가 가능)</SectionTitle>
+                  <SectionTitle
+                    style={{ textAlign: "left", marginBottom: "-10px" }}
+                  >
+                    태그 문항 추가 (최대 3가지 태그 문항 추가 가능)
+                  </SectionTitle>
                   <OptionsContainer>
                     {options.map((option, index) => (
                       <OptionItemWrapper key={index}>
                         <InputField
                           placeholder="선택지를 작성해주세요."
                           value={option}
-                          onChange={(e) => handleOptionChange(index, e.target.value)}
+                          onChange={(e) =>
+                            handleOptionChange(index, e.target.value)
+                          }
                         />
                         {options.length > 1 && (
-                          <DeleteButton onClick={() => handleDeleteOption(index)}></DeleteButton>
+                          <DeleteButton
+                            onClick={() => handleDeleteOption(index)}
+                          ></DeleteButton>
                         )}
                       </OptionItemWrapper>
                     ))}
-                    {options.length < (3 - addedTagsCount) && (
+                    {options.length < 3 - addedTagsCount && (
                       <AddOptionButton onClick={addOption}>
                         + 추가 하기 (최대 {3 - addedTagsCount}개)
                       </AddOptionButton>
@@ -220,11 +247,11 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
                 <Divider />
 
                 <ButtonContainer>
-                  <CreateButton 
-                    onClick={handleAddTag} 
+                  <CreateButton
+                    onClick={handleAddTag}
                     disabled={
-                      addedTagsCount >= 3 || 
-                      options.some(option => !option.trim()) || // 하나라도 비어있으면 비활성화
+                      addedTagsCount >= 3 ||
+                      options.some((option) => !option.trim()) || // 하나라도 비어있으면 비활성화
                       options.length === 0 // 옵션이 없어도 비활성화
                     }
                   >
@@ -240,34 +267,31 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
   );
 };
 
-
-
 export default MoleculeTagList;
-
-
 
 const TagContainer = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  // padding: ${props => props.selected ? '13px 25px' : '12px 24px'};
+  // padding: ${(props) => (props.selected ? "13px 25px" : "12px 24px")};
   padding: 12px 24px;
   margin: 0px;
-  background-color: ${props => {
+  background-color: ${(props) => {
     if (props.disabled) return palette.gray100;
     return props.selected ? palette.gray800 : palette.chatGray;
   }};
-  border: ${props => props.selected ? 'none' : `1px solid ${palette.outlineGray}`};
-    // border: 1px solid ${palette.outlineGray}
+  border: ${(props) =>
+    props.selected ? "none" : `1px solid ${palette.outlineGray}`};
+  // border: 1px solid ${palette.outlineGray}
   border-radius: 8px;
   user-select: none;
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   transition: all 0.2s ease;
   box-sizing: border-box;
-  opacity: ${props => props.disabled ? 0.5 : 1};
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 
   &:hover {
-    background-color: ${props => {
+    background-color: ${(props) => {
       if (props.disabled) return palette.gray100;
       return props.selected ? palette.gray900 : palette.gray100;
     }};
@@ -275,12 +299,12 @@ const TagContainer = styled.div`
 `;
 
 const TagText = styled.span`
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   font-size: 16px;
-  font-weight: ${props => props.selected ? '600' : '400'};
+  font-weight: ${(props) => (props.selected ? "600" : "400")};
   line-height: 155%;
   letter-spacing: -0.03em;
-  color: ${props => props.selected ? palette.white : palette.gray500};
+  color: ${(props) => (props.selected ? palette.white : palette.gray500)};
   white-space: nowrap;
 `;
 
@@ -311,7 +335,7 @@ const AddButton = styled.button`
   gap: 4px;
 
   span {
-    font-family: 'Pretendard', sans-serif;
+    font-family: "Pretendard", sans-serif;
     font-size: 16px;
     font-weight: 400;
     color: ${palette.gray500};
@@ -499,15 +523,15 @@ const ButtonContainer = styled.div`
 const CreateButton = styled.button`
   height: 40px;
   padding: 0 24px;
-  background: ${props => props.disabled ? palette.gray200 : palette.primary};
+  background: ${(props) =>
+    props.disabled ? palette.gray200 : palette.primary};
   color: white;
   border: none;
   border-radius: 4px;
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
-  opacity: ${props => props.disabled ? 0.5 : 1};
-
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 
   &:hover {
     background: ${palette.primaryDark};
