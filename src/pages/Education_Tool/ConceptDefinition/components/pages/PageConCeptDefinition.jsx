@@ -62,6 +62,7 @@ import {
   updateToolOnServer,
   InterviewXPsstMultimodalRequest,
   InterviewXPsstAnalysisRequest,
+  getFindToolListOnServerSaas,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
@@ -149,6 +150,7 @@ const PageConceptDefinition = () => {
     customerList: "",
     analysisScope: "",
   });
+  const [kanoModelList, setKanoModelList] = useState([]);
 
   const [selectBoxStates, setSelectBoxStates] = useState({
     customerList: false,
@@ -231,6 +233,39 @@ const PageConceptDefinition = () => {
     setToolLoading(false);
   }, [toolLoading]);
 
+  
+  // KanoModel 리스트 가져오기
+  useEffect(() => {
+    const getAllTargetDiscovery = async () => {
+      try {
+        let page = 1;
+        const size = 10;
+        let allItems = [];
+
+        const response = await getFindToolListOnServerSaas(
+          projectSaas?._id ?? "",
+          "ix_kano_model_education",
+          isLoggedIn
+        );
+
+        const newItems = (response || []).filter(
+          (item) =>
+            item?.type === "ix_kano_model_education" &&
+            item?.completedStep === 3
+        );
+
+        allItems = [...allItems, ...newItems];
+
+        setKanoModelList(allItems);
+      } catch (error) {
+        setKanoModelList([]); // Set empty array on error
+      }
+    };
+
+    getAllTargetDiscovery();
+  }, [isLoggedIn, projectSaas]);
+  console.log("kanomodel",kanoModelList)
+
   const handleCheckboxChange = (index) => {
     if (toolSteps >= 2) return;
     setSelectedTemplete((prev) => {
@@ -263,153 +298,48 @@ const PageConceptDefinition = () => {
     }
   };
 
-  const handleSubmitPersona = async () => {
-    setIsLoading(true);
-    handleNextStep(1);
-    setToolSteps(1);
-
-    const business = {
-      businessModel: project.businessModel,
-      projectAnalysis: project.projectAnalysis,
-      projectDescription: project.projectDescription,
-      projectTitle: project.projectTitle,
-      targetCountry: project.targetCountry,
-    };
-    setPsstBusinessInfo(business);
-    // 파일 업로드 케이스 먼저 체크
-    if (uploadedFiles.length > 0) {
-      try {
-        const data = {
-          analysis_index: 10,
-          business: psstBusinessInfo,
-          report_index: projectAnalysisMultimodal,
-          type: "ix_psst_analysis",
-        };
-
-        let response = await InterviewXPsstAnalysisRequest(data, isLoggedIn);
-
-        const maxAttempts = 10;
-        let attempts = 0;
-
-        while (
-          attempts < maxAttempts &&
-          (!response ||
-            !response?.response?.psst_analysis?.report_index_key_message)
-        ) {
-          response = await InterviewXPsstAnalysisRequest(data, isLoggedIn);
-          attempts++;
-        }
-        if (attempts >= maxAttempts) {
-          setShowPopupError(true);
-          return;
-        }
-        setProjectAnalysisMultimodalKeyMessage(
-          response.response.psst_analysis.report_index_key_message
-        );
-
-        await updateToolOnServer(
-          toolId,
-          {
-            completedStep: 2,
-            projectAnalysisMultimodalKeyMessage:
-              response.response.psst_analysis.report_index_key_message,
-          },
-          isLoggedIn
-        );
-
-        setIsLoading(false);
-        setToolSteps(2);
-        return;
-      } catch (error) {
-        console.error("Error:", error);
-        setShowPopupError(true);
-        setIsLoading(false);
-        return;
-      }
-    }
-
-    try {
-      const responseToolId = await createToolOnServer(
-        {
-          projectId: project._id,
-          type: "ix_psst_multimodal",
-        },
-        isLoggedIn
-      );
-      setToolId(responseToolId);
-
-      await updateToolOnServer(
-        responseToolId,
-        {
-          selectedTemplete: selectedTemplete,
-        },
-        isLoggedIn
-      );
-      let allAnalysisResults = [];
-      const analysisIndexes = [1, 9, 4, 5];
-      // for문을 map으로 변경
-      for (const i of analysisIndexes) {
-        const data = {
-          analysis_index: i,
-          business: business,
-          report_index: psstReportIndex,
-          type: "ix_psst_analysis",
-        };
-
-        setCurrentLoadingIndex(i);
-        const response = await InterviewXPsstAnalysisRequest(data, isLoggedIn);
-
-        setAnalysisResults((prev) => [
-          ...prev,
-          response.response.psst_analysis,
-        ]);
-
-        allAnalysisResults.push(response.response.psst_analysis);
-      }
-      setCurrentLoadingIndex(0);
-
-      await updateToolOnServer(
-        responseToolId,
-        {
-          completedStep: 2,
-          analysisResults: allAnalysisResults,
-          business: business,
-        },
-        isLoggedIn
-      );
-      setToolSteps(2);
-    } catch (error) {
-      setShowPopupError(true);
-      if (error.response) {
-        switch (error.response.status) {
-          case 500:
-            setShowPopupError(true);
-            break;
-          case 504:
-            setShowPopupError(true);
-            break;
-          default:
-            setShowPopupError(true);
-            break;
-        }
-      } else {
-        setShowPopupError(true);
-      }
-    } finally {
-    }
+  const business = {
+    businessModel: project.businessModel,
+    projectAnalysis: project.projectAnalysis,
+    projectDescription: project.projectDescription,
+    projectTitle: project.projectTitle,
+    targetCountry: project.targetCountry,
   };
 
+  const handleSubmitPersona = async () => {
+    handleNextStep(1);
+    setToolSteps(1);
+    console.log("selectedPersonas",selectedPersonas)
+
+    // const responseToolId = await createToolOnServer(
+    //   {
+    //     projectId: project._id,
+    //     type: "ix_concept_definition_education",
+    //     selectedPersona: selectedPersonas,
+    //   },
+    //   isLoggedIn
+    // );
+
+    // setToolId(responseToolId);
+
+  }
+
+
+
+   
+      
+    
   const handleSubmitReportIndex = async () => {
     setIsLoading(true);
 
-    const responseToolId = await createToolOnServer(
-      {
-        projectId: project._id,
-        type: "ix_psst_multimodal",
-      },
-      isLoggedIn
-    );
-    setToolId(responseToolId);
+    // const responseToolId = await createToolOnServer(
+    //   {
+    //     projectId: project._id,
+    //     type: "ix_psst_multimodal",
+    //   },
+    //   isLoggedIn
+    // );
+    // setToolId(responseToolId);
 
     setHideIndexButton(true);
 
@@ -465,21 +395,21 @@ const PageConceptDefinition = () => {
           firstResponse.response.psst_index_multimodal_description
         );
 
-        await updateToolOnServer(
-          responseToolId,
-          {
-            projectAnalysisMultimodal:
-              firstResponse.response.psst_index_multimodal,
-            projectAnalysisMultimodalDescription:
-              firstResponse.response.psst_index_multimodal_description,
-            business: business,
-            fileName: uploadedFiles.map((file) => ({
-              id: "file_" + timeStamp,
-              name: fileNames,
-            })),
-          },
-          isLoggedIn
-        );
+        // await updateToolOnServer(
+        //   responseToolId,
+        //   {
+        //     projectAnalysisMultimodal:
+        //       firstResponse.response.psst_index_multimodal,
+        //     projectAnalysisMultimodalDescription:
+        //       firstResponse.response.psst_index_multimodal_description,
+        //     business: business,
+        //     fileName: uploadedFiles.map((file) => ({
+        //       id: "file_" + timeStamp,
+        //       name: fileNames,
+        //     })),
+        //   },
+        //   isLoggedIn
+        // );
 
         setFileNames(uploadedFiles.map((file) => file.name));
         setPsstBusinessInfo(business);
@@ -493,6 +423,38 @@ const PageConceptDefinition = () => {
         setIsLoading(false);
         return;
       }
+    }
+  };
+
+  const handleCheckValue = async () => {
+    setIsLoading(true);
+    try {
+      const data = {
+        type: "ix_concept_definition_report_education",
+        business: business,
+        persona_group: selectedPersonas,
+        kano_moel: kanoModelList,
+      };
+
+      // personaName: persona.personaName,
+      // personaCharacteristics: persona.personaCharacteristics,
+      // type: persona.type,
+      // age: persona.age,
+      // gender: persona.gender,
+      // job: persona.job,
+      // keywords: persona.keywords,
+      // userExperience: persona.userExperience,
+      // consumptionPattern: persona.consumptionPattern,
+      // interests: persona.interests,
+      // lifestyle: persona.lifestyle,
+
+      
+      console.log("handleCheckValue");
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error:", error);
+      setShowPopupError(true);
+      setIsLoading(false);
     }
   };
 
@@ -628,6 +590,7 @@ const PageConceptDefinition = () => {
     }
   };
 
+
   // 파일 업로드 핸들러
   const handleChangeStatus = ({ meta, file, remove }, status) => {
     // 20MB 크기 제한 체크
@@ -672,29 +635,7 @@ const PageConceptDefinition = () => {
     }, 0);
   };
 
-  const handleEditBusinessClick = () => {
-    setIsEditingBusiness(true);
-  };
-
-  const handleSaveBusinessClick = () => {
-    setIsEditingBusiness(false);
-  };
-
-  const handleUndoBusinessClick = () => {
-    const originalText =
-      (project?.projectAnalysis.business_analysis
-        ? project?.projectAnalysis.business_analysis
-        : "") +
-      (project?.projectAnalysis.business_analysis &&
-      project?.projectAnalysis.file_analysis
-        ? "\n"
-        : "") +
-      (project?.projectAnalysis.file_analysis
-        ? project?.projectAnalysis.file_analysis
-        : "");
-
-    setBusinessDescription(originalText);
-  };
+ 
 
   const handlePurposeSelect = (purpose, selectBoxId) => {
     setSelectedPurposes((prev) => ({
@@ -718,7 +659,7 @@ const PageConceptDefinition = () => {
     const detectRefresh = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
-      if (currentUrl.toLowerCase().includes("psstreport")) {
+      if (currentUrl.toLowerCase().includes("ConceptDefinition")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         const lastUrl = sessionStorage.getItem("lastUrl");
 
@@ -761,23 +702,7 @@ const PageConceptDefinition = () => {
     };
   }, [navigate]);
 
-  const Templete = [
-    {
-      name: "PSST 프레임워크 ",
-      reason:
-        "문제 정의부터 실행, 성장 계획까지 아우르는 가장 보편적인 사업계획서 구조입니다.정부지원사업, 창업 프로그램, 공공과제 등에 활용됩니다.​",
-    },
-    // {
-    //   name: "3W1H 프레임워크 ",
-    //   reason:
-    //     "해커톤, 메이커톤 등 단기간 기술 구현 중심의 구조입니다.<br/>무엇(What), 왜(Why), 누구(Who), 어떻게(How) 구현할지를 중심으로 계획을 구체화합니다.​",
-    // },
-    // {
-    //   name: "IDEA PITCH 제안서",
-    //   reason:
-    //     "시장성, 차별성, 실행력을 강조하는 발표형 구조입니다.<br/>투자유치(IR), 경진대회, 피칭 행사에 적합합니다.​",
-    // },
-  ];
+
 
   return (
     <>
@@ -799,7 +724,7 @@ const PageConceptDefinition = () => {
                 <span>01</span>
                 <div className="text">
                   <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
-                    파일 업로드
+                    페르소나 선택
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -814,11 +739,11 @@ const PageConceptDefinition = () => {
                 <span>02</span>
                 <div className="text">
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                    핵심 내용 확인
+                   핵심가치 도출
                   </Body1>
-                  <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
+                  {/* <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Analyze Key Points​
-                  </Body1>
+                  </Body1> */}
                 </div>
               </TabButtonType5>
               <TabButtonType5
@@ -832,11 +757,9 @@ const PageConceptDefinition = () => {
                 <span>03</span>
                 <div className="text">
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    계획서 작성
+                    컨셉 정의서
                   </Body1>
-                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    Generate Business Plan​
-                  </Body1>
+                
                 </div>
               </TabButtonType5>
             </TabWrapType5>
@@ -897,52 +820,55 @@ const PageConceptDefinition = () => {
                             </PersonaGroup>
                           ) : (
                             <Body2 color="gray300">
-                              페르소나가 선택되지 않았습니다. 하단에서
-                              페르소나를 선택해 주세요!(1명 선택 가능)
+                              아래 리스트에서 페르소나를 선택해주세요 (최대 3명 선택가능) 
                             </Body2>
                           )}
                         </li>
                       </ListBoxGroup>
                     </div>
 
-                    {personaListSaas.length > 0 ? (
+
+                    <div className="title">
+                        <Body1
+                          color="gray800"
+                          style={{ textAlign: "left", marginBottom: "-20px" }}
+                        >
+                         Favorite 페르소나 리스트  
+                        </Body1>
+                      </div>
+
+                    {personaListSaas.filter(
+                          (item) => item.favorite === true
+                        ).length >= 20 ? (
                       <MoleculePersonaSelectCard
                         filteredPersonaList={personaListSaas}
                         selectedPersonas={selectedPersonas}
                         onPersonaSelect={(persona) => {
                           setSelectedPersonas(persona);
-                          // 필요한 경우 여기서 추가 로직 수행
                         }}
+                        interviewType="multiple"
+                        // onPersonaSelect={handlePersonaSelect}
+                        
+
                       />
                     ) : (
                       <BoxWrap
-                        Hover
-                        NoData
-                        style={{
-                          height: "300px",
-                        }}
-                        onClick={() => navigate("/AiPersona")}
-                      >
-                        <img src={images.PeopleFillPrimary2} alt="" />
-
-                        <Body2 color="gray700" align="center !important">
-                          현재 대화가 가능한 활성 페르소나가 없습니다
-                          <br />
-                          페르소나 생성 요청을 진행하여 페르소나를
-                          활성화해주세요
-                        </Body2>
-
-                        <Button
-                          Medium
-                          Outline
-                          Fill
-                          onClick={() => navigate("/AiPersona")}
-                        >
-                          <Caption1 color="gray700">
-                            AI Person 생성 요청
-                          </Caption1>
-                        </Button>
-                      </BoxWrap>
+                      Hover
+                      NoData
+                      Border
+                      onClick={() => navigate("/AiPersona")}
+                    >
+                      <img src={images.PeopleStarFillPrimary} alt="" />
+                      <Body2 color="gray500" align="center !important">
+                        즐겨찾기를 하시면 관심 있는 페르소나를 해당
+                        페이지에서 확인하실 수 있습니다.{" "}
+                        {
+                          personaListSaas.filter(
+                            (item) => item.favorite === true
+                          ).length
+                        }
+                      </Body2>
+                    </BoxWrap>
                     )}
                   </div>
 
@@ -952,10 +878,10 @@ const PageConceptDefinition = () => {
                     Fill
                     Round
                     onClick={handleSubmitPersona}
-                    // disabled={
-                    //   toolSteps >= 1 ||
-                    //   (!isCreateReportIndex && selectedTemplete.length === 0)
-                    // }
+                    disabled={
+                      toolSteps >= 1 ||
+                      !selectedPersonas
+                    }
                   >
                     다음
                   </Button>
@@ -965,26 +891,12 @@ const PageConceptDefinition = () => {
 
             {activeTab === 2 && completedSteps.includes(1) && (
               <TabContent5>
-                {isLoading && uploadedFiles.length > 0 ? (
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      minHeight: "200px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <AtomPersonaLoader message="보고서를 분석하고 있어요..." />
-                  </div>
-                ) : (
+                
                   <>
                     <div className="title">
                       <H3 color="gray800">Core Value Analysis</H3>
                       <Body3 color="gray800">
-                        {uploadedFiles.length > 0
-                          ? "업로드한 파일을 분석해 계획서의 구조와 주요 정보를 정리합니다."
-                          : "템플림의 구조에 맞춰 계획서의 구조와 핵심 내용을 정리합니다.​"}
+                      Kano Model 결과를 기반으로 비즈니스의 주요 가치를 도출합니다
                       </Body3>
                     </div>
 
@@ -1035,26 +947,25 @@ const PageConceptDefinition = () => {
                             </PersonaGroup>
                           ) : (
                             <Body2 color="gray300">
-                              페르소나가 선택되지 않았습니다. 하단에서
-                              페르소나를 선택해 주세요!(1명 선택 가능)
+                            
                             </Body2>
                           )}
                         </div>
                         <div className="selectBoxWrap">
                           <Body2 color="gray500" style={{ width: "110px" }}>
-                            여정 분석 범위
+                           핵심 가치 선택
                           </Body2>
                           <SelectBox style={{ paddingRight: "20px" }}>
                             <SelectBoxTitle
                               onClick={() =>
-                                toolSteps >= 1
+                                toolSteps >= 2
                                   ? null
                                   : setIsSelectBoxOpen(!isSelectBoxOpen)
                               }
                               None
                               style={{
                                 cursor:
-                                  toolSteps >= 1 ? "not-allowed" : "pointer",
+                                  toolSteps >= 2 ? "not-allowed" : "pointer",
                               }}
                             >
                               {selectedPurposes?.analysisScope ? (
@@ -1087,7 +998,7 @@ const PageConceptDefinition = () => {
                                   color="gray300"
                                   style={{ paddingLeft: "20px" }}
                                 >
-                                  고객 여정 맵의 분석 방향성을 선택하세요
+                                  Kano Model 결과 중 하나를 선택하세요.
                                 </Body2>
                               )}
                               <images.ChevronDown
@@ -1109,23 +1020,7 @@ const PageConceptDefinition = () => {
 
                             {isSelectBoxOpen && (
                               <SelectBoxList>
-                                <SelectBoxItem
-                                  onClick={() => {
-                                    handlePurposeSelect(
-                                      "시간 흐름 기반 여정 분석 | 제품/서비스의 전체적인 사용자 여정을 기반으로 분석",
-                                      "analysisScope"
-                                    );
-                                    setIsSelectBoxOpen(false);
-                                  }}
-                                >
-                                  <Body1 color="gray700" align="left">
-                                    시간 흐름 기반 여정 분석 |{" "}
-                                  </Body1>
-                                  <Body2 color="gray700" align="left">
-                                    제품/서비스의 전체적인 사용자 여정을
-                                    기반으로 분석
-                                  </Body2>
-                                </SelectBoxItem>
+                                
                                 <SelectBoxItem
                                   onClick={() => {
                                     handlePurposeSelect(
@@ -1133,7 +1028,7 @@ const PageConceptDefinition = () => {
                                       "analysisScope"
                                     );
                                     setIsSelectBoxOpen(false);
-                                  }}
+                                  }}k
                                 >
                                   <Body1 color="gray700" align="left">
                                     상황 중심 여정 분석 |{" "}
@@ -1164,68 +1059,21 @@ const PageConceptDefinition = () => {
                           </SelectBox>
                         </div>
                       </BoxWrap>
-                      {/* <ListBoxGroup>
-                        <li>
-                          <Body2 color="gray500">페르소나 선택</Body2>
-                          {selectedPersonas ? (
-                            <PersonaGroup>
-                              {Array.isArray(selectedPersonas) ? (
-                                <>
-                                  {selectedPersonas.length > 3 && (
-                                    <span>+{selectedPersonas.length - 3}</span>
-                                  )}
-                                  {selectedPersonas
-                                    .slice(0, 3)
-                                    .map((persona, index) => (
-                                      <Persona key={index} size="Small" Round>
-                                        <img
-                                          src={
-                                            personaImages[persona.imageKey] ||
-                                            (persona.gender === "남성"
-                                              ? personaImages.persona_m_20_01 // 남성 기본 이미지
-                                              : personaImages.persona_f_20_01) // 여성 기본 이미지
-                                          }
-                                          alt={persona.persona}
-                                        />
-                                      </Persona>
-                                    ))}
-                                </>
-                              ) : (
-                                <Persona size="Small" Round>
-                                  <img
-                                    src={
-                                      personaImages[
-                                        selectedPersonas.imageKey
-                                      ] ||
-                                      (selectedPersonas.gender === "남성"
-                                        ? personaImages.persona_m_20_01 // 남성 기본 이미지
-                                        : personaImages.persona_f_20_01) // 여성 기본 이미지
-                                    }
-                                    alt={selectedPersonas.persona}
-                                  />
-                                </Persona>
-                              )}
-                            </PersonaGroup>
-                          ) : (
-                            <Body2 color="gray300">
-                              페르소나가 선택되지 않았습니다. 하단에서
-                              페르소나를 선택해 주세요!(1명 선택 가능)
-                            </Body2>
-                          )}
-                        </li>
-                        <li style={{ alignItems: "flex-start" }}>
-                          <Body2 color="gray500">핵심 가치 선택</Body2>
-                          <Body2
-                            color="gray800"
-                            style={{ textAlign: "left" }}
-                            dangerouslySetInnerHTML={{
-                              __html: uploadedFiles.length > 0,
-                            }}
-                          />
-                        </li>
-                      </ListBoxGroup> */}
+                     
 
-                      {uploadedFiles.length > 0 ? (
+                        {isLoading ? (
+                          <div
+                            style={{
+                              width: "100%",
+                              display: "flex",
+                              justifyContent: "center",
+                              minHeight: "200px",
+                              alignItems: "center",
+                            }}
+                          >
+                            <AtomPersonaLoader message={`분석 중이예요 ...`} />
+                          </div>
+                        ) : (
                         <InsightAnalysis>
                           <div
                             className="markdown-body"
@@ -1240,46 +1088,43 @@ const PageConceptDefinition = () => {
                             </Markdown>
                           </div>
                         </InsightAnalysis>
-                      ) : (
-                        <>
-                          <div className="title">
-                            <Body1
-                              color="gray700"
-                              style={{ textAlign: "left" }}
-                            >
-                              Kano Model 평가에 포함할 아이디어를 선택해 주세요.
-                              (복수 선택)
-                            </Body1>
-                          </div>
-                          {conceptDefinitionValue.map((value, index) => (
-                            <MoleculeItemSelectCard
-                              FlexStart
-                              key={index}
-                              id={index}
-                              title={value.name}
-                              isSelected={selectedValue.includes(index)}
-                              onSelect={() => handleCheckboxChange(index)}
-                            />
-                          ))}
-                        </>
-                      )}
+                        )}
+            
                     </div>
-                    <Button
-                      Other
-                      Primary
-                      Fill
-                      Round
-                      onClick={handleReportRequest}
-                      disabled={
-                        toolSteps > 2 ||
-                        (uploadedFiles.length === 0 &&
-                          analysisResults.length !== 4)
-                      }
-                    >
-                      다음
-                    </Button>
+                    {projectAnalysisMultimodalKeyMessage && Object.keys(projectAnalysisMultimodalKeyMessage).length > 0 ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "8px",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <Button
+                          Other
+                          Primary
+                          Fill
+                          Round
+                          onClick={handleReportRequest}
+                          disabled={toolSteps > 2}
+                        >
+                         컨셉 정의 작성하기
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        Other
+                        Primary
+                        Fill
+                        Round
+                        onClick={handleCheckValue}
+                        disabled={toolSteps > 2}
+                      >
+                       페르소나 & 핵심가치 확인
+                      </Button>
+                    )}
+
                   </>
-                )}
+                
               </TabContent5>
             )}
 
@@ -1303,7 +1148,7 @@ const PageConceptDefinition = () => {
                 ) : (
                   <>
                     <BgBoxItem primaryLightest>
-                      <H3 color="gray800">비즈니스 기획서</H3>
+                      <H3 color="gray800">컨셉 정의서</H3>
                       <Body3 color="gray800">
                         사업 아이템의 실행 전략을 정리한 초안입니다. 이를
                         기반으로 세부 내용을 구체화해보세요.​

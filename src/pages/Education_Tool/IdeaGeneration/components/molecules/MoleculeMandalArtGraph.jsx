@@ -9,15 +9,15 @@ import {
 import { useAtom } from "jotai";
 
 const MoleculeMandalArtGraph = ({ mandalartData }) => {
-  console.log("🚀 ~ MoleculeMandalArtGraph ~ mandalartData:", mandalartData);
+
   const [selectedItem, setSelectedItem] = useState(null);
   const [ideaGenerationSelectedStartPosition] = useAtom(
     IDEA_GENERATION_SELECTED_START_POSITION
   );
-  console.log(
-    "🚀 ~ MoleculeMandalArtGraph ~ ideaGenerationSelectedStartPosition:",
-    ideaGenerationSelectedStartPosition
-  );
+  // console.log(
+  //   "🚀 ~ MoleculeMandalArtGraph ~ ideaGenerationSelectedStartPosition:",
+  //   ideaGenerationSelectedStartPosition
+  // );
   const [, setIdeaGenerationSelectedMandalart] = useAtom(
     IDEA_GENERATION_SELECTED_MANDALART
   );
@@ -49,16 +49,15 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
 
   const handleBackClick = () => {
     setSelectedItem(null);
+    setIdeaGenerationSelectedMandalart(null);
   };
 
   const generateDetailButtons = () => {
     if (!selectedItem || !mandalartData) return [];
-    console.log("🚀 ~ generateDetailButtons ~ mandalartData:", mandalartData);
-    console.log("🚀 ~ generateDetailButtons ~ selectedItem:", selectedItem);
+
     // 선택된 아이템의 데이터 찾기
     const selectedData = mandalartData[selectedItem - 1];
-    console.log("🚀 ~ generateDetailButtons ~ selectedData:", selectedData);
-    // console.log("selectedData", selectedData);
+
     if (!selectedData?.detailed_execution_ideas) return [];
 
     // detailed_execution_ideas에서 idea_title만 사용

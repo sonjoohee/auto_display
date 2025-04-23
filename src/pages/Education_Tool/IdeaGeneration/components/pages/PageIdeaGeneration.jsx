@@ -334,6 +334,7 @@ const PageIdeaGeneration = () => {
       //   // 유효한 항목이 없는 경우 처리
       //   return;
       // }
+
       const Data = {
         type: "ix_idea_generation_keyword_education",
         business_info: business,
@@ -383,8 +384,58 @@ const PageIdeaGeneration = () => {
     );
   };
 
-  const handlePurposeSelect = async (purpose, selectBoxId, item) => {
+  const handlePurposeSelect = (purpose, selectBoxId, item) => {
+
+    setSelectedPurposes((prev) => ({
+      ...(prev || {}),
+      [selectBoxId]: purpose || "",
+    }))
+
+    handleContactInputChange("purpose", purpose || "");
+    setSelectBoxStates((prev) => ({
+      ...(prev || {}),
+      [selectBoxId]: false,
+    }));
+
+    if (selectBoxId === "customerList" && item) {
+      setSelectedJourneyMapData(item);
+  
+     
+      const persona = item.customerJourneyMapSelectedPersona;
+      const Customer = {
+      personaName: persona?.personaName || "",
+      personaCharacteristics: persona?.personaCharacteristics || "",
+      age: persona?.age || "",
+      gender: persona?.gender || "",
+      job: persona?.job || "",
+      keywords: persona?.keywords || [],
+      type: persona?.type || "",
+      }
+
+      setCustomerJourneyMapSelectedPersona(
+        Customer
+        );
+        setCustomerJourneyMapReport(item.customerJourneyMapReport);
+        
+
+        // handleSubmitCustomerJourney ();
+        setShouldSubmit(true);
+  };
+}
+
+const [shouldSubmit, setShouldSubmit] = useState(false);
+useEffect(() => {
+  if (shouldSubmit) {
+    handleSubmitCustomerJourney();
+    setShouldSubmit(false); // Reset the flag
+  }
+}, [selectedPurposes, shouldSubmit]);
+
+
+  const handleSubmitCustomerJourney = async () => {
     setIsContentLoading(true);
+
+    setIdeaGenerationSelectedPurpose(selectedPurposes)
 
     const responseToolId = await createToolOnServer(
       {
@@ -395,35 +446,16 @@ const PageIdeaGeneration = () => {
     );
     setToolId(responseToolId);
 
-    setSelectedPurposes((prev) => ({
-      ...(prev || {}),
-      [selectBoxId]: purpose || "",
-    }));
-
-    handleContactInputChange("purpose", purpose || "");
-    setSelectBoxStates((prev) => ({
-      ...(prev || {}),
-      [selectBoxId]: false,
-    }));
-
-    // await new Promise((resolve) => setTimeout(resolve, 100));
 
     try {
-      if (selectBoxId === "customerList" && item) {
-        setSelectedJourneyMapData(item);
-
-        // setBusinessDescription(purpose || "");
+      if (selectedJourneyMapData) {
+        // setSelectedJourneyMapData(item);
 
         const data = {
           type: "ix_idea_generation_problem_education",
-          customer_journey_map_persona: item.customerJourneyMapSelectedPersona,
-          customer_journey_map_report: item.customerJourneyMapReport,
+          customer_journey_map_persona: customerJourneyMapSelectedPersona,
+          customer_journey_map_report: customerJourneyMapReport,
         };
-
-        setCustomerJourneyMapSelectedPersona(
-          item.customerJourneyMapSelectedPersona
-        );
-        setCustomerJourneyMapReport(item.customerJourneyMapReport);
 
         const response = await EducationToolsRequest(data, isLoggedIn);
 
@@ -436,7 +468,7 @@ const PageIdeaGeneration = () => {
             (item) => item.title
           )
         );
-
+      
         await updateToolOnServer(
           responseToolId,
           {
@@ -512,7 +544,7 @@ const PageIdeaGeneration = () => {
           idea_theme: ideaGenerationSelectedStartPosition[i],
           persona_group: persona_group,
         };
-        console.log("🚀 ~ handleMandalArt ~ Data:", Data);
+
 
         const interviewResponse = await EducationToolsRequest(Data, isLoggedIn);
 
@@ -600,6 +632,9 @@ const PageIdeaGeneration = () => {
   const handleSelectBoxClick = (selectBoxId, ref) => {
     // Don't open dropdown if toolSteps >= 1 for customerList
     if (toolSteps >= 1) {
+      return;
+    }
+    if(ideaGenerationProblemList.length >0){
       return;
     }
 
@@ -935,7 +970,11 @@ const PageIdeaGeneration = () => {
                       Fill
                       Round
                       onClick={handleSubmitProblem}
-                      disabled={isContentLoading || toolSteps >= 1}
+                      disabled={
+                        isContentLoading ||
+                        toolSteps >= 1 ||
+                        selectedPurposes.customerList.length === 0
+                      }
                     >
                       아이디어 발상으로 전환
                     </Button>
@@ -987,11 +1026,13 @@ const PageIdeaGeneration = () => {
                                 ? "gray500"
                                 : "gray300"
                             }
-                            style={{
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
+                            style={{ 
+                              whiteSpace: "normal",
+                              wordBreak: "keep-all",
+                              wordWrap: "break-word",
+                              overflow: "visible",
                               maxWidth: "100%",
+                              textAlign: "left",
                             }}
                           >
                             {ideaGenerationSelectedStartPosition?.length > 0
@@ -1005,7 +1046,7 @@ const PageIdeaGeneration = () => {
                     </div>
 
                     <div className="content">
-                      <Title>
+                      <Title style={{ marginBottom: "-10px" }}>
                         <Body1 color="gray700">
                           아이디어 시작점을 선택하세요 (8개 선택필수)
                         </Body1>
@@ -1019,12 +1060,10 @@ const PageIdeaGeneration = () => {
                               .flat() // 모든 content 배열을 하나로 합침
                           }
                           disabled={toolSteps >= 2}
-                          // isSelected={ideaGenerationSelectedStartPosition}
-                          // setIsSelected={setIdeaGenerationSelectedStartPosition}
                         />
                       </CardGroupWrap>
 
-                      <div className="content">
+                      {/* <div className="content">
                         <TabContent5Item required>
                           <Title>
                             <Body1 color="gray700">
@@ -1056,7 +1095,7 @@ const PageIdeaGeneration = () => {
                             </Body2>
                           </FormBox>
                         </TabContent5Item>
-                      </div>
+                      </div> */}
                     </div>
                   </>
                 )}
@@ -1118,12 +1157,21 @@ const PageIdeaGeneration = () => {
                                 ? "gray500"
                                 : "gray300"
                             }
-                            style={{
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
+                            // style={{
+                            //   whiteSpace: "nowrap",
+                            //   overflow: "hidden",
+                            //   textOverflow: "ellipsis",
+                            //   maxWidth: "100%",
+                            // }}
+                            style={{ 
+                              whiteSpace: "normal",
+                              wordBreak: "keep-all",
+                              wordWrap: "break-word",
+                              overflow: "visible",
                               maxWidth: "100%",
+                              textAlign: "left",
                             }}
+
                           >
                             {ideaGenerationSelectedStartPosition?.length > 0
                               ? ideaGenerationSelectedStartPosition
@@ -1207,10 +1255,9 @@ const PageIdeaGeneration = () => {
                 ) : (
                   <>
                     <div className="title">
-                      <H3 color="gray800">Idea Generation Theme</H3>
+                      <H3 color="gray800">Define Your Key Customer</H3>
                       <Body3 color="gray800">
-                        문제와 니즈를 창의적 해결 주제로 전환하여, 아이디어
-                        발상의 방향을 정해주세요.
+                      고객 여정 분석을 원하는 주요 고객군을 선택하세요
                       </Body3>
                     </div>
 
@@ -1241,7 +1288,7 @@ const PageIdeaGeneration = () => {
                       onClick={handleEnterInterviewRoom}
                       style={{
                         visibility:
-                          ideaGenerationSelectedMandalart === 0
+                        ideaGenerationSelectedMandalart === null
                             ? "hidden"
                             : "visible",
                       }} // 메인에서는 가리고 세부 보기에선 보여주기
@@ -1261,7 +1308,7 @@ const PageIdeaGeneration = () => {
                         ideaGenerationSelectedMandalart - 1
                       ]?.additional_execution_ideas?.length === 0 ? (
                         <IdeaContainer>
-                          <IdeaBox>
+                          <IdeaBox >
                             {/* <IdeaTitle>{idea.title}</IdeaTitle> */}
                             <IdeaContent>
                               각 아이디어 주제를 클릭해보세요. 주제별로 연관된
@@ -1528,6 +1575,7 @@ const IdeaTitle = styled.h3`
 
 const IdeaContent = styled.div`
   display: flex;
+  justify-content: center;
   flex-direction: column;
   gap: 8px;
 `;

@@ -98,6 +98,7 @@ import MoleculeDeleteForm from "../../../../../pages/Education_Tool/public/Molec
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
 import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
 import KanoModelGraph from "../../../../../components/Charts/KanoModelGraph";
+import { DetachedBindMode } from "three/src/constants.js";
 
 const PageKanoModel = () => {
   const navigate = useNavigate();
@@ -381,13 +382,21 @@ const PageKanoModel = () => {
   const handleSubmitIdeaList = async () => {
     // handleNextStep(1);
     setIsLoading(true);
-    // setShowAnalysisList(true);
+
+    const ideaList = selectedKanoModelIdea?.map(idea => idea?.ideaGenerationMandalArtData) || [];
+
+    const flattenedIdeaList = ideaList?.flatMap(idea => 
+      idea?.flatMap(subIdea => 
+        subIdea?.detailed_execution_ideas.map(detail => detail?.idea_title)
+      )
+    ) || [];
+ 
     try {
       const clusteringData = {
         type: "ix_kano_model_clustering_education",
-        idea_list: selectedKanoModelIdea,
+        idea_list: flattenedIdeaList,
       };
-
+   
       let responseReport = await EducationToolsRequest(
         clusteringData,
         isLoggedIn
@@ -963,8 +972,7 @@ const PageKanoModel = () => {
                     <div className="title">
                       <H3 color="gray800">Participating Persona</H3>
                       <Body3 color="gray800">
-                        Quick Survey에 참여할 페르소나에 대해서 알려주세요. 바로
-                        리크루팅해드릴게요 !
+                      아이디어에 대한 기대와 반응을 평가할 페르소나를 선택해주세요
                       </Body3>
                     </div>
 
