@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { palette } from "../../assets/styles/Palette";
 import { useAtom } from "jotai";
@@ -11,6 +11,10 @@ import { KANO_MODEL_GRAPH_DATA } from "../../pages/AtomStates";
  */
 const KanoModelGraph = () => {
   const [kanoModelGraphData] = useAtom(KANO_MODEL_GRAPH_DATA);
+  // State for custom tooltip
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [tooltipContent, setTooltipContent] = useState("");
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
   // 라벨 정의
   // const satisfactionLabels = {
@@ -107,32 +111,122 @@ const KanoModelGraph = () => {
   const graphData = transformKanoData(kanoModelGraphData);
   const averageKanoData = transformAverageKanoData(kanoModelGraphData);
 
+  // Helper function to rescale a single coordinate
+  const rescaleCoordinate = (coord, average) => {
+    // Handle edge cases where average is 0 or 100 to avoid division by zero
+    if (average === 0) {
+      // Map 0 -> 50, 100 -> 100
+      return 50 + (coord / 100) * 50;
+    } else if (average === 100) {
+      // Map 0 -> 0, 100 -> 50
+      return (coord / 100) * 50;
+    }
+
+    // Normal case: scale based on the average
+    if (coord <= average) {
+      // Map the range [0, average] to [0, 50]
+      return (coord / average) * 50;
+    } else {
+      // coord > average
+      // Map the range (average, 100] to (50, 100]
+      return 50 + ((coord - average) / (100 - average)) * 50;
+    }
+  };
+
+  // Function to rescale all data points
+  const rescaleDataPoints = (dataPoints, averages) => {
+    const { avgCSP, avgCSM } = averages;
+    // Ensure averages are within the valid range [0, 100]
+    const clampedAvgCSP = Math.max(0, Math.min(100, avgCSP));
+    const clampedAvgCSM = Math.max(0, Math.min(100, avgCSM));
+
+    return dataPoints.map((point) => ({
+      ...point,
+      x: rescaleCoordinate(point.x, clampedAvgCSP),
+      // Apply rescaling to the y-coordinate as well
+      y: rescaleCoordinate(point.y, clampedAvgCSM),
+    }));
+  };
+
+  // Rescale the graph data points
+  const rescaledGraphData = rescaleDataPoints(graphData, averageKanoData);
+
+  // Tooltip handlers
+  const handleMouseEnter = (event, title, x, y) => {
+    const graphAreaRect = event.currentTarget
+      .closest("[data-graph-area]")
+      .getBoundingClientRect();
+    const pointRect = event.currentTarget.getBoundingClientRect();
+
+    // Calculate position relative to GraphArea, adjusted for point size and desired offset
+    const relativeX = pointRect.left - graphAreaRect.left + pointRect.width / 2;
+    const relativeY = pointRect.top - graphAreaRect.top - 10; // 10px above the point
+
+    setTooltipContent(title);
+    setTooltipPosition({ x: relativeX, y: relativeY });
+    setTooltipVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    setTooltipVisible(false);
+  };
+
   return (
     <GraphContainer>
       {/* 그래프 영역 */}
-      <GraphArea>
-        {/* 평균 CSP 값으로 수직 기준선 그리기 */}
-        <GridLineVertical position={averageKanoData.avgCSP} />
-        {/* 평균 CSM 값으로 수평 기준선 그리기 */}
-        <GridLineHorizontal position={averageKanoData.avgCSM} />
-
+      <GraphArea data-graph-area>
+        {/* Average lines are now always at 50% after rescaling */}
+        <GridLineVertical position={50} />
+        <GridLineHorizontal position={50} />
+        {/* Quadrant Labels */}
+        <QuadrantLabel top="25%" left="75%">
+          One-dimensional
+        </QuadrantLabel>{" "}
+        {/* Top-Right */}
+        <QuadrantLabel top="25%" left="25%">
+          Attractive
+        </QuadrantLabel>{" "}
+        {/* Top-Left */}
+        <QuadrantLabel top="75%" left="75%">
+          Must-be
+        </QuadrantLabel>{" "}
+        {/* Bottom-Right */}
+        <QuadrantLabel top="75%" left="25%">
+          Indifferent
+        </QuadrantLabel>{" "}
+        {/* Bottom-Left */}
         {/* 좌측 실선 라인 (위로 확장) */}
         <LeftAxisLine />
-
         {/* 좌측 상단 화살표 */}
         <LeftAxisArrow />
-
         {/* 하단 실선 라인 (우측으로 확장) */}
         <BottomAxisLine />
-
         {/* 우측 하단 화살표 */}
         <RightAxisArrow />
-
-        {/* 데이터 포인트 */}
-        {graphData.map((point, index) => (
-          <DataPoint key={index} x={point.x} y={point.y} size={point.size} />
+        {/* 데이터 포인트 - Use rescaled data and add event handlers */}
+        {rescaledGraphData.map((point, index) => (
+          <DataPoint
+            key={index}
+            x={point.x}
+            y={point.y}
+            size={point.size}
+            onMouseEnter={(e) =>
+              handleMouseEnter(e, point.title, point.x, point.y)
+            }
+            onMouseLeave={handleMouseLeave}
+          />
         ))}
-
+        {/* Custom Tooltip */}
+        {tooltipVisible && (
+          <Tooltip
+            style={{
+              left: `${tooltipPosition.x}px`,
+              top: `${tooltipPosition.y}px`,
+            }}
+          >
+            {tooltipContent}
+          </Tooltip>
+        )}
         {/* 곡선과 대각선 주석 처리 (임시로 화면에서 제거) */}
         {/* <GraphPath1 /> */}
         {/* <GraphPath2 /> */}
@@ -460,6 +554,42 @@ const CenterVerticalArrow = styled.div`
     left: 0;
     transform: translateX(3px) rotate(45deg);
   }
+`;
+
+// Add Tooltip styled component
+const Tooltip = styled.div`
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10; /* Ensure tooltip is above other elements */
+  transform: translate(
+    -50%,
+    -100%
+  ); /* Position tooltip centered above the cursor/point */
+  pointer-events: none; /* Prevent tooltip from blocking mouse events */
+  transition: opacity 0.2s ease-in-out; /* Optional: add transition */
+`;
+
+// Add QuadrantLabel styled component
+const QuadrantLabel = styled.div`
+  position: absolute;
+  top: ${(props) => props.top};
+  left: ${(props) => props.left};
+  transform: translate(-50%, -50%); /* Center the label */
+  font-family: "Pretendard", "Poppins", sans-serif;
+  font-size: 14px; /* Adjust font size as needed */
+  font-weight: 600; /* Make labels slightly bolder */
+  color: ${palette.gray500}; /* Use a less prominent color */
+  padding: 4px;
+  border-radius: 4px;
+  /* Optional: Add background for better readability if needed */
+  /* background-color: rgba(255, 255, 255, 0.7); */
+  z-index: 0; /* Ensure labels are behind grid lines and data points */
+  pointer-events: none; /* Labels should not interfere with mouse events */
 `;
 
 // 그래프 내부 SVG 경로 1 (파란 곡선)
