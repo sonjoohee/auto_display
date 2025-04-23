@@ -808,7 +808,7 @@ useEffect(() => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="문제점 & 니즈 분석하고 있어요..." />
+                    <AtomPersonaLoader message="문제점 & 니즈 리스트를 불러오고 있어요..." />
                   </div>
                 ) : (
                   <>
@@ -823,7 +823,7 @@ useEffect(() => {
                     <div className="content">
                       <TabContent5Item>
                         <div className="title">
-                          <Body1 color="gray700">문제점 & 니즈 가져오기 </Body1>
+                          <Body1 color="gray700">고객 여정 지도 가져오기 </Body1>
                         </div>
 
                         <SelectBox ref={customerListRef}>
@@ -938,15 +938,15 @@ useEffect(() => {
                                   color="gray700"
                                   align="center !important"
                                 >
-                                  고객 여정 지도 툴을 선행하세요.
+                                고객 여정 지도를 선택해주세요. 
                                 </Body2>
                               </BoxWrap>
                             ) : (
                               <>
                                 <div className="title">
                                   <Body1 color="gray700">
-                                    문제점 & 니즈 리스트 (최소 8개 이상 작성
-                                    필요)
+                                  고객 여정에서 드러난​ 핵심 문제와 니즈 항목입니다. 
+
                                   </Body1>
                                 </div>
                                 <MoleculeDeleteForm
@@ -964,6 +964,8 @@ useEffect(() => {
                         )}
                       </TabContent5Item>
                     </div>
+
+                    {ideaGenerationProblemListTitle.length > 0 && (
                     <Button
                       Other
                       Primary
@@ -976,8 +978,9 @@ useEffect(() => {
                         selectedPurposes.customerList.length === 0
                       }
                     >
-                      아이디어 발상으로 전환
+                     아이디어 키워드 추출
                     </Button>
+                    )}
                   </>
                 )}
               </TabContent5>
@@ -995,7 +998,7 @@ useEffect(() => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="아이디어 키워드 도출 중..." />
+                    <AtomPersonaLoader message="아이디어 발산을 위한 핵심 키워드를 추출하고 있어요 " />
                   </div>
                 ) : (
                   <>
@@ -1046,7 +1049,7 @@ useEffect(() => {
                     </div>
 
                     <div className="content">
-                      <Title style={{ marginBottom: "-10px" }}>
+                      <Title style={{ marginBottom: "-18px" }}>
                         <Body1 color="gray700">
                           아이디어 시작점을 선택하세요 (8개 선택필수)
                         </Body1>

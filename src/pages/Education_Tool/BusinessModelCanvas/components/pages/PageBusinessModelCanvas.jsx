@@ -8,6 +8,7 @@ import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
 import { Button } from "../../../../../assets/styles/ButtonStyle";
+import Markdown from "markdown-to-jsx";
 import images from "../../../../../assets/styles/Images";
 import {
   CustomTextarea,
@@ -221,11 +222,18 @@ const PageBusinessModelCanvas = () => {
   const [showKanoModelList, setshowKanoModelList] = useState(false);
   const [ideaEvaluateSelect, setIdeaEvaluateSelect] = useState([]);
   const [graphData, setGraphData] = useState([]);
+  const [conceptDefinitionList, setConceptDefinitionList] = useState([]);
   
   const customerListRef = useRef(null);
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const project = projectSaas;
+
+  const prepareMarkdown = (text) => {
+    if (!text) return "";
+    // 연속된 줄바꿈('\n\n')을 <br/><br/>로 변환
+    return text.replace(/\n\n/g, "\n&nbsp;\n").replace(/\n/g, "  \n");
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -420,22 +428,22 @@ const PageBusinessModelCanvas = () => {
 
         const response = await getFindToolListOnServerSaas(
           projectSaas?._id ?? "",
-          "ix_kano_model_education",
+          "ix_concept_definition_education",
           isLoggedIn
         );
 
 
         const newItems = (response || []).filter(
           (item) =>
-            item?.type === "ix_kano_model_education" &&
+            item?.type === "ix_concept_definition_education" &&
             item?.completedStep === 3
         );
 
         allItems = [...allItems, ...newItems];
   
-        setCustomerJourneyList(allItems);
+        setConceptDefinitionList(allItems);
       } catch (error) {
-        setCustomerJourneyList([]); // Set empty array on error
+        setConceptDefinitionList([]); // Set empty array on error
       }
     };
 
@@ -958,7 +966,7 @@ const PageBusinessModelCanvas = () => {
 
                           {selectBoxStates.customerList && (
                             <SelectBoxList dropUp={dropUpStates.customerList}>
-                              {customerJourneyList.length === 0 ? (
+                              {conceptDefinitionList.length === 0 ? (
                                 <SelectBoxItem 
                                 disabled={toolSteps >= 1 || selectedKanoModelData.
                                   kanoModelClustering.attractive.length >0}
@@ -968,7 +976,7 @@ const PageBusinessModelCanvas = () => {
                                   </Body2>
                                 </SelectBoxItem>
                               ) : (
-                                customerJourneyList.map((item, index) => (
+                                conceptDefinitionList.map((item, index) => (
                                   <SelectBoxItem
                                     // disabled={
                                     //   toolSteps >= 1 
@@ -978,7 +986,7 @@ const PageBusinessModelCanvas = () => {
                                       handlePurposeSelect(
                                         `${item.updateDate.split(":")[0]}:${
                                           item.updateDate.split(":")[1]
-                                        } - kano기반 아이디어 선택기 
+                                        } - 아이디어 선택기 
                                     `,
                                         "customerList",
                                         item
@@ -987,7 +995,7 @@ const PageBusinessModelCanvas = () => {
                                   >
                                     <Body2 color="gray700" align="left">
                                       {item.updateDate.split(":")[0]}:
-                                      {item.updateDate.split(":")[1]} kano기반 아이디어 선택기 
+                                      {item.updateDate.split(":")[1]} 아이디어 선택기 
                                      
                                     </Body2>
                                   </SelectBoxItem>
@@ -1023,78 +1031,20 @@ const PageBusinessModelCanvas = () => {
                      
                     </BoxWrap>
                   ) : (
-                    <div className="content" style={{marginTop: "40px"}}>
-                      {/* Attractive Features 섹션 */}
-                      <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
-                                <Body1 color="gray800">Attractive (매력적 속성)</Body1>
-                       </div>
-                       
-                        {selectedKanoModelData.
-                          kanoModelClustering.attractive.map((idea, index) => (
-                          <MoleculeItemSelectCard
-                            FlexStart
-                            key={`attractive-${index}`}
-                            id={`attractive-${index}`}
-                            title={idea.name}
-                            isSelected={ideaEvaluateSelect.includes(`attractive-${index}`)}
-                            onSelect={() => handleCheckboxChange(`attractive-${index}`)}
-                            disabled={toolSteps >= 1}
-                          />
-                        ))}
-
-                        <div className="title" style={{textAlign: "left", marginBottom: "-20px",marginTop: "20px"}}>
-                                <Body1 color="gray800">One-Dimensional (일차원 속성) </Body1>
-                         </div>
-                      {selectedKanoModelData.
-                          kanoModelClustering.one_dimensional.map((idea, index) => (
-                          <MoleculeItemSelectCard
-                            FlexStart
-                            key={`one-dimensional-${index}`}
-                            id={`one-dimensional-${index}`}
-                            title={idea.name}
-                            isSelected={ideaEvaluateSelect.includes(`one_dimensional-${index}`)}
-                            onSelect={() => handleCheckboxChange(`one_dimensional-${index}`)}
-                            disabled={toolSteps >= 1}
-                          />
-                        ))}
-                 
-
-                         <div className="title" style={{textAlign: "left", marginBottom: "-20px",marginTop: "20px"}}>
-                                <Body1 color="gray800">Must-Be (당연적 속성)  </Body1>
-                        </div>
-                      
-                       {selectedKanoModelData.
-                          kanoModelClustering.must_be.map((idea, index) => (
-                          <MoleculeItemSelectCard
-                            FlexStart
-                            key={`must-be-${index}`}
-                            id={`must-be-${index}`}
-                            title={idea.name}
-                            isSelected={ideaEvaluateSelect.includes(`must_be-${index}`)}
-                            onSelect={() => handleCheckboxChange(`must_be-${index}`)}
-                            disabled={toolSteps >= 1}
-                          />
-                        ))}
-
-                        
-                       <div className="title" style={{textAlign: "left", marginBottom: "-20px",marginTop: "20px"}}>
-                                <Body1 color="gray800">Reverse (반대 속성)  </Body1>
-                       </div>
-                      
-                       {selectedKanoModelData.
-                          kanoModelClustering.reverse.map((idea, index) => (
-                          <MoleculeItemSelectCard
-                            FlexStart
-                            key={`reverse-${index}`}
-                            id={`reverse-${index}`}
-                            title={idea.name}
-                            isSelected={ideaEvaluateSelect.includes(`reverse-${index}`)}
-                            onSelect={() => handleCheckboxChange(`reverse-${index}`)}
-                            disabled={toolSteps >= 1}
-                          />
-                        ))}
-               
-                      </div> 
+                    <InsightAnalysis>
+                    <div
+                      className="markdown-body"
+                      style={{
+                        textAlign: "left",
+                      }}
+                    >
+                      <Markdown>
+                        {prepareMarkdown(
+                        ideaEvaluateComparisonEducation ?? ""
+                        )}
+                      </Markdown>
+                    </div>
+                  </InsightAnalysis>
                
                   )}
                     </TabContent5Item>

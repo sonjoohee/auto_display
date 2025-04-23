@@ -1,4 +1,4 @@
-//디자인 감성 분석기
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -48,6 +48,9 @@ import {
   PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION,
   PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE,
   PERSONA_LIST_SAAS,
+  CONCEPT_DEFINITION_FIRST_REPORT,
+  CONCEPT_DEFINITION_FINAL_REPORT,
+  CONCEPT_DEFINITION_SELECTED_PERSONA,
 } from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import {
@@ -63,6 +66,7 @@ import {
   InterviewXPsstMultimodalRequest,
   InterviewXPsstAnalysisRequest,
   getFindToolListOnServerSaas,
+  EducationToolsRequest,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
@@ -79,26 +83,6 @@ const prepareMarkdown = (text) => {
   return text.replace(/\n\n/g, "\n&nbsp;\n").replace(/\n/g, "  \n");
 };
 
-const psstReportIndex = `문제 정의 (Problem)
-            1-1. 창업 배경 및 필요성
-            1-2. 목표 시장 및 고객 분석
-            1-3. 기존 대안의 한계
-
-            해결책 (Solution)
-            2-1. 핵심 기능 및 문제 대응 방식
-            2-2. 기술·구조적 작동 원리
-            2-3. 차별성 및 경쟁 우위
-
-            실행 전략 (Strategy)
-            3-1. 수익 모델 및 가치 전환 구조
-            3-2. 시장 진입 전략 (GTM)
-            3-3. 사업 확장 및 운영 계획
-
-            팀 (Team)
-            4-1. 팀 구성 
-            4-2. 외부 협력 자원 및 네트워크
-            4-3. 운영 체계 및 실행 구조`;
-
 const PageConceptDefinition = () => {
   const navigate = useNavigate();
 
@@ -108,12 +92,13 @@ const PageConceptDefinition = () => {
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
-
+  const [conceptDefinitionFinalReport, setConceptDefinitionFinalReport] = useAtom(CONCEPT_DEFINITION_FINAL_REPORT);
   const [psstBusinessInfo, setPsstBusinessInfo] = useAtom(PSST_BUSINESS_INFO);
   const [, setPsstFileId] = useAtom(PSST_FILE_ID);
   const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL
   );
+  const [conceptDefinitionSelectedPersona, setConceptDefinitionSelectedPersona] = useAtom(CONCEPT_DEFINITION_SELECTED_PERSONA);
   const [
     projectAnalysisMultimodalKeyMessage,
     setProjectAnalysisMultimodalKeyMessage,
@@ -128,6 +113,7 @@ const PageConceptDefinition = () => {
   const [selectedTemplete, setSelectedTemplete] = useAtom(
     PSST_SELECTED_TEMPLETE
   );
+  const [conceptDefinitionFirstReport, setConceptDefinitionFirstReport] = useAtom(CONCEPT_DEFINITION_FIRST_REPORT); 
 
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
@@ -148,7 +134,6 @@ const PageConceptDefinition = () => {
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [selectedPurposes, setSelectedPurposes] = useState({
     customerList: "",
-    analysisScope: "",
   });
   const [kanoModelList, setKanoModelList] = useState([]);
 
@@ -311,6 +296,8 @@ const PageConceptDefinition = () => {
     setToolSteps(1);
     console.log("selectedPersonas",selectedPersonas)
 
+    
+
     // const responseToolId = await createToolOnServer(
     //   {
     //     projectId: project._id,
@@ -325,131 +312,37 @@ const PageConceptDefinition = () => {
   }
 
 
-
-   
-      
-    
-  const handleSubmitReportIndex = async () => {
-    setIsLoading(true);
-
-    // const responseToolId = await createToolOnServer(
-    //   {
-    //     projectId: project._id,
-    //     type: "ix_psst_multimodal",
-    //   },
-    //   isLoggedIn
-    // );
-    // setToolId(responseToolId);
-
-    setHideIndexButton(true);
-
-    const timeStamp = new Date().getTime();
-    const business = {
-      businessModel: project.businessModel,
-      projectAnalysis: project.projectAnalysis,
-      projectDescription: project.projectDescription,
-      projectTitle: project.projectTitle,
-      targetCountry: project.targetCountry,
-    };
-    // 파일 업로드 케이스 먼저 체크
-    if (uploadedFiles.length > 0) {
-      try {
-        const Data = {
-          business: business,
-          tool_id: "file_" + timeStamp,
-          files: uploadedFiles,
-        };
-
-        setPsstFileId(["file_" + timeStamp]);
-        // multimodal API 요청만 실행
-        let firstResponse = await InterviewXPsstMultimodalRequest(
-          Data,
-          isLoggedIn
-        );
-
-        const maxAttempts = 10;
-        let attempts = 0;
-
-        while (
-          attempts < maxAttempts &&
-          (!firstResponse ||
-            firstResponse?.repsponse === null ||
-            !firstResponse?.response?.psst_index_multimodal)
-        ) {
-          firstResponse = await InterviewXPsstMultimodalRequest(
-            Data,
-            isLoggedIn
-          );
-          // console.log(firstResponse);
-          attempts++;
-        }
-        if (attempts >= maxAttempts) {
-          setShowPopupError(true);
-          return;
-        }
-
-        setProjectAnalysisMultimodal(
-          firstResponse.response.psst_index_multimodal
-        );
-        setProjectAnalysisMultimodalDescription(
-          firstResponse.response.psst_index_multimodal_description
-        );
-
-        // await updateToolOnServer(
-        //   responseToolId,
-        //   {
-        //     projectAnalysisMultimodal:
-        //       firstResponse.response.psst_index_multimodal,
-        //     projectAnalysisMultimodalDescription:
-        //       firstResponse.response.psst_index_multimodal_description,
-        //     business: business,
-        //     fileName: uploadedFiles.map((file) => ({
-        //       id: "file_" + timeStamp,
-        //       name: fileNames,
-        //     })),
-        //   },
-        //   isLoggedIn
-        // );
-
-        setFileNames(uploadedFiles.map((file) => file.name));
-        setPsstBusinessInfo(business);
-
-        setIsLoading(false);
-        setIsCreateReportIndex(true);
-        return;
-      } catch (error) {
-        console.error("Error:", error);
-        setShowPopupError(true);
-        setIsLoading(false);
-        return;
-      }
-    }
-  };
-
   const handleCheckValue = async () => {
     setIsLoading(true);
+
+    const personaGroup = selectedPersonas.map(persona => ({
+      personaName: persona.personaName,
+      personaCharacteristics: persona.personaCharacteristics,
+      type: persona.type,
+      age: persona.age,
+      gender: persona.gender,
+      job: persona.job,
+      keywords: persona.keywords,
+    }));
+    
     try {
       const data = {
         type: "ix_concept_definition_report_education",
         business: business,
-        persona_group: selectedPersonas,
-        kano_moel: kanoModelList,
+        persona_group: personaGroup,
+        kano_model: kanoModelList,
       };
 
-      // personaName: persona.personaName,
-      // personaCharacteristics: persona.personaCharacteristics,
-      // type: persona.type,
-      // age: persona.age,
-      // gender: persona.gender,
-      // job: persona.job,
-      // keywords: persona.keywords,
-      // userExperience: persona.userExperience,
-      // consumptionPattern: persona.consumptionPattern,
-      // interests: persona.interests,
-      // lifestyle: persona.lifestyle,
+      let response = await EducationToolsRequest(
+        data,
+        isLoggedIn
+      );
 
-      
-      console.log("handleCheckValue");
+      console.log("response", response)
+
+      setConceptDefinitionFirstReport(response.response.concept_definition_report_education)
+
+    
       setIsLoading(false);
     } catch (error) {
       console.error("Error:", error);
@@ -471,101 +364,44 @@ const PageConceptDefinition = () => {
       //   isLoggedIn
       // );
 
-      if (uploadedFiles.length > 0) {
-        try {
-          // 1. 8개 분석 실행
-          const allResults = [];
-          for (let i = 1; i <= 8; i++) {
-            const data = {
-              analysis_index: i,
-              business: psstBusinessInfo,
-              report_index: projectAnalysisMultimodalKeyMessage,
-              type: "ix_psst_analysis",
-            };
-
-            const response = await InterviewXPsstAnalysisRequest(
-              data,
-              isLoggedIn
-            );
-            allResults.push(response.response.psst_analysis);
-          }
-          setAnalysisResults(allResults);
-
-          // 2. 바로 종합 리포트 생성
-          const apiRequestData = {
-            type: "ix_psst_report",
-            business: psstBusinessInfo,
-            report_index: projectAnalysisMultimodalKeyMessage,
-            report_contents: allResults, // 방금 생성된 allResults 사용
-            additional_request: "없음",
-          };
-
-          let response = await InterviewXPsstAnalysisRequest(
-            apiRequestData,
-            isLoggedIn
-          );
-          setPsstReport(response.response);
-
-          // 3. 서버 업데이트 및 로딩 상태 변경
-          setIsLoadingReport(false);
-          await updateToolOnServer(
-            toolId,
-            {
-              completedStep: 3,
-              psstReport: response.response,
-              analysisResults: allResults,
-            },
-            isLoggedIn
-          );
-        } catch (error) {
-          console.error("Error:", error);
-          setShowPopupError(true);
-          setIsLoadingReport(false);
-        }
-        return;
-      }
       try {
         const apiRequestData = {
-          type: "ix_psst_report",
-          business: psstBusinessInfo,
-
-          report_index: psstReportIndex,
-
-          report_contents: analysisResults,
-          additional_request: "없음",
+          type: "ix_concept_definition_final_report_education",
+          concept_definition_report_education: conceptDefinitionFirstReport,
         };
 
-        let response = await InterviewXPsstAnalysisRequest(
+        let response = await EducationToolsRequest(
           apiRequestData,
           isLoggedIn
         );
-        setPsstReport(response.response);
+        console.log("response", response)
+        setConceptDefinitionFinalReport(response.response);
 
-        const maxAttempts = 10;
-        let attempts = 0;
+        // const maxAttempts = 10;
+        // let attempts = 0;
 
-        while (attempts < maxAttempts && (!response || !response?.response)) {
-          response = await InterviewXPsstAnalysisRequest(
-            apiRequestData,
-            isLoggedIn
-          );
-          attempts++;
-        }
-        if (attempts >= maxAttempts) {
-          setShowPopupError(true);
-          return;
-        }
+        // while (attempts < maxAttempts && (!response || !response?.response)) {
+        //   response = await InterviewXPsstAnalysisRequest(
+        //     apiRequestData,
+        //     isLoggedIn
+        //   );
+        //   attempts++;
+        // }
+        // if (attempts >= maxAttempts) {
+        //   setShowPopupError(true);
+        //   return;
+        // }
 
         setIsLoadingReport(false);
 
-        await updateToolOnServer(
-          toolId,
-          {
-            completedStep: 3,
-            psstReport: response.response,
-          },
-          isLoggedIn
-        );
+        // await updateToolOnServer(
+        //   toolId,
+        //   {
+        //     completedStep: 3,
+        //     psstReport: response.response,
+        //   },
+        //   isLoggedIn
+        // );
       } catch (error) {}
       setToolSteps(3);
     } catch (error) {
@@ -591,51 +427,6 @@ const PageConceptDefinition = () => {
   };
 
 
-  // 파일 업로드 핸들러
-  const handleChangeStatus = ({ meta, file, remove }, status) => {
-    // 20MB 크기 제한 체크
-    const maxSize = 20 * 1024 * 1024; // 20MB in bytes
-    if (file.size > maxSize && status !== "removed") {
-      setShowPopupFileSize(true);
-      remove();
-      return;
-    }
-
-    // 파일 상태 업데이트
-    if (status === "done" || status === "preparing" || status === "uploading") {
-      setUploadedFiles((prev) => {
-        // 이미 존재하는 파일이 아닌 경우에만 추가
-        if (!prev.find((f) => f.name === file.name)) {
-          setFileNames((prev) => [...prev, file.name]);
-          return [...prev, file];
-        }
-        return prev;
-      });
-    } else if (status === "removed") {
-      setUploadedFiles((prev) => prev.filter((f) => f.name !== file.name));
-      setFileNames((prev) => prev.filter((name) => name !== file.name));
-    }
-
-    // 파일 크기를 KB 또는 MB 단위로 변환
-    const size = file.size;
-    const sizeStr =
-      size > 1024 * 1024
-        ? `${(size / (1024 * 1024)).toFixed(1)}MB`
-        : `${(size / 1024).toFixed(1)}KB`;
-
-    // setTimeout을 사용하여 DOM이 업데이트된 후 실행
-    setTimeout(() => {
-      const containers = document.querySelectorAll(".dzu-previewContainer");
-      containers.forEach((container) => {
-        if (!container.dataset.filename) {
-          container.dataset.filename = file.name;
-          container.dataset.size = sizeStr;
-        }
-      });
-    }, 0);
-  };
-
- 
 
   const handlePurposeSelect = (purpose, selectBoxId) => {
     setSelectedPurposes((prev) => ({
@@ -643,15 +434,12 @@ const PageConceptDefinition = () => {
       [selectBoxId]: purpose,
     }));
 
+
     setSelectBoxStates((prev) => ({
       ...prev,
       [selectBoxId]: false,
     }));
 
-    // if (selectBoxId === "customerList") {
-    //   setSelectedBusiness(purpose);
-    //   setBusinessDescription(purpose);
-    // }
   };
 
   useEffect(() => {
@@ -968,7 +756,7 @@ const PageConceptDefinition = () => {
                                   toolSteps >= 2 ? "not-allowed" : "pointer",
                               }}
                             >
-                              {selectedPurposes?.analysisScope ? (
+                              {selectedPurposes?.customerList ? (
                                 <div
                                   style={{
                                     display: "flex",
@@ -977,21 +765,31 @@ const PageConceptDefinition = () => {
                                     paddingLeft: "20px",
                                   }}
                                 >
-                                  <Body1 color="gray700" align="left">
+                                  {/* <Body1 color="gray700" align="left">
                                     {
                                       selectedPurposes?.analysisScope?.split(
                                         "|"
                                       )[0]
                                     }{" "}
                                     |
-                                  </Body1>
-                                  <Body2 color="gray700" align="left">
+                                  </Body1> */}
+                                      <Body2
+                                  color={
+                                    selectedPurposes.customerList
+                                      ? "gray800"
+                                      : "gray300"
+                                  }
+                                >
+                                  {selectedPurposes.customerList ||
+                                    "직접 문제점을 작성합니다."}
+                                </Body2>
+                                  {/* <Body2 color="gray700" align="left">
                                     {
                                       selectedPurposes?.analysisScope?.split(
                                         "|"
                                       )[1]
                                     }
-                                  </Body2>
+                                  </Body2> */}
                                 </div>
                               ) : (
                                 <Body2
@@ -1020,40 +818,31 @@ const PageConceptDefinition = () => {
 
                             {isSelectBoxOpen && (
                               <SelectBoxList>
-                                
-                                <SelectBoxItem
-                                  onClick={() => {
-                                    handlePurposeSelect(
-                                      "상황 중심 여정 분석 | 특정 이벤트나 고객 경험을 중심으로 여정 분석",
-                                      "analysisScope"
-                                    );
-                                    setIsSelectBoxOpen(false);
-                                  }}k
-                                >
-                                  <Body1 color="gray700" align="left">
-                                    상황 중심 여정 분석 |{" "}
-                                  </Body1>
-                                  <Body2 color="gray700" align="left">
-                                    특정 이벤트나 고객 경험을 중심으로 여정 분석
-                                  </Body2>
-                                </SelectBoxItem>
-                                <SelectBoxItem
-                                  onClick={() => {
-                                    handlePurposeSelect(
-                                      "목적 기반 여정 분석 | 고객이 제품/서비스를 사용하여 달성하려는 목표를 중심으로 여정 분석",
-                                      "analysisScope"
-                                    );
+                                {kanoModelList?.map((item, index) => (
+                                  <SelectBoxItem
+                                    key={index}
+                                    onClick={() => {
+                                      handlePurposeSelect(
+                                        ` ${
+                                          item.updateDate.split(":")[0]
+                                        }:${item.updateDate.split(":")[1]}-Kano Model 결과`,
+                                        "customerList",
+                                        item
+                                      );
+                                    
                                     setIsSelectBoxOpen(false);
                                   }}
                                 >
-                                  <Body1 color="gray700" align="left">
-                                    목적 기반 여정 분석 |{" "}
-                                  </Body1>
+                                  {/* <Body1 color="gray700" align="left">
+                                    상황 중심 여정 분석 |{" "}
+                                  </Body1> */}
                                   <Body2 color="gray700" align="left">
-                                    고객이 제품/서비스를 사용하여 달성하려는
-                                    목표를 중심으로 여정 분석
+                                 
+                                      {item.updateDate.split(":")[0]}:
+                                      {item.updateDate.split(":")[1]} - Kano Model 결과
                                   </Body2>
                                 </SelectBoxItem>
+                                ))}
                               </SelectBoxList>
                             )}
                           </SelectBox>
@@ -1083,7 +872,7 @@ const PageConceptDefinition = () => {
                           >
                             <Markdown>
                               {prepareMarkdown(
-                                projectAnalysisMultimodalKeyMessage ?? ""
+                               conceptDefinitionFirstReport ?? ""
                               )}
                             </Markdown>
                           </div>
@@ -1091,7 +880,7 @@ const PageConceptDefinition = () => {
                         )}
             
                     </div>
-                    {projectAnalysisMultimodalKeyMessage && Object.keys(projectAnalysisMultimodalKeyMessage).length > 0 ? (
+                    {conceptDefinitionFirstReport && conceptDefinitionFirstReport.length > 0 ? (
                       <div
                         style={{
                           display: "flex",
@@ -1117,7 +906,7 @@ const PageConceptDefinition = () => {
                         Fill
                         Round
                         onClick={handleCheckValue}
-                        disabled={toolSteps > 2}
+                        disabled={toolSteps > 2 || !selectedPurposes.customerList || isLoading}
                       >
                        페르소나 & 핵심가치 확인
                       </Button>

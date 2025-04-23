@@ -626,6 +626,10 @@ export const IDEA_EVALUATE_COMPARISON_EDUCATION = atom([]);
 
 export const NPS_CONCEPT_DEFINITION = atom([]);
 
+export const CONCEPT_DEFINITION_SELECTED_PERSONA = atom([]);
+export const CONCEPT_DEFINITION_FIRST_REPORT = atom("");
+export const CONCEPT_DEFINITION_FINAL_REPORT = atom("");
+
 //!saas
 // 프로젝트 생성 페이지
 export const PROJECT_CREATE_INFO = atom({});
