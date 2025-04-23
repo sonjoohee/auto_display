@@ -3,29 +3,48 @@ import { useLocation, Link } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { palette } from "../../assets/styles/Palette";
 import { Button, IconButton } from "../../assets/styles/ButtonStyle";
-import { 
-  FormBox, 
-  CustomInput, 
-  CustomTextarea, 
+import {
+  FormBox,
+  CustomInput,
+  CustomTextarea,
   ErrorMessage,
   CheckCircle,
   RadioButton,
-  GenderRadioButton
+  GenderRadioButton,
 } from "../../assets/styles/InputStyle";
 import { CheckBox } from "../../assets/styles/Input";
-import { H1, H2, H3, H4, H5, H6, Body1, Body2_1, Body2, Body3, Sub1, Sub2_1, Sub2, Sub3, Caption1, Caption2, InputText, Helptext } from "../../assets/styles/Typography";
-import { 
-  TabWrap, 
-  TabButton, 
-  TabWrapType2, 
+import {
+  H1,
+  H2,
+  H3,
+  H4,
+  H5,
+  H6,
+  Body1,
+  Body2_1,
+  Body2,
+  Body3,
+  Sub1,
+  Sub2_1,
+  Sub2,
+  Sub3,
+  Caption1,
+  Caption2,
+  InputText,
+  Helptext,
+} from "../../assets/styles/Typography";
+import {
+  TabWrap,
+  TabButton,
+  TabWrapType2,
   TabWrapType3,
-  TabButtonType2, 
+  TabButtonType2,
   TabButtonType3,
-  Status, 
-  Badge, 
-  Tag, 
-  BottomBar, 
-  PersonaGroup, 
+  Status,
+  Badge,
+  Tag,
+  BottomBar,
+  PersonaGroup,
   Persona,
   ListGroupWrap,
   ListBoxItem,
@@ -48,13 +67,17 @@ import {
   RangeSlider,
 } from "../../assets/styles/BusinessAnalysisStyle";
 import PopupWrap from "../../assets/styles/Popup";
-import { SkeletonH1, SkeletonTitle, SkeletonLine } from "../../assets/styles/Skeleton";
+import {
+  SkeletonH1,
+  SkeletonTitle,
+  SkeletonLine,
+} from "../../assets/styles/Skeleton";
 import AtomPersonaLoader from "../Global/atoms/AtomPersonaLoader";
 import images from "../../assets/styles/Images";
 import personaImages from "../../assets/styles/PersonaImages";
-import BarChart from '../../components/Charts/BarChart';
-import CardPersonaSelected from '../../components/Charts/CardPersonaSelected';
-import BarChartLikertScale5 from '../../components/Charts/BarChartLikertScale5';
+import BarChart from "../../components/Charts/BarChart";
+import CardPersonaSelected from "../../components/Charts/CardPersonaSelected";
+import BarChartLikertScale5 from "../../components/Charts/BarChartLikertScale5";
 import ABGraph from "../../components/Charts/ABGraph";
 import BarChartLikertScale11 from "../../components/Charts/BarChartLikertScale11";
 import GraphChartScale2 from "../../components/Charts/GraphChartScale2";
@@ -72,15 +95,15 @@ import ParetoCurveGraph from "../../components/Charts/ParetoCurveGraph";
 import BusinessModelPopup from "../../components/Charts/BusinessModelPopup";
 import WaitLongLodingBar from "../../components/Charts/WaitLongLodingBar";
 import BusinessModelGraph from "../../components/Charts/BusinessModelGraph";
-const PageStyleGuide  = () => {
-  const [activeSection, setActiveSection] = useState('');
+const PageStyleGuide = () => {
+  const [activeSection, setActiveSection] = useState("");
   const [isChecked, setIsChecked] = useState(false);
-  const [selectedRadio, setSelectedRadio] = useState('radio2');
-  const [selectedRadio1, setSelectedRadio1] = useState('radio3');
-  const [selectedRadio2, setSelectedRadio2] = useState('gender2');
-  const [activeTab, setActiveTab] = useState('tab1');
-  const [activeTab1, setActiveTab1] = useState('tab1');
-  const [activeTab2, setActiveTab2] = useState('tab1');
+  const [selectedRadio, setSelectedRadio] = useState("radio2");
+  const [selectedRadio1, setSelectedRadio1] = useState("radio3");
+  const [selectedRadio2, setSelectedRadio2] = useState("gender2");
+  const [activeTab, setActiveTab] = useState("tab1");
+  const [activeTab1, setActiveTab1] = useState("tab1");
+  const [activeTab2, setActiveTab2] = useState("tab1");
   const [showPopup, setShowPopup] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
@@ -88,14 +111,14 @@ const PageStyleGuide  = () => {
 
   // ParetoCurveGraph에 사용할 더미데이터
   const paretoDummyData = [
-    { name: "고고품질 문제", value: 75 },
+    { name: "고고품질 문제", value: 175 },
     { name: "많은 배송 지연", value: 50 },
     { name: "겁나게 비싸서 사기 힘든 높은 가격 불만", value: 35 },
     { name: "이은결제 오류", value: 20 },
     { name: "어머나 재고 부족", value: 15 },
     { name: "기존의 서비스 불량", value: 10 },
     { name: "수 많은 앱 오류", value: 8 },
-    { name: "비싼 통기타", value: 5 }
+    { name: "비싼 통기타", value: 5 },
   ];
 
   const handleWarningClose = () => {
@@ -109,12 +132,11 @@ const PageStyleGuide  = () => {
   const handleErrorClose = () => {
     setShowErrorPopup(false);
   };
-  
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['font', 'color', 'button', 'form', 'tab'];
-      
+      const sections = ["font", "color", "button", "form", "tab"];
+
       for (const section of sections) {
         const element = document.getElementById(section);
         if (element) {
@@ -127,8 +149,8 @@ const PageStyleGuide  = () => {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleCheck = () => {
@@ -147,25 +169,59 @@ const PageStyleGuide  = () => {
   return (
     <>
       <Header>
-        <a href="#font" onClick={scrollToSection}>Font</a>
-        <a href="#color" onClick={scrollToSection}>Color</a>
-        <a href="#button" onClick={scrollToSection}>Button</a>
-        <a href="#form" onClick={scrollToSection}>Form</a>
-        <a href="#tab" onClick={scrollToSection}>Tab</a>
-        <a href="#placeholders" onClick={scrollToSection}>Placeholders</a>
-        <a href="#spinners" onClick={scrollToSection}>Spinners</a>
-        <a href="#status" onClick={scrollToSection}>Status</a>
-        <a href="#viewtype" onClick={scrollToSection}>View Type</a>
-        <a href="#popup" onClick={scrollToSection}>Popup</a>
-        <a href="#bottombar" onClick={scrollToSection}>BottomBar</a>
-        <a href="#personas" onClick={scrollToSection}>Personas</a>
-        <a href="#listgroup" onClick={scrollToSection}>ListGroup</a>
-        <a href="#barChart" onClick={scrollToSection}>BarChart</a>
-        <a href="#boxWrap" onClick={scrollToSection}>BoxWrap</a>
-        <a href="#rangeSlider" onClick={scrollToSection}>RangeSlider</a>
-        <a href="#chartComponents" onClick={scrollToSection}>Chart Components</a>
+        <a href="#font" onClick={scrollToSection}>
+          Font
+        </a>
+        <a href="#color" onClick={scrollToSection}>
+          Color
+        </a>
+        <a href="#button" onClick={scrollToSection}>
+          Button
+        </a>
+        <a href="#form" onClick={scrollToSection}>
+          Form
+        </a>
+        <a href="#tab" onClick={scrollToSection}>
+          Tab
+        </a>
+        <a href="#placeholders" onClick={scrollToSection}>
+          Placeholders
+        </a>
+        <a href="#spinners" onClick={scrollToSection}>
+          Spinners
+        </a>
+        <a href="#status" onClick={scrollToSection}>
+          Status
+        </a>
+        <a href="#viewtype" onClick={scrollToSection}>
+          View Type
+        </a>
+        <a href="#popup" onClick={scrollToSection}>
+          Popup
+        </a>
+        <a href="#bottombar" onClick={scrollToSection}>
+          BottomBar
+        </a>
+        <a href="#personas" onClick={scrollToSection}>
+          Personas
+        </a>
+        <a href="#listgroup" onClick={scrollToSection}>
+          ListGroup
+        </a>
+        <a href="#barChart" onClick={scrollToSection}>
+          BarChart
+        </a>
+        <a href="#boxWrap" onClick={scrollToSection}>
+          BoxWrap
+        </a>
+        <a href="#rangeSlider" onClick={scrollToSection}>
+          RangeSlider
+        </a>
+        <a href="#chartComponents" onClick={scrollToSection}>
+          Chart Components
+        </a>
       </Header>
-      
+
       <ChartComponentsWrap id="chartComponents">
         <h2>Chart Components</h2>
         <FlexContainer>
@@ -190,7 +246,7 @@ const PageStyleGuide  = () => {
           <BusinessModelGraph />
         </FlexContainer>
       </ChartComponentsWrap>
-      
+
       <ContentsWrap>
         <div id="loader">
           <AtomPersonaLoader />
@@ -199,7 +255,8 @@ const PageStyleGuide  = () => {
         <div id="font">
           <h2>Font</h2>
           <Note>
-            한글 폰트는 'Pretendard'를 사용하며, 영문은 'Poppins'를 사용합니다.<br />
+            한글 폰트는 'Pretendard'를 사용하며, 영문은 'Poppins'를 사용합니다.
+            <br />
             별도의 지정을 하지 않아도 자동으로 적용됩니다.
           </Note>
 
@@ -221,10 +278,18 @@ const PageStyleGuide  = () => {
             <Sub2>Sub2_2/Pretendard/Medium(500)/0.88rem/155%/-3%</Sub2>
             <Sub3>Sub3/Pretendard/Medium(500)/0.88rem/155%/-3%</Sub3>
 
-            <Caption1>Caption1/Pretendard/Medium(500)/0.75rem/150%/-3%</Caption1>
-            <Caption2>Caption2/Pretendard/Regular(400)/0.75rem/150%/-3%</Caption2>
-            <InputText>InputText/Pretendard/Medium(500)/0.75rem/150%/-3%</InputText>
-            <Helptext>Helptext/Pretendard/Regular(400)/0.63rem/150%/-3%</Helptext>
+            <Caption1>
+              Caption1/Pretendard/Medium(500)/0.75rem/150%/-3%
+            </Caption1>
+            <Caption2>
+              Caption2/Pretendard/Regular(400)/0.75rem/150%/-3%
+            </Caption2>
+            <InputText>
+              InputText/Pretendard/Medium(500)/0.75rem/150%/-3%
+            </InputText>
+            <Helptext>
+              Helptext/Pretendard/Regular(400)/0.63rem/150%/-3%
+            </Helptext>
           </FlexBox>
         </div>
 
@@ -233,84 +298,156 @@ const PageStyleGuide  = () => {
 
           <FlexBox>
             <CardItem>
-              <div style={{width: "180px", height: "100px", backgroundColor: palette.gray800}} />
+              <div
+                style={{
+                  width: "180px",
+                  height: "100px",
+                  backgroundColor: palette.gray800,
+                }}
+              />
               <div>
                 <Sub1>gray800</Sub1>
                 <Caption1>#323232</Caption1>
               </div>
             </CardItem>
             <CardItem>
-              <div style={{width: "180px", height: "100px", backgroundColor: palette.gray700}} />
+              <div
+                style={{
+                  width: "180px",
+                  height: "100px",
+                  backgroundColor: palette.gray700,
+                }}
+              />
               <div>
                 <Sub1>gray700</Sub1>
                 <Caption1>#666666</Caption1>
               </div>
             </CardItem>
             <CardItem>
-              <div style={{width: "180px", height: "100px", backgroundColor: palette.gray500}} />
+              <div
+                style={{
+                  width: "180px",
+                  height: "100px",
+                  backgroundColor: palette.gray500,
+                }}
+              />
               <div>
                 <Sub1>gray500</Sub1>
                 <Caption1>#8C8C8C</Caption1>
               </div>
             </CardItem>
             <CardItem>
-              <div style={{width: "180px", height: "100px", backgroundColor: palette.gray300}} />
+              <div
+                style={{
+                  width: "180px",
+                  height: "100px",
+                  backgroundColor: palette.gray300,
+                }}
+              />
               <div>
                 <Sub1>gray300</Sub1>
                 <Caption1>#CCCCCC</Caption1>
               </div>
             </CardItem>
             <CardItem>
-              <div style={{width: "180px", height: "100px", backgroundColor: palette.gray200}} />
+              <div
+                style={{
+                  width: "180px",
+                  height: "100px",
+                  backgroundColor: palette.gray200,
+                }}
+              />
               <div>
                 <Sub1>gray200</Sub1>
                 <Caption1>#DDDDDD</Caption1>
               </div>
             </CardItem>
             <CardItem>
-              <div style={{width: "180px", height: "100px", backgroundColor: palette.gray100}} />
+              <div
+                style={{
+                  width: "180px",
+                  height: "100px",
+                  backgroundColor: palette.gray100,
+                }}
+              />
               <div>
                 <Sub1>gray100</Sub1>
                 <Caption1>#F6F6F6</Caption1>
               </div>
             </CardItem>
             <CardItem>
-              <div style={{width: "180px", height: "100px", backgroundColor: palette.gray50}} />
+              <div
+                style={{
+                  width: "180px",
+                  height: "100px",
+                  backgroundColor: palette.gray50,
+                }}
+              />
               <div>
                 <Sub1>gray50</Sub1>
                 <Caption1>#FAFAFA</Caption1>
               </div>
             </CardItem>
             <CardItem>
-              <div style={{width: "180px", height: "100px", backgroundColor: palette.primary}} />
+              <div
+                style={{
+                  width: "180px",
+                  height: "100px",
+                  backgroundColor: palette.primary,
+                }}
+              />
               <div>
                 <Sub1>primary</Sub1>
                 <Caption1>#226FFF</Caption1>
               </div>
             </CardItem>
             <CardItem>
-              <div style={{width: "180px", height: "100px", backgroundColor: palette.black}} />
+              <div
+                style={{
+                  width: "180px",
+                  height: "100px",
+                  backgroundColor: palette.black,
+                }}
+              />
               <div>
                 <Sub1>black</Sub1>
                 <Caption1>#000000</Caption1>
               </div>
             </CardItem>
             <CardItem>
-              <div style={{width: "180px", height: "100px", backgroundColor: palette.white}} />
+              <div
+                style={{
+                  width: "180px",
+                  height: "100px",
+                  backgroundColor: palette.white,
+                }}
+              />
               <div>
                 <Sub1>white</Sub1>
                 <Caption1>#FFFFFF</Caption1>
               </div>
             </CardItem>
             <CardItem>
-              <div style={{width: "180px", height: "100px", backgroundColor: palette.chatGray}} />
+              <div
+                style={{
+                  width: "180px",
+                  height: "100px",
+                  backgroundColor: palette.chatGray,
+                }}
+              />
               <div>
                 <Sub1>chatGray</Sub1>
                 <Caption1>#F7F8FA</Caption1>
               </div>
             </CardItem>
             <CardItem>
-              <div style={{width: "180px", height: "100px", backgroundColor: palette.outlineGray}} />
+              <div
+                style={{
+                  width: "180px",
+                  height: "100px",
+                  backgroundColor: palette.outlineGray,
+                }}
+              />
               <div>
                 <Sub1>outlineGray</Sub1>
                 <Caption1>#E0E4EB</Caption1>
@@ -322,10 +459,9 @@ const PageStyleGuide  = () => {
         <div id="button">
           <h2>Button</h2>
           <Note>
-            기본버튼에 필요한 요소를 추가하여 사용합니다.<br />
-            <CodeBlock>
-              {'<Button>바로가기</Button>'}
-            </CodeBlock>
+            기본버튼에 필요한 요소를 추가하여 사용합니다.
+            <br />
+            <CodeBlock>{"<Button>바로가기</Button>"}</CodeBlock>
           </Note>
 
           <FlexBox column>
@@ -335,9 +471,7 @@ const PageStyleGuide  = () => {
           <Sub1>1. Type</Sub1>
           <Note>
             라운드형 버튼 : Round
-            <CodeBlock>
-              {'<Button Round>바로가기</Button>'}
-            </CodeBlock>
+            <CodeBlock>{"<Button Round>바로가기</Button>"}</CodeBlock>
           </Note>
 
           <FlexBox column>
@@ -347,20 +481,24 @@ const PageStyleGuide  = () => {
             </div>
             <div>
               <Sub2>라운드형</Sub2>
-              <Button Small Round>라운드형 버튼</Button>
+              <Button Small Round>
+                라운드형 버튼
+              </Button>
             </div>
           </FlexBox>
 
           <Sub1>2. Size</Sub1>
           <Note>
-            제일 작은 사이즈 : Small<br />
-            중간 사이즈 : Medium<br />
-            큰 사이즈 : Large<br />
-            좀 더 큰 사이즈 : ExLarge<br />
+            제일 작은 사이즈 : Small
+            <br />
+            중간 사이즈 : Medium
+            <br />
+            큰 사이즈 : Large
+            <br />
+            좀 더 큰 사이즈 : ExLarge
+            <br />
             제일 큰 사이즈 : DbExLarge
-            <CodeBlock>
-              {'<Button Medium>바로가기</Button>'}
-            </CodeBlock>
+            <CodeBlock>{"<Button Medium>바로가기</Button>"}</CodeBlock>
           </Note>
 
           <FlexBox column>
@@ -388,37 +526,48 @@ const PageStyleGuide  = () => {
 
           <Sub1>3. Color</Sub1>
           <Note>
-            기본 버튼 : Primary<br />
-            서브 버튼 : PrimaryLightest (※ Fill 속성 필수로 입력합니다. 추후 아웃라인 추가가능 합니다.)<br />
-            에러 버튼 : Error<br />
+            기본 버튼 : Primary
+            <br />
+            서브 버튼 : PrimaryLightest (※ Fill 속성 필수로 입력합니다. 추후
+            아웃라인 추가가능 합니다.)
+            <br />
+            에러 버튼 : Error
+            <br />
             수정 버튼 : Edit
-            <CodeBlock>
-              {'<Button Primary>바로가기</Button>'}
-            </CodeBlock>
+            <CodeBlock>{"<Button Primary>바로가기</Button>"}</CodeBlock>
           </Note>
 
           <FlexBox column>
             <div>
               <Sub2>기본 버튼</Sub2>
-              <Button Small Primary>기본 버튼</Button>
+              <Button Small Primary>
+                기본 버튼
+              </Button>
             </div>
             <div>
               <Sub2>서브 버튼</Sub2>
-              <Button Small PrimaryLightest Fill>서브 버튼</Button>
+              <Button Small PrimaryLightest Fill>
+                서브 버튼
+              </Button>
             </div>
             <div>
               <Sub2>에러 버튼</Sub2>
-              <Button Small Error>에러 버튼</Button>
+              <Button Small Error>
+                에러 버튼
+              </Button>
             </div>
             <div>
               <Sub2>수정 버튼</Sub2>
-              <Button Small Edit>수정 버튼</Button>
+              <Button Small Edit>
+                수정 버튼
+              </Button>
             </div>
           </FlexBox>
 
           <Sub1>4. Fill</Sub1>
           <Note>
-            채움버튼을 사용시, Primary 속성을 적용해야 합니다.<br />
+            채움버튼을 사용시, Primary 속성을 적용해야 합니다.
+            <br />
             채움 버튼 : Fill, PrimaryLightest
             <CodeBlock>
               {`<Button Small Primary Fill>바로가기</Button>
@@ -427,8 +576,12 @@ const PageStyleGuide  = () => {
           </Note>
 
           <FlexBox>
-            <Button Small Primary Fill>채움 버튼</Button>
-            <Button Small PrimaryLightest Fill>채움 버튼</Button>
+            <Button Small Primary Fill>
+              채움 버튼
+            </Button>
+            <Button Small PrimaryLightest Fill>
+              채움 버튼
+            </Button>
           </FlexBox>
 
           <Sub1>5. Disabled</Sub1>
@@ -440,36 +593,59 @@ const PageStyleGuide  = () => {
           </Note>
 
           <FlexBox>
-            <Button Small disabled>Disabled 버튼</Button>
-            <Button Small Round disabled>Disabled 버튼</Button>
+            <Button Small disabled>
+              Disabled 버튼
+            </Button>
+            <Button Small Round disabled>
+              Disabled 버튼
+            </Button>
           </FlexBox>
 
           <Sub1>6. Icon Type</Sub1>
           <Note>
-            아이콘을 삽입할 경우, 아이콘 위치를 지정해야 합니다.<br />
+            아이콘을 삽입할 경우, 아이콘 위치를 지정해야 합니다.
+            <br />
             <CodeBlock>
               {'<Button>바로가기<img src="이미지" alt="" /></Button>'}
             </CodeBlock>
           </Note>
 
           <FlexBox>
-            <Button Small Primary>바로가기<img src={images.ChevronRightPrimary} alt="" /></Button>
-            <Button Small Primary><img src={images.PeopleFillPrimary} alt="" />바로가기</Button>
+            <Button Small Primary>
+              바로가기
+              <img src={images.ChevronRightPrimary} alt="" />
+            </Button>
+            <Button Small Primary>
+              <img src={images.PeopleFillPrimary} alt="" />
+              바로가기
+            </Button>
           </FlexBox>
 
           <Sub1>7. Icon Type 2</Sub1>
           <Note>
-            아이콘을 삽입할 경우, 아이콘 위치를 지정해야 합니다.<br />
+            아이콘을 삽입할 경우, 아이콘 위치를 지정해야 합니다.
+            <br />
             필요에 따라, 박스가 필요할 경우 6번 참고
-            <strong><br />아이콘 명</strong>
-            저장하기 : FolderArrowDown<br />
-            재생성하기 : IconRepeatSquare<br />
-            수정하기 : PencilSquare<br />
-            이전으로 되돌리기 : ClockCounterclockwise<br />
-            AI로 다듬기 : MagicStick<br />
-            인터뷰 스크립트 보기 : ReportSearch<br />
-            결과리포트 리스트 : BoxArrowUpRight<br />
-            구독 플랜 관리 : CalendarCheck<br />
+            <strong>
+              <br />
+              아이콘 명
+            </strong>
+            저장하기 : FolderArrowDown
+            <br />
+            재생성하기 : IconRepeatSquare
+            <br />
+            수정하기 : PencilSquare
+            <br />
+            이전으로 되돌리기 : ClockCounterclockwise
+            <br />
+            AI로 다듬기 : MagicStick
+            <br />
+            인터뷰 스크립트 보기 : ReportSearch
+            <br />
+            결과리포트 리스트 : BoxArrowUpRight
+            <br />
+            구독 플랜 관리 : CalendarCheck
+            <br />
             고객 서비스 : Headset
             <CodeBlock>
               {'<IconButton>바로가기<img src="이미지" alt="" /></IconButton>'}
@@ -561,15 +737,33 @@ const PageStyleGuide  = () => {
 
           <FlexBox column>
             <FormBox>
-              <CustomInput Edit type="text" placeholder="input text" onChange="" status="valid" />
+              <CustomInput
+                Edit
+                type="text"
+                placeholder="input text"
+                onChange=""
+                status="valid"
+              />
             </FormBox>
 
             <FormBox disabled>
-              <CustomInput Edit type="text" placeholder="disabled" onChange="" disabled />
+              <CustomInput
+                Edit
+                type="text"
+                placeholder="disabled"
+                onChange=""
+                disabled
+              />
             </FormBox>
 
             <FormBox status="error">
-              <CustomInput Edit type="text" placeholder="error input" onChange="" status="error" />
+              <CustomInput
+                Edit
+                type="text"
+                placeholder="error input"
+                onChange=""
+                status="error"
+              />
             </FormBox>
             <ErrorMessage>에러 메시지</ErrorMessage>
           </FlexBox>
@@ -586,8 +780,16 @@ const PageStyleGuide  = () => {
 
           <FlexBox column>
             <CustomTextarea placeholder="textarea" onChange="" />
-            <CustomTextarea placeholder="textarea disabled" onChange="" disabled />
-            <CustomTextarea placeholder="textarea error" onChange="" status="error" />
+            <CustomTextarea
+              placeholder="textarea disabled"
+              onChange=""
+              disabled
+            />
+            <CustomTextarea
+              placeholder="textarea error"
+              onChange=""
+              status="error"
+            />
             <ErrorMessage>에러 메시지</ErrorMessage>
           </FlexBox>
 
@@ -610,15 +812,30 @@ const PageStyleGuide  = () => {
 
           <FlexBox column>
             <FormBox>
-              <CustomTextarea Edit placeholder="textarea" onChange="" status="valid" />
+              <CustomTextarea
+                Edit
+                placeholder="textarea"
+                onChange=""
+                status="valid"
+              />
             </FormBox>
 
             <FormBox disabled>
-              <CustomTextarea Edit placeholder="textarea" onChange="" disabled />
+              <CustomTextarea
+                Edit
+                placeholder="textarea"
+                onChange=""
+                disabled
+              />
             </FormBox>
 
             <FormBox status="error">
-              <CustomTextarea Edit placeholder="textarea error" onChange="" status="error" />
+              <CustomTextarea
+                Edit
+                placeholder="textarea error"
+                onChange=""
+                status="error"
+              />
             </FormBox>
             <ErrorMessage>에러 메시지</ErrorMessage>
           </FlexBox>
@@ -632,7 +849,12 @@ const PageStyleGuide  = () => {
           </Note>
 
           <FlexBox column>
-            <CustomTextarea rows={10} placeholder="textarea" value="" onChange="" />
+            <CustomTextarea
+              rows={10}
+              placeholder="textarea"
+              value=""
+              onChange=""
+            />
           </FlexBox>
 
           <Sub1>3. Checkbox</Sub1>
@@ -671,29 +893,29 @@ const PageStyleGuide  = () => {
 
           <FlexBox>
             <div>
-              <RadioButton 
+              <RadioButton
                 id="radio1"
                 name="radioGroup"
-                checked={selectedRadio === 'radio1'} 
-                onChange={() => setSelectedRadio('radio1')} 
+                checked={selectedRadio === "radio1"}
+                onChange={() => setSelectedRadio("radio1")}
               />
               <label htmlFor="radio1">라디오 버튼 1</label>
             </div>
             <div>
-              <RadioButton 
+              <RadioButton
                 id="radio2"
                 name="radioGroup"
-                checked={selectedRadio === 'radio2'} 
-                onChange={() => setSelectedRadio('radio2')} 
+                checked={selectedRadio === "radio2"}
+                onChange={() => setSelectedRadio("radio2")}
               />
               <label htmlFor="radio2">라디오 버튼 2</label>
             </div>
             <div>
-              <RadioButton 
+              <RadioButton
                 id="radio3"
                 name="radioGroup"
-                checked={selectedRadio === 'radio3'} 
-                onChange={() => setSelectedRadio('radio3')} 
+                checked={selectedRadio === "radio3"}
+                onChange={() => setSelectedRadio("radio3")}
                 disabled
               />
               <label htmlFor="radio3">라디오 버튼 3</label>
@@ -702,27 +924,27 @@ const PageStyleGuide  = () => {
 
           <FlexBox>
             <div>
-              <RadioButton 
+              <RadioButton
                 id="radio1"
                 name="radioGroup1"
-                checked={selectedRadio1 === 'radio1'} 
-                onChange={() => setSelectedRadio1('radio1')} 
+                checked={selectedRadio1 === "radio1"}
+                onChange={() => setSelectedRadio1("radio1")}
               />
             </div>
             <div>
-              <RadioButton 
+              <RadioButton
                 id="radio2"
                 name="radioGroup1"
-                checked={selectedRadio1 === 'radio2'} 
-                onChange={() => setSelectedRadio1('radio2')} 
+                checked={selectedRadio1 === "radio2"}
+                onChange={() => setSelectedRadio1("radio2")}
               />
             </div>
             <div>
-              <RadioButton 
+              <RadioButton
                 id="radio3"
                 name="radioGroup1"
-                checked={selectedRadio1 === 'radio3'} 
-                onChange={() => setSelectedRadio1('radio3')} 
+                checked={selectedRadio1 === "radio3"}
+                onChange={() => setSelectedRadio1("radio3")}
                 disabled
               />
             </div>
@@ -730,7 +952,8 @@ const PageStyleGuide  = () => {
 
           <Sub1>4-1. Type</Sub1>
           <Note>
-            가로의 길이를 조절하려면 라디오박스 상위에 지정해야합니다.<br />
+            가로의 길이를 조절하려면 라디오박스 상위에 지정해야합니다.
+            <br />
             아이콘을 삭제 가능합니다.
             <CodeBlock>
               {`<GenderRadioButton
@@ -751,7 +974,7 @@ onChange={() => setSelectedRadio2('gender1')}
               gender="men"
               icon={images.GenderMen}
               checked={selectedRadio2 === "gender1"}
-              onChange={() => setSelectedRadio2('gender1')}
+              onChange={() => setSelectedRadio2("gender1")}
             />
             <GenderRadioButton
               id="gender2"
@@ -759,14 +982,14 @@ onChange={() => setSelectedRadio2('gender1')}
               gender="women"
               icon={images.GenderWomen}
               checked={selectedRadio2 === "gender2"}
-              onChange={() => setSelectedRadio2('gender2')}
+              onChange={() => setSelectedRadio2("gender2")}
             />
             <GenderRadioButton
               id="gender1"
               name="gender"
               gender="men"
               checked={selectedRadio2 === "gender1"}
-              onChange={() => setSelectedRadio2('gender1')}
+              onChange={() => setSelectedRadio2("gender1")}
               disabled
             />
             <GenderRadioButton
@@ -774,7 +997,7 @@ onChange={() => setSelectedRadio2('gender1')}
               name="gender"
               gender="women"
               checked={selectedRadio2 === "gender2"}
-              onChange={() => setSelectedRadio2('gender2')}
+              onChange={() => setSelectedRadio2("gender2")}
               disabled
             />
           </FlexBox>
@@ -801,21 +1024,21 @@ onChange={() => setSelectedRadio2('gender1')}
 
           <FlexBox>
             <TabWrap>
-              <TabButton 
-                isActive={activeTab === 'tab1'} 
-                onClick={() => setActiveTab('tab1')}
+              <TabButton
+                isActive={activeTab === "tab1"}
+                onClick={() => setActiveTab("tab1")}
               >
                 TAB01
               </TabButton>
-              <TabButton 
-                isActive={activeTab === 'tab2'} 
-                onClick={() => setActiveTab('tab2')}
+              <TabButton
+                isActive={activeTab === "tab2"}
+                onClick={() => setActiveTab("tab2")}
               >
                 TAB02
               </TabButton>
-              <TabButton 
-                isActive={activeTab === 'tab3'} 
-                onClick={() => setActiveTab('tab3')}
+              <TabButton
+                isActive={activeTab === "tab3"}
+                onClick={() => setActiveTab("tab3")}
               >
                 TAB03
               </TabButton>
@@ -835,9 +1058,24 @@ onChange={() => setSelectedRadio2('gender1')}
 
           <FlexBox>
             <TabWrapType2>
-              <TabButtonType2 isActive={activeTab1 === 'tab1'} onClick={() => setActiveTab1('tab1')}>TAB01</TabButtonType2>
-              <TabButtonType2 isActive={activeTab1 === 'tab2'} onClick={() => setActiveTab1('tab2')}>TAB02</TabButtonType2>
-              <TabButtonType2 isActive={activeTab1 === 'tab3'} onClick={() => setActiveTab1('tab3')}>TAB03</TabButtonType2>
+              <TabButtonType2
+                isActive={activeTab1 === "tab1"}
+                onClick={() => setActiveTab1("tab1")}
+              >
+                TAB01
+              </TabButtonType2>
+              <TabButtonType2
+                isActive={activeTab1 === "tab2"}
+                onClick={() => setActiveTab1("tab2")}
+              >
+                TAB02
+              </TabButtonType2>
+              <TabButtonType2
+                isActive={activeTab1 === "tab3"}
+                onClick={() => setActiveTab1("tab3")}
+              >
+                TAB03
+              </TabButtonType2>
             </TabWrapType2>
           </FlexBox>
 
@@ -853,9 +1091,24 @@ onChange={() => setSelectedRadio2('gender1')}
 
           <FlexBox>
             <TabWrapType3>
-              <TabButtonType3 isActive={activeTab2 === 'tab1'} onClick={() => setActiveTab2('tab1')}>TAB01 (10)</TabButtonType3>
-              <TabButtonType3 isActive={activeTab2 === 'tab2'} onClick={() => setActiveTab2('tab2')}>TAB02 (20)</TabButtonType3>
-              <TabButtonType3 isActive={activeTab2 === 'tab3'} onClick={() => setActiveTab2('tab3')}>TAB03 (30)</TabButtonType3>
+              <TabButtonType3
+                isActive={activeTab2 === "tab1"}
+                onClick={() => setActiveTab2("tab1")}
+              >
+                TAB01 (10)
+              </TabButtonType3>
+              <TabButtonType3
+                isActive={activeTab2 === "tab2"}
+                onClick={() => setActiveTab2("tab2")}
+              >
+                TAB02 (20)
+              </TabButtonType3>
+              <TabButtonType3
+                isActive={activeTab2 === "tab3"}
+                onClick={() => setActiveTab2("tab3")}
+              >
+                TAB03 (30)
+              </TabButtonType3>
             </TabWrapType3>
           </FlexBox>
         </div>
@@ -884,9 +1137,12 @@ onChange={() => setSelectedRadio2('gender1')}
           <h2>Spinners</h2>
 
           <Note>
-            원형 로더입니다.<br />
-            메시지를 추가할 수 있습니다.<br />
-            기본 메시지는 "비즈니스를 분석하고 있어요..." 입니다.<br />
+            원형 로더입니다.
+            <br />
+            메시지를 추가할 수 있습니다.
+            <br />
+            기본 메시지는 "비즈니스를 분석하고 있어요..." 입니다.
+            <br />
             메시지 삭제를 원할 시, message="" 로 사용합니다.
             <CodeBlock>
               {`<AtomPersonaLoader />
@@ -970,18 +1226,14 @@ onChange={() => setSelectedRadio2('gender1')}
               커스터마이즈
             </Badge>
 
-            <Badge Keyword>
-              #키워드
-            </Badge>
+            <Badge Keyword>#키워드</Badge>
 
             <Badge Request>
               <img src={images.Plus} alt="모집 요청" />
               모집 요청
             </Badge>
 
-            <Badge Ing>
-              모집 중
-            </Badge>
+            <Badge Ing>모집 중</Badge>
 
             <Badge Complete>
               <img src={images.CheckGreen} alt="모집 완료" />
@@ -991,11 +1243,14 @@ onChange={() => setSelectedRadio2('gender1')}
 
           <Sub1>3. Tag</Sub1>
           <Note>
-            태그는 각각의 컬러로 사용합니다.<br />
-            Red, LavenderMagenta, Amethyst, VistaBlue, BlueYonder, MidnightBlue, ButtonBlue, CeruleanFrost, MiddleBlueGreen, GreenSheen, TropicalRainForest, DollarBill, Olivine, ChineseGreen, Jonquil, PastelOrange, Tangerine, Copper, Shadow, Tuscany, VeryLightTangelo, Orange, CarnationPink
-            <CodeBlock>
-              {`<Tag color="Red" />`}
-            </CodeBlock>
+            태그는 각각의 컬러로 사용합니다.
+            <br />
+            Red, LavenderMagenta, Amethyst, VistaBlue, BlueYonder, MidnightBlue,
+            ButtonBlue, CeruleanFrost, MiddleBlueGreen, GreenSheen,
+            TropicalRainForest, DollarBill, Olivine, ChineseGreen, Jonquil,
+            PastelOrange, Tangerine, Copper, Shadow, Tuscany, VeryLightTangelo,
+            Orange, CarnationPink
+            <CodeBlock>{`<Tag color="Red" />`}</CodeBlock>
           </Note>
 
           <FlexBox>
@@ -1036,7 +1291,8 @@ onChange={() => setSelectedRadio2('gender1')}
         <div id="viewtype">
           <h2>View Type</h2>
           <Note>
-            리스트형, 카드형으로 구분합니다.<br />
+            리스트형, 카드형으로 구분합니다.
+            <br />
             active 속성을 추가하면 활성화 됩니다.
             <CodeBlock>
               {`<ViewType>
@@ -1048,7 +1304,9 @@ onChange={() => setSelectedRadio2('gender1')}
 
           <FlexBox>
             <ViewType>
-              <TypeButton List active>리스트</TypeButton>
+              <TypeButton List active>
+                리스트
+              </TypeButton>
               <TypeButton Card>카드</TypeButton>
             </ViewType>
           </FlexBox>
@@ -1058,13 +1316,19 @@ onChange={() => setSelectedRadio2('gender1')}
           <h2>Popup</h2>
 
           <Note>
-            팝업은 모달 형태로 사용합니다.<br />
-            - Warning, Check, Info, Error로 이미지를 사용합니다. (이미지 삭제 가능)<br />
-            - title는, 굵게 표시합니다.<br />
-            - message는, 서브 메시지 입니다.<br />
-            - buttonType은, Outline, Fill 중 하나를 사용합니다.<br />
-            - closeText, confirmText는, 버튼 텍스트 입니다.<br />
-            - isModal은, 모달 형태로 사용합니다.
+            팝업은 모달 형태로 사용합니다.
+            <br />
+            - Warning, Check, Info, Error로 이미지를 사용합니다. (이미지 삭제
+            가능)
+            <br />
+            - title는, 굵게 표시합니다.
+            <br />
+            - message는, 서브 메시지 입니다.
+            <br />
+            - buttonType은, Outline, Fill 중 하나를 사용합니다.
+            <br />
+            - closeText, confirmText는, 버튼 텍스트 입니다.
+            <br />- isModal은, 모달 형태로 사용합니다.
             <CodeBlock>
               {`<PopupWrap
   Warning
@@ -1081,7 +1345,9 @@ onChange={() => setSelectedRadio2('gender1')}
           </Note>
 
           <FlexBox>
-            <Button Small Primary Fill onClick={() => setShowPopup(true)}>Popup Button</Button>
+            <Button Small Primary Fill onClick={() => setShowPopup(true)}>
+              Popup Button
+            </Button>
             {showPopup && (
               <PopupWrap
                 Warning
@@ -1102,10 +1368,15 @@ onChange={() => setSelectedRadio2('gender1')}
           <h2>Bottom Bar</h2>
 
           <Note>
-            플러팅 바 입니다.<br />
-            최소 가로사이즈는 608px 입니다.<br />
-            바의 기본 백그라운드 컬러는 흰색입니다. (Black 속성을 추가하면 검은색으로 변경됩니다.)<br />
-            바의 라운드 속성은 10px 입니다. (Round 속성을 추가하면 50px로 변경됩니다.)
+            플러팅 바 입니다.
+            <br />
+            최소 가로사이즈는 608px 입니다.
+            <br />
+            바의 기본 백그라운드 컬러는 흰색입니다. (Black 속성을 추가하면
+            검은색으로 변경됩니다.)
+            <br />
+            바의 라운드 속성은 10px 입니다. (Round 속성을 추가하면 50px로
+            변경됩니다.)
             <CodeBlock>
               {`<BottomBar>
   <p>BottomBar</p>
@@ -1117,32 +1388,44 @@ onChange={() => setSelectedRadio2('gender1')}
           <FlexBox column>
             <BottomBarWrap>
               <p>BottomBar</p>
-              <Button Medium Primary Fill>Button</Button>
+              <Button Medium Primary Fill>
+                Button
+              </Button>
             </BottomBarWrap>
 
             <BottomBarWrap Round>
               <p>BottomBar</p>
-              <Button Medium Primary Fill>Button</Button>
+              <Button Medium Primary Fill>
+                Button
+              </Button>
             </BottomBarWrap>
 
             <BottomBarWrap W100>
               <p>BottomBar</p>
-              <Button Medium Primary Fill>Button</Button>
+              <Button Medium Primary Fill>
+                Button
+              </Button>
             </BottomBarWrap>
 
             <BottomBarWrap Black>
               <p>BottomBar</p>
-              <Button Medium Primary Fill>Button</Button>
+              <Button Medium Primary Fill>
+                Button
+              </Button>
             </BottomBarWrap>
 
             <BottomBarWrap Black Round>
               <p>BottomBar</p>
-              <Button Medium Primary Fill>Button</Button>
+              <Button Medium Primary Fill>
+                Button
+              </Button>
             </BottomBarWrap>
 
             <BottomBarWrap Black W100>
               <p>BottomBar</p>
-              <Button Medium Primary Fill>Button</Button>
+              <Button Medium Primary Fill>
+                Button
+              </Button>
             </BottomBarWrap>
           </FlexBox>
         </div>
@@ -1152,7 +1435,8 @@ onChange={() => setSelectedRadio2('gender1')}
 
           <Sub1>1. 사이즈</Sub1>
           <Note>
-            사이즈는 작은 사이즈, 중간 사이즈, 큰 사이즈로 구분합니다.<br />
+            사이즈는 작은 사이즈, 중간 사이즈, 큰 사이즈로 구분합니다.
+            <br />
             size 속성은 Small, Medium, Large 중 하나를 사용합니다.
             <CodeBlock>
               {`<Persona color="PastelBlue" size="Small">
@@ -1196,7 +1480,8 @@ onChange={() => setSelectedRadio2('gender1')}
 
           <Sub1>3. 이미지</Sub1>
           <Note>
-            여성의 경우, PersonaWomen01 ~ PersonaWomen33 사용합니다.<br />
+            여성의 경우, PersonaWomen01 ~ PersonaWomen33 사용합니다.
+            <br />
             남성의 경우, PersonaMen25 ~ PersonaMen27 사용합니다.
             <CodeBlock>
               {`<Persona color="Linen" size="Large">
@@ -1243,44 +1528,94 @@ onChange={() => setSelectedRadio2('gender1')}
           </FlexBox>
 
           <FlexBox>
-            <Persona color="PastelBlue" size="Large" icon="OrangeBottomLikeFill" Round>
+            <Persona
+              color="PastelBlue"
+              size="Large"
+              icon="OrangeBottomLikeFill"
+              Round
+            >
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
-            <Persona color="PastelBlue" size="Large" icon="OrangeBottomLike" Round>
+            <Persona
+              color="PastelBlue"
+              size="Large"
+              icon="OrangeBottomLike"
+              Round
+            >
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
 
-            <Persona color="PastelBlue" size="Large" icon="BlackBottomLikeFill" Round>
+            <Persona
+              color="PastelBlue"
+              size="Large"
+              icon="BlackBottomLikeFill"
+              Round
+            >
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
-            <Persona color="PastelBlue" size="Large" icon="BlackBottomLike" Round>
+            <Persona
+              color="PastelBlue"
+              size="Large"
+              icon="BlackBottomLike"
+              Round
+            >
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
-            
-            <Persona color="PastelBlue" size="Large" icon="BlueBottomLikeFill" Round>
+
+            <Persona
+              color="PastelBlue"
+              size="Large"
+              icon="BlueBottomLikeFill"
+              Round
+            >
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
-            <Persona color="PastelBlue" size="Large" icon="BlueBottomLike" Round>
+            <Persona
+              color="PastelBlue"
+              size="Large"
+              icon="BlueBottomLike"
+              Round
+            >
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
           </FlexBox>
 
           <FlexBox>
-            <Persona color="PastelBlue" size="Large" icon="OrangeTopCrownFill" Round>
+            <Persona
+              color="PastelBlue"
+              size="Large"
+              icon="OrangeTopCrownFill"
+              Round
+            >
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
-            <Persona color="PastelBlue" size="Large" icon="OrangeTopCrown" Round>
+            <Persona
+              color="PastelBlue"
+              size="Large"
+              icon="OrangeTopCrown"
+              Round
+            >
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
 
-            <Persona color="PastelBlue" size="Large" icon="BlackTopCrownFill" Round>
+            <Persona
+              color="PastelBlue"
+              size="Large"
+              icon="BlackTopCrownFill"
+              Round
+            >
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
             <Persona color="PastelBlue" size="Large" icon="BlackTopCrown" Round>
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
-            
-            <Persona color="PastelBlue" size="Large" icon="BlueTopCrownFill" Round>
+
+            <Persona
+              color="PastelBlue"
+              size="Large"
+              icon="BlueTopCrownFill"
+              Round
+            >
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
             <Persona color="PastelBlue" size="Large" icon="BlueTopCrown" Round>
@@ -1289,21 +1624,36 @@ onChange={() => setSelectedRadio2('gender1')}
           </FlexBox>
 
           <FlexBox>
-            <Persona color="PastelBlue" size="Large" icon="OrangeTopStarFill" Round>
+            <Persona
+              color="PastelBlue"
+              size="Large"
+              icon="OrangeTopStarFill"
+              Round
+            >
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
             <Persona color="PastelBlue" size="Large" icon="OrangeTopStar" Round>
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
 
-            <Persona color="PastelBlue" size="Large" icon="BlackTopStarFill" Round>
+            <Persona
+              color="PastelBlue"
+              size="Large"
+              icon="BlackTopStarFill"
+              Round
+            >
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
             <Persona color="PastelBlue" size="Large" icon="BlackTopStar" Round>
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
-            
-            <Persona color="PastelBlue" size="Large" icon="BlueTopStarFill" Round>
+
+            <Persona
+              color="PastelBlue"
+              size="Large"
+              icon="BlueTopStarFill"
+              Round
+            >
               <img src={personaImages.PersonaWomen24} alt="페르소나" />
             </Persona>
             <Persona color="PastelBlue" size="Large" icon="BlueTopStar" Round>
@@ -1366,9 +1716,7 @@ onChange={() => setSelectedRadio2('gender1')}
 
         <div id="listgroup">
           <h2>List Group</h2>
-          <Note>
-            불필요한 컴포넌트는 삭제가 가능합니다.
-          </Note>
+          <Note>불필요한 컴포넌트는 삭제가 가능합니다.</Note>
 
           <Sub1>1. 리스트 형</Sub1>
           <Note>
@@ -1418,13 +1766,16 @@ onChange={() => setSelectedRadio2('gender1')}
                 </ListText>
 
                 <ListButton>
-                  <Button Medium Primary>버튼</Button>
-                  <Button Medium Primary Fill>버튼</Button>
+                  <Button Medium Primary>
+                    버튼
+                  </Button>
+                  <Button Medium Primary Fill>
+                    버튼
+                  </Button>
                 </ListButton>
               </ListBoxItem>
             </CardGroupWrap>
           </FlexBox>
-
 
           <Sub1>2. 카드 형</Sub1>
           <Note>
@@ -1475,13 +1826,28 @@ onChange={() => setSelectedRadio2('gender1')}
                     <Badge None>#키워드3</Badge>
                   </ListSubtitle>
                   <ListSubtitle>
-                    <p>김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한 아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를 주시합니다.<br />주말에는 친구들과 브런치를 즐기거나 패션 아이템을 쇼핑하며 사교적인 시간을 보냅니다. 또한, 새로운 장소를 탐험하는 것을 좋아해 국내외 여행을 자주 다닙니다. 자기계발에도 관심이 많아 꾸준히 독서와 온라인 강의를 통해 지식을 넓혀갑니다.</p>
+                    <p>
+                      김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한
+                      아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다.
+                      직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를
+                      주시합니다.
+                      <br />
+                      주말에는 친구들과 브런치를 즐기거나 패션 아이템을 쇼핑하며
+                      사교적인 시간을 보냅니다. 또한, 새로운 장소를 탐험하는
+                      것을 좋아해 국내외 여행을 자주 다닙니다. 자기계발에도
+                      관심이 많아 꾸준히 독서와 온라인 강의를 통해 지식을
+                      넓혀갑니다.
+                    </p>
                   </ListSubtitle>
                 </CardText>
 
                 <CardButton>
-                  <Button Medium Primary>버튼</Button>
-                  <Button Medium Primary Fill>버튼</Button>
+                  <Button Medium Primary>
+                    버튼
+                  </Button>
+                  <Button Medium Primary Fill>
+                    버튼
+                  </Button>
                 </CardButton>
               </CardListItem>
               <CardListItem>
@@ -1499,12 +1865,25 @@ onChange={() => setSelectedRadio2('gender1')}
                     <Badge None>#키워드3</Badge>
                   </ListSubtitle>
                   <ListSubtitle>
-                    <p>김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한 아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를 주시합니다.<br />주말에는 친구들과 브런치를 즐기거나 패션 아이템을 쇼핑하며 사교적인 시간을 보냅니다. 또한, 새로운 장소를 탐험하는 것을 좋아해 국내외 여행을 자주 다닙니다. 자기계발에도 관심이 많아 꾸준히 독서와 온라인 강의를 통해 지식을 넓혀갑니다.</p>
+                    <p>
+                      김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한
+                      아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다.
+                      직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를
+                      주시합니다.
+                      <br />
+                      주말에는 친구들과 브런치를 즐기거나 패션 아이템을 쇼핑하며
+                      사교적인 시간을 보냅니다. 또한, 새로운 장소를 탐험하는
+                      것을 좋아해 국내외 여행을 자주 다닙니다. 자기계발에도
+                      관심이 많아 꾸준히 독서와 온라인 강의를 통해 지식을
+                      넓혀갑니다.
+                    </p>
                   </ListSubtitle>
                 </CardText>
 
                 <CardButton>
-                  <Button Medium Primary Fill>버튼</Button>
+                  <Button Medium Primary Fill>
+                    버튼
+                  </Button>
                 </CardButton>
               </CardListItem>
               <CardListItem>
@@ -1522,13 +1901,28 @@ onChange={() => setSelectedRadio2('gender1')}
                     <Badge None>#키워드3</Badge>
                   </ListSubtitle>
                   <ListSubtitle>
-                    <p>김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한 아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다. 직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를 주시합니다.<br />주말에는 친구들과 브런치를 즐기거나 패션 아이템을 쇼핑하며 사교적인 시간을 보냅니다. 또한, 새로운 장소를 탐험하는 것을 좋아해 국내외 여행을 자주 다닙니다. 자기계발에도 관심이 많아 꾸준히 독서와 온라인 강의를 통해 지식을 넓혀갑니다.</p>
+                    <p>
+                      김지영은 아침마다 피트니스 센터에서 운동을 하고, 건강한
+                      아침 식사로 하루를 시작하는 활동적인 생활을 즐깁니다.
+                      직장에서 효율적으로 업무를 처리하며 최신 마케팅 트렌드를
+                      주시합니다.
+                      <br />
+                      주말에는 친구들과 브런치를 즐기거나 패션 아이템을 쇼핑하며
+                      사교적인 시간을 보냅니다. 또한, 새로운 장소를 탐험하는
+                      것을 좋아해 국내외 여행을 자주 다닙니다. 자기계발에도
+                      관심이 많아 꾸준히 독서와 온라인 강의를 통해 지식을
+                      넓혀갑니다.
+                    </p>
                   </ListSubtitle>
                 </CardText>
 
                 <CardButton>
-                  <Button Medium Primary>버튼</Button>
-                  <Button Medium Primary Fill>버튼</Button>
+                  <Button Medium Primary>
+                    버튼
+                  </Button>
+                  <Button Medium Primary Fill>
+                    버튼
+                  </Button>
                 </CardButton>
               </CardListItem>
             </CardGroupWrap>
@@ -1546,7 +1940,8 @@ onChange={() => setSelectedRadio2('gender1')}
         <div id="boxWrap">
           <h2>Background Box</h2>
           <Note>
-            안에 내용은 별도로 작성해주세요.<br />
+            안에 내용은 별도로 작성해주세요.
+            <br />
             필요에 따라 이미지를 추가, 삭제 가능합니다.
             <CodeBlock>
               {`<BoxWrap>
@@ -1580,7 +1975,8 @@ onChange={() => setSelectedRadio2('gender1')}
         <div id="rangeSlider">
           <h2>RangeSlider</h2>
           <Note>
-            범위 컨트롤 컴포넌트입니다.<br />
+            범위 컨트롤 컴포넌트입니다.
+            <br />
             Body3 대신 다른 컴포넌트를 사용할 수 있습니다.
             <CodeBlock>
               {`<OCEANRangeWrap>
@@ -1603,7 +1999,7 @@ onChange={() => setSelectedRadio2('gender1')}
             <OCEANRangeWrap>
               <div>
                 <Body3 color="gray800">보수적</Body3>
-                <RangeSlider 
+                <RangeSlider
                   type="range"
                   min="0"
                   max="100"
@@ -1682,7 +2078,7 @@ const ContentsWrap = styled.div`
   #rangeSlider > h2 {
     font-size: 1.25rem;
     font-weight: 700;
-    text-align:left;
+    text-align: left;
     border-bottom: 1px solid ${palette.gray800};
   }
 `;
@@ -1698,7 +2094,7 @@ const Note = styled.div`
   text-align: left;
   padding: 10px 20px;
   background-color: ${palette.gray100};
-  
+
   &:before {
     position: absolute;
     top: 0;
@@ -1712,7 +2108,7 @@ const Note = styled.div`
 
 const FlexBox = styled.div`
   display: flex;
-  flex-direction: ${(props) => props.column ? "column" : "row"};
+  flex-direction: ${(props) => (props.column ? "column" : "row")};
   align-items: flex-start;
   flex-wrap: wrap;
   gap: 10px;
@@ -1751,7 +2147,7 @@ const CardItem = styled.div`
 `;
 
 const CodeBlock = styled.pre`
-  font-family: 'Pretendard', 'Poppins';
+  font-family: "Pretendard", "Poppins";
   font-size: 0.88rem;
   color: ${palette.gray800};
   width: 100%;
@@ -1770,7 +2166,7 @@ const BottomBarWrap = styled(BottomBar)`
 const ChartComponentsWrap = styled.div`
   padding: 80px 20px 40px;
   margin-top: 60px;
-  
+
   h2 {
     margin-bottom: 30px;
     font-size: 24px;
