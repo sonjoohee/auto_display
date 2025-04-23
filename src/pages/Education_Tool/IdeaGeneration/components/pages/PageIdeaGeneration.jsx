@@ -1215,11 +1215,11 @@ const PageIdeaGeneration = () => {
                     </div>
 
                     <div className="content">
-                      <Title>
+                      {/* <Title>
                         <Body1 color="gray700">
                           아이디어 시작점을 선택하세요 (8개 선택가능)
                         </Body1>
-                      </Title>
+                      </Title> */}
 
                       <div
                         style={{

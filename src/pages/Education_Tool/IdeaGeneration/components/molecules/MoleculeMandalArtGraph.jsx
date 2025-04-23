@@ -9,9 +9,14 @@ import {
 import { useAtom } from "jotai";
 
 const MoleculeMandalArtGraph = ({ mandalartData }) => {
+  console.log("🚀 ~ MoleculeMandalArtGraph ~ mandalartData:", mandalartData);
   const [selectedItem, setSelectedItem] = useState(null);
   const [ideaGenerationSelectedStartPosition] = useAtom(
     IDEA_GENERATION_SELECTED_START_POSITION
+  );
+  console.log(
+    "🚀 ~ MoleculeMandalArtGraph ~ ideaGenerationSelectedStartPosition:",
+    ideaGenerationSelectedStartPosition
   );
   const [, setIdeaGenerationSelectedMandalart] = useAtom(
     IDEA_GENERATION_SELECTED_MANDALART
@@ -48,9 +53,11 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
 
   const generateDetailButtons = () => {
     if (!selectedItem || !mandalartData) return [];
-
+    console.log("🚀 ~ generateDetailButtons ~ mandalartData:", mandalartData);
+    console.log("🚀 ~ generateDetailButtons ~ selectedItem:", selectedItem);
     // 선택된 아이템의 데이터 찾기
     const selectedData = mandalartData[selectedItem - 1];
+    console.log("🚀 ~ generateDetailButtons ~ selectedData:", selectedData);
     // console.log("selectedData", selectedData);
     if (!selectedData?.detailed_execution_ideas) return [];
 
@@ -66,7 +73,9 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
     // 중앙 버튼을 5번째 위치에 삽입
     const centerButton = {
       id: 0,
-      text: "되돌아가기",
+      text: `Theme.${selectedItem} ${
+        ideaGenerationSelectedStartPosition[selectedItem - 1].theme
+      }`,
       isCenter: true,
     };
 
@@ -85,6 +94,7 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
           {mandalartButtons.map((button, index) => (
             <MandalartButton
               key={index}
+              themeText={button.text}
               isCenterBox={button.isCenter}
               onClick={
                 !button.isCenter ? () => handleItemClick(button.id) : undefined
@@ -93,7 +103,7 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
             >
               {button.isCenter
                 ? button.text
-                : `Idea.${button.id} ${button.text}`}
+                : `Theme.${button.id} ${button.text}`}
             </MandalartButton>
           ))}
         </MandalartGrid>
@@ -102,6 +112,7 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
           {generateDetailButtons().map((button, index) => (
             <MandalartButton
               key={index}
+              themeText={button.text}
               isCenterBox={button.isCenter}
               isDetailView={true}
               onClick={button.isCenter ? handleBackClick : undefined}
