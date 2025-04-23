@@ -167,6 +167,67 @@ const PageAiPersona = () => {
     (persona) => persona?.favorite === true
   ).length;
 
+  // 즐겨찾기 페르소나 다운로드 함수
+  const handleDownloadFavoritePersonas = () => {
+    // 즐겨찾기 페르소나 필터링
+    const favoritePersonas = personaListSaas.filter(
+      (persona) => persona?.favorite === true
+    );
+
+    // TXT 파일 내용 생성
+    let content = "";
+    favoritePersonas.forEach((persona) => {
+      content += `페르소나명: ${persona?.personaName || ""}\n`;
+      content += `성격: ${persona?.personaCharacteristics || ""}\n`;
+      content += `유형: ${persona?.type || ""}\n`;
+      content += `나이: ${persona?.age || ""}\n`;
+      content += `성별: ${persona?.gender || ""}\n`;
+      content += `직업: ${persona?.job || ""}\n`;
+      
+      // 키워드가 있는 경우
+      if (persona?.keywords && persona.keywords.length > 0) {
+        content += `키워드: ${persona.keywords.join(", ")}\n`;
+      }
+      
+      // 프로필이 생성된 페르소나인 경우 추가 정보 포함
+      if (persona?.status === "complete" || persona?.consumptionPattern) {
+        if (persona?.lifestyle) {
+          content += `라이프스타일: ${persona.lifestyle}\n`;
+        }
+        if (persona?.interests) {
+          content += `관심사: ${persona.interests}\n`;
+        }
+        if (persona?.consumptionPattern) {
+          content += `소비성향: ${persona.consumptionPattern}\n`;
+        }
+        if (persona?.userExperience) {
+          content += `사용경험: ${persona.userExperience}\n`;
+        }
+        if (persona?.family) {
+          content += `가족: ${persona.family}\n`;
+        }
+        if (persona?.monthlyIncome) {
+          content += `월 소득: ${persona.monthlyIncome}\n`;
+        }
+        if (persona?.residence) {
+          content += `거주지: ${persona.residence}\n`;
+        }
+      }
+      
+      // 페르소나 구분선 추가
+      content += "\n----------------------------------------------\n\n";
+    });
+
+    // 파일 다운로드
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "favorite_personas.txt";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   const handleEditClose = () => {
     setIsEditPopupOpen(false);
   };
@@ -1489,6 +1550,20 @@ const PageAiPersona = () => {
                     >
                       <img src={images.PlusPrimary} width="14" height="14" />
                       <Sub2 color="primary">My Persona 요청</Sub2>
+                    </Button>
+                  )}
+
+                  {activeTab === "my_favorite" && favoriteCount > 0 && (
+                    <Button
+                      ExLarge
+                      PrimaryLightest
+                      Fill
+                      onClick={() => {
+                        handleDownloadFavoritePersonas();
+                      }}
+                    >
+                      <img src={images.IconDownload2} width="14" height="14" />
+                      <Sub2 color="primary">다운로드</Sub2>
                     </Button>
                   )}
                 </AiPersonaInfo>
