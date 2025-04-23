@@ -66,6 +66,7 @@ import {
   InterviewXQuickSurveyRequest,
   createToolOnServer,
   updateToolOnServer,
+  getFindToolListOnServerSaas,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
@@ -168,7 +169,7 @@ const PageNps = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [fileNames, setFileNames] = useState([]);
   const [selectedConcept, setSelectedConcept] = useState([]);
-
+  const [conceptList, setConceptList ] = useState([]);
   const [customPersonaForm, setCustomPersonaForm] = useState({
     gender: "",
     age: [],
@@ -187,7 +188,7 @@ const PageNps = () => {
     residence: "",
     income: "",
   });
-  const [interviewModeType, setInterviewModeType] = useState("conceptBoard");
+  const [interviewModeType, setInterviewModeType] = useState("explantion");
   const [isLoadingPreset, setIsLoadingPreset] = useState(false);
   const [selectedPresetCards, setSelectedPresetCards] = useState({});
   const [shouldRegenerate, setShouldRegenerate] = useState(false);
@@ -197,6 +198,7 @@ const PageNps = () => {
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
   const [isCustomPopupOpen, setIsCustomPopupOpen] = useState(false);
   const [isCustomLoading, setIsCustomLoading] = useState(false);
+  
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const project = projectSaas;
@@ -379,6 +381,39 @@ const PageNps = () => {
     interviewLoading();
     setToolLoading(false);
   }, [toolLoading]);
+
+
+  // Concept 리스트 가져오기
+  useEffect(() => {
+    const getAllTargetDiscovery = async () => {
+      try {
+        let page = 1;
+        const size = 10;
+        let allItems = [];
+
+        const response = await getFindToolListOnServerSaas(
+          projectSaas?._id ?? "",
+          "ix_kano_model_education",
+          isLoggedIn
+        );
+
+        const newItems = (response || []).filter(
+          (item) =>
+            item?.type === "ix_kano_model_education" &&
+            item?.completedStep === 3
+        );
+
+        allItems = [...allItems, ...newItems];
+
+        setConceptList(allItems);
+      } catch (error) {
+        setConceptList([]); // Set empty array on error
+      }
+    };
+
+    getAllTargetDiscovery();
+  }, [isLoggedIn, projectSaas]);
+
 
   const handleCheckboxChange = (personaId) => {
     if (toolSteps >= 2) return;
@@ -1232,11 +1267,11 @@ const PageNps = () => {
                 <span>01</span>
                 <div className="text">
                   <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
-                    목적 및 문항
+                    컨셉 입력
                   </Body1>
-                  <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
+                  {/* <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     Question Select
-                  </Body1>
+                  </Body1> */}
                 </div>
               </TabButtonType5>
               <TabButtonType5
@@ -1252,9 +1287,7 @@ const PageNps = () => {
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     페르소나 선택 및 확인
                   </Body1>
-                  <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                    Participating Persona
-                  </Body1>
+                 
                 </div>
               </TabButtonType5>
               <TabButtonType5
@@ -1270,9 +1303,7 @@ const PageNps = () => {
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     최종 인사이트 분석
                   </Body1>
-                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    {/* Sentiment Analysis */}
-                  </Body1>
+          
                 </div>
               </TabButtonType5>
             </TabWrapType5>
@@ -1281,10 +1312,9 @@ const PageNps = () => {
               <TabContent5>
                 <>
                   <div className="title">
-                    <H3 color="gray800">Survey Question Selection</H3>
+                    <H3 color="gray800">Upload Your Concept </H3>
                     <Body3 color="gray800">
-                      다수의 페르소나에게 빠르게 확인하고 싶은 내용은
-                      무엇인가요?
+                    페르소나 평가를 위해 컨셉보드 이미지 또는 제품/서비스 설명을 등록해주세요
                     </Body3>
                   </div>
 
@@ -1300,6 +1330,57 @@ const PageNps = () => {
                           <InterviewModeSelection
                             style={{ marginTop: "-16px" }}
                           >
+
+                            <InterviewModeCard
+                              isActive={interviewModeType === "explanation"}
+                              onClick={() => {
+                                setInterviewModeType("explanation");
+                                // if (
+                                //   !quickSurveyPresetData ||
+                                //   quickSurveyPresetData.length === 0
+                                // ) {
+                                //   handlePresetPersona();
+                                // }
+                              }}
+                            >
+                              <CardWrapper>
+                                <CheckboxWrapper>
+                                  <CheckCircle
+                                    as="input"
+                                    type="radio"
+                                    id="explanation"
+                                    name="interviewMode"
+                                    checked={interviewModeType === "explanation"}
+                                    onChange={() => {}} // 빈 함수로 변경
+                                  />
+                                </CheckboxWrapper>
+                                <CardContent>
+                                  <div>
+                                    <Body2
+                                      color={
+                                        interviewModeType === "explanation"
+                                          ? "primary"
+                                          : "gray800"
+                                      }
+                                      style={{ fontWeight: "700" }}
+                                    >
+                                      설명만으로 평가받기
+                                    </Body2>
+                                    <Body3
+                                      style={{ marginTop: "0px" }}
+                                      color={
+                                        interviewModeType === "explanation"
+                                          ? "gray800"
+                                          : "gray500"
+                                      }
+                                    >
+                                      페르소나에게 전달하고 싶은 제품/서비스 설명을 입력하고, 
+                                      추천 의향을 확인해보세요. 
+                                    </Body3>
+                                  </div>
+                                </CardContent>
+                              </CardWrapper>
+                            </InterviewModeCard>
                             <InterviewModeCard
                               isActive={interviewModeType === "conceptBoard"}
                               onClick={() => {
@@ -1356,57 +1437,6 @@ const PageNps = () => {
                                 </CardContent>
                               </CardWrapper>
                             </InterviewModeCard>
-
-                            <InterviewModeCard
-                              isActive={interviewModeType === "explanation"}
-                              onClick={() => {
-                                setInterviewModeType("explanation");
-                                // if (
-                                //   !quickSurveyPresetData ||
-                                //   quickSurveyPresetData.length === 0
-                                // ) {
-                                //   handlePresetPersona();
-                                // }
-                              }}
-                            >
-                              <CardWrapper>
-                                <CheckboxWrapper>
-                                  <CheckCircle
-                                    as="input"
-                                    type="radio"
-                                    id="explanation"
-                                    name="interviewMode"
-                                    checked={interviewModeType === "explanation"}
-                                    onChange={() => {}} // 빈 함수로 변경
-                                  />
-                                </CheckboxWrapper>
-                                <CardContent>
-                                  <div>
-                                    <Body2
-                                      color={
-                                        interviewModeType === "explanation"
-                                          ? "primary"
-                                          : "gray800"
-                                      }
-                                      style={{ fontWeight: "700" }}
-                                    >
-                                      설명만으로 평가받기
-                                    </Body2>
-                                    <Body3
-                                      style={{ marginTop: "0px" }}
-                                      color={
-                                        interviewModeType === "explanation"
-                                          ? "gray800"
-                                          : "gray500"
-                                      }
-                                    >
-                                      페르소나에게 전달하고 싶은 제품/서비스 설명을 입력하고, 
-                                      추천 의향을 확인해보세요. 
-                                    </Body3>
-                                  </div>
-                                </CardContent>
-                              </CardWrapper>
-                            </InterviewModeCard>
                           </InterviewModeSelection>
 
 
@@ -1421,6 +1451,11 @@ const PageNps = () => {
                         </div>
                       ) : (
                         <div className="content">
+                          <div className="title"> 
+                            <Body1 color="gray700"> 
+                            NPS 평가를 받을 컨셉보드를 업로드해주세요
+                            </Body1>
+                          </div>
                           <ListBoxGroup>
                             <li>
                               <Body2 color="gray500">
@@ -1485,42 +1520,7 @@ const PageNps = () => {
                   ) : (
                     <>
                       
-                  
-
-                      {/* 버튼들을 content div 바깥으로 이동 */}
-                      {quickSurveyAnalysis &&
-                      Object.keys(quickSurveyAnalysis).length > 0 ? (
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: "8px",
-                            justifyContent: "flex-end",
-                          }}
-                        >
-                          <Button
-                            Other
-                            Primary
-                            Fill
-                            Round
-                            onClick={handleRegenerate} // 재생성 핸들러로 변경 필요
-                            disabled={toolSteps >= 1}
-                          >
-                            재생성
-                          </Button>
-                          <Button
-                            Other
-                            Primary
-                            Fill
-                            Round
-                            onClick={handleSubmitConcept}
-                            // disabled={
-                            //   selectedQuestion.length === 0 || toolSteps >= 1
-                            // }
-                          >
-                            다음
-                          </Button>
-                        </div>
-                      ) : (
+                
                         <Button
                           Other
                           Primary
@@ -1531,7 +1531,7 @@ const PageNps = () => {
                         >
                           다음ㄴㄴㄴ
                         </Button>
-                      )}
+                  
                     </>
                   )}
                 </>
@@ -1585,23 +1585,23 @@ const PageNps = () => {
                         <li>
                           <Body2 color="gray500">페르소나 선택</Body2>
                           <Body2 color="gray800">
-                            {quickSurveyPersonaGroup &&
-                            quickSurveyPersonaGroup.length > 0
-                              ? `${quickSurveyPersonaGroup.length}명 완료`
-                              : "30명 예상"}
+                          NPS는 favorite 페르소나를 기반으로 무작위 패널 100명을 섭외하여 진행합니다.  
                           </Body2>
                         </li>
                       </ListBoxGroup>
 
                       
                   <div className="content">
+                  <TabContent5Item style={{ marginTop: "20px" }}>
                   <div className="title">
                             <Body1 color="gray700" style={{textAlign: "left"}}>
-                            NPS 평가를 받을 컨셉정의서를 선택해주세요. 
+                            Favorite 페르소나 리스트  
                             </Body1>
                             </div>
                     
-                    {personaListSaas.length > 0 ? (
+                    {personaListSaas.filter(
+                     (item) => item.favorite === true
+                     ).length >= 20 ? (    
                     <MoleculePersonaSelectCard
                       filteredPersonaList={personaListSaas}
                       hideSelectButton={true}
@@ -1609,31 +1609,24 @@ const PageNps = () => {
                     />
                   ) : (
                     <BoxWrap
-                      NoData
-                      style={{ height: "300px" }}
-                      onClick={() => navigate("/AiPersona")}
-                    >
-                      <img src={images.PeopleFillPrimary2} alt="" />
-
-                      <Body2 color="gray700" align="center !important">
-                        현재 대화가 가능한 활성 페르소나가 없습니다
-                        <br />
-                        페르소나 생성 요청을 진행하여 페르소나를
-                        활성화해주세요
-                      </Body2>
-
-                      <Button
-                        Medium
-                        Outline
-                        Fill
-                        onClick={() => navigate("/AiPersona")}
-                      >
-                        <Caption1 color="gray700">
-                          AI Person 생성 요청
-                        </Caption1>
-                      </Button>
-                    </BoxWrap>
+                            Hover
+                            NoData
+                            Border
+                            onClick={() => navigate("/AiPersona")}
+                          >
+                            <img src={images.PeopleStarFillPrimary} alt="" />
+                            <Body2 color="gray500" align="center !important">
+                              즐겨찾기를 하시면 관심 있는 페르소나를 해당
+                              페이지에서 확인하실 수 있습니다.{" "}
+                              {
+                                personaListSaas.filter(
+                                  (item) => item.favorite === true
+                                ).length
+                              }
+                            </Body2>
+                          </BoxWrap>
                   )}
+                  </TabContent5Item>
   
                   </div>
 
@@ -1671,23 +1664,8 @@ const PageNps = () => {
                             }
                           }
                         }}
-                        disabled={
-                          toolSteps >= 3 ||
-                          !interviewModeType ||
-                          (interviewModeType === "explanation" &&
-                            (!selectedPresetCards ||
-                              !Object.values(selectedPresetCards).some(
-                                (value) => value
-                              )) &&
-                            !quickSurveyPersonaGroup.length > 0) ||
-                          (interviewModeType === "conceptBoard" &&
-                            (!recruitingCondition ||
-                              recruitingCondition.trim() === "" ||
-                              !selectedValues ||
-                              Object.values(selectedValues).every(
-                                (value) => !value
-                              )))
-                        }
+                        disabled={toolSteps >= 3}
+                         
                       >
                         다음
                       </Button>
@@ -1715,10 +1693,9 @@ const PageNps = () => {
                   ) : (
                     <>
                       <BgBoxItem primaryLightest>
-                        <H3 color="gray800">퀵서베이 결과</H3>
+                        <H3 color="gray800">NPS 평가</H3>
                         <Body3 color="gray800">
-                          페르소나 그룹의 의견을 확인하여 타겟 반응을 사전에
-                          확인해보세요.
+                        페르소나가 지인에게 추천할 가능성을 기반으로 한 NPS 분석입니다. 
                         </Body3>
                       </BgBoxItem>
 

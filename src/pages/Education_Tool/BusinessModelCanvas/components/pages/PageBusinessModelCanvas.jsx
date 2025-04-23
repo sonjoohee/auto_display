@@ -80,18 +80,29 @@ import {
   EducationToolsRequest,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
+import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
+import MoleculeDetailSetting from "../molecules/MoleculeDetailSetting";
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
+import MoleculePersonaSelect from "../molecules/MolculePersonaSelect";
+import MolculePresetPersona from "../molecules/MolculePresetPersona";
+import ABGraph from "../../../../../components/Charts/ABGraph";
+import BarChartLikertScale5 from "../../../../../components/Charts/BarChartLikertScale5";
+import BarChartLikertScale2 from "../../../../../components/Charts/BarChartLikertScale2";
+import BarChartLikertScale3 from "../../../../../components/Charts/BarChartLikertScale3";
+import BarChartLikertScale4 from "../../../../../components/Charts/BarChartLikertScale4";
+import BarChartLikertScale11 from "../../../../../components/Charts/BarChartLikertScale11";
 import GraphChartScale2 from "../../../../../components/Charts/GraphChartScale2";
 import GraphChartScale5 from "../../../../../components/Charts/GraphChartScale5";
 import GraphChartScale11 from "../../../../../components/Charts/GraphChartScale11";
 import GraphChartScale3 from "../../../../../components/Charts/GraphChartScale3";
 import GraphChartScale4 from "../../../../../components/Charts/GraphChartScale4";
 import OrganismToastPopupQuickSurveyComplete from "../organisms/OrganismToastPopupQuickSurveyComplete";
+import MolculeQuickSurveyPopup from "../molecules/MolculeQuickSurveyPopup";
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
 import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
 import ParetoCurveGraph from "../../../../../components/Charts/ParetoCurveGraph";
 
-const PageIdeaEvaluate = () => {
+const PageBusinessModelCanvas = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
@@ -105,11 +116,23 @@ const PageIdeaEvaluate = () => {
   );
   const [ideaEvaluateSelectedListIndex, setIdeaEvaluateSelectedListIndex] = useAtom(IDEA_EVALUATE_SELECTED_LIST_INDEX);
   const [ideaEvaluateComparisonEducation, setIdeaEvaluateComparisonEducation] = useAtom(IDEA_EVALUATE_COMPARISON_EDUCATION)
+  const [quickSurveySelectedQuestion, setQuickSurveySelectedQuestion] = useAtom(
+    QUICK_SURVEY_SELECTED_QUESTION
+  );
+  const [quickSurveyCustomGuide, setQuickSurveyCustomGuide] = useAtom(
+    QUICK_SURVEY_CUSTOM_GUIDE
+  );
+  const [quickSurveyPresetData, setQuickSurveyPresetData] = useAtom(
+    QUICK_SURVEY_PRESET_DATA
+  );
   const [quickSurveyPersonaGroup, setquickSurveyPersonaGroup] = useAtom(
     QUICK_SURVEY_PERSONA_GROUP
   );
   const [quickSurveyInterview, setQuickSurveyInterview] = useAtom(
     QUICK_SURVEY_INTERVIEW
+  );
+  const [quickSurveySurveyMethod, setQuickSurveySurveyMethod] = useAtom(
+    QUICK_SURVEY_SURVEY_METHOD
   );
   const [quickSurveyDetailInfo] = useAtom(QUICK_SURVEY_DETAIL_INFO);
   const [quickSurveyRecruitingCondition] = useAtom(
@@ -131,7 +154,9 @@ const PageIdeaEvaluate = () => {
   const [quickSurveyStaticDataState, setQuickSurveyStaticDataState] = useState(
     {}
   );
-  
+  // const [quickSurveyCustomQuestion, setQuickSurveyCustomQuestion] = useAtom(
+  //   QUICK_SURVEY_CUSTOM_QUESTION
+  // );
   const [ideaEvaluateSelectedKanoModelIndex, setIdeaEvaluateSelectedKanoModelIndex] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
@@ -146,10 +171,15 @@ const PageIdeaEvaluate = () => {
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
   const [projectDescription, setProjectDescription] = useState("");
+  const [descriptionLength, setDescriptionLength] = useState(0);
   const [recruitingCondition, setRecruitingCondition] = useState("");
   const [quickSurveyCustomQuestion, setQuickSurveyCustomQuestion] = useState(
     []
   );
+  const [
+    customerJourneyMapSelectedPersona,
+    setCustomerJourneyMapSelectedPersona,
+  ] = useState([]);
   const [customPersonaForm, setCustomPersonaForm] = useState({
     gender: "",
     age: [],
@@ -178,10 +208,14 @@ const PageIdeaEvaluate = () => {
   });
   const [interviewModeType, setInterviewModeType] = useState("");
   const [isLoadingPreset, setIsLoadingPreset] = useState(false);
+  const [selectedPresetCards, setSelectedPresetCards] = useState({});
   const [shouldRegenerate, setShouldRegenerate] = useState(false);
+  const [selectedPersona, setSelectedPersona] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
+  const [isCustomPopupOpen, setIsCustomPopupOpen] = useState(false);
+  const [isCustomLoading, setIsCustomLoading] = useState(false);
   const [customerJourneyList, setCustomerJourneyList] = useState([]);
   const [selectedKanoModelData, setSelectedKanoModelData] = useState([]);
   const [showKanoModelList, setshowKanoModelList] = useState(false);
@@ -215,6 +249,12 @@ const PageIdeaEvaluate = () => {
       document.body.style.paddingRight = "0";
     };
   }, [showToast]);
+
+
+
+
+  console.log("ideaEvaluateSelectedList", ideaEvaluateSelectedList);
+  console.log("ideaEvaluateSelectedListIndex", ideaEvaluateSelectedListIndex);
 
 
   useEffect(() => {
@@ -277,9 +317,92 @@ const PageIdeaEvaluate = () => {
           }
           setCompletedSteps(completedStepsArray);
         }
-       
+        // setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
+        // setToolSteps(toolStep ?? 1);
 
+        // 완료된 단계 설정
+        // const completedStepsArray = [];
+        // for (let i = 1; i <= (toolStep ?? 1); i++) {
+        //   completedStepsArray.push(i);
+        // }
+        // setCompletedSteps(completedStepsArray);
 
+        // 페르소나 설정 (Step 2)
+
+        // if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0) {
+        //   setQuickSurveySurveyMethod(quickSurveySurveyMethod);
+        // }
+
+        if (
+          quickSurveyInterviewModeType &&
+          quickSurveyInterviewModeType.length > 0
+        ) {
+          setInterviewModeType(quickSurveyInterviewModeType);
+        }
+
+        if (
+          quickSurveyDetailInfo &&
+          Object.keys(quickSurveyDetailInfo || {}).length > 0
+        ) {
+          // customPersonaForm 설정
+          setCustomPersonaForm(quickSurveyDetailInfo);
+
+          // selectedValues용으로 데이터 가공
+          const processedValues = {
+            gender:
+              quickSurveyDetailInfo?.gender === "male"
+                ? "남성"
+                : quickSurveyDetailInfo?.gender === "female"
+                ? "여성"
+                : quickSurveyDetailInfo?.gender || "", // "상관없음"은 그대로
+
+            age: Array.isArray(quickSurveyDetailInfo?.age)
+              ? quickSurveyDetailInfo?.age[0] === "상관없음"
+                ? "상관없음"
+                : quickSurveyDetailInfo?.age.join(", ")
+              : "",
+
+            residence: Array.isArray(quickSurveyDetailInfo?.residence)
+              ? quickSurveyDetailInfo?.residence[0] === "상관없음"
+                ? "상관없음"
+                : quickSurveyDetailInfo?.residence.join(", ")
+              : "",
+
+            income: Array.isArray(quickSurveyDetailInfo.income)
+              ? quickSurveyDetailInfo.income[0] === "상관없음"
+                ? "상관없음"
+                : quickSurveyDetailInfo.income.join(", ")
+              : "",
+          };
+
+          setSelectedValues(processedValues);
+        }
+
+        if (
+          quickSurveyRecruitingCondition &&
+          quickSurveyRecruitingCondition.length > 0
+        ) {
+          setRecruitingCondition(quickSurveyRecruitingCondition);
+        }
+
+        if (quickSurveyPersonaGroup && quickSurveyPersonaGroup.length > 0) {
+          setquickSurveyPersonaGroup(quickSurveyPersonaGroup);
+        }
+
+        if (quickSurveyInterview && quickSurveyInterview.length > 0) {
+          setQuickSurveyInterview(quickSurveyInterview);
+        }
+
+        if (quickSurveyReport && quickSurveyReport.length > 0) {
+          setQuickSurveyReport(quickSurveyReport);
+        }
+        if (
+          quickSurveyStaticData &&
+          Object.keys(quickSurveyStaticData).length > 0
+        ) {
+          setQuickSurveyStaticData(quickSurveyStaticData);
+          setQuickSurveyStaticDataState(quickSurveyStaticData);
+        }
       }
     };
     interviewLoading();
@@ -1139,7 +1262,7 @@ const PageIdeaEvaluate = () => {
                       <InsightAnalysis>
                         <div className="title">
                           <div>
-                            {/* <TabWrapType4>
+                            <TabWrapType4>
                               <TabButtonType4
                                 active={activeDesignTab === "emotion"}
                                 onClick={() => setActiveDesignTab("emotion")}
@@ -1152,7 +1275,7 @@ const PageIdeaEvaluate = () => {
                               >
                                 항목별 통계
                               </TabButtonType4>
-                            </TabWrapType4> */}
+                            </TabWrapType4>
                           </div>
                           {/* <Button Primary onClick={handleEnterInterviewRoom}>
                             <img
@@ -1171,11 +1294,12 @@ const PageIdeaEvaluate = () => {
                           </H4>
                         </div>
 
-                    
-                        <ParetoCurveGraph data={graphData} />
-                           
                         {activeDesignTab === "emotion" && (
                           <>
+                        <ParetoCurveGraph data={graphData} />
+                           
+                           
+
                             {/* Insight 섹션 */}
                             <div className="content">
                               {quickSurveyReport?.[0] && (
@@ -1273,6 +1397,58 @@ const PageIdeaEvaluate = () => {
                             </div>
                           </>
                         )}
+                        {activeDesignTab === "scale" && (
+                          <>
+                            {/* 각 질문 유형에 맞는 그래프 렌더링 */}
+                            {(selectedQuestion[0] === "ab_test" ||
+                              (selectedQuestion[0] === "custom_question" &&
+                                quickSurveyAnalysis[selectedQuestion]?.options
+                                  ?.length === 2)) && (
+                              // quickSurveyStaticDataState &&
+                              // typeof quickSurveyStaticDataState === "object" &&
+                              // Object.keys(quickSurveyStaticDataState).length >
+                              //   0 &&
+                              <GraphChartScale2 />
+                            )}
+                            {selectedQuestion[0] === "custom_question" &&
+                              quickSurveyAnalysis[selectedQuestion]?.options
+                                ?.length === 3 && (
+                                // quickSurveyStaticDataState &&
+                                // typeof quickSurveyStaticDataState === "object" &&
+                                // Object.keys(quickSurveyStaticDataState).length >
+                                //   0 &&
+                                <GraphChartScale3 />
+                              )}
+                            {selectedQuestion[0] === "custom_question" &&
+                              quickSurveyAnalysis[selectedQuestion]?.options
+                                ?.length === 4 && (
+                                // quickSurveyStaticDataState &&
+                                // typeof quickSurveyStaticDataState === "object" &&
+                                // Object.keys(quickSurveyStaticDataState).length >
+                                //   0 &&
+                                <GraphChartScale4 />
+                              )}
+                            {(selectedQuestion[0] === "importance" ||
+                              selectedQuestion[0] === "single_choice" ||
+                              (selectedQuestion[0] === "custom_question" &&
+                                quickSurveyAnalysis[selectedQuestion]?.options
+                                  ?.length === 5)) && (
+                              // quickSurveyStaticDataState &&
+                              // typeof quickSurveyStaticDataState === "object" &&
+                              // Object.keys(quickSurveyStaticDataState).length >
+                              //   0 &&
+                              <GraphChartScale5 />
+                            )}
+
+                            {selectedQuestion[0] === "nps" && (
+                              // quickSurveyStaticDataState &&
+                              // typeof quickSurveyStaticDataState === "object" &&
+                              // Object.keys(quickSurveyStaticDataState).length >
+                              //   0 &&
+                              <GraphChartScale11 />
+                            )}
+                          </>
+                        )}
                       </InsightAnalysis>
                     </>
                   )}
@@ -1333,7 +1509,7 @@ const PageIdeaEvaluate = () => {
   );
 };
 
-export default PageIdeaEvaluate;
+export default PageBusinessModelCanvas;
 
 const DesignAnalysisWrap = styled.div`
   display: flex;

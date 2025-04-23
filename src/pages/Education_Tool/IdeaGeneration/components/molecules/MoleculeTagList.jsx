@@ -141,22 +141,19 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
   };
 
   const handleAddTag = () => {
-    // console.log("options", options);
+
     const validOptions = options.filter((option) => option.trim());
-    // console.log("validOptions", validOptions);
 
     const newTags = validOptions.map((option, index) => ({
       problem: "사용자 요청",
       content: [
         {
           id: Date.now() + index,
-          idea: option,
+          theme: option,
           description: "사용자 요청",
         },
       ],
     }));
-
-    // console.log('Adding new tags:', newTags);
 
     setIdeaGenerationStartPosition((prev) => {
       const prevArray = Array.isArray(prev) ? prev : [];
@@ -169,6 +166,7 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
     setOptions([""]);
     setIsPopupOpen(false);
   };
+
 
   return (
     <>
@@ -228,7 +226,7 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
                             handleOptionChange(index, e.target.value)
                           }
                         />
-                        {options.length > 1 && (
+                        {options.length > 2 && (
                           <DeleteButton
                             onClick={() => handleDeleteOption(index)}
                           ></DeleteButton>
@@ -251,8 +249,7 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
                     onClick={handleAddTag}
                     disabled={
                       addedTagsCount >= 3 ||
-                      options.some((option) => !option.trim()) || // 하나라도 비어있으면 비활성화
-                      options.length === 0 // 옵션이 없어도 비활성화
+                      options.every((option) => !option.trim()) // 모든 옵션이 비어있을 때만 비활성화
                     }
                   >
                     아이디어 기반 태그 생성

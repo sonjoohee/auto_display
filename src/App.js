@@ -65,6 +65,7 @@ import PageIdeaGeneration from "./pages/Education_Tool/IdeaGeneration/components
 import PageNps from "./pages/Education_Tool/Nps/components/pages/PageNps";
 import PageIdeaEvaluate from "./pages/Education_Tool/IdeaEvaluate/components/pages/PageIdeaEvaluate";
 import PageConceptDefinition from "./pages/Education_Tool/ConceptDefinition/components/pages/PageConceptDefinition";
+import PageBusinessModelCanvas from "./pages/Education_Tool/BusinessModelCanvas/components/pages/PageBusinessModelCanvas";
 
 import PageMyProfile from "./pages/Persona/components/pages/PageMyProfile";
 
@@ -623,6 +624,15 @@ function App() {
             }
           ></Route>
 
+          <Route
+            path="/BusinessModelCanvas"
+            element={
+              <RequireToken>
+                <PageBusinessModelCanvas />
+              </RequireToken>
+            }
+          ></Route>
+          
           <Route
             path="/DesignSuitability"
             element={

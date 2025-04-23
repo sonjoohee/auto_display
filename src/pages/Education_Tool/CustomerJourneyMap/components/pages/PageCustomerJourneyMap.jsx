@@ -120,7 +120,7 @@ const PageCustomerJourneyMap = () => {
     window.scrollTo(0, 0);
   }, []);
 
-console.log("customerJourneyMapMomentAnalysis", customerJourneyMapMomentAnalysis)
+
   useEffect(() => {
     const interviewLoading = async () => {
       if (toolLoading) {
@@ -196,8 +196,6 @@ console.log("customerJourneyMapMomentAnalysis", customerJourneyMapMomentAnalysis
     });
   };
 
-  console.log("selectedMomentData", selectedMomentData)
-  console.log("selectedMoment", selectedMoment)
 
   const business = {
     business: businessDescription,
@@ -230,10 +228,6 @@ console.log("customerJourneyMapMomentAnalysis", customerJourneyMapMomentAnalysis
       job: selectedPersonas?.job || "",
       keywords: selectedPersonas?.keywords || [],
       imageKey: selectedPersonas?.imageKey || "",
-      userExperience: selectedPersonas?.userExperience || "",
-      consumptionPattern: selectedPersonas?.consumptionPattern || "",
-      interests: selectedPersonas?.interests || "",
-      lifestyle: selectedPersonas?.lifestyle || "",
     };
 
     const data = {
@@ -480,7 +474,7 @@ console.log("customerJourneyMapMomentAnalysis", customerJourneyMapMomentAnalysis
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
-console.log("selectedPersonas", selectedPersonas)
+
   return (
     <>
       <DropzoneStyles />
@@ -848,8 +842,17 @@ console.log("selectedPersonas", selectedPersonas)
                         className="markdown-body"
                         style={{
                           textAlign: "left",
+                          marginTop: "20px",
                         }}
                       >
+
+
+                      <Body3 color="gray800" style={{marginBottom: "30px", fontWeight: "bold" , fontSize: "20px"}}>
+                      {selectedPersonas && customerJourneyMapMomentAnalysis[selectedMoment]
+                              ? selectedPersonas?.personaName + "의" + customerJourneyMapMomentAnalysis[selectedMoment]?.name + " 고객 여정 지도"
+                              :   ""}
+                      </Body3>
+                
                         <Markdown>
                           {prepareMarkdown(customerJourneyMapReport ?? "")}
                         </Markdown>

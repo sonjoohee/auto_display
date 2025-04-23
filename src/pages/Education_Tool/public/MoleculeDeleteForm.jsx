@@ -20,6 +20,7 @@ const MoleculeDeleteForm = ({
 }) => {
   const [initialItems, setInitialItems] = useState([]);
 
+
   useEffect(() => {
     if (!items.length) {
       const newItems = new Array(initialItemCount).fill("");
@@ -40,6 +41,7 @@ const MoleculeDeleteForm = ({
 
   const handleDelete = (index) => {
     setItems(prev => prev.filter((_, i) => i !== index));
+    setInitialItems(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleAdd = () => {
@@ -51,7 +53,7 @@ const MoleculeDeleteForm = ({
       {items.map((item, index) => (
         <DeleteFormWrap key={index}>
           <CustomInput
-            disabled={!edit && index < initialItems.length} // 초기 아이템만 edit에 영향 받음
+            disabled={!edit && index < initialItems.length} 
             type="text"
             placeholder={placeholder}
             value={item}
