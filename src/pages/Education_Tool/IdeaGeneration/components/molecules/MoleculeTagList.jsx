@@ -36,28 +36,14 @@ const IdeaGenerationTag = ({
   }, [initialSelected]);
 
   return (
-    <TagContainer
-      selected={isSelected}
-      onClick={handleClick}
-      disabled={disabled && !isSelected}
-    >
-      {isSelected && (
-        <CheckIcon
-          width="16"
-          height="17"
-          viewBox="0 0 16 17"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M1.77777 8.49989L6.22063 12.9443L14.2178 4.94434"
-            stroke="white"
-            strokeWidth="1.77778"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+
+    <TagContainer selected={isSelected} onClick={handleClick} disabled={disabled && !isSelected}>
+      {/* {isSelected && (
+        <CheckIcon width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1.77777 8.49989L6.22063 12.9443L14.2178 4.94434" stroke="white" strokeWidth="1.77778" strokeLinecap="round" strokeLinejoin="round"/>
+
         </CheckIcon>
-      )}
+      )} */}
       <TagText selected={isSelected}>{text}</TagText>
     </TagContainer>
   );
