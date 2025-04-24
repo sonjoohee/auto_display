@@ -162,6 +162,7 @@ import {
   CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION,
   CUSTOMER_JOURNEY_MAP_REPORT,
   CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX,
+  IDEA_GENERATION_SELECTED_START_POSITION,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -448,12 +449,9 @@ const PageToolListSaas = () => {
   const [, setQuickSurveyInterview] = useAtom(QUICK_SURVEY_INTERVIEW);
   const [, setQuickSurveyReport] = useAtom(QUICK_SURVEY_REPORT);
   const [, setQuickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
-  const [, setQuickSurveyInterviewModeType] = useAtom(
-    QUICK_SURVEY_INTERVIEW_MODE_TYPE
-  );
-  const [, setIdeaGenerationProblemList] = useAtom(
-    IDEA_GENERATION_PROBLEM_LIST
-  );
+  const [, setQuickSurveyInterviewModeType] = useAtom(QUICK_SURVEY_INTERVIEW_MODE_TYPE);
+  const [, setIdeaGenerationProblemList] = useAtom(IDEA_GENERATION_PROBLEM_LIST);
+  const [, setIdeaGenerationSelectedStartPosition] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
   const [, setSelectedKanoModelIdea] = useAtom(KANO_MODEL_SELECTED_IDEA);
   const [, setKanoModelClustering] = useAtom(KANO_MODEL_CLUSTERING);
   const [, setKanoModelClusteringName] = useAtom(KANO_MODEL_CLUSTERING_NAME);
@@ -642,6 +640,7 @@ const PageToolListSaas = () => {
 
     //idea generation education 초기화
     setIdeaGenerationProblemList([]);
+    setIdeaGenerationSelectedStartPosition([]);
 
     //kano model education 초기화
     setSelectedKanoModelIdea([]);
