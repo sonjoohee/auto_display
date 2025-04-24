@@ -90,6 +90,7 @@ import MolculeQuickSurveyPopup from "../molecules/MolculeQuickSurveyPopup";
 import MoleculeFileUpload from "../molecules/MoleculeFileUpload";
 import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
+import WaitLongLodingBar from "../../../../../components/Charts/WaitLongLodingBar";
 
 const PageNps = () => {
   const navigate = useNavigate();
@@ -1693,7 +1694,8 @@ const PageNps = () => {
                         alignItems: "center",
                       }}
                     >
-                      <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
+                      {/* <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" /> */}
+                      <WaitLongLodingBar  />
                     </div>
                   ) : (
                     <>

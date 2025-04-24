@@ -81,11 +81,10 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
   // displayOrder 기준으로 정렬
   mandalartButtons.sort((a, b) => a.displayOrder - b.displayOrder);
 
-  console.log("mandalartButtons", mandalartButtons);
   const handleItemClick = (itemId) => {
     setSelectedItem(itemId);
     setIdeaGenerationSelectedMandalart(itemId);
-    console.log("itemId", itemId);
+
   };
 
   const handleBackClick = () => {
