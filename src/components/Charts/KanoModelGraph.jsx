@@ -51,7 +51,6 @@ const KanoModelGraph = () => {
   //     .flat();
   // };
   const transformKanoData = (kanoModelGraphData) => {
-    // 입력 데이터가 객체이고 null이 아닌지 확인합니다.
     if (
       !kanoModelGraphData ||
       typeof kanoModelGraphData !== "object" ||
@@ -60,18 +59,18 @@ const KanoModelGraph = () => {
       return [];
     }
 
-    // Object.entries를 사용하여 객체를 [key, value] 쌍의 배열로 변환합니다.
-    return Object.entries(kanoModelGraphData).map(([title, data]) => {
-      // CSP 값은 0 ~ 1 범위를 0 ~ 100 범위로 변환합니다.
+    return Object.entries(kanoModelGraphData).map(([title, data], index) => {
       const xValue = data.CSP * 100;
-      // CSM 값은 절대값을 취하고 백분율로 변환합니다.
       const yValue = Math.abs(data.CSM) * 100;
+      // 0 -> 'A', 1 -> 'B', ...
+      const indexCode = String.fromCharCode(65 + index);
 
       return {
         x: xValue,
         y: yValue,
         title: title,
-        size: 8,
+        indexCode: indexCode, // 인덱스 코드 추가
+        size: 24, // 데이터 포인트 크기 증가
       };
     });
   };
@@ -107,9 +106,6 @@ const KanoModelGraph = () => {
 
     return { avgCSP, avgCSM };
   };
-
-  const graphData = transformKanoData(kanoModelGraphData);
-  const averageKanoData = transformAverageKanoData(kanoModelGraphData);
 
   // Helper function to rescale a single coordinate
   const rescaleCoordinate = (coord, average) => {
@@ -148,8 +144,43 @@ const KanoModelGraph = () => {
     }));
   };
 
-  // Rescale the graph data points
-  const rescaledGraphData = rescaleDataPoints(graphData, averageKanoData);
+  // Helper function to get quadrant name
+  const getQuadrantName = (x, y) => {
+    if (x > 50 && y > 50) return "One-dimensional"; // 매력적 품질 (우상단)
+    if (x <= 50 && y > 50) return "Attractive"; // 일원적 품질 (좌상단)
+    if (x > 50 && y <= 50) return "Must-be"; // 당연 품질 (우하단)
+    if (x <= 50 && y <= 50) return "Indifferent"; // 무관심 품질 (좌하단)
+    return ""; // Should not happen
+  };
+
+  // 1. 기본 데이터 변환
+  const transformedData = transformKanoData(kanoModelGraphData);
+  // 2. 평균값 계산
+  const averageKanoData = transformAverageKanoData(kanoModelGraphData);
+  // 3. 데이터 리스케일링 (이제 rescaleDataPoints 함수가 위에 선언되어 접근 가능)
+  const rescaledGraphData = rescaleDataPoints(transformedData, averageKanoData);
+  // 4. 범례 데이터 생성
+  const legendData = transformedData.map((item, index) => {
+    const rescaledPoint = rescaledGraphData[index];
+    const quadrantName = getQuadrantName(rescaledPoint.x, rescaledPoint.y);
+    return {
+      ...item,
+      quadrantName: quadrantName,
+    };
+  });
+
+  // legendData를 사분면으로 그룹화
+  const groupedLegendData = {
+    Attractive: [],
+    "One-dimensional": [],
+    "Must-be": [],
+    Indifferent: [],
+  };
+
+  // 각 아이템을 해당 사분면 그룹에 추가
+  legendData.forEach((item) => {
+    groupedLegendData[item.quadrantName].push(item);
+  });
 
   // Tooltip handlers
   const handleMouseEnter = (event, title, x, y) => {
@@ -172,67 +203,91 @@ const KanoModelGraph = () => {
   };
 
   return (
-    <GraphContainer>
-      {/* 그래프 영역 */}
-      <GraphArea data-graph-area>
-        {/* Average lines are now always at 50% after rescaling */}
-        <GridLineVertical position={50} />
-        <GridLineHorizontal position={50} />
-        {/* Quadrant Labels */}
-        <QuadrantLabel top="25%" left="75%">
-          One-dimensional
-        </QuadrantLabel>{" "}
-        {/* Top-Right */}
-        <QuadrantLabel top="25%" left="25%">
-          Attractive
-        </QuadrantLabel>{" "}
-        {/* Top-Left */}
-        <QuadrantLabel top="75%" left="75%">
-          Must-be
-        </QuadrantLabel>{" "}
-        {/* Bottom-Right */}
-        <QuadrantLabel top="75%" left="25%">
-          Indifferent
-        </QuadrantLabel>{" "}
-        {/* Bottom-Left */}
-        {/* 좌측 실선 라인 (위로 확장) */}
-        <LeftAxisLine />
-        {/* 좌측 상단 화살표 */}
-        <LeftAxisArrow />
-        {/* 하단 실선 라인 (우측으로 확장) */}
-        <BottomAxisLine />
-        {/* 우측 하단 화살표 */}
-        <RightAxisArrow />
-        {/* 데이터 포인트 - Use rescaled data and add event handlers */}
-        {rescaledGraphData.map((point, index) => (
-          <DataPoint
-            key={index}
-            x={point.x}
-            y={point.y}
-            size={point.size}
-            onMouseEnter={(e) =>
-              handleMouseEnter(e, point.title, point.x, point.y)
-            }
-            onMouseLeave={handleMouseLeave}
-          />
-        ))}
-        {/* Custom Tooltip */}
-        {tooltipVisible && (
-          <Tooltip
-            style={{
-              left: `${tooltipPosition.x}px`,
-              top: `${tooltipPosition.y}px`,
-            }}
-          >
-            {tooltipContent}
-          </Tooltip>
+    <GraphWrapper>
+      {/* 전체 레이아웃 Wrapper */}
+      <GraphContainer>
+        {/* 그래프 영역 */}
+        <GraphArea data-graph-area>
+          {/* Average lines are now always at 50% after rescaling */}
+          <GridLineVertical position={50} />
+          <GridLineHorizontal position={50} />
+          {/* Quadrant Labels */}
+          <QuadrantLabel top="25%" left="75%">
+            One-dimensional
+          </QuadrantLabel>{" "}
+          {/* Top-Right */}
+          <QuadrantLabel top="25%" left="25%">
+            Attractive
+          </QuadrantLabel>{" "}
+          {/* Top-Left */}
+          <QuadrantLabel top="75%" left="75%">
+            Must-be
+          </QuadrantLabel>{" "}
+          {/* Bottom-Right */}
+          <QuadrantLabel top="75%" left="25%">
+            Indifferent
+          </QuadrantLabel>{" "}
+          {/* Bottom-Left */}
+          {/* 좌측 실선 라인 (위로 확장) */}
+          <LeftAxisLine />
+          {/* 좌측 상단 화살표 */}
+          <LeftAxisArrow />
+          {/* 하단 실선 라인 (우측으로 확장) */}
+          <BottomAxisLine />
+          {/* 우측 하단 화살표 */}
+          <RightAxisArrow />
+          {/* 데이터 포인트 - Use rescaled data and add event handlers */}
+          {rescaledGraphData.map((point, index) => (
+            <DataPoint
+              key={index}
+              x={point.x}
+              y={point.y}
+              size={point.size} // size prop 전달
+              onMouseEnter={(e) =>
+                // 툴크에는 여전히 title 표시
+                handleMouseEnter(e, point.title, point.x, point.y)
+              }
+              onMouseLeave={handleMouseLeave}
+            >
+              {point.indexCode} {/* 데이터 포인트 내부에 인덱스 코드 렌더링 */}
+            </DataPoint>
+          ))}
+          {/* Custom Tooltip */}
+          {tooltipVisible && (
+            <Tooltip
+              style={{
+                left: `${tooltipPosition.x}px`,
+                top: `${tooltipPosition.y}px`,
+              }}
+            >
+              {tooltipContent}
+            </Tooltip>
+          )}
+          {/* 곡선과 대각선 주석 처리 (임시로 화면에서 제거) */}
+          {/* <GraphPath1 /> */}
+          {/* <GraphPath2 /> */}
+          {/* <GraphPath3 /> */}
+        </GraphArea>
+      </GraphContainer>
+      {/* 범례 컨테이너 */}
+      <LegendContainer>
+        {/* 각 사분면 그룹별로 렌더링 */}
+        {Object.entries(groupedLegendData).map(
+          ([quadrantName, items]) =>
+            items.length > 0 && (
+              <div key={quadrantName}>
+                <QuadrantTitle>{quadrantName}</QuadrantTitle>
+                {items.map((item, idx) => (
+                  <LegendItem key={idx}>
+                    <span className="index-code">{item.indexCode}</span>
+                    <span className="item-title">{item.title}</span>
+                  </LegendItem>
+                ))}
+              </div>
+            )
         )}
-        {/* 곡선과 대각선 주석 처리 (임시로 화면에서 제거) */}
-        {/* <GraphPath1 /> */}
-        {/* <GraphPath2 /> */}
-        {/* <GraphPath3 /> */}
-      </GraphArea>
-    </GraphContainer>
+      </LegendContainer>
+    </GraphWrapper>
   );
 };
 
@@ -389,17 +444,24 @@ const BottomCircleLabel = styled.div`
 // 데이터 포인트
 const DataPoint = styled.div`
   position: absolute;
-  width: ${(props) => props.size}px;
-  height: ${(props) => props.size}px;
+  width: ${(props) => props.size}px; /* props로 크기 조절 */
+  height: ${(props) => props.size}px; /* props로 크기 조절 */
   border-radius: 50%;
   background-color: ${palette.primary};
-  border: 1px solid ${palette.primary};
+  border: 1px solid ${palette.primaryDark}; /* 테두리 추가 */
   left: ${(props) => props.x}%;
-  top: ${(props) => 100 - props.y}%; /* y축 반전 (0이 아래, 100이 위) */
+  top: ${(props) => 100 - props.y}%; /* y축 반전 */
   transform: translate(-50%, -50%);
   z-index: 3;
+  /* 추가: 텍스트 중앙 정렬 및 스타일 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${palette.white};
+  font-size: 12px; /* 폰트 크기 조절 */
+  font-weight: bold;
+  cursor: default; /* 기본 커서 유지 */
 `;
-
 // 좌측 상단 화살표 - 좌측으로 4px 이동
 const LeftAxisArrow = styled.div`
   position: absolute;
@@ -668,3 +730,65 @@ const GraphPath3 = () => (
     />
   </svg>
 );
+
+// 전체 레이아웃을 위한 Wrapper 추가
+const GraphWrapper = styled.div`
+  display: flex;
+  align-items: flex-start; /* 상단 정렬 */
+  gap: 40px; /* 그래프와 범례 사이 간격 */
+  justify-content: center; /* 중앙 정렬 */
+  padding: 20px;
+`;
+
+// 범례 컨테이너 스타일
+const LegendContainer = styled.div`
+  width: 250px; /* 범례 너비 조절 */
+  max-height: 500px; /* 그래프 높이와 맞춤 */
+  overflow-y: auto; /* 내용이 많을 경우 스크롤 */
+  padding: 10px;
+  border: 1px solid ${palette.outlineGray};
+  border-radius: 8px;
+  background-color: ${palette.white};
+`;
+
+// 범례 아이템 스타일 수정
+const LegendItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2px; /* 간격 줄임 */
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: ${palette.gray800};
+  width: 100%;
+
+  .index-code {
+    font-weight: bold;
+    text-align: left; /* 왼쪽 정렬 */
+    width: auto; /* 고정 너비 제거 */
+    margin-right: 2px; /* 약간의 간격만 추가 */
+    flex-shrink: 0;
+  }
+
+  .item-title {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left; /* 왼쪽 정렬 */
+  }
+`;
+
+// 사분면 그룹 타이틀 스타일
+const QuadrantTitle = styled.div`
+  font-weight: 600;
+  font-size: 14px;
+  color: ${palette.gray800};
+  margin: 12px 0 8px 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid ${palette.outlineGray};
+  text-align: left; /* 왼쪽 정렬 추가 */
+
+  &:first-child {
+    margin-top: 0;
+  }
+`;
