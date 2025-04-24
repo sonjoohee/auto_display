@@ -102,6 +102,9 @@ import MolculeQuickSurveyPopup from "../molecules/MolculeQuickSurveyPopup";
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
 import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
 import ParetoCurveGraph from "../../../../../components/Charts/ParetoCurveGraph";
+import BusinessModelPopup from "../../../../../components/Charts/BusinessModelPopup";
+import BusinessModelGraph from "../../../../../components/Charts/BusinessModelGraph";
+
 
 const PageBusinessModelCanvas = () => {
   const navigate = useNavigate();
@@ -923,7 +926,7 @@ const PageBusinessModelCanvas = () => {
 
                       <TabContent5Item>
                         <div className="title">
-                          <Body1 color="gray700">kano기반 아이디어 선택 </Body1>
+                          <Body1 color="gray700">컨셉 정의서 </Body1>
                         </div>
 
                         <SelectBox ref={customerListRef}>
@@ -949,7 +952,7 @@ const PageBusinessModelCanvas = () => {
                               }
                             >
                               {selectedPurposes.customerList ||
-                                "Kano Model 결과를 불러 올 수 있습니다"}
+                                "컨셉 정의서를 불러 올 수 있습니다"}
                             </Body2>
                             <images.ChevronDown
                               width="24px"

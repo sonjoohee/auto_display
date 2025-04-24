@@ -170,6 +170,7 @@ import {
   ISSUE_GENERATION_SELECTED_START_POSITION,
   KEYWORDS_GENERATION_SELECTED_ISSUE,
   KEYWORDS_GENERATION_TAG,
+  IDEA_GENERATION_START_POSITION,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -465,6 +466,9 @@ const PageToolListSaas = () => {
   const [, setIdeaGenerationSelectedStartPosition] = useAtom(
     IDEA_GENERATION_SELECTED_START_POSITION
   );
+  const [, setIdeaGenerationStartPosition] = useAtom(
+    IDEA_GENERATION_START_POSITION
+  );
   const [, setSelectedKanoModelIdea] = useAtom(KANO_MODEL_SELECTED_IDEA);
   const [, setKanoModelClustering] = useAtom(KANO_MODEL_CLUSTERING);
   const [, setKanoModelClusteringName] = useAtom(KANO_MODEL_CLUSTERING_NAME);
@@ -687,6 +691,7 @@ const PageToolListSaas = () => {
 
     //idea generation education 초기화
     setIdeaGenerationProblemList([]);
+    setIdeaGenerationStartPosition([]);
     setIdeaGenerationSelectedStartPosition([]);
 
     //kano model education 초기화
