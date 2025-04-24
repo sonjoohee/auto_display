@@ -59,8 +59,11 @@ import PageIdeaGenerator from "./pages/Tool/IdeaGenerator/components/pages/PageI
 import PageDesignAnalysis from "./pages/Tool/DesignEmotionAnalyzer/components/pages/PageDesignAnalysis";
 import PageDesignSuitability from "./pages/Persona/components/pages/PageDesignSuitability";
 
+//! 교육 툴
 import PageCustomerJourneyMap from "./pages/Education_Tool/CustomerJourneyMap/components/pages/PageCustomerJourneyMap";
 import PageKanoModel from "./pages/Education_Tool/KanoModel/components/pages/PageKanoModel";
+import PageIssueGeneration from "./pages/Education_Tool/IssueGeneration/components/pages/PageIssueGeneration";
+import PageNeedsKeywordsGeneration from "./pages/Education_Tool/NeedsKeywordsGeneration/components/pages/PageNeedsKeywordsGeneration";
 import PageIdeaGeneration from "./pages/Education_Tool/IdeaGeneration/components/pages/PageIdeaGeneration";
 import PageNps from "./pages/Education_Tool/Nps/components/pages/PageNps";
 import PageIdeaEvaluate from "./pages/Education_Tool/IdeaEvaluate/components/pages/PageIdeaEvaluate";
@@ -579,6 +582,24 @@ function App() {
             }
           ></Route>
 
+          <Route
+            path="/IssueGeneration"
+            element={
+              <RequireToken>
+                <PageIssueGeneration />
+              </RequireToken>
+            }
+          ></Route>
+
+          <Route
+            path="/NeedsKeywordsGeneration"
+            element={
+              <RequireToken>
+                <PageNeedsKeywordsGeneration />
+              </RequireToken>
+            }
+          ></Route>
+          
           <Route
             path="/IdeaGeneration"
             element={

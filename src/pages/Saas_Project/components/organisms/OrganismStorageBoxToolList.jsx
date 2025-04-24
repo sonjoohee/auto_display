@@ -160,6 +160,44 @@ import {
   QUICK_SURVEY_DETAIL_INFO,
   QUICK_SURVEY_RECRUITING_CONDITION,
   QUICK_SURVEY_INTERVIEW_MODE_TYPE,
+   CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS,
+  CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA,
+  CUSTOMER_JOURNEY_MAP_REPORT,
+  CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION,
+  CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX,
+  IDEA_GENERATION_PROBLEM_LIST,
+  IDEA_GENERATION_PROBLEM_LIST_TITLE,
+  IDEA_GENERATION_START_POSITION,
+  IDEA_GENERATION_MANDALART_DATA,
+  IDEA_GENERATION_SELECTED_START_POSITION,
+  IDEA_GENERATION_SELECTED_MANDALART,
+  IDEA_GENERATION_POSSSESSION_TECH,
+  IDEA_GENERATION_SELECTED_PURPOSE,
+  KANO_MODEL_SELECTED_IDEA,
+  KANO_MODEL_CLUSTERING,
+  KANO_MODEL_CLUSTERING_NAME,
+  KANO_MODEL_EVALUATION,
+  KANO_MODEL_PRODUCT_ANALYSIS,
+  KANO_MODEL_GRAPH_DATA,
+  IDEA_EVALUATE_LIST,
+  IDEA_EVALUATE_SELECTED_LIST,
+  IDEA_EVALUATE_COMPARISON_EDUCATION,
+  IDEA_EVALUATE_SELECTED_KANO_MODEL,
+  IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX,
+  IDEA_EVALUATE_SELECTED_LIST_INDEX,
+  CONCEPT_DEFINITION_SELECTED_PURPOSE,
+  CONCEPT_DEFINITION_SELECTED_PERSONA,
+  CONCEPT_DEFINITION_FIRST_REPORT,
+  CONCEPT_DEFINITION_FINAL_REPORT,
+  ISSUE_GENERATION_SELECTED_PURPOSE,
+  ISSUE_GENERATION_PROBLEM_LIST,
+  ISSUE_GENERATION_PROBLEM_LIST_TITLE,
+  ISSUE_GENERATION_START_POSITION,
+  ISSUE_GENERATION_SELECTED_START_POSITION,
+  ISSUE_GENERATION_LIST,
+  KEYWORDS_GENERATION_SELECTED_ISSUE,
+  KEYWORDS_GENERATION_SELECTED_ISSUE_INDEX,
+  KEYWORDS_GENERATION_TAG,
 } from "../../../AtomStates";
 import {
   updateToolOnServer,
@@ -403,6 +441,53 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [deleteToolId, setDeleteToolId] = useState(null);
   const [deleteToolType, setDeleteToolType] = useState(null);
 
+   //!Education Tool
+  const [, setCustomerJourneyMapMomentAnalysis] = useAtom(CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS);
+  const [, setCustomerJourneyMapSelectedPersona] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA);
+  const [, setCustomerJourneyMapReport] = useAtom(CUSTOMER_JOURNEY_MAP_REPORT);
+  const [, setCustomerJourneyMapSelectedDirection] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION);
+  const [, setCustomerJourneyMapSelectedDirectionIndex] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX);
+
+  const [, setIssueGenerationSelectedPurpose] = useAtom(ISSUE_GENERATION_SELECTED_PURPOSE); 
+  const [, setIssueGenerationProblemList] = useAtom(ISSUE_GENERATION_PROBLEM_LIST);
+  const [, setIssueGenerationProblemListTitle] = useAtom(ISSUE_GENERATION_PROBLEM_LIST_TITLE);
+  const [, setIssueGenerationStartPosition] = useAtom(ISSUE_GENERATION_START_POSITION);
+  const [, setIssueGenerationSelectedStartPosition] = useAtom(ISSUE_GENERATION_SELECTED_START_POSITION);
+
+  const [, setIssueGenerationList] = useAtom(ISSUE_GENERATION_LIST);
+  const [, setKeywordsGenerationSelectedIssue] = useAtom(KEYWORDS_GENERATION_SELECTED_ISSUE); 
+  const [, setKeywordsGenerationSelectedIssueIndex] = useAtom(KEYWORDS_GENERATION_SELECTED_ISSUE_INDEX);
+  const [, setKeywordsGenerationTag] = useAtom(KEYWORDS_GENERATION_TAG);
+
+  const [, setIdeaGenerationSelectedPurpose] = useAtom(IDEA_GENERATION_SELECTED_PURPOSE);
+  const [, setIdeaGenerationProblemList] = useAtom(IDEA_GENERATION_PROBLEM_LIST);
+  const [, setIdeaGenerationProblemListTitle] = useAtom(IDEA_GENERATION_PROBLEM_LIST_TITLE);
+  const [, setIdeaGenerationStartPosition] = useAtom(IDEA_GENERATION_START_POSITION);
+  const [, setIdeaGenerationMandalartData] = useAtom(IDEA_GENERATION_MANDALART_DATA);
+  const [, setIdeaGenerationSelectedStartPosition] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
+  const [, setIdeaGenerationSelectedMandalart] = useAtom(IDEA_GENERATION_SELECTED_MANDALART);
+  const [, setIdeaGenerationPossessionTech] = useAtom(IDEA_GENERATION_POSSSESSION_TECH);
+
+  const [,   setSelectedKanoModelIdea] = useAtom(KANO_MODEL_SELECTED_IDEA);
+  const [, setKanoModelClustering] = useAtom(KANO_MODEL_CLUSTERING);
+  const [, setKanoModelClusteringName] = useAtom(KANO_MODEL_CLUSTERING_NAME);
+  const [, setKanoModelEvaluation] = useAtom(KANO_MODEL_EVALUATION);
+  const [, setKanoModelProductAnalysis] = useAtom(KANO_MODEL_PRODUCT_ANALYSIS);
+  const [, setKanoModelGraphData] = useAtom(KANO_MODEL_GRAPH_DATA);
+
+  const [, setIdeaEvaluateSelectedKanoModel] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL);
+  const [, setIdeaEvaluateSelectedKanoModelIndex] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX);
+  const [, setIdeaEvaluateList] = useAtom(IDEA_EVALUATE_LIST);
+  const [, setIdeaEvaluateSelectedList] = useAtom(IDEA_EVALUATE_SELECTED_LIST);
+  const [, setIdeaEvaluateComparisonEducation] = useAtom(IDEA_EVALUATE_COMPARISON_EDUCATION);
+  const [, setIdeaEvaluateSelectedListIndex] = useAtom(IDEA_EVALUATE_SELECTED_LIST_INDEX);
+
+  const [, setConceptDefinitionSelectedPersona] = useAtom(CONCEPT_DEFINITION_SELECTED_PERSONA);
+  const [, setConceptDefinitionSelectedPurpose] = useAtom(CONCEPT_DEFINITION_SELECTED_PURPOSE);
+  const [, setConceptDefinitionFirstReport] = useAtom(CONCEPT_DEFINITION_FIRST_REPORT);
+  const [, setConceptDefinitionFinalReport] = useAtom(CONCEPT_DEFINITION_FINAL_REPORT);
+
+
   const saveConversation = (data) => {
     // 대화 저장 로직 구현
   };
@@ -441,6 +526,20 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           return "보고서 생성기";
         case "ix_quick_survey_question":
           return "퀵 서베이";
+           case "ix_customer_journey_map_education":
+          return "고객 여정 맵 분석기";
+        case "ix_idea_generation_education":
+          return "아이디어 발상";
+        case "ix_kano_model_education":
+          return "Kano Model";
+        case "ix_idea_evaluation_education":
+          return "아이디어 평가";
+        case "ix_concept_definition_education":
+          return "컨셉 정의서";
+        case "ix_issue_generation_education":
+          return "핵심 이슈 도출";
+        case "ix_needs_keywords_generation_education":
+          return "문제점 & 니즈 키워드 생성";
         default:
           return tool.type;
       }
@@ -529,6 +628,20 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           );
         case "ix_quick_survey_question":
           return tool.goal || "상세 내용 없음";
+          case "ix_customer_journey_map_education":
+          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+        case "ix_idea_generation_education":
+          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+        case "ix_kano_model_education":
+          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+        case "ix_idea_evaluation_education":
+          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+        case "ix_concept_definition_education":
+          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+        case "ix_issue_generation_education":
+          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+        case "ix_needs_keywords_generation_education":
+          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
         default:
           return tool.type;
       }
@@ -582,6 +695,18 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           return tool.completedStep === 3 ? "완료" : "진행중";
         case "ix_quick_survey_question":
           return tool.completedStep === 3 ? "완료" : "진행중";
+           case "ix_customer_journey_map_education":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        case "ix_idea_generation_education":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        case "ix_kano_model_education":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        case "ix_idea_evaluation_education":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        case "ix_issue_generation_education":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        case "ix_needs_keywords_generation_education":
+          return tool.completedStep === 2 ? "완료" : "진행중";
         default:
           return "-";
       }
@@ -986,6 +1111,122 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setQuickSurveyRecruitingCondition(chatData?.recruitmentCriteria || "");
         setQuickSurveyInterviewModeType(chatData?.interviewModeType || "");
 
+
+        //!Education Tool
+
+        //!고객 저니 맵
+        setToolStep(1);
+        setCustomerJourneyMapMomentAnalysis([]);
+        setCustomerJourneyMapSelectedPersona([]);
+        setCustomerJourneyMapReport([]);
+        setCustomerJourneyMapSelectedDirection([]);
+        setToolLoading(false);
+        setToolStep(chatData?.completedStep);
+        setToolId(chatData?.id);
+        setCustomerJourneyMapMomentAnalysis(chatData?.customerJourneyMapMomentAnalysis || []);
+        setCustomerJourneyMapSelectedPersona(chatData?.customerJourneyMapSelectedPersona || {});
+        setCustomerJourneyMapReport(chatData?.customerJourneyMapReport || []);
+        setCustomerJourneyMapSelectedDirection(chatData?.selectedDirection || []);
+        setCustomerJourneyMapSelectedDirectionIndex(chatData?.selectedDirectionIndex || 0);
+
+        //! 핵심 이슈 도출
+        setToolStep(1);
+        setIssueGenerationSelectedPurpose([]);
+        setIssueGenerationProblemList([]);
+        setIssueGenerationProblemListTitle([]);
+        setIssueGenerationStartPosition([]);
+        setIssueGenerationSelectedStartPosition([]);
+        setToolLoading(false);
+        setToolStep(chatData?.completedStep);
+        setToolId(chatData?.id);
+        setIssueGenerationSelectedPurpose(chatData?.selectedPurposes || {});
+        setIssueGenerationProblemList(chatData?.issueGenerationProblemList || []);
+        setIssueGenerationProblemListTitle(chatData?.issueGenerationProblemListTitle || []);
+        setIssueGenerationStartPosition(chatData?.issueGenerationStartPosition || []);
+        setIssueGenerationSelectedStartPosition(chatData?.issueGenerationSelectedStartPosition || []);
+
+        //! 핵심 니즈 키워드 생성
+        setToolStep(1);
+        setIssueGenerationList([]);
+        setKeywordsGenerationSelectedIssue([]);
+        setKeywordsGenerationTag([]);
+        setToolLoading(false);
+        setToolStep(chatData?.completedStep);
+        setToolId(chatData?.id);
+        setKeywordsGenerationSelectedIssue(chatData?.keywordsGenerationSelectedIssue || []);
+        setKeywordsGenerationSelectedIssueIndex(chatData?.selectedIssueIndex || []);
+        setKeywordsGenerationTag(chatData?.keywordsGenerationTag || []);
+   
+
+        //! 아이디어 발상
+        setToolStep(1);
+        setIdeaGenerationSelectedPurpose([]);
+        setIdeaGenerationProblemList([]);
+        setIdeaGenerationProblemListTitle([]);
+        setIdeaGenerationStartPosition([]);
+        setIdeaGenerationMandalartData([]);
+        setIdeaGenerationSelectedStartPosition([]);
+        setIdeaGenerationSelectedMandalart(null);
+        setIdeaGenerationPossessionTech("");
+        setToolLoading(false);
+        setToolStep(chatData?.completedStep);
+        setToolId(chatData?.id);  
+        setIdeaGenerationSelectedPurpose(chatData?.selectedPurposes || {});
+        setIdeaGenerationProblemList(chatData?.ideaGenerationProblemList || []);  
+        setIdeaGenerationProblemListTitle(chatData?.ideaGenerationProblemListTitle || []);  
+        setIdeaGenerationStartPosition(chatData?.ideaGenerationStartPosition || []);  
+        setIdeaGenerationMandalartData(chatData?.ideaGenerationMandalArtData || []);  
+        setIdeaGenerationSelectedStartPosition(chatData?.ideaGenerationSelectedStartPosition || []);  
+        setIdeaGenerationPossessionTech(chatData?.possessionTech || "");
+
+        //!Kano Model
+        setToolStep(1);
+        setSelectedKanoModelIdea([]);
+        setKanoModelClustering([]);
+        setKanoModelClusteringName([]);
+        setKanoModelEvaluation([]);
+        setKanoModelProductAnalysis([]);
+        setToolLoading(false);
+        setToolStep(chatData?.completedStep);
+        setToolId(chatData?.id);
+        setSelectedKanoModelIdea(chatData?.kanoModelSelectedIdea || []);
+        setKanoModelClustering(chatData?.kanoModelClustering || []);
+        setKanoModelClusteringName(chatData?.kanoModelClusteringName || []);
+        setKanoModelEvaluation(chatData?.kanoModelEvaluation || []);
+        setKanoModelProductAnalysis(chatData?.kanoModelProductAnalysis || []);
+        setKanoModelGraphData(chatData?.kanoModelGraphData || []);
+
+        //!아이디어 평가
+        setToolStep(1);
+        setIdeaEvaluateList([]);
+        setIdeaEvaluateSelectedList([]);
+        setIdeaEvaluateSelectedListIndex({});
+        setIdeaEvaluateComparisonEducation([]);
+        setIdeaEvaluateSelectedKanoModel({});
+        setIdeaEvaluateSelectedKanoModelIndex({});
+        setToolLoading(false);
+        setToolStep(chatData?.completedStep);
+        setToolId(chatData?.id);
+        setIdeaEvaluateList(chatData?.ideaEvaluateList || []);
+        setIdeaEvaluateSelectedList(chatData?.ideaEvaluateSelectedList || []);
+        setIdeaEvaluateComparisonEducation(chatData?.ideaEvaluateComparisonEducation || []);
+        setIdeaEvaluateSelectedListIndex(chatData?. ideaEvaluateSelectedListIndex || {});
+        setIdeaEvaluateSelectedKanoModel(chatData?.selectedKanoModelIdea || {});
+        setIdeaEvaluateSelectedKanoModelIndex(chatData?.selectedKanoModelIdeaIndex || []);
+
+        //!컨셉 정의
+        setToolStep(1);
+        setConceptDefinitionSelectedPersona([]);
+        setConceptDefinitionFirstReport("");
+        setConceptDefinitionFinalReport("");
+        setToolLoading(false);
+        setToolStep(chatData?.completedStep);
+        setToolId(chatData?.id);
+        setConceptDefinitionSelectedPersona(chatData?.selectedPersonas || []);
+        setConceptDefinitionFirstReport(chatData?.conceptDefinitionFirstReport || "");
+        setConceptDefinitionFinalReport(chatData?.conceptDefinitionFinalReport || "");
+
+
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);
 
@@ -1007,6 +1248,27 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         } else if (chatData.type === "ix_quick_survey_question") {
           setToolLoading(true);
           navigate("/QuickSurvey");
+         } else if (chatData.type === "ix_customer_journey_map_education") {
+          setToolLoading(true);
+          navigate("/CustomerJourneyMap");
+        } else if (chatData.type === "ix_idea_generation_education") {
+          setToolLoading(true);
+          navigate("/IdeaGeneration");
+        } else if (chatData.type === "ix_kano_model_education") {
+          setToolLoading(true);
+          navigate("/KanoModel");
+        } else if (chatData.type === "ix_idea_evaluation_education") {
+          setToolLoading(true);
+          navigate("/IdeaEvaluate");
+        } else if (chatData.type === "ix_concept_definition_education") {
+          setToolLoading(true);
+          navigate("/ConceptDefinition");
+        } else if (chatData.type === "ix_issue_generation_education") {
+          setToolLoading(true);
+          navigate("/IssueGeneration");
+        } else if (chatData.type === "ix_needs_keywords_generation_education") {
+          setToolLoading(true);
+          navigate("/NeedsKeywordsGeneration");
         }
       } catch (error) {}
     } else if (conversationType === "interviewSingle") {

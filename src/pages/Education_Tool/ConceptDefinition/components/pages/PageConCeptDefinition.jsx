@@ -50,6 +50,7 @@ import {
   CONCEPT_DEFINITION_FIRST_REPORT,
   CONCEPT_DEFINITION_FINAL_REPORT,
   CONCEPT_DEFINITION_SELECTED_PERSONA,
+  CONCEPT_DEFINITION_SELECTED_PURPOSE,
 } from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import {
@@ -118,6 +119,8 @@ const PageConceptDefinition = () => {
   );
   const [conceptDefinitionFirstReport, setConceptDefinitionFirstReport] =
     useAtom(CONCEPT_DEFINITION_FIRST_REPORT);
+  const [conceptDefinitionSelectedPurpose, setConceptDefinitionSelectedPurpose] =
+    useAtom(CONCEPT_DEFINITION_SELECTED_PURPOSE);
 
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
@@ -131,7 +134,6 @@ const PageConceptDefinition = () => {
   const [isEditingBusiness, setIsEditingBusiness] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
   const [isCreateReportIndex, setIsCreateReportIndex] = useState(false);
-  const [hideIndexButton, setHideIndexButton] = useState(false);
   const [selectedPersonas, setSelectedPersonas] = useState(null);
   const [selectedValue, setSelectedValue] = useState([]);
   const [conceptDefinitionValue, setConceptDefinitionValue] = useState([]);
@@ -146,8 +148,6 @@ const PageConceptDefinition = () => {
   });
   // 초기 상태를 빈 배열로 설정
 
-  const [currentLoadingIndex, setCurrentLoadingIndex] = useState(1);
-
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const project = projectSaas;
@@ -159,11 +159,6 @@ const PageConceptDefinition = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       if (toolLoading) {
-        // 비즈니스 정보 설정 (Step 1)
-        if (psstBusinessInfo) {
-          setPsstBusinessInfo(psstBusinessInfo ?? {});
-        }
-
         // 활성 탭 설정 (기본값 1)
         // setActiveTab(Math.min((toolStep ?? 1) +1 , 3));
         if (toolStep === undefined || toolStep === 1) {
@@ -180,39 +175,23 @@ const PageConceptDefinition = () => {
           setCompletedSteps(completedStepsArray);
         }
 
-        if (fileNames) {
-          setFileNames(fileNames ?? []);
-          setUploadedFiles(fileNames ?? []);
-        }
+  
         // 비즈니스 정보 설정 (Step 1)
-
-        if (projectAnalysisMultimodal) {
-          setProjectAnalysisMultimodal(projectAnalysisMultimodal ?? "");
-          setIsCreateReportIndex(true);
+        if(Object.keys(conceptDefinitionSelectedPurpose).length > 0) {
+          setSelectedPurposes(conceptDefinitionSelectedPurpose ?? {});
         }
 
-        if (projectAnalysisMultimodalKeyMessage) {
-          setProjectAnalysisMultimodalKeyMessage(
-            projectAnalysisMultimodalKeyMessage ?? ""
-          );
+        if(conceptDefinitionSelectedPersona && conceptDefinitionSelectedPersona.length > 0) {
+          setSelectedPersonas(conceptDefinitionSelectedPersona ?? []);
+        }
+        
+
+        if (conceptDefinitionFirstReport && conceptDefinitionFirstReport.length > 0) {
+          setConceptDefinitionFirstReport(conceptDefinitionFirstReport ?? "");
         }
 
-        if (projectAnalysisMultimodalDescription) {
-          setProjectAnalysisMultimodalDescription(
-            projectAnalysisMultimodalDescription ?? ""
-          );
-        }
-
-        if (selectedTemplete) {
-          setSelectedTemplete(selectedTemplete ?? []);
-        }
-
-        if (analysisResults) {
-          setAnalysisResults(analysisResults ?? []);
-        }
-
-        if (psstReport) {
-          setPsstReport(psstReport ?? "");
+        if(conceptDefinitionFinalReport && conceptDefinitionFinalReport.length > 0) {
+          setConceptDefinitionFinalReport(conceptDefinitionFinalReport ?? "");
         }
 
         return;
@@ -297,18 +276,17 @@ const PageConceptDefinition = () => {
   const handleSubmitPersona = async () => {
     handleNextStep(1);
     setToolSteps(1);
-    console.log("selectedPersonas", selectedPersonas);
 
-    // const responseToolId = await createToolOnServer(
-    //   {
-    //     projectId: project._id,
-    //     type: "ix_concept_definition_education",
-    //     selectedPersona: selectedPersonas,
-    //   },
-    //   isLoggedIn
-    // );
+    const responseToolId = await createToolOnServer(
+      {
+        projectId: project._id,
+        type: "ix_concept_definition_education",
+        selectedPersonas: selectedPersonas,
+      },
+      isLoggedIn
+    );
 
-    // setToolId(responseToolId);
+    setToolId(responseToolId);
   };
 
   const handleCheckValue = async () => {
@@ -334,10 +312,18 @@ const PageConceptDefinition = () => {
 
       let response = await EducationToolsRequest(data, isLoggedIn);
 
-      console.log("response", response);
-
       setConceptDefinitionFirstReport(
         response.response.concept_definition_report_education
+      );
+
+      await updateToolOnServer(
+        toolId,
+        {
+          // completedStep: 2,
+          selectedKanoModel: selectedPurposes,
+          conceptDefinitionFirstReport: response.response.concept_definition_report_education,
+        },
+        isLoggedIn
       );
 
       setIsLoading(false);

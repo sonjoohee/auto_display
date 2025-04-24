@@ -192,7 +192,7 @@ const PageIdeaGeneration = () => {
 
       if (toolLoading) {
         // 활성 탭 설정 (기본값 1)
-        setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
+        setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
         setToolSteps(toolStep ?? 1);
 
         if (Object.keys(ideaGenerationSelectedPurpose).length > 0) {
@@ -252,14 +252,14 @@ const PageIdeaGeneration = () => {
 
         const response = await getFindToolListOnServerSaas(
           projectSaas?._id ?? "",
-          "ix_customer_journey_map_education",
+          "ix_needs_keywords_generation_education",
           isLoggedIn
         );
 
         const newItems = (response || []).filter(
           (item) =>
-            item?.type === "ix_customer_journey_map_education" &&
-            item?.completedStep === 3
+            item?.type === "ix_needs_keywords_generation_education" &&
+            item?.completedStep === 2
         );
 
         allItems = [...allItems, ...newItems];
@@ -288,100 +288,122 @@ const PageIdeaGeneration = () => {
     }
   };
 
-  const handleSubmitProblem = async () => {
+  const handleSubmitIdea = async () => {
     handleNextStep(1);
+    setToolSteps(1);
 
-    const currentProblemList = [...ideaGenerationProblemList];
-
-    // 각 title을 currentProblemList의 해당 인덱스에 할당
-    // 만약 currentProblemList가 더 짧다면 새 객체를 생성하여 추가
-    const updatedProblemList = ideaGenerationProblemListTitle.map(
-      (title, index) => {
-        if (index < currentProblemList.length) {
-          // 기존 항목이 있으면 title만 업데이트
-          return {
-            ...currentProblemList[index],
-            title: title,
-          };
-        } else {
-          // 기존 항목이 없으면 새 객체 생성
-          return { title: title };
-        }
-      }
-    );
-
-    // 업데이트된 리스트로 상태 설정
-    setIdeaGenerationProblemList(updatedProblemList);
-
-    await updateToolOnServer(
-      toolId,
+    const responseToolId = await createToolOnServer(
       {
-        // completedStep: 1,
-        selectedPurposes: selectedPurposes,
-        ideaGenerationProblemList: ideaGenerationProblemList,
-        ideaGenerationProblemListTitle: ideaGenerationProblemListTitle,
+        projectId: project._id,
+        type: "ix_idea_generation_education",
       },
       isLoggedIn
     );
-    try {
-      setIsLoading(true);
-      // 빈 문자열이나 공백만 있는 항목 제거
-      // const validItems = ideaGenerationProblemList.filter(
-      //   (item) => item.trim() !== ""
-      // );
+    setToolId(responseToolId);
 
-      // if (validItems.length === 0) {
-      //   // 유효한 항목이 없는 경우 처리
-      //   return;
-      // }
+    await updateToolOnServer(
+      responseToolId,
+      {
+        completedStep: 1,
+        ideaGenerationStartPosition: ideaGenerationStartPosition,
+        ideaGenerationSelectedStartPosition:
+          ideaGenerationSelectedStartPosition,
+      },
+      isLoggedIn
+    );
+  }
 
-      const Data = {
-        type: "ix_idea_generation_keyword_education",
-        business_info: business,
-        info: customerJourneyMapSelectedPersona,
-        problem_needs: ideaGenerationProblemList,
-        is_load: true,
-      };
+    // const currentProblemList = [...ideaGenerationProblemList];
 
-      const response = await EducationToolsRequest(Data, isLoggedIn);
+    // // 각 title을 currentProblemList의 해당 인덱스에 할당
+    // // 만약 currentProblemList가 더 짧다면 새 객체를 생성하여 추가
+    // const updatedProblemList = ideaGenerationProblemListTitle.map(
+    //   (title, index) => {
+    //     if (index < currentProblemList.length) {
+    //       // 기존 항목이 있으면 title만 업데이트
+    //       return {
+    //         ...currentProblemList[index],
+    //         title: title,
+    //       };
+    //     } else {
+    //       // 기존 항목이 없으면 새 객체 생성
+    //       return { title: title };
+    //     }
+    //   }
+    
 
-      setIdeaGenerationStartPosition(
-        response.response.idea_generation_keyword_education
-      );
+    // 업데이트된 리스트로 상태 설정
+  //   setIdeaGenerationProblemList(updatedProblemList);
 
-      setIsLoading(false);
-      await updateToolOnServer(
-        toolId,
-        {
-          completedStep: 1,
-          ideaGenerationStartPosition:
-            response.response.idea_generation_keyword_education,
-        },
-        isLoggedIn
-      );
+  //   await updateToolOnServer(
+  //     toolId,
+  //     {
+  //       // completedStep: 1,
+  //       selectedPurposes: selectedPurposes,
+  //       ideaGenerationProblemList: ideaGenerationProblemList,
+  //       ideaGenerationProblemListTitle: ideaGenerationProblemListTitle,
+  //     },
+  //     isLoggedIn
+  //   );
+  //   try {
+  //     setIsLoading(true);
+  //     // 빈 문자열이나 공백만 있는 항목 제거
+  //     // const validItems = ideaGenerationProblemList.filter(
+  //     //   (item) => item.trim() !== ""
+  //     // );
 
-      setToolSteps(1);
-    } catch (error) {
-      console.error("Error submitting problems:", error);
-      setShowPopupError(true);
-    }
-  };
+  //     // if (validItems.length === 0) {
+  //     //   // 유효한 항목이 없는 경우 처리
+  //     //   return;
+  //     // }
+
+  //     const Data = {
+  //       type: "ix_idea_generation_keyword_education",
+  //       business_info: business,
+  //       info: customerJourneyMapSelectedPersona,
+  //       problem_needs: ideaGenerationProblemList,
+  //       is_load: true,
+  //     };
+
+  //     const response = await EducationToolsRequest(Data, isLoggedIn);
+
+  //     setIdeaGenerationStartPosition(
+  //       response.response.idea_generation_keyword_education
+  //     );
+
+  //     setIsLoading(false);
+  //     await updateToolOnServer(
+  //       toolId,
+  //       {
+  //         completedStep: 1,
+  //         ideaGenerationStartPosition:
+  //           response.response.idea_generation_keyword_education,
+  //       },
+  //       isLoggedIn
+  //     );
+
+  //     setToolSteps(1);
+  //   } catch (error) {
+  //     console.error("Error submitting problems:", error);
+  //     setShowPopupError(true);
+  //   }
+  // };
 
   const handleSubmitTheme = async () => {
     handleNextStep(2);
     setToolSteps(2);
 
-    await updateToolOnServer(
-      toolId,
-      {
-        completedStep: 2,
-        ideaGenerationStartPosition: ideaGenerationStartPosition,
-        ideaGenerationSelectedStartPosition:
-          ideaGenerationSelectedStartPosition,
-        possessionTech: projectDescription,
-      },
-      isLoggedIn
-    );
+
+    // await updateToolOnServer(
+    //   responseToolId,
+    //   {
+    //     completedStep: 1,
+    //     ideaGenerationStartPosition: ideaGenerationStartPosition,
+    //     ideaGenerationSelectedStartPosition:
+    //       ideaGenerationSelectedStartPosition,
+    //   },
+    //   isLoggedIn
+    // );
   };
 
   const handlePurposeSelect = (purpose, selectBoxId, item) => {
@@ -396,26 +418,28 @@ const PageIdeaGeneration = () => {
       [selectBoxId]: false,
     }));
 
-    if (selectBoxId === "customerList" && item) {
-      setSelectedJourneyMapData(item);
+    setIdeaGenerationStartPosition(item.keywordsGenerationTag);
 
-      const persona = item.customerJourneyMapSelectedPersona;
-      const Customer = {
-        personaName: persona?.personaName || "",
-        personaCharacteristics: persona?.personaCharacteristics || "",
-        age: persona?.age || "",
-        gender: persona?.gender || "",
-        job: persona?.job || "",
-        keywords: persona?.keywords || [],
-        type: persona?.type || "",
-      };
+    // if (selectBoxId === "customerList" && item) {
+    //   setSelectedJourneyMapData(item);
 
-      setCustomerJourneyMapSelectedPersona(Customer);
-      setCustomerJourneyMapReport(item.customerJourneyMapReport);
+    //   const persona = item.customerJourneyMapSelectedPersona;
+    //   const Customer = {
+    //     personaName: persona?.personaName || "",
+    //     personaCharacteristics: persona?.personaCharacteristics || "",
+    //     age: persona?.age || "",
+    //     gender: persona?.gender || "",
+    //     job: persona?.job || "",
+    //     keywords: persona?.keywords || [],
+    //     type: persona?.type || "",
+    //   };
 
-      // handleSubmitCustomerJourney ();
-      setShouldSubmit(true);
-    }
+    //   setCustomerJourneyMapSelectedPersona(Customer);
+    //   setCustomerJourneyMapReport(item.customerJourneyMapReport);
+
+    //   // handleSubmitCustomerJourney ();
+    //   setShouldSubmit(true);
+    // }
   };
 
   const [shouldSubmit, setShouldSubmit] = useState(false);
@@ -431,14 +455,14 @@ const PageIdeaGeneration = () => {
 
     setIdeaGenerationSelectedPurpose(selectedPurposes);
 
-    const responseToolId = await createToolOnServer(
-      {
-        projectId: project._id,
-        type: "ix_idea_generation_education",
-      },
-      isLoggedIn
-    );
-    setToolId(responseToolId);
+    // const responseToolId = await createToolOnServer(
+    //   {
+    //     projectId: project._id,
+    //     type: "ix_idea_generation_education",
+    //   },
+    //   isLoggedIn
+    // );
+    // setToolId(responseToolId);
 
     try {
       if (selectedJourneyMapData) {
@@ -462,20 +486,20 @@ const PageIdeaGeneration = () => {
           )
         );
 
-        await updateToolOnServer(
-          responseToolId,
-          {
-            completedStep: 0,
-            selectedPurposes: selectedPurposes,
-            ideaGenerationProblemList:
-              response.response.idea_generation_problem_education,
-            ideaGenerationProblemListTitle:
-              response.response.idea_generation_problem_education.map(
-                (item) => item.title
-              ),
-          },
-          isLoggedIn
-        );
+        // await updateToolOnServer(
+        //   responseToolId,
+        //   {
+        //     completedStep: 0,
+        //     selectedPurposes: selectedPurposes,
+        //     ideaGenerationProblemList:
+        //       response.response.idea_generation_problem_education,
+        //     ideaGenerationProblemListTitle:
+        //       response.response.idea_generation_problem_education.map(
+        //         (item) => item.title
+        //       ),
+        //   },
+        //   isLoggedIn
+        // );
       }
 
       //       await updateToolOnServer(
@@ -499,8 +523,8 @@ const PageIdeaGeneration = () => {
   };
 
   const handleMandalArt = async () => {
-    handleNextStep(3);
-    setToolSteps(3);
+    handleNextStep(2);
+    setToolSteps(2);
     setIsLoadingReport(true);
 
     const persona_group = personaListSaas
@@ -601,7 +625,7 @@ const PageIdeaGeneration = () => {
       await updateToolOnServer(
         toolId,
         {
-          completedStep: 4,
+          completedStep: 3,
           ideaGenerationMandalArtData: apiResults,
         },
         isLoggedIn
@@ -774,7 +798,7 @@ const PageIdeaGeneration = () => {
                   </Body1>
                 </div>
               </TabButtonType5>
-              <TabButtonType5
+              {/* <TabButtonType5
                 isActive={activeTab >= 4}
                 onClick={() => completedSteps.includes(3) && setActiveTab(4)}
                 disabled={!completedSteps.includes(3) || isLoading}
@@ -785,7 +809,7 @@ const PageIdeaGeneration = () => {
                     아이디어 결과 보기
                   </Body1>
                 </div>
-              </TabButtonType5>
+              </TabButtonType5> */}
             </TabWrapType5>
 
             {activeTab === 1 && (
@@ -804,177 +828,210 @@ const PageIdeaGeneration = () => {
                   </div>
                 ) : (
                   <>
-                    <div className="title">
+          
+                    <div className="content">
+                      {!ideaGenerationStartPosition.length > 0 ? (
+                        <>
+                         <div className="title">
                       <H3 color="gray800">Problem & Needs</H3>
                       <Body3 color="gray800">
-                        고객 여정 분석을 원하는 주요 페르소나의 문제점 또는
-                        니즈를 도출하세요
+                      문제와 니즈를 창의적 해결 주제로 전환하여, 아이디어 발상의 방향을 정해주세요.
                       </Body3>
                     </div>
+                          <TabContent5Item>
+                            <div className="title">
+                              <Body1 color="gray700">
+                                니즈 키워드 가져오기
+                              </Body1>
+                            </div>
 
-                    <div className="content">
-                      <TabContent5Item>
-                        <div className="title">
-                          <Body1 color="gray700">
-                            고객 여정 지도 가져오기{" "}
-                          </Body1>
-                        </div>
-
-                        <SelectBox ref={customerListRef}>
-                          <SelectBoxTitle
-                            onClick={() =>
-                              handleSelectBoxClick(
-                                "customerList",
-                                customerListRef
-                              )
-                            }
-                            style={{
-                              cursor:
-                                toolSteps >= 1 || isContentLoading
-                                  ? "not-allowed"
-                                  : "pointer",
-                            }}
-                          >
-                            <Body2
-                              color={
-                                selectedPurposes.customerList
-                                  ? "gray800"
-                                  : "gray300"
-                              }
-                            >
-                              {selectedPurposes.customerList ||
-                                "직접 문제점을 작성합니다."}
-                            </Body2>
-                            <images.ChevronDown
-                              width="24px"
-                              height="24px"
-                              color={palette.gray500}
-                              style={{
-                                transform: selectBoxStates.customerList
-                                  ? "rotate(180deg)"
-                                  : "rotate(0deg)",
-                                transition: "transform 0.3s ease",
-                              }}
-                            />
-                          </SelectBoxTitle>
-
-                          {selectBoxStates.customerList && (
-                            <SelectBoxList dropUp={dropUpStates.customerList}>
-                              {customerJourneyList.length === 0 ? (
-                                <SelectBoxItem
-                                  disabled={
-                                    toolSteps >= 1 ||
-                                    ideaGenerationProblemList.length > 0
+                            <SelectBox ref={customerListRef}>
+                              <SelectBoxTitle
+                                onClick={() =>
+                                  handleSelectBoxClick(
+                                    "customerList",
+                                    customerListRef
+                                  )
+                                }
+                                style={{
+                                  cursor:
+                                    toolSteps >= 1 || isContentLoading
+                                      ? "not-allowed"
+                                      : "pointer",
+                                }}
+                              >
+                                <Body2
+                                  color={
+                                    selectedPurposes.customerList
+                                      ? "gray800"
+                                      : "gray300"
                                   }
                                 >
-                                  <Body2 color="gray300" align="left">
-                                    직접 문제점을 작성합니다.
-                                  </Body2>
-                                </SelectBoxItem>
-                              ) : (
-                                customerJourneyList.map((item, index) => (
-                                  <SelectBoxItem
-                                    disabled={
-                                      toolSteps >= 1 || isContentLoading
-                                    }
-                                    key={index}
-                                    onClick={() => {
-                                      handlePurposeSelect(
-                                        `${
-                                          item.customerJourneyMapSelectedPersona
-                                            .personaName || "페르소나"
-                                        }의 고객 여정 지도 (${
-                                          item.updateDate.split(":")[0]
-                                        }:${item.updateDate.split(":")[1]})`,
-                                        "customerList",
-                                        item
-                                      );
-                                    }}
-                                  >
-                                    <Body2 color="gray700" align="left">
-                                      {item.customerJourneyMapSelectedPersona
-                                        .personaName || "페르소나"}
-                                      의 고객 여정 지도 (
-                                      {item.updateDate.split(":")[0]}:
-                                      {item.updateDate.split(":")[1]})
-                                    </Body2>
-                                  </SelectBoxItem>
-                                ))
-                              )}
-                            </SelectBoxList>
-                          )}
-                        </SelectBox>
-                      </TabContent5Item>
-
-                      <TabContent5Item required>
-                        {isContentLoading ? (
-                          <div
-                            style={{
-                              width: "100%",
-                              display: "flex",
-                              justifyContent: "center",
-                              minHeight: "200px",
-                              alignItems: "center",
-                            }}
-                          >
-                            <AtomPersonaLoader message="문제점 & 니즈 리스트를 불러오고 있어요..." />
-                          </div>
-                        ) : (
-                          <>
-                            {ideaGenerationProblemList.length === 0 ? (
-                              <BoxWrap
-                                NoData
-                                style={{ height: "300px" }}
-                                onClick={() => navigate("/CustomerJourneyMap")}
-                              >
-                                <img src={images.PeopleFillPrimary2} alt="" />
-                                <Body2
-                                  color="gray700"
-                                  align="center !important"
-                                >
-                                  고객 여정 지도를 선택해주세요.
+                                  {selectedPurposes.customerList ||
+                                    "직접 문제점을 작성합니다."}
                                 </Body2>
-                              </BoxWrap>
-                            ) : (
-                              <>
-                                <div className="title">
-                                  <Body1 color="gray700">
-                                    고객 여정에서 드러난​ 핵심 문제와 니즈
-                                    항목입니다.
-                                  </Body1>
-                                </div>
-                                <MoleculeDeleteForm
-                                  items={ideaGenerationProblemListTitle || []}
-                                  setItems={setIdeaGenerationProblemListTitle}
-                                  disabled={toolSteps >= 1}
-                                  maxItems={13}
-                                  placeholder="문제점 작성"
-                                  initialItemCount={8}
-                                  edit={false}
+                                <images.ChevronDown
+                                  width="24px"
+                                  height="24px"
+                                  color={palette.gray500}
+                                  style={{
+                                    transform: selectBoxStates.customerList
+                                      ? "rotate(180deg)"
+                                      : "rotate(0deg)",
+                                    transition: "transform 0.3s ease",
+                                  }}
                                 />
-                              </>
-                            )}
-                          </>
-                        )}
-                      </TabContent5Item>
+                              </SelectBoxTitle>
+
+                              {selectBoxStates.customerList && (
+                                <SelectBoxList dropUp={dropUpStates.customerList}>
+                                  {customerJourneyList.length === 0 ? (
+                                    <SelectBoxItem
+                                      disabled={
+                                        toolSteps >= 1 ||
+                                        ideaGenerationProblemList.length > 0
+                                      }
+                                    >
+                                      <Body2 color="gray300" align="left">
+                                        직접 문제점을 작성합니다.
+                                      </Body2>
+                                    </SelectBoxItem>
+                                  ) : (
+                                    customerJourneyList.map((item, index) => (
+                                      <SelectBoxItem
+                                        disabled={
+                                          toolSteps >= 1 || isContentLoading
+                                        }
+                                        key={index}
+                                        onClick={() => {
+                                          handlePurposeSelect(
+                                            `${
+                                              item.updateDate.split(":")[0]
+                                            }:${item.updateDate.split(":")[1]}-키워드 아이디어`,
+                                            "customerList",
+                                            item
+                                          );
+                                        }}
+                                      >
+                                        <Body2 color="gray700" align="left">
+                                          {item.updateDate.split(":")[0]}:
+                                          {item.updateDate.split(":")[1]}-키워드 아이디어
+                                        </Body2>
+                                      </SelectBoxItem>
+                                    ))
+                                  )}
+                                </SelectBoxList>
+                              )}
+                            </SelectBox>
+                          </TabContent5Item>
+
+                          {!ideaGenerationStartPosition.length > 0 && (
+                            <BoxWrap
+                              NoData
+                              style={{ height: "300px", marginTop: "20px" }}
+                              onClick={() => navigate("/CustomerJourneyMap")}
+                            >
+                              <img src={images.PeopleFillPrimary2} alt="" />
+                              <Body2
+                                color="gray700"
+                                align="center !important"
+                              >
+                                니즈 키워드 툴을 선행하세요.
+                              </Body2>
+                            </BoxWrap>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {isContentLoading ? (
+                            <div
+                              style={{
+                                width: "100%",
+                                display: "flex",
+                                justifyContent: "center",
+                                minHeight: "200px",
+                                alignItems: "center",
+                              }}
+                            >
+                              <AtomPersonaLoader message="문제점 & 니즈 리스트를 불러오고 있어요..." />
+                            </div>
+                          ) : (
+                            <>
+                              <div className="title">
+                                <H3 color="gray800">Idea Generation Theme</H3>
+                                <Body3 color="gray800">
+                                  문제와 니즈를 창의적 해결 주제로 전환하여, 아이디어
+                                  발상의 방향을 정해주세요.
+                                </Body3>
+                              </div>
+                              <div className="content">
+                                <ListBoxGroup>
+                                  <li>
+                                    <Body2 color="gray500">분석 장면 선택</Body2>
+
+                                    <Body2
+                                      color={
+                                        ideaGenerationSelectedStartPosition?.length > 0
+                                          ? "gray500"
+                                          : "gray300"
+                                      }
+                                      style={{
+                                        whiteSpace: "normal",
+                                        wordBreak: "keep-all",
+                                        wordWrap: "break-word",
+                                        overflow: "visible",
+                                        maxWidth: "100%",
+                                        textAlign: "left",
+                                      }}
+                                    >
+                                      {ideaGenerationSelectedStartPosition?.length > 0
+                                        ? ideaGenerationSelectedStartPosition
+                                            .map((item) => item.theme)
+                                            .join(", ")
+                                        : "선택해주세요"}
+                                    </Body2>
+                                  </li>
+                                </ListBoxGroup>
+                              </div>
+
+                              <div className="content">
+                                <Title style={{ marginBottom: "-18px" }}>
+                                  <Body1 color="gray700">
+                                    아이디어 시작점을 선택하세요 (8개 선택필수)
+                                  </Body1>
+                                </Title>
+
+                                <CardGroupWrap ideaGeneration>
+                                  <MoleculeTagList
+                                    items={
+                                      ideaGenerationStartPosition
+                                        .map((item) => item.content)
+                                        .flat() // 모든 content 배열을 하나로 합침
+                                    }
+                                    disabled={toolSteps >= 1}
+                                  />
+                                </CardGroupWrap>
+                              </div>
+                            </>
+                          )}
+                        </>
+                      )}
                     </div>
 
-                    {ideaGenerationProblemListTitle.length > 0 && (
-                      <Button
-                        Other
-                        Primary
-                        Fill
-                        Round
-                        onClick={handleSubmitProblem}
-                        disabled={
-                          isContentLoading ||
-                          toolSteps >= 1 ||
-                          selectedPurposes.customerList.length === 0
-                        }
-                      >
-                        아이디어 키워드 추출
-                      </Button>
-                    )}
+                    <Button
+                      Other
+                      Primary
+                      Fill
+                      Round
+                      onClick={handleSubmitIdea}
+                      disabled={
+                        isContentLoading ||
+                        toolSteps >= 1 ||
+                        ideaGenerationSelectedStartPosition.length < 8
+                      }
+                    >
+                      아이디어 키워드 추출
+                    </Button>
                   </>
                 )}
               </TabContent5>
@@ -996,227 +1053,94 @@ const PageIdeaGeneration = () => {
                   </div>
                 ) : (
                   <>
-                    <div className="title">
-                      <H3 color="gray800">Idea Generation Theme</H3>
-                      <Body3 color="gray800">
-                        문제와 니즈를 창의적 해결 주제로 전환하여, 아이디어
-                        발상의 방향을 정해주세요.
-                      </Body3>
-                    </div>
-
-                    <div className="content">
-                      <ListBoxGroup>
-                        <li>
-                          <Body2 color="gray500">고객 여정 맵</Body2>
-
-                          <Body2 color="gray500">
-                            {selectedPurposes.customerList}
-                          </Body2>
-                        </li>
-
-                        <li>
-                          <Body2 color="gray500">분석 장면 선택</Body2>
-
-                          <Body2
-                            color={
-                              ideaGenerationSelectedStartPosition?.length > 0
-                                ? "gray500"
-                                : "gray300"
-                            }
-                            style={{
-                              whiteSpace: "normal",
-                              wordBreak: "keep-all",
-                              wordWrap: "break-word",
-                              overflow: "visible",
-                              maxWidth: "100%",
-                              textAlign: "left",
-                            }}
-                          >
-                            {ideaGenerationSelectedStartPosition?.length > 0
-                              ? ideaGenerationSelectedStartPosition
-                                  .map((item) => item.theme)
-                                  .join(", ")
-                              : "선택해주세요"}
-                          </Body2>
-                        </li>
-                      </ListBoxGroup>
-                    </div>
-
-                    <div className="content">
-                      <Title style={{ marginBottom: "-18px" }}>
-                        <Body1 color="gray700">
-                          아이디어 시작점을 선택하세요 (8개 선택필수)
-                        </Body1>
-                      </Title>
-
-                      <CardGroupWrap ideaGeneration>
-                        <MoleculeTagList
-                          items={
-                            ideaGenerationStartPosition
-                              .map((item) => item.content)
-                              .flat() // 모든 content 배열을 하나로 합침
-                          }
-                          disabled={toolSteps >= 2}
-                        />
-                      </CardGroupWrap>
-
-                      {/* <div className="content">
-                        <TabContent5Item required>
-                          <Title>
-                            <Body1 color="gray700">
-                              보유하고 있는 기술을 작성하세요
-                            </Body1>
-                          </Title>
-
-                          <FormBox Large>
-                            <CustomTextarea
-                              Edit
-                              rows={4}
-                              placeholder="보유 기술을 입력하시면, 아이디어가 더 잘나와요 "
-                              maxLength={150}
-                              status="valid"
-                              value={projectDescription}
-                              onChange={(e) => {
-                                handleInputChange(
-                                  "projectDescription",
-                                  e.target.value
-                                );
-                                setDescriptionLength(e.target.value.length);
-                              }}
-                              disabled={
-                                completedSteps.includes(2) || toolSteps >= 2
-                              }
-                            />
-                            <Body2 color="gray300" align="right">
-                              {descriptionLength} / 150
-                            </Body2>
-                          </FormBox>
-                        </TabContent5Item>
-                      </div> */}
-                    </div>
-                  </>
-                )}
-                <Button
-                  Other
-                  Primary
-                  Fill
-                  Round
-                  onClick={handleSubmitTheme}
-                  disabled={
-                    ideaGenerationSelectedStartPosition.length < 8 ||
-                    toolSteps >= 2
-                  }
-                >
-                  다음
-                </Button>
-              </TabContent5>
-            )}
-
-            {activeTab === 3 && completedSteps.includes(2) && (
-              <TabContent5 Small>
-                {isLoadingReport ? (
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      minHeight: "200px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
+                  <div className="title">
+                    <H3 color="gray800">Participating Persona</H3>
+                    <Body3 color="gray800">
+                      함께 아이디에이션에 참여하는 페르소나들을 확인해보세요
+                    </Body3>
                   </div>
-                ) : (
-                  <>
-                    <div className="title">
-                      <H3 color="gray800">Participating Persona</H3>
-                      <Body3 color="gray800">
-                        함께 아이디에이션에 참여하는 페르소나들을 확인해보세요
-                      </Body3>
-                    </div>
 
-                    <div className="content">
-                      <ListBoxGroup>
-                        <li>
-                          <Body2 color="gray500">고객 여정 맵</Body2>
+                  <div className="content">
+                    <ListBoxGroup>
+                      {/* <li>
+                        <Body2 color="gray500">고객 여정 맵</Body2>
 
-                          <Body2 color="gray500">
-                            {selectedPurposes.customerList}
-                          </Body2>
-                        </li>
+                        <Body2 color="gray500">
+                          {selectedPurposes.customerList}
+                        </Body2>
+                      </li> */}
 
-                        <li>
-                          <Body2 color="gray500">분석 장면 선택</Body2>
+                      <li>
+                        <Body2 color="gray500">분석 장면 선택</Body2>
 
-                          <Body2
-                            color={
-                              ideaGenerationSelectedStartPosition?.length > 0
-                                ? "gray500"
-                                : "gray300"
+                        <Body2
+                          color={
+                            ideaGenerationSelectedStartPosition?.length > 0
+                              ? "gray500"
+                              : "gray300"
+                          }
+                          // style={{
+                          //   whiteSpace: "nowrap",
+                          //   overflow: "hidden",
+                          //   textOverflow: "ellipsis",
+                          //   maxWidth: "100%",
+                          // }}
+                          style={{
+                            whiteSpace: "normal",
+                            wordBreak: "keep-all",
+                            wordWrap: "break-word",
+                            overflow: "visible",
+                            maxWidth: "100%",
+                            textAlign: "left",
+                          }}
+                        >
+                          {ideaGenerationSelectedStartPosition?.length > 0
+                            ? ideaGenerationSelectedStartPosition
+                                .map((item) => item.theme)
+                                .join(", ")
+                            : "선택해주세요"}
+                        </Body2>
+                      </li>
+                    </ListBoxGroup>
+                  </div>
+
+                  <div className="content">
+                    <TabContent5Item style={{ marginTop: "20px" }}>
+                      <div className="title">
+                        <Body1 color="gray800">
+                          Favorite 페르소나 리스트
+                        </Body1>
+                      </div>
+                      {personaListSaas.filter(
+                        (item) => item.favorite === true
+                      ).length >= 20 ? (
+                        <MoleculePersonaSelectCard
+                          filteredPersonaList={personaListSaas}
+                          hideSelectButton={true}
+                        />
+                      ) : (
+                        <BoxWrap
+                          Hover
+                          NoData
+                          Border
+                          onClick={() => navigate("/AiPersona")}
+                        >
+                          <img src={images.PeopleStarFillPrimary} alt="" />
+                          <Body2 color="gray500" align="center !important">
+                            즐겨찾기를 하시면 관심 있는 페르소나를 해당
+                            페이지에서 확인하실 수 있습니다.{" "}
+                            {
+                              personaListSaas.filter(
+                                (item) => item.favorite === true
+                              ).length
                             }
-                            // style={{
-                            //   whiteSpace: "nowrap",
-                            //   overflow: "hidden",
-                            //   textOverflow: "ellipsis",
-                            //   maxWidth: "100%",
-                            // }}
-                            style={{
-                              whiteSpace: "normal",
-                              wordBreak: "keep-all",
-                              wordWrap: "break-word",
-                              overflow: "visible",
-                              maxWidth: "100%",
-                              textAlign: "left",
-                            }}
-                          >
-                            {ideaGenerationSelectedStartPosition?.length > 0
-                              ? ideaGenerationSelectedStartPosition
-                                  .map((item) => item.theme)
-                                  .join(", ")
-                              : "선택해주세요"}
                           </Body2>
-                        </li>
-                      </ListBoxGroup>
-                    </div>
-
-                    <div className="content">
-                      <TabContent5Item style={{ marginTop: "20px" }}>
-                        <div className="title">
-                          <Body1 color="gray800">
-                            Favorite 페르소나 리스트
-                          </Body1>
-                        </div>
-                        {personaListSaas.filter(
-                          (item) => item.favorite === true
-                        ).length >= 20 ? (
-                          <MoleculePersonaSelectCard
-                            filteredPersonaList={personaListSaas}
-                            hideSelectButton={true}
-                          />
-                        ) : (
-                          <BoxWrap
-                            Hover
-                            NoData
-                            Border
-                            onClick={() => navigate("/AiPersona")}
-                          >
-                            <img src={images.PeopleStarFillPrimary} alt="" />
-                            <Body2 color="gray500" align="center !important">
-                              즐겨찾기를 하시면 관심 있는 페르소나를 해당
-                              페이지에서 확인하실 수 있습니다.{" "}
-                              {
-                                personaListSaas.filter(
-                                  (item) => item.favorite === true
-                                ).length
-                              }
-                            </Body2>
-                          </BoxWrap>
-                        )}
-                      </TabContent5Item>
-                    </div>
-                  </>
+                        </BoxWrap>
+                      )}
+                    </TabContent5Item>
+                  </div>
+                </>
                 )}
-
                 <Button
                   Other
                   Primary
@@ -1224,7 +1148,7 @@ const PageIdeaGeneration = () => {
                   Round
                   onClick={handleMandalArt}
                   disabled={
-                    toolSteps >= 3 ||
+                    toolSteps >= 2 ||
                     personaListSaas.filter((item) => item.favorite === true)
                       .length < 20
                   }
@@ -1234,7 +1158,8 @@ const PageIdeaGeneration = () => {
               </TabContent5>
             )}
 
-            {activeTab === 4 && completedSteps.includes(3) && (
+
+            {activeTab === 3 && completedSteps.includes(2) && (
               <TabContent5 Small>
                 {isLoadingReport ? (
                   <div
