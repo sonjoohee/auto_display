@@ -61,48 +61,40 @@ const KanoModelGraph = () => {
 
     return Object.entries(kanoModelGraphData).map(([title, data], index) => {
       const xValue = data.CSP * 100;
-      const yValue = Math.abs(data.CSM) * 100;
-      // 0 -> 'A', 1 -> 'B', ...
+      const yValue = (data.CSM + 1) * 100;
       const indexCode = String.fromCharCode(65 + index);
 
       return {
         x: xValue,
         y: yValue,
         title: title,
-        indexCode: indexCode, // 인덱스 코드 추가
-        size: 24, // 데이터 포인트 크기 증가
+        indexCode: indexCode,
+        size: 24,
       };
     });
   };
 
   const transformAverageKanoData = (kanoModelGraphData) => {
-    // 입력 데이터가 유효한 객체인지 확인합니다.
     if (
       !kanoModelGraphData ||
       typeof kanoModelGraphData !== "object" ||
       Array.isArray(kanoModelGraphData)
     ) {
-      return { avgCSP: 0, avgCSM: 0 }; // 유효하지 않으면 기본값 반환
+      return { avgCSP: 0, avgCSM: 0 };
     }
 
     const dataEntries = Object.values(kanoModelGraphData);
     const numberOfEntries = dataEntries.length;
 
-    // 데이터가 없는 경우 기본값 반환
     if (numberOfEntries === 0) {
       return { avgCSP: 0, avgCSM: 0 };
     }
 
-    // CSP와 CSM 값의 합계를 계산합니다.
     const sumCSP = dataEntries.reduce((sum, data) => sum + data.CSP, 0);
-    const sumCSM = dataEntries.reduce(
-      (sum, data) => sum + Math.abs(data.CSM),
-      0
-    );
+    const sumCSM = dataEntries.reduce((sum, data) => sum + data.CSM, 0);
 
-    // 평균을 계산하고 백분율로 변환합니다.
     const avgCSP = (sumCSP / numberOfEntries) * 100;
-    const avgCSM = (sumCSM / numberOfEntries) * 100;
+    const avgCSM = (sumCSM / numberOfEntries + 1) * 100;
 
     return { avgCSP, avgCSM };
   };
@@ -146,11 +138,11 @@ const KanoModelGraph = () => {
 
   // Helper function to get quadrant name
   const getQuadrantName = (x, y) => {
-    if (x > 50 && y > 50) return "One-dimensional"; // 매력적 품질 (우상단)
-    if (x <= 50 && y > 50) return "Attractive"; // 일원적 품질 (좌상단)
-    if (x > 50 && y <= 50) return "Must-be"; // 당연 품질 (우하단)
-    if (x <= 50 && y <= 50) return "Indifferent"; // 무관심 품질 (좌하단)
-    return ""; // Should not happen
+    if (x > 50 && y > 50) return "One-dimensional"; // 일원적 품질 (우상단): 만족 높음, 불만족 낮음
+    if (x <= 50 && y > 50) return "Attractive"; // 매력적 품질 (좌상단): 만족 낮음, 불만족 낮음
+    if (x > 50 && y <= 50) return "Must-be"; // 당연 품질 (우하단): 만족 높음, 불만족 높음
+    if (x <= 50 && y <= 50) return "Indifferent"; // 무관심 품질 (좌하단): 만족 낮음, 불만족 높음
+    return "";
   };
 
   // 1. 기본 데이터 변환
