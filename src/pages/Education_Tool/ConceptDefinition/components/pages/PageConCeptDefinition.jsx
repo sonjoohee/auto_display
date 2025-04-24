@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -92,13 +91,17 @@ const PageConceptDefinition = () => {
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
-  const [conceptDefinitionFinalReport, setConceptDefinitionFinalReport] = useAtom(CONCEPT_DEFINITION_FINAL_REPORT);
+  const [conceptDefinitionFinalReport, setConceptDefinitionFinalReport] =
+    useAtom(CONCEPT_DEFINITION_FINAL_REPORT);
   const [psstBusinessInfo, setPsstBusinessInfo] = useAtom(PSST_BUSINESS_INFO);
   const [, setPsstFileId] = useAtom(PSST_FILE_ID);
   const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useAtom(
     PROJECT_ANALYSIS_MULTIMODAL
   );
-  const [conceptDefinitionSelectedPersona, setConceptDefinitionSelectedPersona] = useAtom(CONCEPT_DEFINITION_SELECTED_PERSONA);
+  const [
+    conceptDefinitionSelectedPersona,
+    setConceptDefinitionSelectedPersona,
+  ] = useAtom(CONCEPT_DEFINITION_SELECTED_PERSONA);
   const [
     projectAnalysisMultimodalKeyMessage,
     setProjectAnalysisMultimodalKeyMessage,
@@ -113,7 +116,8 @@ const PageConceptDefinition = () => {
   const [selectedTemplete, setSelectedTemplete] = useAtom(
     PSST_SELECTED_TEMPLETE
   );
-  const [conceptDefinitionFirstReport, setConceptDefinitionFirstReport] = useAtom(CONCEPT_DEFINITION_FIRST_REPORT); 
+  const [conceptDefinitionFirstReport, setConceptDefinitionFirstReport] =
+    useAtom(CONCEPT_DEFINITION_FIRST_REPORT);
 
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
@@ -218,7 +222,6 @@ const PageConceptDefinition = () => {
     setToolLoading(false);
   }, [toolLoading]);
 
-  
   // KanoModel 리스트 가져오기
   useEffect(() => {
     const getAllTargetDiscovery = async () => {
@@ -249,7 +252,7 @@ const PageConceptDefinition = () => {
 
     getAllTargetDiscovery();
   }, [isLoggedIn, projectSaas]);
-  console.log("kanomodel",kanoModelList)
+  console.log("kanomodel", kanoModelList);
 
   const handleCheckboxChange = (index) => {
     if (toolSteps >= 2) return;
@@ -294,9 +297,7 @@ const PageConceptDefinition = () => {
   const handleSubmitPersona = async () => {
     handleNextStep(1);
     setToolSteps(1);
-    console.log("selectedPersonas",selectedPersonas)
-
-    
+    console.log("selectedPersonas", selectedPersonas);
 
     // const responseToolId = await createToolOnServer(
     //   {
@@ -308,14 +309,12 @@ const PageConceptDefinition = () => {
     // );
 
     // setToolId(responseToolId);
-
-  }
-
+  };
 
   const handleCheckValue = async () => {
     setIsLoading(true);
 
-    const personaGroup = selectedPersonas.map(persona => ({
+    const personaGroup = selectedPersonas.map((persona) => ({
       personaName: persona.personaName,
       personaCharacteristics: persona.personaCharacteristics,
       type: persona.type,
@@ -324,7 +323,7 @@ const PageConceptDefinition = () => {
       job: persona.job,
       keywords: persona.keywords,
     }));
-    
+
     try {
       const data = {
         type: "ix_concept_definition_report_education",
@@ -333,16 +332,14 @@ const PageConceptDefinition = () => {
         kano_model: kanoModelList,
       };
 
-      let response = await EducationToolsRequest(
-        data,
-        isLoggedIn
+      let response = await EducationToolsRequest(data, isLoggedIn);
+
+      console.log("response", response);
+
+      setConceptDefinitionFirstReport(
+        response.response.concept_definition_report_education
       );
 
-      console.log("response", response)
-
-      setConceptDefinitionFirstReport(response.response.concept_definition_report_education)
-
-    
       setIsLoading(false);
     } catch (error) {
       console.error("Error:", error);
@@ -370,11 +367,8 @@ const PageConceptDefinition = () => {
           concept_definition_report_education: conceptDefinitionFirstReport,
         };
 
-        let response = await EducationToolsRequest(
-          apiRequestData,
-          isLoggedIn
-        );
-        console.log("response", response)
+        let response = await EducationToolsRequest(apiRequestData, isLoggedIn);
+        console.log("response", response);
         setConceptDefinitionFinalReport(response.response);
 
         // const maxAttempts = 10;
@@ -426,20 +420,16 @@ const PageConceptDefinition = () => {
     }
   };
 
-
-
   const handlePurposeSelect = (purpose, selectBoxId) => {
     setSelectedPurposes((prev) => ({
       ...prev,
       [selectBoxId]: purpose,
     }));
 
-
     setSelectBoxStates((prev) => ({
       ...prev,
       [selectBoxId]: false,
     }));
-
   };
 
   useEffect(() => {
@@ -490,8 +480,6 @@ const PageConceptDefinition = () => {
     };
   }, [navigate]);
 
-
-
   return (
     <>
       <DropzoneStyles />
@@ -527,7 +515,7 @@ const PageConceptDefinition = () => {
                 <span>02</span>
                 <div className="text">
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                   핵심가치 도출
+                    핵심가치 도출
                   </Body1>
                   {/* <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Analyze Key Points​
@@ -547,7 +535,6 @@ const PageConceptDefinition = () => {
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     컨셉 정의서
                   </Body1>
-                
                 </div>
               </TabButtonType5>
             </TabWrapType5>
@@ -608,26 +595,25 @@ const PageConceptDefinition = () => {
                             </PersonaGroup>
                           ) : (
                             <Body2 color="gray300">
-                              아래 리스트에서 페르소나를 선택해주세요 (최대 3명 선택가능) 
+                              아래 리스트에서 페르소나를 선택해주세요 (최대 3명
+                              선택가능)
                             </Body2>
                           )}
                         </li>
                       </ListBoxGroup>
                     </div>
 
-
                     <div className="title">
-                        <Body1
-                          color="gray800"
-                          style={{ textAlign: "left", marginBottom: "-20px" }}
-                        >
-                         Favorite 페르소나 리스트  
-                        </Body1>
-                      </div>
+                      <Body1
+                        color="gray800"
+                        style={{ textAlign: "left", marginBottom: "-20px" }}
+                      >
+                        Favorite 페르소나 리스트
+                      </Body1>
+                    </div>
 
-                    {personaListSaas.filter(
-                          (item) => item.favorite === true
-                        ).length >= 20 ? (
+                    {personaListSaas.filter((item) => item.favorite === true)
+                      .length >= 20 ? (
                       <MoleculePersonaSelectCard
                         filteredPersonaList={personaListSaas}
                         selectedPersonas={selectedPersonas}
@@ -636,27 +622,25 @@ const PageConceptDefinition = () => {
                         }}
                         interviewType="multiple"
                         // onPersonaSelect={handlePersonaSelect}
-                        
-
                       />
                     ) : (
                       <BoxWrap
-                      Hover
-                      NoData
-                      Border
-                      onClick={() => navigate("/AiPersona")}
-                    >
-                      <img src={images.PeopleStarFillPrimary} alt="" />
-                      <Body2 color="gray500" align="center !important">
-                        즐겨찾기를 하시면 관심 있는 페르소나를 해당
-                        페이지에서 확인하실 수 있습니다.
-                        {
-                          personaListSaas.filter(
-                            (item) => item.favorite === true
-                          ).length
-                        }
-                      </Body2>
-                    </BoxWrap>
+                        Hover
+                        NoData
+                        Border
+                        onClick={() => navigate("/AiPersona")}
+                      >
+                        <img src={images.PeopleStarFillPrimary} alt="" />
+                        <Body2 color="gray500" align="center !important">
+                          즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서
+                          확인하실 수 있습니다.
+                          {
+                            personaListSaas.filter(
+                              (item) => item.favorite === true
+                            ).length
+                          }
+                        </Body2>
+                      </BoxWrap>
                     )}
                   </div>
 
@@ -666,10 +650,7 @@ const PageConceptDefinition = () => {
                     Fill
                     Round
                     onClick={handleSubmitPersona}
-                    disabled={
-                      toolSteps >= 1 ||
-                      !selectedPersonas
-                    }
+                    disabled={toolSteps >= 1 || !selectedPersonas}
                   >
                     다음
                   </Button>
@@ -679,93 +660,89 @@ const PageConceptDefinition = () => {
 
             {activeTab === 2 && completedSteps.includes(1) && (
               <TabContent5>
-                
-                  <>
-                    <div className="title">
-                      <H3 color="gray800">Core Value Analysis</H3>
-                      <Body3 color="gray800">
-                      Kano Model 결과를 기반으로 비즈니스의 주요 가치를 도출합니다
-                      </Body3>
-                    </div>
+                <>
+                  <div className="title">
+                    <H3 color="gray800">Core Value Analysis</H3>
+                    <Body3 color="gray800">
+                      Kano Model 결과를 기반으로 비즈니스의 주요 가치를
+                      도출합니다
+                    </Body3>
+                  </div>
 
-                    <div className="content">
-                      <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
-                        <div className="selectBoxWrap">
-                          <Body2 color="gray500" style={{ width: "110px" }}>
-                            페르소나 선택
-                          </Body2>
-                          {selectedPersonas ? (
-                            <PersonaGroup>
-                              {Array.isArray(selectedPersonas) ? (
-                                <>
-                                  {selectedPersonas.length > 3 && (
-                                    <span>+{selectedPersonas.length - 3}</span>
-                                  )}
-                                  {selectedPersonas
-                                    .slice(0, 3)
-                                    .map((persona, index) => (
-                                      <Persona key={index} size="Small" Round>
-                                        <img
-                                          src={
-                                            personaImages[persona.imageKey] ||
-                                            (persona.gender === "남성"
-                                              ? personaImages.persona_m_20_01 // 남성 기본 이미지
-                                              : personaImages.persona_f_20_01) // 여성 기본 이미지
-                                          }
-                                          alt={persona.persona}
-                                        />
-                                      </Persona>
-                                    ))}
-                                </>
-                              ) : (
-                                <Persona size="Small" Round>
-                                  <img
-                                    src={
-                                      personaImages[
-                                        selectedPersonas.imageKey
-                                      ] ||
-                                      (selectedPersonas.gender === "남성"
-                                        ? personaImages.persona_m_20_01 // 남성 기본 이미지
-                                        : personaImages.persona_f_20_01) // 여성 기본 이미지
-                                    }
-                                    alt={selectedPersonas.persona}
-                                  />
-                                </Persona>
-                              )}
-                            </PersonaGroup>
-                          ) : (
-                            <Body2 color="gray300">
-                            
-                            </Body2>
-                          )}
-                        </div>
-                        <div className="selectBoxWrap">
-                          <Body2 color="gray500" style={{ width: "110px" }}>
-                           핵심 가치 선택
-                          </Body2>
-                          <SelectBox style={{ paddingRight: "20px" }}>
-                            <SelectBoxTitle
-                              onClick={() =>
-                                toolSteps >= 2
-                                  ? null
-                                  : setIsSelectBoxOpen(!isSelectBoxOpen)
-                              }
-                              None
-                              style={{
-                                cursor:
-                                  toolSteps >= 2 ? "not-allowed" : "pointer",
-                              }}
-                            >
-                              {selectedPurposes?.customerList ? (
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "4px",
-                                    paddingLeft: "20px",
-                                  }}
-                                >
-                                  {/* <Body1 color="gray700" align="left">
+                  <div className="content">
+                    <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
+                      <div className="selectBoxWrap">
+                        <Body2 color="gray500" style={{ width: "110px" }}>
+                          페르소나 선택
+                        </Body2>
+                        {selectedPersonas ? (
+                          <PersonaGroup>
+                            {Array.isArray(selectedPersonas) ? (
+                              <>
+                                {selectedPersonas.length > 3 && (
+                                  <span>+{selectedPersonas.length - 3}</span>
+                                )}
+                                {selectedPersonas
+                                  .slice(0, 3)
+                                  .map((persona, index) => (
+                                    <Persona key={index} size="Small" Round>
+                                      <img
+                                        src={
+                                          personaImages[persona.imageKey] ||
+                                          (persona.gender === "남성"
+                                            ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                            : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                        }
+                                        alt={persona.persona}
+                                      />
+                                    </Persona>
+                                  ))}
+                              </>
+                            ) : (
+                              <Persona size="Small" Round>
+                                <img
+                                  src={
+                                    personaImages[selectedPersonas.imageKey] ||
+                                    (selectedPersonas.gender === "남성"
+                                      ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                      : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                  }
+                                  alt={selectedPersonas.persona}
+                                />
+                              </Persona>
+                            )}
+                          </PersonaGroup>
+                        ) : (
+                          <Body2 color="gray300"></Body2>
+                        )}
+                      </div>
+                      <div className="selectBoxWrap">
+                        <Body2 color="gray500" style={{ width: "110px" }}>
+                          핵심 가치 선택
+                        </Body2>
+                        <SelectBox style={{ paddingRight: "20px" }}>
+                          <SelectBoxTitle
+                            onClick={() =>
+                              toolSteps >= 2
+                                ? null
+                                : setIsSelectBoxOpen(!isSelectBoxOpen)
+                            }
+                            None
+                            style={{
+                              cursor:
+                                toolSteps >= 2 ? "not-allowed" : "pointer",
+                            }}
+                          >
+                            {selectedPurposes?.customerList ? (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "4px",
+                                  paddingLeft: "20px",
+                                }}
+                              >
+                                {/* <Body1 color="gray700" align="left">
                                     {
                                       selectedPurposes?.analysisScope?.split(
                                         "|"
@@ -773,7 +750,7 @@ const PageConceptDefinition = () => {
                                     }{" "}
                                     |
                                   </Body1> */}
-                                      <Body2
+                                <Body2
                                   color={
                                     selectedPurposes.customerList
                                       ? "gray800"
@@ -783,53 +760,53 @@ const PageConceptDefinition = () => {
                                   {selectedPurposes.customerList ||
                                     "직접 문제점을 작성합니다."}
                                 </Body2>
-                                  {/* <Body2 color="gray700" align="left">
+                                {/* <Body2 color="gray700" align="left">
                                     {
                                       selectedPurposes?.analysisScope?.split(
                                         "|"
                                       )[1]
                                     }
                                   </Body2> */}
-                                </div>
-                              ) : (
-                                <Body2
-                                  color="gray300"
-                                  style={{ paddingLeft: "20px" }}
-                                >
-                                  Kano Model 결과 중 하나를 선택하세요.
-                                </Body2>
-                              )}
-                              <images.ChevronDown
-                                width="24px"
-                                height="24px"
-                                color={
-                                  toolSteps >= 1
-                                    ? palette.gray300
-                                    : palette.gray500
-                                }
-                                style={{
-                                  transform: isSelectBoxOpen
-                                    ? "rotate(180deg)"
-                                    : "rotate(0deg)",
-                                  transition: "transform 0.3s ease",
-                                }}
-                              />
-                            </SelectBoxTitle>
+                              </div>
+                            ) : (
+                              <Body2
+                                color="gray300"
+                                style={{ paddingLeft: "20px" }}
+                              >
+                                Kano Model 결과 중 하나를 선택하세요.
+                              </Body2>
+                            )}
+                            <images.ChevronDown
+                              width="24px"
+                              height="24px"
+                              color={
+                                toolSteps >= 1
+                                  ? palette.gray300
+                                  : palette.gray500
+                              }
+                              style={{
+                                transform: isSelectBoxOpen
+                                  ? "rotate(180deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.3s ease",
+                              }}
+                            />
+                          </SelectBoxTitle>
 
-                            {isSelectBoxOpen && (
-                              <SelectBoxList>
-                                {kanoModelList?.map((item, index) => (
-                                  <SelectBoxItem
-                                    key={index}
-                                    onClick={() => {
-                                      handlePurposeSelect(
-                                        ` ${
-                                          item.updateDate.split(":")[0]
-                                        }:${item.updateDate.split(":")[1]}-Kano Model 결과`,
-                                        "customerList",
-                                        item
-                                      );
-                                    
+                          {isSelectBoxOpen && (
+                            <SelectBoxList>
+                              {kanoModelList?.map((item, index) => (
+                                <SelectBoxItem
+                                  key={index}
+                                  onClick={() => {
+                                    handlePurposeSelect(
+                                      ` ${item.updateDate.split(":")[0]}:${
+                                        item.updateDate.split(":")[1]
+                                      }-Kano Model 결과`,
+                                      "customerList",
+                                      item
+                                    );
+
                                     setIsSelectBoxOpen(false);
                                   }}
                                 >
@@ -837,83 +814,84 @@ const PageConceptDefinition = () => {
                                     상황 중심 여정 분석 |{" "}
                                   </Body1> */}
                                   <Body2 color="gray700" align="left">
-                                 
-                                      {item.updateDate.split(":")[0]}:
-                                      {item.updateDate.split(":")[1]} - Kano Model 결과
+                                    {item.updateDate.split(":")[0]}:
+                                    {item.updateDate.split(":")[1]} - Kano Model
+                                    결과
                                   </Body2>
                                 </SelectBoxItem>
-                                ))}
-                              </SelectBoxList>
-                            )}
-                          </SelectBox>
-                        </div>
-                      </BoxWrap>
-                     
+                              ))}
+                            </SelectBoxList>
+                          )}
+                        </SelectBox>
+                      </div>
+                    </BoxWrap>
 
-                        {isLoading ? (
-                          <div
-                            style={{
-                              width: "100%",
-                              display: "flex",
-                              justifyContent: "center",
-                              minHeight: "200px",
-                              alignItems: "center",
-                            }}
-                          >
-                            <AtomPersonaLoader message={`분석 중이예요 ...`} />
-                          </div>
-                        ) : (
-                        <InsightAnalysis>
-                          <div
-                            className="markdown-body"
-                            style={{
-                              textAlign: "left",
-                            }}
-                          >
-                            <Markdown>
-                              {prepareMarkdown(
-                               conceptDefinitionFirstReport ?? ""
-                              )}
-                            </Markdown>
-                          </div>
-                        </InsightAnalysis>
-                        )}
-            
-                    </div>
-                    {conceptDefinitionFirstReport && conceptDefinitionFirstReport.length > 0 ? (
+                    {isLoading ? (
                       <div
                         style={{
+                          width: "100%",
                           display: "flex",
-                          gap: "8px",
-                          justifyContent: "flex-end",
+                          justifyContent: "center",
+                          minHeight: "200px",
+                          alignItems: "center",
                         }}
                       >
-                        <Button
-                          Other
-                          Primary
-                          Fill
-                          Round
-                          onClick={handleReportRequest}
-                          disabled={toolSteps > 2}
-                        >
-                         컨셉 정의 작성하기
-                        </Button>
+                        <AtomPersonaLoader message={`분석 중이예요 ...`} />
                       </div>
                     ) : (
+                      <InsightAnalysis>
+                        <div
+                          className="markdown-body"
+                          style={{
+                            textAlign: "left",
+                          }}
+                        >
+                          <Markdown>
+                            {prepareMarkdown(
+                              conceptDefinitionFirstReport ?? ""
+                            )}
+                          </Markdown>
+                        </div>
+                      </InsightAnalysis>
+                    )}
+                  </div>
+                  {conceptDefinitionFirstReport &&
+                  conceptDefinitionFirstReport.length > 0 ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "8px",
+                        justifyContent: "flex-end",
+                      }}
+                    >
                       <Button
                         Other
                         Primary
                         Fill
                         Round
-                        onClick={handleCheckValue}
-                        disabled={toolSteps > 2 || !selectedPurposes.customerList || isLoading}
+                        onClick={handleReportRequest}
+                        disabled={toolSteps > 2}
                       >
-                       페르소나 & 핵심가치 확인
+                        컨셉 정의 작성하기
                       </Button>
-                    )}
-
-                  </>
-                
+                    </div>
+                  ) : (
+                    <Button
+                      Other
+                      Primary
+                      Fill
+                      Round
+                      onClick={handleCheckValue}
+                      disabled={
+                        toolSteps > 2 ||
+                        !selectedPurposes.customerList ||
+                        isLoading
+                      }
+                    >
+                      페르소나 & 핵심가치 확인
+                    </Button>
+                  )}
+                </>
               </TabContent5>
             )}
 
