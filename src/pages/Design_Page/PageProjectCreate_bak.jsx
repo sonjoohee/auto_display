@@ -604,7 +604,7 @@ const PageProjectCreate = () => {
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect(
-                                    "정보통신 및 기술 (IT, 소프트웨어, 커뮤니티, 광고, 마케팅 등)",
+                                    "정보통신 및 기술",
                                     "industry"
                                   )
                                 }
@@ -617,19 +617,19 @@ const PageProjectCreate = () => {
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect(
-                                    "금융 및 법률 (핀테크, 인사, 법률 등)",
+                                    "금융 및 법률",
                                     "industry"
                                   )
                                 }
                               >
                                 <Body2 color="gray700" align="left">
-                                  금융 및 법률 (핀테크, 인사, 법률 등)
+                                  금융 및 법률
                                 </Body2>
                               </SelectBoxItem>
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect(
-                                    "제조 및 생산 (의류, 뷰티, 식음료, 환경/에너지 등)",
+                                    "제조 및 생산",
                                     "industry"
                                   )
                                 }
@@ -642,31 +642,31 @@ const PageProjectCreate = () => {
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect(
-                                    "건설 및 인프라 (부동산, 모빌리티, 물류 등)",
+                                    "건설 및 인프라",
                                     "industry"
                                   )
                                 }
                               >
                                 <Body2 color="gray700" align="left">
-                                  건설 및 인프라 (부동산, 모빌리티, 물류 등)
+                                  건설 및 인프라
                                 </Body2>
                               </SelectBoxItem>
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect(
-                                    "의료 및 헬스케어 (헬스케어, 바이오 등)",
+                                    "의료 및 헬스케어",
                                     "industry"
                                   )
                                 }
                               >
                                 <Body2 color="gray700" align="left">
-                                  의료 및 헬스케어 (헬스케어, 바이오 등)
+                                  의료 및 헬스케어
                                 </Body2>
                               </SelectBoxItem>
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect(
-                                    "교육 및 공공 서비스 (교육, 정부 및 공공기관 등)",
+                                    "교육 및 공공 서비스",
                                     "industry"
                                   )
                                 }
