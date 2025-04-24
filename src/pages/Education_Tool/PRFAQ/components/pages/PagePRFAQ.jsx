@@ -8,6 +8,7 @@ import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
 import { Button } from "../../../../../assets/styles/ButtonStyle";
+import Markdown from "markdown-to-jsx";
 import images from "../../../../../assets/styles/Images";
 import {
   CustomTextarea,
@@ -80,18 +81,17 @@ import {
   EducationToolsRequest,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
+
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
-import GraphChartScale2 from "../../../../../components/Charts/GraphChartScale2";
-import GraphChartScale5 from "../../../../../components/Charts/GraphChartScale5";
-import GraphChartScale11 from "../../../../../components/Charts/GraphChartScale11";
-import GraphChartScale3 from "../../../../../components/Charts/GraphChartScale3";
-import GraphChartScale4 from "../../../../../components/Charts/GraphChartScale4";
-import OrganismToastPopupQuickSurveyComplete from "../organisms/OrganismToastPopupQuickSurveyComplete";
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
 import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
 import ParetoCurveGraph from "../../../../../components/Charts/ParetoCurveGraph";
+import BusinessModelPopup from "../../../../../components/Charts/BusinessModelPopup";
+import BusinessModelGraph from "../../../../../components/Charts/BusinessModelGraph";
+// import MoleculeBusinessModelGraph from "../molecules/MoleculeBusinessModelGraph";
 
-const PageIdeaEvaluate = () => {
+
+const PagePRFAQ = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
@@ -99,19 +99,29 @@ const PageIdeaEvaluate = () => {
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
-  const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
+  const[personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [quickSurveyAnalysis, setQuickSurveyAnalysis] = useAtom(
     QUICK_SURVEY_ANALYSIS
   );
-  const [ideaEvaluateSelectedListIndex, setIdeaEvaluateSelectedListIndex] =
-    useAtom(IDEA_EVALUATE_SELECTED_LIST_INDEX);
-  const [ideaEvaluateComparisonEducation, setIdeaEvaluateComparisonEducation] =
-    useAtom(IDEA_EVALUATE_COMPARISON_EDUCATION);
+  const [ideaEvaluateSelectedListIndex, setIdeaEvaluateSelectedListIndex] = useAtom(IDEA_EVALUATE_SELECTED_LIST_INDEX);
+  const [ideaEvaluateComparisonEducation, setIdeaEvaluateComparisonEducation] = useAtom(IDEA_EVALUATE_COMPARISON_EDUCATION)
+  const [quickSurveySelectedQuestion, setQuickSurveySelectedQuestion] = useAtom(
+    QUICK_SURVEY_SELECTED_QUESTION
+  );
+  const [quickSurveyCustomGuide, setQuickSurveyCustomGuide] = useAtom(
+    QUICK_SURVEY_CUSTOM_GUIDE
+  );
+  const [quickSurveyPresetData, setQuickSurveyPresetData] = useAtom(
+    QUICK_SURVEY_PRESET_DATA
+  );
   const [quickSurveyPersonaGroup, setquickSurveyPersonaGroup] = useAtom(
     QUICK_SURVEY_PERSONA_GROUP
   );
   const [quickSurveyInterview, setQuickSurveyInterview] = useAtom(
     QUICK_SURVEY_INTERVIEW
+  );
+  const [quickSurveySurveyMethod, setQuickSurveySurveyMethod] = useAtom(
+    QUICK_SURVEY_SURVEY_METHOD
   );
   const [quickSurveyDetailInfo] = useAtom(QUICK_SURVEY_DETAIL_INFO);
   const [quickSurveyRecruitingCondition] = useAtom(
@@ -125,22 +135,18 @@ const PageIdeaEvaluate = () => {
   const [quickSurveyStaticData, setQuickSurveyStaticData] = useAtom(
     QUICK_SURVEY_STATIC_DATA
   );
-  const [ideaEvaluateSelectedKanoModel, setIdeaEvaluateSelectedKanoModel] =
-    useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL);
-  const [ideaEvaluateSelectedList, setIdeaEvaluateSelectedList] = useAtom(
-    IDEA_EVALUATE_SELECTED_LIST
-  );
+  const [ideaEvaluateSelectedKanoModel, setIdeaEvaluateSelectedKanoModel] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL);
+  const [ideaEvaluateSelectedList, setIdeaEvaluateSelectedList] = useAtom(IDEA_EVALUATE_SELECTED_LIST);
   const [ideaEvaluateList, setIdeaEvaluateList] = useAtom(IDEA_EVALUATE_LIST);
   const [quickSurveyProjectDescription, setQuickSurveyProjectDescription] =
     useAtom(QUICK_SURVEY_PROJECT_DESCRIPTION);
   const [quickSurveyStaticDataState, setQuickSurveyStaticDataState] = useState(
     {}
   );
-
-  const [
-    ideaEvaluateSelectedKanoModelIndex,
-    setIdeaEvaluateSelectedKanoModelIndex,
-  ] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX);
+  // const [quickSurveyCustomQuestion, setQuickSurveyCustomQuestion] = useAtom(
+  //   QUICK_SURVEY_CUSTOM_QUESTION
+  // );
+  const [ideaEvaluateSelectedKanoModelIndex, setIdeaEvaluateSelectedKanoModelIndex] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
@@ -154,10 +160,15 @@ const PageIdeaEvaluate = () => {
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
   const [projectDescription, setProjectDescription] = useState("");
+  const [descriptionLength, setDescriptionLength] = useState(0);
   const [recruitingCondition, setRecruitingCondition] = useState("");
   const [quickSurveyCustomQuestion, setQuickSurveyCustomQuestion] = useState(
     []
   );
+  const [
+    customerJourneyMapSelectedPersona,
+    setCustomerJourneyMapSelectedPersona,
+  ] = useState([]);
   const [customPersonaForm, setCustomPersonaForm] = useState({
     gender: "",
     age: [],
@@ -186,20 +197,32 @@ const PageIdeaEvaluate = () => {
   });
   const [interviewModeType, setInterviewModeType] = useState("");
   const [isLoadingPreset, setIsLoadingPreset] = useState(false);
+  const [selectedPresetCards, setSelectedPresetCards] = useState({});
   const [shouldRegenerate, setShouldRegenerate] = useState(false);
+  const [selectedPersona, setSelectedPersona] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
+  const [isCustomPopupOpen, setIsCustomPopupOpen] = useState(false);
+  const [isCustomLoading, setIsCustomLoading] = useState(false);
   const [customerJourneyList, setCustomerJourneyList] = useState([]);
   const [selectedKanoModelData, setSelectedKanoModelData] = useState([]);
   const [showKanoModelList, setshowKanoModelList] = useState(false);
   const [ideaEvaluateSelect, setIdeaEvaluateSelect] = useState([]);
   const [graphData, setGraphData] = useState([]);
+  const [conceptDefinitionList, setConceptDefinitionList] = useState([]);
 
+  
   const customerListRef = useRef(null);
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const project = projectSaas;
+
+  const prepareMarkdown = (text) => {
+    if (!text) return "";
+    // 연속된 줄바꿈('\n\n')을 <br/><br/>로 변환
+    return text.replace(/\n\n/g, "\n&nbsp;\n").replace(/\n/g, "  \n");
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -224,6 +247,13 @@ const PageIdeaEvaluate = () => {
     };
   }, [showToast]);
 
+
+
+
+  console.log("ideaEvaluateSelectedList", ideaEvaluateSelectedList);
+  console.log("ideaEvaluateSelectedListIndex", ideaEvaluateSelectedListIndex);
+
+
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
@@ -245,13 +275,16 @@ const PageIdeaEvaluate = () => {
       }
 
       if (toolLoading) {
+
         // 비즈니스 정보 설정 (Step 1)
         if (Object.keys(ideaEvaluateSelectedKanoModel).length > 0) {
           setSelectedKanoModelData(ideaEvaluateSelectedKanoModel);
           setshowKanoModelList(true);
+        
         }
         if (Object.keys(ideaEvaluateSelectedKanoModelIndex).length > 0) {
           setSelectedPurposes(ideaEvaluateSelectedKanoModelIndex);
+          
         }
         if (ideaEvaluateList && ideaEvaluateList.length > 0) {
           setIdeaEvaluateList(ideaEvaluateList);
@@ -263,10 +296,7 @@ const PageIdeaEvaluate = () => {
           setIdeaEvaluateSelect(ideaEvaluateSelectedListIndex);
         }
 
-        if (
-          ideaEvaluateComparisonEducation &&
-          ideaEvaluateComparisonEducation.length > 0
-        ) {
+        if (ideaEvaluateComparisonEducation && ideaEvaluateComparisonEducation.length > 0) {
           setIdeaEvaluateComparisonEducation(ideaEvaluateComparisonEducation);
         }
 
@@ -284,11 +314,98 @@ const PageIdeaEvaluate = () => {
           }
           setCompletedSteps(completedStepsArray);
         }
+        // setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
+        // setToolSteps(toolStep ?? 1);
+
+        // 완료된 단계 설정
+        // const completedStepsArray = [];
+        // for (let i = 1; i <= (toolStep ?? 1); i++) {
+        //   completedStepsArray.push(i);
+        // }
+        // setCompletedSteps(completedStepsArray);
+
+        // 페르소나 설정 (Step 2)
+
+        // if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0) {
+        //   setQuickSurveySurveyMethod(quickSurveySurveyMethod);
+        // }
+
+        if (
+          quickSurveyInterviewModeType &&
+          quickSurveyInterviewModeType.length > 0
+        ) {
+          setInterviewModeType(quickSurveyInterviewModeType);
+        }
+
+        if (
+          quickSurveyDetailInfo &&
+          Object.keys(quickSurveyDetailInfo || {}).length > 0
+        ) {
+          // customPersonaForm 설정
+          setCustomPersonaForm(quickSurveyDetailInfo);
+
+          // selectedValues용으로 데이터 가공
+          const processedValues = {
+            gender:
+              quickSurveyDetailInfo?.gender === "male"
+                ? "남성"
+                : quickSurveyDetailInfo?.gender === "female"
+                ? "여성"
+                : quickSurveyDetailInfo?.gender || "", // "상관없음"은 그대로
+
+            age: Array.isArray(quickSurveyDetailInfo?.age)
+              ? quickSurveyDetailInfo?.age[0] === "상관없음"
+                ? "상관없음"
+                : quickSurveyDetailInfo?.age.join(", ")
+              : "",
+
+            residence: Array.isArray(quickSurveyDetailInfo?.residence)
+              ? quickSurveyDetailInfo?.residence[0] === "상관없음"
+                ? "상관없음"
+                : quickSurveyDetailInfo?.residence.join(", ")
+              : "",
+
+            income: Array.isArray(quickSurveyDetailInfo.income)
+              ? quickSurveyDetailInfo.income[0] === "상관없음"
+                ? "상관없음"
+                : quickSurveyDetailInfo.income.join(", ")
+              : "",
+          };
+
+          setSelectedValues(processedValues);
+        }
+
+        if (
+          quickSurveyRecruitingCondition &&
+          quickSurveyRecruitingCondition.length > 0
+        ) {
+          setRecruitingCondition(quickSurveyRecruitingCondition);
+        }
+
+        if (quickSurveyPersonaGroup && quickSurveyPersonaGroup.length > 0) {
+          setquickSurveyPersonaGroup(quickSurveyPersonaGroup);
+        }
+
+        if (quickSurveyInterview && quickSurveyInterview.length > 0) {
+          setQuickSurveyInterview(quickSurveyInterview);
+        }
+
+        if (quickSurveyReport && quickSurveyReport.length > 0) {
+          setQuickSurveyReport(quickSurveyReport);
+        }
+        if (
+          quickSurveyStaticData &&
+          Object.keys(quickSurveyStaticData).length > 0
+        ) {
+          setQuickSurveyStaticData(quickSurveyStaticData);
+          setQuickSurveyStaticDataState(quickSurveyStaticData);
+        }
       }
     };
     interviewLoading();
     setToolLoading(false);
   }, [toolLoading]);
+
 
   // 고객핵심가치분석 리스트 가져오기
   useEffect(() => {
@@ -300,25 +417,22 @@ const PageIdeaEvaluate = () => {
 
         const response = await getFindToolListOnServerSaas(
           projectSaas?._id ?? "",
-          "ix_kano_model_education",
+          "ix_concept_definition_education",
           isLoggedIn
         );
 
+
         const newItems = (response || []).filter(
           (item) =>
-            item?.type === "ix_kano_model_education" &&
+            item?.type === "ix_concept_definition_education" &&
             item?.completedStep === 3
-          // &&
-          // item?.deleteState === 0 &&
-          // item?.deleteState === null
         );
 
         allItems = [...allItems, ...newItems];
-        console.log("🚀 ~ getAllTargetDiscovery ~ allItems:", allItems);
-
-        setCustomerJourneyList(allItems);
+  
+        setConceptDefinitionList(allItems);
       } catch (error) {
-        setCustomerJourneyList([]); // Set empty array on error
+        setConceptDefinitionList([]); // Set empty array on error
       }
     };
 
@@ -336,6 +450,7 @@ const PageIdeaEvaluate = () => {
   //     }
   //   });
   // };
+
 
   // const handleCheckboxChange = (ideaId) => {
   //   setIdeaEvaluateSelect((prev) => {
@@ -357,11 +472,12 @@ const PageIdeaEvaluate = () => {
   //   });
   // };
 
+
   const handleCheckboxChange = (ideaId) => {
     setIdeaEvaluateSelect((prev) => {
       if (prev.includes(ideaId)) {
         // 이미 선택된 아이템이면 제거
-        const newSelected = prev.filter((id) => id !== ideaId);
+        const newSelected = prev.filter(id => id !== ideaId);
         return newSelected;
       } else {
         // 새로운 아이템 추가
@@ -369,21 +485,21 @@ const PageIdeaEvaluate = () => {
         return newSelected;
       }
     });
-
+  
     // 선택된 아이템들의 실제 데이터를 가져옴
     setIdeaEvaluateSelectedList((prev) => {
-      const selectedItems = ideaEvaluateSelect.map((ideaId) => {
-        const [category, index] = ideaId.split("-");
-        const categoryKey = category.replace("-", "_");
-        return selectedKanoModelData.kanoModelClustering[categoryKey][
-          parseInt(index)
-        ];
+      const selectedItems = ideaEvaluateSelect.map(ideaId => {
+        const [category, index] = ideaId.split('-');
+        const categoryKey = category.replace('-', '_');
+        return selectedKanoModelData.kanoModelClustering[categoryKey][parseInt(index)];
       });
       return selectedItems;
     });
   };
 
-  // 다음 단계로 이동하는 함수
+
+
+// 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
     setCompletedSteps([...completedSteps, currentStep]);
     setActiveTab(currentStep + 1);
@@ -397,7 +513,8 @@ const PageIdeaEvaluate = () => {
     }));
   };
 
-  const handlePurposeSelect = (purpose, selectBoxId, item) => {
+
+  const handlePurposeSelect = (purpose, selectBoxId,item) => {
     setSelectedPurposes((prev) => ({
       ...(prev || {}),
       [selectBoxId]: purpose || "",
@@ -414,6 +531,8 @@ const PageIdeaEvaluate = () => {
     setSelectedKanoModelData(item);
   };
 
+
+
   const business = {
     business_analysis: businessDescription,
     target: project?.projectAnalysis?.target_customer || "",
@@ -423,19 +542,22 @@ const PageIdeaEvaluate = () => {
   };
 
   const handleCuratedIdea = async () => {
-    if (!ideaEvaluateSelectedList.length > 0) {
-      setshowKanoModelList(true);
-    } else {
-      handleNextStep(1);
+    
+    
+    if(!ideaEvaluateSelectedList.length > 0){
+      setshowKanoModelList(true)
+    }
+      else{
+        handleNextStep(1);
 
-      const responseToolId = await createToolOnServer(
-        {
-          projectId: project._id,
-          type: "ix_idea_evaluation_education",
-        },
-        isLoggedIn
-      );
-      setToolId(responseToolId);
+        const responseToolId = await createToolOnServer(
+          {
+            projectId: project._id,
+            type: "ix_idea_evaluation_education",
+          },
+          isLoggedIn
+        );
+        setToolId(responseToolId);
 
       await updateToolOnServer(
         responseToolId,
@@ -467,69 +589,71 @@ const PageIdeaEvaluate = () => {
     setQuickSurveyCustomQuestion([]);
   };
 
+ 
+
   const handleSubmitReport = async () => {
-    handleNextStep(2);
+    handleNextStep(1);
     // setToolSteps(2);
-    setIsLoadingReport(true);
+    // setIsLoadingReport(true);
 
     try {
+
       const persona_group = personaListSaas
-        .filter((persona) => persona?.favorite === true)
-        .map((persona) => ({
-          personaName: persona.personaName,
-          personaCharacteristics: persona.personaCharacteristics,
-          type: persona.type,
-          age: persona.age,
-          gender: persona.gender,
-          job: persona.job,
-          keywords: persona.keywords,
-          // userExperience: persona.userExperience,
-          // consumptionPattern: persona.consumptionPattern,
-          // interests: persona.interests,
-          // lifestyle: persona.lifestyle,
-        }));
+      .filter((persona) => persona?.favorite === true)
+      .map((persona) => ({
+        personaName: persona.personaName,
+        personaCharacteristics: persona.personaCharacteristics,
+        type: persona.type,
+        age: persona.age,
+        gender: persona.gender,
+        job: persona.job,
+        keywords: persona.keywords,
+        userExperience: persona.userExperience,
+        consumptionPattern: persona.consumptionPattern,
+        interests: persona.interests,
+        lifestyle: persona.lifestyle,
+      
+      }));
 
       const Data = {
         type: "ix_idea_evaluation_comparison_education",
         business: business,
-        idea_list: ideaEvaluateSelectedList,
+        idea_list: ideaEvaluateSelectedList, 
         persona: persona_group,
       };
 
-      let response = await EducationToolsRequest(Data, isLoggedIn);
+      let response = await EducationToolsRequest (Data, isLoggedIn);
 
-      let retryCount = 0;
+       let retryCount = 0;
       const maxRetries = 10;
-      while (
-        retryCount < maxRetries &&
-        (!response ||
-          !response?.response ||
-          !response?.response?.idea_evaluation_comparison_education ||
-          !Array.isArray(
-            response?.response?.idea_evaluation_comparison_education
-          ))
-      ) {
-        response = await EducationToolsRequest(Data, isLoggedIn);
-        maxRetries++;
-      }
-      if (retryCount >= maxRetries) {
-        setShowPopupError(true);
-        return;
-      }
+        while (retryCount < maxRetries &&
+          (!response ||
+           !response?.response ||
+           !response?.response?.idea_evaluation_comparison_education ||
+           !Array.isArray(response?.response?.idea_evaluation_comparison_education)
+          )
+         ) {
+           response = await EducationToolsRequest(Data, isLoggedIn);
+           maxRetries++;
+          
+         }
+           if (retryCount >= maxRetries) {
+           setShowPopupError(true);
+           return;
+         }
 
-      setIdeaEvaluateComparisonEducation(
-        response.response.idea_evaluation_comparison_education
-      );
+      setIdeaEvaluateComparisonEducation(response.response.idea_evaluation_comparison_education)
+      
 
       await updateToolOnServer(
         toolId,
         {
-          ideaEvaluateComparisonEducation:
-            response.response.idea_evaluation_comparison_education,
+          ideaEvaluateComparisonEducation: response.response.idea_evaluation_comparison_education,
           completedStep: 3,
         },
         isLoggedIn
       );
+
 
       setToolSteps(3);
       setCompletedSteps([...completedSteps, 3]);
@@ -554,6 +678,8 @@ const PageIdeaEvaluate = () => {
       setIsLoadingReport(false);
     }
   };
+
+ 
 
   const handleEnterInterviewRoom = () => {
     setSelectedOption(null);
@@ -597,6 +723,7 @@ const PageIdeaEvaluate = () => {
       }));
     }
   };
+
 
   useEffect(() => {
     // 새로고침 감지 함수
@@ -669,6 +796,7 @@ const PageIdeaEvaluate = () => {
     }
   };
 
+
   const handleAnswerChange = (id, option) => {
     setQuickSurveyAnalysis((prev) => ({
       ...prev,
@@ -679,31 +807,30 @@ const PageIdeaEvaluate = () => {
     }));
   };
 
+
   useEffect(() => {
-    if (
-      ideaEvaluateComparisonEducation &&
-      ideaEvaluateComparisonEducation.length > 0
-    ) {
+    if (ideaEvaluateComparisonEducation && ideaEvaluateComparisonEducation.length > 0) {
       // 각 아이디어별 선택된 횟수를 카운트
       const ideaCount = {};
-
-      ideaEvaluateComparisonEducation.forEach((comparison) => {
+      
+      ideaEvaluateComparisonEducation.forEach(comparison => {
         const selectedIdea = comparison.selected_idea;
         ideaCount[selectedIdea] = (ideaCount[selectedIdea] || 0) + 1;
       });
-
+  
       // 파레토 그래프용 데이터 형식으로 변환
       const paretoData = Object.entries(ideaCount)
         .map(([name, value]) => ({
           name,
-          value,
+          value
         }))
         .sort((a, b) => b.value - a.value); // 값이 큰 순서대로 정렬
-
+  
       // 파레토 그래프 데이터 설정
       setGraphData(paretoData);
     }
   }, [ideaEvaluateComparisonEducation]);
+  
 
   return (
     <>
@@ -725,7 +852,7 @@ const PageIdeaEvaluate = () => {
                 <span>01</span>
                 <div className="text">
                   <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
-                    아이디어 입력
+                  컨셉 정의서 확인
                   </Body1>
                   {/* <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     Question Select
@@ -743,34 +870,14 @@ const PageIdeaEvaluate = () => {
                 <span>02</span>
                 <div className="text">
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                    페르소나 선택 및 확인
+                  비즈니스 모델 캔버스 작성
                   </Body1>
                   {/* <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Participating Persona
                   </Body1> */}
                 </div>
               </TabButtonType5>
-              <TabButtonType5
-                Num3
-                isActive={activeTab >= 3}
-                onClick={() =>
-                  (completedSteps.includes(2) || completedSteps.includes(3)) &&
-                  setActiveTab(3)
-                }
-                disabled={
-                  !completedSteps.includes(3) || isLoading || isLoadingReport
-                }
-              >
-                <span>03</span>
-                <div className="text">
-                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    최종 인사이트 분석
-                  </Body1>
-                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    {/* Sentiment Analysis */}
-                  </Body1>
-                </div>
-              </TabButtonType5>
+             
             </TabWrapType5>
 
             {activeTab === 1 && (
@@ -779,16 +886,17 @@ const PageIdeaEvaluate = () => {
                   <div className="title">
                     <H3 color="gray800">Curated Ideas</H3>
                     <Body3 color="gray800">
-                      선별된 아이디어를 사용자 의견으로 다시 평가하여 우선순위를
-                      도출하세요
+                    선별된 아이디어를 사용자 의견으로 다시 평가하여 우선순위를 도출하세요
                     </Body3>
                   </div>
 
                   <div className="content">
                     <TabContent5Item required>
+                     
+
                       <TabContent5Item>
                         <div className="title">
-                          <Body1 color="gray700">kano기반 아이디어 선택 </Body1>
+                          <Body1 color="gray700">컨셉 정의서 </Body1>
                         </div>
 
                         <SelectBox ref={customerListRef}>
@@ -801,7 +909,9 @@ const PageIdeaEvaluate = () => {
                             }
                             style={{
                               cursor:
-                                toolSteps >= 1 ? "not-allowed" : "pointer",
+                                toolSteps >= 1 
+                                  ? "not-allowed"
+                                  : "pointer",
                             }}
                           >
                             <Body2
@@ -812,7 +922,7 @@ const PageIdeaEvaluate = () => {
                               }
                             >
                               {selectedPurposes.customerList ||
-                                "Kano Model 결과를 불러 올 수 있습니다"}
+                                "컨셉 정의서를 불러 올 수 있습니다"}
                             </Body2>
                             <images.ChevronDown
                               width="24px"
@@ -829,30 +939,26 @@ const PageIdeaEvaluate = () => {
 
                           {selectBoxStates.customerList && (
                             <SelectBoxList dropUp={dropUpStates.customerList}>
-                              {customerJourneyList.length === 0 ? (
-                                <SelectBoxItem
-                                  disabled={
-                                    toolSteps >= 1 ||
-                                    selectedKanoModelData.kanoModelClustering
-                                      .attractive.length > 0
-                                  }
+                              {conceptDefinitionList.length === 0 ? (
+                                <SelectBoxItem 
+                                disabled={toolSteps >= 1 }
                                 >
                                   <Body2 color="gray300" align="left">
                                     직접 문제점을 작성합니다.
                                   </Body2>
                                 </SelectBoxItem>
                               ) : (
-                                customerJourneyList.map((item, index) => (
+                                conceptDefinitionList.map((item, index) => (
                                   <SelectBoxItem
                                     // disabled={
-                                    //   toolSteps >= 1
+                                    //   toolSteps >= 1 
                                     // }
                                     key={index}
                                     onClick={() => {
                                       handlePurposeSelect(
                                         `${item.updateDate.split(":")[0]}:${
                                           item.updateDate.split(":")[1]
-                                        } - kano기반 아이디어 선택기 
+                                        } - 아이디어 선택기 
                                     `,
                                         "customerList",
                                         item
@@ -861,8 +967,8 @@ const PageIdeaEvaluate = () => {
                                   >
                                     <Body2 color="gray700" align="left">
                                       {item.updateDate.split(":")[0]}:
-                                      {item.updateDate.split(":")[1]} kano기반
-                                      아이디어 선택기
+                                      {item.updateDate.split(":")[1]} 아이디어 선택기 
+                                     
                                     </Body2>
                                   </SelectBoxItem>
                                 ))
@@ -872,322 +978,71 @@ const PageIdeaEvaluate = () => {
                         </SelectBox>
                       </TabContent5Item>
 
+
                       {isLoading ? (
-                        <div
-                          style={{
-                            width: "100%",
-                            display: "flex",
-                            justifyContent: "center",
-                            minHeight: "200px",
-                            alignItems: "center",
-                          }}
-                        >
-                          <AtomPersonaLoader message="로딩 중..." />
-                        </div>
-                      ) : !showKanoModelList ? (
-                        <BoxWrap NoData style={{ height: "300px" }}>
-                          <img src={images.PeopleFillPrimary2} alt="" />
-                          <Body2 color="gray700" align="center !important">
-                            Kano Model 결과가 보여집니다.
-                          </Body2>
-                        </BoxWrap>
-                      ) : (
-                        <div className="content" style={{ marginTop: "40px" }}>
-                          {/* Attractive Features 섹션 */}
-                          <div
-                            className="title"
-                            style={{ textAlign: "left", marginBottom: "-20px" }}
-                          >
-                            <Body1 color="gray800">
-                              Attractive (매력적 속성)
-                            </Body1>
-                          </div>
-
-                          {selectedKanoModelData.kanoModelClustering.attractive.map(
-                            (idea, index) => (
-                              <MoleculeItemSelectCard
-                                FlexStart
-                                key={`attractive-${index}`}
-                                id={`attractive-${index}`}
-                                title={idea.name}
-                                isSelected={ideaEvaluateSelect.includes(
-                                  `attractive-${index}`
-                                )}
-                                onSelect={() =>
-                                  handleCheckboxChange(`attractive-${index}`)
-                                }
-                                disabled={toolSteps >= 1}
-                              />
-                            )
-                          )}
-
-                          <div
-                            className="title"
-                            style={{
-                              textAlign: "left",
-                              marginBottom: "-20px",
-                              marginTop: "20px",
-                            }}
-                          >
-                            <Body1 color="gray800">
-                              One-Dimensional (일차원 속성){" "}
-                            </Body1>
-                          </div>
-                          {selectedKanoModelData.kanoModelClustering.one_dimensional.map(
-                            (idea, index) => (
-                              <MoleculeItemSelectCard
-                                FlexStart
-                                key={`one-dimensional-${index}`}
-                                id={`one-dimensional-${index}`}
-                                title={idea.name}
-                                isSelected={ideaEvaluateSelect.includes(
-                                  `one_dimensional-${index}`
-                                )}
-                                onSelect={() =>
-                                  handleCheckboxChange(
-                                    `one_dimensional-${index}`
-                                  )
-                                }
-                                disabled={toolSteps >= 1}
-                              />
-                            )
-                          )}
-
-                          <div
-                            className="title"
-                            style={{
-                              textAlign: "left",
-                              marginBottom: "-20px",
-                              marginTop: "20px",
-                            }}
-                          >
-                            <Body1 color="gray800">
-                              Must-Be (당연적 속성){" "}
-                            </Body1>
-                          </div>
-
-                          {selectedKanoModelData.kanoModelClustering.must_be.map(
-                            (idea, index) => (
-                              <MoleculeItemSelectCard
-                                FlexStart
-                                key={`must-be-${index}`}
-                                id={`must-be-${index}`}
-                                title={idea.name}
-                                isSelected={ideaEvaluateSelect.includes(
-                                  `must_be-${index}`
-                                )}
-                                onSelect={() =>
-                                  handleCheckboxChange(`must_be-${index}`)
-                                }
-                                disabled={toolSteps >= 1}
-                              />
-                            )
-                          )}
-
-                          <div
-                            className="title"
-                            style={{
-                              textAlign: "left",
-                              marginBottom: "-20px",
-                              marginTop: "20px",
-                            }}
-                          >
-                            <Body1 color="gray800">
-                              Indifferent (반대 속성){" "}
-                            </Body1>
-                          </div>
-
-                          {selectedKanoModelData.kanoModelClustering.indifferent.map(
-                            (idea, index) => (
-                              <MoleculeItemSelectCard
-                                FlexStart
-                                key={`indifferent-${index}`}
-                                id={`indifferent-${index}`}
-                                title={idea.name}
-                                isSelected={ideaEvaluateSelect.includes(
-                                  `indifferent-${index}`
-                                )}
-                                onSelect={() =>
-                                  handleCheckboxChange(`indifferent-${index}`)
-                                }
-                                disabled={toolSteps >= 1}
-                              />
-                            )
-                          )}
-                        </div>
-                      )}
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        minHeight: "200px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <AtomPersonaLoader message="로딩 중..." />
+                    </div>
+                  ) : !showKanoModelList ? (
+                    <BoxWrap
+                      NoData
+                      style={{ height: "300px" }}
+                    >
+                      <img src={images.PeopleFillPrimary2} alt="" />
+                      <Body2 color="gray700" align="center !important">
+                      Kano Model 결과가 보여집니다.
+                      </Body2>
+                     
+                    </BoxWrap>
+                  ) : (
+                    <InsightAnalysis>
+                    <div
+                      className="markdown-body"
+                      style={{
+                        textAlign: "left",
+                      }}
+                    >
+                      <Markdown>
+                        {prepareMarkdown(
+                        ideaEvaluateComparisonEducation ?? ""
+                        )}
+                      </Markdown>
+                    </div>
+                  </InsightAnalysis>
+               
+                  )}
                     </TabContent5Item>
-
                   </div>   
                         <Button
                           Other
                           Primary
                           Fill
                           Round
-                          onClick={handleCuratedIdea}
-                          disabled={
-                            !showKanoModelList
-                              ? (selectedKanoModelData.length === 0 || toolSteps >= 1)
-                              : (ideaEvaluateSelect.length < 7 || toolSteps >= 1)
-                          }
+                          onClick={handleSubmitReport}
+                          // disabled={
+                          
+                          // }
                         >
                           아이디어 방향성으로 전환
                         </Button>
              
                   
-
                 </>
               </TabContent5>
             )}
 
-            {activeTab === 2 && completedSteps.includes(1) && (
-              <TabContent5>
-                {isLoading ? (
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      minHeight: "200px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <AtomPersonaLoader message="로딩 중..." />
-                  </div>
-                ) : (
-                  <>
-                    <div className="title">
-                      <H3 color="gray800">Participating Persona</H3>
-                      <Body3 color="gray800">
-                        Quick Survey에 참여할 페르소나에 대해서 알려주세요. 바로
-                        리크루팅해드릴게요 !
-                      </Body3>
-                    </div>
+           
 
-                    <div className="content">
-                      <ListBoxGroup>
-                        <li>
-                          <Body2
-                            color="gray500"
-                            style={{
-                              whiteSpace: "nowrap",
-                              marginBottom: "8px",
-                              marginRight: "50px",
-                            }}
-                          >
-                            평가할 아이디어 리스트
-                          </Body2>
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              textAlign: "left",
-                            }}
-                          >
-                            <span
-                              style={{ color: "#8C8C8C", marginBottom: "4px" }}
-                            >
-                              {ideaEvaluateSelectedList.map((idea, index) => {
-                                const isLast =
-                                  index === ideaEvaluateSelectedList.length - 1;
-                                const text = idea.name;
-
-                                // 전체 텍스트가 30자를 넘으면 말줄임표 처리
-                                const totalText = ideaEvaluateSelectedList
-                                  .slice(0, index + 1)
-                                  .map((i) => i.name)
-                                  .join(", ");
-
-                                if (totalText.length > 100 && !isLast) {
-                                  return null;
-                                }
-
-                                if (totalText.length > 100) {
-                                  return text + "..."; // 마지막 아이템에서 말줄임표 추가
-                                }
-
-                                return text + (isLast ? "" : ", "); // 마지막이 아니면 쉼표 추가
-                              })}
-                            </span>
-                          </div>
-                        </li>
-                      </ListBoxGroup>
-
-                      <div className="title">
-                        <Body1
-                          color="gray800"
-                          style={{ textAlign: "left", marginBottom: "-20px" }}
-                        >
-                          아이디어 평가 참여 페르소나 (불러온 Kano Model에
-                          참여한 페르소나와 동일)
-                        </Body1>
-                      </div>
-
-                      {personaListSaas.filter((item) => item.favorite === true)
-                        .length >= 20 ? (
-                        <MoleculePersonaSelectCard
-                          filteredPersonaList={personaListSaas}
-                          hideSelectButton={true}
-                        />
-                      ) : (
-                        <BoxWrap
-                          Hover
-                          NoData
-                          Border
-                          onClick={() => navigate("/AiPersona")}
-                        >
-                          <img src={images.PeopleStarFillPrimary} alt="" />
-                          <Body2 color="gray500" align="center !important">
-                            즐겨찾기를 하시면 관심 있는 페르소나를 해당
-                            페이지에서 확인하실 수 있습니다.{" "}
-                            {
-                              personaListSaas.filter(
-                                (item) => item.favorite === true
-                              ).length
-                            }
-                          </Body2>
-                        </BoxWrap>
-                      )}
-                    </div>
-
-                    {isLoadingDetailSetting || isLoadingPreset ? (
-                      <div
-                        style={{
-                          width: "100%",
-                          display: "flex",
-                          justifyContent: "center",
-                          minHeight: "200px",
-                          alignItems: "center",
-                        }}
-                      >
-                        {/* <AtomPersonaLoader message="로딩 중..." /> */}
-                      </div>
-                    ) : (
-                      <Button
-                        Other
-                        Primary
-                        Fill
-                        Round
-                        onClick={() => {
-                          handleSubmitReport(); //마지막 보고서 함수
-                        }}
-                        disabled={
-                          toolSteps >= 3 ||
-                          personaListSaas.filter(
-                            (item) => item.favorite === true
-                          ).length < 20
-                        }
-                      >
-                        다음
-                      </Button>
-                    )}
-                  </>
-                )}
-              </TabContent5>
-            )}
-
-            {activeTab === 3 &&
-              (completedSteps.includes(2) || completedSteps.includes(3)) && (
+            {activeTab === 2 &&
+              (completedSteps.includes(1) ) && (
                 <TabContent5 Small>
                   {isLoadingReport ? (
                     <div
@@ -1204,164 +1059,36 @@ const PageIdeaEvaluate = () => {
                   ) : (
                     <>
                       <BgBoxItem primaryLightest>
-                        <H3 color="gray800">아이디어 선호도 평가</H3>
+                        <H3 color="gray800">퀵서베이 결과</H3>
                         <Body3 color="gray800">
-                          아이디어에 대해 선호도를 평가한 결과입니다. 어떤
-                          아이디어가 더 매력적인지 확인해보세요.
+                          페르소나 그룹의 의견을 확인하여 타겟 반응을 사전에
+                          확인해보세요.
                         </Body3>
                       </BgBoxItem>
 
-                      <InsightAnalysis>
-                        <div className="title">
-                          <div>
-                            {/* <TabWrapType4>
-                              <TabButtonType4
-                                active={activeDesignTab === "emotion"}
-                                onClick={() => setActiveDesignTab("emotion")}
-                              >
-                                결과 개요
-                              </TabButtonType4>
-                              <TabButtonType4
-                                active={activeDesignTab === "scale"}
-                                onClick={() => setActiveDesignTab("scale")}
-                              >
-                                항목별 통계
-                              </TabButtonType4>
-                            </TabWrapType4> */}
-                          </div>
-                          {/* <Button Primary onClick={handleEnterInterviewRoom}>
-                            <img
-                              src={images.ReportSearch}
-                              alt="인터뷰 스크립트 보기"
-                            />
-                            응답자 의견 확인
-                          </Button> */}
-                        </div>
-                      </InsightAnalysis>
+                      {/* <MoleculeBusinessModelGraph /> */}
 
-                      <InsightAnalysis>
-                        <div className="title">
-                          <H4 color="gray800" align="left">
-                            아이디어 파레토 커브
-                          </H4>
-                        </div>
-
-                        <ParetoCurveGraph data={graphData} />
-
-                        {activeDesignTab === "emotion" && (
-                          <>
-                            {/* Insight 섹션 */}
-                            <div className="content">
-                              {quickSurveyReport?.[0] && (
-                                <InsightContainer>
-                                  <InsightSection>
-                                    <InsightLabel color="gray700">
-                                      총평
-                                    </InsightLabel>
-                                    <InsightContent color="gray700">
-                                      {selectedQuestion[0] === "nps" ? (
-                                        <>
-                                          <div>
-                                            {
-                                              quickSurveyReport[0]
-                                                ?.total_insight
-                                                ?.nps_score_interpretation
-                                            }
-                                          </div>
-                                          <br />
-                                          <div>
-                                            {
-                                              quickSurveyReport[0]
-                                                ?.total_insight
-                                                ?.group_response_analysis
-                                            }
-                                          </div>
-                                          <br />
-                                          <div>
-                                            {
-                                              quickSurveyReport[0]
-                                                ?.total_insight
-                                                ?.enhancement_and_improvement_insight
-                                            }
-                                          </div>
-                                        </>
-                                      ) : (
-                                        // 기존 non-NPS 로직
-                                        <>
-                                          {
-                                            quickSurveyReport[0]?.total_insight
-                                              ?.statistic
-                                          }
-                                          <br />
-                                          <br />
-                                          {
-                                            quickSurveyReport[0]?.total_insight
-                                              ?.insight
-                                          }
-                                        </>
-                                      )}
-                                    </InsightContent>
-                                  </InsightSection>
-
-                                  <InsightSection>
-                                    <InsightLabel color="gray700">
-                                      성별 의견 정리
-                                    </InsightLabel>
-                                    <InsightContent color="gray700">
-                                      <>
-                                        {
-                                          quickSurveyReport[0]?.gender_insight
-                                            ?.statistic
-                                        }
-                                        <br />
-                                        <br />
-                                        {
-                                          quickSurveyReport[0]?.gender_insight
-                                            ?.insight
-                                        }
-                                      </>
-                                    </InsightContent>
-                                  </InsightSection>
-
-                                  <InsightSection>
-                                    <InsightLabel color="gray700">
-                                      연령별 의견 정리
-                                    </InsightLabel>
-                                    <InsightContent color="gray700">
-                                      <>
-                                        {
-                                          quickSurveyReport[0].age_insight
-                                            .statistic
-                                        }
-                                        <br />
-                                        <br />
-                                        {
-                                          quickSurveyReport[0].age_insight
-                                            .insight
-                                        }
-                                      </>
-                                    </InsightContent>
-                                  </InsightSection>
-                                </InsightContainer>
-                              )}
-                            </div>
-                          </>
-                        )}
-                      </InsightAnalysis>
+                      <IdeaContainer>
+              
+                          <IdeaBox>
+                            <IdeaTitle>채널</IdeaTitle>
+              
+                            <IdeaContent>
+                          
+                                  <IdeaText>
+                                  
+                                  </IdeaText>
+                          
+                            </IdeaContent>
+                          </IdeaBox>
+               
+                        </IdeaContainer>
                     </>
                   )}
                 </TabContent5>
               )}
 
-            {showToast && (
-              <OrganismToastPopupQuickSurveyComplete
-                isActive={showToast}
-                onClose={() => setShowToast(false)}
-                isComplete={true}
-                selectedOption={selectedOption}
-                selectedOptionIndex={selectedOptionIndex}
-              />
-            )}
+           
           </DesignAnalysisWrap>
         </MainContent>
       </ContentsWrap>
@@ -1407,7 +1134,7 @@ const PageIdeaEvaluate = () => {
   );
 };
 
-export default PageIdeaEvaluate;
+export default PagePRFAQ;
 
 const DesignAnalysisWrap = styled.div`
   display: flex;
@@ -1801,4 +1528,49 @@ const PlusIconWrapper = styled.div`
 const PlusIcon = styled.span`
   font-size: 16px;
   color: ${palette.gray700};
+`;
+
+
+
+
+const IdeaContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  padding: 20px;
+`;
+
+const IdeaBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: ${palette.white};
+  border: 1px solid ${palette.outlineGray};
+  border-radius: 8px;
+  text-align: left;
+`;
+
+const IdeaTitle = styled.h3`
+  font-family: "Pretendard", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: ${palette.gray800};
+  margin: 0;
+`;
+
+const IdeaContent = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const IdeaText = styled.p`
+  font-family: "Pretendard", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: ${palette.gray600};
+  margin: 0;
 `;

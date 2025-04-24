@@ -81,29 +81,14 @@ import {
   EducationToolsRequest,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
-import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
-import MoleculeDetailSetting from "../molecules/MoleculeDetailSetting";
+
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
-import MoleculePersonaSelect from "../molecules/MolculePersonaSelect";
-import MolculePresetPersona from "../molecules/MolculePresetPersona";
-import ABGraph from "../../../../../components/Charts/ABGraph";
-import BarChartLikertScale5 from "../../../../../components/Charts/BarChartLikertScale5";
-import BarChartLikertScale2 from "../../../../../components/Charts/BarChartLikertScale2";
-import BarChartLikertScale3 from "../../../../../components/Charts/BarChartLikertScale3";
-import BarChartLikertScale4 from "../../../../../components/Charts/BarChartLikertScale4";
-import BarChartLikertScale11 from "../../../../../components/Charts/BarChartLikertScale11";
-import GraphChartScale2 from "../../../../../components/Charts/GraphChartScale2";
-import GraphChartScale5 from "../../../../../components/Charts/GraphChartScale5";
-import GraphChartScale11 from "../../../../../components/Charts/GraphChartScale11";
-import GraphChartScale3 from "../../../../../components/Charts/GraphChartScale3";
-import GraphChartScale4 from "../../../../../components/Charts/GraphChartScale4";
-import OrganismToastPopupQuickSurveyComplete from "../organisms/OrganismToastPopupQuickSurveyComplete";
-import MolculeQuickSurveyPopup from "../molecules/MolculeQuickSurveyPopup";
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
 import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
 import ParetoCurveGraph from "../../../../../components/Charts/ParetoCurveGraph";
 import BusinessModelPopup from "../../../../../components/Charts/BusinessModelPopup";
 import BusinessModelGraph from "../../../../../components/Charts/BusinessModelGraph";
+import MoleculeBusinessModelGraph from "../molecules/MoleculeBusinessModelGraph";
 
 
 const PageBusinessModelCanvas = () => {
@@ -226,6 +211,7 @@ const PageBusinessModelCanvas = () => {
   const [ideaEvaluateSelect, setIdeaEvaluateSelect] = useState([]);
   const [graphData, setGraphData] = useState([]);
   const [conceptDefinitionList, setConceptDefinitionList] = useState([]);
+
   
   const customerListRef = useRef(null);
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -557,6 +543,7 @@ const PageBusinessModelCanvas = () => {
 
   const handleCuratedIdea = async () => {
     
+    
     if(!ideaEvaluateSelectedList.length > 0){
       setshowKanoModelList(true)
     }
@@ -605,9 +592,9 @@ const PageBusinessModelCanvas = () => {
  
 
   const handleSubmitReport = async () => {
-    handleNextStep(2);
+    handleNextStep(1);
     // setToolSteps(2);
-    setIsLoadingReport(true);
+    // setIsLoadingReport(true);
 
     try {
 
@@ -865,7 +852,7 @@ const PageBusinessModelCanvas = () => {
                 <span>01</span>
                 <div className="text">
                   <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
-                   아이디어 입력
+                  컨셉 정의서 확인
                   </Body1>
                   {/* <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     Question Select
@@ -883,31 +870,14 @@ const PageBusinessModelCanvas = () => {
                 <span>02</span>
                 <div className="text">
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                    페르소나 선택 및 확인
+                  비즈니스 모델 캔버스 작성
                   </Body1>
                   {/* <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Participating Persona
                   </Body1> */}
                 </div>
               </TabButtonType5>
-              <TabButtonType5
-                Num3
-                isActive={activeTab >= 3}
-                onClick={() =>(( completedSteps.includes(2) || completedSteps.includes(3)) && setActiveTab(3))}
-                disabled={
-                  !completedSteps.includes(3) || isLoading || isLoadingReport
-                }
-              >
-                <span>03</span>
-                <div className="text">
-                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    최종 인사이트 분석
-                  </Body1>
-                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    {/* Sentiment Analysis */}
-                  </Body1>
-                </div>
-              </TabButtonType5>
+             
             </TabWrapType5>
 
             {activeTab === 1 && (
@@ -971,8 +941,7 @@ const PageBusinessModelCanvas = () => {
                             <SelectBoxList dropUp={dropUpStates.customerList}>
                               {conceptDefinitionList.length === 0 ? (
                                 <SelectBoxItem 
-                                disabled={toolSteps >= 1 || selectedKanoModelData.
-                                  kanoModelClustering.attractive.length >0}
+                                disabled={toolSteps >= 1 }
                                 >
                                   <Body2 color="gray300" align="left">
                                     직접 문제점을 작성합니다.
@@ -1057,12 +1026,10 @@ const PageBusinessModelCanvas = () => {
                           Primary
                           Fill
                           Round
-                          onClick={handleCuratedIdea}
-                          disabled={
-                            ideaEvaluateSelect.length === 0 
-                              ? (selectedKanoModelData.length === 0 || toolSteps >= 1)
-                              : (ideaEvaluateSelect.length < 7 || toolSteps >= 1)
-                          }
+                          onClick={handleSubmitReport}
+                          // disabled={
+                          
+                          // }
                         >
                           아이디어 방향성으로 전환
                         </Button>
@@ -1072,123 +1039,10 @@ const PageBusinessModelCanvas = () => {
               </TabContent5>
             )}
 
-            {activeTab === 2 && completedSteps.includes(1) && (
-              <TabContent5>
-              {isLoading ? (
-                <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    minHeight: "200px",
-                    alignItems: "center",
-                  }}
-                >
-                  <AtomPersonaLoader message="로딩 중..." />
-                </div>
-              ) : (
-                <>
-                  <div className="title">
-                    <H3 color="gray800">Participating Persona</H3>
-                    <Body3 color="gray800">
-                      Quick Survey에 참여할 페르소나에 대해서 알려주세요. 바로
-                      리크루팅해드릴게요 !
-                    </Body3>
-                  </div>
+           
 
-                  <div className="content">
-
-                    
-                  <ListBoxGroup>
-                        <li>
-                          <Body2 color="gray500" style={{whiteSpace: "nowrap", marginBottom: "8px", marginRight: "50px"}}>평가할 아이디어 리스트</Body2>
-                          <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
-                            <span style={{ color: "#8C8C8C", marginBottom: "4px" }}>
-                              {ideaEvaluateSelectedList.map((idea, index) => {
-                                const isLast = index === ideaEvaluateSelectedList.length - 1;
-                                const text = idea.name;
-                                
-                                // 전체 텍스트가 30자를 넘으면 말줄임표 처리
-                                const totalText = ideaEvaluateSelectedList                                                                                                                                                                                                                                            
-                                  .slice(0, index + 1)
-                                  .map(i => i.name)
-                                  .join(", ");
-                                
-                                if (totalText.length > 100 && !isLast) {
-                                  return null; 
-                                }
-                                
-                                if (totalText.length > 100) {
-                                  return text + "...";  // 마지막 아이템에서 말줄임표 추가
-                                }
-                                
-                                return text + (isLast ? "" : ", ");  // 마지막이 아니면 쉼표 추가
-                              })}
-                            </span>
-                          </div>
-                        </li>
-                      </ListBoxGroup>
-
-                      <div className="title">
-                            <Body1 color="gray800" style={{textAlign: "left", marginBottom: "-20px" }}>
-                            아이디어 평가 참여 페르소나 (불러온 Kano Model에 참여한 페르소나와 동일)
-                            </Body1>
-                            </div>
-                    
-                  {personaListSaas.filter(item => item.favorite === true).length >= 20 ? (
-                    <MoleculePersonaSelectCard
-                      filteredPersonaList={personaListSaas}
-                      hideSelectButton={true}
-                    
-                    />
-                  ) : (
-                    <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
-                    <img src={images.PeopleStarFillPrimary} alt="" />
-                    <Body2 color="gray500" align="center !important">
-                      즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실
-                      수 있습니다. {personaListSaas.filter(item => item.favorite === true).length}
-                    </Body2>
-                  </BoxWrap>
-                  )}
-  
-                  </div>
-
-                  {isLoadingDetailSetting || isLoadingPreset ? (
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                        minHeight: "200px",
-                        alignItems: "center",
-                      }}
-                    >
-                      {/* <AtomPersonaLoader message="로딩 중..." /> */}
-                    </div>
-                  ) : (
-                    <Button
-                      Other
-                      Primary
-                      Fill
-                      Round
-                      onClick={() => {
-                          handleSubmitReport(); //마지막 보고서 함수
-                      }}
-                      disabled={
-                        toolSteps >= 3 || personaListSaas.filter(item => item.favorite === true).length < 20
-        
-                      }
-                    >
-                      다음
-                    </Button>
-                  )}
-                </>
-              )}
-            </TabContent5>
-            )}
-
-            {activeTab === 3 &&
-              (completedSteps.includes(2) || completedSteps.includes(3)) && (
+            {activeTab === 2 &&
+              (completedSteps.includes(1) ) && (
                 <TabContent5 Small>
                   {isLoadingReport ? (
                     <div
@@ -1212,211 +1066,29 @@ const PageBusinessModelCanvas = () => {
                         </Body3>
                       </BgBoxItem>
 
-                      <InsightAnalysis>
-                        <div className="title">
-                          <div>
-                            <TabWrapType4>
-                              <TabButtonType4
-                                active={activeDesignTab === "emotion"}
-                                onClick={() => setActiveDesignTab("emotion")}
-                              >
-                                결과 개요
-                              </TabButtonType4>
-                              <TabButtonType4
-                                active={activeDesignTab === "scale"}
-                                onClick={() => setActiveDesignTab("scale")}
-                              >
-                                항목별 통계
-                              </TabButtonType4>
-                            </TabWrapType4>
-                          </div>
-                          {/* <Button Primary onClick={handleEnterInterviewRoom}>
-                            <img
-                              src={images.ReportSearch}
-                              alt="인터뷰 스크립트 보기"
-                            />
-                            응답자 의견 확인
-                          </Button> */}
-                        </div>
-                      </InsightAnalysis>
+                      <MoleculeBusinessModelGraph />
 
-                      <InsightAnalysis>
-                        <div className="title">
-                          <H4 color="gray800" align="left">
-                            아이디어 파레토 커브
-                          </H4>
-                        </div>
-
-                        {activeDesignTab === "emotion" && (
-                          <>
-                        <ParetoCurveGraph data={graphData} />
-                           
-                           
-
-                            {/* Insight 섹션 */}
-                            <div className="content">
-                              {quickSurveyReport?.[0] && (
-                                <InsightContainer>
-                                  <InsightSection>
-                                    <InsightLabel color="gray700">
-                                      총평
-                                    </InsightLabel>
-                                    <InsightContent color="gray700">
-                                      {selectedQuestion[0] === "nps" ? (
-                                        <>
-                                          <div>
-                                            {
-                                              quickSurveyReport[0]
-                                                ?.total_insight
-                                                ?.nps_score_interpretation
-                                            }
-                                          </div>
-                                          <br />
-                                          <div>
-                                            {
-                                              quickSurveyReport[0]
-                                                ?.total_insight
-                                                ?.group_response_analysis
-                                            }
-                                          </div>
-                                          <br />
-                                          <div>
-                                            {
-                                              quickSurveyReport[0]
-                                                ?.total_insight
-                                                ?.enhancement_and_improvement_insight
-                                            }
-                                          </div>
-                                        </>
-                                      ) : (
-                                        // 기존 non-NPS 로직
-                                        <>
-                                          {
-                                            quickSurveyReport[0]?.total_insight
-                                              ?.statistic
-                                          }
-                                          <br />
-                                          <br />
-                                          {
-                                            quickSurveyReport[0]?.total_insight
-                                              ?.insight
-                                          }
-                                        </>
-                                      )}
-                                    </InsightContent>
-                                  </InsightSection>
-
-                                  <InsightSection>
-                                    <InsightLabel color="gray700">
-                                      성별 의견 정리
-                                    </InsightLabel>
-                                    <InsightContent color="gray700">
-                                      <>
-                                        {
-                                          quickSurveyReport[0]?.gender_insight
-                                            ?.statistic
-                                        }
-                                        <br />
-                                        <br />
-                                        {
-                                          quickSurveyReport[0]?.gender_insight
-                                            ?.insight
-                                        }
-                                      </>
-                                    </InsightContent>
-                                  </InsightSection>
-
-                                  <InsightSection>
-                                    <InsightLabel color="gray700">
-                                      연령별 의견 정리
-                                    </InsightLabel>
-                                    <InsightContent color="gray700">
-                                      <>
-                                        {
-                                          quickSurveyReport[0].age_insight
-                                            .statistic
-                                        }
-                                        <br />
-                                        <br />
-                                        {
-                                          quickSurveyReport[0].age_insight
-                                            .insight
-                                        }
-                                      </>
-                                    </InsightContent>
-                                  </InsightSection>
-                                </InsightContainer>
-                              )}
-                            </div>
-                          </>
-                        )}
-                        {activeDesignTab === "scale" && (
-                          <>
-                            {/* 각 질문 유형에 맞는 그래프 렌더링 */}
-                            {(selectedQuestion[0] === "ab_test" ||
-                              (selectedQuestion[0] === "custom_question" &&
-                                quickSurveyAnalysis[selectedQuestion]?.options
-                                  ?.length === 2)) && (
-                              // quickSurveyStaticDataState &&
-                              // typeof quickSurveyStaticDataState === "object" &&
-                              // Object.keys(quickSurveyStaticDataState).length >
-                              //   0 &&
-                              <GraphChartScale2 />
-                            )}
-                            {selectedQuestion[0] === "custom_question" &&
-                              quickSurveyAnalysis[selectedQuestion]?.options
-                                ?.length === 3 && (
-                                // quickSurveyStaticDataState &&
-                                // typeof quickSurveyStaticDataState === "object" &&
-                                // Object.keys(quickSurveyStaticDataState).length >
-                                //   0 &&
-                                <GraphChartScale3 />
-                              )}
-                            {selectedQuestion[0] === "custom_question" &&
-                              quickSurveyAnalysis[selectedQuestion]?.options
-                                ?.length === 4 && (
-                                // quickSurveyStaticDataState &&
-                                // typeof quickSurveyStaticDataState === "object" &&
-                                // Object.keys(quickSurveyStaticDataState).length >
-                                //   0 &&
-                                <GraphChartScale4 />
-                              )}
-                            {(selectedQuestion[0] === "importance" ||
-                              selectedQuestion[0] === "single_choice" ||
-                              (selectedQuestion[0] === "custom_question" &&
-                                quickSurveyAnalysis[selectedQuestion]?.options
-                                  ?.length === 5)) && (
-                              // quickSurveyStaticDataState &&
-                              // typeof quickSurveyStaticDataState === "object" &&
-                              // Object.keys(quickSurveyStaticDataState).length >
-                              //   0 &&
-                              <GraphChartScale5 />
-                            )}
-
-                            {selectedQuestion[0] === "nps" && (
-                              // quickSurveyStaticDataState &&
-                              // typeof quickSurveyStaticDataState === "object" &&
-                              // Object.keys(quickSurveyStaticDataState).length >
-                              //   0 &&
-                              <GraphChartScale11 />
-                            )}
-                          </>
-                        )}
-                      </InsightAnalysis>
+                      <IdeaContainer>
+              
+                          <IdeaBox>
+                            <IdeaTitle>채널</IdeaTitle>
+              
+                            <IdeaContent>
+                          
+                                  <IdeaText>
+                                  
+                                  </IdeaText>
+                          
+                            </IdeaContent>
+                          </IdeaBox>
+               
+                        </IdeaContainer>
                     </>
                   )}
                 </TabContent5>
               )}
 
-            {showToast && (
-              <OrganismToastPopupQuickSurveyComplete
-                isActive={showToast}
-                onClose={() => setShowToast(false)}
-                isComplete={true}
-                selectedOption={selectedOption}
-                selectedOptionIndex={selectedOptionIndex}
-              />
-            )}
+           
           </DesignAnalysisWrap>
         </MainContent>
       </ContentsWrap>
@@ -1858,3 +1530,47 @@ const PlusIcon = styled.span`
   color: ${palette.gray700};
 `;
 
+
+
+
+const IdeaContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  padding: 20px;
+`;
+
+const IdeaBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: ${palette.white};
+  border: 1px solid ${palette.outlineGray};
+  border-radius: 8px;
+  text-align: left;
+`;
+
+const IdeaTitle = styled.h3`
+  font-family: "Pretendard", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: ${palette.gray800};
+  margin: 0;
+`;
+
+const IdeaContent = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const IdeaText = styled.p`
+  font-family: "Pretendard", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: ${palette.gray600};
+  margin: 0;
+`;

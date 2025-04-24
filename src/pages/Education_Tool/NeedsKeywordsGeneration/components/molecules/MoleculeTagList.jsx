@@ -65,7 +65,7 @@ console.log("items", items);
             return (
               <IdeaGenerationTag
                 key={item.id}
-                text={item.theme || ""}
+                text={item || ""}
 
                 initialSelected={selectedTags.includes(index)}
                 disabled={
