@@ -449,20 +449,33 @@ const PageToolListSaas = () => {
   const [, setQuickSurveyInterview] = useAtom(QUICK_SURVEY_INTERVIEW);
   const [, setQuickSurveyReport] = useAtom(QUICK_SURVEY_REPORT);
   const [, setQuickSurveyStaticData] = useAtom(QUICK_SURVEY_STATIC_DATA);
-  const [, setQuickSurveyInterviewModeType] = useAtom(QUICK_SURVEY_INTERVIEW_MODE_TYPE);
-  const [, setIdeaGenerationProblemList] = useAtom(IDEA_GENERATION_PROBLEM_LIST);
-  const [, setIdeaGenerationSelectedStartPosition] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
+  const [, setQuickSurveyInterviewModeType] = useAtom(
+    QUICK_SURVEY_INTERVIEW_MODE_TYPE
+  );
+  const [, setIdeaGenerationProblemList] = useAtom(
+    IDEA_GENERATION_PROBLEM_LIST
+  );
+  const [, setIdeaGenerationSelectedStartPosition] = useAtom(
+    IDEA_GENERATION_SELECTED_START_POSITION
+  );
   const [, setSelectedKanoModelIdea] = useAtom(KANO_MODEL_SELECTED_IDEA);
   const [, setKanoModelClustering] = useAtom(KANO_MODEL_CLUSTERING);
   const [, setKanoModelClusteringName] = useAtom(KANO_MODEL_CLUSTERING_NAME);
   const [, setKanoModelEvaluation] = useAtom(KANO_MODEL_EVALUATION);
   const [, setKanoModelProductAnalysis] = useAtom(KANO_MODEL_PRODUCT_ANALYSIS);
-  const [, setCustomerJourneyMapSelectedPersona] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA);  
-  const [, setCustomerJourneyMapMomentAnalysis] = useAtom(CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS);
-  const [, setCustomerJourneyMapSelectedDirection] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION);
+  const [, setCustomerJourneyMapSelectedPersona] = useAtom(
+    CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA
+  );
+  const [, setCustomerJourneyMapMomentAnalysis] = useAtom(
+    CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS
+  );
+  const [, setCustomerJourneyMapSelectedDirection] = useAtom(
+    CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION
+  );
   const [, setCustomerJourneyMapReport] = useAtom(CUSTOMER_JOURNEY_MAP_REPORT);
-  const [, setCustomerJourneyMapSelectedDirectionIndex] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX);
-
+  const [, setCustomerJourneyMapSelectedDirectionIndex] = useAtom(
+    CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX
+  );
 
   // 초기화 useEffect
   useEffect(() => {
@@ -648,7 +661,6 @@ const PageToolListSaas = () => {
     setKanoModelClusteringName([]);
     setKanoModelEvaluation([]);
     setKanoModelProductAnalysis([]);
-
   }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   useEffect(() => {
@@ -1803,6 +1815,80 @@ const PageToolListSaas = () => {
 
                   // !Edu 툴 추가
                   <>
+                    <ExploreCard AiPersona key="analysis-1">
+                      <span>
+                        <images.GridCircle color={palette.gray700} />
+                        Interveiw
+                      </span>
+                      <p>
+                        <img src={images.ImgExplore12} alt="" />
+                      </p>
+                      <Body1 color="gray800">
+                        <em>준비중</em>
+                        심층 인터뷰 룸
+                      </Body1>
+
+                      <div
+                        className="overlay"
+                        onClick={() => {
+                          navigate("/Persona3Single");
+                        }}
+                      >
+                        <span>
+                          <images.GridCircle color={palette.white} />
+                          Interveiw
+                        </span>
+
+                        <div className="text">
+                          <Body1 color="white">
+                            <em>준비중</em>
+                            심층 인터뷰 룸
+                          </Body1>
+                          <Caption1 color="white" align="left">
+                            1:1 인터뷰를 통해 개별 사용자의 심층적인 인사이트와
+                            핵심 니즈를 탐색하는 도구
+                          </Caption1>
+                          <i />
+                        </div>
+                      </div>
+                    </ExploreCard>
+                    <ExploreCard AiPersona key="analysis-2">
+                      <span>
+                        <images.GridCircle color={palette.gray700} />
+                        Interveiw
+                      </span>
+                      <p>
+                        <img src={images.ImgExplore13} alt="" />
+                      </p>
+                      <Body1 color="gray800">
+                        <em>준비중</em>
+                        그룹 인터뷰 룸
+                      </Body1>
+
+                      <div
+                        className="overlay"
+                        onClick={() => {
+                          navigate("/Persona3Multiple");
+                        }}
+                      >
+                        <span>
+                          <images.GridCircle color={palette.white} />
+                          Interveiw
+                        </span>
+
+                        <div className="text">
+                          <Body1 color="white">
+                            <em>준비중</em>
+                            그룹 인터뷰 룸
+                          </Body1>
+                          <Caption1 color="white" align="left">
+                            소규모 그룹과의 대화를 통해 다양한 관점을 수집하고
+                            핵심 인사이트를 도출하는 도구
+                          </Caption1>
+                          <i />
+                        </div>
+                      </div>
+                    </ExploreCard>
                     <ExploreCard Report key="report-1">
                       <span>
                         <images.GridReport color={palette.gray700} />
@@ -1945,7 +2031,6 @@ const PageToolListSaas = () => {
                         </div>
                       </div>
                     </ExploreCard>
-
                     <ExploreCard Report key="report-1">
                       <span>
                         <images.GridReport color={palette.gray700} />
@@ -2018,7 +2103,6 @@ const PageToolListSaas = () => {
                         </div>
                       </div>
                     </ExploreCard>
-
                     <ExploreCard Report key="report-1">
                       <span>
                         <images.GridReport color={palette.gray700} />

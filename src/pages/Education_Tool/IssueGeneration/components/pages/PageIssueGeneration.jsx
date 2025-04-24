@@ -90,7 +90,8 @@ import MoleculeTagList from "../molecules/MoleculeTagList";
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
 import MoleculeMandalArtGraph from "../molecules/MoleculeMandalArtGraph";
 import OrganismToastPopupQuickSurveyComplete from "../molecules/OrganismToastPopupQuickSurveyComplete";
-const PageIdeaGeneration = () => {
+
+const PageIssueGeneration = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
@@ -434,7 +435,7 @@ const PageIdeaGeneration = () => {
     const responseToolId = await createToolOnServer(
       {
         projectId: project._id,
-        type: "ix_idea_generation_education",
+        type: "ix_issue_generation_education",
       },
       isLoggedIn
     );
@@ -1394,7 +1395,7 @@ const PageIdeaGeneration = () => {
   );
 };
 
-export default PageIdeaGeneration;
+export default PageIssueGeneration;
 
 const DesignAnalysisWrap = styled.div`
   display: flex;
