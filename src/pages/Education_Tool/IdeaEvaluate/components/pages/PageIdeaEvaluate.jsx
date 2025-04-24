@@ -1129,10 +1129,9 @@ const PageIdeaEvaluate = () => {
                   ) : (
                     <>
                       <BgBoxItem primaryLightest>
-                        <H3 color="gray800">퀵서베이 결과</H3>
+                        <H3 color="gray800">아이디어 선호도 평가</H3>
                         <Body3 color="gray800">
-                          페르소나 그룹의 의견을 확인하여 타겟 반응을 사전에
-                          확인해보세요.
+                        아이디어에 대해 선호도를 평가한 결과입니다. 어떤 아이디어가 더 매력적인지 확인해보세요.
                         </Body3>
                       </BgBoxItem>
 

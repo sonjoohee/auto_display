@@ -598,7 +598,19 @@ export const CUSTOMER_JOURNEY_MAP_REPORT = atom([]);
 export const CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION = atom([]);  
 export const CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX = atom(0);
 
+export const ISSUE_GENERATION_SELECTED_PURPOSE = atom({});
+export const ISSUE_GENERATION_PROBLEM_LIST = atom([]);
+export const ISSUE_GENERATION_PROBLEM_LIST_TITLE = atom([]);
+export const ISSUE_GENERATION_START_POSITION = atom([]);
+export const ISSUE_GENERATION_SELECTED_START_POSITION = atom([]);
+
+export const ISSUE_GENERATION_LIST = atom([]);
+export const KEYWORDS_GENERATION_SELECTED_ISSUE = atom([]);
+export const KEYWORDS_GENERATION_SELECTED_ISSUE_INDEX = atom([]);
+export const KEYWORDS_GENERATION_TAG = atom([]);
+
 export const IDEA_GENERATION_SELECTED_PURPOSE = atom({});
+
 export const IDEA_GENERATION_PROBLEM_LIST = atom([]);
 export const IDEA_GENERATION_PROBLEM_LIST_TITLE = atom([]);
 export const IDEA_GENERATION_START_POSITION = atom([]);
@@ -626,6 +638,7 @@ export const IDEA_EVALUATE_COMPARISON_EDUCATION = atom([]);
 
 export const NPS_CONCEPT_DEFINITION = atom([]);
 
+export const CONCEPT_DEFINITION_SELECTED_PURPOSE = atom({});
 export const CONCEPT_DEFINITION_SELECTED_PERSONA = atom([]);
 export const CONCEPT_DEFINITION_FIRST_REPORT = atom("");
 export const CONCEPT_DEFINITION_FINAL_REPORT = atom("");

@@ -5,30 +5,20 @@ import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import images from "../../../../../assets/styles/Images";
 import { useAtom } from "jotai";
 import {
-  IDEA_GENERATION_START_POSITION,
-  IDEA_GENERATION_SELECTED_START_POSITION,
+  ISSUE_GENERATION_START_POSITION,
+  ISSUE_GENERATION_SELECTED_START_POSITION,
 } from "../../../../AtomStates";
 
 // IdeaGenerationTag 컴포넌트
 
 const IdeaGenerationTag = ({
   text,
-  onClick,
   initialSelected = false,
   disabled = false,
 }) => {
   const [isSelected, setIsSelected] = useState(initialSelected);
 
-  const handleClick = (e) => {
-    if (disabled) {
-      return;
-    }
-    if (!disabled || isSelected) {
-      // 선택된 상태면 해제 가능하도록 수정
-      const newSelected = !isSelected;
-      setIsSelected(newSelected);
-    }
-  };
+;
 
   useEffect(() => {
     setIsSelected(initialSelected);
@@ -36,7 +26,7 @@ const IdeaGenerationTag = ({
 
   return (
 
-    <TagContainer selected={isSelected}  disabled={disabled && !isSelected}>
+    <TagContainer selected={isSelected} disabled={disabled && !isSelected}>
       {/* {isSelected && (
         <CheckIcon width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M1.77777 8.49989L6.22063 12.9443L14.2178 4.94434" stroke="white" strokeWidth="1.77778" strokeLinecap="round" strokeLinejoin="round"/>
@@ -49,14 +39,42 @@ const IdeaGenerationTag = ({
 };
 
 // MoleculeTagList 컴포넌트
-const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
+const MoleculeSelectedTagList = ({ items, onTagsChange, disabled }) => {
   const [selectedTags, setSelectedTags] = useState([]);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [questionText, setQuestionText] = useState("");
   const [options, setOptions] = useState(["", ""]);
-  const MAX_SELECTIONS = 8;
-console.log("items", items);
+  const [
+    issueGenerationSelectedStartPosition,
+    setIssueGenerationSelectedStartPosition,
+  ] = useAtom(ISSUE_GENERATION_SELECTED_START_POSITION);
+  const [addedTagsCount, setAddedTagsCount] = useState(0);
+
+
+
+  // // 컴포넌트 마운트 시와 ideaGenerationSelectedStartPosition 변경 시 선택 상태 동기화
+  useEffect(() => {
+    if (items && issueGenerationSelectedStartPosition) {
+      const selectedIndexes = items
+        .map((item, index) =>
+          issueGenerationSelectedStartPosition.some(
+            (selected) => selected.theme === item.theme
+          )
+            ? index
+            : -1
+        )
+        .filter((index) => index !== -1);
+
+      setSelectedTags(selectedIndexes);
+    }
+  }, [items, issueGenerationSelectedStartPosition]);
+
+  useEffect(() => {
+    if (!options || options.length < 2) {
+      setOptions(["", ""]);
+    }
+  }, []);
+
+
+
   return (
     <>
       <TagListContainer>
@@ -66,24 +84,21 @@ console.log("items", items);
               <IdeaGenerationTag
                 key={item.id}
                 text={item.theme || ""}
-
                 initialSelected={selectedTags.includes(index)}
-                disabled={
-                  !selectedTags.includes(index) &&
-                  selectedTags.length >= MAX_SELECTIONS
-                }
+              
               />
             );
           })}
       
       </TagListContainer>
 
-    
+      
+      
     </>
   );
 };
 
-export default MoleculeTagList;
+export default MoleculeSelectedTagList;
 
 const TagContainer = styled.div`
   display: inline-flex;

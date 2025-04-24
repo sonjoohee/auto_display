@@ -252,6 +252,10 @@ const PageNps = () => {
         if (quickSurveyProjectDescription) {
           setProjectDescription(quickSurveyProjectDescription);
         }
+        // if (fileNames) {
+        //   setFileNames(fileNames ?? []);
+        //   setUploadedFiles(fileNames ?? []);
+        // }
 
         if (
           quickSurveyAnalysis &&
@@ -487,9 +491,9 @@ const PageNps = () => {
 
   const handleSubmitConcept = async () => {
     // quickSurveyAnalysis가 비어있을 때만 API 호출
-    // handleNextStep(1);
+    handleNextStep(1);
     if (uploadedFiles.length > 0) {
-      setIsLoading(true);
+      // setIsLoading(true);
       try {
         // 비즈니스 데이터 추가
         const Data = {
@@ -587,8 +591,8 @@ const PageNps = () => {
         setIsLoading(false);
       }
     } else {
-      // handleNextStep(1);
-      setIsLoading(true);
+      handleNextStep(1);
+      // setIsLoading(true);
 
       const Data = {
         type: "ix_quick_survey_custom_guide",
@@ -1506,7 +1510,7 @@ const PageNps = () => {
                          FlexStart
                          key={index}
                          id={index}
-                         title={idea.name}s
+                         title={idea.name}
                          isSelected={selectedConcept.includes(index)}
                          onSelect={() => handleCheckboxChange(index)}
                        />
@@ -1663,18 +1667,7 @@ const PageNps = () => {
                         Fill
                         Round
                         onClick={() => {
-                          if (quickSurveyPersonaGroup.length > 0) {
-                            handleSubmitReport(); //마지막 보고서 함수
-                          } else {
-                            if (
-                              interviewModeType === "conceptBoard" ||
-                              (interviewModeType === "explanation" &&
-                                quickSurveyPresetData &&
-                                quickSurveyPresetData.length > 0)
-                            ) {
-                              handleSubmitSelfSelect();
-                            }
-                          }
+                          handleSubmitReport();
                         }}
                         disabled={toolSteps >= 3}
                          

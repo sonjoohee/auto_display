@@ -242,6 +242,7 @@ const PageKanoModel = () => {
     };
   }, [showToast]);
 
+  console.log( "selectedKanoModelIdea", selectedKanoModelIdea)
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
@@ -872,8 +873,9 @@ const PageKanoModel = () => {
                                 >
                                   <Body1 color="gray700">
                                     Kano Model 평가에 포함할 아이디어를 선택해
-                                    주세요. (복수 선택)
+                                    주세요. (복수 선택 가능)
                                   </Body1>
+                          
                                 </div>
                                 {kanoModelIdeaGeneration.map((idea, index) => (
                                   <MoleculeItemSelectCard

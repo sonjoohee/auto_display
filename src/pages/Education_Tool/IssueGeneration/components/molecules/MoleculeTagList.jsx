@@ -5,8 +5,8 @@ import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import images from "../../../../../assets/styles/Images";
 import { useAtom } from "jotai";
 import {
-  IDEA_GENERATION_START_POSITION,
-  IDEA_GENERATION_SELECTED_START_POSITION,
+  ISSUE_GENERATION_START_POSITION,
+  ISSUE_GENERATION_SELECTED_START_POSITION,
 } from "../../../../AtomStates";
 
 // IdeaGenerationTag 컴포넌트
@@ -57,21 +57,21 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
   const [questionText, setQuestionText] = useState("");
   const [options, setOptions] = useState(["", ""]);
   const MAX_SELECTIONS = 8;
-  const [ideaGenerationStartPosition, setIdeaGenerationStartPosition] = useAtom(
-    IDEA_GENERATION_START_POSITION
+  const [issueGenerationStartPosition, setIssueGenerationStartPosition] = useAtom(
+    ISSUE_GENERATION_START_POSITION
   );
   const [
-    ideaGenerationSelectedStartPosition,
-    setIdeaGenerationSelectedStartPosition,
-  ] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
+    issueGenerationSelectedStartPosition,
+    setIssueGenerationSelectedStartPosition,
+  ] = useAtom(ISSUE_GENERATION_SELECTED_START_POSITION);
   const [addedTagsCount, setAddedTagsCount] = useState(0);
 
   // 컴포넌트 마운트 시와 ideaGenerationSelectedStartPosition 변경 시 선택 상태 동기화
   useEffect(() => {
-    if (items && ideaGenerationSelectedStartPosition) {
+    if (items && issueGenerationSelectedStartPosition) {
       const selectedIndexes = items
         .map((item, index) =>
-          ideaGenerationSelectedStartPosition.some(
+          issueGenerationSelectedStartPosition.some(
             (selected) => selected.theme === item.theme
           )
             ? index
@@ -81,7 +81,7 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
 
       setSelectedTags(selectedIndexes);
     }
-  }, [items, ideaGenerationSelectedStartPosition]);
+  }, [items, issueGenerationSelectedStartPosition]);
 
   useEffect(() => {
     if (!options || options.length < 2) {
@@ -94,12 +94,13 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
       return;
     }
 
+
     if (isSelected) {
       // 태그 선택 해제 시
       const newSelectedTags = selectedTags.filter((i) => i !== index);
       setSelectedTags(newSelectedTags);
 
-      setIdeaGenerationSelectedStartPosition(
+      setIssueGenerationSelectedStartPosition(
         newSelectedTags.map((tagIndex) => items[tagIndex])
       );
     } else {
@@ -108,7 +109,7 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
         const newSelectedTags = [...selectedTags, index];
         setSelectedTags(newSelectedTags);
 
-        setIdeaGenerationSelectedStartPosition(
+        setIssueGenerationSelectedStartPosition(
           newSelectedTags.map((tagIndex) => items[tagIndex])
         );
       }
@@ -155,7 +156,7 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
       ],
     }));
 
-    setIdeaGenerationStartPosition((prev) => {
+    setIssueGenerationStartPosition((prev) => {
       const prevArray = Array.isArray(prev) ? prev : [];
       const updated = [...prevArray, ...newTags];
 
