@@ -119,8 +119,10 @@ const PageConceptDefinition = () => {
   );
   const [conceptDefinitionFirstReport, setConceptDefinitionFirstReport] =
     useAtom(CONCEPT_DEFINITION_FIRST_REPORT);
-  const [conceptDefinitionSelectedPurpose, setConceptDefinitionSelectedPurpose] =
-    useAtom(CONCEPT_DEFINITION_SELECTED_PURPOSE);
+  const [
+    conceptDefinitionSelectedPurpose,
+    setConceptDefinitionSelectedPurpose,
+  ] = useAtom(CONCEPT_DEFINITION_SELECTED_PURPOSE);
 
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
@@ -175,22 +177,29 @@ const PageConceptDefinition = () => {
           setCompletedSteps(completedStepsArray);
         }
 
-  
         // 비즈니스 정보 설정 (Step 1)
-        if(Object.keys(conceptDefinitionSelectedPurpose).length > 0) {
+        if (Object.keys(conceptDefinitionSelectedPurpose).length > 0) {
           setSelectedPurposes(conceptDefinitionSelectedPurpose ?? {});
         }
 
-        if(conceptDefinitionSelectedPersona && conceptDefinitionSelectedPersona.length > 0) {
+        if (
+          conceptDefinitionSelectedPersona &&
+          conceptDefinitionSelectedPersona.length > 0
+        ) {
           setSelectedPersonas(conceptDefinitionSelectedPersona ?? []);
         }
-        
 
-        if (conceptDefinitionFirstReport && conceptDefinitionFirstReport.length > 0) {
+        if (
+          conceptDefinitionFirstReport &&
+          conceptDefinitionFirstReport.length > 0
+        ) {
           setConceptDefinitionFirstReport(conceptDefinitionFirstReport ?? "");
         }
 
-        if(conceptDefinitionFinalReport && conceptDefinitionFinalReport.length > 0) {
+        if (
+          conceptDefinitionFinalReport &&
+          conceptDefinitionFinalReport.length > 0
+        ) {
           setConceptDefinitionFinalReport(conceptDefinitionFinalReport ?? "");
         }
 
@@ -321,7 +330,8 @@ const PageConceptDefinition = () => {
         {
           // completedStep: 2,
           selectedKanoModel: selectedPurposes,
-          conceptDefinitionFirstReport: response.response.concept_definition_report_education,
+          conceptDefinitionFirstReport:
+            response.response.concept_definition_report_education,
         },
         isLoggedIn
       );
@@ -355,7 +365,9 @@ const PageConceptDefinition = () => {
 
         let response = await EducationToolsRequest(apiRequestData, isLoggedIn);
         console.log("response", response);
-        setConceptDefinitionFinalReport(response.response);
+        setConceptDefinitionFinalReport(
+          response.response.concept_definition_final_report_education
+        );
 
         // const maxAttempts = 10;
         // let attempts = 0;
@@ -915,7 +927,9 @@ const PageConceptDefinition = () => {
                           textAlign: "left",
                         }}
                       >
-                        <Markdown>{prepareMarkdown(psstReport ?? "")}</Markdown>
+                        <Markdown>
+                          {prepareMarkdown(conceptDefinitionFinalReport ?? "")}
+                        </Markdown>
                       </div>
                     </InsightAnalysis>
                   </>

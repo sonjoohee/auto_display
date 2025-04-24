@@ -583,7 +583,7 @@ const OrganismPersonaCardList = ({
 
           {activeTab !== "my_favorite" &&
             activeTab !== "my_persona" &&
-            currentTabPersonaCount < 24 && (
+            currentTabPersonaCount < 40 && (
               <>
                 {loadingTabs[activeTab] ? (
                   <div className="more">
