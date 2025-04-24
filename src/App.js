@@ -69,6 +69,7 @@ import PageNps from "./pages/Education_Tool/Nps/components/pages/PageNps";
 import PageIdeaEvaluate from "./pages/Education_Tool/IdeaEvaluate/components/pages/PageIdeaEvaluate";
 import PageConceptDefinition from "./pages/Education_Tool/ConceptDefinition/components/pages/PageConCeptDefinition";
 import PageBusinessModelCanvas from "./pages/Education_Tool/BusinessModelCanvas/components/pages/PageBusinessModelCanvas";
+import PagePRFAQ from "./pages/Education_Tool/PRFAQ/components/pages/PagePRFAQ";
 
 import PageMyProfile from "./pages/Persona/components/pages/PageMyProfile";
 
@@ -645,6 +646,14 @@ function App() {
             }
           ></Route>
 
+          <Route
+            path="/PRFAQ"
+            element={
+              <RequireToken>
+                <PagePRFAQ />
+              </RequireToken>
+            }
+          ></Route>
           <Route
             path="/BusinessModelCanvas"
             element={

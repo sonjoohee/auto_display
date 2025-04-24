@@ -2247,6 +2247,41 @@ const PageToolListSaas = () => {
                         </div>
                       </div>
                     </ExploreCard>
+                    <ExploreCard Report key="report-1">
+                      <span>
+                        <images.GridReport color={palette.gray700} />
+                        Report
+                      </span>
+                      <p>
+                        <img src={images.ImgExplore14} alt="" />
+                      </p>
+                      <Body1 color="gray800">
+                        <em>준비중</em>
+                        PR FAQ
+                      </Body1>
+
+                      <div
+                        className="overlay"
+                        onClick={() => {
+                          navigate("/PRFAQ");
+                        }}
+                      >
+                        <span>
+                          <images.GridReport color={palette.white} />
+                          Report
+                        </span>
+
+                        <div className="text">
+                          <Body1 color="white">
+                            <em>준비중</em>PR FAQ
+                          </Body1>
+                          <Caption1 color="white" align="left">
+                          비즈니스 모델 캔버스를 통해 정의한 비즈니스 모델을 기반으로 작성한 PR FAQ를 확인해 보세요 
+                          </Caption1>
+                          <i />
+                        </div>
+                      </div>
+                    </ExploreCard>
                     <ExploreCard
                       Report
                       Ready

@@ -172,7 +172,6 @@ const PageNeedsKeywordsGeneration = () => {
 
 
 
-
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
@@ -328,21 +327,22 @@ const PageNeedsKeywordsGeneration = () => {
       // }
 
       const Data = {
-        type: "ix_idea_generation_keyword_education",
-        business_info: business,
-        info: customerJourneyMapSelectedPersona,
-        problem_needs: ideaGenerationProblemList,
-        is_load: true,
+        type: "ix_needs_keywords_generation_clustering_education",
+        business: business,
+        theme_list:updatedProblemList
+        
       };
 
       const response = await EducationToolsRequest(Data, isLoggedIn);
 
-      setIdeaGenerationStartPosition(
-        response.response.idea_generation_keyword_education
-      );
+      console.log("response", response);
+
+      // setIdeaGenerationStartPosition(
+      //   response.response.idea_generation_keyword_education
+      // );
 
       setKeywordsGenerationTag(
-        response.response.idea_generation_keyword_education
+        response.response.needs_keywords_generation_clustering_education
       );
 
       setIsLoading(false);
@@ -351,7 +351,7 @@ const PageNeedsKeywordsGeneration = () => {
         {
           completedStep: 2,
           keywordsGenerationTag:
-            response.response.idea_generation_keyword_education,
+            response.response.needs_keywords_generation_clustering_education,
         },
         isLoggedIn
       );
@@ -642,7 +642,7 @@ const PageNeedsKeywordsGeneration = () => {
                           <MoleculeTagList
                             items={
                               keywordsGenerationTag
-                                .map((item) => item.content)
+                                .map((item) => item.main_theme)
                                 .flat() // 모든 content 배열을 하나로 합침
                             }
                             disabled={toolSteps >= 2}

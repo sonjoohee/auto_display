@@ -764,7 +764,7 @@ const PageIssueGeneration = () => {
                           </div>
                         ) : (
                           <>
-                            {customerJourneyList.length === 0 ? (
+                            {selectedPurposes.customerList.length === 0 ? (
                               <BoxWrap
                                 NoData
                                 style={{ height: "300px" }}
