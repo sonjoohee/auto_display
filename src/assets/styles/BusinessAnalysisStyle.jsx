@@ -1059,6 +1059,20 @@ export const ProjectTag = styled.span`
         height: 20px;
         background-image: ${(props) => {
           switch (props.Type) {
+            case "정보통신 및 기술":
+              return `url(${images.ProjectInformation})`;
+            case "금융 및 법률":
+              return `url(${images.ProjectBanking})`;
+            case "제조 및 생산":
+              return `url(${images.ProjectProduction})`;
+            case "건설 및 인프라":
+              return `url(${images.ProjectBuild})`;
+            case "의료 및 헬스케어":
+              return `url(${images.ProjectMedical})`;
+            case "교육 및 공공 서비스":
+              return `url(${images.ProjectEducation})`;
+            case "소비재 및 라이프스타일":
+              return `url(${images.ProjectConsumer})`;
             case "정보통신 및 기술 (IT, 소프트웨어, 커뮤니티, 광고, 마케팅 등)":
               return `url(${images.ProjectInformation})`;
             case "금융 및 법률 (핀테크, 인사, 법률 등)":
@@ -1133,6 +1147,20 @@ export const ProjectTag = styled.span`
 
       if (props.Type) {
         switch (props.Type) {
+          case "정보통신 및 기술":
+            return "정보통신 및 기술";
+          case "금융 및 법률":
+            return "금융 및 법률";
+          case "제조 및 생산":
+            return "제조 및 생산";
+          case "건설 및 인프라":
+            return "건설 및 인프라";
+          case "의료 및 헬스케어":
+            return "의료 및 헬스케어";
+          case "교육 및 공공 서비스":
+            return "교육 및 공공 서비스";
+          case "소비재 및 라이프스타일":
+            return "소비재 및 라이프스타일";
           case "정보통신 및 기술 (IT, 소프트웨어, 커뮤니티, 광고, 마케팅 등)":
             return "정보통신 및 기술";
           case "금융 및 법률 (핀테크, 인사, 법률 등)":
@@ -2460,20 +2488,34 @@ export const ListBoxGroup = styled.ul`
 
 export const CardGroupWrap = styled.div`
   display: flex;
-  flex-direction: ${(props) => (props.column || props.ideaGeneration ? "column" : "row")};
+  flex-direction: ${(props) =>
+    props.column || props.ideaGeneration ? "column" : "row"};
   gap: 15px !important;
   flex-wrap: ${(props) => (props.rowW50 ? "nowrap" : "wrap")};
   width: 100%;
-  margin-bottom: ${(props) => (props.column || props.rowW50 || props.ideaGeneration ? "0" : "140px")};
+  margin-bottom: ${(props) =>
+    props.column || props.rowW50 || props.ideaGeneration ? "0" : "140px"};
 
   > div {
     flex: ${(props) =>
-      props.column || props.ideaGeneration ? "1" : props.rowW50 ? "1 1 50%" : "0 0 calc(24.8% - 10px)"};
+      props.column || props.ideaGeneration
+        ? "1"
+        : props.rowW50
+        ? "1 1 50%"
+        : "0 0 calc(24.8% - 10px)"};
     max-width: ${(props) =>
-      props.column || props.ideaGeneration ? "100%" : props.rowW50 ? "50%" : "calc(24.8% - 10px)"};
+      props.column || props.ideaGeneration
+        ? "100%"
+        : props.rowW50
+        ? "50%"
+        : "calc(24.8% - 10px)"};
     width: 100%;
     justify-content: ${(props) =>
-      props.column || props.rowW50 ? "space-between" : props.ideaGeneration ? "left" : "flex-start"};
+      props.column || props.rowW50
+        ? "space-between"
+        : props.ideaGeneration
+        ? "left"
+        : "flex-start"};
   }
 `;
 
@@ -2552,7 +2594,8 @@ export const AiPersonaCardListItem = styled(ListBoxItem)`
     gap: 12px;
     width: 100%;
     // border-bottom: 1px solid ${palette.outlineGray};
-    border-bottom: ${(props) => (props.quickSurvey ? "0" : "1px solid ${palette.outlineGray}")};
+    border-bottom: ${(props) =>
+      props.quickSurvey ? "0" : "1px solid ${palette.outlineGray}"};
   }
 
   .title {

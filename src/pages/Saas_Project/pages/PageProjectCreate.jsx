@@ -874,25 +874,25 @@ const PageProjectCreate = () => {
                                 <img
                                   src={
                                     selectedValues.industry ===
-                                    "정보통신 및 기술 (IT, 소프트웨어, 커뮤니티, 광고, 마케팅 등)"
+                                    "정보통신 및 기술"
                                       ? images.ProjectInformation
                                       : selectedValues.industry ===
-                                        "금융 및 법률 (핀테크, 인사, 법률 등)"
+                                        "금융 및 법률"
                                       ? images.ProjectBanking
                                       : selectedValues.industry ===
-                                        "제조 및 생산 (의류, 뷰티, 식음료, 환경/에너지 등)"
+                                        "제조 및 생산"
                                       ? images.ProjectProduction
                                       : selectedValues.industry ===
-                                        "건설 및 인프라 (부동산, 모빌리티, 물류 등)"
+                                        "건설 및 인프라"
                                       ? images.ProjectBuild
                                       : selectedValues.industry ===
-                                        "의료 및 헬스케어 (헬스케어, 바이오 등)"
+                                        "의료 및 헬스케어"
                                       ? images.ProjectMedical
                                       : selectedValues.industry ===
-                                        "교육 및 공공 서비스 (교육, 정부 및 공공기관 등)"
+                                        "교육 및 공공 서비스"
                                       ? images.ProjectEducation
                                       : selectedValues.industry ===
-                                        "소비재 및 라이프스타일 (커머스, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)"
+                                        "소비재 및 라이프스타일"
                                       ? images.ProjectConsumer
                                       : images.ProjectEtc
                                   }
@@ -919,96 +919,92 @@ const PageProjectCreate = () => {
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect(
-                                    "정보통신 및 기술 (IT, 소프트웨어, 커뮤니티, 광고, 마케팅 등)",
+                                    "정보통신 및 기술",
                                     "industry"
                                   )
                                 }
                               >
                                 <Body2 color="gray700" align="left">
                                   <img src={images.ProjectInformation} alt="" />
-                                  정보통신 및 기술 (IT, 소프트웨어, 커뮤니티,
-                                  광고, 마케팅 등)
+                                  정보통신 및 기술
                                 </Body2>
                               </SelectBoxItem>
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect(
-                                    "금융 및 법률 (핀테크, 인사, 법률 등)",
+                                    "금융 및 법률",
                                     "industry"
                                   )
                                 }
                               >
                                 <Body2 color="gray700" align="left">
                                   <img src={images.ProjectBanking} alt="" />
-                                  금융 및 법률 (핀테크, 인사, 법률 등)
+                                  금융 및 법률
                                 </Body2>
                               </SelectBoxItem>
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect(
-                                    "제조 및 생산 (의류, 뷰티, 식음료, 환경/에너지 등)",
+                                    "제조 및 생산",
                                     "industry"
                                   )
                                 }
                               >
                                 <Body2 color="gray700" align="left">
                                   <img src={images.ProjectProduction} alt="" />
-                                  제조 및 생산 (의류, 뷰티, 식음료, 환경/에너지
-                                  등)
+                                  제조 및 생산
                                 </Body2>
                               </SelectBoxItem>
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect(
-                                    "건설 및 인프라 (부동산, 모빌리티, 물류 등)",
+                                    "건설 및 인프라",
                                     "industry"
                                   )
                                 }
                               >
                                 <Body2 color="gray700" align="left">
                                   <img src={images.ProjectBuild} alt="" />
-                                  건설 및 인프라 (부동산, 모빌리티, 물류 등)
+                                  건설 및 인프라
                                 </Body2>
                               </SelectBoxItem>
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect(
-                                    "의료 및 헬스케어 (헬스케어, 바이오 등)",
+                                    "의료 및 헬스케어",
                                     "industry"
                                   )
                                 }
                               >
                                 <Body2 color="gray700" align="left">
                                   <img src={images.ProjectMedical} alt="" />
-                                  의료 및 헬스케어 (헬스케어, 바이오 등)
+                                  의료 및 헬스케어
                                 </Body2>
                               </SelectBoxItem>
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect(
-                                    "교육 및 공공 서비스 (교육, 정부 및 공공기관 등)",
+                                    "교육 및 공공 서비스",
                                     "industry"
                                   )
                                 }
                               >
                                 <Body2 color="gray700" align="left">
                                   <img src={images.ProjectEducation} alt="" />
-                                  교육 및 공공 서비스 (교육, 정부 및 공공기관
-                                  등)
+                                  교육 및 공공 서비스
                                 </Body2>
                               </SelectBoxItem>
                               <SelectBoxItem
                                 onClick={() =>
                                   handlePurposeSelect(
-                                    "소비재 및 라이프스타일 (커머스, 리빙, 유아, 펫, 여행, 콘텐츠, 게임 등)",
+                                    "소비재 및 라이프스타일",
                                     "industry"
                                   )
                                 }
                               >
                                 <Body2 color="gray700" align="left">
                                   <img src={images.ProjectConsumer} alt="" />
-                                  소비재 및 라이프스타일 (커머스, 리빙, 유아,
-                                  펫, 여행, 콘텐츠, 게임 등)
+                                  소비재 및 라이프스타일
                                 </Body2>
                               </SelectBoxItem>
                               <SelectBoxItem

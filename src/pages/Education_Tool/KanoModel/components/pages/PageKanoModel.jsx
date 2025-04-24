@@ -554,10 +554,10 @@ const PageKanoModel = () => {
           gender: persona.gender,
           job: persona.job,
           keywords: persona.keywords,
-          userExperience: persona.userExperience,
-          consumptionPattern: persona.consumptionPattern,
-          interests: persona.interests,
-          lifestyle: persona.lifestyle,
+          // userExperience: persona.userExperience,
+          // consumptionPattern: persona.consumptionPattern,
+          // interests: persona.interests,
+          // lifestyle: persona.lifestyle,
         }));
 
       let allResponseEvalute = [];
