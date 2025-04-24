@@ -383,20 +383,23 @@ const PageKanoModel = () => {
     // handleNextStep(1);
     setIsLoading(true);
 
-    const ideaList = selectedKanoModelIdea?.map(idea => idea?.ideaGenerationMandalArtData) || [];
+    const ideaList =
+      selectedKanoModelIdea?.map((idea) => idea?.ideaGenerationMandalArtData) ||
+      [];
 
-    const flattenedIdeaList = ideaList?.flatMap(idea => 
-      idea?.flatMap(subIdea => 
-        subIdea?.detailed_execution_ideas.map(detail => detail?.idea_title)
-      )
-    ) || [];
- 
+    const flattenedIdeaList =
+      ideaList?.flatMap((idea) =>
+        idea?.flatMap((subIdea) =>
+          subIdea?.detailed_execution_ideas.map((detail) => detail?.idea_title)
+        )
+      ) || [];
+
     try {
       const clusteringData = {
         type: "ix_kano_model_clustering_education",
         idea_list: flattenedIdeaList,
       };
-   
+
       let responseReport = await EducationToolsRequest(
         clusteringData,
         isLoggedIn
@@ -571,7 +574,8 @@ const PageKanoModel = () => {
         const evaluteData = {
           type: "ix_kano_model_evaluation_education",
           business_analysis:
-            response.response.kano_model_product_analysis_education,
+            response.response.kano_model_product_analysis_education
+              .basic_features,
           persona_group: currentPersonaGroup, // 현재 루프의 4명 페르소나 그룹
           idea_list: kanoModelClustering,
         };
@@ -972,7 +976,8 @@ const PageKanoModel = () => {
                     <div className="title">
                       <H3 color="gray800">Participating Persona</H3>
                       <Body3 color="gray800">
-                      아이디어에 대한 기대와 반응을 평가할 페르소나를 선택해주세요
+                        아이디어에 대한 기대와 반응을 평가할 페르소나를
+                        선택해주세요
                       </Body3>
                     </div>
 
