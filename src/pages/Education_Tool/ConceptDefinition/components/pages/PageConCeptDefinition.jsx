@@ -649,7 +649,7 @@ const PageConceptDefinition = () => {
                       <img src={images.PeopleStarFillPrimary} alt="" />
                       <Body2 color="gray500" align="center !important">
                         즐겨찾기를 하시면 관심 있는 페르소나를 해당
-                        페이지에서 확인하실 수 있습니다.{" "}
+                        페이지에서 확인하실 수 있습니다.
                         {
                           personaListSaas.filter(
                             (item) => item.favorite === true

@@ -23,28 +23,69 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
   );
   const [projectSaas] = useAtom(PROJECT_SAAS);
 
+
   const mandalartButtons = [
-    ...ideaGenerationSelectedStartPosition.slice(0, 4).map((item, index) => ({
+    // 1, 2, 3 위치 (왼쪽 상단, 중앙 상단, 오른쪽 상단)
+    ...ideaGenerationSelectedStartPosition.slice(0, 3).map((item, index) => ({
       id: index + 1,
       text: item.theme,
       isCenter: false,
+      displayOrder: index + 1 // 1, 2, 3
     })),
+    
+    // 8 위치 (왼쪽 중앙)
+    {
+      id: 8,
+      text: ideaGenerationSelectedStartPosition[7]?.theme || "",
+      isCenter: false,
+      displayOrder: 4 // 표시 순서 4번째
+    },
+    
+    // 0 위치 (중앙)
     {
       id: 0,
       text: projectSaas?.projectTitle || "아이디어 발상",
       isCenter: true,
+      displayOrder: 5 // 표시 순서 5번째
     },
-    ...ideaGenerationSelectedStartPosition.slice(4).map((item, index) => ({
-      id: index + 5,
-      text: item.theme,
+    
+    // 4 위치 (오른쪽 중앙)
+    {
+      id: 4,
+      text: ideaGenerationSelectedStartPosition[3]?.theme || "",
       isCenter: false,
-    })),
+      displayOrder: 6 // 표시 순서 6번째
+    },
+    
+    // 7, 6, 5 위치 (왼쪽 하단, 중앙 하단, 오른쪽 하단)
+    {
+      id: 7,
+      text: ideaGenerationSelectedStartPosition[6]?.theme || "",
+      isCenter: false,
+      displayOrder: 7 // 표시 순서 7번째
+    },
+    {
+      id: 6,
+      text: ideaGenerationSelectedStartPosition[5]?.theme || "",
+      isCenter: false,
+      displayOrder: 8 // 표시 순서 8번째
+    },
+    {
+      id: 5,
+      text: ideaGenerationSelectedStartPosition[4]?.theme || "",
+      isCenter: false,
+      displayOrder: 9 // 표시 순서 9번째
+    },
   ];
 
+  // displayOrder 기준으로 정렬
+  mandalartButtons.sort((a, b) => a.displayOrder - b.displayOrder);
+
+  console.log("mandalartButtons", mandalartButtons);
   const handleItemClick = (itemId) => {
     setSelectedItem(itemId);
     setIdeaGenerationSelectedMandalart(itemId);
-    // console.log("itemId", itemId);
+    console.log("itemId", itemId);
   };
 
   const handleBackClick = () => {
@@ -93,6 +134,7 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
           {mandalartButtons.map((button, index) => (
             <MandalartButton
               key={index}
+              position={button.displayOrder}
               themeText={button.text}
               isCenterBox={button.isCenter}
               onClick={
@@ -113,6 +155,7 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
               key={index}
               themeText={button.text}
               isCenterBox={button.isCenter}
+              position={button.displayOrder}
               isDetailView={true}
               onClick={button.isCenter ? handleBackClick : undefined}
               hasOutline={true}
