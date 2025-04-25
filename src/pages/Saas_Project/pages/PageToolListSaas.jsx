@@ -171,6 +171,8 @@ import {
   KEYWORDS_GENERATION_SELECTED_ISSUE,
   KEYWORDS_GENERATION_TAG,
   IDEA_GENERATION_START_POSITION,
+  CONCEPT_DEFINITION_FIRST_REPORT,
+  CONCEPT_DEFINITION_FINAL_REPORT,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -506,6 +508,8 @@ const PageToolListSaas = () => {
     KEYWORDS_GENERATION_SELECTED_ISSUE
   );
   const [, setKeywordsGenerationTag] = useAtom(KEYWORDS_GENERATION_TAG);
+  const [, setConceptDefinitionFirstReport] = useAtom(CONCEPT_DEFINITION_FIRST_REPORT);
+  const [, setConceptDefinitionFinalReport] = useAtom(CONCEPT_DEFINITION_FINAL_REPORT);
 
   // 초기화 useEffect
   useEffect(() => {
@@ -702,6 +706,11 @@ const PageToolListSaas = () => {
     setKanoModelClusteringName([]);
     setKanoModelEvaluation([]);
     setKanoModelProductAnalysis([]);
+
+    //concept definition education 초기화
+    setConceptDefinitionFirstReport("");
+    setConceptDefinitionFinalReport("");
+  
   }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   useEffect(() => {

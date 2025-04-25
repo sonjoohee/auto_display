@@ -575,19 +575,8 @@ const PagePRFAQ = () => {
     }
   };
 
-  useEffect(() => {
-    if (shouldRegenerate && Object.keys(quickSurveyAnalysis).length === 0) {
-      // handleSubmitBusinessInfo();
-      setShouldRegenerate(false); // 리셋
-    }
-  }, [quickSurveyAnalysis, shouldRegenerate]);
 
-  const handleRegenerate = () => {
-    setShouldRegenerate(true);
-    setSelectedQuestion([]); // 재생성 flag 설정
-    setQuickSurveyAnalysis({});
-    setQuickSurveyCustomQuestion([]);
-  };
+
 
  
 
@@ -680,12 +669,78 @@ const PagePRFAQ = () => {
   };
 
  
+  const handleReportRequest = async () => {
+    setIsLoadingReport(true);
+    handleNextStep(2);
+    // setToolSteps(2);
+    try {
+      // await updateToolOnServer(
+      //   toolId,
+      //   {
+      //     completedStep: 2,
+      //   },
+      //   isLoggedIn
+      // );
 
-  const handleEnterInterviewRoom = () => {
-    setSelectedOption(null);
-    setSelectedOptionIndex(null);
-    setShowToast(true);
+      try {
+        // const apiRequestData = {
+        //   type: "ix_concept_definition_final_report_education",
+        //   concept_definition_report_education: conceptDefinitionFirstReport,
+        // };
+
+        // let response = await EducationToolsRequest(apiRequestData, isLoggedIn);
+        // console.log("response", response);
+        // setConceptDefinitionFinalReport(response.response);
+
+        // const maxAttempts = 10;
+        // let attempts = 0;
+
+        // while (attempts < maxAttempts && (!response || !response?.response)) {
+        //   response = await InterviewXPsstAnalysisRequest(
+        //     apiRequestData,
+        //     isLoggedIn
+        //   );
+        //   attempts++;
+        // }
+        // if (attempts >= maxAttempts) {
+        //   setShowPopupError(true);
+        //   return;
+        // }
+
+        setIsLoadingReport(false);
+
+        // await updateToolOnServer(
+        //   toolId,
+        //   {
+        //     completedStep: 3,
+        //     psstReport: response.response,
+        //   },
+        //   isLoggedIn
+        // );
+      } catch (error) {}
+      setToolSteps(3);
+    } catch (error) {
+      setShowPopupError(true);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowPopupError(true);
+            break;
+          case 504:
+            setShowPopupError(true);
+            break;
+          default:
+            setShowPopupError(true);
+            break;
+        }
+      } else {
+        setShowPopupError(true);
+      }
+    } finally {
+      setIsLoadingReport(false);
+    }
   };
+
 
   const handleContactInputChange = (field, value) => {
     setContactForm((prev) => ({
@@ -699,9 +754,7 @@ const PagePRFAQ = () => {
     if (toolSteps >= 1) {
       return;
     }
-    // if(selectedKanoModelData.kanoModelClustering.length > 0){
-    //   return;
-    // }
+  
 
     calculateDropDirection(ref, selectBoxId);
     setSelectBoxStates((prev) => ({
@@ -731,7 +784,7 @@ const PagePRFAQ = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
       // console.log("currentUrl", currentUrl);
-      if (currentUrl.toLowerCase().includes("quicksurvey")) {
+      if (currentUrl.toLowerCase().includes("prfaq")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         // console.log("세션 스토리지에서 마지막 URL 가져오기");
 
@@ -852,7 +905,7 @@ const PagePRFAQ = () => {
                 <span>01</span>
                 <div className="text">
                   <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
-                  컨셉 정의서 확인
+                  기초 데이터 가져오기
                   </Body1>
                   {/* <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     Question Select
@@ -870,11 +923,27 @@ const PagePRFAQ = () => {
                 <span>02</span>
                 <div className="text">
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                  비즈니스 모델 캔버스 작성
+                  핵심 내용 확인
                   </Body1>
                   {/* <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Participating Persona
                   </Body1> */}
+                </div>
+              </TabButtonType5>
+        
+              <TabButtonType5
+                Num3
+                isActive={activeTab >= 3}
+                onClick={() => completedSteps.includes(2) && setActiveTab(3)}
+                disabled={
+                  !completedSteps.includes(3) || isLoading || isLoadingReport
+                }
+              >
+                <span>03</span>
+                <div className="text">
+                  <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
+                    최종 PRFAQ
+                  </Body1>
                 </div>
               </TabButtonType5>
              
@@ -899,6 +968,83 @@ const PagePRFAQ = () => {
                           <Body1 color="gray700">컨셉 정의서 </Body1>
                         </div>
 
+                        <SelectBox ref={customerListRef}>
+                          <SelectBoxTitle
+                            onClick={() =>
+                              handleSelectBoxClick(
+                                "customerList",
+                                customerListRef
+                              )
+                            }
+                            style={{
+                              cursor:
+                                toolSteps >= 1 
+                                  ? "not-allowed"
+                                  : "pointer",
+                            }}
+                          >
+                            <Body2
+                              color={
+                                selectedPurposes.customerList
+                                  ? "gray800"
+                                  : "gray300"
+                              }
+                            >
+                              {selectedPurposes.customerList ||
+                                "컨셉 정의서를 불러 올 수 있습니다"}
+                            </Body2>
+                            <images.ChevronDown
+                              width="24px"
+                              height="24px"
+                              color={palette.gray500}
+                              style={{
+                                transform: selectBoxStates.customerList
+                                  ? "rotate(180deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.3s ease",
+                              }}
+                            />
+                          </SelectBoxTitle>
+
+                          {selectBoxStates.customerList && (
+                            <SelectBoxList dropUp={dropUpStates.customerList}>
+                              {conceptDefinitionList.length === 0 ? (
+                                <SelectBoxItem 
+                                disabled={toolSteps >= 1 }
+                                >
+                                  <Body2 color="gray300" align="left">
+                                    직접 문제점을 작성합니다.
+                                  </Body2>
+                                </SelectBoxItem>
+                              ) : (
+                                conceptDefinitionList.map((item, index) => (
+                                  <SelectBoxItem
+                                    // disabled={
+                                    //   toolSteps >= 1 
+                                    // }
+                                    key={index}
+                                    onClick={() => {
+                                      handlePurposeSelect(
+                                        `${item.updateDate.split(":")[0]}:${
+                                          item.updateDate.split(":")[1]
+                                        } - 아이디어 선택기 
+                                    `,
+                                        "customerList",
+                                        item
+                                      );
+                                    }}
+                                  >
+                                    <Body2 color="gray700" align="left">
+                                      {item.updateDate.split(":")[0]}:
+                                      {item.updateDate.split(":")[1]} 아이디어 선택기 
+                                     
+                                    </Body2>
+                                  </SelectBoxItem>
+                                ))
+                              )}
+                            </SelectBoxList>
+                          )}
+                        </SelectBox>
                         <SelectBox ref={customerListRef}>
                           <SelectBoxTitle
                             onClick={() =>
@@ -1041,57 +1187,129 @@ const PagePRFAQ = () => {
 
            
 
-            {activeTab === 2 &&
-              (completedSteps.includes(1) ) && (
-                <TabContent5 Small>
-                  {isLoadingReport ? (
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                        minHeight: "200px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
-                    </div>
-                  ) : (
-                    <>
-                      <BgBoxItem primaryLightest>
-                        <H3 color="gray800">퀵서베이 결과</H3>
-                        <Body3 color="gray800">
-                          페르소나 그룹의 의견을 확인하여 타겟 반응을 사전에
-                          확인해보세요.
-                        </Body3>
-                      </BgBoxItem>
+              {activeTab === 2 && completedSteps.includes(1) && (
+                    <TabContent5>
+                      <>
+                        <div className="title">
+                          <H3 color="gray800">Core Value Analysis</H3>
+                          <Body3 color="gray800">
+                            Kano Model 결과를 기반으로 비즈니스의 주요 가치를
+                            도출합니다
+                          </Body3>
+                        </div>
 
-                      {/* <MoleculeBusinessModelGraph /> */}
+                        <div className="content">
+                        <IdeaContainer>
+                      
+                            <IdeaBox>
+                                  <IdeaTitle>기타 의견</IdeaTitle>
+                            
+                                  <IdeaContent>
+                                    
+                                        <IdeaText>
+                                          •
+                                        </IdeaText>
+                                
+                                  </IdeaContent>
+                                </IdeaBox>
+                          
+                              </IdeaContainer>
+                      
 
-                      <IdeaContainer>
-              
-                          <IdeaBox>
-                            <IdeaTitle>채널</IdeaTitle>
-              
-                            <IdeaContent>
-                          
-                                  <IdeaText>
-                                  
-                                  </IdeaText>
-                          
-                            </IdeaContent>
-                          </IdeaBox>
-               
-                        </IdeaContainer>
-                    </>
+                          {isLoading ? (
+                            <div
+                              style={{
+                                width: "100%",
+                                display: "flex",
+                                justifyContent: "center",
+                                minHeight: "200px",
+                                alignItems: "center",
+                              }}
+                            >
+                              <AtomPersonaLoader message={`분석 중이예요 ...`} />
+                            </div>
+                          ) : (
+                            <InsightAnalysis>
+                              <div
+                                className="markdown-body"
+                                style={{
+                                  textAlign: "left",
+                                }}
+                              >
+                                {/* <Markdown>
+                                  {prepareMarkdown(
+                                    conceptDefinitionFirstReport ?? ""
+                                  )}
+                                </Markdown> */}
+                              </div>
+                            </InsightAnalysis>
+                          )}
+                        </div>
+                       
+                          <Button
+                            Other
+                            Primary
+                            Fill
+                            Round
+                            onClick={handleReportRequest}
+                            disabled={
+                              toolSteps > 2 
+                            
+                            }
+                          >
+                            페르소나 & 핵심가치 확인
+                          </Button>
+                   
+                      </>
+                    </TabContent5>
                   )}
-                </TabContent5>
-              )}
 
-           
-          </DesignAnalysisWrap>
-        </MainContent>
-      </ContentsWrap>
+                  {activeTab === 3 && completedSteps.includes(2) && (
+                                <TabContent5 Small>
+                                  {isLoadingReport ? (
+                                    <div
+                                      style={{
+                                        width: "100%",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        minHeight: "200px",
+                                        alignItems: "center",
+                                      }}
+                                    >
+                                      <AtomPersonaLoader
+                                        message={`결과보고서를 작성하고 있습니다.
+                                          1분 정도 소요 될 수 있어요.`}
+                                      />
+                                    </div>
+                                  ) : (
+                                    <>
+                                      <BgBoxItem primaryLightest>
+                                        <H3 color="gray800">컨셉 정의서</H3>
+                                        <Body3 color="gray800">
+                                          사업 아이템의 실행 전략을 정리한 초안입니다. 이를
+                                          기반으로 세부 내용을 구체화해보세요.​
+                                        </Body3>
+                                      </BgBoxItem>
+
+                                      <InsightAnalysis>
+                                        <div
+                                          className="markdown-body"
+                                          style={{
+                                            textAlign: "left",
+                                          }}
+                                        >
+                                          {/* <Markdown>{prepareMarkdown(psstReport ?? "")}</Markdown> */}
+                                        </div>
+                                      </InsightAnalysis>
+                                    </>
+                                  )}
+                                </TabContent5>
+                              )}
+
+                            
+                            </DesignAnalysisWrap>
+                          </MainContent>
+                        </ContentsWrap>
 
       {showPopupError && (
         <PopupWrap
@@ -1574,3 +1792,4 @@ const IdeaText = styled.p`
   color: ${palette.gray600};
   margin: 0;
 `;
+

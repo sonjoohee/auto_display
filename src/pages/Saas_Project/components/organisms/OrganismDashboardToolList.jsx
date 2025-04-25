@@ -692,6 +692,10 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           return tool.completedStep === 3 ? "완료" : "진행중";
         case "ix_needs_keywords_generation_education":
           return tool.completedStep === 2 ? "완료" : "진행중";
+        case "ix_concept_definition_education":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        case "ix_prfaq_education":
+          return tool.completedStep === 3 ? "완료" : "진행중";
         default:
           return "-";
       }
@@ -1202,12 +1206,14 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
 
         //!컨셉 정의
         setToolStep(1);
-        setConceptDefinitionSelectedPersona([]);
+        setConceptDefinitionSelectedPurpose({});
+        setConceptDefinitionSelectedPersona([]); 
         setConceptDefinitionFirstReport("");
         setConceptDefinitionFinalReport("");
         setToolLoading(false);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
+        setConceptDefinitionSelectedPurpose(chatData?.selectedKanoModel || {});
         setConceptDefinitionSelectedPersona(chatData?.selectedPersonas || []);
         setConceptDefinitionFirstReport(chatData?.conceptDefinitionFirstReport || "");
         setConceptDefinitionFinalReport(chatData?.conceptDefinitionFinalReport || "");
