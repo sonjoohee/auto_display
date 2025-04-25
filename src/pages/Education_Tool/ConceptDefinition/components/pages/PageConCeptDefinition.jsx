@@ -71,9 +71,7 @@ import {
 import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
 import MoleculeFileUpload from "../molecules/MoleculeFileUpload";
-import MoleculeAnalysisResults from "../molecules/MoleculeAnalysisResults";
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
-import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
 
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
@@ -94,29 +92,11 @@ const PageConceptDefinition = () => {
   const [projectSaas] = useAtom(PROJECT_SAAS);
   const [conceptDefinitionFinalReport, setConceptDefinitionFinalReport] =
     useAtom(CONCEPT_DEFINITION_FINAL_REPORT);
-  const [psstBusinessInfo, setPsstBusinessInfo] = useAtom(PSST_BUSINESS_INFO);
-  const [, setPsstFileId] = useAtom(PSST_FILE_ID);
-  const [projectAnalysisMultimodal, setProjectAnalysisMultimodal] = useAtom(
-    PROJECT_ANALYSIS_MULTIMODAL
-  );
   const [
     conceptDefinitionSelectedPersona,
     setConceptDefinitionSelectedPersona,
   ] = useAtom(CONCEPT_DEFINITION_SELECTED_PERSONA);
-  const [
-    projectAnalysisMultimodalKeyMessage,
-    setProjectAnalysisMultimodalKeyMessage,
-  ] = useAtom(PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE);
-  const [
-    projectAnalysisMultimodalDescription,
-    setProjectAnalysisMultimodalDescription,
-  ] = useAtom(PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION);
-  const [analysisResults, setAnalysisResults] = useAtom(PSST_ANALYSIS_RESULTS);
-  const [fileNames, setFileNames] = useAtom(PSST_FILE_NAMES);
-  const [psstReport, setPsstReport] = useAtom(PSST_REPORT);
-  const [selectedTemplete, setSelectedTemplete] = useAtom(
-    PSST_SELECTED_TEMPLETE
-  );
+ 
   const [conceptDefinitionFirstReport, setConceptDefinitionFirstReport] =
     useAtom(CONCEPT_DEFINITION_FIRST_REPORT);
   const [
@@ -128,17 +108,11 @@ const PageConceptDefinition = () => {
   const [showPopupError, setShowPopupError] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
-  const [businessDescription, setBusinessDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
-  const [isEditingBusiness, setIsEditingBusiness] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
-  const [isCreateReportIndex, setIsCreateReportIndex] = useState(false);
   const [selectedPersonas, setSelectedPersonas] = useState(null);
-  const [selectedValue, setSelectedValue] = useState([]);
-  const [conceptDefinitionValue, setConceptDefinitionValue] = useState([]);
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [selectedPurposes, setSelectedPurposes] = useState({
     customerList: "",
@@ -157,6 +131,7 @@ const PageConceptDefinition = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
 
   useEffect(() => {
     const interviewLoading = async () => {
@@ -240,19 +215,7 @@ const PageConceptDefinition = () => {
 
     getAllTargetDiscovery();
   }, [isLoggedIn, projectSaas]);
-  console.log("kanomodel", kanoModelList);
 
-  const handleCheckboxChange = (index) => {
-    if (toolSteps >= 2) return;
-    setSelectedTemplete((prev) => {
-      // 하나만 선택되도록 변경, 다른 항목 선택 시 해당 항목으로 변경
-      if (prev.includes(index)) {
-        return []; // 이미 선택된 항목을 다시 클릭하면 선택 해제
-      } else {
-        return [index]; // 새 항목 선택
-      }
-    });
-  };
 
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -261,19 +224,7 @@ const PageConceptDefinition = () => {
     setShowPopupError(false);
   };
 
-  // 필수 필드가 모두 입력되었는지 확인하는 함수
-  const isRequiredFieldsFilled = () => {
-    return businessDescription.trim().length > 0 && uploadedFiles.length > 0;
-  };
-
-  // 비즈니스 설명 입력 핸들러
-  const handleBusinessDescriptionChange = (e) => {
-    const input = e.target.value;
-    if (input.length <= 500) {
-      setBusinessDescription(input);
-    }
-  };
-
+ 
   const business = {
     businessModel: project.businessModel,
     projectAnalysis: project.projectAnalysis,
@@ -291,6 +242,7 @@ const PageConceptDefinition = () => {
         projectId: project._id,
         type: "ix_concept_definition_education",
         selectedPersonas: selectedPersonas,
+        completedStep: 1,
       },
       isLoggedIn
     );
@@ -328,7 +280,7 @@ const PageConceptDefinition = () => {
       await updateToolOnServer(
         toolId,
         {
-          // completedStep: 2,
+          completedStep: 2,
           selectedKanoModel: selectedPurposes,
           conceptDefinitionFirstReport:
             response.response.concept_definition_report_education,
@@ -386,14 +338,16 @@ const PageConceptDefinition = () => {
 
         setIsLoadingReport(false);
 
-        // await updateToolOnServer(
-        //   toolId,
-        //   {
-        //     completedStep: 3,
-        //     psstReport: response.response,
-        //   },
-        //   isLoggedIn
-        // );
+        await updateToolOnServer(
+          toolId,
+          {
+            completedStep: 3,
+            conceptDefinitionFinalReport: response.response.concept_definition_final_report_education,
+          },
+          isLoggedIn
+        );
+        setCompletedSteps([...completedSteps, 3]);
+    
       } catch (error) {}
       setToolSteps(3);
     } catch (error) {
@@ -523,7 +477,7 @@ const PageConceptDefinition = () => {
               <TabButtonType5
                 Num3
                 isActive={activeTab >= 3}
-                onClick={() => completedSteps.includes(2) && setActiveTab(3)}
+                onClick={() => completedSteps.includes(2) || completedSteps.includes(3) && setActiveTab(3)}
                 disabled={
                   !completedSteps.includes(3) || isLoading || isLoadingReport
                 }
@@ -619,7 +573,8 @@ const PageConceptDefinition = () => {
                           setSelectedPersonas(persona);
                         }}
                         interviewType="multiple"
-                        // onPersonaSelect={handlePersonaSelect}
+                        disabled={toolSteps >= 1}
+          
                       />
                     ) : (
                       <BoxWrap
@@ -893,7 +848,7 @@ const PageConceptDefinition = () => {
               </TabContent5>
             )}
 
-            {activeTab === 3 && completedSteps.includes(2) && (
+            {activeTab === 3 && (completedSteps.includes(2) || completedSteps.includes(3)) && (
               <TabContent5 Small>
                 {isLoadingReport ? (
                   <div

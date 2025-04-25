@@ -52,6 +52,7 @@ import {
   PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION,
   NPS_CONCEPT_DEFINITION,
   PERSONA_LIST_SAAS,
+  NPS_SELECTED_CONCEPT,
 } from "../../../../AtomStates";
 import {
   H4,
@@ -105,9 +106,9 @@ const PageNps = () => {
     projectAnalysisMultimodalDescription,
     setProjectAnalysisMultimodalDescription,
   ] = useAtom(PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION);
-  const [npsConceptDefinition, setNpsConceptDefinition] = useAtom(
-    NPS_CONCEPT_DEFINITION
-  );
+  // const [npsConceptDefinition, setNpsConceptDefinition] = useAtom(
+  //   NPS_CONCEPT_DEFINITION
+  // );
   const [quickSurveyAnalysis, setQuickSurveyAnalysis] = useAtom(
     QUICK_SURVEY_ANALYSIS
   );
@@ -146,9 +147,7 @@ const PageNps = () => {
   const [quickSurveyStaticDataState, setQuickSurveyStaticDataState] = useState(
     {}
   );
-  // const [quickSurveyCustomQuestion, setQuickSurveyCustomQuestion] = useAtom(
-  //   QUICK_SURVEY_CUSTOM_QUESTION
-  // );
+  const [npsSelectedConcept, setNPSSelectedConcept] = useAtom(NPS_SELECTED_CONCEPT);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
@@ -199,6 +198,7 @@ const PageNps = () => {
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
   const [isCustomPopupOpen, setIsCustomPopupOpen] = useState(false);
   const [isCustomLoading, setIsCustomLoading] = useState(false);
+  const [npsConceptDefinition, setNpsConceptDefinition] = useState([]);
   
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -409,6 +409,7 @@ const PageNps = () => {
         );
 
         allItems = [...allItems, ...newItems];
+        console.log(allItems)
 
         setNpsConceptDefinition(allItems);
       } catch (error) {
@@ -420,14 +421,38 @@ const PageNps = () => {
   }, [isLoggedIn, projectSaas]);
 
 
-  const handleCheckboxChange = (personaId) => {
-    if (toolSteps >= 2) return;
-    setSelectedQuestion((prev) => {
-      // 하나만 선택되도록 변경, 다른 항목 선택 시 해당 항목으로 변경
-      if (prev.includes(personaId)) {
-        return []; // 이미 선택된 항목을 다시 클릭하면 선택 해제
+  // const handleCheckboxChange = (personaId) => {
+  //   if (toolSteps >= 2) return;
+  //   setSelectedConcept((prev) => {
+  //     // 하나만 선택되도록 변경, 다른 항목 선택 시 해당 항목으로 변경
+  //     if (prev.includes(personaId)) {
+  //       return []; // 이미 선택된 항목을 다시 클릭하면 선택 해제
+  //     } else {
+  //       return [personaId]; // 새 항목 선택
+  //     }
+  //   });
+  // };
+
+  const handleCheckboxChange = (ideaId) => {
+    setSelectedConcept((prev) => {
+      if (prev.includes(ideaId)) {
+        // 이미 선택된 아이템이면 제거
+        const newSelected = prev.filter((id) => id !== ideaId);
+        // 선택된 데이터들 업데이트
+        const selectedDataList = newSelected.map(
+          (id) => npsConceptDefinition[id]
+        );
+        setNPSSelectedConcept(selectedDataList);
+        return newSelected;
       } else {
-        return [personaId]; // 새 항목 선택
+        // 새로운 아이템 추가
+        const newSelected = [...prev, ideaId];
+        // 선택된 데이터들 업데이트
+        const selectedDataList = newSelected.map(
+          (id) => npsConceptDefinition[id]
+        );
+        setNPSSelectedConcept(selectedDataList);
+        return newSelected;
       }
     });
   };
@@ -479,8 +504,7 @@ const PageNps = () => {
   };
 
   
-      
-
+  
 
   const business = {
     business: businessDescription,
@@ -566,6 +590,11 @@ const PageNps = () => {
             quickSurveyAnalysis: response.response.quick_survey_question,
             business: business,
             goal: projectDescription,
+            // fileName: uploadedFiles.map((file) => ({
+            //   id: "file_" + timeStamp,
+            //   name: fileNames,
+            // })),
+            interviewModeType: "moderator",
           },
           isLoggedIn
         );
@@ -637,6 +666,8 @@ const PageNps = () => {
           surveyMethod: quickSurveyAnalysis[selectedQuestion],
           quickSurveyCustomGuide: response.response.quick_survey_custom_guide,
           completedStep: 1,
+          npsSelectedConcept: npsSelectedConcept,
+          interviewModeType: "explanation",
         },
         isLoggedIn
       );
@@ -1500,18 +1531,23 @@ const PageNps = () => {
                         </div>
                       
                     )}
+                      </TabContent5Item>
 
                     {interviewModeType === "explanation" && (
                       <>
-                       <div className="title" style={{textAlign: "left", marginBottom: "-20px"}}>
+                       <div className="title" style={{textAlign: "left", marginBottom: "-20px", marginTop: "-30px" }}>
                        <Body1 color="gray700">NPS 평가를 받을 컨셉정의서를 선택해주세요. </Body1>
                      </div>
                      {npsConceptDefinition.map((idea, index) => (
-                       <MoleculeItemSelectCard
+                       <MoleculeItemSelectCard style
                          FlexStart
                          key={index}
                          id={index}
-                         title={idea.name}
+                         title={`${idea.updateDate.split(":")[0]}:${
+                          idea.updateDate.split(":")[1]
+                        } - 컨셉 정의 - ${
+                          idea.title || "컨셉 정의"
+                        }`}
                          isSelected={selectedConcept.includes(index)}
                          onSelect={() => handleCheckboxChange(index)}
                        />
@@ -1519,7 +1555,7 @@ const PageNps = () => {
                      </>
                     )}
 
-                    </TabContent5Item>
+
                   </div>
 
                   {isLoading ? (
@@ -1546,7 +1582,7 @@ const PageNps = () => {
                           onClick={handleSubmitConcept}
                           // disabled={!projectDescription || toolSteps >= 1}
                         >
-                          다음ㄴㄴㄴ
+                          다음
                         </Button>
                   
                     </>

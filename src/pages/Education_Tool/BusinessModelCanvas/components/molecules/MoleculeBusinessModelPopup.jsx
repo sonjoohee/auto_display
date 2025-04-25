@@ -7,6 +7,7 @@ import { useAtom } from "jotai";
 import { QUICK_SURVEY_STATIC_DATA } from "../../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import { CheckBoxButton, RadioButton } from "../../../../../assets/styles/InputStyle";
+import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 
 const businessModelItems = [
   { id: 1, title: "고객 세그먼트", value: "1고객 세그먼트" },
@@ -112,7 +113,8 @@ const MoleculeBusinessModelPopup = ({
   isOpen = false, 
   onClose = () => {}, 
   onSave = () => {},
-  currentModelId = 3 // 기본값으로 채널(id: 3) 설정
+  currentModelId = 3, // 기본값으로 채널(id: 3) 설정
+  isLoading 
 }) => {
   // 팝업 상태 관리
   const [isVisible, setIsVisible] = useState(isOpen);
@@ -121,8 +123,10 @@ const MoleculeBusinessModelPopup = ({
   const [userOptions, setUserOptions] = useState([]);
   const [inputFields, setInputFields] = useState([]); // 입력 필드 관리
   const [inputValues, setInputValues] = useState({}); // 입력 값 관리
+  // const [isLoading, setIsLoading] = useState(false);
   
   // isOpen props가 변경될 때 상태 업데이트
+  console.log("isLoading", isLoading);
   useEffect(() => {
     setIsVisible(isOpen);
   }, [isOpen]);
@@ -220,6 +224,9 @@ const MoleculeBusinessModelPopup = ({
 
   return (
     <PopupOverlay>
+        {isLoading ? (
+          <AtomPersonaLoader />
+        ) : (
       <PopupContainer>
         <PopupHeader>
           <HeaderTitle>
@@ -233,51 +240,49 @@ const MoleculeBusinessModelPopup = ({
 
         <HeaderSpacer />
 
-        <PopupContent>
-          <SectionTitle>원하는 항목을 선택하세요</SectionTitle>
-          <OptionsContainer>
-            {/* 기본 제공 옵션 */}
-            {defaultOptions[currentModel.id]?.map((option, index) => (
-              <OptionItem 
-                key={`default-${index}`} 
-                onClick={() => handleOptionSelect(option)}
-              >
-                <OptionFlex>
-                  <div>
-                    <RadioButton 
-                      id={`radio-default-${index}`}
-                      name="modelOptionGroup"
-                      checked={selectedOption === option}
-                      onChange={() => handleOptionSelect(option)}
-                    />
-                  </div>
-                  <OptionText>{option}</OptionText>
-                </OptionFlex>
-              </OptionItem>
-            ))}
-            
-            {/* 사용자 정의 옵션 */}
-            {userOptions.map((option, index) => (
-              <OptionItem 
-                key={`user-${index}`} 
-                onClick={() => handleOptionSelect(option)}
-              >
-                <OptionFlex>
-                  <div>
-                    <RadioButton 
-                      id={`radio-user-${index}`}
-                      name="modelOptionGroup"
-                      checked={selectedOption === option}
-                      onChange={() => handleOptionSelect(option)}
-                    />
-                  </div>
-                  <OptionText>{option}</OptionText>
-                </OptionFlex>
-              </OptionItem>
-            ))}
-            
-            {/* 입력 필드 영역 */}
-            {inputFields.map(id => (
+      
+          <PopupContent>
+            <SectionTitle>원하는 항목을 선택하세요</SectionTitle>
+            <OptionsContainer>
+              {/* 기본 제공 옵션 */}
+              {defaultOptions[currentModel.id]?.map((option, index) => (
+                <OptionItem 
+                  key={`default-${index}`} 
+                  onClick={() => handleOptionSelect(option)}
+                >
+                  <OptionFlex>
+                    <div>
+                      <RadioButton 
+                        id={`radio-default-${index}`}
+                        name="modelOptionGroup"
+                        checked={selectedOption === option}
+                        onChange={() => handleOptionSelect(option)}
+                      />
+                    </div>
+                    <OptionText>{option}</OptionText>
+                  </OptionFlex>
+                </OptionItem>
+              ))}
+              
+              {/* 사용자 정의 옵션 */}
+              {userOptions.map((option, index) => (
+                <OptionItem key={`user-${index}`} onClick={() => handleOptionSelect(option)}>
+                  <OptionFlex>
+                    <div>
+                      <RadioButton 
+                        id={`radio-user-${index}`}
+                        name="modelOptionGroup"
+                        checked={selectedOption === option}
+                        onChange={() => handleOptionSelect(option)}
+                      />
+                    </div>
+                    <OptionText>{option}</OptionText>
+                  </OptionFlex>
+                </OptionItem>
+              ))}
+              
+              {/* 입력 필드 */}
+              {inputFields.map(id => (
               <OptionItem key={`input-${id}`} as="div">
                 <OptionFlex>
                   <InputField 
@@ -303,15 +308,15 @@ const MoleculeBusinessModelPopup = ({
                 </OptionFlex>
               </OptionItem>
             ))}
-            
-            {/* 직접 추가하기 버튼 - 3개가 모두 추가된 후에만 숨김 */}
-            {!hideAddButton && (
-              <AddOptionItem onClick={handleAddInputField}>
-                + 직접 추가하기 (최대 3개)
-              </AddOptionItem>
-            )}
-          </OptionsContainer>
-        </PopupContent>
+              
+              {!hideAddButton && (
+                <AddOptionItem onClick={handleAddInputField}>
+                  + 직접 추가하기 (최대 3개)
+                </AddOptionItem>
+              )}
+            </OptionsContainer>
+          </PopupContent>
+   
         
         <BottomSpacer />
         
@@ -328,6 +333,7 @@ const MoleculeBusinessModelPopup = ({
           </ApplyButton>
         </ButtonContainer>
       </PopupContainer>
+           )}
     </PopupOverlay>
   );
 };

@@ -89,6 +89,7 @@ import ParetoCurveGraph from "../../../../../components/Charts/ParetoCurveGraph"
 import BusinessModelPopup from "../../../../../components/Charts/BusinessModelPopup";
 import BusinessModelGraph from "../../../../../components/Charts/BusinessModelGraph";
 import MoleculeBusinessModelGraph from "../molecules/MoleculeBusinessModelGraph";
+import MoleculeBusinessModelPopup from "../molecules/MoleculeBusinessModelPopup";
 
 
 const PageBusinessModelCanvas = () => {
@@ -211,6 +212,8 @@ const PageBusinessModelCanvas = () => {
   const [ideaEvaluateSelect, setIdeaEvaluateSelect] = useState([]);
   const [graphData, setGraphData] = useState([]);
   const [conceptDefinitionList, setConceptDefinitionList] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedBoxId, setSelectedBoxId] = useState(null);
 
   
   const customerListRef = useRef(null);
@@ -589,7 +592,94 @@ const PageBusinessModelCanvas = () => {
     setQuickSurveyCustomQuestion([]);
   };
 
- 
+  const handleSubmitConcept = async () => {
+    setIsLoading(true);
+    // setToolSteps(2);
+    // setIsLoadingReport(true);
+
+    try {
+
+      const persona_group = personaListSaas
+      .filter((persona) => persona?.favorite === true)
+      .map((persona) => ({
+        personaName: persona.personaName,
+        personaCharacteristics: persona.personaCharacteristics,
+        type: persona.type,
+        age: persona.age,
+        gender: persona.gender,
+        job: persona.job,
+        keywords: persona.keywords,
+        userExperience: persona.userExperience,
+        consumptionPattern: persona.consumptionPattern,
+        interests: persona.interests,
+        lifestyle: persona.lifestyle,
+      
+      }));
+
+      const Data = {
+        type: "ix_idea_evaluation_comparison_education",
+        business: business,
+        idea_list: ideaEvaluateSelectedList, 
+        persona: persona_group,
+      };
+
+      let response = await EducationToolsRequest (Data, isLoggedIn);
+
+       let retryCount = 0;
+      const maxRetries = 10;
+        while (retryCount < maxRetries &&
+          (!response ||
+           !response?.response ||
+           !response?.response?.idea_evaluation_comparison_education ||
+           !Array.isArray(response?.response?.idea_evaluation_comparison_education)
+          )
+         ) {
+           response = await EducationToolsRequest(Data, isLoggedIn);
+           maxRetries++;
+          
+         }
+           if (retryCount >= maxRetries) {
+           setShowPopupError(true);
+           return;
+         }
+
+      setIdeaEvaluateComparisonEducation(response.response.idea_evaluation_comparison_education)
+      
+
+      await updateToolOnServer(
+        toolId,
+        {
+          ideaEvaluateComparisonEducation: response.response.idea_evaluation_comparison_education,
+          completedStep: 3,
+        },
+        isLoggedIn
+      );
+
+
+      // setToolSteps(3);
+      // setCompletedSteps([...completedSteps, 3]);
+    } catch (error) {
+      setShowPopupError(true);
+      if (error.response) {
+        switch (error.response.status) {
+          case 500:
+            setShowPopupError(true);
+            break;
+          case 504:
+            setShowPopupError(true);
+            break;
+          default:
+            setShowPopupError(true);
+            break;
+        }
+      } else {
+        setShowPopupError(true);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   const handleSubmitReport = async () => {
     handleNextStep(1);
@@ -679,6 +769,32 @@ const PageBusinessModelCanvas = () => {
     }
   };
 
+  const handleShowPopup = async () => {
+    setShowPopup(true);
+    setIsLoading(true);
+
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    // const responseToolId = await createToolOnServer(
+    //   {
+    //     projectId: project._id,
+    //     type: "ix_idea_evaluation_education",
+    //   },
+    //   isLoggedIn
+    // );
+    
+    setIsLoading(false);
+  };
+
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+  
+  // 팝업 저장 핸들러
+  const handleSavePopup = (data) => {
+    // 저장 로직 구현
+    setShowPopup(false);
+  }
  
 
   const handleContactInputChange = (field, value) => {
@@ -1015,6 +1131,7 @@ const PageBusinessModelCanvas = () => {
                   )}
                     </TabContent5Item>
                   </div>   
+                  {ideaEvaluateComparisonEducation.length > 0 ? (
                         <Button
                           Other
                           Primary
@@ -1027,6 +1144,17 @@ const PageBusinessModelCanvas = () => {
                         >
                           아이디어 방향성으로 전환
                         </Button>
+                  ):(
+                    <Button
+                          Other
+                          Primary
+                          Fill
+                          Round
+                          onClick={handleSubmitConcept}
+                        >
+                          다음
+                        </Button>
+                  )}
              
                   
                 </>
@@ -1053,19 +1181,26 @@ const PageBusinessModelCanvas = () => {
                   ) : (
                     <>
                       <BgBoxItem primaryLightest>
-                        <H3 color="gray800">퀵서베이 결과</H3>
+                        <H3 color="gray800">Business Model 분석</H3>
                         <Body3 color="gray800">
                           페르소나 그룹의 의견을 확인하여 타겟 반응을 사전에
                           확인해보세요.
                         </Body3>
                       </BgBoxItem>
 
-                      <MoleculeBusinessModelGraph />
+                      <MoleculeBusinessModelGraph
+                        setShowPopup={handleShowPopup}
+                        setSelectedBoxId={setSelectedBoxId}
+                        selectedBoxId={selectedBoxId}
+                      />
 
                       <IdeaContainer>
               
                           <IdeaBox>
-                            <IdeaTitle>채널</IdeaTitle>
+                          <HeaderTitle>
+                            <NumberCircle>{selectedBoxId}</NumberCircle>
+                            <HeaderTitleText>{selectedBoxId}</HeaderTitleText>
+                          </HeaderTitle>
               
                             <IdeaContent>
                           
@@ -1086,6 +1221,16 @@ const PageBusinessModelCanvas = () => {
           </DesignAnalysisWrap>
         </MainContent>
       </ContentsWrap>
+
+      {showPopup && (
+        <MoleculeBusinessModelPopup
+          isOpen={showPopup}
+          onClose={handleClosePopup}
+          onSave={handleSavePopup}
+          isLoading={isLoading}
+          currentModelId={selectedBoxId}
+        />
+      )}
 
       {showPopupError && (
         <PopupWrap
@@ -1567,4 +1712,36 @@ const IdeaText = styled.p`
   line-height: 1.5;
   color: ${palette.gray600};
   margin: 0;
+`;
+
+const HeaderTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+`;
+
+const NumberCircle = styled.div`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #323232;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  font-family: "Pretendard", "Poppins";
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  flex-shrink: 0;
+`;
+
+const HeaderTitleText = styled.div`
+  font-family: "Pretendard", "Poppins";
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3em;
+  letter-spacing: -0.03em;
+  color: #666666;
 `;

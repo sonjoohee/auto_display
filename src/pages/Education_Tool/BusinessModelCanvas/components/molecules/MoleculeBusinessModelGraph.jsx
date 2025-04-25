@@ -4,7 +4,8 @@ import { palette } from '../../../../../assets/styles/Palette';
 import MoleculeBusinessModelPopup from "./MoleculeBusinessModelPopup";
 
 // 비즈니스 모델 그래프 컴포넌트
-const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick }) => {
+const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () => {}, setSelectedBoxId, selectedBoxId }) => {
+  // const [showPopup, setShowPopup] = useState(false);
   // 9개의 비즈니스 모델 영역 정의
   const businessAreas = [
     { id: 8, title: '핵심 파트너십' },
@@ -19,14 +20,27 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick }) => {
   ];
 
   // 선택된 박스 ID 상태 관리
-  const [selectedBoxId, setSelectedBoxId] = useState(null);
+  // const [selectedBoxId, setSelectedBoxId] = useState(null);
 
   // 박스 클릭 핸들러
   const handleBoxClick = (id) => {
     setSelectedBoxId(id);
-    if (onBoxClick) {
-      onBoxClick(id);
-    }
+    // if (onBoxClick) {
+      // onBoxClick(id);
+      setShowPopup(id);
+      console.log(id);
+    // }
+  };
+
+  // 팝업 닫기 핸들러
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+  
+  // 팝업 저장 핸들러
+  const handleSavePopup = (data) => {
+    // 저장 로직 구현
+    setShowPopup(false);
   };
 
   return (
@@ -124,6 +138,16 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick }) => {
           isSelected={selectedBoxId === businessAreas[8].id}
         />
       </BottomSection>
+
+      {/* MoleculeBusinessModelPopup 컴포넌트 추가 */}
+      {/* {showPopup && (
+        <MoleculeBusinessModelPopup
+          isOpen={showPopup}
+          onClose={handleClosePopup}
+          onSave={handleSavePopup}
+          currentModelId={selectedBoxId}
+        />
+      )} */}
     </GraphContainer>
   );
 };

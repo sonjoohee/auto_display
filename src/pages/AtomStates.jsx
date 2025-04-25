@@ -610,7 +610,6 @@ export const KEYWORDS_GENERATION_SELECTED_ISSUE_INDEX = atom([]);
 export const KEYWORDS_GENERATION_TAG = atom([]);
 
 export const IDEA_GENERATION_SELECTED_PURPOSE = atom({});
-
 export const IDEA_GENERATION_PROBLEM_LIST = atom([]);
 export const IDEA_GENERATION_PROBLEM_LIST_TITLE = atom([]);
 export const IDEA_GENERATION_START_POSITION = atom([]);
@@ -636,7 +635,8 @@ export const IDEA_EVALUATE_SELECTED_LIST = atom([]);
 export const IDEA_EVALUATE_SELECTED_LIST_INDEX = atom({});
 export const IDEA_EVALUATE_COMPARISON_EDUCATION = atom([]);
 
-export const NPS_CONCEPT_DEFINITION = atom([]);
+
+export const NPS_SELECTED_CONCEPT = atom([]);
 
 export const CONCEPT_DEFINITION_SELECTED_PURPOSE = atom({});
 export const CONCEPT_DEFINITION_SELECTED_PERSONA = atom([]);
