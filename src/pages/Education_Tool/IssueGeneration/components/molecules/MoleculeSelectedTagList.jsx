@@ -13,12 +13,23 @@ import {
 
 const IdeaGenerationTag = ({
   text,
+  onClick,
   initialSelected = false,
   disabled = false,
 }) => {
   const [isSelected, setIsSelected] = useState(initialSelected);
 
-;
+  const handleClick = (e) => {
+    if (disabled) {
+      return;
+    }
+    if (!disabled || isSelected) {
+      // 선택된 상태면 해제 가능하도록 수정
+      const newSelected = !isSelected;
+      setIsSelected(newSelected);
+     
+    }
+  };
 
   useEffect(() => {
     setIsSelected(initialSelected);
@@ -26,7 +37,7 @@ const IdeaGenerationTag = ({
 
   return (
 
-    <TagContainer selected={isSelected} disabled={disabled && !isSelected}>
+    <TagContainer selected={isSelected}  disabled={disabled && !isSelected}>
       {/* {isSelected && (
         <CheckIcon width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M1.77777 8.49989L6.22063 12.9443L14.2178 4.94434" stroke="white" strokeWidth="1.77778" strokeLinecap="round" strokeLinejoin="round"/>
@@ -39,18 +50,23 @@ const IdeaGenerationTag = ({
 };
 
 // MoleculeTagList 컴포넌트
-const MoleculeSelectedTagList = ({ items, onTagsChange, disabled }) => {
+const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
   const [selectedTags, setSelectedTags] = useState([]);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [questionText, setQuestionText] = useState("");
   const [options, setOptions] = useState(["", ""]);
+  const MAX_SELECTIONS = 8;
+  const [issueGenerationStartPosition, setIssueGenerationStartPosition] = useAtom(
+    ISSUE_GENERATION_START_POSITION
+  );
   const [
     issueGenerationSelectedStartPosition,
     setIssueGenerationSelectedStartPosition,
   ] = useAtom(ISSUE_GENERATION_SELECTED_START_POSITION);
   const [addedTagsCount, setAddedTagsCount] = useState(0);
 
-
-
-  // // 컴포넌트 마운트 시와 ideaGenerationSelectedStartPosition 변경 시 선택 상태 동기화
+  // 컴포넌트 마운트 시와 ideaGenerationSelectedStartPosition 변경 시 선택 상태 동기화
   useEffect(() => {
     if (items && issueGenerationSelectedStartPosition) {
       const selectedIndexes = items
@@ -73,6 +89,59 @@ const MoleculeSelectedTagList = ({ items, onTagsChange, disabled }) => {
     }
   }, []);
 
+ 
+
+  const handleClose = () => {
+    setIsPopupOpen(false);
+    setQuestionText("");
+    setOptions(["", ""]);
+  };
+
+  const addOption = () => {
+    if (options.length < 5) {
+      setOptions([...options, ""]);
+    }
+  };
+
+  const handleOptionChange = (index, value) => {
+    const newOptions = [...options];
+    newOptions[index] = value;
+    setOptions(newOptions);
+  };
+
+  const handleDeleteOption = (index) => {
+    if (options.length <= 2) return;
+    const newOptions = [...options];
+    newOptions.splice(index, 1);
+    setOptions(newOptions);
+  };
+
+  const handleAddTag = () => {
+
+    const validOptions = options.filter((option) => option.trim());
+
+    const newTags = validOptions.map((option, index) => ({
+      problem: "사용자 요청",
+      content: [
+        {
+          id: Date.now() + index,
+          theme: option,
+          description: "사용자 요청",
+        },
+      ],
+    }));
+
+    setIssueGenerationStartPosition((prev) => {
+      const prevArray = Array.isArray(prev) ? prev : [];
+      const updated = [...prevArray, ...newTags];
+
+      return updated;
+    });
+
+    setAddedTagsCount((prev) => prev + validOptions.length);
+    setOptions([""]);
+    setIsPopupOpen(false);
+  };
 
 
   return (
@@ -84,21 +153,26 @@ const MoleculeSelectedTagList = ({ items, onTagsChange, disabled }) => {
               <IdeaGenerationTag
                 key={item.id}
                 text={item.theme || ""}
-                initialSelected={selectedTags.includes(index)}
               
+                initialSelected={selectedTags.includes(index)}
+                disabled={
+                  !selectedTags.includes(index) &&
+                  selectedTags.length >= MAX_SELECTIONS
+                }
               />
             );
           })}
       
       </TagListContainer>
 
+     
       
-      
+
     </>
   );
 };
 
-export default MoleculeSelectedTagList;
+export default MoleculeTagList;
 
 const TagContainer = styled.div`
   display: inline-flex;
@@ -109,10 +183,10 @@ const TagContainer = styled.div`
   margin: 0px;
   background-color: ${(props) => {
     if (props.disabled) return palette.gray100;
-    return props.selected ? palette.gray800 : palette.chatGray;
+    return props.selected ? palette.gray800  : palette.chatGray;
   }};
   border: ${(props) =>
-    props.selected ? "none" : `1px solid ${palette.outlineGray}`};
+    props.selected ? palette.gray800 : `1px solid ${palette.outlineGray}`};
   // border: 1px solid ${palette.outlineGray}
   border-radius: 8px;
   user-select: none;
@@ -135,7 +209,7 @@ const TagText = styled.span`
   font-weight: ${(props) => (props.selected ? "600" : "400")};
   line-height: 155%;
   letter-spacing: -0.03em;
-  color: ${(props) => (props.selected ? palette.white : palette.gray500)};
+ color: ${(props) => (props.selected ? palette.white : palette.gray500)};
   white-space: nowrap;
 `;
 

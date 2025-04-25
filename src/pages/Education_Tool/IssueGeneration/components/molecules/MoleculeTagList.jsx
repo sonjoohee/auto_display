@@ -276,10 +276,10 @@ const TagContainer = styled.div`
   margin: 0px;
   background-color: ${(props) => {
     if (props.disabled) return palette.gray100;
-    return props.selected ? palette.gray800 : palette.chatGray;
+    return props.selected ? palette.white : palette.chatGray;
   }};
   border: ${(props) =>
-    props.selected ? "none" : `1px solid ${palette.outlineGray}`};
+    props.selected ? `1px solid ${palette.gray800}` : `1px solid ${palette.outlineGray}`};
   // border: 1px solid ${palette.outlineGray}
   border-radius: 8px;
   user-select: none;
@@ -302,7 +302,7 @@ const TagText = styled.span`
   font-weight: ${(props) => (props.selected ? "600" : "400")};
   line-height: 155%;
   letter-spacing: -0.03em;
-  color: ${(props) => (props.selected ? palette.white : palette.gray500)};
+  color: ${(props) => (props.selected ? palette.gray800 : palette.gray500)};
   white-space: nowrap;
 `;
 

@@ -301,64 +301,124 @@ const PageNeedsKeywordsGeneration = () => {
 
     // 각 title을 currentProblemList의 해당 인덱스에 할당
     // 만약 currentProblemList가 더 짧다면 새 객체를 생성하여 추가
-    const updatedProblemList = keywordsGenerationSelectedIssue.flatMap(
-     (issue) => {
-      return { issueGenerationSelectedStartPosition: issue.issueGenerationSelectedStartPosition };
-     }
-    );
+  //   if (keywordsGenerationSelectedIssue.length > 3) {
+  //   const updatedProblemList = keywordsGenerationSelectedIssue.flatMap(
+  //    (issue) => {
+  //     return { issueGenerationSelectedStartPosition: issue.issueGenerationSelectedStartPosition };
+  //    }
+  //   );
+  // }
 
-    console.log("updatedProblemList", updatedProblemList);
 
 
-    await updateToolOnServer(
-      toolId,
-      {
-        completedStep: 2,
+    // await updateToolOnServer(
+    //   toolId,
+    //   {
+    //     completedStep: 2,
      
-      },
-      isLoggedIn
-    );
+    //   },
+    //   isLoggedIn
+    // );
     try {
-      setIsLoading(true);
-      // 빈 문자열이나 공백만 있는 항목 제거
-      // const validItems = ideaGenerationProblemList.filter(
-      //   (item) => item.trim() !== ""
-      // );
 
-      // if (validItems.length === 0) {
-      //   // 유효한 항목이 없는 경우 처리
-      //   return;
-      // }
+      if (keywordsGenerationSelectedIssue.length >= 3) {
+        setIsLoading(true);
 
-      const Data = {
-        type: "ix_needs_keywords_generation_clustering_education",
-        business: business,
-        theme_list:updatedProblemList
+        const updatedProblemList = keywordsGenerationSelectedIssue.flatMap(
+         (issue) => {
+          return { issueGenerationSelectedStartPosition: issue.issueGenerationSelectedStartPosition };
+         }
+        );
+        setIsLoading(true);
+    
+        const Data = {
+          type: "ix_needs_keywords_generation_clustering_education",
+          business: business,
+          theme_list:updatedProblemList
+          
+        };
+  
+        const response = await EducationToolsRequest(Data, isLoggedIn);
+  
+        console.log("response", response);
+  
+        // setIdeaGenerationStartPosition(
+        //   response.response.idea_generation_keyword_education
+        // );
+  
+        setKeywordsGenerationTag(
+          response.response.needs_keywords_generation_clustering_education
+        );
+  
+        setIsLoading(false);
+        await updateToolOnServer(
+          responseToolId,
+          {
+            completedStep: 2,
+            keywordsGenerationTag:
+              response.response.needs_keywords_generation_clustering_education,
+          },
+          isLoggedIn
+        )
+      }else{
+      
+        // const updatedProblemList = keywordsGenerationSelectedIssue.flatMap(
+        //   (issue) => {
+        //    return { issueGenerationSelectedStartPosition: issue.issueGenerationSelectedStartPosition };
+        //   }
+        //  );
+        const updatedProblemList = keywordsGenerationSelectedIssue.flatMap(issue => {
+          if (issue.issueGenerationSelectedStartPosition && Array.isArray(issue.issueGenerationSelectedStartPosition)) {
+            return issue.issueGenerationSelectedStartPosition.map(item => ({
+              main_theme: item.theme,
+              raw_data: item.description
+            }));
+          }
+          return []; // 해당하는 배열이 없으면 빈 배열 반환
+        });
+        setKeywordsGenerationTag(updatedProblemList);
+         console.log("updatedProblemList", updatedProblemList);
+        await updateToolOnServer(
+          responseToolId,
+          {
+            completedStep: 2,
+            keywordsGenerationTag:
+            updatedProblemList
+            },
+          isLoggedIn
+        )
+      }
+    
+    
+      // const Data = {
+      //   type: "ix_needs_keywords_generation_clustering_education",
+      //   business: business,
+      //   theme_list:updatedProblemList
         
-      };
+      // };
 
-      const response = await EducationToolsRequest(Data, isLoggedIn);
+      // const response = await EducationToolsRequest(Data, isLoggedIn);
 
-      console.log("response", response);
+      // console.log("response", response);
 
-      // setIdeaGenerationStartPosition(
-      //   response.response.idea_generation_keyword_education
+      // // setIdeaGenerationStartPosition(
+      // //   response.response.idea_generation_keyword_education
+      // // );
+
+      // setKeywordsGenerationTag(
+      //   response.response.needs_keywords_generation_clustering_education
       // );
 
-      setKeywordsGenerationTag(
-        response.response.needs_keywords_generation_clustering_education
-      );
-
-      setIsLoading(false);
-      await updateToolOnServer(
-        responseToolId,
-        {
-          completedStep: 2,
-          keywordsGenerationTag:
-            response.response.needs_keywords_generation_clustering_education,
-        },
-        isLoggedIn
-      );
+      // setIsLoading(false);
+      // await updateToolOnServer(
+      //   responseToolId,
+      //   {
+      //     completedStep: 2,
+      //     keywordsGenerationTag:
+      //       response.response.needs_keywords_generation_clustering_education,
+      //   },
+      //   isLoggedIn
+      // );
 
       setToolSteps(1);
     } catch (error) {
