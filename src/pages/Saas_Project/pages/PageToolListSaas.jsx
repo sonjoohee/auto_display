@@ -2031,7 +2031,7 @@ const PageToolListSaas = () => {
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
-                        고객 여정 맵
+                        고객 여정 지도
                       </Body1>
                       <div
                         className="overlay"
