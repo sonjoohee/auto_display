@@ -3,10 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Body1, Body2, Sub2 } from "../../../../../assets/styles/Typography";
 import { Button } from "../../../../../assets/styles/ButtonStyle";
-import {
-  Persona,
-  UniqueTag,
-} from "../../../../../assets/styles/BusinessAnalysisStyle";
+import { Persona } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import { palette } from "../../../../../assets/styles/Palette";
 import personaImages from "../../../../../assets/styles/PersonaImages";
 import { useAtom } from "jotai";
@@ -35,7 +32,7 @@ const MoleculePersonaSelect = ({
   useEffect(() => {
     if (filteredPersonaList && filteredPersonaList.length > 0) {
       setPersonaList({
-        selected: [], 
+        selected: [],
         unselected: [
           ...customPersonaList,
           ...businessPersonaList,
@@ -124,62 +121,58 @@ const MoleculePersonaSelect = ({
 
   return (
     <CardGroupWrap>
+      {filteredPersonaList?.map((persona) => {
+        // 현재 persona가 선태된 상태인지 확인 (personaList.selected 에서 조회)
+        const isSelected = personaList.selected.some(
+          (p) => p._id === persona._id
+        );
 
-      {filteredPersonaList
-          ?.map((persona) => {
-            // 현재 persona가 선태된 상태인지 확인 (personaList.selected 에서 조회)
-            const isSelected = personaList.selected.some(
-              (p) => p._id === persona._id
-            );
-
-            return (
-              <>
-                <ListBoxItem
-                  key={persona._id}
-                  selected={isSelected}
-                  anySelected={personaList.selected.length > 0}
-                  interviewType={interviewType}
-                >
-                  <Persona
-                    size="Large"
-                    icon={persona.favorite ? "OrangeTopLeftStarFill" : null}
-                    Round
-                    Moder
-                  >
-                    <img
-                      src={
-                        personaImages[persona.imageKey] ||
-                        (persona.gender === "남성" 
-                          ? personaImages.persona_m_20_01 // 남성 기본 이미지
-                          : personaImages.persona_f_20_01) // 여성 기본 이미지
-                      }
-                      alt={persona.personaName}
-                    />
-                  </Persona>
-                  <ListText>
-                    <ListTitle>
-                      <Body1 color="gray800">
-                        {persona.persona_view || persona.name}
-                      </Body1>
-                    </ListTitle>
-                    <ListSubtitle>
-                      <PersonaInfo>
-                        <span>{persona.gender}</span>
-                        <span>
-                          {persona.age.includes("세") || persona.age.endsWith("대")
-                            ? persona.age
-                            : `${persona.age}세`}
-                        </span>
-                        <span>{persona.job}</span>
-                      </PersonaInfo>
-                    </ListSubtitle>
-                  </ListText>
-                
-                </ListBoxItem>
-              </>
-            );
-          })}{" "}
-     
+        return (
+          <>
+            <ListBoxItem
+              key={persona._id}
+              selected={isSelected}
+              anySelected={personaList.selected.length > 0}
+              interviewType={interviewType}
+            >
+              <Persona
+                size="Large"
+                icon={persona.favorite ? "OrangeTopLeftStarFill" : null}
+                Round
+                Moder
+              >
+                <img
+                  src={
+                    personaImages[persona.imageKey] ||
+                    (persona.gender === "남성"
+                      ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                      : personaImages.persona_f_20_01) // 여성 기본 이미지
+                  }
+                  alt={persona.personaName}
+                />
+              </Persona>
+              <ListText>
+                <ListTitle>
+                  <Body1 color="gray800">
+                    {persona.persona_view || persona.name}
+                  </Body1>
+                </ListTitle>
+                <ListSubtitle>
+                  <PersonaInfo>
+                    <span>{persona.gender}</span>
+                    <span>
+                      {persona.age.includes("세") || persona.age.endsWith("대")
+                        ? persona.age
+                        : `${persona.age}세`}
+                    </span>
+                    <span>{persona.job}</span>
+                  </PersonaInfo>
+                </ListSubtitle>
+              </ListText>
+            </ListBoxItem>
+          </>
+        );
+      })}{" "}
     </CardGroupWrap>
   );
 };
@@ -217,8 +210,8 @@ const ListBoxItem = styled.div`
       ? 0.5
       : 1};
 
-//   // hover 효과 추가
-//   transition: background-color 0.2s ease;
+  //   // hover 효과 추가
+  //   transition: background-color 0.2s ease;
 
   ${(props) =>
     (((props.interviewType === "single" ||
@@ -241,7 +234,6 @@ const ListBoxItem = styled.div`
       }
     }
   `}
-
 
   ${(props) =>
     props.selected &&

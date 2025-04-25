@@ -43,6 +43,10 @@ import {
 } from "../../../../pages/AtomStates";
 import PopupWrap from "../../../../assets/styles/Popup.jsx";
 
+import MacroSegTag from "../../../../components/Charts/MacroSegTag.jsx";
+import StakeHolderTag from "../../../../components/Charts/StakeHolderTag.jsx";
+import MyPersonaTag from "../../../../components/Charts/MyPersonaTag.jsx";
+
 const OrganismPersonaCardList = ({
   personaData = [],
   setIsStarred = () => {},
@@ -65,6 +69,7 @@ const OrganismPersonaCardList = ({
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [filteredPersonaData, setFilteredPersonaData] = useState([]);
+  console.log("🚀 ~ filteredPersonaData:", filteredPersonaData);
   const [showFavoriteLimitPopup, setShowFavoriteLimitPopup] = useState(false);
   const eventState = true;
   const trialState = false;
@@ -459,7 +464,18 @@ const OrganismPersonaCardList = ({
           {filteredPersonaData.map((persona) => (
             <AiPersonaCardListItem key={persona?._id}>
               <div className="header">
-                <UniqueTag color={persona?.type || "default"} />
+                {persona?.personaType === "macro_segment" && (
+                  <MacroSegTag text={persona?.type || "default"} />
+                )}
+                {persona?.personaType === "key_stakeholder" && (
+                  <StakeHolderTag text={persona?.type || "default"} />
+                )}
+                {persona?.personaType === "my_persona" && (
+                  <MyPersonaTag text={persona?.type || "default"} />
+                )}
+                {persona?.personaType === "unique_user" && (
+                  <UniqueTag color={persona?.type || "default"} />
+                )}
                 <div className="title">
                   <Body1 color="gray800">
                     {persona?.personaName || "제목 없음"}

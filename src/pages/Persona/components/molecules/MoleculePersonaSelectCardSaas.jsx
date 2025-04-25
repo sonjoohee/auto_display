@@ -18,6 +18,10 @@ import {
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 
+import MacroSegTag from "../../../../components/Charts/MacroSegTag.jsx";
+import StakeHolderTag from "../../../../components/Charts/StakeHolderTag.jsx";
+import MyPersonaTag from "../../../../components/Charts/MyPersonaTag.jsx";
+
 const MoleculePersonaSelectCardSaas = ({
   interviewType,
   filteredPersonaList,
@@ -248,7 +252,7 @@ const MoleculePersonaSelectCardSaas = ({
                     <img
                       src={
                         personaImages[persona.imageKey] ||
-                        (persona.gender === "남성" 
+                        (persona.gender === "남성"
                           ? personaImages.persona_m_20_01 // 남성 기본 이미지
                           : personaImages.persona_f_20_01) // 여성 기본 이미지
                       }
@@ -259,8 +263,19 @@ const MoleculePersonaSelectCardSaas = ({
                     <ListTitle>
                       <Body1 color="gray800">
                         {persona.persona_view || persona.personaName}
-                      </Body1>{" "}
-                      <UniqueTag color={persona.type || "default"} />
+                      </Body1>
+                      {persona?.personaType === "macro_segment" && (
+                        <MacroSegTag text={persona?.type || "default"} />
+                      )}
+                      {persona?.personaType === "key_stakeholder" && (
+                        <StakeHolderTag text={persona?.type || "default"} />
+                      )}
+                      {persona?.personaType === "my_persona" && (
+                        <MyPersonaTag text={persona?.type || "default"} />
+                      )}
+                      {persona?.personaType === "unique_user" && (
+                        <UniqueTag color={persona?.type || "default"} />
+                      )}
                     </ListTitle>
                     <ListSubtitle>
                       <PersonaInfo>
