@@ -4365,6 +4365,60 @@ export const ExploreCard = styled.div`
       .overlay {
         opacity: 0; // 기본적으로는 숨김
         visibility: hidden;
+        /* visibility: visible; */
+        pointer-events: none; // 오버레이의 클릭 이벤트 차단
+
+        em {
+          color: ${palette.white};
+        }
+
+        i {
+          &:before,
+          &:after {
+            display: none;
+          }
+        }
+      }
+
+      &:hover .overlay {
+        opacity: 1;
+        visibility: visible;
+      }
+    `}
+    
+    ${(props) =>
+    props.ReadyEducation &&
+    css`
+      cursor: not-allowed;
+      pointer-events: auto; // 마우스 오버 이벤트 허용
+
+      ${Body1} {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        margin-top: 0;
+
+        em {
+          display: block;
+          font-size: 0.75rem;
+          font-weight: 500;
+          font-style: normal;
+          color: ${palette.gray500};
+          line-height: 1.2;
+          letter-spacing: -0.36px;
+          padding: 4px 8px;
+          border-radius: 50px;
+          border: ${(props) =>
+            props.children ? `1px solid ${palette.outlineGray}` : "none"};
+        }
+      }
+
+      .overlay {
+        opacity: 1; // 기본적으로는 숨김
+        /* visibility: hidden; */
+        visibility: visible;
         pointer-events: none; // 오버레이의 클릭 이벤트 차단
 
         em {
