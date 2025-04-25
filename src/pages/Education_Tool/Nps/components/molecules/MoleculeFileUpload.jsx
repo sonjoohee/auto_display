@@ -18,10 +18,10 @@ const MoleculeFileUpload = ({
         onChangeStatus={handleChangeStatus}
         maxFiles={1}
         multiple={false}
-        canRemove={false}
+        canRemove={true}
         canRestart={false}
         disabled={toolSteps >= 1}
-        accept="application/pdf"
+        accept="application/pdf, image/*"
         maxSizeBytes={20 * 1024 * 1024}
         inputWithFilesContent={
           <>
@@ -77,7 +77,7 @@ const MoleculeFileUpload = ({
                     업로드하려는 파일을 드래그하여 놓아주세요
                   </Body2>
                   <Sub3 color="gray500">
-                    PDF 파일만 업로드가 가능합니다 (20MB 이하)
+                  컨셉보드 첨부 또는 가져오기
                   </Sub3>
                 </div>
                 <div className="browse-button">
