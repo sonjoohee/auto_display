@@ -96,7 +96,7 @@ const PageConceptDefinition = () => {
     conceptDefinitionSelectedPersona,
     setConceptDefinitionSelectedPersona,
   ] = useAtom(CONCEPT_DEFINITION_SELECTED_PERSONA);
- 
+
   const [conceptDefinitionFirstReport, setConceptDefinitionFirstReport] =
     useAtom(CONCEPT_DEFINITION_FIRST_REPORT);
   const [
@@ -131,7 +131,6 @@ const PageConceptDefinition = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
 
   useEffect(() => {
     const interviewLoading = async () => {
@@ -216,7 +215,6 @@ const PageConceptDefinition = () => {
     getAllTargetDiscovery();
   }, [isLoggedIn, projectSaas]);
 
-
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
     setCompletedSteps([...completedSteps, currentStep]);
@@ -224,7 +222,6 @@ const PageConceptDefinition = () => {
     setShowPopupError(false);
   };
 
- 
   const business = {
     businessModel: project.businessModel,
     projectAnalysis: project.projectAnalysis,
@@ -342,12 +339,12 @@ const PageConceptDefinition = () => {
           toolId,
           {
             completedStep: 3,
-            conceptDefinitionFinalReport: response.response.concept_definition_final_report_education,
+            conceptDefinitionFinalReport:
+              response.response.concept_definition_final_report_education,
           },
           isLoggedIn
         );
         setCompletedSteps([...completedSteps, 3]);
-    
       } catch (error) {}
       setToolSteps(3);
     } catch (error) {
@@ -477,7 +474,10 @@ const PageConceptDefinition = () => {
               <TabButtonType5
                 Num3
                 isActive={activeTab >= 3}
-                onClick={() => completedSteps.includes(2) || completedSteps.includes(3) && setActiveTab(3)}
+                onClick={() =>
+                  completedSteps.includes(2) ||
+                  (completedSteps.includes(3) && setActiveTab(3))
+                }
                 disabled={
                   !completedSteps.includes(3) || isLoading || isLoadingReport
                 }
@@ -574,7 +574,6 @@ const PageConceptDefinition = () => {
                         }}
                         interviewType="multiple"
                         disabled={toolSteps >= 1}
-          
                       />
                     ) : (
                       <BoxWrap
@@ -585,13 +584,14 @@ const PageConceptDefinition = () => {
                       >
                         <img src={images.PeopleStarFillPrimary} alt="" />
                         <Body2 color="gray500" align="center !important">
-                          즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서
-                          확인하실 수 있습니다.
+                          페르소나 리스트를 확인하려면, 먼저 관심 있는 페르소나
+                          20명을 즐겨찾기에 추가해 주세요. (
                           {
                             personaListSaas.filter(
                               (item) => item.favorite === true
                             ).length
-                          }
+                          }{" "}
+                          / 20)
                         </Body2>
                       </BoxWrap>
                     )}
@@ -848,49 +848,52 @@ const PageConceptDefinition = () => {
               </TabContent5>
             )}
 
-            {activeTab === 3 && (completedSteps.includes(2) || completedSteps.includes(3)) && (
-              <TabContent5 Small>
-                {isLoadingReport ? (
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      minHeight: "200px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <AtomPersonaLoader
-                      message={`결과보고서를 작성하고 있습니다.
+            {activeTab === 3 &&
+              (completedSteps.includes(2) || completedSteps.includes(3)) && (
+                <TabContent5 Small>
+                  {isLoadingReport ? (
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        minHeight: "200px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <AtomPersonaLoader
+                        message={`결과보고서를 작성하고 있습니다.
                         1분 정도 소요 될 수 있어요.`}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <BgBoxItem primaryLightest>
-                      <H3 color="gray800">컨셉 정의서</H3>
-                      <Body3 color="gray800">
-                        사업 아이템의 실행 전략을 정리한 초안입니다. 이를
-                        기반으로 세부 내용을 구체화해보세요.​
-                      </Body3>
-                    </BgBoxItem>
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <BgBoxItem primaryLightest>
+                        <H3 color="gray800">컨셉 정의서</H3>
+                        <Body3 color="gray800">
+                          사업 아이템의 실행 전략을 정리한 초안입니다. 이를
+                          기반으로 세부 내용을 구체화해보세요.​
+                        </Body3>
+                      </BgBoxItem>
 
-                    <InsightAnalysis>
-                      <div
-                        className="markdown-body"
-                        style={{
-                          textAlign: "left",
-                        }}
-                      >
-                        <Markdown>
-                          {prepareMarkdown(conceptDefinitionFinalReport ?? "")}
-                        </Markdown>
-                      </div>
-                    </InsightAnalysis>
-                  </>
-                )}
-              </TabContent5>
-            )}
+                      <InsightAnalysis>
+                        <div
+                          className="markdown-body"
+                          style={{
+                            textAlign: "left",
+                          }}
+                        >
+                          <Markdown>
+                            {prepareMarkdown(
+                              conceptDefinitionFinalReport ?? ""
+                            )}
+                          </Markdown>
+                        </div>
+                      </InsightAnalysis>
+                    </>
+                  )}
+                </TabContent5>
+              )}
           </DesignAnalysisWrap>
         </MainContent>
       </ContentsWrap>

@@ -333,8 +333,8 @@ const MoleculePersonaSelectCardSaas = ({
             <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
               <img src={images.PeopleStarFillPrimary} alt="" />
               <Body2 color="gray500" align="center !important">
-                즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실
-                수 있습니다.
+                페르소나 리스트를 확인하려면, 먼저 관심 있는 페르소나 20명을
+                즐겨찾기에 추가해 주세요.
               </Body2>
             </BoxWrap>
           </>
