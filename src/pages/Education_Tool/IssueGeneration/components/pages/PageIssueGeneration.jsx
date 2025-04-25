@@ -164,7 +164,7 @@ const PageIssueGeneration = () => {
 
       if (toolLoading) {
         // 활성 탭 설정 (기본값 1)
-        setActiveTab(Math.min((toolStep ?? 1) + 1, 4));
+        setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
         setToolSteps(toolStep ?? 1);
 
         if (Object.keys(issueGenerationSelectedPurpose).length > 0) {
@@ -1029,9 +1029,11 @@ const PageIssueGeneration = () => {
 
                         <MoleculeSelectedTagList
                           items={
-                            issueGenerationSelectedStartPosition
+                            issueGenerationStartPosition
+                              .map((item) => item.content)
+                              .flat() // 모든 content 배열을 하나로 합침 
                           }
-                          disabled={toolSteps >= 2}
+                          disabled={toolSteps >= 1}
                         />
                         
                       </TabContent5Item>
