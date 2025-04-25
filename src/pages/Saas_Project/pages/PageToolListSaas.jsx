@@ -508,8 +508,12 @@ const PageToolListSaas = () => {
     KEYWORDS_GENERATION_SELECTED_ISSUE
   );
   const [, setKeywordsGenerationTag] = useAtom(KEYWORDS_GENERATION_TAG);
-  const [, setConceptDefinitionFirstReport] = useAtom(CONCEPT_DEFINITION_FIRST_REPORT);
-  const [, setConceptDefinitionFinalReport] = useAtom(CONCEPT_DEFINITION_FINAL_REPORT);
+  const [, setConceptDefinitionFirstReport] = useAtom(
+    CONCEPT_DEFINITION_FIRST_REPORT
+  );
+  const [, setConceptDefinitionFinalReport] = useAtom(
+    CONCEPT_DEFINITION_FINAL_REPORT
+  );
 
   // 초기화 useEffect
   useEffect(() => {
@@ -710,7 +714,6 @@ const PageToolListSaas = () => {
     //concept definition education 초기화
     setConceptDefinitionFirstReport("");
     setConceptDefinitionFinalReport("");
-  
   }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   useEffect(() => {
@@ -2070,7 +2073,7 @@ const PageToolListSaas = () => {
                       </div>
                     </ExploreCard>
 
-                    <ExploreCard Report anything key="report-1">
+                    <ExploreCard ReadyEducation Report anything key="report-1">
                       <span>
                         {/* <images.GridReport color={palette.gray700} /> */}
                         문제정의
@@ -2089,34 +2092,26 @@ const PageToolListSaas = () => {
                           navigate("/NeedsKeywordsGeneration");
                         }}
                       >
-                        {/* <span>
-                          <images.GridReport color={palette.white} />
-                          문제정의
-                        </span> */}
+                        <span>문제정의</span>
 
-                        <div className="text" style={{ 
-                          display: 'flex', 
-                          justifyContent: 'center', 
-                          alignItems: 'center', 
-                          height: '100%', 
-                          width: '100%'
-                        }}>
-                          <Body1 
-                            color="white" 
-                            style={{ 
-                              fontSize: '16px', 
-                              fontWeight: '500',
-                              textAlign: 'center'
-                            }}
-                          >
-                            2차시에 <br />
-                            오픈됩니다.
-                            <em>준비중</em>
-                            {/* 니즈 키워드 정리 */}
+                        <div className="text">
+                          <Body1 color="white">
+                            <em>준비중</em>니즈 키워드 정리
                           </Body1>
-                          {/* <Caption1 color="white" align="left">
+                          <Caption1 color="white" align="left">
                             고객의 니즈를 키워드로 정리하는 툴
-                          </Caption1> */}
+                          </Caption1>
+                          <i />
+                        </div>
+                      </div>
+
+                      <div className="overlayEducation">
+                        <div className="text">
+                          <Body1 color="white">
+                            2차시에
+                            <br />
+                            오픈 예정입니다.
+                          </Body1>
                         </div>
                       </div>
                     </ExploreCard>

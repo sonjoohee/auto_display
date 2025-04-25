@@ -4288,6 +4288,75 @@ export const ExploreCard = styled.div`
     }
   }
 
+  .overlayEducation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 30px 22px;
+    background: rgba(50, 50, 50, 0.9);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s;
+
+    > span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: ${palette.white};
+      line-height: 1.55;
+      letter-spacing: -0.36px;
+      padding: 4px 12px;
+      border-radius: 5px;
+      background: ${palette.primary};
+    }
+
+    .text {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: auto;
+
+      i {
+        position: relative;
+        width: 64px;
+        height: 12px;
+        margin: 0 auto;
+
+        &:before,
+        &:after {
+          position: absolute;
+          right: 0;
+          border-radius: 4px;
+          background: ${palette.white};
+          content: "";
+        }
+
+        &:before {
+          bottom: 0;
+          width: 100%;
+          height: 2px;
+        }
+
+        &:after {
+          bottom: 5px;
+          right: -1px;
+          transform: rotate(45deg);
+          width: 14px;
+          height: 2px;
+        }
+      }
+    }
+  }
+
   ${Body1} {
     margin-top: 26px;
 
@@ -4333,12 +4402,12 @@ export const ExploreCard = styled.div`
       }
     `}
 
-      ${(props) =>
+    ${(props) =>
     props.anything &&
     css`
       .overlay {
         > span {
-          background: #226FFF;
+          background: #226fff;
         }
       }
     `}
@@ -4400,7 +4469,7 @@ export const ExploreCard = styled.div`
     props.ReadyEducation &&
     css`
       cursor: not-allowed;
-      pointer-events: auto; // 마우스 오버 이벤트 허용
+      /* pointer-events: auto; // 마우스 오버 이벤트 허용 */
 
       ${Body1} {
         display: flex;
@@ -4425,7 +4494,7 @@ export const ExploreCard = styled.div`
         }
       }
 
-      .overlay {
+      .overlayEducation {
         opacity: 1; // 기본적으로는 숨김
         /* visibility: hidden; */
         visibility: visible;
@@ -4441,11 +4510,6 @@ export const ExploreCard = styled.div`
             display: none;
           }
         }
-      }
-
-      &:hover .overlay {
-        opacity: 1;
-        visibility: visible;
       }
     `}
 `;
