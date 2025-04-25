@@ -96,7 +96,6 @@ const PageCustomerJourneyMap = () => {
   const [showPopupError, setShowPopupError] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
-  const [businessDescription, setBusinessDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
@@ -202,12 +201,13 @@ const PageCustomerJourneyMap = () => {
   console.log("selectedMoment", selectedMoment);
 
   const business = {
-    business: businessDescription,
-    target: project?.projectAnalysis?.target_customer || "",
+    business: project?.projectAnalysis?.business_analysis || "",
+    // target: project?.projectAnalysis?.target_customer || "",
     business_model: project?.businessModel || "",
     sector: project?.industryType || "",
     country: project?.targetCountry || "",
   };
+  console.log("🚀 ~ PageCustomerJourneyMap ~ business.project:", project);
 
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -229,12 +229,12 @@ const PageCustomerJourneyMap = () => {
         age: selectedPersonas?.age || "",
         gender: selectedPersonas?.gender || "",
         job: selectedPersonas?.job || "",
-        keywords: selectedPersonas?.keywords || [],
-        imageKey: selectedPersonas?.imageKey || "",
+        // keywords: selectedPersonas?.keywords || [],
+        // imageKey: selectedPersonas?.imageKey || "",
         userExperience: selectedPersonas?.userExperience || "",
-        consumptionPattern: selectedPersonas?.consumptionPattern || "",
+        // consumptionPattern: selectedPersonas?.consumptionPattern || "",
         interests: selectedPersonas?.interests || "",
-        lifestyle: selectedPersonas?.lifestyle || "",
+        // lifestyle: selectedPersonas?.lifestyle || "",
       };
 
       const data = {
