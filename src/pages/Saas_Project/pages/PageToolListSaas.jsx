@@ -1219,8 +1219,10 @@ const PageToolListSaas = () => {
 
                       <ExploreCard AiPersona key="analysis-1">
                         <span>
-                          <images.GridCircle color={palette.gray700} />
-                          Interveiw
+                          {/* <images.GridCircle color={palette.gray700} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.gray700} /> */}
+                          텍스트 내용
                         </span>
                         <p>
                           <img src={images.ImgExplore12} alt="" />
@@ -1237,8 +1239,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            <images.GridCircle color={palette.white} />
-                            Interveiw
+                            {/* <images.GridCircle color={palette.white} /> */}
+                            또는
+                            {/* <images.GridReport color={palette.white} /> */}
+                            텍스트 내용
                           </span>
 
                           <div className="text">
@@ -1257,8 +1261,10 @@ const PageToolListSaas = () => {
 
                       <ExploreCard AiPersona key="analysis-2">
                         <span>
-                          <images.GridCircle color={palette.gray700} />
-                          Interveiw
+                          {/* <images.GridCircle color={palette.gray700} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.gray700} /> */}
+                          텍스트 내용
                         </span>
                         <p>
                           <img src={images.ImgExplore13} alt="" />
@@ -1275,8 +1281,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            <images.GridCircle color={palette.white} />
-                            Interveiw
+                            {/* <images.GridCircle color={palette.white} /> */}
+                            또는
+                            {/* <images.GridReport color={palette.white} /> */}
+                            텍스트 내용
                           </span>
 
                           <div className="text">
@@ -1295,8 +1303,10 @@ const PageToolListSaas = () => {
 
                       <ExploreCard AiPersona key="analysis-3">
                         <span>
-                          <images.GridCircle color={palette.gray700} />
-                          Interveiw
+                          {/* <images.GridCircle color={palette.gray700} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.gray700} /> */}
+                          텍스트 내용
                         </span>
                         <p>
                           <img src={images.ImgExplore15} alt="" />
@@ -1312,8 +1322,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            <images.GridCircle color={palette.white} />
-                            Interveiw
+                            {/* <images.GridCircle color={palette.white} /> */}
+                            또는
+                            {/* <images.GridReport color={palette.white} /> */}
+                            텍스트 내용
                           </span>
 
                           <div className="text">
@@ -1335,8 +1347,10 @@ const PageToolListSaas = () => {
                         {...{ Ready: false }}
                       >
                         <span>
-                          <images.GridTool color={palette.gray700} />
-                          Tool
+                          {/* <images.GridTool color={palette.gray700} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.gray700} /> */}
+                          텍스트 내용
                         </span>
                         <p>
                           <img src={images.ImgExplore05} alt="" />
@@ -1353,8 +1367,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            <images.GridTool color={palette.white} />
-                            Tool
+                            {/* <images.GridTool color={palette.white} /> */}
+                            또는
+                            {/* <images.GridReport color={palette.white} /> */}
+                            텍스트 내용
                           </span>
 
                           <div className="text">
@@ -1376,8 +1392,10 @@ const PageToolListSaas = () => {
                         // {...(!accessableExpert && { Ready: true })}
                       >
                         <span>
-                          <images.GridTool color={palette.gray700} />
-                          Tool
+                          {/* <images.GridTool color={palette.gray700} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.gray700} /> */}
+                          텍스트 내용
                         </span>
                         <p>
                           <img src={images.ImgExplore06} alt="" />
@@ -1394,8 +1412,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            <images.GridTool color={palette.white} />
-                            Tool
+                            {/* <images.GridTool color={palette.white} /> */}
+                            또는
+                            {/* <images.GridReport color={palette.white} /> */}
+                            텍스트 내용
                           </span>
 
                           <div className="text">
@@ -1418,8 +1438,10 @@ const PageToolListSaas = () => {
                         // {...(!accessableExpert && { Ready: true })}
                       >
                         <span>
-                          <images.GridTool color={palette.gray700} />
-                          Tool
+                          {/* <images.GridTool color={palette.gray700} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.gray700} /> */}
+                          텍스트 내용
                         </span>
                         <p>
                           <img src={images.ImgExplore07} alt="" />
@@ -1436,8 +1458,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            <images.GridTool color={palette.white} />
-                            Tool
+                            {/* <images.GridTool color={palette.white} /> */}
+                            또는
+                            {/* <images.GridReport color={palette.white} /> */}
+                            텍스트 내용
                           </span>
 
                           <div className="text">
@@ -1459,8 +1483,10 @@ const PageToolListSaas = () => {
                         key="research-4"
                       >
                         <span>
-                          <images.GridTool color={palette.gray700} />
-                          Tool
+                          {/* <images.GridTool color={palette.gray700} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.gray700} /> */}
+                          텍스트 내용
                         </span>
                         <p>
                           <img src={images.ImgExplore10} alt="" />
@@ -1477,8 +1503,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            <images.GridTool color={palette.white} />
-                            Tool
+                            {/* <images.GridTool color={palette.white} /> */}
+                            또는
+                            {/* <images.GridReport color={palette.white} /> */}
+                            텍스트 내용
                           </span>
 
                           <div className="text">
@@ -1538,8 +1566,10 @@ const PageToolListSaas = () => {
                         // {...(!accessableExpert && { Ready: true })}
                       >
                         <span>
-                          <images.LightningChargeFill color={palette.gray700} />
-                          Expert
+                          {/* <images.LightningChargeFill color={palette.gray700} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.gray700} /> */}
+                          텍스트 내용
                         </span>
                         <p>
                           <img src={images.ImgExplore01} alt="" />
@@ -1556,8 +1586,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            <images.LightningChargeFill color={palette.white} />
-                            Expert
+                            {/* <images.LightningChargeFill color={palette.white} /> */}
+                            또는
+                            {/* <images.GridReport color={palette.white} /> */}
+                            텍스트 내용
                           </span>
 
                           <div className="text">
@@ -1581,8 +1613,10 @@ const PageToolListSaas = () => {
                         // {...(!accessableExpert && { Ready: true })}
                       >
                         <span>
-                          <images.LightningChargeFill color={palette.gray700} />
-                          Expert
+                          {/* <images.LightningChargeFill color={palette.gray700} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.gray700} /> */}
+                          텍스트 내용
                         </span>
                         <p>
                           <img src={images.ImgExplore02} alt="" />
@@ -1599,8 +1633,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            <images.LightningChargeFill color={palette.white} />
-                            Expert
+                            {/* <images.LightningChargeFill color={palette.white} /> */}
+                            또는
+                            {/* <images.GridReport color={palette.white} /> */}
+                            텍스트 내용
                           </span>
 
                           <div className="text">
@@ -1623,8 +1659,10 @@ const PageToolListSaas = () => {
                         // {...(!accessableExpert && { Ready: true })}
                       >
                         <span>
-                          <images.LightningChargeFill color={palette.gray700} />
-                          Expert
+                          {/* <images.LightningChargeFill color={palette.gray700} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.gray700} /> */}
+                          텍스트 내용
                         </span>
                         <p>
                           <img src={images.ImgExplore03} alt="" />
@@ -1641,8 +1679,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            <images.LightningChargeFill color={palette.white} />
-                            Expert
+                            {/* <images.LightningChargeFill color={palette.white} /> */}
+                            또는
+                            {/* <images.GridReport color={palette.white} /> */}
+                            텍스트 내용
                           </span>
 
                           <div className="text">
@@ -1665,8 +1705,10 @@ const PageToolListSaas = () => {
                         // {...(!accessableExpert && { Ready: true })}
                       >
                         <span>
-                          <images.LightningChargeFill color={palette.gray700} />
-                          Expert
+                          {/* <images.LightningChargeFill color={palette.gray700} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.gray700} /> */}
+                          텍스트 내용
                         </span>
                         <p>
                           <img src={images.ImgExplore04} alt="" />
@@ -1683,8 +1725,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            <images.LightningChargeFill color={palette.white} />
-                            Expert
+                            {/* <images.LightningChargeFill color={palette.white} /> */}
+                            또는
+                            {/* <images.GridReport color={palette.white} /> */}
+                            텍스트 내용
                           </span>
 
                           <div className="text">
@@ -1701,8 +1745,10 @@ const PageToolListSaas = () => {
                       </ExploreCard>,
                       <ExploreCard Report key="report-1">
                         <span>
-                          <images.GridReport color={palette.gray700} />
-                          Report
+                          {/* <images.GridReport color={palette.gray700} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.gray700} /> */}
+                          텍스트 내용
                         </span>
                         <p>
                           <img src={images.ImgExplore14} alt="" />
@@ -1719,8 +1765,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            <images.GridReport color={palette.white} />
-                            Report
+                            {/* <images.GridReport color={palette.white} /> */}
+                            또는
+                            {/* <images.GridReport color={palette.white} /> */}
+                            텍스트 내용
                           </span>
 
                           <div className="text">
@@ -1742,8 +1790,10 @@ const PageToolListSaas = () => {
                         style={{ cursor: "default" }}
                       >
                         <span>
-                          <images.LightningChargeFill color={palette.gray700} />
-                          Report
+                          {/* <images.LightningChargeFill color={palette.gray700} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.gray700} /> */}
+                          텍스트 내용
                         </span>
                         <p>
                           <img src={images.ImgExploreNoData} alt="" />
@@ -1856,10 +1906,12 @@ const PageToolListSaas = () => {
 
                   // !Edu 툴 추가
                   <>
-                    <ExploreCard AiPersona key="analysis-1">
+                    <ExploreCard AiPersona anything key="analysis-1">
                       <span>
-                        <images.GridCircle color={palette.gray700} />
-                        Interveiw
+                        {/* <images.GridCircle color={palette.gray700} /> */}
+                        또는
+                        {/* <images.GridReport color={palette.gray700} /> */}
+                        텍스트 내용
                       </span>
                       <p>
                         <img src={images.ImgExplore12} alt="" />
@@ -1876,8 +1928,10 @@ const PageToolListSaas = () => {
                         }}
                       >
                         <span>
-                          <images.GridCircle color={palette.white} />
-                          Interveiw
+                          {/* <images.GridCircle color={palette.white} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.white} /> */}
+                          텍스트 내용
                         </span>
 
                         <div className="text">
@@ -1893,10 +1947,12 @@ const PageToolListSaas = () => {
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard AiPersona key="analysis-2">
+                    <ExploreCard AiPersona anything key="analysis-2">
                       <span>
-                        <images.GridCircle color={palette.gray700} />
-                        Interveiw
+                        {/* <images.GridCircle color={palette.gray700} /> */}
+                        또는
+                        {/* <images.GridReport color={palette.gray700} /> */}
+                        텍스트 내용
                       </span>
                       <p>
                         <img src={images.ImgExplore13} alt="" />
@@ -1913,8 +1969,10 @@ const PageToolListSaas = () => {
                         }}
                       >
                         <span>
-                          <images.GridCircle color={palette.white} />
-                          Interveiw
+                          {/* <images.GridCircle color={palette.white} /> */}
+                          또는
+                          {/* <images.GridReport color={palette.white} /> */}
+                          텍스트 내용
                         </span>
 
                         <div className="text">
@@ -1930,13 +1988,13 @@ const PageToolListSaas = () => {
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report key="report-1">
+                    <ExploreCard Report anything key="report-1">
                       <span>
-                        <images.GridReport color={palette.gray700} />
+                        {/* <images.GridReport color={palette.gray700} /> */}
                         공감하기
                       </span>
                       <p>
-                        <img src={images.ImgExplore14} alt="" />
+                        <img src={images.ImgExplore16} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
@@ -1950,7 +2008,7 @@ const PageToolListSaas = () => {
                         }}
                       >
                         <span>
-                          <images.GridReport color={palette.white} />
+                          {/* <images.GridReport color={palette.white} /> */}
                           공감하기
                         </span>
 
@@ -1967,13 +2025,13 @@ const PageToolListSaas = () => {
                       </div>
                     </ExploreCard>
 
-                    <ExploreCard Report key="report-1">
+                    <ExploreCard Report anything key="report-1">
                       <span>
-                        <images.GridReport color={palette.gray700} />
+                        {/* <images.GridReport color={palette.gray700} /> */}
                         문제정의
                       </span>
                       <p>
-                        <img src={images.ImgExplore14} alt="" />
+                        <img src={images.ImgExplore17} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
@@ -1987,7 +2045,7 @@ const PageToolListSaas = () => {
                         }}
                       >
                         <span>
-                          <images.GridReport color={palette.white} />
+                          {/* <images.GridReport color={palette.white} /> */}
                           문제정의
                         </span>
 
@@ -2003,13 +2061,13 @@ const PageToolListSaas = () => {
                       </div>
                     </ExploreCard>
 
-                    <ExploreCard Report key="report-1">
+                    <ExploreCard Report anything key="report-1">
                       <span>
-                        <images.GridReport color={palette.gray700} />
+                        {/* <images.GridReport color={palette.gray700} /> */}
                         문제정의
                       </span>
                       <p>
-                        <img src={images.ImgExplore14} alt="" />
+                        <img src={images.ImgExplore18} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
@@ -2022,33 +2080,45 @@ const PageToolListSaas = () => {
                           navigate("/NeedsKeywordsGeneration");
                         }}
                       >
-                        <span>
+                        {/* <span>
                           <images.GridReport color={palette.white} />
                           문제정의
-                        </span>
+                        </span> */}
 
-                        <div className="text">
-                          <Body1 color="white">
-                            {/* 2차시에 <br />
-                            오픈됩니다. */}
+                        <div className="text" style={{ 
+                          display: 'flex', 
+                          justifyContent: 'center', 
+                          alignItems: 'center', 
+                          height: '100%', 
+                          width: '100%'
+                        }}>
+                          <Body1 
+                            color="white" 
+                            style={{ 
+                              fontSize: '16px', 
+                              fontWeight: '500',
+                              textAlign: 'center'
+                            }}
+                          >
+                            2차시에 <br />
+                            오픈됩니다.
                             <em>준비중</em>
-                            니즈 키워드 정리
+                            {/* 니즈 키워드 정리 */}
                           </Body1>
-                          <Caption1 color="white" align="left">
+                          {/* <Caption1 color="white" align="left">
                             고객의 니즈를 키워드로 정리하는 툴
-                          </Caption1>
-                          <i />
+                          </Caption1> */}
                         </div>
                       </div>
                     </ExploreCard>
 
-                    <ExploreCard Report key="report-1">
+                    <ExploreCard Report anything key="report-1">
                       <span>
-                        <images.GridReport color={palette.gray700} />
+                        {/* <images.GridReport color={palette.gray700} /> */}
                         솔루션 탐색
                       </span>
                       <p>
-                        <img src={images.ImgExplore14} alt="" />
+                        <img src={images.ImgExplore19} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
@@ -2062,7 +2132,7 @@ const PageToolListSaas = () => {
                         }}
                       >
                         <span>
-                          <images.GridReport color={palette.white} />
+                          {/* <images.GridReport color={palette.white} /> */}
                           솔루션 탐색
                         </span>
 
@@ -2078,13 +2148,13 @@ const PageToolListSaas = () => {
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report key="report-1">
+                    <ExploreCard Report anything key="report-1">
                       <span>
-                        <images.GridReport color={palette.gray700} />
+                        {/* <images.GridReport color={palette.gray700} /> */}
                         솔루션 탐색
                       </span>
                       <p>
-                        <img src={images.ImgExplore14} alt="" />
+                        <img src={images.ImgExplore20} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
@@ -2098,7 +2168,7 @@ const PageToolListSaas = () => {
                         }}
                       >
                         <span>
-                          <images.GridReport color={palette.white} />
+                          {/* <images.GridReport color={palette.white} /> */}
                           솔루션 탐색
                         </span>
 
@@ -2114,13 +2184,13 @@ const PageToolListSaas = () => {
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report key="report-1">
+                    <ExploreCard Report anything key="report-1">
                       <span>
-                        <images.GridReport color={palette.gray700} />
+                        {/* <images.GridReport color={palette.gray700} /> */}
                         솔루션 탐색
                       </span>
                       <p>
-                        <img src={images.ImgExplore14} alt="" />
+                        <img src={images.ImgExplore21} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
@@ -2134,7 +2204,7 @@ const PageToolListSaas = () => {
                         }}
                       >
                         <span>
-                          <images.GridReport color={palette.white} />
+                          {/* <images.GridReport color={palette.white} /> */}
                           솔루션 탐색
                         </span>
 
@@ -2150,13 +2220,13 @@ const PageToolListSaas = () => {
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report key="report-1">
+                    <ExploreCard Report anything key="report-1">
                       <span>
-                        <images.GridReport color={palette.gray700} />
+                        {/* <images.GridReport color={palette.gray700} /> */}
                         비즈니스 구체화
                       </span>
                       <p>
-                        <img src={images.ImgExplore14} alt="" />
+                        <img src={images.ImgExplore22} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
@@ -2170,13 +2240,13 @@ const PageToolListSaas = () => {
                         }}
                       >
                         <span>
-                          <images.GridReport color={palette.white} />
+                          {/* <images.GridReport color={palette.white} /> */}
                           비즈니스 구체화
                         </span>
 
                         <div className="text">
                           <Body1 color="white">
-                            <em>준비중</em>
+                            <em>준비중</em>컨셉 정의
                           </Body1>
                           <Caption1 color="white" align="left">
                             컨셉 정의를 통해 비즈니스 아이디어를 정의하고
@@ -2186,13 +2256,13 @@ const PageToolListSaas = () => {
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report key="report-1">
+                    <ExploreCard Report anything key="report-1">
                       <span>
-                        <images.GridReport color={palette.gray700} />
+                        {/* <images.GridReport color={palette.gray700} /> */}
                         비즈니스 구체화
                       </span>
                       <p>
-                        <img src={images.ImgExplore14} alt="" />
+                        <img src={images.ImgExplore23} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
@@ -2206,7 +2276,7 @@ const PageToolListSaas = () => {
                         }}
                       >
                         <span>
-                          <images.GridReport color={palette.white} />
+                          {/* <images.GridReport color={palette.white} /> */}
                           비즈니스 구체화
                         </span>
 
@@ -2222,13 +2292,13 @@ const PageToolListSaas = () => {
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report key="report-1">
+                    <ExploreCard Report anything key="report-1">
                       <span>
-                        <images.GridReport color={palette.gray700} />
+                        {/* <images.GridReport color={palette.gray700} /> */}
                         비즈니스 구체화
                       </span>
                       <p>
-                        <img src={images.ImgExplore14} alt="" />
+                        <img src={images.ImgExplore24} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
@@ -2242,7 +2312,7 @@ const PageToolListSaas = () => {
                         }}
                       >
                         <span>
-                          <images.GridReport color={palette.white} />
+                          {/* <images.GridReport color={palette.white} /> */}
                           비즈니스 구체화
                         </span>
 
@@ -2258,13 +2328,13 @@ const PageToolListSaas = () => {
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report key="report-1">
+                    <ExploreCard Report anything key="report-1">
                       <span>
-                        <images.GridReport color={palette.gray700} />
+                        {/* <images.GridReport color={palette.gray700} /> */}
                         비즈니스 구체화
                       </span>
                       <p>
-                        <img src={images.ImgExplore14} alt="" />
+                        <img src={images.ImgExplore25} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
@@ -2278,7 +2348,7 @@ const PageToolListSaas = () => {
                         }}
                       >
                         <span>
-                          <images.GridReport color={palette.white} />
+                          {/* <images.GridReport color={palette.white} /> */}
                           비즈니스 구체화
                         </span>
 

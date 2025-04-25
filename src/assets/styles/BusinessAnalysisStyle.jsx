@@ -4333,6 +4333,16 @@ export const ExploreCard = styled.div`
       }
     `}
 
+      ${(props) =>
+    props.anything &&
+    css`
+      .overlay {
+        > span {
+          background: #226FFF;
+        }
+      }
+    `}
+
   ${(props) =>
     props.Ready &&
     css`

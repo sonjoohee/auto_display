@@ -95,6 +95,10 @@ import ParetoCurveGraph from "../../components/Charts/ParetoCurveGraph";
 import BusinessModelPopup from "../../components/Charts/BusinessModelPopup";
 import WaitLongLodingBar from "../../components/Charts/WaitLongLodingBar";
 import BusinessModelGraph from "../../components/Charts/BusinessModelGraph";
+import FavoritePersonaStatus from "../../components/Charts/FavoritePersonaStatus";
+import MyPersonaTag from "../../components/Charts/MyPersonaTag";
+import MacroSegTag from "../../components/Charts/MacroSegTag";
+import StakeHolderTag from "../../components/Charts/StakeHolderTag";
 const PageStyleGuide = () => {
   const [activeSection, setActiveSection] = useState("");
   const [isChecked, setIsChecked] = useState(false);
@@ -244,7 +248,11 @@ const PageStyleGuide = () => {
           <BusinessModelPopup isOpen={true} />
           <WaitLongLodingBar />
           <BusinessModelGraph />
+          <FavoritePersonaStatus />
+          <MyPersonaTag />
         </FlexContainer>
+        <MacroSegTag />
+        <StakeHolderTag />
       </ChartComponentsWrap>
 
       <ContentsWrap>

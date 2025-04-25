@@ -308,6 +308,16 @@ import ImgExplore12 from "../images/img-explore12.png";
 import ImgExplore13 from "../images/img-explore13.png";
 import ImgExplore14 from "../images/img-explore14.png";
 import ImgExplore15 from "../images/img-explore15.png";
+import ImgExplore16 from "../images/img-explore16.png";
+import ImgExplore17 from "../images/img-explore17.png";
+import ImgExplore18 from "../images/img-explore18.png";
+import ImgExplore19 from "../images/img-explore19.png";
+import ImgExplore20 from "../images/img-explore20.png";
+import ImgExplore21 from "../images/img-explore21.png";
+import ImgExplore22 from "../images/img-explore22.png";
+import ImgExplore23 from "../images/img-explore23.png";
+import ImgExplore24 from "../images/img-explore24.png";
+import ImgExplore25 from "../images/img-explore25.png";
 
 import ImgExploreNoData from "../images/img-explore-nodata.png";
 
@@ -671,6 +681,16 @@ const images = {
   ImgExplore13,
   ImgExplore14,
   ImgExplore15,
+  ImgExplore16,
+  ImgExplore17,
+  ImgExplore18,
+  ImgExplore19,
+  ImgExplore20,
+  ImgExplore21,
+  ImgExplore22,
+  ImgExplore23,
+  ImgExplore24,
+  ImgExplore25,
   ImgExploreNoData,
 
   LightningChargeFill,
