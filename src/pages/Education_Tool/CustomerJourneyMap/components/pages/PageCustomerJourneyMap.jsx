@@ -82,14 +82,13 @@ const PageCustomerJourneyMap = () => {
     customerJourneyMapMomentAnalysis,
     setCustomerJourneyMapMomentAnalysis,
   ] = useAtom(CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS);
-  const [
-    customerJourneyMapSelectedDirection,
-    ,
-  ] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION);
+  const [customerJourneyMapSelectedDirection, ,] = useAtom(
+    CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION
+  );
   const [customerJourneyMapReport, setCustomerJourneyMapReport] = useAtom(
     CUSTOMER_JOURNEY_MAP_REPORT
   );
-  const [customerJourneyMapSelectedDirectionIndex, ] = useAtom(
+  const [customerJourneyMapSelectedDirectionIndex] = useAtom(
     CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX
   );
 
@@ -120,7 +119,10 @@ const PageCustomerJourneyMap = () => {
     window.scrollTo(0, 0);
   }, []);
 
-
+  console.log(
+    "customerJourneyMapMomentAnalysis",
+    customerJourneyMapMomentAnalysis
+  );
   useEffect(() => {
     const interviewLoading = async () => {
       if (toolLoading) {
@@ -196,6 +198,8 @@ const PageCustomerJourneyMap = () => {
     });
   };
 
+  console.log("selectedMomentData", selectedMomentData);
+  console.log("selectedMoment", selectedMoment);
 
   const business = {
     business: businessDescription,
@@ -217,71 +221,73 @@ const PageCustomerJourneyMap = () => {
     handleNextStep(1);
     setToolSteps(1);
 
-
     try {
-    // 선택된 페르소나에서 필요한 필드만 추출
-    const selectedCustomer = {
-      personaName: selectedPersonas?.personaName || "",
-      personaCharacteristics: selectedPersonas?.personaCharacteristics || "",
-      age: selectedPersonas?.age || "",
-      gender: selectedPersonas?.gender || "",
-      job: selectedPersonas?.job || "",
-      keywords: selectedPersonas?.keywords || [],
-      imageKey: selectedPersonas?.imageKey || "",
-    };
+      // 선택된 페르소나에서 필요한 필드만 추출
+      const selectedCustomer = {
+        personaName: selectedPersonas?.personaName || "",
+        personaCharacteristics: selectedPersonas?.personaCharacteristics || "",
+        age: selectedPersonas?.age || "",
+        gender: selectedPersonas?.gender || "",
+        job: selectedPersonas?.job || "",
+        keywords: selectedPersonas?.keywords || [],
+        imageKey: selectedPersonas?.imageKey || "",
+        userExperience: selectedPersonas?.userExperience || "",
+        consumptionPattern: selectedPersonas?.consumptionPattern || "",
+        interests: selectedPersonas?.interests || "",
+        lifestyle: selectedPersonas?.lifestyle || "",
+      };
 
-    const data = {
-      projectId: project._id,
-      type: "ix_customer_journey_map_direction_education",
-      business: business,
-      persona: selectedCustomer,
-    };
+      const data = {
+        projectId: project._id,
+        type: "ix_customer_journey_map_direction_education",
+        business: business,
+        persona: selectedCustomer,
+      };
 
-    setCustomerJourneyMapSelectedPersona(selectedCustomer);
+      setCustomerJourneyMapSelectedPersona(selectedCustomer);
 
-    let response = await EducationToolsRequest(data, isLoggedIn);
+      let response = await EducationToolsRequest(data, isLoggedIn);
 
-    const maxAttempts = 10;
-    let attempts = 0;
+      const maxAttempts = 10;
+      let attempts = 0;
 
-    while (
-      attempts < maxAttempts &&
-      (!response ||
-        !response?.response?.customer_journey_map_direction_education ||
-        !response?.response?.customer_journey_map_direction_education
-          ?.time_based ||
-        !response?.response?.customer_journey_map_direction_education
-          ?.context_based ||
-        !response?.response?.customer_journey_map_direction_education
-          ?.goal_based)
-    ) {
-      response = await EducationToolsRequest(data, isLoggedIn);
-      attempts++;
-    }
-    if (attempts >= maxAttempts) {
-      setShowPopupError(true);
-      return;
-    }
+      while (
+        attempts < maxAttempts &&
+        (!response ||
+          !response?.response?.customer_journey_map_direction_education ||
+          !response?.response?.customer_journey_map_direction_education
+            ?.time_based ||
+          !response?.response?.customer_journey_map_direction_education
+            ?.context_based ||
+          !response?.response?.customer_journey_map_direction_education
+            ?.goal_based)
+      ) {
+        response = await EducationToolsRequest(data, isLoggedIn);
+        attempts++;
+      }
+      if (attempts >= maxAttempts) {
+        setShowPopupError(true);
+        return;
+      }
 
-    // 데이터 변환 및 저장
-    const transformedData = Object.entries(
-      response.response.customer_journey_map_direction_education
-    ).reduce(
-      (acc, [type, items]) => [
-        ...acc,
-        ...items.map((item) => ({
-          name: item.title,
-          description: item.description,
-          type: type,
-        })),
-      ],
-      []
-    );
+      // 데이터 변환 및 저장
+      const transformedData = Object.entries(
+        response.response.customer_journey_map_direction_education
+      ).reduce(
+        (acc, [type, items]) => [
+          ...acc,
+          ...items.map((item) => ({
+            name: item.title,
+            description: item.description,
+            type: type,
+          })),
+        ],
+        []
+      );
 
-    // 상태 업데이트
-    setCustomerJourneyMapMomentAnalysis(transformedData);
+      // 상태 업데이트
+      setCustomerJourneyMapMomentAnalysis(transformedData);
 
-   
       const responseToolId = await createToolOnServer(
         {
           projectId: project._id,
@@ -303,8 +309,7 @@ const PageCustomerJourneyMap = () => {
 
       setToolSteps(2);
       setIsLoading(false);
-    
-    }catch (error) {
+    } catch (error) {
       setShowPopupError(true);
       if (error.response) {
         switch (error.response.status) {
@@ -340,7 +345,6 @@ const PageCustomerJourneyMap = () => {
       setInputValue("");
       setCustomItemCount((prev) => prev + 1);
     }
-    setShowCustomForm(false);
   };
 
   const handleReportRequest = async () => {
@@ -475,7 +479,7 @@ const PageCustomerJourneyMap = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
-
+  console.log("selectedPersonas", selectedPersonas);
   return (
     <>
       <DropzoneStyles />
@@ -560,81 +564,139 @@ const PageCustomerJourneyMap = () => {
                                   {selectedPersonas
                                     .slice(0, 3)
                                     .map((persona, index) => (
-                                      <Persona key={index} size="Small" Round>
-                                        <img
-                                          src={
-                                            personaImages[persona.imageKey] ||
-                                            (persona.gender === "남성"
-                                              ? personaImages.persona_m_20_01 // 남성 기본 이미지
-                                              : personaImages.persona_f_20_01) // 여성 기본 이미지
-                                          }
-                                          alt={persona.persona}
-                                        />
-                                      </Persona>
+                                      <div
+                                        style={{
+                                          display: "flex",
+                                          flexDirection: "row",
+                                          alignItems: "center",
+                                          gap: "10px",
+                                        }}
+                                      >
+                                        <Persona key={index} size="Small" Round>
+                                          <img
+                                            src={
+                                              personaImages[persona.imageKey] ||
+                                              (persona.gender === "남성"
+                                                ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                                : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                            }
+                                            alt={persona.personaName}
+                                          />
+                                        </Persona>
+                                        {/* <Body1 color="gray800">
+                                          {persona.personaName}
+                                        </Body1>
+                                        <PersonaInfo>
+                                          <span>{persona.gender}</span>
+                                          <span>
+                                            {persona.age.includes("세")
+                                              ? persona.age
+                                              : `${persona.age}세`}
+                                          </span>
+                                          <span>{persona.job}</span>
+                                        </PersonaInfo> */}
+                                      </div>
                                     ))}
                                 </>
                               ) : (
-                                <Persona size="Small" Round>
-                                  <img
-                                    src={
-                                      personaImages[
-                                        selectedPersonas.imageKey
-                                      ] ||
-                                      (selectedPersonas.gender === "남성"
-                                        ? personaImages.persona_m_20_01 // 남성 기본 이미지
-                                        : personaImages.persona_f_20_01) // 여성 기본 이미지
-                                    }
-                                    alt={selectedPersonas.persona}
-                                  />
-                                </Persona>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: "10px",
+                                  }}
+                                >
+                                  <Persona size="Small" Round>
+                                    <img
+                                      src={
+                                        personaImages[
+                                          selectedPersonas.imageKey
+                                        ] ||
+                                        (selectedPersonas.gender === "남성"
+                                          ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                          : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                      }
+                                      alt={selectedPersonas.personaName}
+                                    />
+                                  </Persona>
+                                  <Body1 color="gray800">
+                                    {selectedPersonas.personaName}
+                                  </Body1>
+                                  <PersonaInfo>
+                                    <span>{selectedPersonas.gender}</span>
+                                    <span>
+                                      {selectedPersonas.age.includes("세")
+                                        ? selectedPersonas.age
+                                        : `${selectedPersonas.age}세`}
+                                    </span>
+                                    <span>{selectedPersonas.job}</span>
+                                  </PersonaInfo>
+                                </div>
                               )}
                             </PersonaGroup>
                           ) : (
                             <Body2 color="gray300">
-                              아래 리스트에서 페르소나를 선택해주세요 (1명 선택가능) 
+                              아래 리스트에서 페르소나를 선택해주세요 (1명
+                              선택가능)
                             </Body2>
                           )}
                         </li>
                       </ListBoxGroup>
                     </div>
 
-                    <TabContent5Item style={{marginTop: "20px"}}>
-
-                    <div className="title">
-                          <Body1 color="gray800">
-                          고객 여정  분석을 진행할 페르소나를 선택해주세요 (AI 페르소나 Favorite에서 리스트 설정 가능) 
-                          </Body1>
-                        </div>
-                    {personaListSaas.filter(item => item.favorite === true).length >= 20 ? (
-                      <MoleculePersonaSelectCard
-                        filteredPersonaList={personaListSaas}
-                        selectedPersonas={selectedPersonas}
-                        onPersonaSelect={(persona) => {
-                          setSelectedPersonas(persona);
-                          // 필요한 경우 여기서 추가 로직 수행
-                        }}
-                        disabled={toolSteps >= 1}
-                      />
-                    ) : (
-                      <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
-                      <img src={images.PeopleStarFillPrimary} alt="" />
-                      <Body2 color="gray500" align="center !important">
-                        즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실
-                        수 있습니다. {personaListSaas.filter(item => item.favorite === true).length}
-                      </Body2>
-                    </BoxWrap>
-                    )}
-                      </TabContent5Item>
-
+                    <TabContent5Item style={{ marginTop: "20px" }}>
+                      <div className="title">
+                        <Body1 color="gray800">
+                          고객 여정 분석을 진행할 페르소나를 선택해주세요 (AI
+                          페르소나 Favorite에서 리스트 설정 가능)
+                        </Body1>
+                      </div>
+                      {personaListSaas.filter((item) => item.favorite === true)
+                        .length >= 20 ? (
+                        <MoleculePersonaSelectCard
+                          filteredPersonaList={personaListSaas}
+                          selectedPersonas={selectedPersonas}
+                          onPersonaSelect={(persona) => {
+                            setSelectedPersonas(persona);
+                            // 필요한 경우 여기서 추가 로직 수행
+                          }}
+                          disabled={toolSteps >= 1}
+                        />
+                      ) : (
+                        <BoxWrap
+                          Hover
+                          NoData
+                          Border
+                          onClick={() => navigate("/AiPersona")}
+                        >
+                          <img src={images.PeopleStarFillPrimary} alt="" />
+                          <Body2 color="gray500" align="center !important">
+                            즐겨찾기를 하시면 관심 있는 페르소나를 해당
+                            페이지에서 확인하실 수 있습니다.{" "}
+                            {
+                              personaListSaas.filter(
+                                (item) => item.favorite === true
+                              ).length
+                            }
+                          </Body2>
+                        </BoxWrap>
+                      )}
+                    </TabContent5Item>
                   </div>
-                
+
                   <Button
                     Other
                     Primary
                     Fill
                     Round
                     onClick={handleSubmitPersona}
-                    disabled={toolSteps >= 1 || getSelectedCount() === 0 || personaListSaas.filter(item => item.favorite === true).length <20}
+                    disabled={
+                      toolSteps >= 1 ||
+                      getSelectedCount() === 0 ||
+                      personaListSaas.filter((item) => item.favorite === true)
+                        .length < 20
+                    }
                   >
                     다음
                   </Button>
@@ -654,7 +716,7 @@ const PageCustomerJourneyMap = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="인상적인 터치포인트를 찾고 있어요!" />
+                    <AtomPersonaLoader message="로딩중..." />
                   </div>
                 ) : (
                   <>
@@ -692,22 +754,42 @@ const PageCustomerJourneyMap = () => {
                                         />
                                       </Persona>
                                     ))}
-                                  
                                 </>
                               ) : (
-                                <Persona size="Small" Round>
-                                  <img
-                                    src={
-                                      personaImages[
-                                        selectedPersonas.imageKey
-                                      ] ||
-                                      (selectedPersonas.gender === "남성"
-                                        ? personaImages.persona_m_20_01 // 남성 기본 이미지
-                                        : personaImages.persona_f_20_01) // 여성 기본 이미지
-                                    }
-                                    alt={selectedPersonas.persona}
-                                  />
-                                </Persona>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: "10px",
+                                  }}
+                                >
+                                  <Persona size="Small" Round>
+                                    <img
+                                      src={
+                                        personaImages[
+                                          selectedPersonas.imageKey
+                                        ] ||
+                                        (selectedPersonas.gender === "남성"
+                                          ? personaImages.persona_m_20_01 // 남성 기본 이미지
+                                          : personaImages.persona_f_20_01) // 여성 기본 이미지
+                                      }
+                                      alt={selectedPersonas.personaName}
+                                    />
+                                  </Persona>
+                                  <Body1 color="gray800">
+                                    {selectedPersonas.personaName}
+                                  </Body1>
+                                  <PersonaInfo>
+                                    <span>{selectedPersonas.gender}</span>
+                                    <span>
+                                      {selectedPersonas.age.includes("세")
+                                        ? selectedPersonas.age
+                                        : `${selectedPersonas.age}세`}
+                                    </span>
+                                    <span>{selectedPersonas.job}</span>
+                                  </PersonaInfo>
+                                </div>
                               )}
                             </PersonaGroup>
                           ) : (
@@ -737,7 +819,7 @@ const PageCustomerJourneyMap = () => {
                           </Body2>
                         </li>
                       </ListBoxGroup>
-                      <TabContent5Item style={{marginTop: "20px", marginBottom: "-80px"}}>
+                      <TabContent5Item style={{ marginTop: "20px" }}>
                         <div className="title">
                           <Body1 color="gray800">
                             어떤 순간을 고객 여정으로 분석하시겠습니까?{" "}
@@ -802,7 +884,7 @@ const PageCustomerJourneyMap = () => {
                       Fill
                       Round
                       onClick={handleReportRequest}
-                      disabled={toolSteps > 2 || selectedMoment.length === 0} 
+                      disabled={toolSteps > 2 || selectedMoment.length === 0}
                     >
                       다음
                     </Button>
@@ -815,15 +897,18 @@ const PageCustomerJourneyMap = () => {
               <TabContent5 Small>
                 {isLoadingReport ? (
                   <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    minHeight: "200px",
-                    alignItems: "center"
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      minHeight: "200px",
+                      alignItems: "center",
                     }}
                   >
-                     <AtomPersonaLoader message="페르소나 중심의 여정을 분석하고 있어요 (1분 정도 걸려요)"/>
+                    <AtomPersonaLoader
+                      message={`결과보고서를 작성하고 있습니다.
+                        1분 정도 소요 될 수 있어요.`}
+                    />
                   </div>
                 ) : (
                   <>
@@ -834,23 +919,25 @@ const PageCustomerJourneyMap = () => {
                         정리해드립니다
                       </Body3>
                     </BgBoxItem>
-
                     <InsightAnalysis>
                       <div
                         className="markdown-body"
                         style={{
                           textAlign: "left",
-                          marginTop: "20px",
                         }}
                       >
-
-
-                      <Body3 color="gray800" style={{marginBottom: "30px", fontWeight: "bold" , fontSize: "20px"}}>
-                      {selectedPersonas && customerJourneyMapMomentAnalysis[selectedMoment]
-                              ? selectedPersonas?.personaName + "의" + customerJourneyMapMomentAnalysis[selectedMoment]?.name + " 고객 여정 지도"
-                              :   ""}
-                      </Body3>
-                
+                        <Markdown>
+                          {prepareMarkdown(customerJourneyMapReport ?? "")}
+                        </Markdown>
+                      </div>
+                    </InsightAnalysis>
+                    <InsightAnalysis>
+                      <div
+                        className="markdown-body"
+                        style={{
+                          textAlign: "left",
+                        }}
+                      >
                         <Markdown>
                           {prepareMarkdown(customerJourneyMapReport ?? "")}
                         </Markdown>
@@ -1077,5 +1164,27 @@ const AddButton = styled.button`
 
   &:hover {
     background: #f8f9fa;
+  }
+`;
+
+const PersonaInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: ${palette.gray500};
+    font-size: 14px;
+
+    + span:before {
+      width: 1px;
+      height: 10px;
+      display: block;
+      background: ${palette.gray500};
+      content: "";
+    }
   }
 `;
