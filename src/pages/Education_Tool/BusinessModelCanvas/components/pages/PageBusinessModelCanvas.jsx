@@ -655,8 +655,8 @@ const PageBusinessModelCanvas = () => {
       );
 
 
-      setToolSteps(3);
-      setCompletedSteps([...completedSteps, 3]);
+      // setToolSteps(3);
+      // setCompletedSteps([...completedSteps, 3]);
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
@@ -680,12 +680,6 @@ const PageBusinessModelCanvas = () => {
   };
 
  
-
-  const handleEnterInterviewRoom = () => {
-    setSelectedOption(null);
-    setSelectedOptionIndex(null);
-    setShowToast(true);
-  };
 
   const handleContactInputChange = (field, value) => {
     setContactForm((prev) => ({
