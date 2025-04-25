@@ -490,7 +490,9 @@ const PageToolListSaas = () => {
   const [, setIssueGenerationSelectedPurpose] = useAtom(
     ISSUE_GENERATION_SELECTED_PURPOSE
   );
-  const [, setIssueGenerationProblemList] = useAtom(ISSUE_GENERATION_PROBLEM_LIST);
+  const [, setIssueGenerationProblemList] = useAtom(
+    ISSUE_GENERATION_PROBLEM_LIST
+  );
   const [, setIssueGenerationProblemListTitle] = useAtom(
     ISSUE_GENERATION_PROBLEM_LIST_TITLE
   );
@@ -1957,14 +1959,15 @@ const PageToolListSaas = () => {
                             <em>준비중</em>고객 여정 지도
                           </Body1>
                           <Caption1 color="white" align="left">
-                          다양한 유형의 고객이 언제, 어디서, 어떤 생각과 불편을 겪는지 흐름을 따라 정리해요 
+                            다양한 유형의 고객이 언제, 어디서, 어떤 생각과
+                            불편을 겪는지 흐름을 따라 정리해요
                           </Caption1>
                           <i />
                         </div>
                       </div>
                     </ExploreCard>
 
-                    <ExploreCard Report key="report-1">
+                    <ExploreCard ReadyEducation Report key="report-1">
                       <span>
                         <images.GridReport color={palette.gray700} />
                         Report
@@ -2000,7 +2003,7 @@ const PageToolListSaas = () => {
                       </div>
                     </ExploreCard>
 
-                    <ExploreCard Report key="report-1">
+                    <ExploreCard ReadyEducation Report key="report-1">
                       <span>
                         <images.GridReport color={palette.gray700} />
                         Report
@@ -2019,24 +2022,27 @@ const PageToolListSaas = () => {
                           navigate("/NeedsKeywordsGeneration");
                         }}
                       >
-                        <span>
+                        {/* <span>
                           <images.GridReport color={palette.white} />
                           Report
-                        </span>
+                        </span> */}
 
                         <div className="text">
                           <Body1 color="white">
-                            <em>준비중</em>니즈 키워드 정리
+                            2차시에 <br />
+                            오픈됩니다.
+                            {/* <em>준비중</em> */}
+                            {/* 니즈 키워드 정리 */}
                           </Body1>
-                          <Caption1 color="white" align="left">
+                          {/* <Caption1 color="white" align="left">
                             고객의 니즈를 키워드로 정리하는 툴
-                          </Caption1>
+                          </Caption1> */}
                           <i />
                         </div>
                       </div>
                     </ExploreCard>
 
-                    <ExploreCard Report key="report-1">
+                    <ExploreCard ReadyEducation Report key="report-1">
                       <span>
                         <images.GridReport color={palette.gray700} />
                         Report
@@ -2065,13 +2071,14 @@ const PageToolListSaas = () => {
                             <em>준비중</em>아이디어 발상
                           </Body1>
                           <Caption1 color="white" align="left">
-                          고객의 불편과 니즈를 기반으로 다양한 AI 페르소나와 함께 아이디어를 발산해 보세요
+                            고객의 불편과 니즈를 기반으로 다양한 AI 페르소나와
+                            함께 아이디어를 발산해 보세요
                           </Caption1>
                           <i />
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report key="report-1">
+                    <ExploreCard ReadyEducation Report key="report-1">
                       <span>
                         <images.GridReport color={palette.gray700} />
                         Report
@@ -2100,7 +2107,8 @@ const PageToolListSaas = () => {
                             <em>준비중</em>카노 모델
                           </Body1>
                           <Caption1 color="white" align="left">
-                          도출된 아이디어가 정말 매력적인지, 꼭 필요한지 고객 입장에서 하나하나 반응을 확인하세요 
+                            도출된 아이디어가 정말 매력적인지, 꼭 필요한지 고객
+                            입장에서 하나하나 반응을 확인하세요
                           </Caption1>
                           <i />
                         </div>
@@ -2135,7 +2143,8 @@ const PageToolListSaas = () => {
                             <em>준비중</em>아이디어 평가
                           </Body1>
                           <Caption1 color="white" align="left">
-                          고객이 가장 원하고 효과가 큰 아이디어를 선별하여 실행 순서를 정하세요 
+                            고객이 가장 원하고 효과가 큰 아이디어를 선별하여
+                            실행 순서를 정하세요
                           </Caption1>
                           <i />
                         </div>
@@ -2206,7 +2215,8 @@ const PageToolListSaas = () => {
                             <em>준비중</em>NPS
                           </Body1>
                           <Caption1 color="white" align="left">
-                          완성된 아이디어나 제품 개념을 보여주고, 고객이 얼마나 추천하고 싶은지 확인하세요 
+                            완성된 아이디어나 제품 개념을 보여주고, 고객이
+                            얼마나 추천하고 싶은지 확인하세요
                           </Caption1>
                           <i />
                         </div>
@@ -2241,7 +2251,8 @@ const PageToolListSaas = () => {
                             <em>준비중</em>비즈니스 모델 캔버스
                           </Body1>
                           <Caption1 color="white" align="left">
-                          누구에게, 어떤 가치를, 어떤 방식으로 전달할지를 정리해 실제 사업 모델을 그려보세요 
+                            누구에게, 어떤 가치를, 어떤 방식으로 전달할지를
+                            정리해 실제 사업 모델을 그려보세요
                           </Caption1>
                           <i />
                         </div>
