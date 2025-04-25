@@ -118,7 +118,6 @@ const PageCustomerJourneyMap = () => {
     window.scrollTo(0, 0);
   }, []);
 
-
   useEffect(() => {
     const interviewLoading = async () => {
       const projectAnalysis =
@@ -211,8 +210,6 @@ const PageCustomerJourneyMap = () => {
     });
   };
 
-
-
   const business = {
     business: businessDescription,
     // target: project?.projectAnalysis?.target_customer || "",
@@ -220,7 +217,6 @@ const PageCustomerJourneyMap = () => {
     sector: project?.industryType || "",
     country: project?.targetCountry || "",
   };
-
 
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -543,7 +539,7 @@ const PageCustomerJourneyMap = () => {
                 <span>03</span>
                 <div className="text">
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    유저저니맵 분석
+                    고객 여정 지도 분석
                   </Body1>
                   {/* <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     Generate Business Plan​
@@ -932,18 +928,6 @@ const PageCustomerJourneyMap = () => {
                         정리해드립니다
                       </Body3>
                     </BgBoxItem>
-                    <InsightAnalysis>
-                      <div
-                        className="markdown-body"
-                        style={{
-                          textAlign: "left",
-                        }}
-                      >
-                        <Markdown>
-                          {prepareMarkdown(customerJourneyMapReport ?? "")}
-                        </Markdown>
-                      </div>
-                    </InsightAnalysis>
                     <InsightAnalysis>
                       <div
                         className="markdown-body"

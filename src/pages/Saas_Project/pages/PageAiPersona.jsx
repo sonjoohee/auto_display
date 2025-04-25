@@ -183,12 +183,12 @@ const PageAiPersona = () => {
       content += `나이: ${persona?.age || ""}\n`;
       content += `성별: ${persona?.gender || ""}\n`;
       content += `직업: ${persona?.job || ""}\n`;
-      
+
       // 키워드가 있는 경우
       if (persona?.keywords && persona.keywords.length > 0) {
         content += `키워드: ${persona.keywords.join(", ")}\n`;
       }
-      
+
       // 프로필이 생성된 페르소나인 경우 추가 정보 포함
       if (persona?.status === "complete" || persona?.consumptionPattern) {
         if (persona?.lifestyle) {
@@ -213,7 +213,7 @@ const PageAiPersona = () => {
           content += `거주지: ${persona.residence}\n`;
         }
       }
-      
+
       // 페르소나 구분선 추가
       content += "\n----------------------------------------------\n\n";
     });

@@ -18,6 +18,10 @@ import {
 } from "../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../assets/styles/Images";
 
+import MacroSegTag from "../../../components/Charts/MacroSegTag.jsx";
+import StakeHolderTag from "../../../components/Charts/StakeHolderTag.jsx";
+import MyPersonaTag from "../../../components/Charts/MyPersonaTag.jsx";
+
 const MoleculePersonaSelectCard = ({
   interviewType,
   filteredPersonaList,
@@ -35,7 +39,6 @@ const MoleculePersonaSelectCard = ({
     setActiveTabState(tabName);
   };
 
-
   // const handlePersonaSelect = (persona) => {
   //   // 현재 선택된 페르소나와 동일한 페르소나를 클릭한 경우 선택 해제
   //   if (disabled) return;
@@ -47,16 +50,15 @@ const MoleculePersonaSelectCard = ({
   //   }
   // };
 
-
   const handlePersonaSelect = (persona) => {
     if (disabled) return;
-  
+
     if (interviewType === "multiple") {
       // 다중 선택 모드
       const currentSelected = Array.isArray(selectedPersonas)
         ? selectedPersonas
         : [];
-  
+
       if (currentSelected.some((p) => p._id === persona._id)) {
         // 이미 선택된 페르소나인 경우 선택 해제
         onPersonaSelect(currentSelected.filter((p) => p._id !== persona._id));
@@ -80,13 +82,11 @@ const MoleculePersonaSelectCard = ({
 
   return (
     <CardGroupWrap>
-      <TabWrapType3 Border>
-   
-      </TabWrapType3>
+      <TabWrapType3 Border></TabWrapType3>
       {filteredPersonaList &&
         filteredPersonaList
           // 활성 탭에 따라 페르소나 필터링
-        .filter((persona) => persona.favorite === true)
+          .filter((persona) => persona.favorite === true)
           .map((persona) => {
             const isSelected = Array.isArray(selectedPersonas)
               ? selectedPersonas.some((p) => p._id === persona._id)
@@ -120,8 +120,19 @@ const MoleculePersonaSelectCard = ({
                     <ListTitle>
                       <Body1 color="gray800">
                         {persona.persona_view || persona.personaName}
-                      </Body1>{" "}
-                      <UniqueTag color={persona.type || "default"} />
+                      </Body1>
+                      {persona?.personaType === "macro_segment" && (
+                        <MacroSegTag text={persona?.type || "default"} />
+                      )}
+                      {persona?.personaType === "key_stakeholder" && (
+                        <StakeHolderTag text={persona?.type || "default"} />
+                      )}
+                      {persona?.personaType === "my_persona" && (
+                        <MyPersonaTag text={persona?.type || "default"} />
+                      )}
+                      {persona?.personaType === "unique_user" && (
+                        <UniqueTag color={persona?.type || "default"} />
+                      )}
                     </ListTitle>
                     <ListSubtitle>
                       <PersonaInfo>
@@ -154,7 +165,8 @@ const MoleculePersonaSelectCard = ({
             );
           })}{" "}
       {activeTabState === "my_favorite" &&
-        filteredPersonaList.filter((persona) => persona.favorite === true).length < 20 && (
+        filteredPersonaList.filter((persona) => persona.favorite === true)
+          .length < 20 && (
           <>
             <div style={{ height: "16px" }}></div>
             <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
