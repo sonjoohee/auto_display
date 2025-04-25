@@ -230,20 +230,34 @@ const PageProjectCreate = () => {
           files: uploadedFiles,
         };
 
-        const response = await InterviewXProjectAnalysisMultimodalRequest(
+        let response = await InterviewXProjectAnalysisMultimodalRequest(
           data,
           isLoggedIn
         );
+        let RetryCount = 0;
+        const MaxRetries = 10;
 
-        // 응답 유효성 검사 추가
-        if (
-          !response ||
+        while (RetryCount < MaxRetries && 
+          (!response ||
           !response.response ||
-          !response.response.project_analysis_multimodal
+          !response.response.project_analysis_multimodal ||
+          !response.response.project_analysis_multimodal.business_analysis ||
+          !response.response.project_analysis_multimodal.file_analysis ||
+          !response.response.project_analysis_multimodal.target_customer)
         ) {
+          response = await InterviewXProjectAnalysisMultimodalRequest(
+            data,
+            isLoggedIn
+          );  
+          RetryCount++;
+        }
+
+        if (RetryCount >= MaxRetries) {
+          setShowPopupError(true);
           return;
         }
 
+       
         // setFileNames(
         //   uploadedFiles.map((file, index) => ({
         //     id: "file_" + timeStamp + "_" + (index + 1),
@@ -394,18 +408,30 @@ const PageProjectCreate = () => {
           target_country: country,
         };
 
-        const response = await InterviewXProjectAnalysisRequest(
+        let response = await InterviewXProjectAnalysisRequest(
           datas,
           isLoggedIn
         );
 
-        if (
-          !response ||
+        let RetryCount = 0;
+        const MaxRetries = 10;
+
+        while (RetryCount < MaxRetries && 
+          (!response ||
           !response.response ||
           !response.response.project_analysis ||
           !response.response.project_analysis.business_analysis ||
-          !response.response.project_analysis.target_customer
+          !response.response.project_analysis.target_customer)
         ) {
+          response = await InterviewXProjectAnalysisRequest(
+            datas,
+            isLoggedIn
+          );  
+          RetryCount++;
+        }
+
+        if (RetryCount >= MaxRetries) {
+          setShowPopupError(true);
           return;
         }
 

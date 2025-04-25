@@ -1918,7 +1918,12 @@ const PageToolListSaas = () => {
 
                   // !Edu 툴 추가
                   <>
-                    <ExploreCard AiPersona anything key="analysis-1">
+                    <ExploreCard
+                      ReadyEducation
+                      AiPersona
+                      anything
+                      key="analysis-1"
+                    >
                       <span>
                         {/* <images.GridCircle color={palette.gray700} /> */}
                         또는
@@ -1932,7 +1937,6 @@ const PageToolListSaas = () => {
                         <em>준비중</em>
                         심층 인터뷰 룸
                       </Body1>
-
                       <div
                         className="overlay"
                         onClick={() => {
@@ -1957,6 +1961,15 @@ const PageToolListSaas = () => {
                           </Caption1>
                           <i />
                         </div>
+                      </div>{" "}
+                      <div className="overlayEducation">
+                        <div className="text">
+                          <Body1 color="white">
+                            2차시에
+                            <br />
+                            오픈 예정입니다.
+                          </Body1>
+                        </div>
                       </div>
                     </ExploreCard>
                     <ExploreCard AiPersona anything key="analysis-2">
@@ -1973,7 +1986,6 @@ const PageToolListSaas = () => {
                         <em>준비중</em>
                         그룹 인터뷰 룸
                       </Body1>
-
                       <div
                         className="overlay"
                         onClick={() => {
@@ -1998,6 +2010,15 @@ const PageToolListSaas = () => {
                           </Caption1>
                           <i />
                         </div>
+                      </div>{" "}
+                      <div className="overlayEducation">
+                        <div className="text">
+                          <Body1 color="white">
+                            2차시에
+                            <br />
+                            오픈 예정입니다.
+                          </Body1>
+                        </div>
                       </div>
                     </ExploreCard>
                     <ExploreCard Report anything key="report-1">
@@ -2012,7 +2033,6 @@ const PageToolListSaas = () => {
                         <em>준비중</em>
                         고객 여정 지도
                       </Body1>
-
                       <div
                         className="overlay"
                         onClick={() => {
@@ -2034,6 +2054,15 @@ const PageToolListSaas = () => {
                           </Caption1>
                           <i />
                         </div>
+                      </div>{" "}
+                      <div className="overlayEducation">
+                        <div className="text">
+                          <Body1 color="white">
+                            2차시에
+                            <br />
+                            오픈 예정입니다.
+                          </Body1>
+                        </div>
                       </div>
                     </ExploreCard>
 
@@ -2049,7 +2078,6 @@ const PageToolListSaas = () => {
                         <em>준비중</em>
                         핵심 이슈 도출
                       </Body1>
-
                       <div
                         className="overlay"
                         onClick={() => {
@@ -2070,10 +2098,19 @@ const PageToolListSaas = () => {
                           </Caption1>
                           <i />
                         </div>
+                      </div>{" "}
+                      <div className="overlayEducation">
+                        <div className="text">
+                          <Body1 color="white">
+                            2차시에
+                            <br />
+                            오픈 예정입니다.
+                          </Body1>
+                        </div>
                       </div>
                     </ExploreCard>
 
-                    <ExploreCard ReadyEducation Report anything key="report-1">
+                    <ExploreCard Report anything key="report-1">
                       <span>
                         {/* <images.GridReport color={palette.gray700} /> */}
                         문제정의
@@ -2128,7 +2165,6 @@ const PageToolListSaas = () => {
                         <em>준비중</em>
                         아이디어 발상
                       </Body1>
-
                       <div
                         className="overlay"
                         onClick={() => {
@@ -2150,6 +2186,15 @@ const PageToolListSaas = () => {
                           </Caption1>
                           <i />
                         </div>
+                      </div>{" "}
+                      <div className="overlayEducation">
+                        <div className="text">
+                          <Body1 color="white">
+                            2차시에
+                            <br />
+                            오픈 예정입니다.
+                          </Body1>
+                        </div>
                       </div>
                     </ExploreCard>
                     <ExploreCard Report anything key="report-1">
@@ -2164,7 +2209,6 @@ const PageToolListSaas = () => {
                         <em>준비중</em>
                         Kano Model
                       </Body1>
-
                       <div
                         className="overlay"
                         onClick={() => {
@@ -2186,6 +2230,15 @@ const PageToolListSaas = () => {
                           </Caption1>
                           <i />
                         </div>
+                      </div>{" "}
+                      <div className="overlayEducation">
+                        <div className="text">
+                          <Body1 color="white">
+                            2차시에
+                            <br />
+                            오픈 예정입니다.
+                          </Body1>
+                        </div>
                       </div>
                     </ExploreCard>
                     <ExploreCard Report anything key="report-1">
@@ -2200,7 +2253,6 @@ const PageToolListSaas = () => {
                         <em>준비중</em>
                         아이디어 평가
                       </Body1>
-
                       <div
                         className="overlay"
                         onClick={() => {
@@ -2222,6 +2274,15 @@ const PageToolListSaas = () => {
                           </Caption1>
                           <i />
                         </div>
+                      </div>{" "}
+                      <div className="overlayEducation">
+                        <div className="text">
+                          <Body1 color="white">
+                            2차시에
+                            <br />
+                            오픈 예정입니다.
+                          </Body1>
+                        </div>
                       </div>
                     </ExploreCard>
                     <ExploreCard Report anything key="report-1">
@@ -2236,7 +2297,6 @@ const PageToolListSaas = () => {
                         <em>준비중</em>
                         컨셉 정의
                       </Body1>
-
                       <div
                         className="overlay"
                         onClick={() => {
@@ -2258,6 +2318,15 @@ const PageToolListSaas = () => {
                           </Caption1>
                           <i />
                         </div>
+                      </div>{" "}
+                      <div className="overlayEducation">
+                        <div className="text">
+                          <Body1 color="white">
+                            2차시에
+                            <br />
+                            오픈 예정입니다.
+                          </Body1>
+                        </div>
                       </div>
                     </ExploreCard>
                     <ExploreCard Report anything key="report-1">
@@ -2272,7 +2341,6 @@ const PageToolListSaas = () => {
                         <em>준비중</em>
                         NPS
                       </Body1>
-
                       <div
                         className="overlay"
                         onClick={() => {
@@ -2294,6 +2362,15 @@ const PageToolListSaas = () => {
                           </Caption1>
                           <i />
                         </div>
+                      </div>{" "}
+                      <div className="overlayEducation">
+                        <div className="text">
+                          <Body1 color="white">
+                            2차시에
+                            <br />
+                            오픈 예정입니다.
+                          </Body1>
+                        </div>
                       </div>
                     </ExploreCard>
                     <ExploreCard Report anything key="report-1">
@@ -2308,7 +2385,6 @@ const PageToolListSaas = () => {
                         <em>준비중</em>
                         비즈니스 모델 캔버스
                       </Body1>
-
                       <div
                         className="overlay"
                         onClick={() => {
@@ -2330,6 +2406,15 @@ const PageToolListSaas = () => {
                           </Caption1>
                           <i />
                         </div>
+                      </div>{" "}
+                      <div className="overlayEducation">
+                        <div className="text">
+                          <Body1 color="white">
+                            2차시에
+                            <br />
+                            오픈 예정입니다.
+                          </Body1>
+                        </div>
                       </div>
                     </ExploreCard>
                     <ExploreCard Report anything key="report-1">
@@ -2344,7 +2429,6 @@ const PageToolListSaas = () => {
                         <em>준비중</em>
                         PR FAQ
                       </Body1>
-
                       <div
                         className="overlay"
                         onClick={() => {
@@ -2365,6 +2449,15 @@ const PageToolListSaas = () => {
                             기반으로 작성한 PR FAQ를 확인해 보세요
                           </Caption1>
                           <i />
+                        </div>
+                      </div>{" "}
+                      <div className="overlayEducation">
+                        <div className="text">
+                          <Body1 color="white">
+                            2차시에
+                            <br />
+                            오픈 예정입니다.
+                          </Body1>
                         </div>
                       </div>
                     </ExploreCard>

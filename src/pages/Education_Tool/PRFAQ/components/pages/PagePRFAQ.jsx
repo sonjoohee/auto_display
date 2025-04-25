@@ -177,12 +177,15 @@ const PagePRFAQ = () => {
   });
   const [selectBoxStates, setSelectBoxStates] = useState({
     customerList: false,
+    businessModelCanvas: false,
   });
   const [selectedPurposes, setSelectedPurposes] = useState({
     customerList: "",
+    businessModelCanvas: "",
   });
   const [dropUpStates, setDropUpStates] = useState({
     customerList: false,
+    businessModelCanvas: false,
   });
   const [, setContactForm] = useState({
     email: "",
@@ -212,8 +215,8 @@ const PagePRFAQ = () => {
   const [graphData, setGraphData] = useState([]);
   const [conceptDefinitionList, setConceptDefinitionList] = useState([]);
 
-  
   const customerListRef = useRef(null);
+  const businessModelCanvasRef = useRef(null);
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const project = projectSaas;
@@ -1027,7 +1030,7 @@ const PagePRFAQ = () => {
                                       handlePurposeSelect(
                                         `${item.updateDate.split(":")[0]}:${
                                           item.updateDate.split(":")[1]
-                                        } - 아이디어 선택기 
+                                        } - 컨셉 정의서
                                     `,
                                         "customerList",
                                         item
@@ -1036,7 +1039,7 @@ const PagePRFAQ = () => {
                                   >
                                     <Body2 color="gray700" align="left">
                                       {item.updateDate.split(":")[0]}:
-                                      {item.updateDate.split(":")[1]} 아이디어 선택기 
+                                      {item.updateDate.split(":")[1]} 컨셉 정의서
                                      
                                     </Body2>
                                   </SelectBoxItem>
@@ -1045,12 +1048,16 @@ const PagePRFAQ = () => {
                             </SelectBoxList>
                           )}
                         </SelectBox>
+                        <div className="title">
+                          <Body1 color="gray700">비즈니스 모델 캔버스  </Body1>
+                        </div>
+
                         <SelectBox ref={customerListRef}>
                           <SelectBoxTitle
                             onClick={() =>
                               handleSelectBoxClick(
-                                "customerList",
-                                customerListRef
+                                "businessModelCanvas",
+                                businessModelCanvasRef
                               )
                             }
                             style={{
@@ -1062,20 +1069,20 @@ const PagePRFAQ = () => {
                           >
                             <Body2
                               color={
-                                selectedPurposes.customerList
+                                selectedPurposes.businessModelCanvas
                                   ? "gray800"
                                   : "gray300"
                               }
                             >
-                              {selectedPurposes.customerList ||
-                                "컨셉 정의서를 불러 올 수 있습니다"}
+                              {selectedPurposes.businessModelCanvas ||
+                                "비즈니스 모델 캔버스를 불러 올 수 있습니다"}
                             </Body2>
                             <images.ChevronDown
                               width="24px"
                               height="24px"
                               color={palette.gray500}
                               style={{
-                                transform: selectBoxStates.customerList
+                                transform: selectBoxStates.businessModelCanvas
                                   ? "rotate(180deg)"
                                   : "rotate(0deg)",
                                 transition: "transform 0.3s ease",
@@ -1083,8 +1090,8 @@ const PagePRFAQ = () => {
                             />
                           </SelectBoxTitle>
 
-                          {selectBoxStates.customerList && (
-                            <SelectBoxList dropUp={dropUpStates.customerList}>
+                          {selectBoxStates.businessModelCanvas && (
+                            <SelectBoxList dropUp={dropUpStates.businessModelCanvas}>
                               {conceptDefinitionList.length === 0 ? (
                                 <SelectBoxItem 
                                 disabled={toolSteps >= 1 }
@@ -1104,16 +1111,16 @@ const PagePRFAQ = () => {
                                       handlePurposeSelect(
                                         `${item.updateDate.split(":")[0]}:${
                                           item.updateDate.split(":")[1]
-                                        } - 아이디어 선택기 
+                                        } - 비즈니스 모델 캔버스 
                                     `,
-                                        "customerList",
+                                        "businessModelCanvas",
                                         item
                                       );
                                     }}
                                   >
                                     <Body2 color="gray700" align="left">
                                       {item.updateDate.split(":")[0]}:
-                                      {item.updateDate.split(":")[1]} 아이디어 선택기 
+                                      {item.updateDate.split(":")[1]} 비즈니스 모델 캔버스 
                                      
                                     </Body2>
                                   </SelectBoxItem>

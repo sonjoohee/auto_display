@@ -224,9 +224,7 @@ const MoleculeBusinessModelPopup = ({
 
   return (
     <PopupOverlay>
-        {isLoading ? (
-          <AtomPersonaLoader />
-        ) : (
+
       <PopupContainer>
         <PopupHeader>
           <HeaderTitle>
@@ -240,100 +238,115 @@ const MoleculeBusinessModelPopup = ({
 
         <HeaderSpacer />
 
-      
-          <PopupContent>
-            <SectionTitle>원하는 항목을 선택하세요</SectionTitle>
-            <OptionsContainer>
-              {/* 기본 제공 옵션 */}
-              {defaultOptions[currentModel.id]?.map((option, index) => (
-                <OptionItem 
-                  key={`default-${index}`} 
-                  onClick={() => handleOptionSelect(option)}
-                >
-                  <OptionFlex>
-                    <div>
-                      <RadioButton 
-                        id={`radio-default-${index}`}
-                        name="modelOptionGroup"
-                        checked={selectedOption === option}
-                        onChange={() => handleOptionSelect(option)}
-                      />
-                    </div>
-                    <OptionText>{option}</OptionText>
-                  </OptionFlex>
-                </OptionItem>
-              ))}
-              
-              {/* 사용자 정의 옵션 */}
-              {userOptions.map((option, index) => (
-                <OptionItem key={`user-${index}`} onClick={() => handleOptionSelect(option)}>
-                  <OptionFlex>
-                    <div>
-                      <RadioButton 
-                        id={`radio-user-${index}`}
-                        name="modelOptionGroup"
-                        checked={selectedOption === option}
-                        onChange={() => handleOptionSelect(option)}
-                      />
-                    </div>
-                    <OptionText>{option}</OptionText>
-                  </OptionFlex>
-                </OptionItem>
-              ))}
-              
-              {/* 입력 필드 */}
-              {inputFields.map(id => (
-              <OptionItem key={`input-${id}`} as="div">
-                <OptionFlex>
-                  <InputField 
-                    placeholder={`${currentModel.title} 항목을 직접 입력하세요`}
-                    value={inputValues[id] || ""}
-                    onChange={(e) => handleInputChange(id, e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(id, e)}
-                    autoFocus
-                  />
-                  <CheckButton 
-                    onClick={() => handleAddUserOption(id)}
-                    disabled={isInputFieldEmpty(id)}
-                    active={!isInputFieldEmpty(id)}
+        {isLoading ? (
+         <div
+         style={{
+           width: "100%",
+           display: "flex",
+           justifyContent: "center",
+           minHeight: "200px",
+           alignItems: "center",
+           marginTop: "50px",
+         }}
+       >
+          <AtomPersonaLoader message="구성 요소 선별 중입니다 " />
+        </div>
+        ) : (
+          <>
+            <PopupContent>
+              <SectionTitle>원하는 항목을 선택하세요</SectionTitle>
+              <OptionsContainer>
+                {/* 기본 제공 옵션 */}
+                {defaultOptions[currentModel.id]?.map((option, index) => (
+                  <OptionItem 
+                    key={`default-${index}`} 
+                    onClick={() => handleOptionSelect(option)}
                   >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 12L10 17L19 8" 
-                        stroke={isInputFieldEmpty(id) ? "#E0E4EB" : "#226FFF"} 
-                        strokeWidth="2" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round"/>
-                    </svg>
-                  </CheckButton>
-                </OptionFlex>
-              </OptionItem>
-            ))}
-              
-              {!hideAddButton && (
-                <AddOptionItem onClick={handleAddInputField}>
-                  + 직접 추가하기 (최대 3개)
-                </AddOptionItem>
-              )}
-            </OptionsContainer>
-          </PopupContent>
-   
-        
-        <BottomSpacer />
-        
-        <Divider />
+                    <OptionFlex>
+                      <div>
+                        <RadioButton 
+                          id={`radio-default-${index}`}
+                          name="modelOptionGroup"
+                          checked={selectedOption === option}
+                          onChange={() => handleOptionSelect(option)}
+                        />
+                      </div>
+                      <OptionText>{option}</OptionText>
+                    </OptionFlex>
+                  </OptionItem>
+                ))}
+                
+                {/* 사용자 정의 옵션 */}
+                {userOptions.map((option, index) => (
+                  <OptionItem key={`user-${index}`} onClick={() => handleOptionSelect(option)}>
+                    <OptionFlex>
+                      <div>
+                        <RadioButton 
+                          id={`radio-user-${index}`}
+                          name="modelOptionGroup"
+                          checked={selectedOption === option}
+                          onChange={() => handleOptionSelect(option)}
+                        />
+                      </div>
+                      <OptionText>{option}</OptionText>
+                    </OptionFlex>
+                  </OptionItem>
+                ))}
+                
+                {/* 입력 필드 */}
+                {inputFields.map(id => (
+                  <OptionItem key={`input-${id}`} as="div">
+                    <OptionFlex>
+                      <InputField 
+                        placeholder={`${currentModel.title} 항목을 직접 입력하세요`}
+                        value={inputValues[id] || ""}
+                        onChange={(e) => handleInputChange(id, e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(id, e)}
+                        autoFocus
+                      />
+                      <CheckButton 
+                        onClick={() => handleAddUserOption(id)}
+                        disabled={isInputFieldEmpty(id)}
+                        active={!isInputFieldEmpty(id)}
+                      >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M5 12L10 17L19 8" 
+                            stroke={isInputFieldEmpty(id) ? "#E0E4EB" : "#226FFF"} 
+                            strokeWidth="2" 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round"/>
+                        </svg>
+                      </CheckButton>
+                    </OptionFlex>
+                  </OptionItem>
+                ))}
+                
+                {!hideAddButton && (
+                  <AddOptionItem onClick={handleAddInputField}>
+                    + 직접 추가하기 (최대 3개)
+                  </AddOptionItem>
+                )}
+              </OptionsContainer>
+            </PopupContent>
+            
+            <BottomSpacer />
+            
+            <Divider />
 
-        <ButtonContainer>
-          <div></div> {/* 왼쪽 공간 유지용 */}
-          <ApplyButton 
-            isActive={!!selectedOption}
-            onClick={handleApply}
-            disabled={!selectedOption}
-          >
-            적용하기
-          </ApplyButton>
-        </ButtonContainer>
+            <ButtonContainer>
+              <div></div> {/* 왼쪽 공간 유지용 */}
+              <ApplyButton 
+                isActive={!!selectedOption}
+                onClick={handleApply}
+                disabled={!selectedOption}
+              >
+                적용하기
+              </ApplyButton>
+            </ButtonContainer>
+          </>
+        )}
       </PopupContainer>
-           )}
+          
     </PopupOverlay>
   );
 };

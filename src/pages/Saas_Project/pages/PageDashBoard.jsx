@@ -40,6 +40,7 @@ import {
 } from "../../../utils/indexedDB";
 import OrganismDashboardToolList from "../components/organisms/OrganismDashboardToolList";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
+import FavoritePersonaStatus from "../../../components/Charts/FavoritePersonaStatus";
 
 const PageDashBoard = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -169,7 +170,7 @@ const PageDashBoard = () => {
   // 페르소나 타입별 상태 카운트 함수 추가
   const countPersonasByTypeAndStatus = (personaList, type) => {
     if (!personaList || !Array.isArray(personaList)) {
-      return { total: 0, active: 0, generating: 0, inactive: 0 };
+      return { total: 0, active: 0, generating: 0, inactive: 0, favorite: 0 };
     }
 
     // 해당 타입의 페르소나만 필터링
@@ -197,7 +198,11 @@ const PageDashBoard = () => {
         persona?.status !== "request"
     ).length;
 
-    return { total, active, generating, inactive };
+    const favorite = filteredPersonas.filter(
+      (persona) => persona?.favorite === true
+    ).length;
+
+    return { total, active, generating, inactive, favorite };
   };
 
   // 컴포넌트 내부에서 사용
@@ -474,52 +479,55 @@ const PageDashBoard = () => {
                   Persona Status
                 </H2>
 
-                <TooltipButton onClick={() => setShowTooltip(!showTooltip)}>
-                  <Sub3 color="gray500">페르소나 상태 알아보기</Sub3>
-                  {showTooltip && (
-                    <TooltipContent>
-                      <TooltipHeader>
-                        페르소나 상태 알아보기
-                        <span />
-                      </TooltipHeader>
+                {sessionStorage.getItem("educationState") === "false" && (
+                  <TooltipButton onClick={() => setShowTooltip(!showTooltip)}>
+                    <Sub3 color="gray500">페르소나 상태 알아보기</Sub3>
+                    {showTooltip && (
+                      <TooltipContent>
+                        <TooltipHeader>
+                          페르소나 상태 알아보기
+                          <span />
+                        </TooltipHeader>
 
-                      <TooltipBody>
-                        <div>
-                          <div className="title start">
-                            <Sub3 color="gray500">비활성 페르소나</Sub3>
+                        <TooltipBody>
+                          <div>
+                            <div className="title start">
+                              <Sub3 color="gray500">비활성 페르소나</Sub3>
+                            </div>
+                            <Sub3 color="gray700" align="left">
+                              프로젝트에 따라 추천되었지만, 아직 자신의 경험이나
+                              의견을 표현할 수 없는 상태의 페르소나
+                            </Sub3>
                           </div>
-                          <Sub3 color="gray700" align="left">
-                            프로젝트에 따라 추천되었지만, 아직 자신의 경험이나
-                            의견을 표현할 수 없는 상태의 페르소나
-                          </Sub3>
-                        </div>
 
-                        <div>
-                          <div className="title ing">
-                            <Sub3 color="gray500">생성 중</Sub3>
+                          <div>
+                            <div className="title ing">
+                              <Sub3 color="gray500">생성 중</Sub3>
+                            </div>
+                            <Sub3 color="gray700" align="left">
+                              생성 요청이 접수되어, 의견을 표현할 수 있도록 생성
+                              중인 상태의 페르소나
+                            </Sub3>
                           </div>
-                          <Sub3 color="gray700" align="left">
-                            생성 요청이 접수되어, 의견을 표현할 수 있도록 생성
-                            중인 상태의 페르소나
-                          </Sub3>
-                        </div>
 
-                        <div>
-                          <div className="title complete">
-                            <Sub3 color="gray500">활성 페르소나</Sub3>
+                          <div>
+                            <div className="title complete">
+                              <Sub3 color="gray500">활성 페르소나</Sub3>
+                            </div>
+                            <Sub3 color="gray700" align="left">
+                              생성이 완료되어 자신의 경험과 의견을 자유롭게
+                              표현할 수 있는 상태의 페르소나
+                            </Sub3>
                           </div>
-                          <Sub3 color="gray700" align="left">
-                            생성이 완료되어 자신의 경험과 의견을 자유롭게 표현할
-                            수 있는 상태의 페르소나
-                          </Sub3>
-                        </div>
-                      </TooltipBody>
-                    </TooltipContent>
-                  )}
-                </TooltipButton>
+                        </TooltipBody>
+                      </TooltipContent>
+                    )}
+                  </TooltipButton>
+                )}
               </div>
 
-              {personaListSaas?.length > 0 ? (
+              {personaListSaas?.length > 0 &&
+              sessionStorage.getItem("educationState") === "false" ? (
                 <PersonaStatusWrap>
                   <div
                     onClick={() => navigateToAiPersonaTab("macro_segment")}
@@ -796,6 +804,23 @@ const PageDashBoard = () => {
                     </div>
                   </div>
                 </PersonaStatusWrap>
+              ) : personaListSaas?.length > 0 &&
+                sessionStorage.getItem("educationState") === "true" ? (
+                <FavoritePersonaStatus
+                  maxPersonaCount={20} // 최대 페르소나 수 (기본값 20명)
+                  totalPersona={{
+                    macroSegment: macroSegmentStats.total,
+                    uniqueUser: uniqueUserStats.total,
+                    stakeholder: keyStakeholderStats.total,
+                    myPersona: myPersonaStats.total,
+                  }} // 개별 카테고리별 최대 수 (기본값 40명)
+                  data={{
+                    macroSegment: macroSegmentStats.favorite,
+                    uniqueUser: uniqueUserStats.favorite,
+                    stakeholder: keyStakeholderStats.favorite,
+                    myPersona: myPersonaStats.favorite,
+                  }}
+                />
               ) : (
                 <PersonaStatusWrap
                   NoData
