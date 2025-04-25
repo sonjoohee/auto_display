@@ -160,7 +160,7 @@ import {
   QUICK_SURVEY_DETAIL_INFO,
   QUICK_SURVEY_RECRUITING_CONDITION,
   QUICK_SURVEY_INTERVIEW_MODE_TYPE,
-   CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS,
+  CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS,
   CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA,
   CUSTOMER_JOURNEY_MAP_REPORT,
   CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION,
@@ -441,52 +441,105 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [deleteToolId, setDeleteToolId] = useState(null);
   const [deleteToolType, setDeleteToolType] = useState(null);
 
-   //!Education Tool
-  const [, setCustomerJourneyMapMomentAnalysis] = useAtom(CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS);
-  const [, setCustomerJourneyMapSelectedPersona] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA);
+  //!Education Tool
+  const [, setCustomerJourneyMapMomentAnalysis] = useAtom(
+    CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS
+  );
+  const [, setCustomerJourneyMapSelectedPersona] = useAtom(
+    CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA
+  );
   const [, setCustomerJourneyMapReport] = useAtom(CUSTOMER_JOURNEY_MAP_REPORT);
-  const [, setCustomerJourneyMapSelectedDirection] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION);
-  const [, setCustomerJourneyMapSelectedDirectionIndex] = useAtom(CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX);
+  const [, setCustomerJourneyMapSelectedDirection] = useAtom(
+    CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION
+  );
+  const [, setCustomerJourneyMapSelectedDirectionIndex] = useAtom(
+    CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX
+  );
 
-  const [, setIssueGenerationSelectedPurpose] = useAtom(ISSUE_GENERATION_SELECTED_PURPOSE); 
-  const [, setIssueGenerationProblemList] = useAtom(ISSUE_GENERATION_PROBLEM_LIST);
-  const [, setIssueGenerationProblemListTitle] = useAtom(ISSUE_GENERATION_PROBLEM_LIST_TITLE);
-  const [, setIssueGenerationStartPosition] = useAtom(ISSUE_GENERATION_START_POSITION);
-  const [, setIssueGenerationSelectedStartPosition] = useAtom(ISSUE_GENERATION_SELECTED_START_POSITION);
+  const [, setIssueGenerationSelectedPurpose] = useAtom(
+    ISSUE_GENERATION_SELECTED_PURPOSE
+  );
+  const [, setIssueGenerationProblemList] = useAtom(
+    ISSUE_GENERATION_PROBLEM_LIST
+  );
+  const [, setIssueGenerationProblemListTitle] = useAtom(
+    ISSUE_GENERATION_PROBLEM_LIST_TITLE
+  );
+  const [, setIssueGenerationStartPosition] = useAtom(
+    ISSUE_GENERATION_START_POSITION
+  );
+  const [, setIssueGenerationSelectedStartPosition] = useAtom(
+    ISSUE_GENERATION_SELECTED_START_POSITION
+  );
 
   const [, setIssueGenerationList] = useAtom(ISSUE_GENERATION_LIST);
-  const [, setKeywordsGenerationSelectedIssue] = useAtom(KEYWORDS_GENERATION_SELECTED_ISSUE); 
-  const [, setKeywordsGenerationSelectedIssueIndex] = useAtom(KEYWORDS_GENERATION_SELECTED_ISSUE_INDEX);
+  const [, setKeywordsGenerationSelectedIssue] = useAtom(
+    KEYWORDS_GENERATION_SELECTED_ISSUE
+  );
+  const [, setKeywordsGenerationSelectedIssueIndex] = useAtom(
+    KEYWORDS_GENERATION_SELECTED_ISSUE_INDEX
+  );
   const [, setKeywordsGenerationTag] = useAtom(KEYWORDS_GENERATION_TAG);
 
-  const [, setIdeaGenerationSelectedPurpose] = useAtom(IDEA_GENERATION_SELECTED_PURPOSE);
-  const [, setIdeaGenerationProblemList] = useAtom(IDEA_GENERATION_PROBLEM_LIST);
-  const [, setIdeaGenerationProblemListTitle] = useAtom(IDEA_GENERATION_PROBLEM_LIST_TITLE);
-  const [, setIdeaGenerationStartPosition] = useAtom(IDEA_GENERATION_START_POSITION);
-  const [, setIdeaGenerationMandalartData] = useAtom(IDEA_GENERATION_MANDALART_DATA);
-  const [, setIdeaGenerationSelectedStartPosition] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
-  const [, setIdeaGenerationSelectedMandalart] = useAtom(IDEA_GENERATION_SELECTED_MANDALART);
-  const [, setIdeaGenerationPossessionTech] = useAtom(IDEA_GENERATION_POSSSESSION_TECH);
+  const [, setIdeaGenerationSelectedPurpose] = useAtom(
+    IDEA_GENERATION_SELECTED_PURPOSE
+  );
+  const [, setIdeaGenerationProblemList] = useAtom(
+    IDEA_GENERATION_PROBLEM_LIST
+  );
+  const [, setIdeaGenerationProblemListTitle] = useAtom(
+    IDEA_GENERATION_PROBLEM_LIST_TITLE
+  );
+  const [, setIdeaGenerationStartPosition] = useAtom(
+    IDEA_GENERATION_START_POSITION
+  );
+  const [, setIdeaGenerationMandalartData] = useAtom(
+    IDEA_GENERATION_MANDALART_DATA
+  );
+  const [, setIdeaGenerationSelectedStartPosition] = useAtom(
+    IDEA_GENERATION_SELECTED_START_POSITION
+  );
+  const [, setIdeaGenerationSelectedMandalart] = useAtom(
+    IDEA_GENERATION_SELECTED_MANDALART
+  );
+  const [, setIdeaGenerationPossessionTech] = useAtom(
+    IDEA_GENERATION_POSSSESSION_TECH
+  );
 
-  const [,   setSelectedKanoModelIdea] = useAtom(KANO_MODEL_SELECTED_IDEA);
+  const [, setSelectedKanoModelIdea] = useAtom(KANO_MODEL_SELECTED_IDEA);
   const [, setKanoModelClustering] = useAtom(KANO_MODEL_CLUSTERING);
   const [, setKanoModelClusteringName] = useAtom(KANO_MODEL_CLUSTERING_NAME);
   const [, setKanoModelEvaluation] = useAtom(KANO_MODEL_EVALUATION);
   const [, setKanoModelProductAnalysis] = useAtom(KANO_MODEL_PRODUCT_ANALYSIS);
   const [, setKanoModelGraphData] = useAtom(KANO_MODEL_GRAPH_DATA);
 
-  const [, setIdeaEvaluateSelectedKanoModel] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL);
-  const [, setIdeaEvaluateSelectedKanoModelIndex] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX);
+  const [, setIdeaEvaluateSelectedKanoModel] = useAtom(
+    IDEA_EVALUATE_SELECTED_KANO_MODEL
+  );
+  const [, setIdeaEvaluateSelectedKanoModelIndex] = useAtom(
+    IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX
+  );
   const [, setIdeaEvaluateList] = useAtom(IDEA_EVALUATE_LIST);
   const [, setIdeaEvaluateSelectedList] = useAtom(IDEA_EVALUATE_SELECTED_LIST);
-  const [, setIdeaEvaluateComparisonEducation] = useAtom(IDEA_EVALUATE_COMPARISON_EDUCATION);
-  const [, setIdeaEvaluateSelectedListIndex] = useAtom(IDEA_EVALUATE_SELECTED_LIST_INDEX);
+  const [, setIdeaEvaluateComparisonEducation] = useAtom(
+    IDEA_EVALUATE_COMPARISON_EDUCATION
+  );
+  const [, setIdeaEvaluateSelectedListIndex] = useAtom(
+    IDEA_EVALUATE_SELECTED_LIST_INDEX
+  );
 
-  const [, setConceptDefinitionSelectedPersona] = useAtom(CONCEPT_DEFINITION_SELECTED_PERSONA);
-  const [, setConceptDefinitionSelectedPurpose] = useAtom(CONCEPT_DEFINITION_SELECTED_PURPOSE);
-  const [, setConceptDefinitionFirstReport] = useAtom(CONCEPT_DEFINITION_FIRST_REPORT);
-  const [, setConceptDefinitionFinalReport] = useAtom(CONCEPT_DEFINITION_FINAL_REPORT);
-
+  const [, setConceptDefinitionSelectedPersona] = useAtom(
+    CONCEPT_DEFINITION_SELECTED_PERSONA
+  );
+  const [, setConceptDefinitionSelectedPurpose] = useAtom(
+    CONCEPT_DEFINITION_SELECTED_PURPOSE
+  );
+  const [, setConceptDefinitionFirstReport] = useAtom(
+    CONCEPT_DEFINITION_FIRST_REPORT
+  );
+  const [, setConceptDefinitionFinalReport] = useAtom(
+    CONCEPT_DEFINITION_FINAL_REPORT
+  );
 
   const saveConversation = (data) => {
     // 대화 저장 로직 구현
@@ -526,20 +579,20 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           return "보고서 생성기";
         case "ix_quick_survey_question":
           return "퀵 서베이";
-           case "ix_customer_journey_map_education":
-          return "고객 여정 맵 분석기";
+        case "ix_customer_journey_map_education":
+          return "고객 여정 지도";
         case "ix_idea_generation_education":
           return "아이디어 발상";
         case "ix_kano_model_education":
-          return "Kano Model";
+          return "카노 모델";
         case "ix_idea_evaluation_education":
           return "아이디어 평가";
         case "ix_concept_definition_education":
           return "컨셉 정의서";
         case "ix_issue_generation_education":
-          return "핵심 이슈 도출";
+          return "핵심 문제 정의";
         case "ix_needs_keywords_generation_education":
-          return "문제점 & 니즈 키워드 생성";
+          return "핵심 키워드 추출";
         default:
           return tool.type;
       }
@@ -606,6 +659,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         return "비즈니스(아이디어)를 입력해주세요.";
     }
   };
+
   // 툴 설명 가져오기 함수
   const getToolDescription = (tool) => {
     if (tool.type) {
@@ -615,10 +669,9 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         case "ix_customer_value_persona":
           return (tool.analysisScope?.split("|")[0] || "상세 내용 없음").trim();
         case "ix_idea_generator_persona":
-          return (
-            `${tool.coreValue?.[0]} 외 ${tool.coreValue?.length - 1}개` ||
-            "상세 내용 없음"
-          );
+          return tool.coreValue?.length > 1
+            ? `${tool.coreValue[0]} 외 ${tool.coreValue.length - 1}개`
+            : tool.coreValue?.[0] || "상세 내용 없음";
         case "ix_design_emotion_analysis":
           return tool.imageName?.[0]?.name || "상세 내용 없음";
         case "ix_psst_multimodal":
@@ -628,20 +681,58 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           );
         case "ix_quick_survey_question":
           return tool.goal || "상세 내용 없음";
-          case "ix_customer_journey_map_education":
-          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+        case "ix_customer_journey_map_education":
+          return (
+            tool.customerJourneyMapSelectedPersona.personaName +
+            (tool.selectedDirection?.name
+              ? "의 " + tool.selectedDirection.name
+              : "")
+          );
         case "ix_idea_generation_education":
-          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+          return (
+            tool.ideaGenerationSelectedStartPosition
+              ?.map((item, index) =>
+                index === tool.ideaGenerationSelectedStartPosition.length - 1
+                  ? item.main_theme
+                  : item.main_theme + ", "
+              )
+              .join("") || "상세 내용 없음"
+          );
         case "ix_kano_model_education":
-          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+          return (
+            tool.kanoModelClusteringName
+              ?.map((item, index) =>
+                index === tool.kanoModelClusteringName.length - 1
+                  ? item
+                  : item + ", "
+              )
+              .join("") || "상세 내용 없음"
+          );
         case "ix_idea_evaluation_education":
           return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
         case "ix_concept_definition_education":
           return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
         case "ix_issue_generation_education":
-          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+          return (
+            tool.issueGenerationProblemListTitle
+              ?.map((item, index) =>
+                index === tool.issueGenerationProblemListTitle.length - 1
+                  ? item
+                  : item + ", "
+              )
+              .join("") || "상세 내용 없음"
+          );
+
         case "ix_needs_keywords_generation_education":
-          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+          return (
+            tool.keywordsGenerationTag
+              ?.map((item, index) =>
+                index === tool.keywordsGenerationTag.length - 1
+                  ? item.main_theme
+                  : item.main_theme + ", "
+              )
+              .join("") || "상세 내용 없음"
+          );
         default:
           return tool.type;
       }
@@ -679,6 +770,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
     }
     return "상세 내용 없음";
   };
+
   // 툴 설명 가져오기 함수
   const getToolStatus = (tool) => {
     if (tool.type) {
@@ -695,7 +787,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           return tool.completedStep === 3 ? "완료" : "진행중";
         case "ix_quick_survey_question":
           return tool.completedStep === 3 ? "완료" : "진행중";
-           case "ix_customer_journey_map_education":
+        case "ix_customer_journey_map_education":
           return tool.completedStep === 3 ? "완료" : "진행중";
         case "ix_idea_generation_education":
           return tool.completedStep === 3 ? "완료" : "진행중";
@@ -1113,7 +1205,6 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setQuickSurveyRecruitingCondition(chatData?.recruitmentCriteria || "");
         setQuickSurveyInterviewModeType(chatData?.interviewModeType || "");
 
-
         //!Education Tool
 
         //!고객 저니 맵
@@ -1125,11 +1216,19 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setToolLoading(false);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
-        setCustomerJourneyMapMomentAnalysis(chatData?.customerJourneyMapMomentAnalysis || []);
-        setCustomerJourneyMapSelectedPersona(chatData?.customerJourneyMapSelectedPersona || {});
+        setCustomerJourneyMapMomentAnalysis(
+          chatData?.customerJourneyMapMomentAnalysis || []
+        );
+        setCustomerJourneyMapSelectedPersona(
+          chatData?.customerJourneyMapSelectedPersona || {}
+        );
         setCustomerJourneyMapReport(chatData?.customerJourneyMapReport || []);
-        setCustomerJourneyMapSelectedDirection(chatData?.selectedDirection || []);
-        setCustomerJourneyMapSelectedDirectionIndex(chatData?.selectedDirectionIndex || 0);
+        setCustomerJourneyMapSelectedDirection(
+          chatData?.selectedDirection || []
+        );
+        setCustomerJourneyMapSelectedDirectionIndex(
+          chatData?.selectedDirectionIndex || 0
+        );
 
         //! 핵심 이슈 도출
         setToolStep(1);
@@ -1142,10 +1241,18 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setIssueGenerationSelectedPurpose(chatData?.selectedPurposes || {});
-        setIssueGenerationProblemList(chatData?.issueGenerationProblemList || []);
-        setIssueGenerationProblemListTitle(chatData?.issueGenerationProblemListTitle || []);
-        setIssueGenerationStartPosition(chatData?.issueGenerationStartPosition || []);
-        setIssueGenerationSelectedStartPosition(chatData?.issueGenerationSelectedStartPosition || []);
+        setIssueGenerationProblemList(
+          chatData?.issueGenerationProblemList || []
+        );
+        setIssueGenerationProblemListTitle(
+          chatData?.issueGenerationProblemListTitle || []
+        );
+        setIssueGenerationStartPosition(
+          chatData?.issueGenerationStartPosition || []
+        );
+        setIssueGenerationSelectedStartPosition(
+          chatData?.issueGenerationSelectedStartPosition || []
+        );
 
         //! 핵심 니즈 키워드 생성
         setToolStep(1);
@@ -1155,10 +1262,13 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setToolLoading(false);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
-        setKeywordsGenerationSelectedIssue(chatData?.keywordsGenerationSelectedIssue || []);
-        setKeywordsGenerationSelectedIssueIndex(chatData?.selectedIssueIndex || []);
+        setKeywordsGenerationSelectedIssue(
+          chatData?.keywordsGenerationSelectedIssue || []
+        );
+        setKeywordsGenerationSelectedIssueIndex(
+          chatData?.selectedIssueIndex || []
+        );
         setKeywordsGenerationTag(chatData?.keywordsGenerationTag || []);
-   
 
         //! 아이디어 발상
         setToolStep(1);
@@ -1172,13 +1282,21 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setIdeaGenerationPossessionTech("");
         setToolLoading(false);
         setToolStep(chatData?.completedStep);
-        setToolId(chatData?.id);  
+        setToolId(chatData?.id);
         setIdeaGenerationSelectedPurpose(chatData?.selectedPurposes || {});
-        setIdeaGenerationProblemList(chatData?.ideaGenerationProblemList || []);  
-        setIdeaGenerationProblemListTitle(chatData?.ideaGenerationProblemListTitle || []);  
-        setIdeaGenerationStartPosition(chatData?.ideaGenerationStartPosition || []);  
-        setIdeaGenerationMandalartData(chatData?.ideaGenerationMandalArtData || []);  
-        setIdeaGenerationSelectedStartPosition(chatData?.ideaGenerationSelectedStartPosition || []);  
+        setIdeaGenerationProblemList(chatData?.ideaGenerationProblemList || []);
+        setIdeaGenerationProblemListTitle(
+          chatData?.ideaGenerationProblemListTitle || []
+        );
+        setIdeaGenerationStartPosition(
+          chatData?.ideaGenerationStartPosition || []
+        );
+        setIdeaGenerationMandalartData(
+          chatData?.ideaGenerationMandalArtData || []
+        );
+        setIdeaGenerationSelectedStartPosition(
+          chatData?.ideaGenerationSelectedStartPosition || []
+        );
         setIdeaGenerationPossessionTech(chatData?.possessionTech || "");
 
         //!Kano Model
@@ -1211,10 +1329,16 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setToolId(chatData?.id);
         setIdeaEvaluateList(chatData?.ideaEvaluateList || []);
         setIdeaEvaluateSelectedList(chatData?.ideaEvaluateSelectedList || []);
-        setIdeaEvaluateComparisonEducation(chatData?.ideaEvaluateComparisonEducation || []);
-        setIdeaEvaluateSelectedListIndex(chatData?. ideaEvaluateSelectedListIndex || {});
+        setIdeaEvaluateComparisonEducation(
+          chatData?.ideaEvaluateComparisonEducation || []
+        );
+        setIdeaEvaluateSelectedListIndex(
+          chatData?.ideaEvaluateSelectedListIndex || {}
+        );
         setIdeaEvaluateSelectedKanoModel(chatData?.selectedKanoModelIdea || {});
-        setIdeaEvaluateSelectedKanoModelIndex(chatData?.selectedKanoModelIdeaIndex || []);
+        setIdeaEvaluateSelectedKanoModelIndex(
+          chatData?.selectedKanoModelIdeaIndex || []
+        );
 
         //!컨셉 정의
         setToolStep(1);
@@ -1227,9 +1351,12 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setToolId(chatData?.id);
         setConceptDefinitionSelectedPurpose(chatData?.selectedKanoModel || {});
         setConceptDefinitionSelectedPersona(chatData?.selectedPersonas || []);
-        setConceptDefinitionFirstReport(chatData?.conceptDefinitionFirstReport || "");
-        setConceptDefinitionFinalReport(chatData?.conceptDefinitionFinalReport || "");
-
+        setConceptDefinitionFirstReport(
+          chatData?.conceptDefinitionFirstReport || ""
+        );
+        setConceptDefinitionFinalReport(
+          chatData?.conceptDefinitionFinalReport || ""
+        );
 
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);
@@ -1252,7 +1379,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         } else if (chatData.type === "ix_quick_survey_question") {
           setToolLoading(true);
           navigate("/QuickSurvey");
-         } else if (chatData.type === "ix_customer_journey_map_education") {
+        } else if (chatData.type === "ix_customer_journey_map_education") {
           setToolLoading(true);
           navigate("/CustomerJourneyMap");
         } else if (chatData.type === "ix_idea_generation_education") {
@@ -1422,7 +1549,17 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
                     </Body2>
                   </td>
                   <td>
-                    <Body2 color="gray700" align="left">
+                    <Body2
+                      color="gray700"
+                      align="left"
+                      style={{
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
                       {getToolDescription(tool)}
                     </Body2>
                   </td>
