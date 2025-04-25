@@ -91,7 +91,7 @@ const PageCustomerJourneyMap = () => {
   const [customerJourneyMapSelectedDirectionIndex] = useAtom(
     CUSTOMER_JOURNEY_MAP_SELECTED_DIRECTION_INDEX
   );
-
+  const [businessDescription, setBusinessDescription] = useState("");
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
@@ -124,6 +124,23 @@ const PageCustomerJourneyMap = () => {
   );
   useEffect(() => {
     const interviewLoading = async () => {
+      const projectAnalysis =
+        (project?.projectAnalysis.business_analysis
+          ? project?.projectAnalysis.business_analysis
+          : "") +
+        (project?.projectAnalysis.business_analysis &&
+        project?.projectAnalysis.file_analysis
+          ? "\n"
+          : "") +
+        (project?.projectAnalysis.file_analysis
+          ? project?.projectAnalysis.file_analysis
+          : "");
+      const projectTitle = project?.projectTitle;
+
+      if (project) {
+        setBusinessDescription(projectAnalysis);
+      }
+
       if (toolLoading) {
         // 비즈니스 정보 설정 (Step 1)
         if (psstBusinessInfo) {
@@ -201,7 +218,7 @@ const PageCustomerJourneyMap = () => {
   console.log("selectedMoment", selectedMoment);
 
   const business = {
-    business: project?.projectAnalysis?.business_analysis || "",
+    business: businessDescription,
     // target: project?.projectAnalysis?.target_customer || "",
     business_model: project?.businessModel || "",
     sector: project?.industryType || "",
@@ -256,9 +273,9 @@ const PageCustomerJourneyMap = () => {
         (!response ||
           !response?.response?.customer_journey_map_direction_education ||
           !response?.response?.customer_journey_map_direction_education
-            ?.time_based ||
+            ?.problem_based ||
           !response?.response?.customer_journey_map_direction_education
-            ?.context_based ||
+            ?.situation_based ||
           !response?.response?.customer_journey_map_direction_education
             ?.goal_based)
       ) {
