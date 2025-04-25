@@ -188,7 +188,7 @@ const MoleculeSignupEducationForm = () => {
     setSignUpEmail("");
     setSignUpPassword("");
     setConfirmPassword("");
-    navigate("/");
+    navigate("/DCB-education");
   };
 
   const handlePhoneNumberChange = (e) => {

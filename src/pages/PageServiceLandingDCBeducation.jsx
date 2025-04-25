@@ -202,7 +202,7 @@ const PageServiceLandingDCBeducation = () => {
               navigate("/Project");
             }}
           >
-            나의 X 만나기
+            시작하기
           </Button>
         </div>
 
