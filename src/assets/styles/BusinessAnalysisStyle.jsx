@@ -4322,38 +4322,15 @@ export const ExploreCard = styled.div`
     .text {
       display: flex;
       flex-direction: column;
+      align-items: center;   // 중앙 정렬 추가
+      justify-content: center; // 중앙 정렬 추가
       gap: 12px;
-      margin-top: auto;
-
-      i {
-        position: relative;
-        width: 64px;
-        height: 12px;
-        margin: 0 auto;
-
-        &:before,
-        &:after {
-          position: absolute;
-          right: 0;
-          border-radius: 4px;
-          background: ${palette.white};
-          content: "";
-        }
-
-        &:before {
-          bottom: 0;
-          width: 100%;
-          height: 2px;
-        }
-
-        &:after {
-          bottom: 5px;
-          right: -1px;
-          transform: rotate(45deg);
-          width: 14px;
-          height: 2px;
-        }
-      }
+      height: 100%;          // 높이 100% 추가
+      width: 100%;           // 너비 100% 추가
+      text-align: center;    // 텍스트 중앙 정렬 추가
+      margin-top: 0;         // margin-top: auto 제거하고 0으로 설정
+      
+      // ... 기존 코드 유지 ...
     }
   }
 
