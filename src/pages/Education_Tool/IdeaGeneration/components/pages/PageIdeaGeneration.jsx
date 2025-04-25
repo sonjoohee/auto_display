@@ -986,7 +986,7 @@ const PageIdeaGeneration = () => {
                                     >
                                       {ideaGenerationSelectedStartPosition?.length > 0
                                         ? ideaGenerationSelectedStartPosition
-                                            .map((item) => item.theme)
+                                            .map((item) => item.main_theme)
                                             .join(", ")
                                         : "선택해주세요"}
                                     </Body2>
@@ -1005,8 +1005,8 @@ const PageIdeaGeneration = () => {
                                   <MoleculeTagList
                                     items={
                                       ideaGenerationStartPosition
-                                        .map((item) => item.content)
-                                        .flat() // 모든 content 배열을 하나로 합침
+                                        // .map((item) => item.content)
+                                        // .flat() // 모든 content 배열을 하나로 합침
                                     }
                                     disabled={toolSteps >= 1}
                                   />

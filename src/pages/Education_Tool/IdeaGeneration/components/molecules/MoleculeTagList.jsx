@@ -66,13 +66,14 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
   ] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
   const [addedTagsCount, setAddedTagsCount] = useState(0);
 
+
   // 컴포넌트 마운트 시와 ideaGenerationSelectedStartPosition 변경 시 선택 상태 동기화
   useEffect(() => {
     if (items && ideaGenerationSelectedStartPosition) {
       const selectedIndexes = items
         .map((item, index) =>
           ideaGenerationSelectedStartPosition.some(
-            (selected) => selected.theme === item.theme
+            (selected) => selected.main_theme === item.main_theme
           )
             ? index
             : -1
@@ -107,6 +108,7 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
       if (!disabled && selectedTags.length < MAX_SELECTIONS) {
         const newSelectedTags = [...selectedTags, index];
         setSelectedTags(newSelectedTags);
+
 
         setIdeaGenerationSelectedStartPosition(
           newSelectedTags.map((tagIndex) => items[tagIndex])
@@ -145,14 +147,14 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
     const validOptions = options.filter((option) => option.trim());
 
     const newTags = validOptions.map((option, index) => ({
-      problem: "사용자 요청",
-      content: [
-        {
+
+
+      
           id: Date.now() + index,
-          theme: option,
-          description: "사용자 요청",
-        },
-      ],
+          main_theme: option,
+          raw_data: "사용자 요청",
+    
+  
     }));
 
     setIdeaGenerationStartPosition((prev) => {
@@ -176,7 +178,7 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
             return (
               <IdeaGenerationTag
                 key={item.id}
-                text={item.theme || ""}
+                text={item.main_theme || ""}
                 onClick={(e, isSelected) => handleTagClick(index, isSelected)}
                 initialSelected={selectedTags.includes(index)}
                 disabled={
