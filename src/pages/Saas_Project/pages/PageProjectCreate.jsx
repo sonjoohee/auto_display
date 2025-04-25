@@ -59,6 +59,10 @@ const PageProjectCreate = () => {
   const [projectEducationState, setProjectEducationState] = useAtom(
     PROJECT_EDUCATION_STATE
   );
+  console.log(
+    "🚀 ~ PageProjectCreate ~ projectEducationState:",
+    projectEducationState
+  );
   const [projectEducationCode, setProjectEducationCode] = useAtom(
     PROJECT_EDUCATION_CODE
   );
@@ -237,18 +241,19 @@ const PageProjectCreate = () => {
         let RetryCount = 0;
         const MaxRetries = 10;
 
-        while (RetryCount < MaxRetries && 
+        while (
+          RetryCount < MaxRetries &&
           (!response ||
-          !response.response ||
-          !response.response.project_analysis_multimodal ||
-          !response.response.project_analysis_multimodal.business_analysis ||
-          !response.response.project_analysis_multimodal.file_analysis ||
-          !response.response.project_analysis_multimodal.target_customer)
+            !response.response ||
+            !response.response.project_analysis_multimodal ||
+            !response.response.project_analysis_multimodal.business_analysis ||
+            !response.response.project_analysis_multimodal.file_analysis ||
+            !response.response.project_analysis_multimodal.target_customer)
         ) {
           response = await InterviewXProjectAnalysisMultimodalRequest(
             data,
             isLoggedIn
-          );  
+          );
           RetryCount++;
         }
 
@@ -257,7 +262,6 @@ const PageProjectCreate = () => {
           return;
         }
 
-       
         // setFileNames(
         //   uploadedFiles.map((file, index) => ({
         //     id: "file_" + timeStamp + "_" + (index + 1),
@@ -416,17 +420,15 @@ const PageProjectCreate = () => {
         let RetryCount = 0;
         const MaxRetries = 10;
 
-        while (RetryCount < MaxRetries && 
+        while (
+          RetryCount < MaxRetries &&
           (!response ||
-          !response.response ||
-          !response.response.project_analysis ||
-          !response.response.project_analysis.business_analysis ||
-          !response.response.project_analysis.target_customer)
+            !response.response ||
+            !response.response.project_analysis ||
+            !response.response.project_analysis.business_analysis ||
+            !response.response.project_analysis.target_customer)
         ) {
-          response = await InterviewXProjectAnalysisRequest(
-            datas,
-            isLoggedIn
-          );  
+          response = await InterviewXProjectAnalysisRequest(datas, isLoggedIn);
           RetryCount++;
         }
 
