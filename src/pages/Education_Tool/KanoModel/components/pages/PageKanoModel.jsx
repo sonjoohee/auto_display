@@ -242,7 +242,7 @@ const PageKanoModel = () => {
     };
   }, [showToast]);
 
-  console.log( "selectedKanoModelIdea", selectedKanoModelIdea)
+  console.log("selectedKanoModelIdea", selectedKanoModelIdea);
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
@@ -875,7 +875,6 @@ const PageKanoModel = () => {
                                     Kano Model 평가에 포함할 아이디어를 선택해
                                     주세요. (복수 선택 가능)
                                   </Body1>
-                          
                                 </div>
                                 {kanoModelIdeaGeneration.map((idea, index) => (
                                   <MoleculeItemSelectCard
@@ -1043,13 +1042,14 @@ const PageKanoModel = () => {
                         >
                           <img src={images.PeopleStarFillPrimary} alt="" />
                           <Body2 color="gray500" align="center !important">
-                            즐겨찾기를 하시면 관심 있는 페르소나를 해당
-                            페이지에서 확인하실 수 있습니다.{" "}
+                            페르소나 리스트를 확인하려면, 먼저 관심 있는
+                            페르소나 20명을 즐겨찾기에 추가해 주세요. (
                             {
                               personaListSaas.filter(
                                 (item) => item.favorite === true
                               ).length
-                            }
+                            }{" "}
+                            / 20)
                           </Body2>
                         </BoxWrap>
                       )}
