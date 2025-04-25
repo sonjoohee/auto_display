@@ -1,5 +1,5 @@
 //디자인 감성 분석기
-import React, { useEffect, useState, useRef,  } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAtom } from "jotai";
@@ -75,7 +75,6 @@ const PageIssueGeneration = () => {
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
 
-
   const [ideaGenerationPossessionTech, setIdeaGenerationPossessionTech] =
     useAtom(IDEA_GENERATION_POSSSESSION_TECH);
 
@@ -84,17 +83,18 @@ const PageIssueGeneration = () => {
   );
 
   const [issueGenerationSelectedPurpose, setIssueGenerationSelectedPurpose] =
-    useAtom(ISSUE_GENERATION_SELECTED_PURPOSE); 
+    useAtom(ISSUE_GENERATION_SELECTED_PURPOSE);
   const [issueGenerationProblemList, setIssueGenerationProblemList] = useAtom(
     ISSUE_GENERATION_PROBLEM_LIST
   );
   const [issueGenerationProblemListTitle, setIssueGenerationProblemListTitle] =
     useAtom(ISSUE_GENERATION_PROBLEM_LIST_TITLE);
-  const [issueGenerationSelectedStartPosition, setIssueGenerationSelectedStartPosition] =
-    useAtom(ISSUE_GENERATION_SELECTED_START_POSITION);
-  const [issueGenerationStartPosition, setIssueGenerationStartPosition] = useAtom(
-    ISSUE_GENERATION_START_POSITION
-  );
+  const [
+    issueGenerationSelectedStartPosition,
+    setIssueGenerationSelectedStartPosition,
+  ] = useAtom(ISSUE_GENERATION_SELECTED_START_POSITION);
+  const [issueGenerationStartPosition, setIssueGenerationStartPosition] =
+    useAtom(ISSUE_GENERATION_START_POSITION);
 
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [isContentLoading, setIsContentLoading] = useState(false);
@@ -536,7 +536,6 @@ const PageIssueGeneration = () => {
       return false;
     };
 
-
     // F5 키 또는 Ctrl+R 감지
     const handleKeyDown = (event) => {
       if (
@@ -726,9 +725,12 @@ const PageIssueGeneration = () => {
                                         `${
                                           item.customerJourneyMapSelectedPersona
                                             .personaName || "페르소나"
-                                        }의 고객 여정 지도 (${
-                                          item.updateDate.split(":")[0]
-                                        }:${item.updateDate.split(":")[1]})`,
+                                        }의 ${
+                                          item.selectedDirection.name ||
+                                          "선택한 방향성"
+                                        } (${item.updateDate.split(":")[0]}:${
+                                          item.updateDate.split(":")[1]
+                                        })`,
                                         "customerList",
                                         item
                                       );
@@ -737,8 +739,10 @@ const PageIssueGeneration = () => {
                                     <Body2 color="gray700" align="left">
                                       {item.customerJourneyMapSelectedPersona
                                         .personaName || "페르소나"}
-                                      의 고객 여정 지도 (
-                                      {item.updateDate.split(":")[0]}:
+                                      의{" "}
+                                      {item.selectedDirection.name ||
+                                        "선택한 방향성"}
+                                      ({item.updateDate.split(":")[0]}:
                                       {item.updateDate.split(":")[1]})
                                     </Body2>
                                   </SelectBoxItem>
@@ -775,7 +779,7 @@ const PageIssueGeneration = () => {
                                   color="gray700"
                                   align="center !important"
                                 >
-                                  고객 여정 지도 툴을 선행하세요. 
+                                  고객 여정 지도 툴을 선행하세요.
                                 </Body2>
                               </BoxWrap>
                             ) : (
@@ -884,27 +888,27 @@ const PageIssueGeneration = () => {
                         </li>
                       </ListBoxGroup>
                     </div>
-                    
-                  { issueGenerationStartPosition.length > 0 && (
-                    <div className="content">
-                      <Title style={{ marginBottom: "-18px" }}>
-                        <Body1 color="gray700">
-                          아이디어 시작점을 선택하세요 (8개 선택필수)
-                        </Body1>
-                      </Title>
 
-                      <CardGroupWrap ideaGeneration>
-                        <MoleculeTagList
-                          items={
-                            issueGenerationStartPosition
-                              .map((item) => item.content)
-                              .flat() // 모든 content 배열을 하나로 합침 
-                          }
-                          disabled={toolSteps >= 3}
-                        />
-                      </CardGroupWrap>
+                    {issueGenerationStartPosition.length > 0 && (
+                      <div className="content">
+                        <Title style={{ marginBottom: "-18px" }}>
+                          <Body1 color="gray700">
+                            아이디어 시작점을 선택하세요 (8개 선택필수)
+                          </Body1>
+                        </Title>
 
-                      {/* <div className="content">
+                        <CardGroupWrap ideaGeneration>
+                          <MoleculeTagList
+                            items={
+                              issueGenerationStartPosition
+                                .map((item) => item.content)
+                                .flat() // 모든 content 배열을 하나로 합침
+                            }
+                            disabled={toolSteps >= 3}
+                          />
+                        </CardGroupWrap>
+
+                        {/* <div className="content">
                         <TabContent5Item required>
                           <Title>
                             <Body1 color="gray700">
@@ -937,7 +941,7 @@ const PageIssueGeneration = () => {
                           </FormBox>
                         </TabContent5Item>
                       </div> */}
-                    </div>
+                      </div>
                     )}
                   </>
                 )}
@@ -975,9 +979,7 @@ const PageIssueGeneration = () => {
                   <>
                     <div className="title">
                       <H3 color="gray800">Participating Persona</H3>
-                      <Body3 color="gray800">
-                      아이디에이션 태그 결과
-                      </Body3>
+                      <Body3 color="gray800">아이디에이션 태그 결과</Body3>
                     </div>
 
                     <div className="content">
@@ -999,7 +1001,6 @@ const PageIssueGeneration = () => {
                                 ? "gray500"
                                 : "gray300"
                             }
-                          
                             style={{
                               whiteSpace: "normal",
                               wordBreak: "keep-all",
@@ -1022,28 +1023,19 @@ const PageIssueGeneration = () => {
                     <div className="content">
                       <TabContent5Item style={{ marginTop: "20px" }}>
                         <div className="title">
-                          <Body1 color="gray800">
-                            아이디어 시작점
-                          </Body1>
+                          <Body1 color="gray800">아이디어 시작점</Body1>
                         </div>
 
                         <MoleculeSelectedTagList
-                          items={
-                            issueGenerationSelectedStartPosition
-                          }
+                          items={issueGenerationSelectedStartPosition}
                           disabled={toolSteps >= 2}
                         />
-                        
                       </TabContent5Item>
                     </div>
                   </>
                 )}
-
               </TabContent5>
             )}
-
-        
-
           </DesignAnalysisWrap>
         </MainContent>
       </ContentsWrap>
