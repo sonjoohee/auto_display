@@ -4324,3 +4324,53 @@ export const EducationToolsRequest = async (data, isLoggedIn) => {
     throw error;
   }
 };
+
+
+
+//nps - 컨셉보드 멀티모달
+export const InterviewXNPSConceptboardMultimodalRequest = async (data, isLoggedIn) => {
+  if (!isLoggedIn) {
+    console.error("로그인이 필요합니다.");
+    return null;
+  }
+
+  try {
+    const formData = new FormData();
+    data.files.forEach((file) => {
+      formData.append("files", file);
+    });
+    formData.append("business", data.business); // 다른 데이터 추가
+    formData.append("tool_id", data.tool_id); // 다른 데이터 추가
+    formData.append("type", "ix_nps_conceptboard_multimodal"); // 다른 데이터 추가
+
+    const token = sessionStorage.getItem("accessToken");
+    if (!token) {
+      throw new Error("액세스 토큰이 존재하지 않습니다.");
+    }
+
+    const response = await axios.post(
+      "https://wishresearch.kr/panels/tool/create_tool_temp_file",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (!response.data?.time || !response.data?.objectId) {
+      return response.data;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+
+    const result = await getTermkeyResult(response.data.objectId);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

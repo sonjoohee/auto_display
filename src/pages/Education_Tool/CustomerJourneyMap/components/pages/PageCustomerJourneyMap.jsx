@@ -118,10 +118,7 @@ const PageCustomerJourneyMap = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  console.log(
-    "customerJourneyMapMomentAnalysis",
-    customerJourneyMapMomentAnalysis
-  );
+
   useEffect(() => {
     const interviewLoading = async () => {
       const projectAnalysis =
@@ -214,8 +211,7 @@ const PageCustomerJourneyMap = () => {
     });
   };
 
-  console.log("selectedMomentData", selectedMomentData);
-  console.log("selectedMoment", selectedMoment);
+
 
   const business = {
     business: businessDescription,
@@ -224,7 +220,7 @@ const PageCustomerJourneyMap = () => {
     sector: project?.industryType || "",
     country: project?.targetCountry || "",
   };
-  console.log("🚀 ~ PageCustomerJourneyMap ~ business.project:", project);
+
 
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -496,7 +492,7 @@ const PageCustomerJourneyMap = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
-  console.log("selectedPersonas", selectedPersonas);
+
   return (
     <>
       <DropzoneStyles />

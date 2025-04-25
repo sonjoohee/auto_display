@@ -171,7 +171,6 @@ const PageNeedsKeywordsGeneration = () => {
   }, []);
 
 
-
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
@@ -205,15 +204,20 @@ const PageNeedsKeywordsGeneration = () => {
         if (keywordsGenerationSelectedIssue) {
           setKeywordsGenerationSelectedIssue(keywordsGenerationSelectedIssue ?? []);
           setshowSelectedIssue(true);
-        
+          const issueIndexes = Array.from(
+            { length: keywordsGenerationSelectedIssue.length },
+            (_, index) => index
+          );
+          setSelectedIssue(issueIndexes);
         }
+   
         
         // if (issueGenerationList && issueGenerationList.length > 0) {
         //   setSelectedIssue(issueGenerationList ?? []);
         // }
-        if (keywordsGenerationSelectedIssueIndex) {
-          setSelectedIssue(keywordsGenerationSelectedIssueIndex ?? []);
-        }
+        // if (keywordsGenerationSelectedIssueIndex) {
+        //   setSelectedIssue(keywordsGenerationSelectedIssueIndex ?? []);
+        // }
 
         // 완료된 단계 설정
         const completedStepsArray = [];
@@ -244,7 +248,7 @@ const PageNeedsKeywordsGeneration = () => {
         );
 
 
-        console.log("respontgfsdgbfdsghrfsdgfsdgfsdgrfse", response);
+        // console.log("respontgfsdgbfdsghrfsdgfsdgfsdgrfse", response);
         const newItems = (response || []).filter(
           (item) =>
             item?.type === "ix_issue_generation_education" &&

@@ -68,6 +68,8 @@ import {
   createToolOnServer,
   updateToolOnServer,
   getFindToolListOnServerSaas,
+  EducationToolsRequest,
+  InterviewXNPSConceptboardMultimodalRequest
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
@@ -518,25 +520,22 @@ const PageNps = () => {
     // quickSurveyAnalysis가 비어있을 때만 API 호출
     handleNextStep(1);
     if (uploadedFiles.length > 0) {
+      console.log("uploadedFiles", uploadedFiles);
       // setIsLoading(true);
       try {
         // 비즈니스 데이터 추가
+       
+        const timeStamp = new Date().getTime();
         const Data = {
-          type: "ix_quick_survey_question",
-          business: businessDescription,
-          goal: projectDescription,
+          business: business,
+          tool_id: "file_" + timeStamp,
+          files: uploadedFiles,
         };
-        // const timeStamp = new Date().getTime();
-        // const Data = {
-        //   business: business,
-        //   tool_id: "file_" + timeStamp,
-        //   files: uploadedFiles,
-        // };
 
     // setPsstFileId(["file_" + timeStamp]);
         setFileNames(uploadedFiles.map((file) => file.name));
 
-        setQuickSurveyProjectDescription(projectDescription);
+        // setQuickSurveyProjectDescription(projectDescription);
 
         // API 요청
         let response;
@@ -545,19 +544,21 @@ const PageNps = () => {
 
         while (retryCount < maxRetries) {
           try {
-            response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+            response = await InterviewXNPSConceptboardMultimodalRequest(Data, isLoggedIn);
 
-            // 응답 형식 검증
-            if (
-              response.response &&
-              response.response.quick_survey_question &&
-              response.response.quick_survey_question.ab_test &&
-              response.response.quick_survey_question.importance &&
-              response.response.quick_survey_question.nps &&
-              response.response.quick_survey_question.single_choice
-            ) {
-              break; // 올바른 응답 형식이면 루프 종료
-            }
+            console.log("response", response);
+
+            // // 응답 형식 검증
+            // if (
+            //   response.response &&
+            //   response.response.nps_conceptboard_multimodal &&
+            //   response.response.nps_conceptboard_multimodal.ab_test &&
+            //   response.response.nps_conceptboard_multimodal.importance &&
+            //   response.response.nps_conceptboard_multimodal.nps &&
+            //   response.response.quick_survey_question.single_choice
+            // ) {
+            //   break; // 올바른 응답 형식이면 루프 종료
+            // }
 
             retryCount++;
           } catch (error) {
@@ -571,6 +572,8 @@ const PageNps = () => {
             "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
           );
         }
+
+      // setNpsConceptboardMultimodal(response.response.nps_conceptboard_multimodal);
 
         const responseToolId = await createToolOnServer(
           {
@@ -589,11 +592,11 @@ const PageNps = () => {
           {
             quickSurveyAnalysis: response.response.quick_survey_question,
             business: business,
-            goal: projectDescription,
-            // fileName: uploadedFiles.map((file) => ({
-            //   id: "file_" + timeStamp,
-            //   name: fileNames,
-            // })),
+            // goal: projectDescription,
+            fileName: uploadedFiles.map((file) => ({
+              id: "file_" + timeStamp,
+              name: fileNames,
+            })),
             interviewModeType: "moderator",
           },
           isLoggedIn
@@ -629,12 +632,13 @@ const PageNps = () => {
         business: business,
         goal: projectDescription,
       };
+      console.log("Data", Data);
       let response;
       let retryCount = 0;
       const maxRetries = 10;
 
       while (retryCount < maxRetries) {
-        response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+        response = await EducationToolsRequest(Data, isLoggedIn);
 
         // 응답 형식 확인
         if (
@@ -917,7 +921,8 @@ const PageNps = () => {
         business: business,
         survey_method: {
           ...quickSurveyAnalysis[selectedQuestion],
-          type: selectedQuestion.toString(),
+          type: "nps",
+          // type: selectedQuestion.toString(),
         },
         persona_group: quickSurveyPersonaGroup,
       };
@@ -1545,9 +1550,7 @@ const PageNps = () => {
                          id={index}
                          title={`${idea.updateDate.split(":")[0]}:${
                           idea.updateDate.split(":")[1]
-                        } - 컨셉 정의 - ${
-                          idea.title || "컨셉 정의"
-                        }`}
+                        } - 컨셉 정의 `}
                          isSelected={selectedConcept.includes(index)}
                          onSelect={() => handleCheckboxChange(index)}
                        />
@@ -1573,7 +1576,6 @@ const PageNps = () => {
                   ) : (
                     <>
                       
-                
                         <Button
                           Other
                           Primary

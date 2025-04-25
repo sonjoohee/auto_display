@@ -56,7 +56,7 @@ const MoleculeTagList = ({ items, onTagsChange, disabled }) => {
   const [questionText, setQuestionText] = useState("");
   const [options, setOptions] = useState(["", ""]);
   const MAX_SELECTIONS = 8;
-console.log("items", items);
+
   return (
     <>
       <TagListContainer>

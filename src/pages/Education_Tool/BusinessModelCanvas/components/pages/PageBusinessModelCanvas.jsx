@@ -1026,12 +1026,12 @@ const PageBusinessModelCanvas = () => {
                           >
                             <Body2
                               color={
-                                selectedPurposes.customerList
+                                selectedPurposes?.customerList
                                   ? "gray800"
                                   : "gray300"
                               }
                             >
-                              {selectedPurposes.customerList ||
+                              {selectedPurposes?.customerList ||
                                 "컨셉 정의서를 불러 올 수 있습니다"}
                             </Body2>
                             <images.ChevronDown
@@ -1048,8 +1048,8 @@ const PageBusinessModelCanvas = () => {
                           </SelectBoxTitle>
 
                           {selectBoxStates.customerList && (
-                            <SelectBoxList dropUp={dropUpStates.customerList}>
-                              {conceptDefinitionList.length === 0 ? (
+                            <SelectBoxList dropUp={dropUpStates?.customerList}>
+                              {conceptDefinitionList?.length === 0 ? (
                                 <SelectBoxItem 
                                 disabled={toolSteps >= 1 }
                                 >
@@ -1058,7 +1058,7 @@ const PageBusinessModelCanvas = () => {
                                   </Body2>
                                 </SelectBoxItem>
                               ) : (
-                                conceptDefinitionList.map((item, index) => (
+                                conceptDefinitionList?.map((item, index) => (
                                   <SelectBoxItem
                                     // disabled={
                                     //   toolSteps >= 1 
@@ -1068,7 +1068,7 @@ const PageBusinessModelCanvas = () => {
                                       handlePurposeSelect(
                                         `${item.updateDate.split(":")[0]}:${
                                           item.updateDate.split(":")[1]
-                                        } - 아이디어 선택기 
+                                        } - 컨셉 정의서 
                                     `,
                                         "customerList",
                                         item
@@ -1077,8 +1077,7 @@ const PageBusinessModelCanvas = () => {
                                   >
                                     <Body2 color="gray700" align="left">
                                       {item.updateDate.split(":")[0]}:
-                                      {item.updateDate.split(":")[1]} 아이디어 선택기 
-                                     
+                                      {item.updateDate.split(":")[1]} 컨셉 정의서
                                     </Body2>
                                   </SelectBoxItem>
                                 ))

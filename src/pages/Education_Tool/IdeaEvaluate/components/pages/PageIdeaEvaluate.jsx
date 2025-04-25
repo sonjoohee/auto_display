@@ -829,7 +829,7 @@ const PageIdeaEvaluate = () => {
 
                           {selectBoxStates.customerList && (
                             <SelectBoxList dropUp={dropUpStates.customerList}>
-                              {customerJourneyList.length === 0 ? (
+                              {customerJourneyList?.length === 0 ? (
                                 <SelectBoxItem
                                   disabled={
                                     toolSteps >= 1 ||
@@ -842,7 +842,7 @@ const PageIdeaEvaluate = () => {
                                   </Body2>
                                 </SelectBoxItem>
                               ) : (
-                                customerJourneyList.map((item, index) => (
+                                customerJourneyList?.map((item, index) => (
                                   <SelectBoxItem
                                     // disabled={
                                     //   toolSteps >= 1
