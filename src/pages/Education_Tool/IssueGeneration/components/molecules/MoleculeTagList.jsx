@@ -291,7 +291,7 @@ const TagContainer = styled.div`
   &:hover {
     background-color: ${(props) => {
       if (props.disabled) return palette.gray100;
-      return props.selected ? palette.gray900 : palette.gray100;
+      return palette.gray100;
     }};
   }
 `;

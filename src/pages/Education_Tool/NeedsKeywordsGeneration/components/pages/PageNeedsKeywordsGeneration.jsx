@@ -8,10 +8,6 @@ import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
 import { Button, IconButton } from "../../../../../assets/styles/ButtonStyle";
-import {
-  FormBox,
-  CustomTextarea,
-} from "../../../../../assets/styles/InputStyle";
 import PopupWrap from "../../../../../assets/styles/Popup";
 import {
   ContentsWrap,
@@ -39,19 +35,6 @@ import {
   TOOL_STEP,
   TOOL_LOADING,
   PROJECT_SAAS,
-  DESIGN_ANALYSIS_BUSINESS_TITLE,
-  IDEA_GENERATION_START_POSITION,
-  IDEA_GENERATION_IDEA_LIST,
-  CUSTOMER_JOURNEY_MAP_REPORT,
-  CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA,
-  IDEA_GENERATION_PROBLEM_LIST,
-  PERSONA_LIST_SAAS,
-  IDEA_GENERATION_MANDALART_DATA,
-  IDEA_GENERATION_PROBLEM_LIST_TITLE,
-  IDEA_GENERATION_SELECTED_START_POSITION,
-  IDEA_GENERATION_SELECTED_MANDALART,
-  IDEA_GENERATION_POSSSESSION_TECH,
-  IDEA_GENERATION_SELECTED_PURPOSE,
   ISSUE_GENERATION_LIST,
   KEYWORDS_GENERATION_SELECTED_ISSUE,
   KEYWORDS_GENERATION_SELECTED_ISSUE_INDEX,
@@ -190,13 +173,6 @@ const PageNeedsKeywordsGeneration = () => {
           setSelectedIssue(issueIndexes);
         }
    
-        
-        // if (issueGenerationList && issueGenerationList.length > 0) {
-        //   setSelectedIssue(issueGenerationList ?? []);
-        // }
-        // if (keywordsGenerationSelectedIssueIndex) {
-        //   setSelectedIssue(keywordsGenerationSelectedIssueIndex ?? []);
-        // }
 
         // 완료된 단계 설정
         const completedStepsArray = [];
@@ -237,6 +213,7 @@ const PageNeedsKeywordsGeneration = () => {
         allItems = [...allItems, ...newItems];
 
         setIssueGenerationList(allItems);
+        // console.log("allItems", allItems);
       } catch (error) {
 
         setIssueGenerationList([]); // Set empty array on error
@@ -298,26 +275,6 @@ const PageNeedsKeywordsGeneration = () => {
       setUserCredits(userCreditValue)
 
 
-    // 각 title을 currentProblemList의 해당 인덱스에 할당
-    // 만약 currentProblemList가 더 짧다면 새 객체를 생성하여 추가
-  //   if (keywordsGenerationSelectedIssue.length > 3) {
-  //   const updatedProblemList = keywordsGenerationSelectedIssue.flatMap(
-  //    (issue) => {
-  //     return { issueGenerationSelectedStartPosition: issue.issueGenerationSelectedStartPosition };
-  //    }
-  //   );
-  // }
-
-
-
-    // await updateToolOnServer(
-    //   toolId,
-    //   {
-    //     completedStep: 2,
-     
-    //   },
-    //   isLoggedIn
-    // );
     try {
 
       if (keywordsGenerationSelectedIssue.length >= 3) {
@@ -339,11 +296,6 @@ const PageNeedsKeywordsGeneration = () => {
   
         const response = await EducationToolsRequest(Data, isLoggedIn, signal);
   
-        // console.log("response", response);
-  
-        // setIdeaGenerationStartPosition(
-        //   response.response.idea_generation_keyword_education
-        // );
   
         setKeywordsGenerationTag(
           response.response.needs_keywords_generation_clustering_education
@@ -361,11 +313,7 @@ const PageNeedsKeywordsGeneration = () => {
         )
       }else{
       
-        // const updatedProblemList = keywordsGenerationSelectedIssue.flatMap(
-        //   (issue) => {
-        //    return { issueGenerationSelectedStartPosition: issue.issueGenerationSelectedStartPosition };
-        //   }
-        //  );
+       
         const updatedProblemList = keywordsGenerationSelectedIssue.flatMap(issue => {
           if (issue.issueGenerationSelectedStartPosition && Array.isArray(issue.issueGenerationSelectedStartPosition)) {
             return issue.issueGenerationSelectedStartPosition.map(item => ({
@@ -388,36 +336,6 @@ const PageNeedsKeywordsGeneration = () => {
         )
       }
     
-    
-      // const Data = {
-      //   type: "ix_needs_keywords_generation_clustering_education",
-      //   business: business,
-      //   theme_list:updatedProblemList
-        
-      // };
-
-      // const response = await EducationToolsRequest(Data, isLoggedIn);
-
-      // console.log("response", response);
-
-      // // setIdeaGenerationStartPosition(
-      // //   response.response.idea_generation_keyword_education
-      // // );
-
-      // setKeywordsGenerationTag(
-      //   response.response.needs_keywords_generation_clustering_education
-      // );
-
-      // setIsLoading(false);
-      // await updateToolOnServer(
-      //   responseToolId,
-      //   {
-      //     completedStep: 2,
-      //     keywordsGenerationTag:
-      //       response.response.needs_keywords_generation_clustering_education,
-      //   },
-      //   isLoggedIn
-      // );
 
       setToolSteps(1);
     } catch (error) {
@@ -432,6 +350,9 @@ const PageNeedsKeywordsGeneration = () => {
   };
 
   const handleCheckboxChange = (ideaId) => {
+    if(toolSteps >= 1){
+      return;
+    }
     setSelectedIssue((prev) => {
       if (prev.includes(ideaId)) {
         // 이미 선택된 아이템이면 제거
@@ -532,7 +453,7 @@ const PageNeedsKeywordsGeneration = () => {
                 <span>01</span>
                 <div className="text" style={{ whiteSpace: "nowrap" }}>
                   <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
-                    문제 정의
+                    키워드 취합
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -547,7 +468,7 @@ const PageNeedsKeywordsGeneration = () => {
                 <span>02</span>
                 <div className="text" style={{ whiteSpace: "nowrap" }}>
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                    아이디어 키워드 도출
+                    키워드 클러스터링
                   </Body1>
                   {/* <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Design Sector
@@ -600,10 +521,9 @@ const PageNeedsKeywordsGeneration = () => {
                 ) : (
                   <>
                     <div className="title">
-                      <H3 color="gray800">Problem & Needs</H3>
+                      <H3 color="gray800">Collect Need’s Keyword</H3>
                       <Body3 color="gray800">
-                        고객 여정 분석을 원하는 주요 페르소나의 문제점 또는
-                        니즈를 도출하세요
+                        산발적으로 도출된 니즈 키워드를 하나의 풀로 모으세요
                       </Body3>
                     </div>
 
@@ -618,7 +538,7 @@ const PageNeedsKeywordsGeneration = () => {
                                   }}
                                 >
                                   <Body1 color="gray700">
-                                  아이디어 리스트 선택
+                                  필요한 니즈 키워드를 선택하여, 아이디어 발산 방향으로 정리하세요 
                                   </Body1>
                                 </div>
                                 {showSelectedIssue ? (
@@ -645,11 +565,13 @@ const PageNeedsKeywordsGeneration = () => {
                                         FlexStart
                                         key={index}
                                         id={index}
-                                        title={`${idea.updateDate.split(":")[0]}:${
-                                          idea.updateDate.split(":")[1]
-                                        } - 문제점 & 니즈 - ${
-                                          idea.title || "아이디어"
-                                        }`}
+                                        title = {`${idea.selectedPurposes.customerList
+                                          }`}
+                                        // title={`${idea.updateDate.split(":")[0]}:${
+                                        //   idea.updateDate.split(":")[1]
+                                        // } - 문제점 & 니즈 - ${
+                                        //   idea.title || "아이디어"
+                                        // }`}
                                         isSelected={selectedIssue.includes(index)}
                                         onSelect={() => handleCheckboxChange(index)}
                                       />
@@ -700,15 +622,14 @@ const PageNeedsKeywordsGeneration = () => {
                       <div className="title">
                         <H3 color="gray800">Idea Generation Theme</H3>
                         <Body3 color="gray800">
-                          문제와 니즈를 창의적 해결 주제로 전환하여, 아이디어
-                          발상의 방향을 정해주세요.
+                        수집된 키워드를 그룹화하여, 아이디어 발산의 핵심 키워드를 최종 선정하세요
                         </Body3>
                       </div>
 
                       <div className="content">
-                        <Title style={{ marginBottom: "-18px" }}>
+                        <Title style={{ marginBottom: "-18px", textAlign: "left" }}>
                           <Body1 color="gray700">
-                            {keywordsGenerationTag.length}개의 고객 여정 지도 결과를 취합한 핵심 니즈 키워드입니다.
+                            {keywordsGenerationTag.length}개의 고객 여정 분석 결과를 통합해 정리한 핵심 니즈 키워드입니다.<br />해당 키워드는 아이디어 발산의 주제어로 선택 가능합니다.
                           </Body1>
                         </Title>
 

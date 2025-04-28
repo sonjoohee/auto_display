@@ -658,7 +658,7 @@ const PageIssueGeneration = () => {
                 <span>01</span>
                 <div className="text" style={{ whiteSpace: "nowrap" }}>
                   <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
-                    문제 정의
+                  MoT 정의
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -673,7 +673,7 @@ const PageIssueGeneration = () => {
                 <span>02</span>
                 <div className="text" style={{ whiteSpace: "nowrap" }}>
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                    아이디어 키워드 도출
+                  핵심 니즈 정의​
                   </Body1>
                   {/* <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Design Sector
@@ -691,7 +691,7 @@ const PageIssueGeneration = () => {
                 <span>03</span>
                 <div className="text" style={{ whiteSpace: "nowrap" }}>
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    아이디어 발상
+                  키워드 선택​
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -726,10 +726,9 @@ const PageIssueGeneration = () => {
                 ) : (
                   <>
                     <div className="title">
-                      <H3 color="gray800">Problem & Needs</H3>
+                      <H3 color="gray800">Identify MoT Moment</H3>
                       <Body3 color="gray800">
-                        고객 여정 분석을 원하는 주요 페르소나의 문제점 또는
-                        니즈를 도출하세요
+                      고객 여정에서 MoT를 찾아, 아이디어의 기회를 포착하세요​
                       </Body3>
                     </div>
 
@@ -843,7 +842,7 @@ const PageIssueGeneration = () => {
                               alignItems: "center",
                             }}
                           >
-                            <AtomPersonaLoader message="문제점 & 니즈 리스트를 불러오고 있어요..." />
+                            <AtomPersonaLoader message="선택하신 고객 여정에서 MoT 순간을 분석하고 있어요" />
                           </div>
                         ) : (
                           <>
@@ -858,7 +857,7 @@ const PageIssueGeneration = () => {
                                   color="gray700"
                                   align="center !important"
                                 >
-                                  고객 여정 지도 툴을 선행하세요.
+                                분석할 고객 여정 지도를 선택하고, <br /> 핵심 MoT를 도출하세요 
                                 </Body2>
                               </BoxWrap>
                             ) : (
@@ -923,24 +922,29 @@ const PageIssueGeneration = () => {
                 ) : (
                   <>
                     <div className="title">
-                      <H3 color="gray800">Idea Generation Theme</H3>
+                      <H3 color="gray800">Defining Key Needs</H3>
                       <Body3 color="gray800">
-                        문제와 니즈를 창의적 해결 주제로 전환하여, 아이디어
-                        발상의 방향을 정해주세요.
+                      문제 정의를 통해 도출된 니즈를 바탕으로 아이디어 방향을 설정합니다.
                       </Body3>
                     </div>
 
                     <div className="content">
-                      <ListBoxGroup>
-                        <li>
+                      <ListBoxGroup style={{ alignItems: "flex-start" }}>
+                        <li style={{ alignItems: "flex-start" }}>
                           <Body2 color="gray500">고객 여정 맵</Body2>
 
-                          <Body2 color="gray500">
+                          <Body2 
+                            color="gray500"
+                            style={{ 
+                              alignSelf: "flex-start",
+                              verticalAlign: "top"
+                            }}
+                          >
                             {selectedPurposes.customerList}
                           </Body2>
                         </li>
 
-                        <li>
+                        <li style={{ alignItems: "flex-start" }}>
                           <Body2 color="gray500">분석 장면 선택</Body2>
 
                           <Body2
@@ -956,6 +960,8 @@ const PageIssueGeneration = () => {
                               overflow: "visible",
                               maxWidth: "100%",
                               textAlign: "left",
+                              alignSelf: "flex-start",
+                              verticalAlign: "top"
                             }}
                           >
                             {issueGenerationSelectedStartPosition?.length > 0
@@ -972,7 +978,7 @@ const PageIssueGeneration = () => {
                       <div className="content">
                         <Title style={{ marginBottom: "-18px" }}>
                           <Body1 color="gray700">
-                            아이디어 시작점을 선택하세요 (8개 선택필수)
+                          MoT 기반으로 도출한 방향성 중, 아이디어 발산 키워드를 선택하세요. (8개 필수 선택)
                           </Body1>
                         </Title>
 
@@ -1007,7 +1013,7 @@ const PageIssueGeneration = () => {
             )}
 
             {activeTab === 3 && completedSteps.includes(2) && (
-              <TabContent5 Small>
+              <TabContent5 >
                 {isLoadingReport ? (
                   <div
                     style={{
@@ -1023,22 +1029,28 @@ const PageIssueGeneration = () => {
                 ) : (
                   <>
                     <div className="title">
-                      <H3 color="gray800">Participating Persona</H3>
-                      <Body3 color="gray800">아이디에이션 태그 결과</Body3>
+                      <H3 color="gray800">Selected Keywords</H3>
+                      <Body3 color="gray800">고객 여정과 MoT 분석을 통해 최종 선택한 니즈 키워드를 확인하세요</Body3>
                     </div>
 
                     <div className="content">
-                      <ListBoxGroup>
-                        <li>
+                      <ListBoxGroup style={{ alignItems: "flex-start" }}>
+                        <li style={{ alignItems: "flex-start"}}>
                           <Body2 color="gray500">고객 여정 맵</Body2>
 
-                          <Body2 color="gray500">
+                          <Body2 
+                            color="gray500"
+                            style={{ 
+                              alignSelf: "flex-start",
+                              verticalAlign: "top",
+                            }}
+                          >
                             {selectedPurposes.customerList}
                           </Body2>
                         </li>
 
-                        <li>
-                          <Body2 color="gray500">분석 장면 선택</Body2>
+                        <li style={{ alignItems: "flex-start" }}>
+                          <Body2 color="gray500" >분석 장면 선택</Body2>
 
                           <Body2
                             color={
@@ -1053,6 +1065,9 @@ const PageIssueGeneration = () => {
                               overflow: "visible",
                               maxWidth: "100%",
                               textAlign: "left",
+                              alignSelf: "flex-start",
+                              verticalAlign: "top",
+                   
                             }}
                           >
                             {issueGenerationSelectedStartPosition?.length > 0
@@ -1068,7 +1083,7 @@ const PageIssueGeneration = () => {
                     <div className="content">
                       <TabContent5Item style={{ marginTop: "20px" }}>
                         <div className="title">
-                          <Body1 color="gray800">아이디어 시작점</Body1>
+                          <Body1 color="gray800">해당 니즈 키워드는 아이디어 발상하는 데 활용됩니다. </Body1>
                         </div>
 
                         <MoleculeSelectedTagList
