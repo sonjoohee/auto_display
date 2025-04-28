@@ -59,10 +59,10 @@ const PageProjectCreate = () => {
   const [projectEducationState, setProjectEducationState] = useAtom(
     PROJECT_EDUCATION_STATE
   );
-  console.log(
-    "🚀 ~ PageProjectCreate ~ projectEducationState:",
-    projectEducationState
-  );
+  // console.log(
+  //   "🚀 ~ PageProjectCreate ~ projectEducationState:",
+  //   projectEducationState
+  // );
   const [projectEducationCode, setProjectEducationCode] = useAtom(
     PROJECT_EDUCATION_CODE
   );

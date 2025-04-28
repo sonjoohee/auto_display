@@ -271,13 +271,6 @@ const PageBusinessModelCanvas = () => {
     };
   }, [showToast]);
 
-
-
-
-  console.log("ideaEvaluateSelectedList", ideaEvaluateSelectedList);
-  console.log("ideaEvaluateSelectedListIndex", ideaEvaluateSelectedListIndex);
-
-
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)

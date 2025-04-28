@@ -163,7 +163,7 @@ const MoleculeSignupEducationForm = () => {
         }
       }
     } catch (error) {
-      console.log("🚀 ~ handleSignup ~ error response:", response);
+      // console.log("🚀 ~ handleSignup ~ error response:", response);
       // setErrorStatus(error);
       setErrorStatus("서버와의 통신 중 오류가 발생했습니다.");
     } finally {

@@ -149,7 +149,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
 
         if (userInfoResponse.ok) {
           const userInfo = await userInfoResponse.json();
-          console.log("🚀 ~ handleLogin ~ userInfo:", userInfo);
+          // console.log("🚀 ~ handleLogin ~ userInfo:", userInfo);
 
           // if (
           //   userInfo.email === "yspark@userconnect.kr" ||

@@ -218,10 +218,10 @@ const PageKanoModel = () => {
           setKanoModelProductAnalysis(kanoModelProductAnalysis);
         }
         if (kanoModelGraphData && kanoModelGraphData.length > 0) {
-          console.log(
-            "🚀 ~ interviewLoading ~ kanoModelGraphData:",
-            kanoModelGraphData
-          );
+          // console.log(
+          //   "🚀 ~ interviewLoading ~ kanoModelGraphData:",
+          //   kanoModelGraphData
+          // );
 
           setKanoModelGraphData(kanoModelGraphData);
         }

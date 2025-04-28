@@ -28,7 +28,6 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
     // if (onBoxClick) {
       // onBoxClick(id);
       setShowPopup(id);
-      console.log(id);
     // }
   };
 

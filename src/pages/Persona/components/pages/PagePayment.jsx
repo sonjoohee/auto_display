@@ -49,8 +49,8 @@ const PagePayment = () => {
     }
 
     if (tid && orderId) {
-      console.log("🚀 ~ useEffect ~ tid:", tid);
-      console.log("🚀 ~ useEffect ~ orderId:", orderId);
+      // console.log("🚀 ~ useEffect ~ tid:", tid);
+      // console.log("🚀 ~ useEffect ~ orderId:", orderId);
 
       const verifyPayment = async () => {
         try {
@@ -107,7 +107,7 @@ const PagePayment = () => {
   }, [location]);
 
   const onePayments = (e) => {
-    console.log("onePayments");
+    // console.log("onePayments");
 
     if (window.AUTHNICE) {
       // 상품 가격 추출
