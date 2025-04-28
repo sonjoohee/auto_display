@@ -49,6 +49,9 @@ const PagePayment = () => {
     }
 
     if (tid && orderId) {
+      console.log("🚀 ~ useEffect ~ tid:", tid);
+      console.log("🚀 ~ useEffect ~ orderId:", orderId);
+
       const verifyPayment = async () => {
         try {
           // const response = await fetch("http://localhost:8000/payment/onePay", {
@@ -118,13 +121,11 @@ const PagePayment = () => {
       const goodsItem = "Credit" + credit;
 
       window.AUTHNICE.requestPay({
-        // clientId: "S2_9fea099793f145afa7800b21958ab376",
         clientId: "R2_7a52394e0f5e4d298ff882d3931f1e8f",
         method: "card",
         orderId: createdOrderId,
         amount: price,
         goodsName: goodsItem,
-        // returnUrl: "http://localhost:8000/payment/onePayCall",
         returnUrl: "https://wishresearch.kr/payment/onePayCall",
         fnError: function (result) {
           alert("개발자확인용 : " + result.errorMsg + "");
@@ -181,7 +182,7 @@ const PagePayment = () => {
 
                   <PaymentPrice>
                     <Button Large PrimaryLightest Fill Round W100>
-                      <H5 data-price="100">￦4,900</H5>
+                      <H5 data-price="4900">￦4,900</H5>
                     </Button>
 
                     <H6 color="gray700">11% 할인</H6>
@@ -242,91 +243,13 @@ const PagePayment = () => {
                 </PaymentCredit>
               </PaymentCard>
             </PaymentWrap>
-
-            {/* <PaymentCard>
-              <PaymentPlan>
-                <PlanTitle>
-                  <H2>Basic Plan</H2>
-                  <h1>FREE</h1>
-                </PlanTitle>
-
-                <PlanList>
-                  <li>
-                    <img src={images.CheckGreen} alt="" />
-                    <H6 color="gray500">비즈니스 페르소나 요청 1건 / My Persona 요청 불가</H6>
-                  </li>
-                  <li>
-                    <img src={images.CheckGreen} alt="" />
-                    <H6 color="gray500">인터뷰 커스터마이징 3건</H6>
-                  </li>
-                  <li>
-                    <img src={images.CheckGreen} alt="" />
-                    <H6 color="gray500">인뎁스 인터뷰 사용 불가능</H6>
-                  </li>
-                  <li>
-                    <img src={images.CheckGreen} alt="" />
-                    <H6 color="gray500">인터뷰 룸 추가질문 1건 가능</H6>
-                  </li>
-                </PlanList>
-
-                {isProPlan ? (
-                  <>
-                    <Button DbExLarge Round Outline W100>
-                      <Body2 color="gray500">다운그레이드 하기</Body2>
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button DbExLarge Round W100>
-                      <Body2 color="gray500">시작하기</Body2>
-                    </Button>
-                  </>
-                )}
-              </PaymentPlan>
-
-              <PaymentPlan>
-                <PlanTitle>
-                  <H2>Pro Plan</H2>
-                  <h1 className="price">12,900</h1>
-                </PlanTitle>
-
-                <PlanList>
-                  <li>
-                    <img src={images.CheckGreen} alt="" />
-                    <H6 color="gray500">비즈니스 페르소나 요청 10건</H6>
-                  </li>
-                  <li>
-                    <img src={images.CheckGreen} alt="" />
-                    <H6 color="gray500">인터뷰 커스터마이징 무제한</H6>
-                  </li>
-                  <li>
-                    <img src={images.CheckGreen} alt="" />
-                    <H6 color="gray500">인뎁스 인터뷰 1건 가능</H6>
-                  </li>
-                  <li>
-                    <img src={images.CheckGreen} alt="" />
-                    <H6 color="gray500">인터뷰 룸 추가질문 3건 가능 </H6>
-                  </li>
-                </PlanList>
-
-                {isProPlan ? (
-                  <Button DbExLarge Round W100>
-                    <Body2 color="gray500">현재 플랜</Body2>
-                  </Button>
-                ) : (
-                  <Button DbExLarge Primary Fill Round W100 onClick={handlePlanChange}>
-                    <Body2 color="white">시작하기</Body2>
-                  </Button>
-                )}
-              </PaymentPlan>
-            </PaymentCard> */}
           </PaymentWrap>
 
           {showSuccessPopup && (
             <PopupWrap
               Success
               title="결제 완료!"
-              message="성공적으로 Pro 업그레이드에 성공 하셨습니다!"
+              message="성공적으로 결제 하셨습니다!"
               buttonType="Outline"
               confirmText="확인"
               isModal={false}
@@ -341,7 +264,7 @@ const PagePayment = () => {
               title="결제 실패"
               message={
                 <>
-                  현재 (문제명)로 인하여 결제에 실패했습니다.
+                  결제에 실패했습니다.
                   <br />
                   다시 시도해주세요
                 </>
