@@ -576,16 +576,38 @@ const PageIdeaGeneration = () => {
         const reportMaxRetries = 10;
         while (
           reportRetryCount < reportMaxRetries &&
-          (!reportResponse ||
+          ( // 데이터가 유효하지 않거나 불완전한 경우 루프 계속
+            !reportResponse ||
             !reportResponse?.response ||
             !reportResponse?.response?.idea_generation_report_education ||
-            !reportResponse?.response?.idea_generation_report_education
-              ?.core_ideas ||
-            !reportResponse?.response?.idea_generation_report_education
-              ?.detailed_execution_ideas ||
-            !reportResponse?.response?.idea_generation_report_education
-              ?.additional_execution_ideas)
+            !reportResponse?.response?.idea_generation_report_education?.core_ideas ||
+
+            // detailed_execution_ideas 검사: 유효한 객체 배열이 아닌 경우 계속
+            !(
+              Array.isArray(reportResponse?.response?.idea_generation_report_education?.detailed_execution_ideas) &&
+              reportResponse.response.idea_generation_report_education.detailed_execution_ideas.every(
+                (item) =>
+                  typeof item === "object" &&
+                  item !== null &&
+                  "idea_title" in item &&
+                  "idea_description" in item
+              )
+            ) ||
+
+            // additional_execution_ideas 검사: 유효한 객체 배열이 아닌 경우 계속
+            !(
+              Array.isArray(reportResponse?.response?.idea_generation_report_education?.additional_execution_ideas) &&
+              reportResponse.response.idea_generation_report_education.additional_execution_ideas.every(
+                (item) =>
+                  typeof item === "object" &&
+                  item !== null &&
+                  "idea_title" in item &&
+                  "idea_description" in item
+              )
+            )
+          )
         ) {
+          console.log("reportRetryCount", reportRetryCount);
           reportResponse = await EducationToolsRequest(data, isLoggedIn);
           reportRetryCount++;
         }
