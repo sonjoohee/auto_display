@@ -4316,24 +4316,10 @@ export const EducationToolsRequest = async (data, isLoggedIn, abortSignal) => {
       return response.data;
     }
 
-    await new Promise((resolve, reject) => {
-      const timeout = setTimeout(resolve, response.data.time);
-      
-      // abort signal이 발생하면 타임아웃 제거하고 Promise 취소
-      if (abortSignal) {
-        abortSignal.addEventListener('abort', () => {
-          clearTimeout(timeout);
-          reject(new DOMException('Aborted', 'AbortError'));
-        });
-      }
-    });
-
-    // abort signal 확인
-    if (abortSignal && abortSignal.aborted) {
-      throw new DOMException('Aborted', 'AbortError');
-    }
+    await new Promise((resolve) => setTimeout(resolve, response.data.time));
 
     const result = await getTermkeyResult(response.data.objectId, abortSignal);
+
     return result;
   } catch (error) {
     console.error(error);
