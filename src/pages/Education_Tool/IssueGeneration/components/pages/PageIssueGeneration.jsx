@@ -977,7 +977,7 @@ const PageIssueGeneration = () => {
                                 .map((item) => item.content)
                                 .flat() // 모든 content 배열을 하나로 합침
                             }
-                            disabled={toolSteps >= 3}
+                            disabled={toolSteps >= 2}
                           />
                         </CardGroupWrap>
                       </div>
