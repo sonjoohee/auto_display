@@ -41,12 +41,15 @@ import {
   PROJECT_TOTAL_INFO,
   PROJECT_CREATE_INFO,
   PROJECT_SAAS,
+  CREDIT_CREATE_INTERVIEW,
+  USER_CREDITS,
 } from "../../../../pages/AtomStates";
 import {
   updateProjectOnServer,
   UserCreditCheck,
   UserCreditUse,
   createProjectReportOnServer,
+  UserCreditInfo,
 } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "../../../../pages/Persona/components/molecules/MoleculeRecreate";
 import { InterviewXPersonaSingleInterviewGeneratorRequest } from "../../../../utils/indexedDB";
@@ -65,6 +68,8 @@ const OrganismToastPopupSingleChat = ({
   isIndepth,
 }) => {
   const [projectSaas] = useAtom(PROJECT_SAAS);
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [creditCreateInterview] = useAtom(CREDIT_CREATE_INTERVIEW);
   const project = projectSaas;
   const [selectedPersonaList, setSelectedPersonaList] = useAtom(
     SELECTED_PERSONA_LIST
@@ -1076,6 +1081,23 @@ const OrganismToastPopupSingleChat = ({
         "interviewSingle"
       );
       setReportId(newReportId); // 생성된 대화 ID 설정
+
+      const creditUsePayload = {
+        title: project.projectTitle,
+        service_type: "심층 인터뷰 룸",
+        target: "",
+        state: "use",
+        mount: creditCreateInterview,
+      };
+  
+      await UserCreditUse(creditUsePayload, isLoggedIn);
+  
+      // 크레딧 사용 후 사용자 정보 새로고침
+  
+        const userCreditValue = await UserCreditInfo(isLoggedIn);
+        // 전역 상태의 크레딧 정보 업데이트
+        setUserCredits(userCreditValue);
+  
     } catch (error) {
       // console.error("Failed to create project on server:", error);
     }
@@ -1327,6 +1349,7 @@ const OrganismToastPopupSingleChat = ({
     // 크레딧 사용 처리가 완료되면 입력 활성화
     setIsInputEnabled(true);
   };
+
 
   return (
     <>

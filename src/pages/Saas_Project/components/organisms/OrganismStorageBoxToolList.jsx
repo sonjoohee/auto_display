@@ -198,6 +198,7 @@ import {
   KEYWORDS_GENERATION_SELECTED_ISSUE,
   KEYWORDS_GENERATION_SELECTED_ISSUE_INDEX,
   KEYWORDS_GENERATION_TAG,
+  CREDIT_CREATE_TOOL_LOADED,
 } from "../../../AtomStates";
 import {
   updateToolOnServer,
@@ -211,6 +212,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [isLoading] = React.useState(false);
   const [isLoggedIn] = React.useState(false);
   const [localToolList, setLocalToolList] = useState(toolListSaas || []);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
 
   useEffect(() => {
     setLocalToolList(toolListSaas);
@@ -1214,6 +1216,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setCustomerJourneyMapReport([]);
         setCustomerJourneyMapSelectedDirection([]);
         setToolLoading(false);
+        setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setCustomerJourneyMapMomentAnalysis(
@@ -1238,6 +1241,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setIssueGenerationStartPosition([]);
         setIssueGenerationSelectedStartPosition([]);
         setToolLoading(false);
+        setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setIssueGenerationSelectedPurpose(chatData?.selectedPurposes || {});
@@ -1260,6 +1264,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setKeywordsGenerationSelectedIssue([]);
         setKeywordsGenerationTag([]);
         setToolLoading(false);
+        setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setKeywordsGenerationSelectedIssue(
@@ -1281,6 +1286,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setIdeaGenerationSelectedMandalart(null);
         setIdeaGenerationPossessionTech("");
         setToolLoading(false);
+        setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setIdeaGenerationSelectedPurpose(chatData?.selectedPurposes || {});
@@ -1307,6 +1313,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setKanoModelEvaluation([]);
         setKanoModelProductAnalysis([]);
         setToolLoading(false);
+        setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setSelectedKanoModelIdea(chatData?.kanoModelSelectedIdea || []);
@@ -1325,6 +1332,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setIdeaEvaluateSelectedKanoModel({});
         setIdeaEvaluateSelectedKanoModelIndex({});
         setToolLoading(false);
+        setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setIdeaEvaluateList(chatData?.ideaEvaluateList || []);
@@ -1347,6 +1355,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setConceptDefinitionFirstReport("");
         setConceptDefinitionFinalReport("");
         setToolLoading(false);
+        setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setConceptDefinitionSelectedPurpose(chatData?.selectedKanoModel || {});

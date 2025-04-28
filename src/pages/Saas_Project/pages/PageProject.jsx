@@ -55,6 +55,8 @@ import {
   EDUCATION_STATE,
   PROJECT_EDUCATION_STATE,
   PROJECT_EDUCATION_CODE,
+  CREDIT_CREATE_TOOL_LOW,
+  CREDIT_CREATE_TOOL_HIGH,
 } from "../../AtomStates";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 
@@ -78,6 +80,8 @@ const PageProject = () => {
   const [, setCreditCreateMultimodal] = useAtom(CREDIT_CREATE_MULTIMODAL);
   const [, setCreditCreateInterview] = useAtom(CREDIT_CREATE_INTERVIEW);
   const [, setCreditCreateProject] = useAtom(CREDIT_CREATE_PROJECT);
+  const [, setCreditCreateToolLow] = useAtom(CREDIT_CREATE_TOOL_LOW);
+  const [, setCreditCreateToolHigh] = useAtom(CREDIT_CREATE_TOOL_HIGH);
   const [, setEventTitle] = useAtom(EVENT_TITLE);
   const [, setEventState] = useAtom(EVENT_STATE);
   const [, setTrialState] = useAtom(TRIAL_STATE);
@@ -114,7 +118,7 @@ const PageProject = () => {
           );
 
           if (response) {
-            // console.log("🚀 ~ fetchCreditInfo ~ response:", response);
+            console.log("🚀 ~ fetchCreditInfo ~ response:", response);
             setCreditRequestCustomPersona(response.request_custom_persona);
             setCreditRequestBusinessPersona(response.request_business_persona);
             setCreditCustomTheory(response.custom_theory);
@@ -129,6 +133,8 @@ const PageProject = () => {
             setCreditCreateMultimodal(response.create_multimodal);
             setCreditCreateInterview(response.create_interview);
             setCreditCreateProject(response.create_project);
+            setCreditCreateToolLow(response.create_tool_low);
+            setCreditCreateToolHigh(response.create_tool_high);
           }
           sessionStorage.setItem(
             "educationState",

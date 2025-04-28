@@ -19,6 +19,9 @@ import {
   EVENT_TITLE,
   TRIAL_STATE,
   USER_CREDITS,
+  CREDIT_CREATE_INTERVIEW,
+  CREDIT_CREATE_TOOL_LOADED,
+  EDUCATION_STATE,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -60,6 +63,9 @@ const PagePersona3Multiple = () => {
   const navigate = useNavigate();
 
   const [, setUserCredits] = useAtom(USER_CREDITS);
+  const [creditCreateInterview] = useAtom(CREDIT_CREATE_INTERVIEW);
+  const [creditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [educationState] = useAtom(EDUCATION_STATE);
   const [eventState, ] = useAtom(EVENT_STATE);
   const [eventTitle, ] = useAtom(EVENT_TITLE);
   const [trialState, ] = useAtom(TRIAL_STATE);
@@ -100,6 +106,28 @@ const PagePersona3Multiple = () => {
   const [showRequestPopup, setShowRequestPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [activeTab, ] = useState(1);
+  const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
+  const [showCreditLessPopup, setShowCreditLessPopup] = useState(false);
+
+  useEffect(() => {
+    const checkCredit = async () => {
+      if(!creditCreateToolLoaded){
+      setShowCreatePersonaPopup(true);
+       // 크레딧 사용전 사용 확인
+       const creditPayload = {
+        // 기존 10 대신 additionalQuestionMount 사용
+        mount: creditCreateInterview,
+      };
+      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+
+      if (creditResponse?.state !== "use") {
+        setShowCreditLessPopup(true);
+        return;
+      }
+    }
+  }
+    checkCredit();
+  }, []);
 
   // 인터뷰 목적 선택 핸들러 수정
   const handleInterviewPurposeSelect = (title) => {
@@ -503,7 +531,9 @@ const PagePersona3Multiple = () => {
   }, [navigate]);
 
 
-
+  const handleConfirmCredit = async () => {
+    setShowCreatePersonaPopup(false);
+  };
 
   return (
     <>
@@ -1036,6 +1066,95 @@ const PagePersona3Multiple = () => {
                 onConfirm={() => setShowInterviewTypeAlert(false)}
               />
             )}
+
+{showCreatePersonaPopup &&
+        (eventState && !educationState ? (
+          <PopupWrap
+            Event
+            title="심층 인터뷰 룸"
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditCreateInterview} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : trialState && !educationState ? (
+          <PopupWrap
+            Check
+            title="심층 인터뷰 룸"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateInterview} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="심층 인터뷰 룸"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateInterview} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ))}
+         {showCreditLessPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => {
+            setShowCreditLessPopup(false);
+            navigate("/Tool");
+          }}
+          onConfirm={() => {
+            setShowCreditLessPopup(false);
+            navigate("/Tool");
+          }}
+        />
+      )}
           </PersonaSingleWrap>
         </MainContent>
       </ContentsWrap>

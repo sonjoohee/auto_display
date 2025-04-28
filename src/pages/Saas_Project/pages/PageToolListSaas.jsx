@@ -173,6 +173,8 @@ import {
   IDEA_GENERATION_START_POSITION,
   CONCEPT_DEFINITION_FIRST_REPORT,
   CONCEPT_DEFINITION_FINAL_REPORT,
+  BUSINESS_MODEL_CANVAS_MARKDOWN,
+  CREDIT_CREATE_TOOL_LOADED
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -199,6 +201,7 @@ const PageToolListSaas = () => {
 
   const navigate = useNavigate();
   const [projectEducationState] = useAtom(PROJECT_EDUCATION_STATE);
+  const [, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
 
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [, setToolLoading] = useAtom(TOOL_LOADING);
@@ -514,6 +517,9 @@ const PageToolListSaas = () => {
   const [, setConceptDefinitionFinalReport] = useAtom(
     CONCEPT_DEFINITION_FINAL_REPORT
   );
+  const [, setBusinessModelCanvasMarkdown] = useAtom(
+    BUSINESS_MODEL_CANVAS_MARKDOWN
+  );
 
   // 초기화 useEffect
   useEffect(() => {
@@ -623,6 +629,7 @@ const PageToolListSaas = () => {
     // 모든 관련 atom 상태 초기화
     setToolStep(0);
     setToolId("");
+    setCreditCreateToolLoaded(false);
 
     // Target Discovery 관련 atom 초기화
     setTargetDiscoveryInfo({});
@@ -714,6 +721,9 @@ const PageToolListSaas = () => {
     //concept definition education 초기화
     setConceptDefinitionFirstReport("");
     setConceptDefinitionFinalReport("");
+
+    //business model canvas education 초기화
+    setBusinessModelCanvasMarkdown("");
   }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   useEffect(() => {

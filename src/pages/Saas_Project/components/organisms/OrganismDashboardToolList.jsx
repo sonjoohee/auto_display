@@ -197,6 +197,7 @@ import {
   KEYWORDS_GENERATION_SELECTED_ISSUE,
   KEYWORDS_GENERATION_SELECTED_ISSUE_INDEX,
   KEYWORDS_GENERATION_TAG,
+  CREDIT_CREATE_TOOL_LOADED,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -205,6 +206,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const navigate = useNavigate();
   const [isLoading] = React.useState(false);
   const [isLoggedIn] = React.useState(false);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
 
   // 상태 변수들 정의
   const [, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
@@ -578,6 +580,8 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           return "핵심 문제 정의";
         case "ix_needs_keywords_generation_education":
           return "핵심 키워드 추출";
+        case "ix_nps_education":
+          return "NPS";
         default:
           return tool.type;
       }
@@ -718,6 +722,8 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
               )
               .join("") || "상세 내용 없음"
           );
+        case "ix_nps_education":
+          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
         default:
           return tool.type;
       }
@@ -787,6 +793,8 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         case "ix_concept_definition_education":
           return tool.completedStep === 3 ? "완료" : "진행중";
         case "ix_prfaq_education":
+          return tool.completedStep === 3 ? "완료" : "진행중";
+        case "ix_nps_education":
           return tool.completedStep === 3 ? "완료" : "진행중";
         default:
           return "-";
@@ -1202,6 +1210,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setCustomerJourneyMapReport([]);
         setCustomerJourneyMapSelectedDirection([]);
         setToolLoading(false);
+        setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setCustomerJourneyMapMomentAnalysis(
@@ -1226,6 +1235,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setIssueGenerationStartPosition([]);
         setIssueGenerationSelectedStartPosition([]);
         setToolLoading(false);
+        setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setIssueGenerationSelectedPurpose(chatData?.selectedPurposes || {});
@@ -1248,6 +1258,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setKeywordsGenerationSelectedIssue([]);
         setKeywordsGenerationTag([]);
         setToolLoading(false);
+        setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setKeywordsGenerationSelectedIssue(
@@ -1269,6 +1280,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setIdeaGenerationSelectedMandalart(null);
         setIdeaGenerationPossessionTech("");
         setToolLoading(false);
+        setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setIdeaGenerationSelectedPurpose(chatData?.selectedPurposes || {});
@@ -1295,6 +1307,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setKanoModelEvaluation([]);
         setKanoModelProductAnalysis([]);
         setToolLoading(false);
+        setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setSelectedKanoModelIdea(chatData?.kanoModelSelectedIdea || []);
@@ -1313,6 +1326,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setIdeaEvaluateSelectedKanoModel({});
         setIdeaEvaluateSelectedKanoModelIndex({});
         setToolLoading(false);
+        setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setIdeaEvaluateList(chatData?.ideaEvaluateList || []);
@@ -1335,6 +1349,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setConceptDefinitionFirstReport("");
         setConceptDefinitionFinalReport("");
         setToolLoading(false);
+        setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
         setToolId(chatData?.id);
         setConceptDefinitionSelectedPurpose(chatData?.selectedKanoModel || {});
@@ -1388,6 +1403,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         } else if (chatData.type === "ix_needs_keywords_generation_education") {
           setToolLoading(true);
           navigate("/NeedsKeywordsGeneration");
+        } else if (chatData.type === "ix_nps_education") {
+          setToolLoading(true);
+          navigate("/Nps");
         }
       } catch (error) {}
     } else if (conversationType === "interviewSingle") {

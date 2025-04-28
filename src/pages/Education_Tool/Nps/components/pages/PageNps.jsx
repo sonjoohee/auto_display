@@ -53,6 +53,13 @@ import {
   NPS_CONCEPT_DEFINITION,
   PERSONA_LIST_SAAS,
   NPS_SELECTED_CONCEPT,
+  EVENT_STATE,
+  TRIAL_STATE,
+  EVENT_TITLE,
+  CREDIT_CREATE_TOOL,
+  USER_CREDITS,
+  CREDIT_CREATE_TOOL_LOADED,
+  EDUCATION_STATE,
 } from "../../../../AtomStates";
 import {
   H4,
@@ -70,6 +77,9 @@ import {
   getFindToolListOnServerSaas,
   EducationToolsRequest,
   InterviewXNPSConceptboardMultimodalRequest,
+  UserCreditCheck,
+  UserCreditUse,
+  UserCreditInfo,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
@@ -99,6 +109,13 @@ const PageNps = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [eventState] = useAtom(EVENT_STATE);
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
+  const [creditCreateTool, setCreditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [educationState] = useAtom(EDUCATION_STATE);
   const [personaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -202,6 +219,9 @@ const PageNps = () => {
   const [isCustomPopupOpen, setIsCustomPopupOpen] = useState(false);
   const [isCustomLoading, setIsCustomLoading] = useState(false);
   const [npsConceptDefinition, setNpsConceptDefinition] = useState([]);
+  const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
+
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -232,6 +252,20 @@ const PageNps = () => {
 
   useEffect(() => {
     const interviewLoading = async () => {
+      if(!creditCreateToolLoaded){
+      setShowCreatePersonaPopup(true);
+      // 크레딧 사용전 사용 확인
+      const creditPayload = {
+        // 기존 10 대신 additionalQuestionMount 사용
+        mount: creditCreateTool,
+      };
+      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+
+      if (creditResponse?.state !== "use") {
+        setShowCreditPopup(true);
+        return;
+      }
+      }
       // 비즈니스 정보 설정 (Step 1)
 
       const projectAnalysis =
@@ -576,7 +610,7 @@ const PageNps = () => {
         const responseToolId = await createToolOnServer(
           {
             projectId: project._id,
-            type: "ix_quick_survey_question",
+            type: "ix_nps_education",
           },
           isLoggedIn
         );
@@ -660,6 +694,17 @@ const PageNps = () => {
 
       setQuickSurveySurveyMethod(quickSurveyAnalysis[selectedQuestion]);
       setQuickSurveySelectedQuestion(selectedQuestion);
+
+
+      const responseToolId = await createToolOnServer(
+        {
+          projectId: project._id,
+          type: "ix_nps_education",
+        },
+        isLoggedIn
+      );
+
+      setToolId(responseToolId);
 
       await updateToolOnServer(
         toolId,
@@ -1298,6 +1343,12 @@ const PageNps = () => {
     setQuickSurveyCustomQuestion(null); // aiResponse 초기화
   };
 
+
+  const handleConfirmCredit = async () => {
+    setShowCreatePersonaPopup(false);
+  };
+
+
   return (
     <>
       <DropzoneStyles />
@@ -1579,7 +1630,14 @@ const PageNps = () => {
                         Fill
                         Round
                         onClick={handleSubmitConcept}
-                        // disabled={!projectDescription || toolSteps >= 1}
+                        disabled={
+                          interviewModeType === "conceptBoard"
+                            ? toolSteps >= 1 ||
+                              !uploadedFiles.length > 0
+                            : 
+                              !selectedConcept.length > 0 ||
+                              toolSteps >= 1
+                        }
                       >
                         다음
                       </Button>
@@ -1716,18 +1774,12 @@ const PageNps = () => {
               (completedSteps.includes(2) || completedSteps.includes(3)) && (
                 <TabContent5 Small>
                   {isLoadingReport ? (
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                        minHeight: "200px",
-                        alignItems: "center",
-                      }}
-                    >
-                      {/* <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" /> */}
+                    <LoadingContainer>
                       <WaitLongLodingBar />
-                    </div>
+                      <LoadingText color="gray700">
+                        결과보고서를 작성하고 있습니다. (1분 정도 걸려요)
+                      </LoadingText>
+                    </LoadingContainer>
                   ) : (
                     <>
                       <BgBoxItem primaryLightest>
@@ -2065,6 +2117,96 @@ const PageNps = () => {
           isModal={false}
           onCancel={() => setShowPopupSave(false)}
           onConfirm={() => setShowPopupSave(false)}
+        />
+      )}
+
+{showCreatePersonaPopup &&
+        (eventState && !educationState ? (
+          <PopupWrap
+            Event
+            title="NPS "
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : trialState && !educationState ? (
+          <PopupWrap
+            Check
+            title="NPS "
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="NPS "
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ))}
+
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
+          onConfirm={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
         />
       )}
     </>
@@ -2465,4 +2607,17 @@ const PlusIconWrapper = styled.div`
 const PlusIcon = styled.span`
   font-size: 16px;
   color: ${palette.gray700};
+`;
+
+
+const LoadingContainer = styled.div`
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+`;
+
+const LoadingText = styled(Body2)`
+margin-top: 12px;
+text-align: center;
 `;

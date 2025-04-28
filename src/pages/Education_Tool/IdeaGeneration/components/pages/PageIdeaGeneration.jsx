@@ -38,19 +38,9 @@ import {
   TOOL_ID,
   TOOL_STEP,
   TOOL_LOADING,
-  DESIGN_ANALYSIS_BUSINESS_INFO,
-  DESIGN_ANALYSIS_EMOTION_ANALYSIS,
-  DESIGN_ANALYSIS_SELECTED_PERSONA,
-  DESIGN_ANALYSIS_EMOTION_TARGET,
-  DESIGN_ANALYSIS_EMOTION_SCALE,
-  DESIGN_ANALYSIS_FILE_NAMES,
-  DESIGN_ANALYSIS_FILE_ID,
   PROJECT_SAAS,
   DESIGN_ANALYSIS_BUSINESS_TITLE,
   IDEA_GENERATION_START_POSITION,
-  IDEA_GENERATION_IDEA_LIST,
-  CUSTOMER_JOURNEY_MAP_REPORT,
-  CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA,
   IDEA_GENERATION_PROBLEM_LIST,
   PERSONA_LIST_SAAS,
   IDEA_GENERATION_MANDALART_DATA,
@@ -59,6 +49,13 @@ import {
   IDEA_GENERATION_SELECTED_MANDALART,
   IDEA_GENERATION_POSSSESSION_TECH,
   IDEA_GENERATION_SELECTED_PURPOSE,
+  EVENT_STATE,
+  TRIAL_STATE,
+  EVENT_TITLE,
+  CREDIT_CREATE_TOOL_HIGH,
+  EDUCATION_STATE,
+  USER_CREDITS,
+  CREDIT_CREATE_TOOL_LOADED,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -81,6 +78,9 @@ import {
   updateToolOnServer,
   EducationToolsRequest,
   getFindToolListOnServerSaas,
+  UserCreditCheck,
+  UserCreditUse,
+  UserCreditInfo,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDeleteForm from "../../../public/MoleculeDeleteForm";
@@ -94,6 +94,13 @@ const PageIdeaGeneration = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [eventState] = useAtom(EVENT_STATE);
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
+  const [creditCreateToolHigh, ] = useAtom(CREDIT_CREATE_TOOL_HIGH);
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [educationState] = useAtom(EDUCATION_STATE);
   const [toolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -150,7 +157,6 @@ const PageIdeaGeneration = () => {
     purpose: "",
     content: "",
   });
-  const [descriptionLength, setDescriptionLength] = useState(0);
   const [projectDescription, setProjectDescription] = useState("");
   const [selectedJourneyMapData, setSelectedJourneyMapData] = useState([]);
   const [
@@ -159,6 +165,9 @@ const PageIdeaGeneration = () => {
   ] = useState([]);
   const [customerJourneyMapReport, setCustomerJourneyMapReport] = useState([]);
   const [showToast, setShowToast] = useState(false);
+  const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
+
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -171,6 +180,20 @@ const PageIdeaGeneration = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
+      if(!creditCreateToolLoaded){
+        setShowCreatePersonaPopup(true);
+      // 크레딧 사용전 사용 확인
+      const creditPayload = {
+        // 기존 10 대신 additionalQuestionMount 사용
+        mount: creditCreateToolHigh,
+      };
+      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+
+      if (creditResponse?.state !== "use") {
+        setShowCreditPopup(true);
+        return;
+      }
+    }
 
       const projectAnalysis =
         (project?.projectAnalysis.business_analysis
@@ -300,6 +323,25 @@ const PageIdeaGeneration = () => {
       isLoggedIn
     );
     setToolId(responseToolId);
+
+    // 크레딧이 사용 가능한 상태면 사용 API 호출
+    const creditUsePayload = {
+      title: project.projectTitle,
+      service_type: "고객 여정 지도",
+      target: "",
+      state: "use",
+      mount: creditCreateToolHigh,
+    };
+
+    await UserCreditUse(creditUsePayload, isLoggedIn);
+
+    // 크레딧 사용 후 사용자 정보 새로고침
+
+      const userCreditValue = await UserCreditInfo(isLoggedIn);
+      // 전역 상태의 크레딧 정보 업데이트
+      setUserCredits(userCreditValue);
+  
+
 
     await updateToolOnServer(
       responseToolId,
@@ -738,6 +780,10 @@ const PageIdeaGeneration = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
+
+  const handleConfirmCredit = async () => {
+    setShowCreatePersonaPopup(false);
+  };
 
   return (
     <>
@@ -1315,6 +1361,97 @@ const PageIdeaGeneration = () => {
           isModal={false}
           onCancel={() => setShowPopupSave(false)}
           onConfirm={() => setShowPopupSave(false)}
+        />
+      )}
+   
+
+{showCreatePersonaPopup &&
+        (eventState && !educationState ? (
+          <PopupWrap
+            Event
+            title="아이디어 발상"
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditCreateToolHigh} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : trialState && !educationState ? (
+          <PopupWrap
+            Check
+            title="아이디어 발상"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateToolHigh} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="아이디어 발상"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateToolHigh} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ))}
+
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
+          onConfirm={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
         />
       )}
     </>
