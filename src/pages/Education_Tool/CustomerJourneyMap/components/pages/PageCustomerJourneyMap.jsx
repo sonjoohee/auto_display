@@ -80,9 +80,11 @@ const PageCustomerJourneyMap = () => {
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
   const [eventTitle] = useAtom(EVENT_TITLE);
-  const [creditCreateTool, ] = useAtom(CREDIT_CREATE_TOOL);
+  const [creditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
-  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
+    CREDIT_CREATE_TOOL_LOADED
+  );
   const [educationState] = useAtom(EDUCATION_STATE);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -125,7 +127,6 @@ const PageCustomerJourneyMap = () => {
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
 
-
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const project = projectSaas;
@@ -136,22 +137,21 @@ const PageCustomerJourneyMap = () => {
 
   useEffect(() => {
     const interviewLoading = async () => {
-
       if (!creditCreateToolLoaded) {
-      setShowCreatePersonaPopup(true);
-      // 크레딧 사용전 사용 확인
-      const creditPayload = {
-        // 기존 10 대신 additionalQuestionMount 사용
-        mount: creditCreateTool,
-      };
-      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+        setShowCreatePersonaPopup(true);
+        // 크레딧 사용전 사용 확인
+        const creditPayload = {
+          // 기존 10 대신 additionalQuestionMount 사용
+          mount: creditCreateTool,
+        };
+        const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
 
-      if (creditResponse?.state !== "use") {
-        setShowCreditPopup(true);
-        return;
+        if (creditResponse?.state !== "use") {
+          setShowCreditPopup(true);
+          return;
+        }
+        setCreditCreateToolLoaded(true);
       }
-      setCreditCreateToolLoaded(true);
-    }
 
       const projectAnalysis =
         (project?.projectAnalysis?.business_analysis
@@ -355,11 +355,10 @@ const PageCustomerJourneyMap = () => {
       await UserCreditUse(creditUsePayload, isLoggedIn);
 
       // 크레딧 사용 후 사용자 정보 새로고침
-  
-        const userCreditValue = await UserCreditInfo(isLoggedIn);
-        // 전역 상태의 크레딧 정보 업데이트
-        setUserCredits(userCreditValue);
-    
+
+      const userCreditValue = await UserCreditInfo(isLoggedIn);
+      // 전역 상태의 크레딧 정보 업데이트
+      setUserCredits(userCreditValue);
 
       await updateToolOnServer(
         responseToolId,
@@ -439,7 +438,11 @@ const PageCustomerJourneyMap = () => {
           direction: selectedMomentData,
         };
 
-        let response = await EducationToolsRequest(apiRequestData, isLoggedIn, signal);
+        let response = await EducationToolsRequest(
+          apiRequestData,
+          isLoggedIn,
+          signal
+        );
 
         const maxAttempts = 10;
         let attempts = 0;
@@ -450,7 +453,11 @@ const PageCustomerJourneyMap = () => {
             !response?.response ||
             !response?.response?.customer_journey_map_report_education)
         ) {
-          response = await EducationToolsRequest(apiRequestData, isLoggedIn, signal);
+          response = await EducationToolsRequest(
+            apiRequestData,
+            isLoggedIn,
+            signal
+          );
           attempts++;
         }
         if (attempts >= maxAttempts) {
@@ -474,6 +481,8 @@ const PageCustomerJourneyMap = () => {
         );
       } catch (error) {}
       setToolSteps(3);
+      setCompletedSteps([...completedSteps, 3]);
+
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
@@ -563,7 +572,6 @@ const PageCustomerJourneyMap = () => {
     setShowCreatePersonaPopup(false);
   };
 
-
   return (
     <>
       <DropzoneStyles />
@@ -606,7 +614,7 @@ const PageCustomerJourneyMap = () => {
               <TabButtonType5
                 Num3
                 isActive={activeTab >= 3}
-                onClick={() => completedSteps.includes(2) && setActiveTab(3)}
+                onClick={() => completedSteps.includes(2) || completedSteps.includes(3) && setActiveTab(3)}
                 disabled={
                   !completedSteps.includes(3) || isLoading || isLoadingReport
                 }
@@ -978,7 +986,7 @@ const PageCustomerJourneyMap = () => {
               </TabContent5>
             )}
 
-            {activeTab === 3 && completedSteps.includes(2) && (
+            {activeTab === 3 && (completedSteps.includes(2) || completedSteps.includes(3)) && (
               <TabContent5 Small>
                 {isLoadingReport ? (
                   <div
@@ -1049,8 +1057,8 @@ const PageCustomerJourneyMap = () => {
         />
       )}
 
-{showCreatePersonaPopup &&
-        (eventState &&  !educationState ? (
+      {showCreatePersonaPopup &&
+        (eventState && !educationState ? (
           <PopupWrap
             Event
             title="고객 여정 지도"

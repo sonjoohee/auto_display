@@ -60,6 +60,8 @@ import {
   USER_CREDITS,
   CREDIT_CREATE_TOOL_LOADED,
   EDUCATION_STATE,
+  NPS_SELECTED_MODE_TYPE,
+  NPS_FILE_NAME,
 } from "../../../../AtomStates";
 import {
   H4,
@@ -168,6 +170,10 @@ const PageNps = () => {
   );
   const [npsSelectedConcept, setNPSSelectedConcept] =
     useAtom(NPS_SELECTED_CONCEPT);
+  const [npsSelectedModeType, setNpsSelectedModeType] = useAtom(
+    NPS_SELECTED_MODE_TYPE
+  );
+  const [npsFileName, setNpsFileName] = useAtom(NPS_FILE_NAME);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
