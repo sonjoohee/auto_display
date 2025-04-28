@@ -381,6 +381,10 @@ const PageKanoModel = () => {
   };
 
   const handleSubmitIdeaList = async () => {
+    // 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+
     // handleNextStep(1);
     setIsLoading(true);
 
@@ -403,7 +407,8 @@ const PageKanoModel = () => {
 
       let responseReport = await EducationToolsRequest(
         clusteringData,
-        isLoggedIn
+        isLoggedIn,
+        signal
       );
 
       let reportRetryCount = 0;
@@ -521,6 +526,11 @@ const PageKanoModel = () => {
   };
 
   const handleSubmitReport = async () => {
+
+    // 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+    
     await updateToolOnServer(
       toolId,
       {
@@ -539,7 +549,7 @@ const PageKanoModel = () => {
         business: business,
       };
 
-      let response = await EducationToolsRequest(Data, isLoggedIn);
+      let response = await EducationToolsRequest(Data, isLoggedIn, signal);
 
       setKanoModelProductAnalysis(
         response.response.kano_model_product_analysis_education
@@ -583,7 +593,8 @@ const PageKanoModel = () => {
 
         let responseEvalute = await EducationToolsRequest(
           evaluteData,
-          isLoggedIn
+          isLoggedIn,
+          signal
         );
 
         let evaluteRetryCount = 0;
@@ -599,7 +610,8 @@ const PageKanoModel = () => {
         ) {
           responseEvalute = await EducationToolsRequest(
             evaluteData,
-            isLoggedIn
+            isLoggedIn,
+            signal
           );
           evaluteRetryCount++;
         }
@@ -627,7 +639,8 @@ const PageKanoModel = () => {
 
       let responseKanoModel = await EducationToolsRequest(
         kanoModelData,
-        isLoggedIn
+        isLoggedIn,
+        signal
       );
 
       setKanoModelGraphData(
@@ -676,6 +689,8 @@ const PageKanoModel = () => {
     setSelectedOptionIndex(null);
     setShowToast(true);
   };
+
+  const abortControllerRef = useRef(null);
 
   useEffect(() => {
     // 새로고침 감지 함수
@@ -726,6 +741,9 @@ const PageKanoModel = () => {
       }
     };
 
+    // 컴포넌트가 마운트될 때 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+
     // 함수 실행
     detectRefresh();
 
@@ -737,6 +755,11 @@ const PageKanoModel = () => {
     return () => {
       // window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
+
+      // 진행 중인 모든 API 요청 중단
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, [navigate]);
 

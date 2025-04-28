@@ -790,7 +790,7 @@ export const InterviewXPersonaSingleInterviewGeneratorRequestTheoryCustom =
   };
 
 // termkey를 이용한 결과 조회 API
-export const getTermkeyResult = async (termkey) => {
+export const getTermkeyResult = async (termkey, abortSignal) => {
   try {
     const token = sessionStorage.getItem("accessToken");
     if (!token) {
@@ -810,6 +810,7 @@ export const getTermkeyResult = async (termkey) => {
               "Content-Type": "application/json",
             },
             withCredentials: true,
+            signal: abortSignal,
           }
         );
 
@@ -4285,8 +4286,8 @@ export const InterviewXQuickSurveyRequest = async (data, isLoggedIn) => {
   }
 };
 
-//퀙서베이 질문 생성
-export const EducationToolsRequest = async (data, isLoggedIn) => {
+// 교육용 툴
+export const EducationToolsRequest = async (data, isLoggedIn, abortSignal) => {
   // if (!isLoggedIn) {
   //   console.error("로그인이 필요합니다.");
   //   return null;
@@ -4307,6 +4308,7 @@ export const EducationToolsRequest = async (data, isLoggedIn) => {
           "Content-Type": "application/json",
         },
         withCredentials: true,
+        signal: abortSignal,
       }
     );
 
@@ -4314,10 +4316,24 @@ export const EducationToolsRequest = async (data, isLoggedIn) => {
       return response.data;
     }
 
-    await new Promise((resolve) => setTimeout(resolve, response.data.time));
+    await new Promise((resolve, reject) => {
+      const timeout = setTimeout(resolve, response.data.time);
+      
+      // abort signal이 발생하면 타임아웃 제거하고 Promise 취소
+      if (abortSignal) {
+        abortSignal.addEventListener('abort', () => {
+          clearTimeout(timeout);
+          reject(new DOMException('Aborted', 'AbortError'));
+        });
+      }
+    });
 
-    const result = await getTermkeyResult(response.data.objectId);
+    // abort signal 확인
+    if (abortSignal && abortSignal.aborted) {
+      throw new DOMException('Aborted', 'AbortError');
+    }
 
+    const result = await getTermkeyResult(response.data.objectId, abortSignal);
     return result;
   } catch (error) {
     console.error(error);
@@ -4328,7 +4344,7 @@ export const EducationToolsRequest = async (data, isLoggedIn) => {
 
 
 //nps - 컨셉보드 멀티모달
-export const InterviewXNPSConceptboardMultimodalRequest = async (data, isLoggedIn) => {
+export const InterviewXNPSConceptboardMultimodalRequest = async (data, isLoggedIn, abortSignal) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
@@ -4357,6 +4373,7 @@ export const InterviewXNPSConceptboardMultimodalRequest = async (data, isLoggedI
           "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
+        signal: abortSignal,
       }
     );
 
@@ -4366,7 +4383,7 @@ export const InterviewXNPSConceptboardMultimodalRequest = async (data, isLoggedI
 
     await new Promise((resolve) => setTimeout(resolve, response.data.time));
 
-    const result = await getTermkeyResult(response.data.objectId);
+    const result = await getTermkeyResult(response.data.objectId, abortSignal);
 
     return result;
   } catch (error) {

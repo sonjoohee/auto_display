@@ -261,6 +261,10 @@ const PageIssueGeneration = () => {
   };
 
   const handleSubmitProblem = async () => {
+    // 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+
     handleNextStep(1);
 
     const currentProblemList = [...issueGenerationProblemList];
@@ -315,7 +319,7 @@ const PageIssueGeneration = () => {
         is_load: true,
       };
 
-      const response = await EducationToolsRequest(Data, isLoggedIn);
+      const response = await EducationToolsRequest(Data, isLoggedIn, signal);
 
       setIssueGenerationStartPosition(
         response.response.idea_generation_keyword_education
@@ -399,6 +403,10 @@ const PageIssueGeneration = () => {
   }, [selectedPurposes, shouldSubmit]);
 
   const handleSubmitCustomerJourney = async () => {
+    // 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+    
     setIsContentLoading(true);
 
     setIssueGenerationSelectedPurpose(selectedPurposes);
@@ -422,7 +430,7 @@ const PageIssueGeneration = () => {
           customer_journey_map_report: customerJourneyMapReport,
         };
 
-        const response = await EducationToolsRequest(data, isLoggedIn);
+        const response = await EducationToolsRequest(data, isLoggedIn, signal);
 
         setIssueGenerationProblemList(
           response.response.idea_generation_problem_education
@@ -513,6 +521,8 @@ const PageIssueGeneration = () => {
     setShowToast(true);
   };
 
+  const abortControllerRef = useRef(null);
+
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
@@ -548,6 +558,9 @@ const PageIssueGeneration = () => {
       }
     };
 
+    // 컴포넌트가 마운트될 때 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+
     // 함수 실행
     detectRefresh();
 
@@ -556,6 +569,11 @@ const PageIssueGeneration = () => {
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+
+      // 진행 중인 모든 API 요청 중단
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, [navigate]);
 

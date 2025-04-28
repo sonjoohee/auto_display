@@ -468,6 +468,11 @@ const PageIdeaEvaluate = () => {
   };
 
   const handleSubmitReport = async () => {
+
+    // 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+    
     handleNextStep(2);
     // setToolSteps(2);
     setIsLoadingReport(true);
@@ -496,7 +501,7 @@ const PageIdeaEvaluate = () => {
         persona: persona_group,
       };
 
-      let response = await EducationToolsRequest(Data, isLoggedIn);
+      let response = await EducationToolsRequest(Data, isLoggedIn, signal);
 
       let retryCount = 0;
       const maxRetries = 10;
@@ -509,7 +514,7 @@ const PageIdeaEvaluate = () => {
             response?.response?.idea_evaluation_comparison_education
           ))
       ) {
-        response = await EducationToolsRequest(Data, isLoggedIn);
+        response = await EducationToolsRequest(Data, isLoggedIn, signal);
         maxRetries++;
       }
       if (retryCount >= maxRetries) {
@@ -598,6 +603,8 @@ const PageIdeaEvaluate = () => {
     }
   };
 
+  const abortControllerRef = useRef(null);
+
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
@@ -647,6 +654,9 @@ const PageIdeaEvaluate = () => {
       }
     };
 
+    // 컴포넌트가 마운트될 때 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+
     // 함수 실행
     detectRefresh();
 
@@ -658,6 +668,11 @@ const PageIdeaEvaluate = () => {
     return () => {
       // window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
+
+      // 진행 중인 모든 API 요청 중단
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, [navigate]);
 

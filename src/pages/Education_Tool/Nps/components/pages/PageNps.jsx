@@ -512,6 +512,10 @@ const PageNps = () => {
   };
 
   const handleSubmitConcept = async () => {
+    // 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+
     // quickSurveyAnalysis가 비어있을 때만 API 호출
     handleNextStep(1);
     if (uploadedFiles.length > 0) {
@@ -636,7 +640,7 @@ const PageNps = () => {
       const maxRetries = 10;
 
       while (retryCount < maxRetries) {
-        response = await EducationToolsRequest(Data, isLoggedIn);
+        response = await EducationToolsRequest(Data, isLoggedIn, signal);
 
         // 응답 형식 확인
         if (
@@ -1133,6 +1137,8 @@ const PageNps = () => {
     }, 0);
   };
 
+  const abortControllerRef = useRef(null);
+
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
@@ -1182,6 +1188,9 @@ const PageNps = () => {
       }
     };
 
+    // 컴포넌트가 마운트될 때 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+
     // 함수 실행
     detectRefresh();
 
@@ -1193,6 +1202,11 @@ const PageNps = () => {
     return () => {
       // window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
+
+      // 진행 중인 모든 API 요청 중단
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, [navigate]);
 

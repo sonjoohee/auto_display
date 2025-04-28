@@ -1,5 +1,4 @@
-//디자인 감성 분석기
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAtom } from "jotai";
@@ -226,6 +225,10 @@ const PageCustomerJourneyMap = () => {
   };
 
   const handleSubmitPersona = async () => {
+    // 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+
     setIsLoading(true);
     handleNextStep(1);
     setToolSteps(1);
@@ -255,7 +258,7 @@ const PageCustomerJourneyMap = () => {
 
       setCustomerJourneyMapSelectedPersona(selectedCustomer);
 
-      let response = await EducationToolsRequest(data, isLoggedIn);
+      let response = await EducationToolsRequest(data, isLoggedIn, signal);
 
       const maxAttempts = 10;
       let attempts = 0;
@@ -271,7 +274,7 @@ const PageCustomerJourneyMap = () => {
           !response?.response?.customer_journey_map_direction_education
             ?.goal_based)
       ) {
-        response = await EducationToolsRequest(data, isLoggedIn);
+        response = await EducationToolsRequest(data, isLoggedIn, signal);
         attempts++;
       }
       if (attempts >= maxAttempts) {
@@ -358,6 +361,10 @@ const PageCustomerJourneyMap = () => {
   };
 
   const handleReportRequest = async () => {
+    // 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+
     setIsLoadingReport(true);
     handleNextStep(2);
     // setToolSteps(2);
@@ -380,7 +387,7 @@ const PageCustomerJourneyMap = () => {
           direction: selectedMomentData,
         };
 
-        let response = await EducationToolsRequest(apiRequestData, isLoggedIn);
+        let response = await EducationToolsRequest(apiRequestData, isLoggedIn, signal);
 
         const maxAttempts = 10;
         let attempts = 0;
@@ -391,7 +398,7 @@ const PageCustomerJourneyMap = () => {
             !response?.response ||
             !response?.response?.customer_journey_map_report_education)
         ) {
-          response = await EducationToolsRequest(apiRequestData, isLoggedIn);
+          response = await EducationToolsRequest(apiRequestData, isLoggedIn, signal);
           attempts++;
         }
         if (attempts >= maxAttempts) {
@@ -442,6 +449,8 @@ const PageCustomerJourneyMap = () => {
     return Array.isArray(selectedPersonas) ? selectedPersonas.length : 1;
   };
 
+  const abortControllerRef = useRef(null);
+
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
@@ -481,12 +490,20 @@ const PageCustomerJourneyMap = () => {
       }
     };
 
+    // 컴포넌트가 마운트될 때 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+
     detectRefresh();
 
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+
+      // 진행 중인 모든 API 요청 중단
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, [navigate]);
 
