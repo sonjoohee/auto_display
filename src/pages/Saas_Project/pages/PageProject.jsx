@@ -136,7 +136,15 @@ const PageProject = () => {
           );
           setEducationState(educationStateResponse.education_state);
 
-          if (educationStateResponse) {
+          console.log(
+            "🚀 ~ fetchCreditInfo ~ educationStateResponse:",
+            educationStateResponse
+          );
+          if (educationStateResponse.education_state === true) {
+            console.log(
+              "🚀 ~ fetchCreditInfo ~ educationStateResponse:",
+              educationStateResponse
+            );
             setProjectEducationState("education");
             setProjectEducationCode("edu_000001");
           }

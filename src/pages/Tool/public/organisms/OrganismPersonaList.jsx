@@ -197,7 +197,7 @@ const OrganismPersonaList = ({
                     key={persona._id}
                     personaImage={
                       personaImages[persona.imageKey] ||
-                      (persona.gender === "남성" 
+                      (persona.gender === "남성"
                         ? personaImages.persona_m_20_01 // 남성 기본 이미지
                         : personaImages.persona_f_20_01) // 여성 기본 이미지
                     }

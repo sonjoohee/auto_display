@@ -18,6 +18,10 @@ import {
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 
+import MacroSegTag from "../../../../components/Charts/MacroSegTag.jsx";
+import StakeHolderTag from "../../../../components/Charts/StakeHolderTag.jsx";
+import MyPersonaTag from "../../../../components/Charts/MyPersonaTag.jsx";
+
 const MoleculePersonaSelectCardSaas = ({
   interviewType,
   filteredPersonaList,
@@ -248,7 +252,7 @@ const MoleculePersonaSelectCardSaas = ({
                     <img
                       src={
                         personaImages[persona.imageKey] ||
-                        (persona.gender === "남성" 
+                        (persona.gender === "남성"
                           ? personaImages.persona_m_20_01 // 남성 기본 이미지
                           : personaImages.persona_f_20_01) // 여성 기본 이미지
                       }
@@ -259,8 +263,19 @@ const MoleculePersonaSelectCardSaas = ({
                     <ListTitle>
                       <Body1 color="gray800">
                         {persona.persona_view || persona.personaName}
-                      </Body1>{" "}
-                      <UniqueTag color={persona.type || "default"} />
+                      </Body1>
+                      {persona?.personaType === "macro_segment" && (
+                        <MacroSegTag text={persona?.type || "default"} />
+                      )}
+                      {persona?.personaType === "key_stakeholder" && (
+                        <StakeHolderTag text={persona?.type || "default"} />
+                      )}
+                      {persona?.personaType === "my_persona" && (
+                        <MyPersonaTag text={persona?.type || "default"} />
+                      )}
+                      {persona?.personaType === "unique_user" && (
+                        <UniqueTag color={persona?.type || "default"} />
+                      )}
                     </ListTitle>
                     <ListSubtitle>
                       <PersonaInfo>
@@ -318,8 +333,8 @@ const MoleculePersonaSelectCardSaas = ({
             <BoxWrap Hover NoData Border onClick={() => navigate("/AiPersona")}>
               <img src={images.PeopleStarFillPrimary} alt="" />
               <Body2 color="gray500" align="center !important">
-                즐겨찾기를 하시면 관심 있는 페르소나를 해당 페이지에서 확인하실
-                수 있습니다.
+                페르소나 리스트를 확인하려면, 먼저 관심 있는 페르소나 20명을
+                즐겨찾기에 추가해 주세요.
               </Body2>
             </BoxWrap>
           </>

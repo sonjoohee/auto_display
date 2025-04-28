@@ -1231,10 +1231,8 @@ const PageToolListSaas = () => {
 
                       <ExploreCard AiPersona key="analysis-1">
                         <span>
-                          {/* <images.GridCircle color={palette.gray700} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.gray700} /> */}
-                          텍스트 내용
+                          <images.GridCircle color={palette.gray700} />
+                          Interveiw
                         </span>
                         <p>
                           <img src={images.ImgExplore12} alt="" />
@@ -1251,10 +1249,8 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            {/* <images.GridCircle color={palette.white} /> */}
-                            또는
-                            {/* <images.GridReport color={palette.white} /> */}
-                            텍스트 내용
+                            <images.GridCircle color={palette.gray700} />
+                            Interveiw
                           </span>
 
                           <div className="text">
@@ -1273,10 +1269,8 @@ const PageToolListSaas = () => {
 
                       <ExploreCard AiPersona key="analysis-2">
                         <span>
-                          {/* <images.GridCircle color={palette.gray700} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.gray700} /> */}
-                          텍스트 내용
+                          <images.GridCircle color={palette.gray700} />
+                          Interveiw
                         </span>
                         <p>
                           <img src={images.ImgExplore13} alt="" />
@@ -1293,10 +1287,8 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            {/* <images.GridCircle color={palette.white} /> */}
-                            또는
-                            {/* <images.GridReport color={palette.white} /> */}
-                            텍스트 내용
+                            <images.GridCircle color={palette.gray700} />
+                            Interveiw 텍스트 내용
                           </span>
 
                           <div className="text">
@@ -1315,10 +1307,8 @@ const PageToolListSaas = () => {
 
                       <ExploreCard AiPersona key="analysis-3">
                         <span>
-                          {/* <images.GridCircle color={palette.gray700} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.gray700} /> */}
-                          텍스트 내용
+                          <images.GridCircle color={palette.gray700} />
+                          Interveiw
                         </span>
                         <p>
                           <img src={images.ImgExplore15} alt="" />
@@ -1334,10 +1324,8 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            {/* <images.GridCircle color={palette.white} /> */}
-                            또는
-                            {/* <images.GridReport color={palette.white} /> */}
-                            텍스트 내용
+                            <images.GridCircle color={palette.gray700} />
+                            Interveiw
                           </span>
 
                           <div className="text">
@@ -1359,10 +1347,8 @@ const PageToolListSaas = () => {
                         {...{ Ready: false }}
                       >
                         <span>
-                          {/* <images.GridTool color={palette.gray700} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.gray700} /> */}
-                          텍스트 내용
+                          <images.GridTool color={palette.gray700} />
+                          Tool
                         </span>
                         <p>
                           <img src={images.ImgExplore05} alt="" />
@@ -1379,10 +1365,8 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            {/* <images.GridTool color={palette.white} /> */}
-                            또는
-                            {/* <images.GridReport color={palette.white} /> */}
-                            텍스트 내용
+                            <images.GridTool color={palette.gray700} />
+                            Tool
                           </span>
 
                           <div className="text">
@@ -1404,10 +1388,8 @@ const PageToolListSaas = () => {
                         // {...(!accessableExpert && { Ready: true })}
                       >
                         <span>
-                          {/* <images.GridTool color={palette.gray700} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.gray700} /> */}
-                          텍스트 내용
+                          <images.GridTool color={palette.gray700} />
+                          Tool
                         </span>
                         <p>
                           <img src={images.ImgExplore06} alt="" />
@@ -1424,10 +1406,8 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            {/* <images.GridTool color={palette.white} /> */}
-                            또는
-                            {/* <images.GridReport color={palette.white} /> */}
-                            텍스트 내용
+                            <images.GridTool color={palette.gray700} />
+                            Tool
                           </span>
 
                           <div className="text">
@@ -1450,10 +1430,8 @@ const PageToolListSaas = () => {
                         // {...(!accessableExpert && { Ready: true })}
                       >
                         <span>
-                          {/* <images.GridTool color={palette.gray700} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.gray700} /> */}
-                          텍스트 내용
+                          <images.GridTool color={palette.gray700} />
+                          Tool
                         </span>
                         <p>
                           <img src={images.ImgExplore07} alt="" />
@@ -1470,10 +1448,8 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            {/* <images.GridTool color={palette.white} /> */}
-                            또는
-                            {/* <images.GridReport color={palette.white} /> */}
-                            텍스트 내용
+                            <images.GridTool color={palette.gray700} />
+                            Tool
                           </span>
 
                           <div className="text">
@@ -1495,10 +1471,8 @@ const PageToolListSaas = () => {
                         key="research-4"
                       >
                         <span>
-                          {/* <images.GridTool color={palette.gray700} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.gray700} /> */}
-                          텍스트 내용
+                          <images.GridTool color={palette.gray700} />
+                          Tool
                         </span>
                         <p>
                           <img src={images.ImgExplore10} alt="" />
@@ -1515,10 +1489,8 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            {/* <images.GridTool color={palette.white} /> */}
-                            또는
-                            {/* <images.GridReport color={palette.white} /> */}
-                            텍스트 내용
+                            <images.GridTool color={palette.gray700} />
+                            Tool
                           </span>
 
                           <div className="text">
@@ -1578,10 +1550,8 @@ const PageToolListSaas = () => {
                         // {...(!accessableExpert && { Ready: true })}
                       >
                         <span>
-                          {/* <images.LightningChargeFill color={palette.gray700} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.gray700} /> */}
-                          텍스트 내용
+                          <images.LightningChargeFill color={palette.gray700} />
+                          Expert
                         </span>
                         <p>
                           <img src={images.ImgExplore01} alt="" />
@@ -1598,10 +1568,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            {/* <images.LightningChargeFill color={palette.white} /> */}
-                            또는
-                            {/* <images.GridReport color={palette.white} /> */}
-                            텍스트 내용
+                            <images.LightningChargeFill
+                              color={palette.gray700}
+                            />
+                            Expert
                           </span>
 
                           <div className="text">
@@ -1625,10 +1595,8 @@ const PageToolListSaas = () => {
                         // {...(!accessableExpert && { Ready: true })}
                       >
                         <span>
-                          {/* <images.LightningChargeFill color={palette.gray700} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.gray700} /> */}
-                          텍스트 내용
+                          <images.LightningChargeFill color={palette.gray700} />
+                          Expert
                         </span>
                         <p>
                           <img src={images.ImgExplore02} alt="" />
@@ -1645,10 +1613,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            {/* <images.LightningChargeFill color={palette.white} /> */}
-                            또는
-                            {/* <images.GridReport color={palette.white} /> */}
-                            텍스트 내용
+                            <images.LightningChargeFill
+                              color={palette.gray700}
+                            />
+                            Expert
                           </span>
 
                           <div className="text">
@@ -1671,10 +1639,8 @@ const PageToolListSaas = () => {
                         // {...(!accessableExpert && { Ready: true })}
                       >
                         <span>
-                          {/* <images.LightningChargeFill color={palette.gray700} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.gray700} /> */}
-                          텍스트 내용
+                          <images.LightningChargeFill color={palette.gray700} />
+                          Expert
                         </span>
                         <p>
                           <img src={images.ImgExplore03} alt="" />
@@ -1691,10 +1657,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            {/* <images.LightningChargeFill color={palette.white} /> */}
-                            또는
-                            {/* <images.GridReport color={palette.white} /> */}
-                            텍스트 내용
+                            <images.LightningChargeFill
+                              color={palette.gray700}
+                            />
+                            Expert
                           </span>
 
                           <div className="text">
@@ -1717,10 +1683,8 @@ const PageToolListSaas = () => {
                         // {...(!accessableExpert && { Ready: true })}
                       >
                         <span>
-                          {/* <images.LightningChargeFill color={palette.gray700} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.gray700} /> */}
-                          텍스트 내용
+                          <images.LightningChargeFill color={palette.gray700} />
+                          Expert
                         </span>
                         <p>
                           <img src={images.ImgExplore04} alt="" />
@@ -1737,10 +1701,10 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            {/* <images.LightningChargeFill color={palette.white} /> */}
-                            또는
-                            {/* <images.GridReport color={palette.white} /> */}
-                            텍스트 내용
+                            <images.LightningChargeFill
+                              color={palette.gray700}
+                            />
+                            Expert
                           </span>
 
                           <div className="text">
@@ -1757,10 +1721,8 @@ const PageToolListSaas = () => {
                       </ExploreCard>,
                       <ExploreCard Report key="report-1">
                         <span>
-                          {/* <images.GridReport color={palette.gray700} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.gray700} /> */}
-                          텍스트 내용
+                          <images.GridReport color={palette.gray700} />
+                          Report
                         </span>
                         <p>
                           <img src={images.ImgExplore14} alt="" />
@@ -1777,10 +1739,8 @@ const PageToolListSaas = () => {
                           }}
                         >
                           <span>
-                            {/* <images.GridReport color={palette.white} /> */}
-                            또는
-                            {/* <images.GridReport color={palette.white} /> */}
-                            텍스트 내용
+                            <images.GridReport color={palette.gray700} />
+                            Report
                           </span>
 
                           <div className="text">
@@ -1802,10 +1762,8 @@ const PageToolListSaas = () => {
                         style={{ cursor: "default" }}
                       >
                         <span>
-                          {/* <images.LightningChargeFill color={palette.gray700} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.gray700} /> */}
-                          텍스트 내용
+                          <images.GridReport color={palette.gray700} />
+                          Report
                         </span>
                         <p>
                           <img src={images.ImgExploreNoData} alt="" />
@@ -1918,18 +1876,8 @@ const PageToolListSaas = () => {
 
                   // !Edu 툴 추가
                   <>
-                    <ExploreCard
-                      ReadyEducation
-                      AiPersona
-                      anything
-                      key="analysis-1"
-                    >
-                      <span>
-                        {/* <images.GridCircle color={palette.gray700} /> */}
-                        또는
-                        {/* <images.GridReport color={palette.gray700} /> */}
-                        텍스트 내용
-                      </span>
+                    <ExploreCard AiPersona anything key="analysis-1">
+                      <span>공감하기</span>
                       <p>
                         <img src={images.ImgExplore12} alt="" />
                       </p>
@@ -1943,12 +1891,7 @@ const PageToolListSaas = () => {
                           navigate("/Persona3Single");
                         }}
                       >
-                        <span>
-                          {/* <images.GridCircle color={palette.white} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.white} /> */}
-                          텍스트 내용
-                        </span>
+                        <span>공감하기</span>
 
                         <div className="text">
                           <Body1 color="white">
@@ -1973,12 +1916,7 @@ const PageToolListSaas = () => {
                       </div>
                     </ExploreCard>
                     <ExploreCard AiPersona anything key="analysis-2">
-                      <span>
-                        {/* <images.GridCircle color={palette.gray700} /> */}
-                        또는
-                        {/* <images.GridReport color={palette.gray700} /> */}
-                        텍스트 내용
-                      </span>
+                      <span>공감하기</span>
                       <p>
                         <img src={images.ImgExplore13} alt="" />
                       </p>
@@ -1992,12 +1930,7 @@ const PageToolListSaas = () => {
                           navigate("/Persona3Multiple");
                         }}
                       >
-                        <span>
-                          {/* <images.GridCircle color={palette.white} /> */}
-                          또는
-                          {/* <images.GridReport color={palette.white} /> */}
-                          텍스트 내용
-                        </span>
+                        <span>공감하기</span>
 
                         <div className="text">
                           <Body1 color="white">
@@ -2022,16 +1955,13 @@ const PageToolListSaas = () => {
                       </div>
                     </ExploreCard>
                     <ExploreCard Report anything key="report-1">
-                      <span>
-                        {/* <images.GridReport color={palette.gray700} /> */}
-                        공감하기
-                      </span>
+                      <span>공감하기</span>
                       <p>
                         <img src={images.ImgExplore16} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
-                        고객 여정 맵
+                        고객 여정 지도
                       </Body1>
                       <div
                         className="overlay"
@@ -2039,10 +1969,7 @@ const PageToolListSaas = () => {
                           navigate("/CustomerJourneyMap");
                         }}
                       >
-                        <span>
-                          {/* <images.GridReport color={palette.white} /> */}
-                          공감하기
-                        </span>
+                        <span>공감하기</span>
 
                         <div className="text">
                           <Body1 color="white">
@@ -2066,17 +1993,24 @@ const PageToolListSaas = () => {
                       </div>
                     </ExploreCard>
 
-                    <ExploreCard Report anything key="report-1">
-                      <span>
-                        {/* <images.GridReport color={palette.gray700} /> */}
-                        문제정의
-                      </span>
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-05T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
+                      <span>문제정의</span>
                       <p>
                         <img src={images.ImgExplore17} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
-                        핵심 이슈 도출
+                        핵심 문제 정의
                       </Body1>
                       <div
                         className="overlay"
@@ -2084,14 +2018,12 @@ const PageToolListSaas = () => {
                           navigate("/IssueGeneration");
                         }}
                       >
-                        <span>
-                          {/* <images.GridReport color={palette.white} /> */}
-                          문제정의
-                        </span>
+                        <span>문제정의</span>
 
                         <div className="text">
                           <Body1 color="white">
-                            <em>준비중</em>핵심 이슈 도출
+                            <em>준비중</em>
+                            핵심 문제 정의
                           </Body1>
                           <Caption1 color="white" align="left">
                             고객의 문제와 요구를 식별하고 우선순위를 정하는 툴
@@ -2104,23 +2036,30 @@ const PageToolListSaas = () => {
                           <Body1 color="white">
                             2차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
 
-                    <ExploreCard Report anything key="report-1">
-                      <span>
-                        {/* <images.GridReport color={palette.gray700} /> */}
-                        문제정의
-                      </span>
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-05T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
+                      <span>문제정의</span>
                       <p>
                         <img src={images.ImgExplore18} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
-                        니즈 키워드 정리
+                        핵심 키워드 추출
                       </Body1>
 
                       <div
@@ -2133,7 +2072,7 @@ const PageToolListSaas = () => {
 
                         <div className="text">
                           <Body1 color="white">
-                            <em>준비중</em>니즈 키워드 정리
+                            <em>준비중</em>핵심 키워드 추출
                           </Body1>
                           <Caption1 color="white" align="left">
                             고객의 니즈를 키워드로 정리하는 툴
@@ -2147,17 +2086,24 @@ const PageToolListSaas = () => {
                           <Body1 color="white">
                             2차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
 
-                    <ExploreCard Report anything key="report-1">
-                      <span>
-                        {/* <images.GridReport color={palette.gray700} /> */}
-                        솔루션 탐색
-                      </span>
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-12-05T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
+                      <span>솔루션 탐색</span>
                       <p>
                         <img src={images.ImgExplore19} alt="" />
                       </p>
@@ -2171,10 +2117,7 @@ const PageToolListSaas = () => {
                           navigate("/IdeaGeneration");
                         }}
                       >
-                        <span>
-                          {/* <images.GridReport color={palette.white} /> */}
-                          솔루션 탐색
-                        </span>
+                        <span>솔루션 탐색</span>
 
                         <div className="text">
                           <Body1 color="white">
@@ -2190,24 +2133,31 @@ const PageToolListSaas = () => {
                       <div className="overlayEducation">
                         <div className="text">
                           <Body1 color="white">
-                            2차시에
+                            3차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report anything key="report-1">
-                      <span>
-                        {/* <images.GridReport color={palette.gray700} /> */}
-                        솔루션 탐색
-                      </span>
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-12T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
+                      <span>솔루션 탐색</span>
                       <p>
                         <img src={images.ImgExplore20} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
-                        Kano Model
+                        카노 모델
                       </Body1>
                       <div
                         className="overlay"
@@ -2215,10 +2165,7 @@ const PageToolListSaas = () => {
                           navigate("/KanoModel");
                         }}
                       >
-                        <span>
-                          {/* <images.GridReport color={palette.white} /> */}
-                          솔루션 탐색
-                        </span>
+                        <span>솔루션 탐색</span>
 
                         <div className="text">
                           <Body1 color="white">
@@ -2234,18 +2181,25 @@ const PageToolListSaas = () => {
                       <div className="overlayEducation">
                         <div className="text">
                           <Body1 color="white">
-                            2차시에
+                            3차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report anything key="report-1">
-                      <span>
-                        {/* <images.GridReport color={palette.gray700} /> */}
-                        솔루션 탐색
-                      </span>
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-12T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
+                      <span>솔루션 탐색</span>
                       <p>
                         <img src={images.ImgExplore21} alt="" />
                       </p>
@@ -2259,10 +2213,7 @@ const PageToolListSaas = () => {
                           navigate("/IdeaEvaluate");
                         }}
                       >
-                        <span>
-                          {/* <images.GridReport color={palette.white} /> */}
-                          솔루션 탐색
-                        </span>
+                        <span>솔루션 탐색</span>
 
                         <div className="text">
                           <Body1 color="white">
@@ -2278,24 +2229,31 @@ const PageToolListSaas = () => {
                       <div className="overlayEducation">
                         <div className="text">
                           <Body1 color="white">
-                            2차시에
+                            3차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report anything key="report-1">
-                      <span>
-                        {/* <images.GridReport color={palette.gray700} /> */}
-                        비즈니스 구체화
-                      </span>
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-19T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
+                      <span>비즈니스 구체화</span>
                       <p>
                         <img src={images.ImgExplore22} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
-                        컨셉 정의
+                        컨셉 정의서
                       </Body1>
                       <div
                         className="overlay"
@@ -2303,14 +2261,11 @@ const PageToolListSaas = () => {
                           navigate("/ConceptDefinition");
                         }}
                       >
-                        <span>
-                          {/* <images.GridReport color={palette.white} /> */}
-                          비즈니스 구체화
-                        </span>
+                        <span>비즈니스 구체화</span>
 
                         <div className="text">
                           <Body1 color="white">
-                            <em>준비중</em>컨셉 정의
+                            <em>준비중</em>컨셉 정의서
                           </Body1>
                           <Caption1 color="white" align="left">
                             컨셉 정의를 통해 비즈니스 아이디어를 정의하고
@@ -2322,18 +2277,25 @@ const PageToolListSaas = () => {
                       <div className="overlayEducation">
                         <div className="text">
                           <Body1 color="white">
-                            2차시에
+                            4차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report anything key="report-1">
-                      <span>
-                        {/* <images.GridReport color={palette.gray700} /> */}
-                        비즈니스 구체화
-                      </span>
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-19T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
+                      <span>비즈니스 구체화</span>
                       <p>
                         <img src={images.ImgExplore23} alt="" />
                       </p>
@@ -2347,10 +2309,7 @@ const PageToolListSaas = () => {
                           navigate("/NPS");
                         }}
                       >
-                        <span>
-                          {/* <images.GridReport color={palette.white} /> */}
-                          비즈니스 구체화
-                        </span>
+                        <span>비즈니스 구체화</span>
 
                         <div className="text">
                           <Body1 color="white">
@@ -2366,18 +2325,25 @@ const PageToolListSaas = () => {
                       <div className="overlayEducation">
                         <div className="text">
                           <Body1 color="white">
-                            2차시에
+                            4차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report anything key="report-1">
-                      <span>
-                        {/* <images.GridReport color={palette.gray700} /> */}
-                        비즈니스 구체화
-                      </span>
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-19T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
+                      <span>비즈니스 구체화</span>
                       <p>
                         <img src={images.ImgExplore24} alt="" />
                       </p>
@@ -2391,10 +2357,7 @@ const PageToolListSaas = () => {
                           navigate("/BusinessModelCanvas");
                         }}
                       >
-                        <span>
-                          {/* <images.GridReport color={palette.white} /> */}
-                          비즈니스 구체화
-                        </span>
+                        <span>비즈니스 구체화</span>
 
                         <div className="text">
                           <Body1 color="white">
@@ -2410,24 +2373,31 @@ const PageToolListSaas = () => {
                       <div className="overlayEducation">
                         <div className="text">
                           <Body1 color="white">
-                            2차시에
+                            4차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report anything key="report-1">
-                      <span>
-                        {/* <images.GridReport color={palette.gray700} /> */}
-                        비즈니스 구체화
-                      </span>
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-19T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
+                      <span>비즈니스 구체화</span>
                       <p>
                         <img src={images.ImgExplore25} alt="" />
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
-                        PR FAQ
+                        PRFAQ
                       </Body1>
                       <div
                         className="overlay"
@@ -2435,14 +2405,11 @@ const PageToolListSaas = () => {
                           navigate("/PRFAQ");
                         }}
                       >
-                        <span>
-                          {/* <images.GridReport color={palette.white} /> */}
-                          비즈니스 구체화
-                        </span>
+                        <span>비즈니스 구체화</span>
 
                         <div className="text">
                           <Body1 color="white">
-                            <em>준비중</em>PR FAQ
+                            <em>준비중</em>PRFAQ
                           </Body1>
                           <Caption1 color="white" align="left">
                             비즈니스 모델 캔버스를 통해 정의한 비즈니스 모델을
@@ -2454,9 +2421,9 @@ const PageToolListSaas = () => {
                       <div className="overlayEducation">
                         <div className="text">
                           <Body1 color="white">
-                            2차시에
+                            4차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>

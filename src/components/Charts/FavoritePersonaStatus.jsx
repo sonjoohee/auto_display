@@ -285,7 +285,8 @@ const HeaderBox = styled.div`
 `;
 
 const Title = styled.div`
-  font-family: "Pretendard", sans-serif;
+  font-family: 'Pretendard', 'Poppins';
+
   font-size: 16px;
   font-weight: 400;
   line-height: 1.55em;
@@ -294,7 +295,8 @@ const Title = styled.div`
 `;
 
 const TotalCount = styled.div`
-  font-family: "Pretendard", sans-serif;
+  font-family: 'Poppins', 'Pretendard';
+
   font-size: 32px;
   font-weight: 600;
   line-height: 1.2em;
@@ -369,7 +371,8 @@ const ColorIndicator = styled.div`
 `;
 
 const CategoryName = styled.div`
-  font-family: "Pretendard", sans-serif;
+  font-family: 'Pretendard', 'Poppins';
+
   font-size: 16px;
   font-weight: 400;
   line-height: 1.55em;
@@ -382,18 +385,19 @@ const CategoryValue = styled.div`
   flex-direction: row;
   align-items: baseline;
   gap: 6px;
-  font-family: "Pretendard", sans-serif;
   line-height: 1.3em;
   letter-spacing: -0.03em;
   color: #666666;
 `;
 
 const ValueNumber = styled.span`
+  font-family: 'Poppins', 'Pretendard';
   font-size: 24px;
   font-weight: 600;
 `;
 
 const ValueUnit = styled.span`
+  font-family: 'Pretendard', 'Poppins';
   font-size: 14px;
   font-weight: 400;
 `;
