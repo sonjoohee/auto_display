@@ -1876,12 +1876,7 @@ const PageToolListSaas = () => {
 
                   // !Edu 툴 추가
                   <>
-                    <ExploreCard
-                      ReadyEducation
-                      AiPersona
-                      anything
-                      key="analysis-1"
-                    >
+                    <ExploreCard AiPersona anything key="analysis-1">
                       <span>공감하기</span>
                       <p>
                         <img src={images.ImgExplore12} alt="" />
@@ -1998,7 +1993,17 @@ const PageToolListSaas = () => {
                       </div>
                     </ExploreCard>
 
-                    <ExploreCard Report anything key="report-1">
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-05T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
                       <span>문제정의</span>
                       <p>
                         <img src={images.ImgExplore17} alt="" />
@@ -2031,13 +2036,23 @@ const PageToolListSaas = () => {
                           <Body1 color="white">
                             2차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
 
-                    <ExploreCard Report anything key="report-1">
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-05T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
                       <span>문제정의</span>
                       <p>
                         <img src={images.ImgExplore18} alt="" />
@@ -2071,13 +2086,23 @@ const PageToolListSaas = () => {
                           <Body1 color="white">
                             2차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
 
-                    <ExploreCard Report anything key="report-1">
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-12-05T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
                       <span>솔루션 탐색</span>
                       <p>
                         <img src={images.ImgExplore19} alt="" />
@@ -2108,14 +2133,24 @@ const PageToolListSaas = () => {
                       <div className="overlayEducation">
                         <div className="text">
                           <Body1 color="white">
-                            2차시에
+                            3차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report anything key="report-1">
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-12T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
                       <span>솔루션 탐색</span>
                       <p>
                         <img src={images.ImgExplore20} alt="" />
@@ -2146,14 +2181,24 @@ const PageToolListSaas = () => {
                       <div className="overlayEducation">
                         <div className="text">
                           <Body1 color="white">
-                            2차시에
+                            3차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report anything key="report-1">
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-12T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
                       <span>솔루션 탐색</span>
                       <p>
                         <img src={images.ImgExplore21} alt="" />
@@ -2184,14 +2229,24 @@ const PageToolListSaas = () => {
                       <div className="overlayEducation">
                         <div className="text">
                           <Body1 color="white">
-                            2차시에
+                            3차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report anything key="report-1">
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-19T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
                       <span>비즈니스 구체화</span>
                       <p>
                         <img src={images.ImgExplore22} alt="" />
@@ -2222,14 +2277,24 @@ const PageToolListSaas = () => {
                       <div className="overlayEducation">
                         <div className="text">
                           <Body1 color="white">
-                            2차시에
+                            4차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report anything key="report-1">
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-19T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
                       <span>비즈니스 구체화</span>
                       <p>
                         <img src={images.ImgExplore23} alt="" />
@@ -2260,14 +2325,24 @@ const PageToolListSaas = () => {
                       <div className="overlayEducation">
                         <div className="text">
                           <Body1 color="white">
-                            2차시에
+                            4차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report anything key="report-1">
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-19T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
                       <span>비즈니스 구체화</span>
                       <p>
                         <img src={images.ImgExplore24} alt="" />
@@ -2298,14 +2373,24 @@ const PageToolListSaas = () => {
                       <div className="overlayEducation">
                         <div className="text">
                           <Body1 color="white">
-                            2차시에
+                            4차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
                     </ExploreCard>
-                    <ExploreCard Report anything key="report-1">
+                    <ExploreCard
+                      ReadyEducation={
+                        !(
+                          sessionStorage.getItem("adminState") === "true" ||
+                          new Date() >= new Date("2025-05-19T00:00:00.000Z")
+                        )
+                      }
+                      Report
+                      anything
+                      key="report-1"
+                    >
                       <span>비즈니스 구체화</span>
                       <p>
                         <img src={images.ImgExplore25} alt="" />
@@ -2336,9 +2421,9 @@ const PageToolListSaas = () => {
                       <div className="overlayEducation">
                         <div className="text">
                           <Body1 color="white">
-                            2차시에
+                            4차시에
                             <br />
-                            오픈 예정입니다.
+                            오픈됩니다.
                           </Body1>
                         </div>
                       </div>
