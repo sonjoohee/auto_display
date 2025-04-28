@@ -97,9 +97,11 @@ const PageIdeaGeneration = () => {
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
   const [eventTitle] = useAtom(EVENT_TITLE);
-  const [creditCreateToolHigh, ] = useAtom(CREDIT_CREATE_TOOL_HIGH);
+  const [creditCreateToolHigh] = useAtom(CREDIT_CREATE_TOOL_HIGH);
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
-  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
+    CREDIT_CREATE_TOOL_LOADED
+  );
   const [educationState] = useAtom(EDUCATION_STATE);
   const [toolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -168,7 +170,6 @@ const PageIdeaGeneration = () => {
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
 
-
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const project = projectSaas;
@@ -180,20 +181,20 @@ const PageIdeaGeneration = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
-      if(!creditCreateToolLoaded){
+      if (!creditCreateToolLoaded) {
         setShowCreatePersonaPopup(true);
-      // 크레딧 사용전 사용 확인
-      const creditPayload = {
-        // 기존 10 대신 additionalQuestionMount 사용
-        mount: creditCreateToolHigh,
-      };
-      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+        // 크레딧 사용전 사용 확인
+        const creditPayload = {
+          // 기존 10 대신 additionalQuestionMount 사용
+          mount: creditCreateToolHigh,
+        };
+        const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
 
-      if (creditResponse?.state !== "use") {
-        setShowCreditPopup(true);
-        return;
+        if (creditResponse?.state !== "use") {
+          setShowCreditPopup(true);
+          return;
+        }
       }
-    }
 
       const projectAnalysis =
         (project?.projectAnalysis.business_analysis
@@ -337,11 +338,9 @@ const PageIdeaGeneration = () => {
 
     // 크레딧 사용 후 사용자 정보 새로고침
 
-      const userCreditValue = await UserCreditInfo(isLoggedIn);
-      // 전역 상태의 크레딧 정보 업데이트
-      setUserCredits(userCreditValue);
-  
-
+    const userCreditValue = await UserCreditInfo(isLoggedIn);
+    // 전역 상태의 크레딧 정보 업데이트
+    setUserCredits(userCreditValue);
 
     await updateToolOnServer(
       responseToolId,
@@ -606,7 +605,11 @@ const PageIdeaGeneration = () => {
           persona_group: persona_group,
         };
 
-        const interviewResponse = await EducationToolsRequest(Data, isLoggedIn, signal);
+        const interviewResponse = await EducationToolsRequest(
+          Data,
+          isLoggedIn,
+          signal
+        );
 
         const data = {
           type: "ix_idea_generation_report_education",
@@ -616,19 +619,26 @@ const PageIdeaGeneration = () => {
             interviewResponse.response.idea_generation_interview_education,
         };
 
-        let reportResponse = await EducationToolsRequest(data, isLoggedIn, signal);
+        let reportResponse = await EducationToolsRequest(
+          data,
+          isLoggedIn,
+          signal
+        );
 
         let reportRetryCount = 0;
         const reportMaxRetries = 10;
         while (
           reportRetryCount < reportMaxRetries &&
-          (
-            !reportResponse ||
+          (!reportResponse ||
             !reportResponse?.response ||
             !reportResponse?.response?.idea_generation_report_education ||
-            !reportResponse?.response?.idea_generation_report_education?.core_ideas ||
+            !reportResponse?.response?.idea_generation_report_education
+              ?.core_ideas ||
             !(
-              Array.isArray(reportResponse?.response?.idea_generation_report_education?.detailed_execution_ideas) &&
+              Array.isArray(
+                reportResponse?.response?.idea_generation_report_education
+                  ?.detailed_execution_ideas
+              ) &&
               reportResponse.response.idea_generation_report_education.detailed_execution_ideas.every(
                 (item) =>
                   typeof item === "object" &&
@@ -638,7 +648,10 @@ const PageIdeaGeneration = () => {
               )
             ) ||
             !(
-              Array.isArray(reportResponse?.response?.idea_generation_report_education?.additional_execution_ideas) &&
+              Array.isArray(
+                reportResponse?.response?.idea_generation_report_education
+                  ?.additional_execution_ideas
+              ) &&
               reportResponse.response.idea_generation_report_education.additional_execution_ideas.every(
                 (item) =>
                   typeof item === "object" &&
@@ -646,11 +659,13 @@ const PageIdeaGeneration = () => {
                   "idea_title" in item &&
                   "idea_description" in item
               )
-            )
-          )
+            ))
         ) {
-          
-          reportResponse = await EducationToolsRequest(data, isLoggedIn, signal);
+          reportResponse = await EducationToolsRequest(
+            data,
+            isLoggedIn,
+            signal
+          );
           reportRetryCount++;
         }
 
@@ -659,7 +674,8 @@ const PageIdeaGeneration = () => {
           return;
         }
 
-        const reportData = reportResponse.response.idea_generation_report_education;
+        const reportData =
+          reportResponse.response.idea_generation_report_education;
 
         reportData.core_ideas = reportData?.core_ideas?.map((coreIdea) => {
           // persona_name과 일치하는 persona 찾기
@@ -1394,9 +1410,8 @@ const PageIdeaGeneration = () => {
           onConfirm={() => setShowPopupSave(false)}
         />
       )}
-   
 
-{showCreatePersonaPopup &&
+      {showCreatePersonaPopup &&
         (eventState && !educationState ? (
           <PopupWrap
             Event

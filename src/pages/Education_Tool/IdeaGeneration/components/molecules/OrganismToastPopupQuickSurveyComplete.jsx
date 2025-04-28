@@ -10,7 +10,7 @@ import {
   PERSONA_BUTTON_STATE_3,
   PROJECT_TOTAL_INFO,
   IDEA_GENERATION_MANDALART_DATA,
-  IDEA_GENERATION_SELECTED_MANDALART
+  IDEA_GENERATION_SELECTED_MANDALART,
 } from "../../../../AtomStates";
 import personaImages from "../../../../../assets/styles/PersonaImages";
 
@@ -26,7 +26,9 @@ const OrganismToastPopupQuickSurveyComplete = ({
   );
   const [projectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
   const [ideaGenerationMandalArtData] = useAtom(IDEA_GENERATION_MANDALART_DATA);
-  const [ideaGenerationSelectedMandalart] = useAtom(IDEA_GENERATION_SELECTED_MANDALART);
+  const [ideaGenerationSelectedMandalart] = useAtom(
+    IDEA_GENERATION_SELECTED_MANDALART
+  );
 
   const [active, setActive] = useState(isActive);
   const [showWarning, setShowWarning] = useState(false);
@@ -37,30 +39,28 @@ const OrganismToastPopupQuickSurveyComplete = ({
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [filteredAnswers, setFilteredAnswers] = useState([]);
 
-
   //저장되었던 인터뷰 로드
   useEffect(() => {
     const interviewLoading = async () => {
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
-  
         // 단일 질문에 대한 Complete 상태 설정
         const completedStatus = ["Complete"];
         setInterviewStatus(completedStatus);
 
-        const processedAnswers = ideaGenerationMandalArtData[ideaGenerationSelectedMandalart - 1].core_ideas.map((idea, index) => {
-       
+        const processedAnswers = ideaGenerationMandalArtData[
+          ideaGenerationSelectedMandalart - 1
+        ].core_ideas.map((idea, index) => {
           return {
             persona: idea,
             imageKey: idea.imageKey,
             gender: idea.gender,
             age: idea.age,
             job: idea.job,
-            answer:{
-                answer: idea.answer,
-                core_idea: idea.core_idea,
-            } 
-              
+            answer: {
+              answer: idea.answer,
+              core_idea: idea.core_idea,
+            },
           };
         });
 
@@ -81,12 +81,13 @@ const OrganismToastPopupQuickSurveyComplete = ({
     // answers가 없으면 빈 배열 사용
     const questionAnswers = answers || [];
     try {
-      const filtered = selectedOption && questionAnswers.length > 0
-        ? questionAnswers.filter(
-            (answer) => answer?.answer?.main === selectedOption
-          )
-        : questionAnswers;
-      
+      const filtered =
+        selectedOption && questionAnswers.length > 0
+          ? questionAnswers.filter(
+              (answer) => answer?.answer?.main === selectedOption
+            )
+          : questionAnswers;
+
       // filtered가 배열인지 확인
       setFilteredAnswers(Array.isArray(filtered) ? filtered : []);
     } catch (error) {
@@ -117,7 +118,9 @@ const OrganismToastPopupQuickSurveyComplete = ({
                 <p>
                   <span>{answer?.gender}</span>
                   <span>
-                      {answer?.age?.includes("세") ? answer?.age : `${answer?.age}세`}
+                    {answer?.age?.includes("세")
+                      ? answer?.age
+                      : `${answer?.age}세`}
                   </span>
                   <span>{answer?.job}</span>
                 </p>
@@ -125,19 +128,21 @@ const OrganismToastPopupQuickSurveyComplete = ({
             </TypeName>
             <TextContainer>
               <div>
-                  {answer?.answer?.core_idea && (
-                      (() => {
-                          const index = ideaGenerationMandalArtData[ideaGenerationSelectedMandalart - 1].core_ideas.indexOf(answer.answer.core_idea);
-                          return ` ${answer.answer.answer}`;
-                      })()
-                  )}
+                {answer?.answer?.core_idea &&
+                  (() => {
+                    const index = ideaGenerationMandalArtData[
+                      ideaGenerationSelectedMandalart - 1
+                    ].core_ideas.indexOf(answer.answer.core_idea);
+                    return ` ${answer.answer.answer}`;
+                  })()}
               </div>
-              <div style={{ marginTop: "16px" }}>{answer?.answer?.core_idea}</div>
+              <div style={{ marginTop: "16px" }}>
+                {answer?.answer?.core_idea}
+              </div>
             </TextContainer>
           </AnswerItem>
         ))}
       </>
-    
     );
   };
 
@@ -165,20 +170,19 @@ const OrganismToastPopupQuickSurveyComplete = ({
     }
     setPersonaButtonState3(0);
     // onClose();
-    window.location.href = "/";
+    window.location.href = "/Project";
   };
 
   const handleWarningContinue = () => {
     setShowWarning(false);
   };
 
-
   // 이미 완료된 인터뷰를 확인할 때 사용 ex)인터뷰 스크립트 보기, 인터뷰 상세보기
   const renderInterviewItemsComplete = () => {
     return (
       <InterviewItem status={"Complete"}>
         {/* <QuestionWrap status={"Complete"} isOpen={visibleAnswers}> */}
-          {/* <QuestionText>Q. {quickSurveySurveyMethod?.question}</QuestionText> */}
+        {/* <QuestionText>Q. {quickSurveySurveyMethod?.question}</QuestionText> */}
         {/* </QuestionWrap> */}
         {visibleAnswers && <AnswerWrap>{renderAnswersComplete()}</AnswerWrap>}
       </InterviewItem>
@@ -234,11 +238,11 @@ const OrganismToastPopupQuickSurveyComplete = ({
           closeText="확인"
           onConfirm={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
           onCancel={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
         />
       )}

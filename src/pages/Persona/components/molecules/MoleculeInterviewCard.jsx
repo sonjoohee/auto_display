@@ -12,9 +12,7 @@ import {
   PROJECT_TOTAL_INFO,
   PROJECT_CREATE_INFO,
 } from "../../../AtomStates";
-import {
-  SkeletonLine,
-} from "../../../../assets/styles/Skeleton";
+import { SkeletonLine } from "../../../../assets/styles/Skeleton";
 import PopupWrap from "../../../../assets/styles/Popup";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
 import MoleculeRecreate from "./MoleculeRecreate";
@@ -69,8 +67,10 @@ const MoleculeInterviewCard = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
   const [, setSelectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
-  const [, setInterviewQuestionListState] = useState  ([]);
-  const [interviewQuestionList, setInterviewQuestionList] = useAtom(INTERVIEW_QUESTION_LIST);
+  const [, setInterviewQuestionListState] = useState([]);
+  const [interviewQuestionList, setInterviewQuestionList] = useAtom(
+    INTERVIEW_QUESTION_LIST
+  );
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [state, setState] = useState({
     isExpanded: false,
@@ -95,8 +95,6 @@ const MoleculeInterviewCard = ({
   const [regenerateCount, setRegenerateCount] = useState(0);
   const [showRegenerateButton, setShowRegenerateButton] = useState(false);
 
-  
-
   const loadInterviewQuestion = async () => {
     //재생성 버튼 숨기기
     setShowRegenerateButton(false);
@@ -119,7 +117,6 @@ const MoleculeInterviewCard = ({
         theory_name: title,
       };
 
-  
       let response = await InterviewXPersonaMultipleInterviewGeneratorRequest(
         data,
         isLoggedIn
@@ -133,7 +130,6 @@ const MoleculeInterviewCard = ({
         retryCount < maxRetries &&
         (!response || !response.response || response.response.length !== 5)
       ) {
-      
         response = await InterviewXPersonaMultipleInterviewGeneratorRequest(
           data,
           isLoggedIn
@@ -158,7 +154,7 @@ const MoleculeInterviewCard = ({
 
       // interviewQuestionList가 undefined나 null인 경우 빈 배열로 초기화
       const currentList = interviewQuestionList || [];
-      
+
       // 새로운 데이터를 포함한 전체 리스트를 생성
       const newQuestionList = [
         ...currentList,
@@ -311,11 +307,11 @@ const MoleculeInterviewCard = ({
           closeText="확인"
           onConfirm={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
           onCancel={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
         />
       )}

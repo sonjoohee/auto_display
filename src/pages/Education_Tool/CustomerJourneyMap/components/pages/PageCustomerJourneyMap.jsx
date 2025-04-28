@@ -482,7 +482,6 @@ const PageCustomerJourneyMap = () => {
       } catch (error) {}
       setToolSteps(3);
       setCompletedSteps([...completedSteps, 3]);
-
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
@@ -614,7 +613,10 @@ const PageCustomerJourneyMap = () => {
               <TabButtonType5
                 Num3
                 isActive={activeTab >= 3}
-                onClick={() => completedSteps.includes(2) || completedSteps.includes(3) && setActiveTab(3)}
+                onClick={() =>
+                  completedSteps.includes(2) ||
+                  (completedSteps.includes(3) && setActiveTab(3))
+                }
                 disabled={
                   !completedSteps.includes(3) || isLoading || isLoadingReport
                 }
@@ -972,7 +974,7 @@ const PageCustomerJourneyMap = () => {
                       </TabContent5Item>
                     </div>
                     <Button
-                      style={{ marginTop: "-100px"}}
+                      style={{ marginTop: "-100px" }}
                       Other
                       Primary
                       Fill
@@ -987,47 +989,46 @@ const PageCustomerJourneyMap = () => {
               </TabContent5>
             )}
 
-            {activeTab === 3 && (completedSteps.includes(2) || completedSteps.includes(3)) && (
-              <TabContent5 Small>
-                {isLoadingReport ? (
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      minHeight: "200px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <AtomPersonaLoader
-                      message={`페르소나 중심의 여정을 분석하고 있어요 (1분 정도 걸려요)​`}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <BgBoxItem primaryLightest>
-                      <H3 color="gray800">Customer Journey Analysis</H3>
-                      <Body3 color="gray800">
-                        페르소나와 분석 상황을 기반으로 고객 여정의 주요 단계를
-                        정리해드립니다
-                      </Body3>
-                    </BgBoxItem>
-                    <InsightAnalysis>
-                      <div
-                        className="markdown-body"
-                        style={{
-                          textAlign: "left",
-                        }}
-                      >
-                        <Markdown>
-                          {customerJourneyMapReport ?? ""}
-                        </Markdown>
-                      </div>
-                    </InsightAnalysis>
-                  </>
-                )}
-              </TabContent5>
-            )}
+            {activeTab === 3 &&
+              (completedSteps.includes(2) || completedSteps.includes(3)) && (
+                <TabContent5 Small>
+                  {isLoadingReport ? (
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        minHeight: "200px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <AtomPersonaLoader
+                        message={`페르소나 중심의 여정을 분석하고 있어요 (1분 정도 걸려요)​`}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <BgBoxItem primaryLightest>
+                        <H3 color="gray800">Customer Journey Analysis</H3>
+                        <Body3 color="gray800">
+                          페르소나와 분석 상황을 기반으로 고객 여정의 주요
+                          단계를 정리해드립니다
+                        </Body3>
+                      </BgBoxItem>
+                      <InsightAnalysis>
+                        <div
+                          className="markdown-body"
+                          style={{
+                            textAlign: "left",
+                          }}
+                        >
+                          <Markdown>{customerJourneyMapReport ?? ""}</Markdown>
+                        </div>
+                      </InsightAnalysis>
+                    </>
+                  )}
+                </TabContent5>
+              )}
           </DesignAnalysisWrap>
         </MainContent>
       </ContentsWrap>
@@ -1211,7 +1212,7 @@ const InsightAnalysis = styled.div`
     div {
       color: ${palette.gray800}; 
     } */
-    
+
     @media (max-width: 767px) {
       padding: 15px;
     }

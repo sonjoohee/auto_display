@@ -165,7 +165,7 @@ const MoleculeSignupForm = () => {
     setSignUpEmail("");
     setSignUpPassword("");
     setConfirmPassword("");
-    navigate("/");
+    navigate("/Project");
   };
 
   const handlePhoneNumberChange = (e) => {

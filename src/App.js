@@ -145,7 +145,7 @@ function App() {
   function RedirectIfLoggedIn({ children }) {
     const token = sessionStorage.getItem("accessToken");
     if (token) {
-      return <Navigate to="/" replace />;
+      return <Navigate to="/Project" replace />;
     }
     return children;
   }
@@ -314,7 +314,7 @@ function App() {
           Cancel
           onClick={(e) => {
             if (e.target === e.currentTarget) {
-              window.location.href = "/";
+              window.location.href = "/Project";
             }
           }}
         >
@@ -322,7 +322,7 @@ function App() {
             <button
               type="button"
               className="closePopup"
-              onClick={() => (window.location.href = "/")}
+              onClick={() => (window.location.href = "/Project")}
             >
               닫기
             </button>
@@ -337,7 +337,7 @@ function App() {
             <div className="btnWrap">
               <button
                 type="button"
-                onClick={() => (window.location.href = "/")}
+                onClick={() => (window.location.href = "/Project")}
               >
                 확인
               </button>
@@ -600,7 +600,7 @@ function App() {
               </RequireToken>
             }
           ></Route>
-          
+
           <Route
             path="/IdeaGeneration"
             element={

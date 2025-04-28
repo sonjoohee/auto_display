@@ -39,8 +39,8 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
     IS_LOADING_BUSINESS_ANALYSIS
   );
   const [isProjectIdReady, setIsProjectIdReady] = useState(false);
-  const [projectId, ] = useAtom(PROJECT_ID);
-  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [projectId] = useAtom(PROJECT_ID);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [businessAnalysis, setBusinessAnalysis] = useAtom(BUSINESS_ANALYSIS);
   const [personaButtonState1, setPersonaButtonState1] = useAtom(
     PERSONA_BUTTON_STATE_1
@@ -796,11 +796,11 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           closeText="확인"
           onConfirm={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
           onCancel={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
         />
       )}
@@ -814,11 +814,11 @@ const OrganismBusinessAnalysis = ({ personaStep }) => {
           closeText="확인"
           onConfirm={() => {
             setShowErrorPopup2(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
           onCancel={() => {
             setShowErrorPopup2(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
         />
       )}

@@ -1,4 +1,4 @@
-//직압관리/프로젝트 리스트 
+//직압관리/프로젝트 리스트
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,7 @@ const OrganismEmptyProject = () => {
   const navigate = useNavigate();
 
   const handleNewProject = () => {
-    navigate("/"); // 새 프로젝트 페이지로 이동
+    navigate("/Project"); // 새 프로젝트 페이지로 이동
   };
 
   return (

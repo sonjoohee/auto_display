@@ -1089,15 +1089,14 @@ const OrganismToastPopupSingleChat = ({
         state: "use",
         mount: creditCreateInterview,
       };
-  
+
       await UserCreditUse(creditUsePayload, isLoggedIn);
-  
+
       // 크레딧 사용 후 사용자 정보 새로고침
-  
-        const userCreditValue = await UserCreditInfo(isLoggedIn);
-        // 전역 상태의 크레딧 정보 업데이트
-        setUserCredits(userCreditValue);
-  
+
+      const userCreditValue = await UserCreditInfo(isLoggedIn);
+      // 전역 상태의 크레딧 정보 업데이트
+      setUserCredits(userCreditValue);
     } catch (error) {
       // console.error("Failed to create project on server:", error);
     }
@@ -1349,7 +1348,6 @@ const OrganismToastPopupSingleChat = ({
     // 크레딧 사용 처리가 완료되면 입력 활성화
     setIsInputEnabled(true);
   };
-
 
   return (
     <>
@@ -1693,11 +1691,11 @@ const OrganismToastPopupSingleChat = ({
           closeText="확인"
           onConfirm={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
           onCancel={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
         />
       )}

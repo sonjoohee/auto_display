@@ -86,9 +86,11 @@ const PageIdeaEvaluate = () => {
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
   const [eventTitle] = useAtom(EVENT_TITLE);
-  const [creditCreateToolHigh, ] = useAtom(CREDIT_CREATE_TOOL_HIGH);
+  const [creditCreateToolHigh] = useAtom(CREDIT_CREATE_TOOL_HIGH);
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
-  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
+    CREDIT_CREATE_TOOL_LOADED
+  );
   const [educationState] = useAtom(EDUCATION_STATE);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -161,7 +163,6 @@ const PageIdeaEvaluate = () => {
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
 
-
   const customerListRef = useRef(null);
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -193,20 +194,20 @@ const PageIdeaEvaluate = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
-      if(!creditCreateToolLoaded){
+      if (!creditCreateToolLoaded) {
         setShowCreatePersonaPopup(true);
         // 크레딧 사용전 사용 확인
-      const creditPayload = {
-        // 기존 10 대신 additionalQuestionMount 사용
-        mount: creditCreateToolHigh,
-      };
-      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+        const creditPayload = {
+          // 기존 10 대신 additionalQuestionMount 사용
+          mount: creditCreateToolHigh,
+        };
+        const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
 
-      if (creditResponse?.state !== "use") {
-        setShowCreditPopup(true);
-        return;
+        if (creditResponse?.state !== "use") {
+          setShowCreditPopup(true);
+          return;
+        }
       }
-    }
 
       const projectAnalysis =
         (project?.projectAnalysis?.business_analysis
@@ -219,7 +220,6 @@ const PageIdeaEvaluate = () => {
         (project?.projectAnalysis?.file_analysis
           ? project?.projectAnalysis?.file_analysis
           : "");
-
 
       if (project) {
         setBusinessDescription(projectAnalysis);
@@ -430,12 +430,10 @@ const PageIdeaEvaluate = () => {
       await UserCreditUse(creditUsePayload, isLoggedIn);
 
       // 크레딧 사용 후 사용자 정보 새로고침
-  
-        const userCreditValue = await UserCreditInfo(isLoggedIn);
-        // 전역 상태의 크레딧 정보 업데이트
-        setUserCredits(userCreditValue);
-    
 
+      const userCreditValue = await UserCreditInfo(isLoggedIn);
+      // 전역 상태의 크레딧 정보 업데이트
+      setUserCredits(userCreditValue);
 
       await updateToolOnServer(
         responseToolId,
@@ -468,11 +466,10 @@ const PageIdeaEvaluate = () => {
   };
 
   const handleSubmitReport = async () => {
-
     // 새 AbortController 생성
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
-    
+
     handleNextStep(2);
     // setToolSteps(2);
     setIsLoadingReport(true);
@@ -719,7 +716,6 @@ const PageIdeaEvaluate = () => {
       setGraphData(paretoData);
     }
   }, [ideaEvaluateComparisonEducation]);
-
 
   const handleConfirmCredit = async () => {
     setShowCreatePersonaPopup(false);

@@ -1144,7 +1144,7 @@ const PageCustomerValueAnalyzer = () => {
 
         // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
-          navigate("/");
+          navigate("/Project");
           return true;
         }
 

@@ -1916,7 +1916,7 @@ const PageAiPersona = () => {
                         W100
                         onClick={() => handleRequestClick(currentPersona)}
                       >
-                        페르소나 생성
+                        인터뷰 활성화 요청
                       </Button>
                     </>
                   )}

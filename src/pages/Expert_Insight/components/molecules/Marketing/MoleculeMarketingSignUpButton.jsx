@@ -23,7 +23,6 @@ import { palette } from "../../../../../assets/styles/Palette";
 import images from "../../../../../assets/styles/Images";
 
 const MoleculeMarketingSignUpButton = () => {
-
   const navigate = useNavigate();
   const { saveConversation } = useSaveConversation();
 
@@ -98,14 +97,14 @@ const MoleculeMarketingSignUpButton = () => {
 
   const handleMobileWarningConfirm = () => {
     setShowMobileWarning(false);
-    navigate("/");
+    navigate("/Project");
   };
 
   const handleNavigateToMain = () => {
     if (isMobileDevice()) {
       setShowMobileWarning(true);
     } else {
-      navigate("/");
+      navigate("/Project");
     }
   };
 

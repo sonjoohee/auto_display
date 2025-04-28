@@ -594,7 +594,7 @@ const OrganismPersonaCardList = ({
                         }}
                       >
                         <img src={images.PlusPrimary} width="8" height="8" />
-                        생성 요청
+                        활성화 요청
                       </div>
                     )}
                   </StyledButton>
