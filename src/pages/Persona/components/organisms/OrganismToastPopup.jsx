@@ -23,6 +23,8 @@ import {
   PROJECT_TOTAL_INFO,
   PROJECT_CREATE_INFO,
   PROJECT_SAAS,
+  USER_CREDITS,
+  CREDIT_CREATE_INTERVIEW,
 } from "../../../AtomStates";
 import personaImages from "../../../../assets/styles/PersonaImages";
 import { updateProjectOnServer } from "../../../../utils/indexedDB";
@@ -32,6 +34,7 @@ import { InterviewXPersonaMultipleInterviewGeneratorRequest } from "../../../../
 import { InterviewXPersonaMultipleInterviewRequest } from "../../../../utils/indexedDB";
 import { InterviewXInterviewReportRequest } from "../../../../utils/indexedDB";
 import { InterviewXInterviewReportAdditionalRequest } from "../../../../utils/indexedDB";
+import { UserCreditUse, UserCreditInfo } from "../../../../utils/indexedDB";
 
 const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const [projectSaas] = useAtom(PROJECT_SAAS);
@@ -40,6 +43,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     SELECTED_PERSONA_LIST
   );
   const [, setReportId] = useAtom(PROJECT_REPORT_ID);
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [creditCreateInterview] = useAtom(CREDIT_CREATE_INTERVIEW);
   const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
   const [, setInterviewReport] = useAtom(INTERVIEW_REPORT);
   const [, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
@@ -785,6 +790,22 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         "interviewGroup"
       );
       setReportId(newReportId); // 생성된 대화 ID 설정
+      
+      const creditUsePayload = {
+        title: project.projectTitle,
+        service_type: "그룹 인터뷰 룸",
+        target: "",
+        state: "use",
+        mount: creditCreateInterview,
+      };
+  
+      await UserCreditUse(creditUsePayload, isLoggedIn);
+  
+      // 크레딧 사용 후 사용자 정보 새로고침
+  
+        const userCreditValue = await UserCreditInfo(isLoggedIn);
+        // 전역 상태의 크레딧 정보 업데이트
+        setUserCredits(userCreditValue);
     } catch (error) {
       // console.error("Failed to create project on server:", error);
     }

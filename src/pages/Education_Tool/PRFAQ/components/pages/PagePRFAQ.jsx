@@ -57,6 +57,11 @@ import {
   IDEA_EVALUATE_SELECTED_KANO_MODEL,
   IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX,
   IDEA_EVALUATE_SELECTED_LIST_INDEX,
+  EVENT_STATE,
+  TRIAL_STATE,
+  EVENT_TITLE,
+  CREDIT_CREATE_TOOL, 
+  EDUCATION_STATE,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -74,11 +79,11 @@ import {
   Caption1,
 } from "../../../../../assets/styles/Typography";
 import {
-  InterviewXQuickSurveyRequest,
   createToolOnServer,
   updateToolOnServer,
   getFindToolListOnServerSaas,
   EducationToolsRequest,
+  UserCreditCheck,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 
@@ -95,6 +100,12 @@ const PagePRFAQ = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
+  const [eventState] = useAtom(EVENT_STATE);
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
+  const [creditCreateTool, setCreditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
+  const [educationState] = useAtom(EDUCATION_STATE);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -214,6 +225,8 @@ const PagePRFAQ = () => {
   const [ideaEvaluateSelect, setIdeaEvaluateSelect] = useState([]);
   const [graphData, setGraphData] = useState([]);
   const [conceptDefinitionList, setConceptDefinitionList] = useState([]);
+  const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
+ 
 
   const customerListRef = useRef(null);
   const businessModelCanvasRef = useRef(null);
@@ -260,6 +273,18 @@ const PagePRFAQ = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
+      setShowCreatePersonaPopup(true);
+      // 크레딧 사용전 사용 확인
+      const creditPayload = {
+        // 기존 10 대신 additionalQuestionMount 사용
+        mount: creditCreateTool,
+      };
+      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+
+      if (creditResponse?.state !== "use") {
+        setShowCreditPopup(true);
+        return;
+      }
 
       const projectAnalysis =
         (project?.projectAnalysis?.business_analysis
@@ -899,7 +924,10 @@ const PagePRFAQ = () => {
       setGraphData(paretoData);
     }
   }, [ideaEvaluateComparisonEducation]);
-  
+
+  const handleConfirmCredit = async () => {
+    setShowCreatePersonaPopup(false);
+  };
 
   return (
     <>
@@ -950,7 +978,7 @@ const PagePRFAQ = () => {
               <TabButtonType5
                 Num3
                 isActive={activeTab >= 3}
-                onClick={() => completedSteps.includes(2) && setActiveTab(3)}
+                onClick={() => completedSteps.includes(2) || completedSteps.includes(3) && setActiveTab(3)}
                 disabled={
                   !completedSteps.includes(3) || isLoading || isLoadingReport
                 }
@@ -1061,7 +1089,7 @@ const PagePRFAQ = () => {
                             </SelectBoxList>
                           )}
                         </SelectBox>
-                        <div className="title">
+                        <div className="title" style={{marginTop: "50px"}}>
                           <Body1 color="gray700">비즈니스 모델 캔버스  </Body1>
                         </div>
 
@@ -1145,7 +1173,7 @@ const PagePRFAQ = () => {
                       </TabContent5Item>
 
 
-                      {isLoading ? (
+                      {/* {isLoading ? (
                     <div
                       style={{
                         width: "100%",
@@ -1157,18 +1185,19 @@ const PagePRFAQ = () => {
                     >
                       <AtomPersonaLoader message="로딩 중..." />
                     </div>
-                  ) : !showKanoModelList ? (
-                    <BoxWrap
-                      NoData
-                      style={{ height: "300px" }}
-                    >
-                      <img src={images.PeopleFillPrimary2} alt="" />
-                      <Body2 color="gray700" align="center !important">
-                      Kano Model 결과가 보여집니다.
-                      </Body2>
+                  // ) : !showKanoModelList ? (
+                  //   <BoxWrap
+                  //     NoData
+                  //     style={{ height: "300px" }}
+                  //   >
+                  //     <img src={images.PeopleFillPrimary2} alt="" />
+                  //     <Body2 color="gray700" align="center !important">
+                  //     Kano Model 결과가 보여집니다.
+                  //     </Body2>
                      
-                    </BoxWrap>
+                  //   </BoxWrap>
                   ) : (
+                    <>
                     <InsightAnalysis>
                     <div
                       className="markdown-body"
@@ -1183,8 +1212,9 @@ const PagePRFAQ = () => {
                       </Markdown>
                     </div>
                   </InsightAnalysis>
-               
-                  )}
+
+                    </>
+                  )} */}
                     </TabContent5Item>
                   </div>   
                         <Button
@@ -1193,9 +1223,11 @@ const PagePRFAQ = () => {
                           Fill
                           Round
                           onClick={handleSubmitReport}
-                          // disabled={
-                          
-                          // }
+                          disabled={
+                            !selectedPurposes.customerList ||
+                            !selectedPurposes.businessModelCanvas ||
+                            toolSteps >= 1 
+                          }
                         >
                           아이디어 방향성으로 전환
                         </Button>
@@ -1208,128 +1240,105 @@ const PagePRFAQ = () => {
            
 
               {activeTab === 2 && completedSteps.includes(1) && (
-                    <TabContent5>
-                      <>
-                        <div className="title">
-                          <H3 color="gray800">Core Value Analysis</H3>
-                          <Body3 color="gray800">
-                            Kano Model 결과를 기반으로 비즈니스의 주요 가치를
-                            도출합니다
-                          </Body3>
-                        </div>
+                 <TabContent5>
+               { isLoading ? (
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      minHeight: "200px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <AtomPersonaLoader message={`분석 중이예요 ...`} />
+                  </div>
+                ) : (
+                 <>
+                    <div className="title">
+                      <H3 color="gray800">Core Value Analysis</H3>
+                      <Body3 color="gray800">
+                        Kano Model 결과를 기반으로 비즈니스의 주요 가치를 도출합니다
+                      </Body3>
+                    </div>
 
-                        <div className="content">
-                        <IdeaContainer>
-                      
-                            <IdeaBox>
-                                  <IdeaTitle>기타 의견</IdeaTitle>
-                            
-                                  <IdeaContent>
-                                    
-                                        <IdeaText>
-                                          •
-                                        </IdeaText>
-                                
-                                  </IdeaContent>
-                                </IdeaBox>
-                          
-                              </IdeaContainer>
-                      
+                    <div className="content">
+                      <IdeaContainer>
+                        <IdeaBox>
+                          <IdeaTitle>기타 의견</IdeaTitle>
+                          <IdeaContent>
+                            <IdeaText>•</IdeaText>
+                          </IdeaContent>
+                        </IdeaBox>
+                      </IdeaContainer>
 
-                          {isLoading ? (
-                            <div
-                              style={{
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                minHeight: "200px",
-                                alignItems: "center",
-                              }}
-                            >
-                              <AtomPersonaLoader message={`분석 중이예요 ...`} />
-                            </div>
-                          ) : (
-                            <InsightAnalysis>
-                              <div
-                                className="markdown-body"
-                                style={{
-                                  textAlign: "left",
-                                }}
-                              >
-                                {/* <Markdown>
-                                  {prepareMarkdown(
-                                    conceptDefinitionFirstReport ?? ""
-                                  )}
-                                </Markdown> */}
-                              </div>
-                            </InsightAnalysis>
-                          )}
+                      <InsightAnalysis>
+                        <div
+                          className="markdown-body"
+                          style={{
+                            textAlign: "left",
+                          }}
+                        >
+                          {/* <Markdown>
+                            {prepareMarkdown(
+                              conceptDefinitionFirstReport ?? ""
+                            )}
+                          </Markdown> */}
                         </div>
-                       
-                          <Button
-                            Other
-                            Primary
-                            Fill
-                            Round
-                            onClick={handleReportRequest}
-                            disabled={
-                              toolSteps > 2 
-                            
-                            }
-                          >
-                            페르소나 & 핵심가치 확인
-                          </Button>
-                   
-                      </>
-                    </TabContent5>
+                      </InsightAnalysis>
+                    </div>
+                    </>
+                )}
+                  </TabContent5>
+                )}
+              
+              
+
+              {activeTab === 3 && (completedSteps.includes(2) || completedSteps.includes(3)) && (
+                <TabContent5 Small>
+                  {isLoadingReport ? (
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        minHeight: "200px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <AtomPersonaLoader
+                        message={`결과보고서를 작성하고 있습니다.
+                          1분 정도 소요 될 수 있어요.`}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <BgBoxItem primaryLightest>
+                        <H3 color="gray800">컨셉 정의서</H3>
+                        <Body3 color="gray800">
+                          사업 아이템의 실행 전략을 정리한 초안입니다. 이를
+                          기반으로 세부 내용을 구체화해보세요.​
+                        </Body3>
+                      </BgBoxItem>
+
+                      <InsightAnalysis>
+                        <div
+                          className="markdown-body"
+                          style={{
+                            textAlign: "left",
+                          }}
+                        >
+                          {/* <Markdown>{prepareMarkdown(psstReport ?? "")}</Markdown> */}
+                        </div>
+                      </InsightAnalysis>
+                    </>
                   )}
+                </TabContent5>
+              )}
 
-                  {activeTab === 3 && completedSteps.includes(2) && (
-                                <TabContent5 Small>
-                                  {isLoadingReport ? (
-                                    <div
-                                      style={{
-                                        width: "100%",
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        minHeight: "200px",
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      <AtomPersonaLoader
-                                        message={`결과보고서를 작성하고 있습니다.
-                                          1분 정도 소요 될 수 있어요.`}
-                                      />
-                                    </div>
-                                  ) : (
-                                    <>
-                                      <BgBoxItem primaryLightest>
-                                        <H3 color="gray800">컨셉 정의서</H3>
-                                        <Body3 color="gray800">
-                                          사업 아이템의 실행 전략을 정리한 초안입니다. 이를
-                                          기반으로 세부 내용을 구체화해보세요.​
-                                        </Body3>
-                                      </BgBoxItem>
-
-                                      <InsightAnalysis>
-                                        <div
-                                          className="markdown-body"
-                                          style={{
-                                            textAlign: "left",
-                                          }}
-                                        >
-                                          {/* <Markdown>{prepareMarkdown(psstReport ?? "")}</Markdown> */}
-                                        </div>
-                                      </InsightAnalysis>
-                                    </>
-                                  )}
-                                </TabContent5>
-                              )}
-
-                            
-                            </DesignAnalysisWrap>
-                          </MainContent>
-                        </ContentsWrap>
+            </DesignAnalysisWrap>
+          </MainContent>
+        </ContentsWrap>
 
       {showPopupError && (
         <PopupWrap
@@ -1366,6 +1375,97 @@ const PagePRFAQ = () => {
           isModal={false}
           onCancel={() => setShowPopupSave(false)}
           onConfirm={() => setShowPopupSave(false)}
+        />
+      )}
+     
+
+{showCreatePersonaPopup &&
+        (eventState && !educationState ? (
+          <PopupWrap
+            Event
+            title="PRFAQ"
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : trialState && !educationState ? (
+          <PopupWrap
+            Check
+            title="PRFAQ"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="PRFAQ"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ))}
+
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
+          onConfirm={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
         />
       )}
     </>

@@ -57,6 +57,14 @@ import {
   IDEA_EVALUATE_SELECTED_KANO_MODEL,
   IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX,
   IDEA_EVALUATE_SELECTED_LIST_INDEX,
+  BUSINESS_MODEL_CANVAS_MARKDOWN,
+  EVENT_STATE,
+  TRIAL_STATE,
+  EVENT_TITLE,
+  CREDIT_CREATE_TOOL,
+  CREDIT_CREATE_TOOL_LOADED,
+  USER_CREDITS,
+  EDUCATION_STATE,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -74,11 +82,13 @@ import {
   Caption1,
 } from "../../../../../assets/styles/Typography";
 import {
-  InterviewXQuickSurveyRequest,
   createToolOnServer,
   updateToolOnServer,
   getFindToolListOnServerSaas,
   EducationToolsRequest,
+  UserCreditCheck,
+  UserCreditUse,
+  UserCreditInfo,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 
@@ -96,8 +106,15 @@ const PageBusinessModelCanvas = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [eventState] = useAtom(EVENT_STATE);
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
+  const [creditCreateTool, setCreditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [educationState] = useAtom(EDUCATION_STATE);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
   const[personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
@@ -144,6 +161,7 @@ const PageBusinessModelCanvas = () => {
   const [quickSurveyStaticDataState, setQuickSurveyStaticDataState] = useState(
     {}
   );
+  const [businessModelCanvasMarkdown, setBusinessModelCanvasMarkdown] = useAtom(BUSINESS_MODEL_CANVAS_MARKDOWN);
   // const [quickSurveyCustomQuestion, setQuickSurveyCustomQuestion] = useAtom(
   //   QUICK_SURVEY_CUSTOM_QUESTION
   // );
@@ -214,6 +232,9 @@ const PageBusinessModelCanvas = () => {
   const [conceptDefinitionList, setConceptDefinitionList] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedBoxId, setSelectedBoxId] = useState(null);
+  const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
+ 
 
   
   const customerListRef = useRef(null);
@@ -260,6 +281,20 @@ const PageBusinessModelCanvas = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
+      if(!creditCreateToolLoaded){
+      setShowCreatePersonaPopup(true);
+      // 크레딧 사용전 사용 확인
+      const creditPayload = {
+        // 기존 10 대신 additionalQuestionMount 사용
+        mount: creditCreateTool,
+      };
+      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+
+      if (creditResponse?.state !== "use") {
+        setShowCreditPopup(true);
+        return;
+      }
+    }
 
       const projectAnalysis =
         (project?.projectAnalysis?.business_analysis
@@ -646,8 +681,8 @@ const PageBusinessModelCanvas = () => {
            return;
          }
 
-      setIdeaEvaluateComparisonEducation(response.response.idea_evaluation_comparison_education)
-      
+      // setIdeaEvaluateComparisonEducation(response.response.idea_evaluation_comparison_education)
+      setBusinessModelCanvasMarkdown(response.response.idea_evaluation_comparison_education)
 
       await updateToolOnServer(
         toolId,
@@ -816,6 +851,12 @@ const PageBusinessModelCanvas = () => {
     if (toolSteps >= 1) {
       return;
     }
+    if(isLoading){
+      return;
+    }
+    if(ideaEvaluateComparisonEducation.length > 0){
+      return;
+    }
     // if(selectedKanoModelData.kanoModelClustering.length > 0){
     //   return;
     // }
@@ -932,6 +973,10 @@ const PageBusinessModelCanvas = () => {
         answer: option,
       },
     }));
+  };
+
+  const handleConfirmCredit = async () => {
+    setShowCreatePersonaPopup(false);
   };
 
 
@@ -1105,7 +1150,7 @@ const PageBusinessModelCanvas = () => {
                       </TabContent5Item>
 
 
-                      {isLoading ? (
+                  {isLoading ? (
                     <div
                       style={{
                         width: "100%",
@@ -1138,7 +1183,7 @@ const PageBusinessModelCanvas = () => {
                     >
                       <Markdown>
                         {prepareMarkdown(
-                        ideaEvaluateComparisonEducation ?? ""
+                         businessModelCanvasMarkdown ?? ""
                         )}
                       </Markdown>
                     </div>
@@ -1147,7 +1192,7 @@ const PageBusinessModelCanvas = () => {
                   )}
                     </TabContent5Item>
                   </div>   
-                  {ideaEvaluateComparisonEducation.length > 0 ? (
+                  {businessModelCanvasMarkdown.length > 0 ? (
                         <Button
                           Other
                           Primary
@@ -1167,6 +1212,10 @@ const PageBusinessModelCanvas = () => {
                           Fill
                           Round
                           onClick={handleSubmitConcept}
+                          disabled={
+                            !selectedPurposes?.customerList.length > 0 ||
+                            toolSteps >= 1 || isLoading
+                          }
                         >
                           다음
                         </Button>
@@ -1209,7 +1258,7 @@ const PageBusinessModelCanvas = () => {
                         setSelectedBoxId={setSelectedBoxId}
                         selectedBoxId={selectedBoxId}
                       />
-
+                      {selectedBoxId && (
                       <IdeaContainer>
               
                           <IdeaBox>
@@ -1228,6 +1277,8 @@ const PageBusinessModelCanvas = () => {
                           </IdeaBox>
                
                         </IdeaContainer>
+                        
+                      )}
                     </>
                   )}
                 </TabContent5>
@@ -1283,6 +1334,96 @@ const PageBusinessModelCanvas = () => {
           isModal={false}
           onCancel={() => setShowPopupSave(false)}
           onConfirm={() => setShowPopupSave(false)}
+        />
+      )}
+  
+{showCreatePersonaPopup &&
+        (eventState && !educationState ? (
+          <PopupWrap
+            Event
+            title="비즈니스 모델 캔버스"
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : trialState && !educationState ? (
+          <PopupWrap
+            Check
+            title="비즈니스 모델 캔버스"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="비즈니스 모델 캔버스"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ))}
+
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          } }
+          onConfirm={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
         />
       )}
     </>

@@ -9,10 +9,6 @@ import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavig
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
 import { Button } from "../../../../../assets/styles/ButtonStyle";
 import images from "../../../../../assets/styles/Images";
-import {
-  CustomTextarea,
-  FormBox,
-} from "../../../../../assets/styles/InputStyle";
 import PopupWrap from "../../../../../assets/styles/Popup";
 import {
   ContentsWrap,
@@ -35,20 +31,8 @@ import {
   TOOL_STEP,
   TOOL_LOADING,
   PROJECT_SAAS,
-  QUICK_SURVEY_PROJECT_DESCRIPTION,
   QUICK_SURVEY_ANALYSIS,
-  QUICK_SURVEY_CUSTOM_GUIDE,
-  QUICK_SURVEY_PRESET_DATA,
-  QUICK_SURVEY_PERSONA_GROUP,
-  QUICK_SURVEY_INTERVIEW,
   QUICK_SURVEY_REPORT,
-  QUICK_SURVEY_STATIC_DATA,
-  QUICK_SURVEY_SELECTED_QUESTION,
-  QUICK_SURVEY_SURVEY_METHOD,
-  QUICK_SURVEY_DETAIL_INFO,
-  QUICK_SURVEY_RECRUITING_CONDITION,
-  QUICK_SURVEY_INTERVIEW_MODE_TYPE,
-  QUICK_SURVEY_CUSTOM_QUESTION,
   PERSONA_LIST_SAAS,
   IDEA_EVALUATE_SELECTED_LIST,
   IDEA_EVALUATE_LIST,
@@ -56,6 +40,13 @@ import {
   IDEA_EVALUATE_SELECTED_KANO_MODEL,
   IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX,
   IDEA_EVALUATE_SELECTED_LIST_INDEX,
+  EVENT_STATE,
+  TRIAL_STATE,
+  EVENT_TITLE,
+  CREDIT_CREATE_TOOL_HIGH,
+  EDUCATION_STATE,
+  USER_CREDITS,
+  CREDIT_CREATE_TOOL_LOADED,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -73,19 +64,16 @@ import {
   Caption1,
 } from "../../../../../assets/styles/Typography";
 import {
-  InterviewXQuickSurveyRequest,
   createToolOnServer,
   updateToolOnServer,
   getFindToolListOnServerSaas,
   EducationToolsRequest,
+  UserCreditCheck,
+  UserCreditUse,
+  UserCreditInfo,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
-import GraphChartScale2 from "../../../../../components/Charts/GraphChartScale2";
-import GraphChartScale5 from "../../../../../components/Charts/GraphChartScale5";
-import GraphChartScale11 from "../../../../../components/Charts/GraphChartScale11";
-import GraphChartScale3 from "../../../../../components/Charts/GraphChartScale3";
-import GraphChartScale4 from "../../../../../components/Charts/GraphChartScale4";
 import OrganismToastPopupQuickSurveyComplete from "../organisms/OrganismToastPopupQuickSurveyComplete";
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
 import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
@@ -95,6 +83,13 @@ const PageIdeaEvaluate = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [eventState] = useAtom(EVENT_STATE);
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
+  const [creditCreateToolHigh, ] = useAtom(CREDIT_CREATE_TOOL_HIGH);
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [educationState] = useAtom(EDUCATION_STATE);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -107,36 +102,15 @@ const PageIdeaEvaluate = () => {
     useAtom(IDEA_EVALUATE_SELECTED_LIST_INDEX);
   const [ideaEvaluateComparisonEducation, setIdeaEvaluateComparisonEducation] =
     useAtom(IDEA_EVALUATE_COMPARISON_EDUCATION);
-  const [quickSurveyPersonaGroup, setquickSurveyPersonaGroup] = useAtom(
-    QUICK_SURVEY_PERSONA_GROUP
-  );
-  const [quickSurveyInterview, setQuickSurveyInterview] = useAtom(
-    QUICK_SURVEY_INTERVIEW
-  );
-  const [quickSurveyDetailInfo] = useAtom(QUICK_SURVEY_DETAIL_INFO);
-  const [quickSurveyRecruitingCondition] = useAtom(
-    QUICK_SURVEY_RECRUITING_CONDITION
-  );
-  const [quickSurveyInterviewModeType] = useAtom(
-    QUICK_SURVEY_INTERVIEW_MODE_TYPE
-  );
+
   const [quickSurveyReport, setQuickSurveyReport] =
     useAtom(QUICK_SURVEY_REPORT);
-  const [quickSurveyStaticData, setQuickSurveyStaticData] = useAtom(
-    QUICK_SURVEY_STATIC_DATA
-  );
   const [ideaEvaluateSelectedKanoModel, setIdeaEvaluateSelectedKanoModel] =
     useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL);
   const [ideaEvaluateSelectedList, setIdeaEvaluateSelectedList] = useAtom(
     IDEA_EVALUATE_SELECTED_LIST
   );
   const [ideaEvaluateList, setIdeaEvaluateList] = useAtom(IDEA_EVALUATE_LIST);
-  const [quickSurveyProjectDescription, setQuickSurveyProjectDescription] =
-    useAtom(QUICK_SURVEY_PROJECT_DESCRIPTION);
-  const [quickSurveyStaticDataState, setQuickSurveyStaticDataState] = useState(
-    {}
-  );
-
   const [
     ideaEvaluateSelectedKanoModelIndex,
     setIdeaEvaluateSelectedKanoModelIndex,
@@ -154,16 +128,10 @@ const PageIdeaEvaluate = () => {
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
   const [projectDescription, setProjectDescription] = useState("");
-  const [recruitingCondition, setRecruitingCondition] = useState("");
   const [quickSurveyCustomQuestion, setQuickSurveyCustomQuestion] = useState(
     []
   );
-  const [customPersonaForm, setCustomPersonaForm] = useState({
-    gender: "",
-    age: [],
-    residence: [],
-    income: [],
-  });
+
   const [selectBoxStates, setSelectBoxStates] = useState({
     customerList: false,
   });
@@ -178,12 +146,7 @@ const PageIdeaEvaluate = () => {
     purpose: "",
     content: "",
   });
-  const [selectedValues, setSelectedValues] = useState({
-    gender: "",
-    age: "",
-    residence: "",
-    income: "",
-  });
+
   const [interviewModeType, setInterviewModeType] = useState("");
   const [isLoadingPreset, setIsLoadingPreset] = useState(false);
   const [shouldRegenerate, setShouldRegenerate] = useState(false);
@@ -195,6 +158,9 @@ const PageIdeaEvaluate = () => {
   const [showKanoModelList, setshowKanoModelList] = useState(false);
   const [ideaEvaluateSelect, setIdeaEvaluateSelect] = useState([]);
   const [graphData, setGraphData] = useState([]);
+  const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
+
 
   const customerListRef = useRef(null);
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -227,6 +193,20 @@ const PageIdeaEvaluate = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
+      if(!creditCreateToolLoaded){
+        setShowCreatePersonaPopup(true);
+        // 크레딧 사용전 사용 확인
+      const creditPayload = {
+        // 기존 10 대신 additionalQuestionMount 사용
+        mount: creditCreateToolHigh,
+      };
+      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+
+      if (creditResponse?.state !== "use") {
+        setShowCreditPopup(true);
+        return;
+      }
+    }
 
       const projectAnalysis =
         (project?.projectAnalysis?.business_analysis
@@ -239,6 +219,7 @@ const PageIdeaEvaluate = () => {
         (project?.projectAnalysis?.file_analysis
           ? project?.projectAnalysis?.file_analysis
           : "");
+
 
       if (project) {
         setBusinessDescription(projectAnalysis);
@@ -436,6 +417,25 @@ const PageIdeaEvaluate = () => {
         isLoggedIn
       );
       setToolId(responseToolId);
+
+      // 크레딧이 사용 가능한 상태면 사용 API 호출
+      const creditUsePayload = {
+        title: project.projectTitle,
+        service_type: "고객 여정 지도",
+        target: "",
+        state: "use",
+        mount: creditCreateToolHigh,
+      };
+
+      await UserCreditUse(creditUsePayload, isLoggedIn);
+
+      // 크레딧 사용 후 사용자 정보 새로고침
+  
+        const userCreditValue = await UserCreditInfo(isLoggedIn);
+        // 전역 상태의 크레딧 정보 업데이트
+        setUserCredits(userCreditValue);
+    
+
 
       await updateToolOnServer(
         responseToolId,
@@ -719,6 +719,11 @@ const PageIdeaEvaluate = () => {
       setGraphData(paretoData);
     }
   }, [ideaEvaluateComparisonEducation]);
+
+
+  const handleConfirmCredit = async () => {
+    setShowCreatePersonaPopup(false);
+  };
 
   return (
     <>
@@ -1413,6 +1418,95 @@ const PageIdeaEvaluate = () => {
           isModal={false}
           onCancel={() => setShowPopupSave(false)}
           onConfirm={() => setShowPopupSave(false)}
+        />
+      )}
+      {showCreatePersonaPopup &&
+        (eventState && !educationState ? (
+          <PopupWrap
+            Event
+            title="아이디어 평가"
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditCreateToolHigh} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : trialState && !educationState ? (
+          <PopupWrap
+            Check
+            title="아이디어 평가"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateToolHigh} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="아이디어 평가"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateToolHigh} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ))}
+
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
+          onConfirm={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
         />
       )}
     </>

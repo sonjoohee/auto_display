@@ -56,13 +56,15 @@ import {
   KEYWORDS_GENERATION_SELECTED_ISSUE,
   KEYWORDS_GENERATION_SELECTED_ISSUE_INDEX,
   KEYWORDS_GENERATION_TAG,
+  EVENT_STATE,
+  TRIAL_STATE,
+  EVENT_TITLE,
+  CREDIT_CREATE_TOOL_LOW,
+  CREDIT_CREATE_TOOL_LOADED,
+  EDUCATION_STATE,
+  USER_CREDITS,
 } from "../../../../AtomStates";
-import {
-  SelectBox,
-  SelectBoxItem,
-  SelectBoxTitle,
-  SelectBoxList,
-} from "../../../../../assets/styles/InputStyle";
+
 import images from "../../../../../assets/styles/Images";
 import {
   H4,
@@ -78,6 +80,9 @@ import {
   updateToolOnServer,
   EducationToolsRequest,
   getFindToolListOnServerSaas,
+  UserCreditCheck,
+  UserCreditUse,
+  UserCreditInfo,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDeleteForm from "../../../public/MoleculeDeleteForm";
@@ -90,41 +95,23 @@ const PageNeedsKeywordsGeneration = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [eventState] = useAtom(EVENT_STATE);
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
+  const [creditCreateToolLow, ] = useAtom(CREDIT_CREATE_TOOL_LOW);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [educationState] = useAtom(EDUCATION_STATE);
   const [toolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
-  const [personaListSaas] = useAtom(PERSONA_LIST_SAAS);
-  const [
-    ideaGenerationSelectedStartPosition,
-    setIdeaGenerationSelectedStartPosition,
-  ] = useAtom(IDEA_GENERATION_SELECTED_START_POSITION);
-  const [ideaGenerationStartPosition, setIdeaGenerationStartPosition] = useAtom(
-    IDEA_GENERATION_START_POSITION
-  );
   const [keywordsGenerationTag, setKeywordsGenerationTag] = useAtom(KEYWORDS_GENERATION_TAG);
-  const [keywordsGenerationSelectedIssueIndex, setKeywordsGenerationSelectedIssueIndex] = useAtom(KEYWORDS_GENERATION_SELECTED_ISSUE_INDEX);  
   const [issueGenerationList, setIssueGenerationList] = useAtom(ISSUE_GENERATION_LIST);
   const [keywordsGenerationSelectedIssue, setKeywordsGenerationSelectedIssue] = useAtom(KEYWORDS_GENERATION_SELECTED_ISSUE);
-  const [ideaGenerationPossessionTech, setIdeaGenerationPossessionTech] =
-    useAtom(IDEA_GENERATION_POSSSESSION_TECH);
-  const [ideaGenerationSelectedPurpose, setIdeaGenerationSelectedPurpose] =
-    useAtom(IDEA_GENERATION_SELECTED_PURPOSE);
-
-  const [ideaGenerationProblemList, setIdeaGenerationProblemList] = useAtom(
-    IDEA_GENERATION_PROBLEM_LIST
-  );
-  const [ideaGenerationMandalArtData, setIdeaGenerationMandalArtData] = useAtom(
-    IDEA_GENERATION_MANDALART_DATA
-  );
-  const [ideaGenerationProblemListTitle, setIdeaGenerationProblemListTitle] =
-    useAtom(IDEA_GENERATION_PROBLEM_LIST_TITLE);
-  const [ideaGenerationSelectedMandalart, setIdeaGenerationSelectedMandalart] =
-    useAtom(IDEA_GENERATION_SELECTED_MANDALART);
 
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [isContentLoading, setIsContentLoading] = useState(false);
-  const [customerJourneyList, setCustomerJourneyList] = useState([]);
   const [showPopupError, setShowPopupError] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
@@ -135,32 +122,11 @@ const PageNeedsKeywordsGeneration = () => {
   const [businessDescriptionTitle, setBusinessDescriptionTitle] = useState("");
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
-  const [selectedPurposes, setSelectedPurposes] = useState({
-    customerList: "",
-  });
-  const [selectBoxStates, setSelectBoxStates] = useState({
-    customerList: false,
-  });
-  const [dropUpStates, setDropUpStates] = useState({
-    customerList: false,
-  });
-  const [, setContactForm] = useState({
-    email: "",
-    purpose: "",
-    content: "",
-  });
-  const [descriptionLength, setDescriptionLength] = useState(0);
-  const [projectDescription, setProjectDescription] = useState("");
-  const [
-    customerJourneyMapSelectedPersona,
-    setCustomerJourneyMapSelectedPersona,
-  ] = useState([]);
-  const [customerJourneyMapReport, setCustomerJourneyMapReport] = useState([]);
-  const [showToast, setShowToast] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState([]);
-  const [selectedQuestion, setSelectedQuestion] = useState([]);
-  const [needToFindMatchingIssue, setNeedToFindMatchingIssue] = useState(false);
   const [showSelectedIssue, setshowSelectedIssue] = useState(false);
+  const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
+
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -174,7 +140,20 @@ const PageNeedsKeywordsGeneration = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
+      if(!creditCreateToolLoaded){
+      setShowCreatePersonaPopup(true);
+       // 크레딧 사용전 사용 확인
+       const creditPayload = {
+        // 기존 10 대신 additionalQuestionMount 사용
+        mount: creditCreateToolLow,
+      };
+      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
 
+      if (creditResponse?.state !== "use") {
+        setShowCreditPopup(true);
+        return;
+      }
+    }
       const projectAnalysis =
         (project?.projectAnalysis.business_analysis
           ? project?.projectAnalysis.business_analysis
@@ -301,6 +280,22 @@ const PageNeedsKeywordsGeneration = () => {
       isLoggedIn
     );
     setToolId(responseToolId);
+
+    const creditUsePayload = {
+      title: project.projectTitle,
+      service_type: "고객 여정 지도",
+      target: "",
+      state: "use",
+      mount: creditCreateToolLow,
+    };
+
+    await UserCreditUse(creditUsePayload, isLoggedIn);
+
+    // 크레딧 사용 후 사용자 정보 새로고침
+
+      const userCreditValue = await UserCreditInfo(isLoggedIn);
+      // 전역 상태의 크레딧 정보 업데이트
+      setUserCredits(userCreditValue)
 
 
     // 각 title을 currentProblemList의 해당 인덱스에 할당
@@ -432,6 +427,9 @@ const PageNeedsKeywordsGeneration = () => {
   };
 
   
+  const handleConfirmCredit = async () => {
+    setShowCreatePersonaPopup(false);
+  };
 
   const handleCheckboxChange = (ideaId) => {
     setSelectedIssue((prev) => {
@@ -771,6 +769,91 @@ const PageNeedsKeywordsGeneration = () => {
           isModal={false}
           onCancel={() => setShowPopupSave(false)}
           onConfirm={() => setShowPopupSave(false)}
+        />
+      )}
+   
+
+{showCreatePersonaPopup &&
+        (eventState && !educationState ? (
+          <PopupWrap
+            Event
+            title="핵심 키워드 추출"
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditCreateToolLow} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : trialState && !educationState ? (
+          <PopupWrap
+            Check
+            title="핵심 키워드 추출"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateToolLow} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="핵심 키워드 추출"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateToolLow} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ))}
+
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => setShowCreditPopup(false)}
+          onConfirm={() => setShowCreditPopup(false)}
         />
       )}
     </>

@@ -513,6 +513,9 @@ export const CREDIT_CREATE_EXPERT = atom(0);
 export const CREDIT_CREATE_MULTIMODAL = atom(0);
 export const CREDIT_CREATE_INTERVIEW = atom(0);
 export const CREDIT_CREATE_PROJECT = atom(0);
+export const CREDIT_CREATE_TOOL_LOW = atom(0);
+export const CREDIT_CREATE_TOOL_HIGH = atom(0);
+export const CREDIT_CREATE_TOOL_LOADED = atom(false);
 
 export const EVENT_STATE = atom(false);
 export const EVENT_TITLE = atom("");
@@ -642,6 +645,8 @@ export const CONCEPT_DEFINITION_SELECTED_PURPOSE = atom({});
 export const CONCEPT_DEFINITION_SELECTED_PERSONA = atom([]);
 export const CONCEPT_DEFINITION_FIRST_REPORT = atom("");
 export const CONCEPT_DEFINITION_FINAL_REPORT = atom("");
+
+export const BUSINESS_MODEL_CANVAS_MARKDOWN = atom("");
 
 //!saas
 // 프로젝트 생성 페이지

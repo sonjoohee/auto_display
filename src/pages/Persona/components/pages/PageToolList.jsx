@@ -179,6 +179,7 @@ import {
   EXPERT_BUTTON_STATE,
   ADDITION_BUTTON_STATE,
   CUSTOMER_ADDITION_BUTTON_STATE,
+  CREDIT_CREATE_TOOL_LOADED,
 } from "../../../AtomStates";
 import {
   ContentsWrap,
@@ -215,6 +216,7 @@ const PageToolList = () => {
   }, []);
 
   const [projectTotalInfo, setProjectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
 
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [accessableExpert, setAccessableExpert] = useAtom(ACCESSABLE_EXPERT);
@@ -738,6 +740,7 @@ const PageToolList = () => {
     // 모든 관련 atom 상태 초기화
     setToolStep(0);
     setToolId("");
+    setCreditCreateToolLoaded(false);
 
     // Target Discovery 관련 atom 초기화
     setTargetDiscoveryInfo({});
@@ -781,6 +784,7 @@ const PageToolList = () => {
       try {
         if (isLoggedIn) {
           const response = await CreditInfo(isLoggedIn);
+     
 
           if (response) {
             setCreditRequestCustomPersona(response.request_custom_persona);
