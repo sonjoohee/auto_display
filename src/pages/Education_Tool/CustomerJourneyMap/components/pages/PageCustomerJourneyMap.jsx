@@ -1211,19 +1211,6 @@ const InsightAnalysis = styled.div`
       color: ${palette.gray800}; 
     } */
     
-    ul, ol {
-      list-style-type: disc !important;
-      padding-left: 2em !important;
-      margin: 1em 0 !important;
-      display: block !important;
-    }
-    
-    li {
-      display: list-item !important;
-      margin: 0.25em 0 !important;
-      list-style: inherit !important;
-    }
-    
     @media (max-width: 767px) {
       padding: 15px;
     }

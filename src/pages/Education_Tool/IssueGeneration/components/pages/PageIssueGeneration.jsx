@@ -345,12 +345,18 @@ const PageIssueGeneration = () => {
       //   // 유효한 항목이 없는 경우 처리
       //   return;
       // }
+      
 
       const Data = {
         type: "ix_idea_generation_keyword_education",
         business_info: business,
         info: customerJourneyMapSelectedPersona,
-        problem_needs: issueGenerationProblemList,
+        problem_needs: issueGenerationProblemListTitle.map(title => {
+          // 기존 issueGenerationProblemList에서 일치하는 title을 가진 객체 찾기
+          const existingItem = issueGenerationProblemList.find(item => item.title === title);
+          // 있으면 그 객체 반환, 없으면 새 객체 생성
+          return existingItem || { title };
+        }),
         is_load: true,
       };
 
