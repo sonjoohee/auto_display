@@ -174,7 +174,7 @@ import {
   CONCEPT_DEFINITION_FIRST_REPORT,
   CONCEPT_DEFINITION_FINAL_REPORT,
   BUSINESS_MODEL_CANVAS_MARKDOWN,
-  CREDIT_CREATE_TOOL_LOADED
+  CREDIT_CREATE_TOOL_LOADED,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -1686,12 +1686,7 @@ const PageToolListSaas = () => {
                         </div>
                       </ExploreCard>,
 
-                      <ExploreCard
-                        Expert
-                        // Ready
-                        key="expert-4"
-                        // {...(!accessableExpert && { Ready: true })}
-                      >
+                      <ExploreCard Expert key="expert-4">
                         <span>
                           <images.LightningChargeFill color={palette.gray700} />
                           Expert
@@ -1914,15 +1909,6 @@ const PageToolListSaas = () => {
                           </Caption1>
                           <i />
                         </div>
-                      </div>{" "}
-                      <div className="overlayEducation">
-                        <div className="text">
-                          <Body1 color="white">
-                            2차시에
-                            <br />
-                            오픈 예정입니다.
-                          </Body1>
-                        </div>
                       </div>
                     </ExploreCard>
                     <ExploreCard AiPersona anything key="analysis-2">
@@ -1953,15 +1939,6 @@ const PageToolListSaas = () => {
                           </Caption1>
                           <i />
                         </div>
-                      </div>{" "}
-                      <div className="overlayEducation">
-                        <div className="text">
-                          <Body1 color="white">
-                            2차시에
-                            <br />
-                            오픈 예정입니다.
-                          </Body1>
-                        </div>
                       </div>
                     </ExploreCard>
                     <ExploreCard Report anything key="report-1">
@@ -1991,15 +1968,6 @@ const PageToolListSaas = () => {
                           </Caption1>
                           <i />
                         </div>
-                      </div>{" "}
-                      <div className="overlayEducation">
-                        <div className="text">
-                          <Body1 color="white">
-                            2차시에
-                            <br />
-                            오픈 예정입니다.
-                          </Body1>
-                        </div>
                       </div>
                     </ExploreCard>
 
@@ -2007,7 +1975,7 @@ const PageToolListSaas = () => {
                       ReadyEducation={
                         !(
                           sessionStorage.getItem("adminState") === "true" ||
-                          new Date() >= new Date("2025-05-05T00:00:00.000Z")
+                          new Date() >= new Date("2025-05-09T00:00:00.000Z")
                         )
                       }
                       Report
@@ -2056,7 +2024,7 @@ const PageToolListSaas = () => {
                       ReadyEducation={
                         !(
                           sessionStorage.getItem("adminState") === "true" ||
-                          new Date() >= new Date("2025-05-05T00:00:00.000Z")
+                          new Date() >= new Date("2025-05-09T00:00:00.000Z")
                         )
                       }
                       Report
@@ -2106,7 +2074,7 @@ const PageToolListSaas = () => {
                       ReadyEducation={
                         !(
                           sessionStorage.getItem("adminState") === "true" ||
-                          new Date() >= new Date("2025-12-05T00:00:00.000Z")
+                          new Date() >= new Date("2025-16-05T00:00:00.000Z")
                         )
                       }
                       Report
@@ -2154,7 +2122,7 @@ const PageToolListSaas = () => {
                       ReadyEducation={
                         !(
                           sessionStorage.getItem("adminState") === "true" ||
-                          new Date() >= new Date("2025-05-12T00:00:00.000Z")
+                          new Date() >= new Date("2025-05-16T00:00:00.000Z")
                         )
                       }
                       Report
@@ -2202,7 +2170,7 @@ const PageToolListSaas = () => {
                       ReadyEducation={
                         !(
                           sessionStorage.getItem("adminState") === "true" ||
-                          new Date() >= new Date("2025-05-12T00:00:00.000Z")
+                          new Date() >= new Date("2025-05-16T00:00:00.000Z")
                         )
                       }
                       Report
@@ -2250,7 +2218,7 @@ const PageToolListSaas = () => {
                       ReadyEducation={
                         !(
                           sessionStorage.getItem("adminState") === "true" ||
-                          new Date() >= new Date("2025-05-19T00:00:00.000Z")
+                          new Date() >= new Date("2025-05-23T00:00:00.000Z")
                         )
                       }
                       Report
@@ -2298,7 +2266,7 @@ const PageToolListSaas = () => {
                       ReadyEducation={
                         !(
                           sessionStorage.getItem("adminState") === "true" ||
-                          new Date() >= new Date("2025-05-19T00:00:00.000Z")
+                          new Date() >= new Date("2025-05-23T00:00:00.000Z")
                         )
                       }
                       Report
@@ -2346,7 +2314,7 @@ const PageToolListSaas = () => {
                       ReadyEducation={
                         !(
                           sessionStorage.getItem("adminState") === "true" ||
-                          new Date() >= new Date("2025-05-19T00:00:00.000Z")
+                          new Date() >= new Date("2025-05-23T00:00:00.000Z")
                         )
                       }
                       Report
@@ -2394,7 +2362,7 @@ const PageToolListSaas = () => {
                       ReadyEducation={
                         !(
                           sessionStorage.getItem("adminState") === "true" ||
-                          new Date() >= new Date("2025-05-19T00:00:00.000Z")
+                          new Date() >= new Date("2025-05-23T00:00:00.000Z")
                         )
                       }
                       Report
@@ -2438,22 +2406,6 @@ const PageToolListSaas = () => {
                         </div>
                       </div>
                     </ExploreCard>
-                    {/* <ExploreCard
-                      Report
-                      Ready
-                      key="report-2"
-                      style={{ cursor: "default" }}
-                    >
-                      <span>
-                        <images.LightningChargeFill color={palette.gray700} />
-                        Report
-                      </span>
-                      <p>
-                        <img src={images.ImgExploreNoData} alt="" />
-                      </p>
-                      <div style={{ height: "10px" }}></div>
-                      <Body1 color="gray300">Coming Soon</Body1>
-                    </ExploreCard> */}
                   </>
                 )}
               </ExploreList>
