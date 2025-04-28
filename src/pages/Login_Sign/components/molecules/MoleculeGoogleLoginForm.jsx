@@ -157,7 +157,7 @@ const MoleculeGoogleLoginForm = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      navigate("/");
+      navigate("/Project");
     }
   };
 

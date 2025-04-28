@@ -81,17 +81,24 @@ const PageNeedsKeywordsGeneration = () => {
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
   const [eventTitle] = useAtom(EVENT_TITLE);
-  const [creditCreateToolLow, ] = useAtom(CREDIT_CREATE_TOOL_LOW);
-  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [creditCreateToolLow] = useAtom(CREDIT_CREATE_TOOL_LOW);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
+    CREDIT_CREATE_TOOL_LOADED
+  );
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [educationState] = useAtom(EDUCATION_STATE);
   const [toolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
-  const [keywordsGenerationTag, setKeywordsGenerationTag] = useAtom(KEYWORDS_GENERATION_TAG);
-  const [issueGenerationList, setIssueGenerationList] = useAtom(ISSUE_GENERATION_LIST);
-  const [keywordsGenerationSelectedIssue, setKeywordsGenerationSelectedIssue] = useAtom(KEYWORDS_GENERATION_SELECTED_ISSUE);
+  const [keywordsGenerationTag, setKeywordsGenerationTag] = useAtom(
+    KEYWORDS_GENERATION_TAG
+  );
+  const [issueGenerationList, setIssueGenerationList] = useAtom(
+    ISSUE_GENERATION_LIST
+  );
+  const [keywordsGenerationSelectedIssue, setKeywordsGenerationSelectedIssue] =
+    useAtom(KEYWORDS_GENERATION_SELECTED_ISSUE);
 
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [isContentLoading, setIsContentLoading] = useState(false);
@@ -110,7 +117,6 @@ const PageNeedsKeywordsGeneration = () => {
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
 
-
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const project = projectSaas;
@@ -119,24 +125,23 @@ const PageNeedsKeywordsGeneration = () => {
     window.scrollTo(0, 0);
   }, []);
 
-
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
-      if(!creditCreateToolLoaded){
-      setShowCreatePersonaPopup(true);
-       // 크레딧 사용전 사용 확인
-       const creditPayload = {
-        // 기존 10 대신 additionalQuestionMount 사용
-        mount: creditCreateToolLow,
-      };
-      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+      if (!creditCreateToolLoaded) {
+        setShowCreatePersonaPopup(true);
+        // 크레딧 사용전 사용 확인
+        const creditPayload = {
+          // 기존 10 대신 additionalQuestionMount 사용
+          mount: creditCreateToolLow,
+        };
+        const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
 
-      if (creditResponse?.state !== "use") {
-        setShowCreditPopup(true);
-        return;
+        if (creditResponse?.state !== "use") {
+          setShowCreditPopup(true);
+          return;
+        }
       }
-    }
       const projectAnalysis =
         (project?.projectAnalysis.business_analysis
           ? project?.projectAnalysis.business_analysis
@@ -154,7 +159,7 @@ const PageNeedsKeywordsGeneration = () => {
         setBusinessDescriptionTitle(projectTitle);
         setBusinessDescription(projectAnalysis);
       }
- 
+
       if (toolLoading) {
         // 활성 탭 설정 (기본값 1)
         setActiveTab(Math.min((toolStep ?? 1) + 1, 2));
@@ -162,9 +167,11 @@ const PageNeedsKeywordsGeneration = () => {
         if (keywordsGenerationTag && keywordsGenerationTag.length > 0) {
           setKeywordsGenerationTag(keywordsGenerationTag ?? []);
         }
-  
+
         if (keywordsGenerationSelectedIssue) {
-          setKeywordsGenerationSelectedIssue(keywordsGenerationSelectedIssue ?? []);
+          setKeywordsGenerationSelectedIssue(
+            keywordsGenerationSelectedIssue ?? []
+          );
           setshowSelectedIssue(true);
           const issueIndexes = Array.from(
             { length: keywordsGenerationSelectedIssue.length },
@@ -172,7 +179,6 @@ const PageNeedsKeywordsGeneration = () => {
           );
           setSelectedIssue(issueIndexes);
         }
-   
 
         // 완료된 단계 설정
         const completedStepsArray = [];
@@ -202,7 +208,6 @@ const PageNeedsKeywordsGeneration = () => {
           isLoggedIn
         );
 
-
         // console.log("respontgfsdgbfdsghrfsdgfsdgfsdgrfse", response);
         const newItems = (response || []).filter(
           (item) =>
@@ -215,7 +220,6 @@ const PageNeedsKeywordsGeneration = () => {
         setIssueGenerationList(allItems);
         // console.log("allItems", allItems);
       } catch (error) {
-
         setIssueGenerationList([]); // Set empty array on error
       }
     };
@@ -229,8 +233,6 @@ const PageNeedsKeywordsGeneration = () => {
     sector: project?.industryType || "",
     country: project?.targetCountry || "",
   };
-
-  
 
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -270,37 +272,36 @@ const PageNeedsKeywordsGeneration = () => {
 
     // 크레딧 사용 후 사용자 정보 새로고침
 
-      const userCreditValue = await UserCreditInfo(isLoggedIn);
-      // 전역 상태의 크레딧 정보 업데이트
-      setUserCredits(userCreditValue)
-
+    const userCreditValue = await UserCreditInfo(isLoggedIn);
+    // 전역 상태의 크레딧 정보 업데이트
+    setUserCredits(userCreditValue);
 
     try {
-
       if (keywordsGenerationSelectedIssue.length >= 3) {
         setIsLoading(true);
 
         const updatedProblemList = keywordsGenerationSelectedIssue.flatMap(
-         (issue) => {
-          return { issueGenerationSelectedStartPosition: issue.issueGenerationSelectedStartPosition };
-         }
+          (issue) => {
+            return {
+              issueGenerationSelectedStartPosition:
+                issue.issueGenerationSelectedStartPosition,
+            };
+          }
         );
         setIsLoading(true);
-    
+
         const Data = {
           type: "ix_needs_keywords_generation_clustering_education",
           business: business,
-          theme_list:updatedProblemList
-          
+          theme_list: updatedProblemList,
         };
-  
+
         const response = await EducationToolsRequest(Data, isLoggedIn, signal);
-  
-  
+
         setKeywordsGenerationTag(
           response.response.needs_keywords_generation_clustering_education
         );
-  
+
         setIsLoading(false);
         await updateToolOnServer(
           responseToolId,
@@ -310,32 +311,33 @@ const PageNeedsKeywordsGeneration = () => {
               response.response.needs_keywords_generation_clustering_education,
           },
           isLoggedIn
-        )
-      }else{
-      
-       
-        const updatedProblemList = keywordsGenerationSelectedIssue.flatMap(issue => {
-          if (issue.issueGenerationSelectedStartPosition && Array.isArray(issue.issueGenerationSelectedStartPosition)) {
-            return issue.issueGenerationSelectedStartPosition.map(item => ({
-              main_theme: item.theme,
-              raw_data: item.description
-            }));
+        );
+      } else {
+        const updatedProblemList = keywordsGenerationSelectedIssue.flatMap(
+          (issue) => {
+            if (
+              issue.issueGenerationSelectedStartPosition &&
+              Array.isArray(issue.issueGenerationSelectedStartPosition)
+            ) {
+              return issue.issueGenerationSelectedStartPosition.map((item) => ({
+                main_theme: item.theme,
+                raw_data: item.description,
+              }));
+            }
+            return []; // 해당하는 배열이 없으면 빈 배열 반환
           }
-          return []; // 해당하는 배열이 없으면 빈 배열 반환
-        });
+        );
         setKeywordsGenerationTag(updatedProblemList);
         //  console.log("updatedProblemList", updatedProblemList);
         await updateToolOnServer(
           responseToolId,
           {
             completedStep: 2,
-            keywordsGenerationTag:
-            updatedProblemList
-            },
+            keywordsGenerationTag: updatedProblemList,
+          },
           isLoggedIn
-        )
+        );
       }
-    
 
       setToolSteps(1);
     } catch (error) {
@@ -344,13 +346,12 @@ const PageNeedsKeywordsGeneration = () => {
     }
   };
 
-  
   const handleConfirmCredit = async () => {
     setShowCreatePersonaPopup(false);
   };
 
   const handleCheckboxChange = (ideaId) => {
-    if(toolSteps >= 1){
+    if (toolSteps >= 1) {
       return;
     }
     setSelectedIssue((prev) => {
@@ -400,7 +401,6 @@ const PageNeedsKeywordsGeneration = () => {
 
       return false;
     };
-
 
     // F5 키 또는 Ctrl+R 감지
     const handleKeyDown = (event) => {
@@ -528,75 +528,73 @@ const PageNeedsKeywordsGeneration = () => {
                     </div>
 
                     <div className="content">
-
-                              <>
-                              <div
-                                  className="title"
-                                  style={{
-                                    textAlign: "left",
-                                    marginBottom: "-20px",
-                                  }}
-                                >
-                                  <Body1 color="gray700">
-                                  필요한 니즈 키워드를 선택하여, 아이디어 발산 방향으로 정리하세요 
-                                  </Body1>
-                                </div>
-                                {showSelectedIssue ? (
-                                  <>
-                                    {keywordsGenerationSelectedIssue.map((idea, index) => (
-                                      <MoleculeItemSelectCard
-                                        FlexStart
-                                        key={index}
-                                        id={index}
-                                        title={`${idea.updateDate.split(":")[0]}:${
-                                          idea.updateDate.split(":")[1]
-                                        } - 문제점 & 니즈 - ${
-                                          idea.title || "아이디어"
-                                        }`}
-                                        isSelected={selectedIssue.includes(index)}
-                                        onSelect={() => handleCheckboxChange(index)}
-                                      />
-                                    ))}
-                                  </>
-                                ) : (
-                                  <>
-                                    {issueGenerationList.map((idea, index) => (
-                                      <MoleculeItemSelectCard
-                                        FlexStart
-                                        key={index}
-                                        id={index}
-                                        title = {`${idea.selectedPurposes.customerList
-                                          }`}
-                                        // title={`${idea.updateDate.split(":")[0]}:${
-                                        //   idea.updateDate.split(":")[1]
-                                        // } - 문제점 & 니즈 - ${
-                                        //   idea.title || "아이디어"
-                                        // }`}
-                                        isSelected={selectedIssue.includes(index)}
-                                        onSelect={() => handleCheckboxChange(index)}
-                                      />
-                                    ))}
-                                  </>
-                                )}
-                              </>
-                          
-                     
+                      <>
+                        <div
+                          className="title"
+                          style={{
+                            textAlign: "left",
+                            marginBottom: "-20px",
+                          }}
+                        >
+                          <Body1 color="gray700">
+                            필요한 니즈 키워드를 선택하여, 아이디어 발산
+                            방향으로 정리하세요
+                          </Body1>
                         </div>
-                      <Button
-                        Other
-                        Primary
-                        Fill
-                        Round
-                        onClick={handleSubmitIssuList}
-                        disabled={
-                          isContentLoading ||
-                          toolSteps >= 1 ||
-                          selectedIssue.length === 0
-                        }
-                      >
-                        아이디어 키워드 추출
-                      </Button>
-              
+                        {showSelectedIssue ? (
+                          <>
+                            {keywordsGenerationSelectedIssue.map(
+                              (idea, index) => (
+                                <MoleculeItemSelectCard
+                                  FlexStart
+                                  key={index}
+                                  id={index}
+                                  title={`${idea.updateDate.split(":")[0]}:${
+                                    idea.updateDate.split(":")[1]
+                                  } - 문제점 & 니즈 - ${
+                                    idea.title || "아이디어"
+                                  }`}
+                                  isSelected={selectedIssue.includes(index)}
+                                  onSelect={() => handleCheckboxChange(index)}
+                                />
+                              )
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {issueGenerationList.map((idea, index) => (
+                              <MoleculeItemSelectCard
+                                FlexStart
+                                key={index}
+                                id={index}
+                                title={`${idea.selectedPurposes.customerList}`}
+                                // title={`${idea.updateDate.split(":")[0]}:${
+                                //   idea.updateDate.split(":")[1]
+                                // } - 문제점 & 니즈 - ${
+                                //   idea.title || "아이디어"
+                                // }`}
+                                isSelected={selectedIssue.includes(index)}
+                                onSelect={() => handleCheckboxChange(index)}
+                              />
+                            ))}
+                          </>
+                        )}
+                      </>
+                    </div>
+                    <Button
+                      Other
+                      Primary
+                      Fill
+                      Round
+                      onClick={handleSubmitIssuList}
+                      disabled={
+                        isContentLoading ||
+                        toolSteps >= 1 ||
+                        selectedIssue.length === 0
+                      }
+                    >
+                      아이디어 키워드 추출
+                    </Button>
                   </>
                 )}
               </TabContent5>
@@ -622,14 +620,21 @@ const PageNeedsKeywordsGeneration = () => {
                       <div className="title">
                         <H3 color="gray800">Idea Generation Theme</H3>
                         <Body3 color="gray800">
-                        수집된 키워드를 그룹화하여, 아이디어 발산의 핵심 키워드를 최종 선정하세요
+                          수집된 키워드를 그룹화하여, 아이디어 발산의 핵심
+                          키워드를 최종 선정하세요
                         </Body3>
                       </div>
 
                       <div className="content">
-                        <Title style={{ marginBottom: "-18px", textAlign: "left" }}>
+                        <Title
+                          style={{ marginBottom: "-18px", textAlign: "left" }}
+                        >
                           <Body1 color="gray700">
-                            {keywordsGenerationTag.length}개의 고객 여정 분석 결과를 통합해 정리한 핵심 니즈 키워드입니다.<br />해당 키워드는 아이디어 발산의 주제어로 선택 가능합니다.
+                            {keywordsGenerationTag.length}개의 고객 여정 분석
+                            결과를 통합해 정리한 핵심 니즈 키워드입니다.
+                            <br />
+                            해당 키워드는 아이디어 발산의 주제어로 선택
+                            가능합니다.
                           </Body1>
                         </Title>
 
@@ -649,8 +654,6 @@ const PageNeedsKeywordsGeneration = () => {
                 )}
               </TabContent5>
             )}
-            
-
           </DesignAnalysisWrap>
         </MainContent>
       </ContentsWrap>
@@ -692,9 +695,8 @@ const PageNeedsKeywordsGeneration = () => {
           onConfirm={() => setShowPopupSave(false)}
         />
       )}
-   
 
-{showCreatePersonaPopup &&
+      {showCreatePersonaPopup &&
         (eventState && !educationState ? (
           <PopupWrap
             Event

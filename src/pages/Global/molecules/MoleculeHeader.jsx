@@ -281,7 +281,7 @@ const MoleculeHeader = () => {
         //   console.error("툴 리스트 불러오기 오류:", error);
         // }
 
-        navigate("/");
+        navigate("/Project");
         // navigate("/DashBoard");
       } else {
         // 다른 외부 링크는 새 창에서 열기
@@ -289,7 +289,7 @@ const MoleculeHeader = () => {
       }
     } catch (e) {
       // URL 파싱 실패시 (상대 경로인 경우) 직접 이동
-      if (link.startsWith("/")) {
+      if (link.startsWith("/Project")) {
         navigate(link);
       } else {
         window.open(link, "_blank");

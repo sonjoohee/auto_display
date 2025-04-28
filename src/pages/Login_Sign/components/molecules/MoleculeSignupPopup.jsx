@@ -3,7 +3,14 @@ import { useAtom } from "jotai";
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { SIGN_UP_EMAIL, IS_LOGIN_POPUP_OPEN, IS_MARKETING, IS_LOGGED_IN, USER_NAME, USER_EMAIL } from "../../../AtomStates";
+import {
+  SIGN_UP_EMAIL,
+  IS_LOGIN_POPUP_OPEN,
+  IS_MARKETING,
+  IS_LOGGED_IN,
+  USER_NAME,
+  USER_EMAIL,
+} from "../../../AtomStates";
 
 import { palette } from "../../../../assets/styles/Palette";
 import images from "../../../../assets/styles/Images";
@@ -38,20 +45,19 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
         alert("인증 이메일이 재발송되었습니다.");
       } else {
         const result = await response.json();
-        if(result.error === "User with this email already exists.") {
+        if (result.error === "User with this email already exists.") {
           alert("이미 사용 중인 이메일 주소입니다.");
         } else {
           alert(result.error || "이메일 재발송 중 오류가 발생했습니다.");
         }
       }
     } catch (error) {
-      
       alert("서버와의 통신 중 오류가 발생했습니다.");
     }
   };
 
   const handleGoToLogin = () => {
-    if(isMarketing) {
+    if (isMarketing) {
       sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
       sessionStorage.removeItem("userName");
       sessionStorage.removeItem("userEmail");
@@ -60,7 +66,7 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
       setUserName("");
       setUserEmail("");
     }
-    navigate("/");
+    navigate("/Project");
     setSignUpEmail(""); // 이메일 상태를 초기화합니다.
     // setIsLoginPopupOpen(true);
   };
@@ -86,7 +92,7 @@ const MoleculeSignupPopup = ({ onClose, email }) => {
           <button type="button" onClick={handleResendEmail}>
             재발송하기
           </button>
-          <a href="/" onClick={handleGoToLogin}>
+          <a href="/Project" onClick={handleGoToLogin}>
             로그인 바로가기
           </a>
         </div>

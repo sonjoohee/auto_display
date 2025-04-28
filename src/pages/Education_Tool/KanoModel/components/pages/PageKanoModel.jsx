@@ -84,11 +84,13 @@ const PageKanoModel = () => {
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
   const [eventTitle] = useAtom(EVENT_TITLE);
-  const [creditCreateToolHigh, ] = useAtom(CREDIT_CREATE_TOOL_HIGH);
-  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [creditCreateToolHigh] = useAtom(CREDIT_CREATE_TOOL_HIGH);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
+    CREDIT_CREATE_TOOL_LOADED
+  );
   const [educationState] = useAtom(EDUCATION_STATE);
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
-  const [toolStep, ] = useAtom(TOOL_STEP);
+  const [toolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
@@ -137,7 +139,6 @@ const PageKanoModel = () => {
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
 
-
   const project = projectSaas;
 
   useEffect(() => {
@@ -163,24 +164,23 @@ const PageKanoModel = () => {
     };
   }, [showToast]);
 
-
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
-      if(!creditCreateToolLoaded){
-      setShowCreatePersonaPopup(true);
-      // 크레딧 사용전 사용 확인
-      const creditPayload = {
-        // 기존 10 대신 additionalQuestionMount 사용
-        mount: creditCreateToolHigh,
-      };
-      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+      if (!creditCreateToolLoaded) {
+        setShowCreatePersonaPopup(true);
+        // 크레딧 사용전 사용 확인
+        const creditPayload = {
+          // 기존 10 대신 additionalQuestionMount 사용
+          mount: creditCreateToolHigh,
+        };
+        const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
 
-      if (creditResponse?.state !== "use") {
-        setShowCreditPopup(true);
-        return;
+        if (creditResponse?.state !== "use") {
+          setShowCreditPopup(true);
+          return;
+        }
       }
-    }
 
       const projectAnalysis =
         (project?.projectAnalysis?.business_analysis
@@ -193,7 +193,6 @@ const PageKanoModel = () => {
         (project?.projectAnalysis?.file_analysis
           ? project?.projectAnalysis?.file_analysis
           : "");
-  
 
       if (project) {
         setBusinessDescription(projectAnalysis);
@@ -422,12 +421,10 @@ const PageKanoModel = () => {
       await UserCreditUse(creditUsePayload, isLoggedIn);
 
       // 크레딧 사용 후 사용자 정보 새로고침
-  
-        const userCreditValue = await UserCreditInfo(isLoggedIn);
-        // 전역 상태의 크레딧 정보 업데이트
-        setUserCredits(userCreditValue);
-    
 
+      const userCreditValue = await UserCreditInfo(isLoggedIn);
+      // 전역 상태의 크레딧 정보 업데이트
+      setUserCredits(userCreditValue);
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
@@ -481,11 +478,10 @@ const PageKanoModel = () => {
   };
 
   const handleSubmitReport = async () => {
-
     // 새 AbortController 생성
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
-    
+
     await updateToolOnServer(
       toolId,
       {

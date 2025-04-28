@@ -1397,11 +1397,11 @@ const PagePersona2 = () => {
           closeText="확인"
           onConfirm={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
           onCancel={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
         />
       )}

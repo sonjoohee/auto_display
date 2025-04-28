@@ -97,7 +97,9 @@ const PageConceptDefinition = () => {
   const [trialState] = useAtom(TRIAL_STATE);
   const [eventTitle] = useAtom(EVENT_TITLE);
   const [creditCreateTool, setCreditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
-  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
+    CREDIT_CREATE_TOOL_LOADED
+  );
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [educationState] = useAtom(EDUCATION_STATE);
   const [personaListSaas] = useAtom(PERSONA_LIST_SAAS);
@@ -152,22 +154,21 @@ const PageConceptDefinition = () => {
 
   useEffect(() => {
     const interviewLoading = async () => {
-      if(!creditCreateToolLoaded){
-      setShowCreatePersonaPopup(true);
-      // 크레딧 사용전 사용 확인
-      const creditPayload = {
-        // 기존 10 대신 additionalQuestionMount 사용
-        mount: creditCreateTool,
-      };
-      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+      if (!creditCreateToolLoaded) {
+        setShowCreatePersonaPopup(true);
+        // 크레딧 사용전 사용 확인
+        const creditPayload = {
+          // 기존 10 대신 additionalQuestionMount 사용
+          mount: creditCreateTool,
+        };
+        const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
 
-      if (creditResponse?.state !== "use") {
-        setShowCreditPopup(true);
-        return;
-      }
+        if (creditResponse?.state !== "use") {
+          setShowCreditPopup(true);
+          return;
+        }
       }
       if (toolLoading) {
-
         // 활성 탭 설정 (기본값 1)
         // setActiveTab(Math.min((toolStep ?? 1) +1 , 3));
         // setToolSteps(toolStep);
@@ -284,7 +285,6 @@ const PageConceptDefinition = () => {
     );
 
     setToolId(responseToolId);
-
   };
 
   const handleCheckValue = async () => {
@@ -328,7 +328,7 @@ const PageConceptDefinition = () => {
         },
         isLoggedIn
       );
-        // 크레딧이 사용 가능한 상태면 사용 API 호출
+      // 크레딧이 사용 가능한 상태면 사용 API 호출
       const creditUsePayload = {
         title: project.projectTitle,
         service_type: "고객 여정 지도",
@@ -339,7 +339,7 @@ const PageConceptDefinition = () => {
 
       await UserCreditUse(creditUsePayload, isLoggedIn);
 
-    // 크레딧 사용 후 사용자 정보 새로고침
+      // 크레딧 사용 후 사용자 정보 새로고침
 
       const userCreditValue = await UserCreditInfo(isLoggedIn);
       // 전역 상태의 크레딧 정보 업데이트
@@ -357,7 +357,7 @@ const PageConceptDefinition = () => {
     // 새 AbortController 생성
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
-    
+
     setIsLoadingReport(true);
     handleNextStep(2);
     // setToolSteps(2);
@@ -376,7 +376,11 @@ const PageConceptDefinition = () => {
           concept_definition_report_education: conceptDefinitionFirstReport,
         };
 
-        let response = await EducationToolsRequest(apiRequestData, isLoggedIn, signal);
+        let response = await EducationToolsRequest(
+          apiRequestData,
+          isLoggedIn,
+          signal
+        );
         // console.log("response", response);
         setConceptDefinitionFinalReport(
           response.response.concept_definition_final_report_education
@@ -502,7 +506,7 @@ const PageConceptDefinition = () => {
       }
     };
   }, [navigate]);
- 
+
   const handleConfirmCredit = async () => {
     setShowCreatePersonaPopup(false);
   };
@@ -1014,8 +1018,7 @@ const PageConceptDefinition = () => {
         />
       )}
 
-
-{showCreatePersonaPopup &&
+      {showCreatePersonaPopup &&
         (eventState && !educationState ? (
           <PopupWrap
             Event

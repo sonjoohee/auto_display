@@ -155,15 +155,21 @@ import images from "../../../../assets/styles/Images";
 
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 
-const PageExpertInsight = () => { 
-
+const PageExpertInsight = () => {
   const navigate = useNavigate();
 
-  const [projectSaas, ] = useAtom(PROJECT_SAAS);
-  const [strategyConsultantReportData, setStrategyConsultantReportData] =useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
-  const [, setGrowthHackerSelectedSolution] =useAtom(GROWTH_HACKER_SELECTED_SOLUTION);
-  const [, setGrowthHackerRecommendedSolution] =useAtom(GROWTH_HACKER_RECOMMENDED_SOLUTION);
-  const [, setBmModelSuggestionReportData] = useAtom(BM_MODEL_SUGGESTION_REPORT_DATA);
+  const [projectSaas] = useAtom(PROJECT_SAAS);
+  const [strategyConsultantReportData, setStrategyConsultantReportData] =
+    useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
+  const [, setGrowthHackerSelectedSolution] = useAtom(
+    GROWTH_HACKER_SELECTED_SOLUTION
+  );
+  const [, setGrowthHackerRecommendedSolution] = useAtom(
+    GROWTH_HACKER_RECOMMENDED_SOLUTION
+  );
+  const [, setBmModelSuggestionReportData] = useAtom(
+    BM_MODEL_SUGGESTION_REPORT_DATA
+  );
   const [, setBmQuestionList] = useAtom(BM_QUESTION_LIST);
   const [, setBmOrLean] = useAtom(BM_OR_LEAN);
   const [, setBmBmAutoReportData] = useAtom(BM_BM_AUTO_REPORT_DATA);
@@ -173,49 +179,67 @@ const PageExpertInsight = () => {
   const [, setBmLeanAdsReportData] = useAtom(BM_LEAN_ADS_REPORT_DATA);
   const [, setBmBmCustomReportData] = useAtom(BM_BM_CUSTOM_REPORT_DATA);
   const [, setBmLeanCustomReportData] = useAtom(BM_LEAN_CUSTOM_REPORT_DATA);
-  const [, setSurveyGuidelineDetailReportData] =useAtom(SURVEY_GUIDELINE_DETAIL_REPORT_DATA);
-  const [, setSurveyGuidelineReportData] = useAtom(SURVEY_GUIDELINE_REPORT_DATA);
+  const [, setSurveyGuidelineDetailReportData] = useAtom(
+    SURVEY_GUIDELINE_DETAIL_REPORT_DATA
+  );
+  const [, setSurveyGuidelineReportData] = useAtom(
+    SURVEY_GUIDELINE_REPORT_DATA
+  );
   const [, setSurveyGoalSuggestionList] = useAtom(SURVEY_GOAL_SUGGESTION_LIST);
   const [, setSurveyGoalFixed] = useAtom(SURVEY_GOAL_FIXED);
-  const [, setSurveyQuestionList] =useAtom(SURVEY_QUESTION_LIST);
+  const [, setSurveyQuestionList] = useAtom(SURVEY_QUESTION_LIST);
   const [, setPriceScrapData] = useAtom(PRICE_SCRAP_DATA);
   const [, setPriceReportData] = useAtom(PRICE_REPORT_DATA);
   const [, setPriceProduct] = useAtom(PRICE_PRODUCT);
-  const [, setPriceSelectedProductSegmentation] = useAtom(PRICE_SELECTED_PRODUCT_SEGMENTATION);
+  const [, setPriceSelectedProductSegmentation] = useAtom(
+    PRICE_SELECTED_PRODUCT_SEGMENTATION
+  );
   const [, setPriceProductSegmentation] = useAtom(PRICE_PRODUCT_SEGMENTATION);
   const [buttonState, setButtonState] = useAtom(BUTTON_STATE);
   const [, setPocPersonaList] = useAtom(POC_PERSONA_LIST);
   const [, setSelectedPocTarget] = useAtom(SELCTED_POC_TARGET);
   const [isLoadingPage, setIsLoadingPage] = useState(true); // 로딩 상태 추가
-  const [isLoading, ] = useAtom(IS_LOADING);
+  const [isLoading] = useAtom(IS_LOADING);
   const [conversationId, setConversationId] = useAtom(CONVERSATION_ID);
   const [isExpertInsightAccessible, setIsExpertInsightAccessible] = useAtom(
     IS_EXPERT_INSIGHT_ACCESSIBLE
   );
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
-  const [, setInputBusinessInfo] =useAtom(INPUT_BUSINESS_INFO);
+  const [, setInputBusinessInfo] = useAtom(INPUT_BUSINESS_INFO);
   const [titleOfBusinessInfo, setTitleOfBusinessInfo] = useAtom(
     TITLE_OF_BUSINESS_INFORMATION
   );
-  const [, setMainFeaturesOfBusinessInformation] =useAtom(MAIN_FEATURES_OF_BUSINESS_INFORMATION);
-  const [, setMainCharacteristicOfBusinessInformation] =useAtom(MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION);
-  const [, setBusinessInformationTargetCustomer] =useAtom(BUSINESS_INFORMATION_TARGET_CUSTOMER);
+  const [, setMainFeaturesOfBusinessInformation] = useAtom(
+    MAIN_FEATURES_OF_BUSINESS_INFORMATION
+  );
+  const [, setMainCharacteristicOfBusinessInformation] = useAtom(
+    MAIN_CHARACTERISTIC_OF_BUSINESS_INFORMATION
+  );
+  const [, setBusinessInformationTargetCustomer] = useAtom(
+    BUSINESS_INFORMATION_TARGET_CUSTOMER
+  );
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(
     SELECTED_EXPERT_INDEX
   );
   const [, setSelectedAdditionalKeyword] = useAtom(SELECTED_ADDITIONAL_KEYWORD);
-  const [, setSelectedCustomerAdditionalKeyword] = useAtom(SELECTED_CUSTOMER_ADDITIONAL_KEYWORD);
-  const [, setCustomerAdditionalReportData] = useAtom(CUSTOMER_ADDITIONAL_REPORT_DATA);
-  const [approachPath, ] = useAtom(APPROACH_PATH);
+  const [, setSelectedCustomerAdditionalKeyword] = useAtom(
+    SELECTED_CUSTOMER_ADDITIONAL_KEYWORD
+  );
+  const [, setCustomerAdditionalReportData] = useAtom(
+    CUSTOMER_ADDITIONAL_REPORT_DATA
+  );
+  const [approachPath] = useAtom(APPROACH_PATH);
   const [, setAdditionalReportData] = useAtom(ADDITIONAL_REPORT_DATA);
   const [, setStrategyReportData] = useAtom(STRATEGY_REPORT_DATA);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태 확인
-  const [, setSelectedPocOptions] =useAtom(SELECTED_POC_OPTIONS);
-  const [recommendedTargetData, setRecommendedTargetData] = useAtom(RECOMMENDED_TARGET_DATA);
+  const [, setSelectedPocOptions] = useAtom(SELECTED_POC_OPTIONS);
+  const [recommendedTargetData, setRecommendedTargetData] = useAtom(
+    RECOMMENDED_TARGET_DATA
+  );
   const [, setpocDetailReportData] = useAtom(POC_DETAIL_REPORT_DATA);
   const [, setIdeaFeatureData] = useAtom(IDEA_FEATURE_DATA);
-  const [, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA );
+  const [, setIdeaRequirementData] = useAtom(IDEA_REQUIREMENT_DATA);
   const [, setIdeaFeatureDataTemp] = useAtom(IDEA_FEATURE_DATA_TEMP);
   const [, setIdeaRequirementDataTemp] = useAtom(IDEA_REQUIREMENT_DATA_TEMP);
   const [, setIdeaList] = useAtom(IDEA_LIST);
@@ -223,13 +247,17 @@ const PageExpertInsight = () => {
   const [ideaPriority, setIdeaPriority] = useAtom(IDEA_PRIORITY);
   const [, setIdeaMiroState] = useAtom(IDEA_MIRO_STATE);
   const [, setGrowthHackerReportData] = useAtom(GROWTH_HACKER_REPORT_DATA);
-  const [, setGrowthHackerDetailReportData] =useAtom(GROWTH_HACKER_DETAIL_REPORT_DATA);
+  const [, setGrowthHackerDetailReportData] = useAtom(
+    GROWTH_HACKER_DETAIL_REPORT_DATA
+  );
   const [, setKpiQuestionList] = useAtom(KPI_QUESTION_LIST);
   const [, setCaseReportData] = useAtom(CASE_REPORT_DATA);
   const [, setCaseHashTag] = useAtom(CASE_HASH_TAG);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
   const [, setMarketingMbtiResult] = useAtom(MARKETING_MBTI_RESULT);
-  const [, setMarketingResearchReportData] = useAtom(MARKETING_RESEARCH_REPORT_DATA);
+  const [, setMarketingResearchReportData] = useAtom(
+    MARKETING_RESEARCH_REPORT_DATA
+  );
   const [, setMarketingBmReportData] = useAtom(MARKETING_BM_REPORT_DATA);
   const [, setMarketingCustomerData] = useAtom(MARKETING_CUSTOMER_DATA);
   const [, setMarketingSelectedCustomer] = useAtom(MARKETING_SELECTED_CUSTOMER);
@@ -246,7 +274,6 @@ const PageExpertInsight = () => {
   let marketingSegmentReportCount = 0;
   let growthHackerReportCount = 0;
   let strategyConsultantCount = 0;
-
 
   const togglePopup = () => {
     setIsPopupVisible((prev) => !prev);
@@ -379,7 +406,7 @@ const PageExpertInsight = () => {
   useEffect(() => {
     // 접근 가능 여부를 확인하여 차단 로직 수행
     if (!isExpertInsightAccessible) {
-      navigate("/"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
+      navigate("/Project"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
     }
 
     // 페이지를 나갈 때 접근 가능 여부 초기화
@@ -650,7 +677,7 @@ const PageExpertInsight = () => {
       event.returnValue = "";
 
       // 새로고침 시 루트 페이지로 이동
-      navigate("/");
+      navigate("/Project");
     };
 
     // F5 키 또는 Ctrl+R 감지

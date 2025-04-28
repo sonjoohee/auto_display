@@ -444,7 +444,7 @@ const PagePersona2 = () => {
   useEffect(() => {
     // 접근 가능 여부를 확인하여 차단 로직 수행
     if (!isPersonaAccessible) {
-      navigate("/"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
+      navigate("/Project"); // 접근이 허용되지 않으면 메인 페이지로 리다이렉트
     }
 
     // 페이지를 나갈 때 접근 가능 여부 초기화
@@ -2276,11 +2276,11 @@ const PagePersona2 = () => {
           closeText="확인"
           onConfirm={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
           onCancel={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
         />
       )}

@@ -146,7 +146,7 @@ const OrganismIncNavigation = () => {
   // };
 
   const handleExitChatConfirm = () => {
-    navigate("/");
+    navigate("/Project");
   };
   const handleExitChatCancel = () => {
     setIsExitPopupOpen(false);
@@ -602,7 +602,7 @@ const OrganismIncNavigation = () => {
       setChatIdToDelete(null);
       setChatRefreshTrigger((prev) => !prev);
       if (chatIdToDelete === conversationId) {
-        navigate("/"); // / 경로로 이동
+        navigate("/Project"); // / 경로로 이동
       }
     } catch (error) {
       // console.error("삭제 요청 오류:", error);
@@ -731,7 +731,7 @@ const OrganismIncNavigation = () => {
   };
 
   const handleClickHome = () => {
-    if (location.pathname !== "/") {
+    if (location.pathname !== "/Project") {
       setIsHomePopupOpen(true);
     }
   };
@@ -752,7 +752,9 @@ const OrganismIncNavigation = () => {
         <MenuList>
           <li
             onClick={handleNewProjectClick}
-            className={`home ${location.pathname === "/" ? "active" : ""}`}
+            className={`home ${
+              location.pathname === "/Project" ? "active" : ""
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -970,32 +972,15 @@ const OrganismIncNavigation = () => {
                 </div>
 
                 <ul>
-                  {/* 소셜 로그인 상태가 아닐 때만 비밀번호 변경 버튼을 표시 */}
-                  {
-                    // <li>
-                    //   <button type="button" onClick={handleAccountClick}>
-                    //     <img src={images.AccountSetting} alt="" />
-                    //     비밀번호 변경
-                    //   </button>
-                    // </li>
-                    <li>
-                      <button
-                        type="button"
-                        onClick={() => navigate("/MyProfile")}
-                      >
-                        <img src={images.AccountSetting} alt="" />
-                        계정 설정
-                      </button>
-                    </li>
-                  }
-
-                  {/* <li>
-                    <button type="button">
-                      <img src={images.AccountInfo} alt="" />
-                      정책 및 약관 정보
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => navigate("/MyProfile")}
+                    >
+                      <img src={images.AccountSetting} alt="" />
+                      계정 설정
                     </button>
-                  </li> */}
-
+                  </li>
                   <li>
                     <button type="button" onClick={handleLogoutClick}>
                       <img src={images.AccountLogout} alt="" />
@@ -1011,12 +996,6 @@ const OrganismIncNavigation = () => {
                 <img src={images.PersonCircle} alt="로그인" />
                 로그인
               </button>
-              {/* <Link to="/signup">회원가입</Link> */}
-
-              {/* <div className="terms">
-                <Link to="#">이용약관</Link>
-                <Link to="#">개인정보처리방침</Link>
-              </div> */}
             </>
           )}
         </Setting>

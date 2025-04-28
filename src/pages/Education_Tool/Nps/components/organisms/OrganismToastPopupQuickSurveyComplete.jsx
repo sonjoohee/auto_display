@@ -11,7 +11,7 @@ import {
   PROJECT_TOTAL_INFO,
   QUICK_SURVEY_INTERVIEW,
   QUICK_SURVEY_SURVEY_METHOD,
-  QUICK_SURVEY_SELECTED_QUESTION
+  QUICK_SURVEY_SELECTED_QUESTION,
 } from "../../../../AtomStates";
 import personaImages from "../../../../../assets/styles/PersonaImages";
 
@@ -32,7 +32,7 @@ const OrganismToastPopupQuickSurveyComplete = ({
   const [active, setActive] = useState(isActive);
   const [showWarning, setShowWarning] = useState(false);
   const [isLoadingPrepare, setIsLoadingPrepare] = useState(true);
-  const [quickSurveySelectedQuestion, ] = useAtom(QUICK_SURVEY_SELECTED_QUESTION);
+  const [quickSurveySelectedQuestion] = useAtom(QUICK_SURVEY_SELECTED_QUESTION);
   const [, setInterviewStatus] = useState([]);
   const [answers, setAnswers] = useState({});
   const [visibleAnswers, setVisibleAnswers] = useState(false);
@@ -44,7 +44,6 @@ const OrganismToastPopupQuickSurveyComplete = ({
     const interviewLoading = async () => {
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
-  
         // 단일 질문에 대한 Complete 상태 설정
         const completedStatus = ["Complete"];
         setInterviewStatus(completedStatus);
@@ -81,12 +80,13 @@ const OrganismToastPopupQuickSurveyComplete = ({
     // answers가 없으면 빈 배열 사용
     const questionAnswers = answers || [];
     try {
-      const filtered = selectedOption && questionAnswers.length > 0
-        ? questionAnswers.filter(
-            (answer) => answer?.answer?.main === selectedOption
-          )
-        : questionAnswers;
-      
+      const filtered =
+        selectedOption && questionAnswers.length > 0
+          ? questionAnswers.filter(
+              (answer) => answer?.answer?.main === selectedOption
+            )
+          : questionAnswers;
+
       // filtered가 배열인지 확인
       setFilteredAnswers(Array.isArray(filtered) ? filtered : []);
     } catch (error) {
@@ -117,7 +117,9 @@ const OrganismToastPopupQuickSurveyComplete = ({
                 <p>
                   <span>{answer?.gender}</span>
                   <span>
-                      {answer?.age?.includes("세") ? answer?.age : `${answer?.age}세`}
+                    {answer?.age?.includes("세")
+                      ? answer?.age
+                      : `${answer?.age}세`}
                   </span>
                   <span>{answer?.job}</span>
                 </p>
@@ -125,35 +127,51 @@ const OrganismToastPopupQuickSurveyComplete = ({
             </TypeName>
             <TextContainer>
               <div>
-                  {answer?.answer?.main && quickSurveySurveyMethod?.options && (
-                      (() => {
-                          const index = quickSurveySurveyMethod.options.indexOf(answer.answer.main);
+                {answer?.answer?.main &&
+                  quickSurveySurveyMethod?.options &&
+                  (() => {
+                    const index = quickSurveySurveyMethod.options.indexOf(
+                      answer.answer.main
+                    );
 
-                          if (quickSurveySelectedQuestion[0] === 'ab_test' && selectedOptionIndex == null) {
-                              return `${String.fromCharCode(65 + (answer.answer.main === quickSurveySurveyMethod.options[0] ? 0 : 1))}. ${answer.answer.main}`;
-                          }
-                          
-                          if ((quickSurveySelectedQuestion[0] === 'importance' || 
-                              quickSurveySelectedQuestion[0] === 'single_choice' || 
-                              quickSurveySelectedQuestion[0] === 'custom_question') && 
-                              selectedOptionIndex == null) {
-                              return `${index + 1}. ${answer.answer.main}`;
-                          }
-                          
-                          if (quickSurveySelectedQuestion[0] === 'nps') {
-                              return answer.answer.main;
-                          }
-                          
-                          return `${selectedOptionIndex ? `${selectedOptionIndex}. ` : ''}${answer.answer.main}`;
-                      })()
-                  )}
+                    if (
+                      quickSurveySelectedQuestion[0] === "ab_test" &&
+                      selectedOptionIndex == null
+                    ) {
+                      return `${String.fromCharCode(
+                        65 +
+                          (answer.answer.main ===
+                          quickSurveySurveyMethod.options[0]
+                            ? 0
+                            : 1)
+                      )}. ${answer.answer.main}`;
+                    }
+
+                    if (
+                      (quickSurveySelectedQuestion[0] === "importance" ||
+                        quickSurveySelectedQuestion[0] === "single_choice" ||
+                        quickSurveySelectedQuestion[0] === "custom_question") &&
+                      selectedOptionIndex == null
+                    ) {
+                      return `${index + 1}. ${answer.answer.main}`;
+                    }
+
+                    if (quickSurveySelectedQuestion[0] === "nps") {
+                      return answer.answer.main;
+                    }
+
+                    return `${
+                      selectedOptionIndex ? `${selectedOptionIndex}. ` : ""
+                    }${answer.answer.main}`;
+                  })()}
               </div>
-              <div style={{ marginTop: "16px" }}>{answer?.answer?.followUp}</div>
+              <div style={{ marginTop: "16px" }}>
+                {answer?.answer?.followUp}
+              </div>
             </TextContainer>
           </AnswerItem>
         ))}
       </>
-    
     );
   };
 
@@ -181,13 +199,12 @@ const OrganismToastPopupQuickSurveyComplete = ({
     }
     setPersonaButtonState3(0);
     // onClose();
-    window.location.href = "/";
+    window.location.href = "/Project";
   };
 
   const handleWarningContinue = () => {
     setShowWarning(false);
   };
-
 
   // 이미 완료된 인터뷰를 확인할 때 사용 ex)인터뷰 스크립트 보기, 인터뷰 상세보기
   const renderInterviewItemsComplete = () => {
@@ -250,11 +267,11 @@ const OrganismToastPopupQuickSurveyComplete = ({
           closeText="확인"
           onConfirm={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
           onCancel={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
         />
       )}

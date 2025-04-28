@@ -63,9 +63,7 @@ const OrganismToastPopupSingleLiveChat = ({
   const project = projectSaas;
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [creditCreateInterview] = useAtom(CREDIT_CREATE_INTERVIEW);
-  const [, setSelectedPersonaList] = useAtom(
-    SELECTED_PERSONA_LIST
-  );
+  const [, setSelectedPersonaList] = useAtom(SELECTED_PERSONA_LIST);
   const [purposeItemsSingleAtom] = useAtom(PURPOSE_ITEMS_SINGLE);
   const [, setReportId] = useAtom(PROJECT_REPORT_ID);
   const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
@@ -111,7 +109,7 @@ const OrganismToastPopupSingleLiveChat = ({
   const [, setShowRegenerateButton1] = useState(false);
   const [showRegenerateButton2, setShowRegenerateButton2] = useState(false);
   const [selectedQuestions, setSelectedQuestions] = useState([]);
-  const [showAddQuestion, ] = useState(false);
+  const [showAddQuestion] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isInputEnabled, setIsInputEnabled] = useState(false);
   const [showRequestPopup, setShowRequestPopup] = useState(false);
@@ -639,7 +637,7 @@ const OrganismToastPopupSingleLiveChat = ({
                   <img
                     src={
                       personaImages[answer.persona.imageKey] ||
-                      (answer.persona.gender === "남성" 
+                      (answer.persona.gender === "남성"
                         ? personaImages.persona_m_20_01 // 남성 기본 이미지
                         : personaImages.persona_f_20_01) // 여성 기본 이미지
                     }
@@ -775,7 +773,6 @@ const OrganismToastPopupSingleLiveChat = ({
     });
   };
 
-
   const handleCheckResult = async () => {
     setActive(false);
     if (onClose) {
@@ -798,14 +795,14 @@ const OrganismToastPopupSingleLiveChat = ({
         state: "use",
         mount: creditCreateInterview,
       };
-  
+
       await UserCreditUse(creditUsePayload, isLoggedIn);
-  
+
       // 크레딧 사용 후 사용자 정보 새로고침
-  
-        const userCreditValue = await UserCreditInfo(isLoggedIn);
-        // 전역 상태의 크레딧 정보 업데이트
-        setUserCredits(userCreditValue);
+
+      const userCreditValue = await UserCreditInfo(isLoggedIn);
+      // 전역 상태의 크레딧 정보 업데이트
+      setUserCredits(userCreditValue);
     } catch (error) {
       // console.error("Failed to create project on server:", error);
     }
@@ -994,7 +991,7 @@ const OrganismToastPopupSingleLiveChat = ({
                         <img
                           src={
                             personaImages[persona.imageKey] ||
-                            (persona.gender === "남성" 
+                            (persona.gender === "남성"
                               ? personaImages.persona_m_20_01 // 남성 기본 이미지
                               : personaImages.persona_f_20_01) // 여성 기본 이미지
                           }
@@ -1065,7 +1062,7 @@ const OrganismToastPopupSingleLiveChat = ({
                         <label
                           disabled={countAdditionalQuestion === 0}
                           onClick={() => {
-                              setSelectedRadio("yes");
+                            setSelectedRadio("yes");
                             loadInterviewReport();
                           }}
                         >
@@ -1153,7 +1150,7 @@ const OrganismToastPopupSingleLiveChat = ({
                       inputValue.trim() &&
                       !interviewStatus.includes("Ing") &&
                       !isAnalyzing &&
-                      (singleInterviewReportTab2.length === 0)  // 추가된 조건
+                      singleInterviewReportTab2.length === 0 // 추가된 조건
                     ) {
                       e.preventDefault(); // 기본 엔터 동작 방지
                       // DOM 이벤트 즉시 중지 및 버블링 방지
@@ -1189,7 +1186,9 @@ const OrganismToastPopupSingleLiveChat = ({
                   style={{
                     pointerEvents: "auto",
                   }}
-                  disabled={isAnalyzing || (singleInterviewReportTab2.length !== 0)}
+                  disabled={
+                    isAnalyzing || singleInterviewReportTab2.length !== 0
+                  }
                 />
                 <button
                   type="button"
@@ -1202,7 +1201,8 @@ const OrganismToastPopupSingleLiveChat = ({
                   disabled={
                     !inputValue.trim() ||
                     isAnalyzing ||
-                    interviewStatus.includes("Ing")||  (singleInterviewReportTab2.length !== 0) 
+                    interviewStatus.includes("Ing") ||
+                    singleInterviewReportTab2.length !== 0
                   }
                 >
                   <Body1 color="primary">질문하기</Body1>
@@ -1236,11 +1236,11 @@ const OrganismToastPopupSingleLiveChat = ({
           closeText="확인"
           onConfirm={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
           onCancel={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
         />
       )}
