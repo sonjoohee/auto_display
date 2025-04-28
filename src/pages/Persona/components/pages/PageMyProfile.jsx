@@ -2,10 +2,9 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
-// import Header from "../../../Design_Page/IncHeader";
 import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
 import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup";
 import PopupWrap from "../../../../assets/styles/Popup";
@@ -70,8 +69,6 @@ const PageMyProfile = () => {
   const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [selectedPurpose, setSelectedPurpose] = useState("");
 
-  const [userCreditData, setUserCreditData] = useAtom(USER_CREDIT_DATA);
-  const [userMembership, setUserMembership] = useAtom(USER_MEMBERSHIP);
   const [userName, setUserName] = useAtom(USER_NAME); // 아톰에서 유저 이름 불러오기
   const [userEmail, setUserEmail] = useAtom(USER_EMAIL); // 아톰에서 유저 이메일 불러오기
   const handleAccountClick = () => {
@@ -174,17 +171,23 @@ const PageMyProfile = () => {
         );
         closeMemberDeletePopup();
 
-        sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
-        sessionStorage.removeItem("userName");
-        sessionStorage.removeItem("userEmail");
-        sessionStorage.removeItem("isSocialLogin");
-        localStorage.removeItem("userName");
-        localStorage.removeItem("userEmail");
+        let url_address = "/";
+        if (sessionStorage.getItem("educationState") === "true") {
+          url_address = "/DCB-Education";
+        }
+        // sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
+        // sessionStorage.removeItem("userName");
+        // sessionStorage.removeItem("userEmail");
+        // sessionStorage.removeItem("isSocialLogin");
+        // localStorage.removeItem("userName");
+        // localStorage.removeItem("userEmail");
+        sessionStorage.clear(); // 세션 스토리지 모두 삭제
+        localStorage.clear(); // 로컬 스토리지 모두 삭제
         setIsLoggedIn(false);
         setIsSocialLoggedIn(false);
         setUserName("");
         setUserEmail("");
-        window.location.href = "/"; // 페이지 이동
+        window.location.href = url_address; // 페이지 이동
       } catch (error) {
         // console.error("회원탈퇴 제출 실패:", error);
       }
@@ -286,17 +289,7 @@ const PageMyProfile = () => {
                     </Button>
                   </>
                 ) : null}
-                {sessionStorage.getItem("adminState") === "true" && (
-                  <Button Primary onClick={() => navigate("/Payment")}>
-                    <images.CoinSmall
-                      width="12px"
-                      height="8px"
-                      color={palette.primary}
-                    />
-                    <Sub3 color="primary">요금제 관리</Sub3>
-                  </Button>
-                )}
-                {/* <img src={images.CoinSmall} alt="요금제 관리" /> */}
+
                 <div style={{ position: "relative" }}>
                   <Button
                     Primary
@@ -343,13 +336,11 @@ const PageMyProfile = () => {
                 <div className="text">
                   <div className="name">
                     <H4 color="gray800">{userName}</H4>
-                    {/* 일반일때 Grade General */}
                     {sessionStorage.getItem("userMembership") === "Normal" ? (
                       <Grade General />
                     ) : (
                       <Grade />
                     )}
-                    {/* <Grade /> */}
                   </div>
                   {sessionStorage.getItem("userCreatedAt") !== undefined && (
                     <Caption2 color="gray500" align="left">
@@ -360,21 +351,14 @@ const PageMyProfile = () => {
                 </div>
               </ProfileInfo>
 
-              {sessionStorage.getItem("adminState") === "true" && (
-                <Button
-                  Large
-                  Outline
-                  Round
-                  onClick={() => navigate("/Payment")}
-                >
-                  <images.CoinSmall
-                    width="12px"
-                    height="8"
-                    color={palette.gray800}
-                  />
-                  <InputText>크레딧 충전</InputText>
-                </Button>
-              )}
+              <Button Large Outline Round onClick={() => navigate("/Payment")}>
+                <images.CoinSmall
+                  width="12px"
+                  height="8"
+                  color={palette.gray800}
+                />
+                <InputText>크레딧 충전</InputText>
+              </Button>
             </ProfileInfoWrap>
 
             <ProfileInfoWrap column>
@@ -395,10 +379,6 @@ const PageMyProfile = () => {
                 </ProfileContentItem>
 
                 <ProfileContentItem>
-                  {/* <div>
-                    <Sub3 color="gray500">성별 (Gender)</Sub3>
-                    <Sub3 color="gray800">여성</Sub3>
-                  </div> */}
                   <div>
                     <Sub3 color="gray500">요금제 </Sub3>
                     <Sub3 color="gray800">
@@ -413,29 +393,11 @@ const PageMyProfile = () => {
 
             <ProfileInfoWrap column>
               <ProfileTitle>
-                {/* <Body2>아이디 & 비밀번호</Body2> */}
-
                 <Button Large Outline Round onClick={handleAccountClick}>
                   <img src={images.Repeat} alt="" />
                   <InputText>비밀번호 변경</InputText>
                 </Button>
               </ProfileTitle>
-
-              {/* <ProfileContent>
-                <ProfileContentItem>
-                  <div>
-                    <Sub3 color="gray500">아이디 (ID)</Sub3>
-                    <Sub3 color="gray800">User Lee</Sub3>
-                  </div>
-                </ProfileContentItem>
-
-                <ProfileContentItem>
-                  <div>
-                    <Sub3 color="gray500">비밀번호 (Password)</Sub3>
-                    <Sub3 color="gray800">User********</Sub3>
-                  </div>
-                </ProfileContentItem>
-              </ProfileContent> */}
             </ProfileInfoWrap>
 
             <WithdrawalButton onClick={() => setIsMemberDeletePopupOpen(true)}>
@@ -545,12 +507,6 @@ const PageMyProfile = () => {
                       </SelectBoxList>
                     )}
                   </SelectBox>
-                  {/* <CustomInput 
-                    type="text" 
-                    placeholder="문의 하시려는 목적을 선택해 주세요."
-                    value={contactForm.purpose}
-                    onChange={(e) => handleContactInputChange('purpose', e.target.value)}
-                  /> */}
                 </div>
                 <div>
                   <H5 color="gray800" align="left">
@@ -749,24 +705,6 @@ const Grade = styled.div`
     content: "${(props) => (props.General ? "일반" : "구독")}";
   }
 `;
-
-// const Grade = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   padding: 4px 8px;
-//   border-radius: 5px;
-//   background: ${palette.primaryLightest};
-
-//   &:before {
-//     font-size: 0.88rem;
-//     font-weight: 400;
-//     line-height: 1.55;
-//     letter-spacing: -0.42px;
-//     color: ${palette.primary};
-//     content: "충전 플랜";
-//   }
-// `;
 
 const WithdrawalButton = styled.div`
   position: fixed;

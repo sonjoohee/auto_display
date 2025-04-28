@@ -510,6 +510,10 @@ const OrganismIncNavigation = () => {
 
   const handleLogoutConfirm = () => {
     // 로그아웃 확인 버튼을 눌렀을 때 실행
+    let url_address = "/";
+    if (sessionStorage.getItem("educationState") === "true") {
+      url_address = "/DCB-Education";
+    }
     sessionStorage.clear(); // 세션 스토리지 모두 삭제
     localStorage.clear(); // 로컬 스토리지 모두 삭제
     setIsLoggedIn(false);
@@ -517,7 +521,7 @@ const OrganismIncNavigation = () => {
     setUserName("");
     setUserEmail("");
     setIsLogoutPopup(false); // 로그아웃 팝업 닫기
-    window.location.href = "/"; // 페이지 이동
+    window.location.href = url_address; // 페이지 이동
   };
 
   const handleCloseLogoutPopup = () => {
