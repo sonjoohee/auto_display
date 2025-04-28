@@ -889,6 +889,27 @@ const PageIssueGeneration = () => {
                       </ListBoxGroup>
                     </div>
 
+                    
+                  { issueGenerationStartPosition.length > 0 && (
+                    <div className="content">
+                      <Title style={{ marginBottom: "-18px" }}>
+                        <Body1 color="gray700">
+                          아이디어 시작점을 선택하세요 (8개 선택필수)
+                        </Body1>
+                      </Title>
+
+                      <CardGroupWrap ideaGeneration>
+                        <MoleculeTagList
+                          items={
+                            issueGenerationStartPosition
+                              .map((item) => item.content)
+                              .flat() // 모든 content 배열을 하나로 합침 
+                          }
+                          disabled={toolSteps >= 2}
+                        />
+                      </CardGroupWrap>
+
+
                     {issueGenerationStartPosition.length > 0 && (
                       <div className="content">
                         <Title style={{ marginBottom: "-18px" }}>
