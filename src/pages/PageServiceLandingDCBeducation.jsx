@@ -137,7 +137,7 @@ const PageServiceLandingDCBeducation = () => {
           <Nav></Nav>
           <div className="gnb">
             <Link
-              to="https://interviewx.tistory.com"
+              to="https://interviewx-edu.tistory.com/"
               style={{ marginTop: "3px" }}
             >
               블로그
@@ -162,7 +162,7 @@ const PageServiceLandingDCBeducation = () => {
               Primary
               Fill
               onClick={() =>
-                (window.location.href = "https://interviewx.tistory.com")
+                (window.location.href = "https://interviewx-edu.tistory.com/")
               }
               className="mobile"
             >
