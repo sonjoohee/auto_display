@@ -377,7 +377,7 @@ const PageConceptDefinition = () => {
         };
 
         let response = await EducationToolsRequest(apiRequestData, isLoggedIn, signal);
-        console.log("response", response);
+        // console.log("response", response);
         setConceptDefinitionFinalReport(
           response.response.concept_definition_final_report_education
         );

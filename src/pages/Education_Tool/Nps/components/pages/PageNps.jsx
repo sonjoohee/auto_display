@@ -450,7 +450,7 @@ const PageNps = () => {
         );
 
         allItems = [...allItems, ...newItems];
-        console.log(allItems);
+        // console.log(allItems);
 
         setNpsConceptDefinition(allItems);
       } catch (error) {
@@ -559,7 +559,7 @@ const PageNps = () => {
     // quickSurveyAnalysis가 비어있을 때만 API 호출
     handleNextStep(1);
     if (uploadedFiles.length > 0) {
-      console.log("uploadedFiles", uploadedFiles);
+      // console.log("uploadedFiles", uploadedFiles);
       // setIsLoading(true);
       try {
         // 비즈니스 데이터 추가
@@ -588,7 +588,7 @@ const PageNps = () => {
               isLoggedIn
             );
 
-            console.log("response", response);
+            // console.log("response", response);
 
             // // 응답 형식 검증
             // if (
@@ -674,7 +674,7 @@ const PageNps = () => {
         business: business,
         goal: projectDescription,
       };
-      console.log("Data", Data);
+      // console.log("Data", Data);
       let response;
       let retryCount = 0;
       const maxRetries = 10;

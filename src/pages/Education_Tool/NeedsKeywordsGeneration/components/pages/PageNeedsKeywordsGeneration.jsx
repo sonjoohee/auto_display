@@ -339,7 +339,7 @@ const PageNeedsKeywordsGeneration = () => {
   
         const response = await EducationToolsRequest(Data, isLoggedIn, signal);
   
-        console.log("response", response);
+        // console.log("response", response);
   
         // setIdeaGenerationStartPosition(
         //   response.response.idea_generation_keyword_education
@@ -376,7 +376,7 @@ const PageNeedsKeywordsGeneration = () => {
           return []; // 해당하는 배열이 없으면 빈 배열 반환
         });
         setKeywordsGenerationTag(updatedProblemList);
-         console.log("updatedProblemList", updatedProblemList);
+        //  console.log("updatedProblemList", updatedProblemList);
         await updateToolOnServer(
           responseToolId,
           {

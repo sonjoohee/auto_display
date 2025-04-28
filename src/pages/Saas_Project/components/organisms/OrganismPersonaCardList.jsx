@@ -74,6 +74,7 @@ const OrganismPersonaCardList = ({
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [filteredPersonaData, setFilteredPersonaData] = useState([]);
+
   const [showFavoriteLimitPopup, setShowFavoriteLimitPopup] = useState(false);
   // const eventState = true;
   // const trialState = false;

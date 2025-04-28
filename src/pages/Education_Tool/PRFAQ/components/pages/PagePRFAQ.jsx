@@ -266,8 +266,8 @@ const PagePRFAQ = () => {
 
 
 
-  console.log("ideaEvaluateSelectedList", ideaEvaluateSelectedList);
-  console.log("ideaEvaluateSelectedListIndex", ideaEvaluateSelectedListIndex);
+  // console.log("ideaEvaluateSelectedList", ideaEvaluateSelectedList);
+  // console.log("ideaEvaluateSelectedListIndex", ideaEvaluateSelectedListIndex);
 
 
   useEffect(() => {

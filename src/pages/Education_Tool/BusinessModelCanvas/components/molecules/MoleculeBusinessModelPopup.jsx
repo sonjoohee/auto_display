@@ -126,7 +126,6 @@ const MoleculeBusinessModelPopup = ({
   // const [isLoading, setIsLoading] = useState(false);
   
   // isOpen props가 변경될 때 상태 업데이트
-  console.log("isLoading", isLoading);
   useEffect(() => {
     setIsVisible(isOpen);
   }, [isOpen]);

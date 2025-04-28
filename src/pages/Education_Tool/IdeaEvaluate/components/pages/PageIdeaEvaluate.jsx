@@ -295,7 +295,7 @@ const PageIdeaEvaluate = () => {
         );
 
         allItems = [...allItems, ...newItems];
-        console.log("🚀 ~ getAllTargetDiscovery ~ allItems:", allItems);
+        // console.log("🚀 ~ getAllTargetDiscovery ~ allItems:", allItems);
 
         setCustomerJourneyList(allItems);
       } catch (error) {

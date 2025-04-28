@@ -118,7 +118,7 @@ const PageProject = () => {
           );
 
           if (response) {
-            console.log("🚀 ~ fetchCreditInfo ~ response:", response);
+            // console.log("🚀 ~ fetchCreditInfo ~ response:", response);
             setCreditRequestCustomPersona(response.request_custom_persona);
             setCreditRequestBusinessPersona(response.request_business_persona);
             setCreditCustomTheory(response.custom_theory);
@@ -142,15 +142,15 @@ const PageProject = () => {
           );
           setEducationState(educationStateResponse.education_state);
 
-          console.log(
-            "🚀 ~ fetchCreditInfo ~ educationStateResponse:",
-            educationStateResponse
-          );
+          // console.log(
+          //   "🚀 ~ fetchCreditInfo ~ educationStateResponse:",
+          //   educationStateResponse
+          // );
           if (educationStateResponse.education_state === true) {
-            console.log(
-              "🚀 ~ fetchCreditInfo ~ educationStateResponse:",
-              educationStateResponse
-            );
+            // console.log(
+            //   "🚀 ~ fetchCreditInfo ~ educationStateResponse:",
+            //   educationStateResponse
+            // );
             setProjectEducationState("education");
             setProjectEducationCode("edu_000001");
           }
