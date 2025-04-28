@@ -284,6 +284,10 @@ const PageNeedsKeywordsGeneration = () => {
   };
 
   const handleSubmitIssuList = async () => {
+    // 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+
     handleNextStep(1);
 
     const responseToolId = await createToolOnServer(
@@ -338,7 +342,7 @@ const PageNeedsKeywordsGeneration = () => {
           
         };
   
-        const response = await EducationToolsRequest(Data, isLoggedIn);
+        const response = await EducationToolsRequest(Data, isLoggedIn, signal);
   
         console.log("response", response);
   
@@ -453,7 +457,7 @@ const PageNeedsKeywordsGeneration = () => {
     });
   };
 
-
+  const abortControllerRef = useRef(null);
 
   useEffect(() => {
     // 새로고침 감지 함수
@@ -491,6 +495,9 @@ const PageNeedsKeywordsGeneration = () => {
       }
     };
 
+    // 컴포넌트가 마운트될 때 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+
     // 함수 실행
     detectRefresh();
 
@@ -499,6 +506,11 @@ const PageNeedsKeywordsGeneration = () => {
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+
+      // 진행 중인 모든 API 요청 중단
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, [navigate]);
 

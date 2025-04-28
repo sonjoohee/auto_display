@@ -525,6 +525,10 @@ const PageIdeaGeneration = () => {
     setToolSteps(2);
     setIsLoadingReport(true);
 
+    // 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+
     const persona_group = personaListSaas
       .filter((persona) => persona?.favorite === true)
       .map((persona) => ({
@@ -560,7 +564,7 @@ const PageIdeaGeneration = () => {
           persona_group: persona_group,
         };
 
-        const interviewResponse = await EducationToolsRequest(Data, isLoggedIn);
+        const interviewResponse = await EducationToolsRequest(Data, isLoggedIn, signal);
 
         const data = {
           type: "ix_idea_generation_report_education",
@@ -570,19 +574,17 @@ const PageIdeaGeneration = () => {
             interviewResponse.response.idea_generation_interview_education,
         };
 
-        let reportResponse = await EducationToolsRequest(data, isLoggedIn);
+        let reportResponse = await EducationToolsRequest(data, isLoggedIn, signal);
 
         let reportRetryCount = 0;
         const reportMaxRetries = 10;
         while (
           reportRetryCount < reportMaxRetries &&
-          ( // 데이터가 유효하지 않거나 불완전한 경우 루프 계속
+          (
             !reportResponse ||
             !reportResponse?.response ||
             !reportResponse?.response?.idea_generation_report_education ||
             !reportResponse?.response?.idea_generation_report_education?.core_ideas ||
-
-            // detailed_execution_ideas 검사: 유효한 객체 배열이 아닌 경우 계속
             !(
               Array.isArray(reportResponse?.response?.idea_generation_report_education?.detailed_execution_ideas) &&
               reportResponse.response.idea_generation_report_education.detailed_execution_ideas.every(
@@ -593,8 +595,6 @@ const PageIdeaGeneration = () => {
                   "idea_description" in item
               )
             ) ||
-
-            // additional_execution_ideas 검사: 유효한 객체 배열이 아닌 경우 계속
             !(
               Array.isArray(reportResponse?.response?.idea_generation_report_education?.additional_execution_ideas) &&
               reportResponse.response.idea_generation_report_education.additional_execution_ideas.every(
@@ -607,8 +607,8 @@ const PageIdeaGeneration = () => {
             )
           )
         ) {
-          console.log("reportRetryCount", reportRetryCount);
-          reportResponse = await EducationToolsRequest(data, isLoggedIn);
+          
+          reportResponse = await EducationToolsRequest(data, isLoggedIn, signal);
           reportRetryCount++;
         }
 
@@ -617,8 +617,7 @@ const PageIdeaGeneration = () => {
           return;
         }
 
-        const reportData =
-          reportResponse.response.idea_generation_report_education;
+        const reportData = reportResponse.response.idea_generation_report_education;
 
         reportData.core_ideas = reportData?.core_ideas?.map((coreIdea) => {
           // persona_name과 일치하는 persona 찾기
@@ -701,6 +700,8 @@ const PageIdeaGeneration = () => {
     setShowToast(true);
   };
 
+  const abortControllerRef = useRef(null);
+
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
@@ -747,6 +748,9 @@ const PageIdeaGeneration = () => {
       }
     };
 
+    // 컴포넌트가 마운트될 때 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+
     // 함수 실행
     detectRefresh();
 
@@ -758,6 +762,11 @@ const PageIdeaGeneration = () => {
     return () => {
       // window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
+
+      // 진행 중인 모든 API 요청 중단
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, [navigate]);
 

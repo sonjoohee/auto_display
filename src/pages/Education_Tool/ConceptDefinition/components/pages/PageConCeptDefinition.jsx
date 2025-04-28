@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAtom } from "jotai";
@@ -248,6 +248,10 @@ const PageConceptDefinition = () => {
   };
 
   const handleCheckValue = async () => {
+    // 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+
     setIsLoading(true);
 
     const personaGroup = selectedPersonas.map((persona) => ({
@@ -268,7 +272,7 @@ const PageConceptDefinition = () => {
         kano_model: kanoModelList,
       };
 
-      let response = await EducationToolsRequest(data, isLoggedIn);
+      let response = await EducationToolsRequest(data, isLoggedIn, signal);
 
       setConceptDefinitionFirstReport(
         response.response.concept_definition_report_education
@@ -294,6 +298,10 @@ const PageConceptDefinition = () => {
   };
 
   const handleReportRequest = async () => {
+    // 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
+    
     setIsLoadingReport(true);
     handleNextStep(2);
     // setToolSteps(2);
@@ -312,7 +320,7 @@ const PageConceptDefinition = () => {
           concept_definition_report_education: conceptDefinitionFirstReport,
         };
 
-        let response = await EducationToolsRequest(apiRequestData, isLoggedIn);
+        let response = await EducationToolsRequest(apiRequestData, isLoggedIn, signal);
         console.log("response", response);
         setConceptDefinitionFinalReport(
           response.response.concept_definition_final_report_education
@@ -381,6 +389,8 @@ const PageConceptDefinition = () => {
     }));
   };
 
+  const abortControllerRef = useRef(null);
+
   useEffect(() => {
     // 새로고침 감지 함수
     const detectRefresh = () => {
@@ -420,12 +430,20 @@ const PageConceptDefinition = () => {
       }
     };
 
+    // 컴포넌트가 마운트될 때 새 AbortController 생성
+    abortControllerRef.current = new AbortController();
+
     detectRefresh();
 
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+
+      // 진행 중인 모든 API 요청 중단
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, [navigate]);
 
