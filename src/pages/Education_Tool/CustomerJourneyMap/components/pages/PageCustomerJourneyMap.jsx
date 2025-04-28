@@ -57,11 +57,11 @@ import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard
 import MoleculeWriteCard from "../molecules/MoleculeWriteCard";
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 
-const prepareMarkdown = (text) => {
-  if (!text) return "";
-  // 연속된 줄바꿈('\n\n')을 <br/><br/>로 변환
-  return text.replace(/\n\n/g, "\n&nbsp;\n").replace(/\n/g, "  \n");
-};
+// const prepareMarkdown = (text) => {
+//   if (!text) return "";
+//   // 연속된 줄바꿈('\n\n')을 <br/><br/>로 변환
+//   return text.replace(/\n\n/g, "\n&nbsp;\n").replace(/\n/g, "  \n");
+// };
 
 const PageCustomerJourneyMap = () => {
   const navigate = useNavigate();
@@ -120,15 +120,15 @@ const PageCustomerJourneyMap = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       const projectAnalysis =
-        (project?.projectAnalysis.business_analysis
-          ? project?.projectAnalysis.business_analysis
+        (project?.projectAnalysis?.business_analysis
+          ? project?.projectAnalysis?.business_analysis
           : "") +
-        (project?.projectAnalysis.business_analysis &&
-        project?.projectAnalysis.file_analysis
+        (project?.projectAnalysis?.business_analysis &&
+        project?.projectAnalysis?.file_analysis
           ? "\n"
           : "") +
-        (project?.projectAnalysis.file_analysis
-          ? project?.projectAnalysis.file_analysis
+        (project?.projectAnalysis?.file_analysis
+          ? project?.projectAnalysis?.file_analysis
           : "");
       const projectTitle = project?.projectTitle;
 
@@ -954,7 +954,7 @@ const PageCustomerJourneyMap = () => {
                         }}
                       >
                         <Markdown>
-                          {prepareMarkdown(customerJourneyMapReport ?? "")}
+                          {customerJourneyMapReport ?? ""}
                         </Markdown>
                       </div>
                     </InsightAnalysis>
