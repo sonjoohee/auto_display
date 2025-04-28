@@ -972,6 +972,7 @@ const PageCustomerJourneyMap = () => {
                       </TabContent5Item>
                     </div>
                     <Button
+                      style={{ marginTop: "-100px"}}
                       Other
                       Primary
                       Fill
