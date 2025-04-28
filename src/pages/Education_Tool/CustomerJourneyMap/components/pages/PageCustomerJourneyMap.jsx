@@ -357,6 +357,7 @@ const PageCustomerJourneyMap = () => {
       ]);
       setInputValue("");
       setCustomItemCount((prev) => prev + 1);
+      setShowCustomForm(false);
     }
   };
 
@@ -729,7 +730,7 @@ const PageCustomerJourneyMap = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="로딩중..." />
+                    <AtomPersonaLoader message="주목할 만한 분석 장면을 찾고 있어요!​" />
                   </div>
                 ) : (
                   <>
@@ -919,8 +920,7 @@ const PageCustomerJourneyMap = () => {
                     }}
                   >
                     <AtomPersonaLoader
-                      message={`결과보고서를 작성하고 있습니다.
-                        1분 정도 소요 될 수 있어요.`}
+                      message={`페르소나 중심의 여정을 분석하고 있어요 (1분 정도 걸려요)​`}
                     />
                   </div>
                 ) : (
