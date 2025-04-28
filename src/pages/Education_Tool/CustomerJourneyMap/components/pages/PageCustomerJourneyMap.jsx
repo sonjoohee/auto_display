@@ -474,6 +474,8 @@ const PageCustomerJourneyMap = () => {
         );
       } catch (error) {}
       setToolSteps(3);
+      setCompletedSteps([...completedSteps, 3]);
+
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
@@ -606,7 +608,7 @@ const PageCustomerJourneyMap = () => {
               <TabButtonType5
                 Num3
                 isActive={activeTab >= 3}
-                onClick={() => completedSteps.includes(2) && setActiveTab(3)}
+                onClick={() => completedSteps.includes(2) || completedSteps.includes(3) && setActiveTab(3)}
                 disabled={
                   !completedSteps.includes(3) || isLoading || isLoadingReport
                 }
@@ -978,7 +980,7 @@ const PageCustomerJourneyMap = () => {
               </TabContent5>
             )}
 
-            {activeTab === 3 && completedSteps.includes(2) && (
+            {activeTab === 3 && (completedSteps.includes(2) || completedSteps.includes(3)) && (
               <TabContent5 Small>
                 {isLoadingReport ? (
                   <div

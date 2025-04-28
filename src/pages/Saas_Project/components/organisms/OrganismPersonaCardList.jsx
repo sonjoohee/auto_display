@@ -74,7 +74,6 @@ const OrganismPersonaCardList = ({
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [filteredPersonaData, setFilteredPersonaData] = useState([]);
-  console.log("🚀 ~ filteredPersonaData:", filteredPersonaData);
   const [showFavoriteLimitPopup, setShowFavoriteLimitPopup] = useState(false);
   // const eventState = true;
   // const trialState = false;
@@ -365,7 +364,8 @@ const OrganismPersonaCardList = ({
 
   // 크레딧 확인 핸들러 추가
   const handleCreditCheck = () => {
-    setShowCreatePersonaPopup(true);
+    // setShowCreatePersonaPopup(true);
+    handleCreatePersona(activeTab);
   };
 
   // 크레딧 확인 팝업에서 확인 클릭 시 핸들러
