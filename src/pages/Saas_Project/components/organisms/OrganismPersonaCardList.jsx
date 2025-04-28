@@ -613,7 +613,7 @@ const OrganismPersonaCardList = ({
                 ) : (
                   <div className="more" onClick={handleCreditCheck}>
                     <Body3 color="gray500" align="center">
-                      + 더보기 ({creditPersonaCreate} credit)
+                      + 더보기
                     </Body3>
                   </div>
                 )}
