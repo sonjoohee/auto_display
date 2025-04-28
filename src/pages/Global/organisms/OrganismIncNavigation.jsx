@@ -722,7 +722,7 @@ const OrganismIncNavigation = () => {
   const handleConfirmAndNavigate = () => {
     setPersonaStep(0);
 
-    window.location.href = "/";
+    window.location.href = "/Project";
     setIsHomePopupOpen(false);
   };
 
