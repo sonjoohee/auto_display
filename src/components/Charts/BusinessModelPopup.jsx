@@ -136,7 +136,7 @@ const BusinessModelPopup = ({
     setInputFields([]); // 입력 필드 초기화
     setInputValues({}); // 입력 값 초기화
   }, [currentModelId]);
-  
+
   // 팝업 닫기 처리
   const handleClose = () => {
     setIsVisible(false);
@@ -280,7 +280,7 @@ const BusinessModelPopup = ({
             {inputFields.map(id => (
               <OptionItem key={`input-${id}`} as="div">
                 <OptionFlex>
-                  <InputField 
+                <InputField 
                     placeholder={`${currentModel.title} 항목을 직접 입력하세요`}
                     value={inputValues[id] || ""}
                     onChange={(e) => handleInputChange(id, e.target.value)}
@@ -548,7 +548,7 @@ const InputField = styled.input`
   letter-spacing: -0.03em;
   color: ${palette.gray800};
   background: transparent;
-  
+
   &::placeholder {
     color: ${palette.gray300};
   }

@@ -59,9 +59,9 @@ const QuckSurveyPopup = ({
   // 옵션 삭제 함수 추가
   const handleDeleteOption = (index) => {
     if (options.length > 1) {
-      const newOptions = [...options];
-      newOptions.splice(index, 1);
-      setOptions(newOptions);
+    const newOptions = [...options];
+    newOptions.splice(index, 1);
+    setOptions(newOptions);
     }
   };
 
@@ -483,7 +483,7 @@ const CreateButton = styled.button`
   font-size: 16px;
   cursor: pointer;
   transition: all 0.2s ease;
-  
+
   &:hover {
     background-color: ${palette.primaryLight};
   }
