@@ -99,6 +99,9 @@ import FavoritePersonaStatus from "../../components/Charts/FavoritePersonaStatus
 import MyPersonaTag from "../../components/Charts/MyPersonaTag";
 import MacroSegTag from "../../components/Charts/MacroSegTag";
 import StakeHolderTag from "../../components/Charts/StakeHolderTag";
+import NeedsKeywordSelected from "../../components/Charts/NeedsKeywordSelected";
+import NeedsKeywordResult from "../../components/Charts/NeedsKeywordResult";
+
 const PageStyleGuide = () => {
   const [activeSection, setActiveSection] = useState("");
   const [isChecked, setIsChecked] = useState(false);
@@ -112,7 +115,9 @@ const PageStyleGuide = () => {
   const [showWarning, setShowWarning] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [rangeValue, setRangeValue] = useState(50);
-
+  const [selectedKeywords, setSelectedKeywords] = useState(['k1', 'k3']);
+  const [isCardSelected, setIsCardSelected] = useState(false);
+  
   // ParetoCurveGraph에 사용할 더미데이터
   const paretoDummyData = [
     { name: "고고품질 문제", value: 175 },
@@ -123,6 +128,18 @@ const PageStyleGuide = () => {
     { name: "기존의 서비스 불량", value: 10 },
     { name: "수 많은 앱 오류", value: 8 },
     { name: "비싼 통기타", value: 5 },
+  ];
+
+  // 더미 키워드 데이터
+  const dummyKeywords = [
+    { id: 'k1', text: '경험 기반 쇼핑 큐레이션' },
+    { id: 'k2', text: '정보 통합 & 개인화' },
+    { id: 'k3', text: '경험 기반 쇼핑 큐레이션' },
+    { id: 'k4', text: '경험 공유 커뮤니티' },
+    { id: 'k5', text: '경험 기반 쇼핑 큐레이션' },
+    { id: 'k6', text: '정보 통합 & 개인화' },
+    { id: 'k7', text: '경험 기반 쇼핑 큐레이션' },
+    { id: 'k8', text: '경험 공유 커뮤니티' }
   ];
 
   const handleWarningClose = () => {
@@ -224,6 +241,9 @@ const PageStyleGuide = () => {
         <a href="#chartComponents" onClick={scrollToSection}>
           Chart Components
         </a>
+        <a href="#needsKeyword" onClick={scrollToSection}>
+          NeedsKeyword
+        </a>
       </Header>
 
       <ChartComponentsWrap id="chartComponents">
@@ -250,6 +270,8 @@ const PageStyleGuide = () => {
           <BusinessModelGraph />
           <FavoritePersonaStatus />
           <MyPersonaTag />
+          <NeedsKeywordSelected />
+          <NeedsKeywordResult />
         </FlexContainer>
         <MacroSegTag />
         <StakeHolderTag />
@@ -2019,6 +2041,37 @@ onChange={() => setSelectedRadio2('gender1')}
             </OCEANRangeWrap>
           </FlexBox>
         </div>
+
+        <div id="needsKeyword">
+          <h2>NeedsKeywordSelected</h2>
+          <Note>
+            <p>
+              NeedsKeywordSelected 컴포넌트는 키워드 선택 카드를 표시합니다. 
+              좌측 상단에는 radioGroup1 버튼이 있으며, 내부 키워드는 각각 체크 가능합니다.
+            </p>
+            <CodeBlock>
+              {`<NeedsKeywordSelected 
+  title="아이디어 1" 
+  keywords={dummyKeywords} 
+  selectedKeywords={selectedKeywords} 
+  onSelectionChange={setSelectedKeywords}
+  isSelected={isCardSelected}
+  onCardSelect={setIsCardSelected}
+/>`}
+            </CodeBlock>
+          </Note>
+
+          <FlexBox>
+            <NeedsKeywordSelected 
+              title="페르소나의 구매 여정 분석 키워드" 
+              keywords={dummyKeywords} 
+              selectedKeywords={selectedKeywords} 
+              onSelectionChange={setSelectedKeywords}
+              isSelected={isCardSelected}
+              onCardSelect={setIsCardSelected}
+            />
+          </FlexBox>
+        </div>
       </ContentsWrap>
     </>
   );
@@ -2176,7 +2229,7 @@ const ChartComponentsWrap = styled.div`
   margin-top: 60px;
 
   h2 {
-    margin-bottom: 30px;
+    margin-bottom: 0px;
     font-size: 24px;
     font-weight: 600;
   }
