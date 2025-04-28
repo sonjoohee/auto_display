@@ -17,15 +17,59 @@ import {
   MainContent,
   PaymentWrap,
   PaymentCard,
+  PaymentPlan,
+  PlanTitle,
+  PlanList,
   PaymentCredit,
+  ToggleList,
   Title,
   PaymentPrice,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
 import images from "../../../../assets/styles/Images";
 import { useNavigate } from "react-router-dom";
-import { USER_EMAIL } from "../../../AtomStates";
+import {
+  IS_LOGGED_IN,
+  PROJECT_REPORT_LIST,
+  PROJECT_ID,
+  PROJECT_REPORT_ID,
+  PROJECT_LIST,
+  REPORT_LIST,
+  PERSONA_LIST,
+  SELECTED_PERSONA_LIST,
+  CUSTOMIZE_PERSONA_LIST,
+  REQUEST_PERSONA_LIST,
+  INTERVIEW_QUESTION_LIST,
+  SELECTED_INTERVIEW_PURPOSE,
+  CATEGORY_COLOR,
+  PROJECT_LOAD_BUTTON_STATE,
+  REPORT_LOAD_BUTTON_STATE,
+  REPORT_DESCRIPTION_LOAD_BUTTON_STATE,
+  INTERVIEW_DATA,
+  INTERVIEW_REPORT,
+  INTERVIEW_REPORT_ADDITIONAL,
+  IS_EDIT_MODE,
+  IS_SHOW_TOAST,
+  IS_PERSONA_ACCESSIBLE,
+  PROJECT_LOADING,
+  PROJECT_REFRESH_TRIGGER,
+  USER_EMAIL,
+} from "../../../AtomStates";
+import OrganismProjectCard from "../organisms/OrganismProjectCard";
+import { getProjectListByIdFromIndexedDB } from "../../../../utils/indexedDB";
+import OrganismEmptyProject from "../organisms/OrganismEmptyProject";
+import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import { useLocation } from "react-router-dom";
-import { H2, H5, H6 } from "../../../../assets/styles/Typography";
+import {
+  H2,
+  H3,
+  H4,
+  H5,
+  H6,
+  Body2,
+  Body3,
+  Sub3,
+  Caption2,
+} from "../../../../assets/styles/Typography";
 import PopupWrap from "../../../../assets/styles/Popup";
 
 const PagePayment = () => {
@@ -104,8 +148,6 @@ const PagePayment = () => {
   }, [location]);
 
   const onePayments = (e) => {
-    console.log("onePayments");
-
     if (window.AUTHNICE) {
       // 상품 가격 추출
       const priceElement = e.currentTarget.querySelector("[data-price]");
@@ -118,8 +160,7 @@ const PagePayment = () => {
       const goodsItem = "Credit" + credit;
 
       window.AUTHNICE.requestPay({
-        // clientId: "S2_9fea099793f145afa7800b21958ab376",
-        clientId: "R2_7a52394e0f5e4d298ff882d3931f1e8f",
+        clientId: "S2_9fea099793f145afa7800b21958ab376",
         method: "card",
         orderId: createdOrderId,
         amount: price,
@@ -175,31 +216,31 @@ const PagePayment = () => {
                 <PaymentCredit onClick={onePayments}>
                   <images.CoinSmall color={palette.gray700} />
                   <div>
-                    <p credit-name="5500">5,500</p>
+                    <p credit-name="50">50</p>
                     <H6 color="gray700">Credit</H6>
                   </div>
 
                   <PaymentPrice>
                     <Button Large PrimaryLightest Fill Round W100>
-                      <H5 data-price="100">￦4,900</H5>
+                      <H5 data-price="1100">￦1,100</H5>
                     </Button>
 
-                    <H6 color="gray700">11% 할인</H6>
+                    <H6 color="gray700">5% 할인</H6>
                   </PaymentPrice>
                 </PaymentCredit>
                 <PaymentCredit onClick={onePayments}>
                   <images.CoinMedium color={palette.gray700} />
                   <div>
-                    <p credit-name="11000">11,000</p>
+                    <p credit-name="160">160</p>
                     <H6 color="gray700">Credit</H6>
                   </div>
 
                   <PaymentPrice>
                     <Button Large PrimaryLightest Fill Round W100>
-                      <H5 data-price="9900">￦9,900</H5>
+                      <H5 data-price="3300">￦3,300</H5>
                     </Button>
 
-                    <H6 color="gray700">11% 할인</H6>
+                    <H6 color="gray700">10% 할인</H6>
                   </PaymentPrice>
                 </PaymentCredit>
                 <PaymentCredit onClick={onePayments}>
@@ -209,35 +250,99 @@ const PagePayment = () => {
                     color={palette.gray700}
                   />
                   <div>
-                    <p credit-name="24000">24,000</p>
+                    <p credit-name="300">300</p>
                     <H6 color="gray700">Credit</H6>
                   </div>
 
                   <PaymentPrice>
                     <Button Large PrimaryLightest Fill Round W100>
-                      <H5 data-price="19900">￦19,900</H5>
+                      <H5 data-price="5500">￦5,500</H5>
                     </Button>
 
-                    <H6 color="gray700">21% 할인</H6>
+                    <H6 color="gray700">20% 할인</H6>
                   </PaymentPrice>
                 </PaymentCredit>
-                <PaymentCredit onClick={onePayments}>
-                  <images.CoinLarge
-                    width="34px"
-                    height="32px"
+                <PaymentCredit onClick={handlePlanChange}>
+                  <images.ClockClockwise
+                    width="39px"
+                    height="36px"
                     color={palette.gray700}
                   />
                   <div>
-                    <p credit-name="65000">65,000</p>
+                    <p credit-name="1000">
+                      1,000<span>/월</span>
+                    </p>
                     <H6 color="gray700">Credit</H6>
                   </div>
 
                   <PaymentPrice>
                     <Button Large PrimaryLightest Fill Round W100>
-                      <H5 data-price="49900">￦49,900</H5>
+                      <H5 data-price="12900">구독 플랜</H5>
+                      {/* 
+                      *************
+
+                      카드 입력 받는곳이 필요함, 
+                      받아서 보낼 데이터. 
+                      POST 처리.  개인 토큰 필수
+                      http://127.0.0.1:8000/payment/billingKey
+                      {
+                      "cardNo":"9410108017544293",
+                      "expYear":"29",
+                      "expMonth":"03",
+                      "idNo":"910410",
+                      "cardPw":"19"
+                      }
+                      
+                      카드 입력받고 
+                      
+                      {
+	"resultCode": "0000",
+	"resultMsg": "정상 처리되었습니다.",
+	"tid": "UT0018097m01162501151405351046",
+	"orderId": "0755e3e2-7725-42a2-89e4-ea6c59c57c8e",
+	"bid": "BIKYUT0018097m2501151405350001",
+	"authDate": "2025-01-15T00:00:00.000+0900",
+	"cardCode": "04",
+	"cardName": "삼성",
+	"messageSource": "nicepay",
+	"status": "issued"
+}
+  이와 같이 리턴 받음. 
+  그러면 바로 데이터 그대로 
+  POST 로 토큰넣어서 발송
+  http://127.0.0.1:8000/payment/billingPay
+
+  그럼 정상처리됨. 
+  
+
+
+  ==> 
+    {
+	"resultCode": "0000",
+	"resultMsg": "정상 처리되었습니다.",
+	"tid": "UT0018097m01162501151405351046",
+	"orderId": "0755e3e2-7725-42a2-89e4-ea6c59c57c8e",
+	"bid": "BIKYUT0018097m2501151405350001",
+	"authDate": "2025-01-15T00:00:00.000+0900",
+	"cardCode": "04",
+	"cardName": "삼성",
+	"messageSource": "nicepay",
+	"status": "issued"
+}
+  해당데이터 그대로 보내면 
+
+  백엔드에서 구독 가격 잡고 결제처리할꺼임. 
+
+
+                      
+                      
+                      
+                      
+                      
+                      */}
                     </Button>
 
-                    <H6 color="gray700">31% 할인</H6>
+                    <H6 color="gray700">35% 할인</H6>
                   </PaymentPrice>
                 </PaymentCredit>
               </PaymentCard>
