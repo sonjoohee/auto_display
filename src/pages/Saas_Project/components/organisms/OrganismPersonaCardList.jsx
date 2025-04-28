@@ -40,6 +40,9 @@ import {
   PROJECT_SAAS,
   PERSONA_LIST_SAAS,
   CREDIT_CREATE_PERSONA_DEFAULT,
+  EVENT_STATE,
+  TRIAL_STATE,
+  EVENT_TITLE,
 } from "../../../../pages/AtomStates";
 import PopupWrap from "../../../../assets/styles/Popup.jsx";
 
@@ -58,7 +61,9 @@ const OrganismPersonaCardList = ({
   setLoadingTabs,
 }) => {
   const navigate = useNavigate();
-
+  const [eventState] = useAtom(EVENT_STATE);
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [project] = useAtom(PROJECT_SAAS);
   const [creditCreatePersonaDefault] = useAtom(CREDIT_CREATE_PERSONA_DEFAULT);
@@ -71,9 +76,9 @@ const OrganismPersonaCardList = ({
   const [filteredPersonaData, setFilteredPersonaData] = useState([]);
   console.log("🚀 ~ filteredPersonaData:", filteredPersonaData);
   const [showFavoriteLimitPopup, setShowFavoriteLimitPopup] = useState(false);
-  const eventState = true;
-  const trialState = false;
-  const eventTitle = "이벤트 제목";
+  // const eventState = true;
+  // const trialState = false;
+  // const eventTitle = "이벤트 제목";
 
   // 탭이 변경될 때마다 데이터 필터링 및 통계 계산
   useEffect(() => {
