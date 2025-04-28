@@ -21,12 +21,10 @@ import {
   IS_SIGNUP_POPUP_OPEN,
   PROJECT_EDUCATION_CODE,
 } from "../../../AtomStates";
-import MoleculeSignupPopup from "./MoleculeSignupPopup";
-import images from "../../../../assets/styles/Images";
 import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
-import { Body3, Helptext, Body4 } from "../../../../assets/styles/Typography";
-
+import { Helptext } from "../../../../assets/styles/Typography";
+import MoleculeSignupEducationPopup from "./MoleculeSignupEducationPopup";
 const MoleculeSignupEducationForm = () => {
   const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
   const [signUpEmail, setSignUpEmail] = useAtom(SIGN_UP_EMAIL);
@@ -617,7 +615,10 @@ const MoleculeSignupEducationForm = () => {
           </JoinWrap>
         </SignupFormContainer>
         {isSignupSuccessful && (
-          <MoleculeSignupPopup onClose={closePopup} signUpEmail={signUpEmail} />
+          <MoleculeSignupEducationPopup
+            onClose={closePopup}
+            signUpEmail={signUpEmail}
+          />
         )}
       </ThemeProvider>
     </>

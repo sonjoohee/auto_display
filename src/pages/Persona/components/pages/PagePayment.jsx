@@ -21,9 +21,10 @@ import {
   Title,
   PaymentPrice,
 } from "../../../../assets/styles/BusinessAnalysisStyle";
+import { UserCreditInfo } from "../../../../utils/indexedDB";
 import images from "../../../../assets/styles/Images";
 import { useNavigate } from "react-router-dom";
-import { USER_EMAIL } from "../../../AtomStates";
+import { USER_EMAIL, USER_CREDITS } from "../../../AtomStates";
 import { useLocation } from "react-router-dom";
 import { H2, H5, H6 } from "../../../../assets/styles/Typography";
 import PopupWrap from "../../../../assets/styles/Popup";
@@ -32,6 +33,10 @@ const PagePayment = () => {
   const [userEmail, setUserEmail] = useAtom(USER_EMAIL);
   const location = useLocation();
   const navigate = useNavigate();
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [isProPlan, setIsProPlan] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showFailPopup, setShowFailPopup] = useState(false);
 
   useEffect(() => {
     // URL의 쿼리 파라미터 확인
@@ -49,12 +54,8 @@ const PagePayment = () => {
     }
 
     if (tid && orderId) {
-      console.log("🚀 ~ useEffect ~ tid:", tid);
-      console.log("🚀 ~ useEffect ~ orderId:", orderId);
-
       const verifyPayment = async () => {
         try {
-          // const response = await fetch("http://localhost:8000/payment/onePay", {
           const response = await fetch(
             "https://wishresearch.kr/payment/onePay",
             {
@@ -80,12 +81,11 @@ const PagePayment = () => {
 
           if (result.resultCode === "0000") {
             setShowSuccessPopup(true);
+            const userCreditValue = await UserCreditInfo(true);
+            // 전역 상태의 크레딧 정보 업데이트
+            setUserCredits(userCreditValue);
           } else {
             setShowFailPopup(true);
-            // 이미 사용된 OrderId입니다 ==> 중복결제 오류 안내이후 확인누를시 새로고침 필요 ( 상단에 결제데이터 남아있음. )
-
-            // 결제 실패시 데이터 전달해서 결제 실패 사유를  사용자가 알아야할거같아요.
-            // 실패 이후 확인시 네비게이터로  / Payment 로 이동
           }
         } catch (error) {
           alert("결제 처리 중 오류가 발생했습니다.");
@@ -107,8 +107,6 @@ const PagePayment = () => {
   }, [location]);
 
   const onePayments = (e) => {
-    console.log("onePayments");
-
     if (window.AUTHNICE) {
       // 상품 가격 추출
       const priceElement = e.currentTarget.querySelector("[data-price]");
@@ -135,10 +133,6 @@ const PagePayment = () => {
       // console.error("AUTHNICE is not loaded");
     }
   };
-
-  const [isProPlan, setIsProPlan] = useState(false);
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [showFailPopup, setShowFailPopup] = useState(false);
 
   const handlePlanChange = () => {
     setShowSuccessPopup(true);
