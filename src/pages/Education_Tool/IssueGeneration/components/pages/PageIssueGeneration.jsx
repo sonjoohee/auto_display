@@ -889,27 +889,6 @@ const PageIssueGeneration = () => {
                       </ListBoxGroup>
                     </div>
 
-                    
-                  { issueGenerationStartPosition.length > 0 && (
-                    <div className="content">
-                      <Title style={{ marginBottom: "-18px" }}>
-                        <Body1 color="gray700">
-                          아이디어 시작점을 선택하세요 (8개 선택필수)
-                        </Body1>
-                      </Title>
-
-                      <CardGroupWrap ideaGeneration>
-                        <MoleculeTagList
-                          items={
-                            issueGenerationStartPosition
-                              .map((item) => item.content)
-                              .flat() // 모든 content 배열을 하나로 합침 
-                          }
-                          disabled={toolSteps >= 2}
-                        />
-                      </CardGroupWrap>
-
-
                     {issueGenerationStartPosition.length > 0 && (
                       <div className="content">
                         <Title style={{ marginBottom: "-18px" }}>
@@ -928,40 +907,6 @@ const PageIssueGeneration = () => {
                             disabled={toolSteps >= 3}
                           />
                         </CardGroupWrap>
-
-                        {/* <div className="content">
-                        <TabContent5Item required>
-                          <Title>
-                            <Body1 color="gray700">
-                              보유하고 있는 기술을 작성하세요
-                            </Body1>
-                          </Title>
-
-                          <FormBox Large>
-                            <CustomTextarea
-                              Edit
-                              rows={4}
-                              placeholder="보유 기술을 입력하시면, 아이디어가 더 잘나와요 "
-                              maxLength={150}
-                              status="valid"
-                              value={projectDescription}
-                              onChange={(e) => {
-                                handleInputChange(
-                                  "projectDescription",
-                                  e.target.value
-                                );
-                                setDescriptionLength(e.target.value.length);
-                              }}
-                              disabled={
-                                completedSteps.includes(2) || toolSteps >= 2
-                              }
-                            />
-                            <Body2 color="gray300" align="right">
-                              {descriptionLength} / 150
-                            </Body2>
-                          </FormBox>
-                        </TabContent5Item>
-                      </div> */}
                       </div>
                     )}
                   </>
@@ -1048,14 +993,12 @@ const PageIssueGeneration = () => {
                         </div>
 
                         <MoleculeSelectedTagList
-
                           items={
                             issueGenerationStartPosition
                               .map((item) => item.content)
-                              .flat() // 모든 content 배열을 하나로 합침 
+                              .flat() // 모든 content 배열을 하나로 합침
                           }
                           disabled={toolSteps >= 1}
-
                         />
                       </TabContent5Item>
                     </div>
