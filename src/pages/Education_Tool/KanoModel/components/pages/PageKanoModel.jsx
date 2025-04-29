@@ -40,6 +40,7 @@ import {
   KANO_MODEL_EVALUATION,
   KANO_MODEL_CLUSTERING_NAME,
   KANO_MODEL_GRAPH_DATA,
+  KANO_MODEL_REPORT_DATA,
   EVENT_STATE,
   TRIAL_STATE,
   EVENT_TITLE,
@@ -76,6 +77,90 @@ import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard
 import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
 import KanoModelGraph from "../../../../../components/Charts/KanoModelGraph";
 import { DetachedBindMode } from "three/src/constants.js";
+
+// Helper functions moved from KanoModelGraph.jsx
+const transformKanoData = (kanoModelGraphData) => {
+  if (
+    !kanoModelGraphData ||
+    typeof kanoModelGraphData !== "object" ||
+    Array.isArray(kanoModelGraphData)
+  ) {
+    return [];
+  }
+
+  return Object.entries(kanoModelGraphData).map(([title, data], index) => {
+    const xValue = data.CSP * 100;
+    const yValue = (data.CSM + 1) * 100;
+    const indexCode = String.fromCharCode(65 + index);
+
+    return {
+      x: xValue,
+      y: yValue,
+      title: title,
+      indexCode: indexCode,
+      size: 24,
+    };
+  });
+};
+
+const transformAverageKanoData = (kanoModelGraphData) => {
+  if (
+    !kanoModelGraphData ||
+    typeof kanoModelGraphData !== "object" ||
+    Array.isArray(kanoModelGraphData)
+  ) {
+    return { avgCSP: 0, avgCSM: 0 };
+  }
+
+  const dataEntries = Object.values(kanoModelGraphData);
+  const numberOfEntries = dataEntries.length;
+
+  if (numberOfEntries === 0) {
+    return { avgCSP: 0, avgCSM: 0 };
+  }
+
+  const sumCSP = dataEntries.reduce((sum, data) => sum + data.CSP, 0);
+  const sumCSM = dataEntries.reduce((sum, data) => sum + data.CSM, 0);
+
+  const avgCSP = (sumCSP / numberOfEntries) * 100;
+  const avgCSM = (sumCSM / numberOfEntries + 1) * 100;
+
+  return { avgCSP, avgCSM };
+};
+
+const rescaleCoordinate = (coord, average) => {
+  if (average === 0) {
+    return 50 + (coord / 100) * 50;
+  } else if (average === 100) {
+    return (coord / 100) * 50;
+  }
+
+  if (coord <= average) {
+    return (coord / average) * 50;
+  } else {
+    return 50 + ((coord - average) / (100 - average)) * 50;
+  }
+};
+
+const rescaleDataPoints = (dataPoints, averages) => {
+  const { avgCSP, avgCSM } = averages;
+  const clampedAvgCSP = Math.max(0, Math.min(100, avgCSP));
+  const clampedAvgCSM = Math.max(0, Math.min(100, avgCSM));
+
+  return dataPoints.map((point) => ({
+    ...point,
+    x: rescaleCoordinate(point.x, clampedAvgCSP),
+    y: rescaleCoordinate(point.y, clampedAvgCSM),
+  }));
+};
+
+const getQuadrantName = (x, y) => {
+  if (x > 50 && y > 50) return "One-dimensional";
+  if (x <= 50 && y > 50) return "Attractive";
+  if (x > 50 && y <= 50) return "Must-be";
+  if (x <= 50 && y <= 50) return "Indifferent";
+  return "";
+};
 
 const PageKanoModel = () => {
   const navigate = useNavigate();
@@ -116,6 +201,9 @@ const PageKanoModel = () => {
   );
   const [kanoModelGraphData, setKanoModelGraphData] = useAtom(
     KANO_MODEL_GRAPH_DATA
+  );
+  const [kanoModelReportData, setKanoModelReportData] = useAtom(
+    KANO_MODEL_REPORT_DATA
   );
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
@@ -598,14 +686,42 @@ const PageKanoModel = () => {
         responseKanoModel.response.kano_coefficients_result
       );
 
+      // Calculate grouped legend data (report data)
+      const graphData = responseKanoModel.response.kano_coefficients_result;
+      const transformedData = transformKanoData(graphData);
+      const averageKanoData = transformAverageKanoData(graphData);
+      const rescaledGraphData = rescaleDataPoints(
+        transformedData,
+        averageKanoData
+      );
+      const legendData = transformedData.map((item, index) => {
+        const rescaledPoint = rescaledGraphData[index];
+        const quadrantName = getQuadrantName(rescaledPoint.x, rescaledPoint.y);
+        return { ...item, quadrantName };
+      });
+      const calculatedGroupedLegendData = {
+        Attractive: [],
+        "One-dimensional": [],
+        "Must-be": [],
+        Indifferent: [],
+      };
+      legendData.forEach((item) => {
+        if (calculatedGroupedLegendData[item.quadrantName]) {
+          calculatedGroupedLegendData[item.quadrantName].push(item.title);
+        }
+      });
+
+      // Update the atom state for report data
+      setKanoModelReportData(calculatedGroupedLegendData);
+
       await updateToolOnServer(
         toolId,
         {
           kanoModelProductAnalysis:
             response.response.kano_model_product_analysis_education,
           kanoModelEvaluation: flattenedEvaluation,
-          kanoModelGraphData:
-            responseKanoModel.response.kano_coefficients_result,
+          kanoModelGraphData: graphData, // Save graph data
+          kanoModelReportData: calculatedGroupedLegendData, // Save calculated report data
           completedStep: 3,
         },
         isLoggedIn

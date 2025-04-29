@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { palette } from "../../assets/styles/Palette";
 import { useAtom } from "jotai";
-import { KANO_MODEL_GRAPH_DATA } from "../../pages/AtomStates";
+import {
+  KANO_MODEL_GRAPH_DATA,
+  KANO_MODEL_REPORT_DATA,
+} from "../../pages/AtomStates";
 
 /**
  * 카노 모델(Kano Model) 그래프 컴포넌트
@@ -16,40 +19,6 @@ const KanoModelGraph = () => {
   const [tooltipContent, setTooltipContent] = useState("");
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
-  // 라벨 정의
-  // const satisfactionLabels = {
-  //   veryHigh: "매우 만족",
-  //   high: "만족",
-  //   neutral: "보통",
-  //   low: "불만족",
-  //   veryLow: "매우 불만족",
-  // };
-
-  // const fulfillmentLabels = {
-  //   fulfilled: "충족",
-  //   adequate: "보통",
-  //   unfulfilled: "불충족",
-  // };
-
-  // 데이터 변환 함수
-  // const transformKanoData = (kanoModelGraphData) => {
-  //   console.log(
-  //     "🚀 ~ transformKanoData ~ kanoModelGraphData:",
-  //     kanoModelGraphData
-  //   );
-  //   if (!kanoModelGraphData || !Array.isArray(kanoModelGraphData)) return [];
-
-  //   return kanoModelGraphData
-  //     .map((data) => {
-  //       return {
-  //         x: data.CSP,
-  //         y: data.CSM,
-  //         title: Object.keys(data),
-  //         size: 8,
-  //       };
-  //     })
-  //     .flat();
-  // };
   const transformKanoData = (kanoModelGraphData) => {
     if (
       !kanoModelGraphData ||
@@ -171,7 +140,9 @@ const KanoModelGraph = () => {
 
   // 각 아이템을 해당 사분면 그룹에 추가
   legendData.forEach((item) => {
-    groupedLegendData[item.quadrantName].push(item);
+    if (groupedLegendData[item.quadrantName]) {
+      groupedLegendData[item.quadrantName].push(item);
+    }
   });
 
   // Tooltip handlers

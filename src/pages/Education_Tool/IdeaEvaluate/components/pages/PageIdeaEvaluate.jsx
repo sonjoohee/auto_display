@@ -272,6 +272,8 @@ const PageIdeaEvaluate = () => {
   }, [toolLoading]);
 
   // 고객핵심가치분석 리스트 가져오기
+  //! 로딩 추가
+
   useEffect(() => {
     const getAllTargetDiscovery = async () => {
       try {
@@ -919,13 +921,16 @@ const PageIdeaEvaluate = () => {
                             </Body1>
                           </div>
 
-                          {selectedKanoModelData.kanoModelClustering.attractive.map(
-                            (idea, index) => (
+                          {selectedKanoModelData.kanoModelReportData.Attractive.map(
+                            (
+                              title,
+                              index // map의 첫 번째 인자 이름을 title로 변경 (가독성)
+                            ) => (
                               <MoleculeItemSelectCard
                                 FlexStart
                                 key={`attractive-${index}`}
                                 id={`attractive-${index}`}
-                                title={idea.name}
+                                title={title} // idea.name 대신 title (문자열 자체) 사용
                                 isSelected={ideaEvaluateSelect.includes(
                                   `attractive-${index}`
                                 )}
@@ -949,13 +954,18 @@ const PageIdeaEvaluate = () => {
                               One-Dimensional (일차원 속성){" "}
                             </Body1>
                           </div>
-                          {selectedKanoModelData.kanoModelClustering.one_dimensional.map(
-                            (idea, index) => (
+                          {selectedKanoModelData.kanoModelReportData[
+                            "One-dimensional"
+                          ].map(
+                            (
+                              title,
+                              index // map의 첫 번째 인자 이름을 title로 변경, 키 접근 방식 변경
+                            ) => (
                               <MoleculeItemSelectCard
                                 FlexStart
                                 key={`one-dimensional-${index}`}
                                 id={`one-dimensional-${index}`}
-                                title={idea.name}
+                                title={title} // idea.name 대신 title (문자열 자체) 사용
                                 isSelected={ideaEvaluateSelect.includes(
                                   `one_dimensional-${index}`
                                 )}
@@ -982,49 +992,23 @@ const PageIdeaEvaluate = () => {
                             </Body1>
                           </div>
 
-                          {selectedKanoModelData.kanoModelClustering.must_be.map(
-                            (idea, index) => (
+                          {selectedKanoModelData.kanoModelReportData[
+                            "Must-be"
+                          ].map(
+                            (
+                              title,
+                              index // map의 첫 번째 인자 이름을 title로 변경, 키 접근 방식 변경
+                            ) => (
                               <MoleculeItemSelectCard
                                 FlexStart
                                 key={`must-be-${index}`}
                                 id={`must-be-${index}`}
-                                title={idea.name}
+                                title={title} // idea.name 대신 title (문자열 자체) 사용
                                 isSelected={ideaEvaluateSelect.includes(
                                   `must_be-${index}`
                                 )}
                                 onSelect={() =>
                                   handleCheckboxChange(`must_be-${index}`)
-                                }
-                                disabled={toolSteps >= 1}
-                              />
-                            )
-                          )}
-
-                          <div
-                            className="title"
-                            style={{
-                              textAlign: "left",
-                              marginBottom: "-20px",
-                              marginTop: "20px",
-                            }}
-                          >
-                            <Body1 color="gray800">
-                              Indifferent (반대 속성){" "}
-                            </Body1>
-                          </div>
-
-                          {selectedKanoModelData.kanoModelClustering.indifferent.map(
-                            (idea, index) => (
-                              <MoleculeItemSelectCard
-                                FlexStart
-                                key={`indifferent-${index}`}
-                                id={`indifferent-${index}`}
-                                title={idea.name}
-                                isSelected={ideaEvaluateSelect.includes(
-                                  `indifferent-${index}`
-                                )}
-                                onSelect={() =>
-                                  handleCheckboxChange(`indifferent-${index}`)
                                 }
                                 disabled={toolSteps >= 1}
                               />
