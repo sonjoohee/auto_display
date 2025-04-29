@@ -186,6 +186,7 @@ import {
   IDEA_EVALUATE_SELECTED_KANO_MODEL,
   IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX,
   IDEA_EVALUATE_SELECTED_LIST_INDEX,
+  IDEA_EVALUATE_GRAPH_DATA,
   CONCEPT_DEFINITION_SELECTED_PURPOSE,
   CONCEPT_DEFINITION_SELECTED_PERSONA,
   CONCEPT_DEFINITION_FIRST_REPORT,
@@ -533,6 +534,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [, setIdeaEvaluateSelectedListIndex] = useAtom(
     IDEA_EVALUATE_SELECTED_LIST_INDEX
   );
+  const [, setIdeaEvaluateGraphData] = useAtom(IDEA_EVALUATE_GRAPH_DATA);
 
   const [, setConceptDefinitionSelectedPersona] = useAtom(
     CONCEPT_DEFINITION_SELECTED_PERSONA
@@ -1336,6 +1338,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setIdeaEvaluateComparisonEducation([]);
         setIdeaEvaluateSelectedKanoModel({});
         setIdeaEvaluateSelectedKanoModelIndex({});
+        setIdeaEvaluateGraphData([]);
         setToolLoading(false);
         setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
@@ -1352,6 +1355,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setIdeaEvaluateSelectedKanoModelIndex(
           chatData?.selectedKanoModelIdeaIndex || []
         );
+        setIdeaEvaluateGraphData(chatData?.paretoChartData || []);
 
         //!컨셉 정의
         setToolStep(1);

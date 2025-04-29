@@ -638,6 +638,7 @@ export const IDEA_EVALUATE_LIST = atom([]);
 export const IDEA_EVALUATE_SELECTED_LIST = atom([]);
 export const IDEA_EVALUATE_SELECTED_LIST_INDEX = atom({});
 export const IDEA_EVALUATE_COMPARISON_EDUCATION = atom([]);
+export const IDEA_EVALUATE_GRAPH_DATA = atom([]);
 
 export const NPS_SELECTED_CONCEPT = atom([]);
 export const NPS_SELECTED_MODE_TYPE = atom("");
