@@ -700,7 +700,7 @@ const PageIdeaGeneration = () => {
                   <div className="content">
                     <div className="title">
                       <H3 color="gray800">Select Idea Theme</H3>
-                      <Body3 color="gray800">
+                      <Body3 color="gray800" style={{ marginBottom: "24px" }}>
                         정리된 키워드를 기반으로 아이디어 발산을 위한 주제어를 선택하세요.
                       </Body3>
                     </div>
@@ -852,7 +852,7 @@ const PageIdeaGeneration = () => {
                         </BoxWrap>
                       ) : (
                         <div className="content">
-                          <Title style={{ marginBottom: "-18px" }}>
+                          <Title style={{ marginBottom: "-18px", marginTop: "8px" }}>
                             <Body1 color="gray700">
                             아이디어 발산의 주제어를 선택하세요 (8개 필수 선택) 
                             </Body1>
@@ -911,7 +911,7 @@ const PageIdeaGeneration = () => {
                     </div>
 
                     <div className="content">
-                    <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
+                    <BoxWrap Column NoneV style={{ marginBottom: "0px" }}>
                         <div className="selectBoxWrap">
                           <Body2 color="gray500" style={{ width: "110px" }}>
                             핵심 키워드
