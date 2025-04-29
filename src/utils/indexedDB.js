@@ -2005,6 +2005,7 @@ export const createToolOnServer = async (data, isLoggedIn) => {
         timestamp: Date.now(),
         ...data,
         toolType: "tool",
+        completedStatus: false,
       };
       const response = await axios.post(
         "https://wishresearch.kr/panels/tool/create_tool",

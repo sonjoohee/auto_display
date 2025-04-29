@@ -116,7 +116,9 @@ const PageNps = () => {
   const [trialState] = useAtom(TRIAL_STATE);
   const [eventTitle] = useAtom(EVENT_TITLE);
   const [creditCreateTool, setCreditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
-  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
+    CREDIT_CREATE_TOOL_LOADED
+  );
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [educationState] = useAtom(EDUCATION_STATE);
   const [personaListSaas] = useAtom(PERSONA_LIST_SAAS);
@@ -230,7 +232,6 @@ const PageNps = () => {
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
 
-
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const project = projectSaas;
@@ -260,19 +261,19 @@ const PageNps = () => {
 
   useEffect(() => {
     const interviewLoading = async () => {
-      if(!creditCreateToolLoaded){
-      setShowCreatePersonaPopup(true);
-      // 크레딧 사용전 사용 확인
-      const creditPayload = {
-        // 기존 10 대신 additionalQuestionMount 사용
-        mount: creditCreateTool,
-      };
-      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+      if (!creditCreateToolLoaded) {
+        setShowCreatePersonaPopup(true);
+        // 크레딧 사용전 사용 확인
+        const creditPayload = {
+          // 기존 10 대신 additionalQuestionMount 사용
+          mount: creditCreateTool,
+        };
+        const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
 
-      if (creditResponse?.state !== "use") {
-        setShowCreditPopup(true);
-        return;
-      }
+        if (creditResponse?.state !== "use") {
+          setShowCreditPopup(true);
+          return;
+        }
       }
       // 비즈니스 정보 설정 (Step 1)
 
@@ -710,7 +711,6 @@ const PageNps = () => {
       setQuickSurveySelectedQuestion(selectedQuestion);
       // setNpsSurveyMethod();
 
-
       const responseToolId = await createToolOnServer(
         {
           projectId: project._id,
@@ -1092,6 +1092,7 @@ const PageNps = () => {
           quickSurveyReport: responseReport.response.quick_survey_report,
           quickSurveyStaticData: responseReport.response.statistics_data,
           completedStep: 3,
+          completedStatus: true,
         },
         isLoggedIn
       );
@@ -1368,11 +1369,9 @@ const PageNps = () => {
     setQuickSurveyCustomQuestion(null); // aiResponse 초기화
   };
 
-
   const handleConfirmCredit = async () => {
     setShowCreatePersonaPopup(false);
   };
-
 
   return (
     <>
@@ -1657,11 +1656,8 @@ const PageNps = () => {
                         onClick={handleSubmitConcept}
                         disabled={
                           interviewModeType === "conceptBoard"
-                            ? toolSteps >= 1 ||
-                              !uploadedFiles.length > 0
-                            : 
-                              !selectedConcept.length > 0 ||
-                              toolSteps >= 1
+                            ? toolSteps >= 1 || !uploadedFiles.length > 0
+                            : !selectedConcept.length > 0 || toolSteps >= 1
                         }
                       >
                         다음
@@ -2145,7 +2141,7 @@ const PageNps = () => {
         />
       )}
 
-{showCreatePersonaPopup &&
+      {showCreatePersonaPopup &&
         (eventState && !educationState ? (
           <PopupWrap
             Event
@@ -2634,15 +2630,14 @@ const PlusIcon = styled.span`
   color: ${palette.gray700};
 `;
 
-
 const LoadingContainer = styled.div`
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const LoadingText = styled(Body2)`
-margin-top: 12px;
-text-align: center;
+  margin-top: 12px;
+  text-align: center;
 `;

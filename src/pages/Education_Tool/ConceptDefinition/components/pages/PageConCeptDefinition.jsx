@@ -409,6 +409,7 @@ const PageConceptDefinition = () => {
             completedStep: 3,
             conceptDefinitionFinalReport:
               response.response.concept_definition_final_report_education,
+            completedStatus: true,
           },
           isLoggedIn
         );

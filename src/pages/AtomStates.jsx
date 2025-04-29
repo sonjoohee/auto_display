@@ -594,6 +594,7 @@ export const QUICK_SURVEY_STATIC_DATA = atom({});
 export const QUICK_SURVEY_INTERVIEW_MODE_TYPE = atom("");
 
 //Education Tool
+export const EDUCATION_TOOL_COMPLETED_STATUS = atom(false);
 
 export const CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS = atom([]);
 export const CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA = atom({});
@@ -621,6 +622,7 @@ export const IDEA_GENERATION_MANDALART_DATA = atom([]);
 export const IDEA_GENERATION_SELECTED_START_POSITION = atom([]);
 export const IDEA_GENERATION_SELECTED_MANDALART = atom(null);
 export const IDEA_GENERATION_POSSSESSION_TECH = atom("");
+export const IDEA_GENERATION_ADDITIONAL_DATA = atom([]);
 
 export const KANO_MODEL_IDEA_GENERATION = atom([]);
 export const KANO_MODEL_IDEA_GENERATION_NAME = atom([]);
@@ -638,6 +640,7 @@ export const IDEA_EVALUATE_LIST = atom([]);
 export const IDEA_EVALUATE_SELECTED_LIST = atom([]);
 export const IDEA_EVALUATE_SELECTED_LIST_INDEX = atom({});
 export const IDEA_EVALUATE_COMPARISON_EDUCATION = atom([]);
+export const IDEA_EVALUATE_GRAPH_DATA = atom([]);
 
 export const NPS_SELECTED_CONCEPT = atom([]);
 export const NPS_SELECTED_MODE_TYPE = atom("");

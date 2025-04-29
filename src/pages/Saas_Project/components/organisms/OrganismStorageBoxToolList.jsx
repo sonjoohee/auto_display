@@ -173,6 +173,7 @@ import {
   IDEA_GENERATION_SELECTED_MANDALART,
   IDEA_GENERATION_POSSSESSION_TECH,
   IDEA_GENERATION_SELECTED_PURPOSE,
+  IDEA_GENERATION_ADDITIONAL_DATA,
   KANO_MODEL_SELECTED_IDEA,
   KANO_MODEL_CLUSTERING,
   KANO_MODEL_CLUSTERING_NAME,
@@ -186,6 +187,7 @@ import {
   IDEA_EVALUATE_SELECTED_KANO_MODEL,
   IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX,
   IDEA_EVALUATE_SELECTED_LIST_INDEX,
+  IDEA_EVALUATE_GRAPH_DATA,
   CONCEPT_DEFINITION_SELECTED_PURPOSE,
   CONCEPT_DEFINITION_SELECTED_PERSONA,
   CONCEPT_DEFINITION_FIRST_REPORT,
@@ -200,6 +202,7 @@ import {
   KEYWORDS_GENERATION_SELECTED_ISSUE_INDEX,
   KEYWORDS_GENERATION_TAG,
   CREDIT_CREATE_TOOL_LOADED,
+  EDUCATION_TOOL_COMPLETED_STATUS
 } from "../../../AtomStates";
 import {
   updateToolOnServer,
@@ -207,6 +210,7 @@ import {
 } from "../../../../utils/indexedDB";
 
 const OrganismStorageBoxToolList = ({ toolListSaas }) => {
+  const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
   const [projectSaas] = useAtom(PROJECT_SAAS);
   const project = projectSaas;
   const navigate = useNavigate();
@@ -510,6 +514,9 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [, setIdeaGenerationPossessionTech] = useAtom(
     IDEA_GENERATION_POSSSESSION_TECH
   );
+  const [, setIdeaGenerationAdditionalData] = useAtom(
+    IDEA_GENERATION_ADDITIONAL_DATA
+  );
 
   const [, setSelectedKanoModelIdea] = useAtom(KANO_MODEL_SELECTED_IDEA);
   const [, setKanoModelClustering] = useAtom(KANO_MODEL_CLUSTERING);
@@ -533,6 +540,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [, setIdeaEvaluateSelectedListIndex] = useAtom(
     IDEA_EVALUATE_SELECTED_LIST_INDEX
   );
+  const [, setIdeaEvaluateGraphData] = useAtom(IDEA_EVALUATE_GRAPH_DATA);
 
   const [, setConceptDefinitionSelectedPersona] = useAtom(
     CONCEPT_DEFINITION_SELECTED_PERSONA
@@ -1216,6 +1224,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         //!고객 저니 맵
         setToolStep(1);
         setCustomerJourneyMapMomentAnalysis([]);
+        setCompletedStatus(false);
         setCustomerJourneyMapSelectedPersona([]);
         setCustomerJourneyMapReport([]);
         setCustomerJourneyMapSelectedDirection([]);
@@ -1236,6 +1245,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setCustomerJourneyMapSelectedDirectionIndex(
           chatData?.selectedDirectionIndex || 0
         );
+        setCompletedStatus(chatData?.completedStatus || false);
 
         //! 핵심 이슈 도출
         setToolStep(1);
@@ -1288,6 +1298,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setIdeaGenerationMandalartData([]);
         setIdeaGenerationSelectedStartPosition([]);
         setIdeaGenerationSelectedMandalart(null);
+        setIdeaGenerationAdditionalData([]);
         setIdeaGenerationPossessionTech("");
         setToolLoading(false);
         setCreditCreateToolLoaded(true);
@@ -1308,6 +1319,9 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           chatData?.ideaGenerationSelectedStartPosition || []
         );
         setIdeaGenerationPossessionTech(chatData?.possessionTech || "");
+        setIdeaGenerationAdditionalData(
+          chatData?.ideaGenerationAdditionalData || []
+        );
 
         //!Kano Model
         setToolStep(1);
@@ -1336,6 +1350,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setIdeaEvaluateComparisonEducation([]);
         setIdeaEvaluateSelectedKanoModel({});
         setIdeaEvaluateSelectedKanoModelIndex({});
+        setIdeaEvaluateGraphData([]);
         setToolLoading(false);
         setCreditCreateToolLoaded(true);
         setToolStep(chatData?.completedStep);
@@ -1352,6 +1367,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setIdeaEvaluateSelectedKanoModelIndex(
           chatData?.selectedKanoModelIdeaIndex || []
         );
+        setIdeaEvaluateGraphData(chatData?.paretoChartData || []);
 
         //!컨셉 정의
         setToolStep(1);

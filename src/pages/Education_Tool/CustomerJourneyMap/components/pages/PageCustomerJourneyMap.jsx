@@ -45,6 +45,7 @@ import {
   USER_CREDITS,
   CREDIT_CREATE_TOOL_LOADED,
   EDUCATION_STATE,
+  EDUCATION_TOOL_COMPLETED_STATUS
 } from "../../../../AtomStates";
 import personaImages from "../../../../../assets/styles/PersonaImages";
 import {
@@ -76,6 +77,7 @@ import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 const PageCustomerJourneyMap = () => {
   const navigate = useNavigate();
 
+  const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
@@ -208,6 +210,9 @@ const PageCustomerJourneyMap = () => {
         }
         if (customerJourneyMapSelectedPersona) {
           setSelectedPersonas(customerJourneyMapSelectedPersona ?? {});
+        }
+        if (completedStatus) {
+          setCompletedStatus(true);
         }
 
         return;
@@ -476,9 +481,11 @@ const PageCustomerJourneyMap = () => {
             completedStep: 3,
             customerJourneyMapReport:
               response.response.customer_journey_map_report_education,
+            completedStatus: true,
           },
           isLoggedIn
         );
+        setCompletedStatus(true);
       } catch (error) {}
       setToolSteps(3);
       setCompletedSteps([...completedSteps, 3]);
@@ -1025,8 +1032,21 @@ const PageCustomerJourneyMap = () => {
                           <Markdown>{customerJourneyMapReport ?? ""}</Markdown>
                         </div>
                       </InsightAnalysis>
-                    </>
-                  )}
+                      {completedStatus && (
+                          <Button
+                          Other
+                          Primary
+                          Fill
+                          Round
+                          onClick={() => navigate("/Tool")}
+                  
+                        >
+                          툴로 이동하기
+                        </Button>
+                        )}
+                        </>
+                        
+                      )}
                 </TabContent5>
               )}
           </DesignAnalysisWrap>
