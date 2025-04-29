@@ -92,7 +92,8 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
     setIdeaGenerationSelectedMandalart(null);
   };
 
-  const generateDetailButtons = () => {
+  const getDetailButtons = () => {
+
     if (!selectedItem || !mandalartData) return [];
 
     // 선택된 아이템의 데이터 찾기
@@ -101,29 +102,64 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
     if (!selectedData?.detailed_execution_ideas) return [];
 
     // detailed_execution_ideas에서 idea_title만 사용
-    const detailButtons = selectedData.detailed_execution_ideas.map(
-      (item, index) => ({
+    const detailButtons = [
+      // 1, 2, 3 위치 (왼쪽 상단, 중앙 상단, 오른쪽 상단)
+      ...selectedData.detailed_execution_ideas.slice(0, 3).map((item, index) => ({
         id: index + 1,
         text: item.idea_title,
         isCenter: false,
-      })
-    );
-
-    // 중앙 버튼을 5번째 위치에 삽입
-    const centerButton = {
-      id: 0,
-      text: `Theme.${selectedItem} ${
-        ideaGenerationSelectedStartPosition[selectedItem - 1].main_theme
-      }`,
-      isCenter: true,
-    };
-
-    // 앞의 4개 버튼 + 중앙 버튼 + 나머지 버튼들
-    return [
-      ...detailButtons.slice(0, 4),
-      centerButton,
-      ...detailButtons.slice(4),
+        displayOrder: index + 1 // 1, 2, 3
+      })),
+      
+      // 8 위치 (왼쪽 중앙)
+      {
+        id: 8,
+        text: selectedData.detailed_execution_ideas[7]?.idea_title || "",
+        isCenter: false,
+        displayOrder: 4
+      },
+      
+      // 중앙 버튼
+      {
+        id: 0,
+        text: `Theme.${selectedItem} ${
+          ideaGenerationSelectedStartPosition[selectedItem - 1].main_theme
+        }`,
+        isCenter: true,
+        displayOrder: 5
+      },
+      
+      // 4 위치 (오른쪽 중앙)
+      {
+        id: 4,
+        text: selectedData.detailed_execution_ideas[3]?.idea_title || "",
+        isCenter: false,
+        displayOrder: 6
+      },
+      
+      // 7, 6, 5 위치 (왼쪽 하단, 중앙 하단, 오른쪽 하단)
+      {
+        id: 7,
+        text: selectedData.detailed_execution_ideas[6]?.idea_title || "",
+        isCenter: false,
+        displayOrder: 7
+      },
+      {
+        id: 6,
+        text: selectedData.detailed_execution_ideas[5]?.idea_title || "",
+        isCenter: false,
+        displayOrder: 8
+      },
+      {
+        id: 5,
+        text: selectedData.detailed_execution_ideas[4]?.idea_title || "",
+        isCenter: false,
+        displayOrder: 9
+      }
     ];
+
+    // displayOrder 기준으로 정렬
+    return detailButtons.sort((a, b) => a.displayOrder - b.displayOrder);
   };
 
   return (
@@ -149,7 +185,7 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
         </MandalartGrid>
       ) : (
         <MandalartGrid>
-          {generateDetailButtons().map((button, index) => (
+          {getDetailButtons().map((button, index) => (
             <MandalartButton
               key={index}
               themeText={button.text}
