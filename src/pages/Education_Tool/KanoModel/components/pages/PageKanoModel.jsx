@@ -314,6 +314,9 @@ const PageKanoModel = () => {
 
           setKanoModelGraphData(kanoModelGraphData);
         }
+        if(completedStatus) {
+          setCompletedStatus(true);
+        }
 
         // 활성 탭 설정 (기본값 1)
         if (toolStep === undefined || toolStep === 1) {
@@ -1238,7 +1241,19 @@ const PageKanoModel = () => {
                         <KanoModelGraph />
                       </InsightAnalysis>
                     </>
+                    
                   )}
+                  {completedStatus && (
+                          <Button
+                          Primary
+                          Edit
+                          Large
+                          onClick={() => navigate("/Tool")}
+                  
+                        >
+                          리서치 툴 리스트 바로가기 
+                        </Button>
+                        )}
                 </TabContent5>
               )}
 

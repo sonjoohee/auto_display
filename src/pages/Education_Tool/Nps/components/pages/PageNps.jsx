@@ -63,6 +63,7 @@ import {
   NPS_SELECTED_MODE_TYPE,
   NPS_FILE_NAME,
   NPS_SURVEY_METHOD,
+  EDUCATION_TOOL_COMPLETED_STATUS,
 } from "../../../../AtomStates";
 import {
   H4,
@@ -111,6 +112,7 @@ import WaitLongLodingBar from "../../../../../components/Charts/WaitLongLodingBa
 const PageNps = () => {
   const navigate = useNavigate();
 
+  const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
@@ -426,6 +428,9 @@ const PageNps = () => {
           setQuickSurveyStaticData(quickSurveyStaticData);
           setQuickSurveyStaticDataState(quickSurveyStaticData);
         }
+      }
+      if(completedStatus) {
+        setCompletedStatus(true);
       }
     };
     interviewLoading();
@@ -2085,6 +2090,17 @@ const PageNps = () => {
                           </>
                         )}
                       </InsightAnalysis>
+                      {completedStatus && (
+                          <Button
+                          Primary
+                          Edit
+                          Large
+                          onClick={() => navigate("/Tool")}
+                  
+                        >
+                          리서치 툴 리스트 바로가기 
+                        </Button>
+                        )}
                     </>
                   )}
                 </TabContent5>
