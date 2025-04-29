@@ -855,8 +855,8 @@ const PageIdeaEvaluate = () => {
                                 <SelectBoxItem
                                   disabled={
                                     toolSteps >= 1 ||
-                                    selectedKanoModelData.kanoModelClustering
-                                      .attractive.length > 0
+                                    selectedKanoModelData?.kanoModelClustering
+                                      ?.attractive.length > 0 || customerJourneyList?.length === 0
                                   }
                                 >
                                   <Body2 color="gray300" align="left">
@@ -1027,7 +1027,7 @@ const PageIdeaEvaluate = () => {
                     disabled={
                       !showKanoModelList
                         ? selectedKanoModelData.length === 0 || toolSteps >= 1
-                        : ideaEvaluateSelect.length < 7 || toolSteps >= 1
+                        : ideaEvaluateSelect.length < 7 || toolSteps >= 1 ||ideaEvaluateSelect.length >9
                     }
                   >
                     아이디어 방향성으로 전환

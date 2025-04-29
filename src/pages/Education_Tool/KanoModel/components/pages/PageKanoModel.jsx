@@ -1084,19 +1084,35 @@ const PageKanoModel = () => {
                     <div className="content">
                       <ListBoxGroup>
                         <li>
+                    
                           <Body2
                             color="gray500"
                             style={{
+                              alignSelf: "flex-start",
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "flex-start",
                               whiteSpace: "nowrap",
-                              marginBottom: "8px",
-                              marginRight: "50px",
                             }}
                           >
                             평가할 아이디어 리스트
                           </Body2>
                           <div
-                            style={{ display: "flex", flexDirection: "column" }}
+                           style={{
+                            whiteSpace: "normal",
+                            wordBreak: "keep-all",
+                            wordWrap: "break-word",
+                            overflow: "visible",
+                            maxWidth: "100%",
+                            textAlign: "left",
+                            marginLeft: "50px",
+                            marginTop: "0",
+                            paddingTop: "0",
+                            display: "block",
+                            alignSelf: "flex-start"
+                          }}
                           >
+                            
                             {selectedKanoModelIdea.map((idea, index) => (
                               <span
                                 key={index}
@@ -1105,11 +1121,11 @@ const PageKanoModel = () => {
                                   marginBottom: "4px",
                                 }}
                               >
-                                {`${idea.updateDate.split(":")[0]}:${
-                                  idea.updateDate.split(":")[1]
-                                } - 아이디어 발상 - ${
-                                  idea.title || "아이디어"
-                                }`}
+                                {idea.updateDate.split(":")[0] + ":" + 
+                                 idea.updateDate.split(":")[1] + 
+                                 " - 아이디어 발상 - " + 
+                                 (idea.title || "아이디어") + 
+                                 (index < selectedKanoModelIdea.length - 1 ? ", " : "")}
                               </span>
                             ))}
                           </div>
