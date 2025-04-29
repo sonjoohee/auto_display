@@ -178,6 +178,7 @@ import {
   KANO_MODEL_EVALUATION,
   KANO_MODEL_PRODUCT_ANALYSIS,
   KANO_MODEL_GRAPH_DATA,
+  KANO_MODEL_REPORT_DATA,
   IDEA_EVALUATE_LIST,
   IDEA_EVALUATE_SELECTED_LIST,
   IDEA_EVALUATE_COMPARISON_EDUCATION,
@@ -206,7 +207,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const navigate = useNavigate();
   const [isLoading] = React.useState(false);
   const [isLoggedIn] = React.useState(false);
-  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
+    CREDIT_CREATE_TOOL_LOADED
+  );
 
   // 상태 변수들 정의
   const [, setSavedTimestamp] = useAtom(SAVED_TIMESTAMP);
@@ -501,6 +504,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setKanoModelEvaluation] = useAtom(KANO_MODEL_EVALUATION);
   const [, setKanoModelProductAnalysis] = useAtom(KANO_MODEL_PRODUCT_ANALYSIS);
   const [, setKanoModelGraphData] = useAtom(KANO_MODEL_GRAPH_DATA);
+  const [, setKanoModelReportData] = useAtom(KANO_MODEL_REPORT_DATA);
 
   const [, setIdeaEvaluateSelectedKanoModel] = useAtom(
     IDEA_EVALUATE_SELECTED_KANO_MODEL
@@ -1316,6 +1320,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setKanoModelEvaluation(chatData?.kanoModelEvaluation || []);
         setKanoModelProductAnalysis(chatData?.kanoModelProductAnalysis || []);
         setKanoModelGraphData(chatData?.kanoModelGraphData || []);
+        setKanoModelReportData(chatData?.kanoModelReportData || []);
 
         //!아이디어 평가
         setToolStep(1);

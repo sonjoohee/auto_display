@@ -4327,10 +4327,12 @@ export const EducationToolsRequest = async (data, isLoggedIn, abortSignal) => {
   }
 };
 
-
-
 //nps - 컨셉보드 멀티모달
-export const InterviewXNPSConceptboardMultimodalRequest = async (data, isLoggedIn, abortSignal) => {
+export const InterviewXNPSConceptboardMultimodalRequest = async (
+  data,
+  isLoggedIn,
+  abortSignal
+) => {
   if (!isLoggedIn) {
     console.error("로그인이 필요합니다.");
     return null;
