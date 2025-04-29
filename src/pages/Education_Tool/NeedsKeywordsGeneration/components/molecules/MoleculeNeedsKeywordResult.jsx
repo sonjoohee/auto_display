@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import styled, { css } from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled, { css } from "styled-components";
 
 // 프로젝트 팔레트를 가져옵니다. assets/styles/Palette.jsx에서 import
-import { palette } from '../../../../../assets/styles/Palette';
+import { palette } from "../../../../../assets/styles/Palette";
 
 /**
  * NeedsKeywordResult 컴포넌트
@@ -16,111 +16,141 @@ import { palette } from '../../../../../assets/styles/Palette';
  * @param {boolean} props.isSelected - 카드 자체가 선택된 상태 여부 (기본값: false)
  * @returns {JSX.Element}
  */
-const MoleculeNeedsKeywordResult = ({ 
-  keywords = [], 
-  selectedKeywords = [], 
-  onSelectionChange, 
+const MoleculeNeedsKeywordResult = ({
+  keywords = [],
+  selectedKeywords = [],
+  onSelectionChange,
   title = "{페르소나}의 {고객 여정 지도 분석 씬} 키워드",
-  isSelected = false
+  isSelected = false,
 }) => {
   const [selected, setSelected] = useState(selectedKeywords);
 
-
   const handleToggle = (id) => {
     let updatedSelection;
-    
+
     if (selected.includes(id)) {
       // 이미 선택된 항목은 선택 해제 가능
-      updatedSelection = selected.filter(keywordId => keywordId !== id);
+      updatedSelection = selected.filter((keywordId) => keywordId !== id);
     } else {
       // 제한 없이 선택 가능
       updatedSelection = [...selected, id];
     }
-    
+
     setSelected(updatedSelection);
-    
+
     if (onSelectionChange) {
       onSelectionChange(updatedSelection);
     }
   };
 
   // 키워드가 20개 미만이면 20개로 채움
-//   const normalizedKeywords = [...keywords];
-//   while (normalizedKeywords.length < 20) {
-//     normalizedKeywords.push({ 
-//       id: `empty-${normalizedKeywords.length}`, 
-//       text: '키워드 없음' 
-//     });
-//   }
+  //   const normalizedKeywords = [...keywords];
+  //   while (normalizedKeywords.length < 20) {
+  //     normalizedKeywords.push({
+  //       id: `empty-${normalizedKeywords.length}`,
+  //       text: '키워드 없음'
+  //     });
+  //   }
 
-//   console.log("keywords", keywords);
- 
+  //   console.log("keywords", keywords);
 
   return (
     <Container isSelected={isSelected}>
       <MainRow>
         <ContentContainer>
           <TitleRow>
-            <Title style={{textAlign: 'left'}}>{title}<br/>해당 키워드는 아이디어 발산의 주제어로 선택 가능합니다.</Title>
+            <Title style={{ textAlign: "left" }}>
+              {title}
+              <br />
+              해당 키워드는 아이디어 발산의 주제어로 선택 가능합니다.
+            </Title>
           </TitleRow>
           <Divider />
           <KeywordGroupsContainer>
             <KeywordGroupsRow>
               <KeywordGroup>
-                {keywords.slice(0, 10).map((keyword) => {
-                  const isKeywordSelected = selected.includes(keyword.id);
-                  const isEmptyKeyword = keyword.id ? keyword.id.toString().startsWith('empty-') : true;
-                  
-                  return (
-                    <KeywordRow key={keyword.id}>
-                      <CheckCircleSmall 
-                        isSelected={isEmptyKeyword || isKeywordSelected}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (!isEmptyKeyword) {
-                            handleToggle(keyword.id);
-                          }
-                        }}
-                        isEmptyKeyword={isEmptyKeyword}
-                      >
-                      
-                          <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1.76562 5.9155L4.9908 9.13654L12.2338 1.86426" stroke="#226FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                {keywords
+                  .slice(0, Math.ceil(keywords.length / 2))
+                  .map((keyword) => {
+                    const isKeywordSelected = selected.includes(keyword.id);
+                    const isEmptyKeyword = keyword.id
+                      ? keyword.id.toString().startsWith("empty-")
+                      : true;
+
+                    return (
+                      <KeywordRow key={keyword.id}>
+                        <CheckCircleSmall
+                          isSelected={isEmptyKeyword || isKeywordSelected}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!isEmptyKeyword) {
+                              handleToggle(keyword.id);
+                            }
+                          }}
+                          isEmptyKeyword={isEmptyKeyword}
+                        >
+                          <svg
+                            width="14"
+                            height="11"
+                            viewBox="0 0 14 11"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M1.76562 5.9155L4.9908 9.13654L12.2338 1.86426"
+                              stroke="#226FFF"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
                           </svg>
-                     
-                      </CheckCircleSmall>
-                      <KeywordText>{keyword}</KeywordText>
-                    </KeywordRow>
-                  );
-                })}
+                        </CheckCircleSmall>
+                        <KeywordText>{keyword}</KeywordText>
+                      </KeywordRow>
+                    );
+                  })}
               </KeywordGroup>
               <KeywordGroup>
-                {keywords.slice(10, 20).map((keyword) => {
-                  const isKeywordSelected = selected.includes(keyword.id);
-                  const isEmptyKeyword = keyword.id ? keyword.id.toString().startsWith('empty-') : true;
-                  
-                  return (
-                    <KeywordRow key={keyword.id}>
-                      <CheckCircleSmall 
-                        isSelected={isEmptyKeyword || isKeywordSelected}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (!isEmptyKeyword) {
-                            handleToggle(keyword.id);
-                          }
-                        }}
-                        isEmptyKeyword={isEmptyKeyword}
-                      >
-                  
-                          <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1.76562 5.9155L4.9908 9.13654L12.2338 1.86426" stroke="#226FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                {keywords
+                  .slice(Math.ceil(keywords.length / 2), keywords.length)
+                  .map((keyword) => {
+                    const isKeywordSelected = selected.includes(keyword.id);
+                    const isEmptyKeyword = keyword.id
+                      ? keyword.id.toString().startsWith("empty-")
+                      : true;
+
+                    return (
+                      <KeywordRow key={keyword.id}>
+                        <CheckCircleSmall
+                          isSelected={isEmptyKeyword || isKeywordSelected}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!isEmptyKeyword) {
+                              handleToggle(keyword.id);
+                            }
+                          }}
+                          isEmptyKeyword={isEmptyKeyword}
+                        >
+                          <svg
+                            width="14"
+                            height="11"
+                            viewBox="0 0 14 11"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M1.76562 5.9155L4.9908 9.13654L12.2338 1.86426"
+                              stroke="#226FFF"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
                           </svg>
-                  
-                      </CheckCircleSmall>
-                      <KeywordText>{keyword}</KeywordText>
-                    </KeywordRow>
-                  );
-                })}
+                        </CheckCircleSmall>
+                        <KeywordText>{keyword}</KeywordText>
+                      </KeywordRow>
+                    );
+                  })}
               </KeywordGroup>
             </KeywordGroupsRow>
           </KeywordGroupsContainer>
@@ -133,38 +163,43 @@ const MoleculeNeedsKeywordResult = ({
 // 더미 데이터로 컴포넌트 사용 예제 추가
 const ExampleNeedsKeywordResult = () => {
   // 키워드 선택 상태 관리
-  const [selectedKeywords, setSelectedKeywords] = useState(['k1', 'k3', 'k12', 'k15']);
+  const [selectedKeywords, setSelectedKeywords] = useState([
+    "k1",
+    "k3",
+    "k12",
+    "k15",
+  ]);
 
   // 더미 키워드 데이터
   const dummyKeywords = [
-    { id: 'k1', text: '경험 기반 쇼핑 큐레이션' },
-    { id: 'k2', text: '정보 통합 & 개인화' },
-    { id: 'k3', text: '경험 기반 쇼핑 큐레이션' },
-    { id: 'k4', text: '경험 공유 커뮤니티' },
-    { id: 'k5', text: '경험 기반 쇼핑 큐레이션' },
-    { id: 'k6', text: '정보 통합 & 개인화' },
-    { id: 'k7', text: '경험 기반 쇼핑 큐레이션' },
-    { id: 'k8', text: '경험 공유 커뮤니티' },
-    { id: 'k9', text: '경험 기반 쇼핑 큐레이션' },
-    { id: 'k10', text: '정보 통합 & 개인화' },
-    { id: 'k11', text: '경험 기반 쇼핑 큐레이션' },
-    { id: 'k12', text: '정보 통합 & 개인화' },
-    { id: 'k13', text: '경험 기반 쇼핑 큐레이션' },
-    { id: 'k14', text: '경험 공유 커뮤니티' },
-    { id: 'k15', text: '경험 기반 쇼핑 큐레이션' },
-    { id: 'k16', text: '정보 통합 & 개인화' },
-    { id: 'k17', text: '경험 기반 쇼핑 큐레이션' },
-    { id: 'k18', text: '경험 공유 커뮤니티' },
-    { id: 'k19', text: '경험 기반 쇼핑 큐레이션' },
-    { id: 'k20', text: '정보 통합 & 개인화' }
+    { id: "k1", text: "경험 기반 쇼핑 큐레이션" },
+    { id: "k2", text: "정보 통합 & 개인화" },
+    { id: "k3", text: "경험 기반 쇼핑 큐레이션" },
+    { id: "k4", text: "경험 공유 커뮤니티" },
+    { id: "k5", text: "경험 기반 쇼핑 큐레이션" },
+    { id: "k6", text: "정보 통합 & 개인화" },
+    { id: "k7", text: "경험 기반 쇼핑 큐레이션" },
+    { id: "k8", text: "경험 공유 커뮤니티" },
+    { id: "k9", text: "경험 기반 쇼핑 큐레이션" },
+    { id: "k10", text: "정보 통합 & 개인화" },
+    { id: "k11", text: "경험 기반 쇼핑 큐레이션" },
+    { id: "k12", text: "정보 통합 & 개인화" },
+    { id: "k13", text: "경험 기반 쇼핑 큐레이션" },
+    { id: "k14", text: "경험 공유 커뮤니티" },
+    { id: "k15", text: "경험 기반 쇼핑 큐레이션" },
+    { id: "k16", text: "정보 통합 & 개인화" },
+    { id: "k17", text: "경험 기반 쇼핑 큐레이션" },
+    { id: "k18", text: "경험 공유 커뮤니티" },
+    { id: "k19", text: "경험 기반 쇼핑 큐레이션" },
+    { id: "k20", text: "정보 통합 & 개인화" },
   ];
 
   return (
     <ExampleContainer>
-      <MoleculeNeedsKeywordResult 
-        title="페르소나의 구매 여정 분석 키워드" 
-        keywords={dummyKeywords} 
-        selectedKeywords={selectedKeywords} 
+      <MoleculeNeedsKeywordResult
+        title="페르소나의 구매 여정 분석 키워드"
+        keywords={dummyKeywords}
+        selectedKeywords={selectedKeywords}
         onSelectionChange={setSelectedKeywords}
         isSelected={true}
       />
@@ -189,7 +224,8 @@ const Container = styled.div`
   background: ${palette.white};
   border-radius: 10px;
   width: 820px;
-  border: 1px solid ${props => props.isSelected ? palette.primary : palette.outlineGray};
+  border: 1px solid
+    ${(props) => (props.isSelected ? palette.primary : palette.outlineGray)};
   padding: 20px 24px 24px 20px;
 `;
 
@@ -213,7 +249,7 @@ const TitleRow = styled.div`
 `;
 
 const Title = styled.h2`
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   font-weight: 600;
   font-size: 20px;
   line-height: 1.55;
@@ -264,19 +300,24 @@ const CheckCircleSmall = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: ${props => props.isEmptyKeyword ? palette.white : props.isSelected ? palette.primary : palette.white};
+  background-color: ${(props) =>
+    props.isEmptyKeyword
+      ? palette.white
+      : props.isSelected
+      ? palette.primary
+      : palette.white};
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  cursor: ${props => props.isEmptyKeyword ? 'default' : 'pointer'};
+  cursor: ${(props) => (props.isEmptyKeyword ? "default" : "pointer")};
 `;
 
 const KeywordText = styled.span`
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.55;
   letter-spacing: -0.03em;
   color: ${palette.gray800};
-`; 
+`;
