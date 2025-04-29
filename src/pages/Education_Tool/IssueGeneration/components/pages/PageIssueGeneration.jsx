@@ -463,7 +463,7 @@ const PageIssueGeneration = () => {
 
     const creditUsePayload = {
       title: project.projectTitle,
-      service_type: "고객 여정 지도",
+      service_type: "핵심 문제 도출",
       target: "",
       state: "use",
       mount: creditCreateToolLow,
@@ -920,24 +920,42 @@ const PageIssueGeneration = () => {
                     <AtomPersonaLoader message="아이디어 발산을 위한 핵심 키워드를 추출하고 있어요 " />
                   </div>
                 ) : (
+                <>
+                {issueGenerationStartPosition.length > 0 && (
                   <>
                     <div className="title">
                       <H3 color="gray800">Defining Key Needs</H3>
                       <Body3 color="gray800">
-                      문제 정의를 통해 도출된 니즈를 바탕으로 아이디어 방향을 설정합니다.
+                        문제 정의를 통해 도출된 니즈를 바탕으로 아이디어 방향을 설정합니다.
                       </Body3>
                     </div>
-
+                
+   
                     <div className="content">
                       <ListBoxGroup style={{ alignItems: "flex-start" }}>
                         <li style={{ alignItems: "flex-start" }}>
-                          <Body2 color="gray500">고객 여정 맵</Body2>
+                          <Body2 
+                            color="gray500"
+                            style={{ 
+                              alignSelf: "flex-start",
+                              whiteSpace: "nowrap"
+                            }}
+                          >
+                            고객 여정 맵
+                          </Body2>
 
                           <Body2 
                             color="gray500"
                             style={{ 
                               alignSelf: "flex-start",
-                              verticalAlign: "top"
+                              whiteSpace: "normal",
+                              wordBreak: "keep-all",
+                              wordWrap: "break-word",
+                              overflow: "visible",
+                              maxWidth: "100%",
+                              textAlign: "left",
+                              marginLeft: "20px",
+                             textAlign: "left"
                             }}
                           >
                             {selectedPurposes.customerList}
@@ -945,7 +963,15 @@ const PageIssueGeneration = () => {
                         </li>
 
                         <li style={{ alignItems: "flex-start" }}>
-                          <Body2 color="gray500">분석 장면 선택</Body2>
+                          <Body2 
+                            color="gray500"
+                            style={{ 
+                              alignSelf: "flex-start",
+                              whiteSpace: "nowrap"
+                            }}
+                          >
+                            분석 장면 선택
+                          </Body2>
 
                           <Body2
                             color={
@@ -961,7 +987,7 @@ const PageIssueGeneration = () => {
                               maxWidth: "100%",
                               textAlign: "left",
                               alignSelf: "flex-start",
-                              verticalAlign: "top"
+                              marginLeft: "20px"
                             }}
                           >
                             {issueGenerationSelectedStartPosition?.length > 0
@@ -972,9 +998,6 @@ const PageIssueGeneration = () => {
                           </Body2>
                         </li>
                       </ListBoxGroup>
-                    </div>
-
-                    {issueGenerationStartPosition.length > 0 && (
                       <div className="content">
                         <Title style={{ marginBottom: "-18px" }}>
                           <Body1 color="gray700">
@@ -993,22 +1016,28 @@ const PageIssueGeneration = () => {
                           />
                         </CardGroupWrap>
                       </div>
+                    </div>
+                    {!isLoading && (
+                      <Button
+                        Other
+                        Primary
+                        Fill
+                        Round
+                        onClick={handleSubmitTheme}
+                      disabled={
+                        issueGenerationSelectedStartPosition.length < 8 ||
+                        toolSteps >= 2
+                      }
+                    >
+                      다음
+                    </Button>
                     )}
+                    </>
+                   )}
+                    
                   </>
-                )}
-                <Button
-                  Other
-                  Primary
-                  Fill
-                  Round
-                  onClick={handleSubmitTheme}
-                  disabled={
-                    issueGenerationSelectedStartPosition.length < 8 ||
-                    toolSteps >= 2
-                  }
-                >
-                  다음
-                </Button>
+                  )}
+
               </TabContent5>
             )}
 
@@ -1027,6 +1056,7 @@ const PageIssueGeneration = () => {
                     <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
                   </div>
                 ) : (
+
                   <>
                     <div className="title">
                       <H3 color="gray800">Selected Keywords</H3>
@@ -1042,7 +1072,7 @@ const PageIssueGeneration = () => {
                             color="gray500"
                             style={{ 
                               alignSelf: "flex-start",
-                              verticalAlign: "top",
+                              whiteSpace: "nowrap"
                             }}
                           >
                             {selectedPurposes.customerList}
@@ -1066,8 +1096,8 @@ const PageIssueGeneration = () => {
                               maxWidth: "100%",
                               textAlign: "left",
                               alignSelf: "flex-start",
-                              verticalAlign: "top",
-                   
+                              marginLeft: "20px",
+                              textAlign: "left"
                             }}
                           >
                             {issueGenerationSelectedStartPosition?.length > 0

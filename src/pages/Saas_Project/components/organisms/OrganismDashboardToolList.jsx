@@ -172,6 +172,7 @@ import {
   IDEA_GENERATION_SELECTED_MANDALART,
   IDEA_GENERATION_POSSSESSION_TECH,
   IDEA_GENERATION_SELECTED_PURPOSE,
+  IDEA_GENERATION_ADDITIONAL_DATA,
   KANO_MODEL_SELECTED_IDEA,
   KANO_MODEL_CLUSTERING,
   KANO_MODEL_CLUSTERING_NAME,
@@ -393,6 +394,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setIdeaGeneratorPurpose] = useAtom(IDEA_GENERATOR_PURPOSE);
   const [, setIdeaGeneratorEditingBusinessText] = useAtom(
     IDEA_GENERATOR_EDITING_BUSINESS_TEXT
+  );
+  const [, setIdeaGenerationAdditionalData] = useAtom(
+    IDEA_GENERATION_ADDITIONAL_DATA
   );
   const [, setReportLoadButtonState] = useAtom(REPORT_LOAD_BUTTON_STATE);
   const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
@@ -1283,6 +1287,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setIdeaGenerationStartPosition([]);
         setIdeaGenerationMandalartData([]);
         setIdeaGenerationSelectedStartPosition([]);
+        setIdeaGenerationAdditionalData([]);
         setIdeaGenerationSelectedMandalart(null);
         setIdeaGenerationPossessionTech("");
         setToolLoading(false);
@@ -1304,6 +1309,9 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           chatData?.ideaGenerationSelectedStartPosition || []
         );
         setIdeaGenerationPossessionTech(chatData?.possessionTech || "");
+        setIdeaGenerationAdditionalData(
+          chatData?.ideaGenerationAdditionalData || []
+        );
 
         //!Kano Model
         setToolStep(1);
