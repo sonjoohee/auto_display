@@ -92,13 +92,13 @@ const MoleculeSelectItem = ({
         </RadioContainer>
         <ContentContainer>
           <TitleRow>
-            <Title>{title}</Title>
+            <Title style={{textAlign: "left"}}>{title}</Title>
           </TitleRow>
           <Divider />
           <KeywordGroupsContainer>
             <KeywordGroupsRow>
               <KeywordGroup>
-                {normalizedKeywords.slice(0, 4).map((keyword) => {
+                {normalizedKeywords.slice(0, 4).map((keyword) => {ㄴㄴ
                   // const isKeywordSelected = selected.includes(keyword.id);
                   const isEmptyKeyword = keyword.id ? keyword.id.toString().startsWith('empty-') : true;
                   

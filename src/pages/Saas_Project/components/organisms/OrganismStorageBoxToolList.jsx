@@ -1249,6 +1249,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
 
         //! 핵심 이슈 도출
         setToolStep(1);
+        setCompletedStatus(false);
         setIssueGenerationSelectedPurpose([]);
         setIssueGenerationProblemList([]);
         setIssueGenerationProblemListTitle([]);
@@ -1271,9 +1272,11 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setIssueGenerationSelectedStartPosition(
           chatData?.issueGenerationSelectedStartPosition || []
         );
+        setCompletedStatus(chatData?.completedStatus || false);
 
         //! 핵심 니즈 키워드 생성
         setToolStep(1);
+        setCompletedStatus(false);
         setIssueGenerationList([]);
         setKeywordsGenerationSelectedIssue([]);
         setKeywordsGenerationTag([]);
@@ -1288,6 +1291,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           chatData?.selectedIssueIndex || []
         );
         setKeywordsGenerationTag(chatData?.keywordsGenerationTag || []);
+        setCompletedStatus(chatData?.completedStatus || false);
 
         //! 아이디어 발상
         setToolStep(1);

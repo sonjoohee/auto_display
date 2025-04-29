@@ -57,6 +57,7 @@ import {
   USER_CREDITS,
   CREDIT_CREATE_TOOL_LOADED,
   IDEA_GENERATION_ADDITIONAL_DATA,
+  EDUCATION_TOOL_COMPLETED_STATUS
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -103,6 +104,7 @@ const PageIdeaGeneration = () => {
   const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
     CREDIT_CREATE_TOOL_LOADED
   );
+  const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
   const [educationState] = useAtom(EDUCATION_STATE);
   const [toolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -519,7 +521,7 @@ const PageIdeaGeneration = () => {
           business_model: project?.businessModel || "",
           sector: project?.industryType || "",
          },
-         type: "ix_idea_generation_report_education",
+         type: "ix_idea_generation_additional_report_education",
   
       }
 
@@ -529,8 +531,7 @@ const PageIdeaGeneration = () => {
         signal
       );
 
-      console.log("Response", Response);
-      setIdeaGenerationAdditionalData(Response.response.idea_generation_report_education);
+      setIdeaGenerationAdditionalData(Response.response.idea_generation_additional_report_education);
 
       await updateToolOnServer(
         toolId,
@@ -540,11 +541,11 @@ const PageIdeaGeneration = () => {
 
           completedStatus: true,
 
-          ideaGenerationAdditionalData: Response.response.idea_generation_report_education
-
+          ideaGenerationAdditionalData: Response.response.idea_generation_additional_report_education
         },
         isLoggedIn
       );
+      setCompletedStatus(true);
     } catch (error) {
       console.error("Error in handleMandalArt:", error);
       setShowPopupError(true);
@@ -1167,7 +1168,6 @@ const PageIdeaGeneration = () => {
                       message={
                         <span>
                           참여 페르소나들이 8개의 주제어를
-                          <br />
                           바탕으로 아이디어를 발산하고 있어요.
                           <br />
                           (3분 정도 걸려요)
@@ -1256,43 +1256,17 @@ const PageIdeaGeneration = () => {
                         </IdeaContainer>
                       )}
 
-
-{/* <div className="content">
-                              {quickSurveyReport?.[0] && (
+{/* 
+<div className="content">
+                              {ideaGenerationAdditionalData?.length > 0 && (
                                 <InsightContainer>
                                   <InsightSection>
                                     <InsightLabel color="gray700">
                                       아이디어 발산 Theme 정의
                                     </InsightLabel>
                                     <InsightContent color="gray700">
-                                      {selectedQuestion[0] === "nps" ? (
-                                        <>
-                                          <div>
-                                            {
-                                              quickSurveyReport[0]
-                                                ?.total_insight
-                                                ?.nps_score_interpretation
-                                            }
-                                          </div>
-                                          <br />
-                                          <div>
-                                            {
-                                              quickSurveyReport[0]
-                                                ?.total_insight
-                                                ?.group_response_analysis
-                                            }
-                                          </div>
-                                          <br />
-                                          <div>
-                                            {
-                                              quickSurveyReport[0]
-                                                ?.total_insight
-                                                ?.enhancement_and_improvement_insight
-                                            }
-                                          </div>
-                                        </>
-                                      ) : (
-                                        // 기존 non-NPS 로직
+                                      
+                               
                                         <>
                                           {
                                             quickSurveyReport[0]?.total_insight
@@ -1305,7 +1279,7 @@ const PageIdeaGeneration = () => {
                                               ?.insight
                                           }
                                         </>
-                                      )}
+                                  
                                     </InsightContent>
                                   </InsightSection>
 
@@ -1373,6 +1347,18 @@ const PageIdeaGeneration = () => {
                             </div> */}
 
                     </div>
+                    {completedStatus && (
+                          <Button
+                          Other
+                          Primary
+                          Fill
+                          Round
+                          onClick={() => navigate("/Tool")}
+                  
+                        >
+                          툴로 이동하기
+                        </Button>
+                        )}
                   </>
                 )}
               </TabContent5>
