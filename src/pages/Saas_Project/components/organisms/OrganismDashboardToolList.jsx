@@ -201,6 +201,7 @@ import {
   KEYWORDS_GENERATION_SELECTED_ISSUE_INDEX,
   KEYWORDS_GENERATION_TAG,
   CREDIT_CREATE_TOOL_LOADED,
+  EDUCATION_TOOL_COMPLETED_STATUS
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -439,6 +440,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   );
 
   //!Education Tool
+  const [, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
   const [, setCustomerJourneyMapMomentAnalysis] = useAtom(
     CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS
   );
@@ -1215,6 +1217,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
 
         //!고객 저니 맵
         setToolStep(1);
+        setCompletedStatus(false);
         setCustomerJourneyMapMomentAnalysis([]);
         setCustomerJourneyMapSelectedPersona([]);
         setCustomerJourneyMapReport([]);
@@ -1236,9 +1239,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setCustomerJourneyMapSelectedDirectionIndex(
           chatData?.selectedDirectionIndex || 0
         );
+        setCompletedStatus(chatData?.completedStatus || false);
 
         //! 핵심 이슈 도출
         setToolStep(1);
+        setCompletedStatus(false);
         setIssueGenerationSelectedPurpose([]);
         setIssueGenerationProblemList([]);
         setIssueGenerationProblemListTitle([]);
@@ -1261,9 +1266,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setIssueGenerationSelectedStartPosition(
           chatData?.issueGenerationSelectedStartPosition || []
         );
+        setCompletedStatus(chatData?.completedStatus || false);
 
         //! 핵심 니즈 키워드 생성
         setToolStep(1);
+        setCompletedStatus(false);
         setIssueGenerationList([]);
         setKeywordsGenerationSelectedIssue([]);
         setKeywordsGenerationTag([]);
@@ -1278,9 +1285,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           chatData?.selectedIssueIndex || []
         );
         setKeywordsGenerationTag(chatData?.keywordsGenerationTag || []);
+        setCompletedStatus(chatData?.completedStatus || false);
 
         //! 아이디어 발상
         setToolStep(1);
+        setCompletedStatus(false);
         setIdeaGenerationSelectedPurpose([]);
         setIdeaGenerationProblemList([]);
         setIdeaGenerationProblemListTitle([]);
@@ -1312,9 +1321,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setIdeaGenerationAdditionalData(
           chatData?.ideaGenerationAdditionalData || []
         );
+        setCompletedStatus(chatData?.completedStatus || false);
 
         //!Kano Model
         setToolStep(1);
+        setCompletedStatus(false);
         setSelectedKanoModelIdea([]);
         setKanoModelClustering([]);
         setKanoModelClusteringName([]);
@@ -1331,9 +1342,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setKanoModelProductAnalysis(chatData?.kanoModelProductAnalysis || []);
         setKanoModelGraphData(chatData?.kanoModelGraphData || []);
         setKanoModelReportData(chatData?.kanoModelReportData || []);
+        setCompletedStatus(chatData?.completedStatus || false);
 
         //!아이디어 평가
         setToolStep(1);
+        setCompletedStatus(false);
         setIdeaEvaluateList([]);
         setIdeaEvaluateSelectedList([]);
         setIdeaEvaluateSelectedListIndex({});
@@ -1358,9 +1371,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           chatData?.selectedKanoModelIdeaIndex || []
         );
         setIdeaEvaluateGraphData(chatData?.paretoChartData || []);
+        setCompletedStatus(chatData?.completedStatus || false);
 
         //!컨셉 정의
         setToolStep(1);
+        setCompletedStatus(false);
         setConceptDefinitionSelectedPurpose({});
         setConceptDefinitionSelectedPersona([]);
         setConceptDefinitionFirstReport("");
@@ -1377,6 +1392,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setConceptDefinitionFinalReport(
           chatData?.conceptDefinitionFinalReport || ""
         );
+        setCompletedStatus(chatData?.completedStatus || false);
 
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);

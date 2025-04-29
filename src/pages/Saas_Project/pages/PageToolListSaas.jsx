@@ -179,6 +179,7 @@ import {
   IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX,
   IDEA_EVALUATE_COMPARISON_EDUCATION,
   IDEA_EVALUATE_GRAPH_DATA,
+  EDUCATION_TOOL_COMPLETED_STATUS
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -469,6 +470,8 @@ const PageToolListSaas = () => {
   const [, setQuickSurveyInterviewModeType] = useAtom(
     QUICK_SURVEY_INTERVIEW_MODE_TYPE
   );
+  //!교육툴
+  const [, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
   const [, setIdeaGenerationProblemList] = useAtom(
     IDEA_GENERATION_PROBLEM_LIST
   );
@@ -701,6 +704,8 @@ const PageToolListSaas = () => {
     setQuickSurveyStaticData([]);
     setQuickSurveyInterviewModeType("");
 
+    //!교육툴
+    setCompletedStatus(false);
     //customer journey map 초기화
     setCustomerJourneyMapSelectedPersona([]);
     setCustomerJourneyMapMomentAnalysis([]);

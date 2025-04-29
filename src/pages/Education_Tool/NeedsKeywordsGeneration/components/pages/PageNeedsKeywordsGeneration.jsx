@@ -46,6 +46,7 @@ import {
   CREDIT_CREATE_TOOL_LOADED,
   EDUCATION_STATE,
   USER_CREDITS,
+  EDUCATION_TOOL_COMPLETED_STATUS
 } from "../../../../AtomStates";
 
 import images from "../../../../../assets/styles/Images";
@@ -91,6 +92,7 @@ const PageNeedsKeywordsGeneration = () => {
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
+  const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
   const [keywordsGenerationTag, setKeywordsGenerationTag] = useAtom(
     KEYWORDS_GENERATION_TAG
   );
@@ -193,6 +195,9 @@ const PageNeedsKeywordsGeneration = () => {
             (_, index) => index
           );
           setSelectedIssue(issueIndexes);
+        }
+        if(completedStatus) {
+          setCompletedStatus(true);
         }
 
         // // 완료된 단계 설정
@@ -328,6 +333,10 @@ const PageNeedsKeywordsGeneration = () => {
           },
           isLoggedIn
         );
+    
+          setCompletedStatus(true);
+    
+        
       } else {
         const updatedProblemList = keywordsGenerationSelectedIssue.flatMap(
           (issue) => {
@@ -350,9 +359,11 @@ const PageNeedsKeywordsGeneration = () => {
           {
             completedStep: 2,
             keywordsGenerationTag: updatedProblemList,
+            completedStatus: true,
           },
           isLoggedIn
         );
+        setCompletedStatus(true);
       }
 
       setToolSteps(1);
@@ -714,7 +725,21 @@ const PageNeedsKeywordsGeneration = () => {
                       </div>
                     </>
                   )
+                  
+                  
                 )}
+                 {completedStatus && (
+                          <Button
+                          Other
+                          Primary
+                          Fill
+                          Round
+                          onClick={() => navigate("/Tool")}
+                  
+                        >
+                          툴로 이동하기
+                        </Button>
+                        )}
               </TabContent5>
             )}
           </DesignAnalysisWrap>

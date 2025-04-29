@@ -407,6 +407,7 @@ const PageIssueGeneration = () => {
       },
       isLoggedIn
     );
+    setCompletedStatus(true);
   };
 
   const handlePurposeSelect = (purpose, selectBoxId, item) => {

@@ -48,6 +48,7 @@ import {
   EDUCATION_STATE,
   USER_CREDITS,
   CREDIT_CREATE_TOOL_LOADED,
+  EDUCATION_TOOL_COMPLETED_STATUS
 } from "../../../../AtomStates";
 import {
   H4,
@@ -165,6 +166,7 @@ const getQuadrantName = (x, y) => {
 const PageKanoModel = () => {
   const navigate = useNavigate();
 
+  const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
@@ -732,6 +734,7 @@ const PageKanoModel = () => {
         },
         isLoggedIn
       );
+      setCompletedStatus(true);
 
       setToolSteps(3);
       setCompletedSteps([...completedSteps, 3]);
