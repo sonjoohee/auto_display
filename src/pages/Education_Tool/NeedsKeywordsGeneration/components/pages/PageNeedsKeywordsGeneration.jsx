@@ -545,17 +545,13 @@ const PageNeedsKeywordsGeneration = () => {
                           <>
 
 
-                          {issueGenerationList.map(
+                          {keywordsGenerationSelectedIssue.map(
                             (idea, index) => (
                               <MoleculeSelectItem 
-                              title={`${idea.updateDate.split(":")[0]}:${
-                                idea.updateDate.split(":")[1]
-                              } - 문제점 & 니즈 - ${
-                                idea.title || "아이디어"
-                              }`}
-                              keywords={idea.issueGenerationSelectedStartPosition.map((item) => ({
-                                main_theme: item.theme,
-                                raw_data: item.description,
+                              title={`${idea.selectedPurposes.customerList}`}
+                              keywords={idea.issueGenerationSelectedStartPosition.map((item, itemIndex) => ({
+                                id: `${index}-${itemIndex}`,
+                                text: item.theme || ''
                               }))}
                               // selectedKeywords={idea.selectedPurposes.customerList} 
                               // onSelectionChange={setSelectedKeywords1} 
@@ -566,7 +562,7 @@ const PageNeedsKeywordsGeneration = () => {
                             )}
                                 
 
-
+{/* 
                             {keywordsGenerationSelectedIssue.map(
                               (idea, index) => (
                                 <MoleculeItemSelectCard
@@ -582,7 +578,7 @@ const PageNeedsKeywordsGeneration = () => {
                                   onSelect={() => handleCheckboxChange(index)}
                                 />
                               )
-                            )}
+                            )} */}
                           </>
                         ) : (
                           <>
@@ -666,7 +662,7 @@ const PageNeedsKeywordsGeneration = () => {
                       </div>
 
                       <div className="content">
-                        <Title
+                        {/* <Title
                           style={{ marginBottom: "-18px", textAlign: "left" }}
                         >
                           <Body1 color="gray700">
@@ -676,17 +672,26 @@ const PageNeedsKeywordsGeneration = () => {
                             해당 키워드는 아이디어 발산의 주제어로 선택
                             가능합니다.
                           </Body1>
-                        </Title>
+                        </Title> */}
 
                         <CardGroupWrap ideaGeneration>
-                          <MoleculeTagList
+
+                        <MoleculeNeedsKeywordResult 
+                            title={`${keywordsGenerationTag.length}개의 고객 여정 분석 결과를 통합해 정리한 핵심 니즈 키워드입니다.`}
+                            keywords={
+                                keywordsGenerationTag
+                                  .map((item) => item.main_theme)
+                                  .flat() // 모든 content 배열을 하나로 합침
+                              }
+                          />
+                          {/* <MoleculeTagList
                             items={
                               keywordsGenerationTag
                                 .map((item) => item.main_theme)
                                 .flat() // 모든 content 배열을 하나로 합침
                             }
                             disabled={toolSteps >= 2}
-                          />
+                          /> */}
                         </CardGroupWrap>
                       </div>
                     </>

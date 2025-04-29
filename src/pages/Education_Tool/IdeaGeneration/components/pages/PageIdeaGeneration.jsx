@@ -1117,10 +1117,19 @@ const PageIdeaGeneration = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader 
-                      message={"참여 페르소나들이 8개의 주제어를 바탕으로 아이디어를 발산하고 있어요."}
-                    />
-                  </div>
+                   
+                <AtomPersonaLoader 
+                    message={
+                      <span>
+                        참여 페르소나들이 8개의 주제어를
+                        <br />
+                        바탕으로 아이디어를 발산하고 있어요.
+                        <br />
+                        (3분 정도 걸려요)
+                      </span>
+                    }
+                  />
+                           </div>
                 ) : (
                   <>
                     <div className="title">

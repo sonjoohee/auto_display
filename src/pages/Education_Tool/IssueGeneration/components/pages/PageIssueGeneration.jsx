@@ -884,7 +884,7 @@ const PageIssueGeneration = () => {
                       </TabContent5Item>
                     </div>
 
-                    {issueGenerationProblemListTitle.length > 0 && (
+                    {issueGenerationProblemListTitle.length > 0  || !isContentLoading && (
                       <Button
                         Other
                         Primary

@@ -25,10 +25,6 @@ const MoleculeNeedsKeywordResult = ({
 }) => {
   const [selected, setSelected] = useState(selectedKeywords);
 
-  // 외부에서 selectedKeywords가 변경될 때 내부 상태도 업데이트
-  useEffect(() => {
-    setSelected(selectedKeywords);
-  }, [selectedKeywords]);
 
   const handleToggle = (id) => {
     let updatedSelection;
@@ -49,28 +45,31 @@ const MoleculeNeedsKeywordResult = ({
   };
 
   // 키워드가 20개 미만이면 20개로 채움
-  const normalizedKeywords = [...keywords];
-  while (normalizedKeywords.length < 20) {
-    normalizedKeywords.push({ 
-      id: `empty-${normalizedKeywords.length}`, 
-      text: '키워드 없음' 
-    });
-  }
+//   const normalizedKeywords = [...keywords];
+//   while (normalizedKeywords.length < 20) {
+//     normalizedKeywords.push({ 
+//       id: `empty-${normalizedKeywords.length}`, 
+//       text: '키워드 없음' 
+//     });
+//   }
+
+//   console.log("keywords", keywords);
+ 
 
   return (
     <Container isSelected={isSelected}>
       <MainRow>
         <ContentContainer>
           <TitleRow>
-            <Title>{title}</Title>
+            <Title style={{textAlign: 'left'}}>{title}<br/>해당 키워드는 아이디어 발산의 주제어로 선택 가능합니다.</Title>
           </TitleRow>
           <Divider />
           <KeywordGroupsContainer>
             <KeywordGroupsRow>
               <KeywordGroup>
-                {normalizedKeywords.slice(0, 10).map((keyword) => {
+                {keywords.slice(0, 10).map((keyword) => {
                   const isKeywordSelected = selected.includes(keyword.id);
-                  const isEmptyKeyword = keyword.id.startsWith('empty-');
+                  const isEmptyKeyword = keyword.id ? keyword.id.toString().startsWith('empty-') : true;
                   
                   return (
                     <KeywordRow key={keyword.id}>
@@ -84,25 +83,21 @@ const MoleculeNeedsKeywordResult = ({
                         }}
                         isEmptyKeyword={isEmptyKeyword}
                       >
-                        {isEmptyKeyword ? (
+                      
                           <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M1.76562 5.9155L4.9908 9.13654L12.2338 1.86426" stroke="#226FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
-                        ) : (
-                          <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 5L4.33333 8.33333L11 1.66667" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        )}
+                     
                       </CheckCircleSmall>
-                      <KeywordText>{keyword.text}</KeywordText>
+                      <KeywordText>{keyword}</KeywordText>
                     </KeywordRow>
                   );
                 })}
               </KeywordGroup>
               <KeywordGroup>
-                {normalizedKeywords.slice(10, 20).map((keyword) => {
+                {keywords.slice(10, 20).map((keyword) => {
                   const isKeywordSelected = selected.includes(keyword.id);
-                  const isEmptyKeyword = keyword.id.startsWith('empty-');
+                  const isEmptyKeyword = keyword.id ? keyword.id.toString().startsWith('empty-') : true;
                   
                   return (
                     <KeywordRow key={keyword.id}>
@@ -116,17 +111,13 @@ const MoleculeNeedsKeywordResult = ({
                         }}
                         isEmptyKeyword={isEmptyKeyword}
                       >
-                        {isEmptyKeyword ? (
+                  
                           <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M1.76562 5.9155L4.9908 9.13654L12.2338 1.86426" stroke="#226FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
-                        ) : (
-                          <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 5L4.33333 8.33333L11 1.66667" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        )}
+                  
                       </CheckCircleSmall>
-                      <KeywordText>{keyword.text}</KeywordText>
+                      <KeywordText>{keyword}</KeywordText>
                     </KeywordRow>
                   );
                 })}

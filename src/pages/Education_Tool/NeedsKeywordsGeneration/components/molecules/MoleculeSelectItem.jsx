@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 // 프로젝트 팔레트를 가져옵니다. assets/styles/Palette.jsx에서 import
 import { palette } from '../../../../../assets/styles/Palette';
 import { RadioButton } from '../../../../../assets/styles/InputStyle';
+import { CheckBoxButton } from '../../../../../assets/styles/InputStyle';
 
 /**
  * NeedsKeywordSelected 컴포넌트
@@ -21,36 +22,33 @@ import { RadioButton } from '../../../../../assets/styles/InputStyle';
 const MoleculeSelectItem = ({ 
   keywords = [], 
   id ,
-  selectedKeywords = [], 
-  onSelectionChange, 
+  // selectedKeywords = [], 
+  // onSelectionChange, 
   title = "{페르소나}의 {고객 여정 지도 분석 씬222222222222222} 키워드",
   isSelected = false,
   onCardSelect
 }) => {
-  const [selected, setSelected] = useState(selectedKeywords);
+  // const [selected, setSelected] = useState(selectedKeywords);
 
   // 외부에서 selectedKeywords가 변경될 때 내부 상태도 업데이트
-  useEffect(() => {
-    setSelected(selectedKeywords);
-  }, [selectedKeywords]);
 
-  const handleToggle = (id) => {
-    let updatedSelection;
+  // const handleToggle = (id) => {
+  //   let updatedSelection;
     
-    if (selected.includes(id)) {
-      // 이미 선택된 항목은 선택 해제 가능
-      updatedSelection = selected.filter(keywordId => keywordId !== id);
-    } else {
-      // 제한 없이 선택 가능
-      updatedSelection = [...selected, id];
-    }
+  //   if (selected.includes(id)) {
+  //     // 이미 선택된 항목은 선택 해제 가능
+  //     updatedSelection = selected.filter(keywordId => keywordId !== id);
+  //   } else {
+  //     // 제한 없이 선택 가능
+  //     updatedSelection = [...selected, id];
+  //   }
     
-    setSelected(updatedSelection);
+  //   setSelected(updatedSelection);
     
-    if (onSelectionChange) {
-      onSelectionChange(updatedSelection);
-    }
-  };
+  //   if (onSelectionChange) {
+  //     onSelectionChange(updatedSelection);
+  //   }
+  // };
 
   // 컴포넌트 선택 구현
   const handleCardSelect = () => {
@@ -82,11 +80,12 @@ const MoleculeSelectItem = ({
         <RadioContainer>
           <OptionFlex >
             <div>
-              <RadioButton
+              <CheckBoxButton
                 id={id}
                 name={id} 
                 checked={isSelected}
-                onChange={() => onCardSelect(id)}
+                // onChange={() => onCardSelect(id)}
+                onChange={() => onCardSelect && onCardSelect(!isSelected)} 
               />
             </div>
             </OptionFlex>
@@ -100,18 +99,18 @@ const MoleculeSelectItem = ({
             <KeywordGroupsRow>
               <KeywordGroup>
                 {normalizedKeywords.slice(0, 4).map((keyword) => {
-                  const isKeywordSelected = selected.includes(keyword.id);
+                  // const isKeywordSelected = selected.includes(keyword.id);
                   const isEmptyKeyword = keyword.id ? keyword.id.toString().startsWith('empty-') : true;
                   
                   return (
                     <KeywordRow key={keyword.id}>
                       <CheckCircleSmall 
-                        isSelected={isEmptyKeyword || isKeywordSelected}
+                        // isSelected={isEmptyKeyword || isKeywordSelected}
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (!isEmptyKeyword) {
-                            handleToggle(keyword.id);
-                          }
+                          // if (!isEmptyKeyword) {
+                          //   handleToggle(keyword.id);
+                          // }
                         }}
                         isEmptyKeyword={isEmptyKeyword}
                       >
@@ -128,24 +127,24 @@ const MoleculeSelectItem = ({
               </KeywordGroup>
               <KeywordGroup>
                 {normalizedKeywords.slice(4, 8).map((keyword) => {
-                  const isKeywordSelected = selected.includes(keyword.id);
+                  // const isKeywordSelected = selected.includes(keyword.id);
                   const isEmptyKeyword = keyword.id ? keyword.id.toString().startsWith('empty-') : true;
                   
                   return (
                     <KeywordRow key={keyword.id}>
                       <CheckCircleSmall 
-                        isSelected={isEmptyKeyword || isKeywordSelected}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (!isEmptyKeyword) {
-                            handleToggle(keyword.id);
-                          }
-                        }}
+                        // isSelected={isEmptyKeyword || isKeywordSelected}
+                        // onClick={(e) => {
+                        //   e.stopPropagation();
+                        //   if (!isEmptyKeyword) {
+                        //     handleToggle(keyword.id);
+                        //   }
+                        // }}
                         isEmptyKeyword={isEmptyKeyword}
                       >
                       
-                          <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 5L4.33333 8.33333L11 1.66667" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1.76562 5.9155L4.9908 9.13654L12.2338 1.86426" stroke="#226FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
                       
                       </CheckCircleSmall>
