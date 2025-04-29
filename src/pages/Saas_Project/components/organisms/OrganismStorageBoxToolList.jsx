@@ -173,6 +173,7 @@ import {
   IDEA_GENERATION_SELECTED_MANDALART,
   IDEA_GENERATION_POSSSESSION_TECH,
   IDEA_GENERATION_SELECTED_PURPOSE,
+  IDEA_GENERATION_ADDITIONAL_DATA,
   KANO_MODEL_SELECTED_IDEA,
   KANO_MODEL_CLUSTERING,
   KANO_MODEL_CLUSTERING_NAME,
@@ -510,6 +511,9 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   );
   const [, setIdeaGenerationPossessionTech] = useAtom(
     IDEA_GENERATION_POSSSESSION_TECH
+  );
+  const [, setIdeaGenerationAdditionalData] = useAtom(
+    IDEA_GENERATION_ADDITIONAL_DATA
   );
 
   const [, setSelectedKanoModelIdea] = useAtom(KANO_MODEL_SELECTED_IDEA);
@@ -1290,6 +1294,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setIdeaGenerationMandalartData([]);
         setIdeaGenerationSelectedStartPosition([]);
         setIdeaGenerationSelectedMandalart(null);
+        setIdeaGenerationAdditionalData([]);
         setIdeaGenerationPossessionTech("");
         setToolLoading(false);
         setCreditCreateToolLoaded(true);
@@ -1310,6 +1315,9 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           chatData?.ideaGenerationSelectedStartPosition || []
         );
         setIdeaGenerationPossessionTech(chatData?.possessionTech || "");
+        setIdeaGenerationAdditionalData(
+          chatData?.ideaGenerationAdditionalData || []
+        );
 
         //!Kano Model
         setToolStep(1);

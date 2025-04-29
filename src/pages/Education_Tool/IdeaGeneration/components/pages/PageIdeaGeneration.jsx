@@ -56,6 +56,7 @@ import {
   EDUCATION_STATE,
   USER_CREDITS,
   CREDIT_CREATE_TOOL_LOADED,
+  IDEA_GENERATION_ADDITIONAL_DATA,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -120,7 +121,9 @@ const PageIdeaGeneration = () => {
     useAtom(IDEA_GENERATION_POSSSESSION_TECH);
   const [ideaGenerationSelectedPurpose, setIdeaGenerationSelectedPurpose] =
     useAtom(IDEA_GENERATION_SELECTED_PURPOSE);
-
+  const [ideaGenerationAdditionalData, setIdeaGenerationAdditionalData] = useAtom(
+    IDEA_GENERATION_ADDITIONAL_DATA
+  );
   const [ideaGenerationProblemList, setIdeaGenerationProblemList] = useAtom(
     IDEA_GENERATION_PROBLEM_LIST
   );
@@ -244,6 +247,9 @@ const PageIdeaGeneration = () => {
         }
         if (ideaGenerationMandalArtData) {
           setIdeaGenerationMandalArtData(ideaGenerationMandalArtData ?? []);
+        }
+        if (ideaGenerationAdditionalData) {
+          setIdeaGenerationAdditionalData(ideaGenerationAdditionalData ?? []);
         }
 
         // 완료된 단계 설정
@@ -372,8 +378,8 @@ const PageIdeaGeneration = () => {
     handleNextStep(2);
     setToolSteps(2);
     setIsLoadingReport(true);
-    // const selectedStartPosition = ideaGenerationSelectedStartPosition.map(item => item.main_theme);
-    // console.log("selectedStartPositiossssssssssssssssssn", selectedStartPosition);
+    const selectedStartPosition = ideaGenerationSelectedStartPosition.map(item => item.main_theme);
+    console.log("selectedStartPositiossssssssssssssssssn", selectedStartPosition);
 
     // 새 AbortController 생성
     abortControllerRef.current = new AbortController();
@@ -507,20 +513,36 @@ const PageIdeaGeneration = () => {
       }
 
       setIdeaGenerationMandalArtData(apiResults);
-      // console.log("apiResults", apiResults);
-   
-      // data = {
-      //    selectedStartPosition: ideaGenerationSelectedStartPosition.map(item => item.main_theme),
-      //    ideaGenerationMandalArtData: apiResults,
-      //    business: business,
+
+     const data = {
+      main_theme_raw_data : {
+         main_theme: ideaGenerationSelectedStartPosition.map(item => item.main_theme),
+         core_ideas: apiResults.map(item => item.core_ideas.map(coreIdea => coreIdea.core_idea)),
+         detailed_execution_ideas: apiResults.map(item => item.detailed_execution_ideas)},
+         business: {
+          business: businessDescription,
+          business_model: project?.businessModel || "",
+          sector: project?.industryType || "",
+         },
+         type: "ix_idea_generation_report_education",
   
-      // }
+      }
+
+      let Response = await EducationToolsRequest(
+        data,
+        isLoggedIn,
+        signal
+      );
+
+      console.log("Response", Response);
+      setIdeaGenerationAdditionalData(Response.response.idea_generation_report_education);
 
       await updateToolOnServer(
         toolId,
         {
           completedStep: 3,
           ideaGenerationMandalArtData: apiResults,
+          ideaGenerationAdditionalData: Response.response.idea_generation_report_education
         },
         isLoggedIn
       );

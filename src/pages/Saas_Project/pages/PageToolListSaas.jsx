@@ -175,6 +175,10 @@ import {
   CONCEPT_DEFINITION_FINAL_REPORT,
   BUSINESS_MODEL_CANVAS_MARKDOWN,
   CREDIT_CREATE_TOOL_LOADED,
+  IDEA_EVALUATE_SELECTED_LIST,
+  IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX,
+  IDEA_EVALUATE_COMPARISON_EDUCATION,
+  IDEA_EVALUATE_GRAPH_DATA,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -520,6 +524,14 @@ const PageToolListSaas = () => {
   const [, setBusinessModelCanvasMarkdown] = useAtom(
     BUSINESS_MODEL_CANVAS_MARKDOWN
   );
+  const [, setIdeaEvaluateSelectedList] = useAtom(IDEA_EVALUATE_SELECTED_LIST);
+  const [, setIdeaEvaluateSelectedKanoModelIndex] = useAtom(
+    IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX
+  );
+  const [, setIdeaEvaluateComparisonEducation] = useAtom(
+    IDEA_EVALUATE_COMPARISON_EDUCATION
+  );
+  const [, setIdeaEvaluateGraphData] = useAtom(IDEA_EVALUATE_GRAPH_DATA);
 
   // 초기화 useEffect
   useEffect(() => {
@@ -717,6 +729,11 @@ const PageToolListSaas = () => {
     setKanoModelClusteringName([]);
     setKanoModelEvaluation([]);
     setKanoModelProductAnalysis([]);
+
+    setIdeaEvaluateSelectedList([]);
+    setIdeaEvaluateSelectedKanoModelIndex([]);
+    setIdeaEvaluateComparisonEducation([]);
+    setIdeaEvaluateGraphData([]);
 
     //concept definition education 초기화
     setConceptDefinitionFirstReport("");
