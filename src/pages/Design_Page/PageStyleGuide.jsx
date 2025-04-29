@@ -101,6 +101,7 @@ import MacroSegTag from "../../components/Charts/MacroSegTag";
 import StakeHolderTag from "../../components/Charts/StakeHolderTag";
 import NeedsKeywordSelected from "../../components/Charts/NeedsKeywordSelected";
 import NeedsKeywordResult from "../../components/Charts/NeedsKeywordResult";
+import MultipleQustionSelection from "../../components/Charts/MultipleQustionSelection";
 
 const PageStyleGuide = () => {
   const [activeSection, setActiveSection] = useState("");
@@ -272,6 +273,7 @@ const PageStyleGuide = () => {
           <MyPersonaTag />
           <NeedsKeywordSelected />
           <NeedsKeywordResult />
+          <MultipleQustionSelection />
         </FlexContainer>
         <MacroSegTag />
         <StakeHolderTag />
