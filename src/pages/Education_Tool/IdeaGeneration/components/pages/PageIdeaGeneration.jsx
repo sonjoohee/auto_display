@@ -416,6 +416,7 @@ const PageIdeaGeneration = () => {
 
     try {
       const apiResults = [];
+      const apiResultsAdditional = [];
 
       //8번의 API 호출을 순차적으로 실행
       for (let i = 0; i < 8; i++) {
@@ -498,6 +499,8 @@ const PageIdeaGeneration = () => {
 
         const reportData =
           reportResponse.response.idea_generation_report_education;
+        const reportDataAdditional =
+          reportResponse.response.idea_generation_additional_report_education;
 
         reportData.core_ideas = reportData?.core_ideas?.map((coreIdea) => {
           // persona_name과 일치하는 persona 찾기
@@ -517,6 +520,7 @@ const PageIdeaGeneration = () => {
         });
 
         apiResults.push(reportData);
+        apiResultsAdditional.push(reportDataAdditional);
       }
 
       setIdeaGenerationMandalArtData(apiResults);
@@ -543,9 +547,7 @@ const PageIdeaGeneration = () => {
 
       // let Response = await EducationToolsRequest(data, isLoggedIn, signal);
 
-      setIdeaGenerationAdditionalData(
-        reportResponse.response.idea_generation_additional_report_education
-      );
+      setIdeaGenerationAdditionalData(apiResultsAdditional);
 
       await updateToolOnServer(
         toolId,
@@ -553,8 +555,7 @@ const PageIdeaGeneration = () => {
           completedStep: 3,
           ideaGenerationMandalArtData: apiResults,
           completedStatus: true,
-          ideaGenerationAdditionalData:
-            reportResponse.response.idea_generation_additional_report_education,
+          ideaGenerationAdditionalData: apiResultsAdditional,
         },
         isLoggedIn
       );
@@ -846,8 +847,14 @@ const PageIdeaGeneration = () => {
                           </SelectBox>
                         </div>
 
-                        <div className="selectBoxWrap" style={{ marginTop: "12px" }}>
-                          <Body2 color="gray500" style={{ width: "110px", alignSelf: "flex-start" }}>
+                        <div
+                          className="selectBoxWrap"
+                          style={{ marginTop: "12px" }}
+                        >
+                          <Body2
+                            color="gray500"
+                            style={{ width: "110px", alignSelf: "flex-start" }}
+                          >
                             주제어 선택
                           </Body2>
                           <li
@@ -900,11 +907,9 @@ const PageIdeaGeneration = () => {
                         </BoxWrap>
                       ) : (
                         <div className="content">
-
                           <Title
                             style={{ marginBottom: "-18px", marginTop: "8px" }}
                           >
-
                             <Body1 color="gray700">
                               아이디어 발산의 주제어를 선택하세요 (8개 필수
                               선택)
@@ -1060,8 +1065,14 @@ const PageIdeaGeneration = () => {
                           </SelectBox>
                         </div>
 
-                        <div className="selectBoxWrap" style={{ marginTop: "12px" }}>
-                          <Body2 color="gray500" style={{ width: "110px", alignSelf: "flex-start" }}>
+                        <div
+                          className="selectBoxWrap"
+                          style={{ marginTop: "12px" }}
+                        >
+                          <Body2
+                            color="gray500"
+                            style={{ width: "110px", alignSelf: "flex-start" }}
+                          >
                             주제어 선택
                           </Body2>
                           <li
@@ -1192,7 +1203,8 @@ const PageIdeaGeneration = () => {
                     <div className="title">
                       <H3 color="gray800">Define Your Key Customer</H3>
                       <Body3 color="gray800">
-                        고객 여정 분석을 원하는 주요 고객군을 선택하세요<Title style={{ marginTop: "28px" }}></Title>
+                        고객 여정 분석을 원하는 주요 고객군을 선택하세요
+                        <Title style={{ marginTop: "28px" }}></Title>
                       </Body3>
                     </div>
 
@@ -1230,15 +1242,9 @@ const PageIdeaGeneration = () => {
                     </Button>
 
                     <div className="content">
-                      {!ideaGenerationMandalArtData[
-                        ideaGenerationSelectedMandalart - 1
-                      ]?.additional_execution_ideas ||
-                      ideaGenerationMandalArtData[
-                        ideaGenerationSelectedMandalart - 1
-                      ]?.additional_execution_ideas?.length === 0 ? (
+                      {ideaGenerationSelectedMandalart === null ? (
                         <IdeaContainer>
                           <IdeaBox>
-                            {/* <IdeaTitle>{idea.title}</IdeaTitle> */}
                             <IdeaContent>
                               각 아이디어 주제를 클릭해보세요. 주제별로 연관된
                               아이디어 8가지가 제시됩니다.
@@ -1247,24 +1253,40 @@ const PageIdeaGeneration = () => {
                         </IdeaContainer>
                       ) : (
                         <IdeaContainer>
-                          {/* {ideaGenerationMandalArtData[ideaGenerationSelectedMandalart - 1]?.additional_execution_ideas.map((idea, index) => ( */}
                           <IdeaBox>
-                            <IdeaTitle>기타 의견</IdeaTitle>
-                            {/* <IdeaTitle>{idea.idea_title}</IdeaTitle> */}
+                            <IdeaTitle>아이디어 발산 Theme 정의 </IdeaTitle>
                             <IdeaContent>
-                              {ideaGenerationMandalArtData[
+                              <IdeaText>
+                                {
+                                  ideaGenerationAdditionalData[
+                                    ideaGenerationSelectedMandalart - 1
+                                  ]?.theme_definition
+                                }
+                              </IdeaText>
+                            </IdeaContent>
+
+                            <IdeaTitle>아이디어 별 설명</IdeaTitle>
+                            <IdeaContent>
+                              {ideaGenerationAdditionalData[
                                 ideaGenerationSelectedMandalart - 1
-                              ]?.additional_execution_ideas.map(
-                                (idea, index) => (
-                                  <IdeaText>
-                                    • {idea.idea_title} :{" "}
-                                    {idea.idea_description}
-                                  </IdeaText>
-                                )
-                              )}
+                              ]?.priority_ideas.map((idea, index) => (
+                                <IdeaText>
+                                  {idea.title} : {idea.description}
+                                </IdeaText>
+                              ))}
+                            </IdeaContent>
+
+                            <IdeaTitle>전략적 제언</IdeaTitle>
+                            <IdeaContent>
+                              <IdeaText>
+                                {
+                                  ideaGenerationAdditionalData[
+                                    ideaGenerationSelectedMandalart - 1
+                                  ]?.strategic_recommendations
+                                }
+                              </IdeaText>
                             </IdeaContent>
                           </IdeaBox>
-                          {/* ))} */}
                         </IdeaContainer>
                       )}
 
