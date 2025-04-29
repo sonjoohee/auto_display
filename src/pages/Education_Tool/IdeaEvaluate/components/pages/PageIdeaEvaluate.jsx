@@ -358,7 +358,7 @@ const PageIdeaEvaluate = () => {
       const selectedItems = ideaEvaluateSelect.map((ideaId) => {
         const [category, index] = ideaId.split("-");
         const categoryKey = category.replace("-", "_");
-        return selectedKanoModelData.kanoModelClustering[categoryKey][
+        return selectedKanoModelData.kanoModelReportData[categoryKey][
           parseInt(index)
         ];
       });
@@ -921,7 +921,7 @@ const PageIdeaEvaluate = () => {
                             </Body1>
                           </div>
 
-                          {selectedKanoModelData.kanoModelReportData.Attractive.map(
+                          {selectedKanoModelData.kanoModelReportData.attractive.map(
                             (
                               title,
                               index // map의 첫 번째 인자 이름을 title로 변경 (가독성)
@@ -954,9 +954,7 @@ const PageIdeaEvaluate = () => {
                               One-Dimensional (일차원 속성){" "}
                             </Body1>
                           </div>
-                          {selectedKanoModelData.kanoModelReportData[
-                            "One-dimensional"
-                          ].map(
+                          {selectedKanoModelData.kanoModelReportData.one_dimensional.map(
                             (
                               title,
                               index // map의 첫 번째 인자 이름을 title로 변경, 키 접근 방식 변경
@@ -992,9 +990,7 @@ const PageIdeaEvaluate = () => {
                             </Body1>
                           </div>
 
-                          {selectedKanoModelData.kanoModelReportData[
-                            "Must-be"
-                          ].map(
+                          {selectedKanoModelData.kanoModelReportData.must_be.map(
                             (
                               title,
                               index // map의 첫 번째 인자 이름을 title로 변경, 키 접근 방식 변경
@@ -1086,12 +1082,12 @@ const PageIdeaEvaluate = () => {
                               {ideaEvaluateSelectedList.map((idea, index) => {
                                 const isLast =
                                   index === ideaEvaluateSelectedList.length - 1;
-                                const text = idea.name;
+                                const text = idea;
 
                                 // 전체 텍스트가 30자를 넘으면 말줄임표 처리
                                 const totalText = ideaEvaluateSelectedList
                                   .slice(0, index + 1)
-                                  .map((i) => i.name)
+                                  .map((i) => i)
                                   .join(", ");
 
                                 if (totalText.length > 100 && !isLast) {
