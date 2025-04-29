@@ -102,6 +102,8 @@ import StakeHolderTag from "../../components/Charts/StakeHolderTag";
 import NeedsKeywordSelected from "../../components/Charts/NeedsKeywordSelected";
 import NeedsKeywordResult from "../../components/Charts/NeedsKeywordResult";
 import MultipleQustionSelection from "../../components/Charts/MultipleQustionSelection";
+import { useAtom } from "jotai";
+import { KANO_MODEL_GRAPH_DATA } from "../../pages/AtomStates";
 
 const PageStyleGuide = () => {
   const [activeSection, setActiveSection] = useState("");
@@ -119,18 +121,6 @@ const PageStyleGuide = () => {
   const [selectedKeywords, setSelectedKeywords] = useState(['k1', 'k3']);
   const [isCardSelected, setIsCardSelected] = useState(false);
   
-  // ParetoCurveGraph에 사용할 더미데이터
-  const paretoDummyData = [
-    { name: "고고품질 문제", value: 175 },
-    { name: "많은 배송 지연", value: 50 },
-    { name: "겁나게 비싸서 사기 힘든 높은 가격 불만", value: 35 },
-    { name: "이은결제 오류", value: 20 },
-    { name: "어머나 재고 부족", value: 15 },
-    { name: "기존의 서비스 불량", value: 10 },
-    { name: "수 많은 앱 오류", value: 8 },
-    { name: "비싼 통기타", value: 5 },
-  ];
-
   // 더미 키워드 데이터
   const dummyKeywords = [
     { id: 'k1', text: '경험 기반 쇼핑 큐레이션' },
@@ -141,6 +131,39 @@ const PageStyleGuide = () => {
     { id: 'k6', text: '정보 통합 & 개인화' },
     { id: 'k7', text: '경험 기반 쇼핑 큐레이션' },
     { id: 'k8', text: '경험 공유 커뮤니티' }
+  ];
+  
+  // KanoModelGraph를 위한 더미 데이터
+  const [kanoModelGraphData, setKanoModelGraphData] = useAtom(KANO_MODEL_GRAPH_DATA);
+  
+  // KanoModelGraph 더미 데이터 설정
+  useEffect(() => {
+    // 카노 모델 더미 데이터
+    const kanoModelDummyData = {
+      "직관적인 UI": { CSP: 0.8, CSM: 0.6 },
+      "빠른 로딩 속도": { CSP: 0.7, CSM: 0.4 },
+      "다양한 필터링 옵션": { CSP: 0.5, CSM: 0.8 },
+      "개인화된 추천": { CSP: 0.2, CSM: 0.9 },
+      "사용자 리뷰 시스템": { CSP: 0.3, CSM: 0.1 },
+      "실시간 알림": { CSP: 0.9, CSM: -0.2 },
+      "결제 간소화": { CSP: 0.1, CSM: 0.2 },
+      "쇼핑 히스토리": { CSP: 0.4, CSM: -0.5 }
+    };
+    
+    // KanoModelGraph 데이터 설정
+    setKanoModelGraphData(kanoModelDummyData);
+  }, [setKanoModelGraphData]);
+  
+  // ParetoCurveGraph에 사용할 더미데이터
+  const paretoDummyData = [
+    { name: "고고품질 문제", value: 175 },
+    { name: "많은 배송 지연", value: 50 },
+    { name: "겁나게 비싸서 사기 힘든 높은 가격 불만", value: 35 },
+    { name: "이은결제 오류", value: 20 },
+    { name: "어머나 재고 부족", value: 15 },
+    { name: "기존의 서비스 불량", value: 10 },
+    { name: "수 많은 앱 오류", value: 8 },
+    { name: "비싼 통기타", value: 5 },
   ];
 
   const handleWarningClose = () => {
@@ -242,6 +265,9 @@ const PageStyleGuide = () => {
         <a href="#chartComponents" onClick={scrollToSection}>
           Chart Components
         </a>
+        <a href="#kanoModel" onClick={scrollToSection}>
+          Kano Model
+        </a>
         <a href="#needsKeyword" onClick={scrollToSection}>
           NeedsKeyword
         </a>
@@ -278,6 +304,18 @@ const PageStyleGuide = () => {
         <MacroSegTag />
         <StakeHolderTag />
       </ChartComponentsWrap>
+
+      {/* Kano Model Graph Section */}
+      <KanoModelWrap id="kanoModel">
+        <SectionTitle>Kano Model</SectionTitle>
+        <ComponentDescription>
+          Kano Model은 제품 또는 서비스의 기능이 고객 만족도에 어떤 영향을 미치는지 
+          시각화하는 그래프입니다. 가로축은 충족도(CSP), 세로축은 만족도(CSM)를 나타냅니다.
+        </ComponentDescription>
+        <KanoModelGraphWrapper>
+          <KanoModelGraph />
+        </KanoModelGraphWrapper>
+      </KanoModelWrap>
 
       <ContentsWrap>
         <div id="loader">
@@ -2243,4 +2281,35 @@ const FlexContainer = styled.div`
   gap: 30px;
   justify-content: center;
   align-items: flex-start;
+`;
+
+// Kano Model 관련 스타일 컴포넌트
+const KanoModelWrap = styled.div`
+  margin: 50px 0;
+  padding: 20px;
+  background-color: ${palette.white};
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const KanoModelGraphWrapper = styled.div`
+  margin-top: 20px;
+  padding: 20px;
+  background-color: ${palette.white};
+  border-radius: 8px;
+  border: 1px solid ${palette.gray300};
+  height: 600px;
+`;
+
+const SectionTitle = styled.h2`
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+`;
+
+const ComponentDescription = styled.p`
+  font-size: 16px;
+  color: ${palette.gray700};
+  margin-bottom: 20px;
+  line-height: 1.5;
 `;

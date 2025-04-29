@@ -239,7 +239,17 @@ const KanoModelGraph = () => {
           ([quadrantName, items]) =>
             items.length > 0 && (
               <div key={quadrantName}>
-                <QuadrantTitle>{quadrantName}</QuadrantTitle>
+                <QuadrantTitle 
+                  style={
+                    quadrantName === "One-dimensional" || 
+                    quadrantName === "Must-be" || 
+                    quadrantName === "Indifferent" 
+                      ? { marginTop: '20px' } 
+                      : {}
+                  }
+                >
+                  {quadrantName}
+                </QuadrantTitle>
                 {items.map((item, idx) => (
                   <LegendItem key={idx}>
                     <span className="index-code">{item.indexCode}</span>
@@ -708,7 +718,7 @@ const LegendContainer = styled.div`
   width: 250px; /* 범례 너비 조절 */
   max-height: 500px; /* 그래프 높이와 맞춤 */
   overflow-y: auto; /* 내용이 많을 경우 스크롤 */
-  padding: 10px;
+  padding: 16px; /* 10px에서 16px로 패딩 늘림 */
   border: 1px solid ${palette.outlineGray};
   border-radius: 8px;
   background-color: ${palette.white};
@@ -728,7 +738,7 @@ const LegendItem = styled.div`
     font-weight: bold;
     text-align: left; /* 왼쪽 정렬 */
     width: auto; /* 고정 너비 제거 */
-    margin-right: 2px; /* 약간의 간격만 추가 */
+    margin-right: 4px; /* 2px에서 4px로 간격 늘림 */
     flex-shrink: 0;
   }
 
