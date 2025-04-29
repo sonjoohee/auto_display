@@ -548,7 +548,7 @@ const PageNeedsKeywordsGeneration = () => {
                 ) : (
                   <>
                     <div className="title">
-                      <H3 color="gray800">Collect Need’s Keyword</H3>
+                      <H3 color="gray800">Collect Need's Keyword</H3>
                       <Body3 color="gray800">
                         산발적으로 도출된 니즈 키워드를 하나의 풀로 모으세요
                       </Body3>
@@ -570,8 +570,8 @@ const PageNeedsKeywordsGeneration = () => {
                         </div>
                         {showSelectedIssue ? (
                           <>
-                            {keywordsGenerationSelectedIssue.map(
-                              (idea, index) => (
+                            {keywordsGenerationSelectedIssue.map((idea, index) => (
+                              <div key={index} style={{ marginBottom: "20px" }}>
                                 <MoleculeSelectItem
                                   title={`${idea.selectedPurposes.customerList}`}
                                   keywords={idea.issueGenerationSelectedStartPosition.map(
@@ -583,84 +583,49 @@ const PageNeedsKeywordsGeneration = () => {
                                   // selectedKeywords={idea.selectedPurposes.customerList}
                                   // onSelectionChange={setSelectedKeywords1}
                                   isSelected={selectedIssue.includes(index)}
-                                  onCardSelect={() =>
-                                    handleCheckboxChange(index)
-                                  }
+                                  onCardSelect={() => handleCheckboxChange(index)}
                                 />
-                              )
-                            )}
-
-                            {/* 
-                            {keywordsGenerationSelectedIssue.map(
-                              (idea, index) => (
-                                <MoleculeItemSelectCard
-                                  FlexStart
-                                  key={index}
-                                  id={index}
-                                  title={`${idea.updateDate.split(":")[0]}:${
-                                    idea.updateDate.split(":")[1]
-                                  } - 문제점 & 니즈 - ${
-                                    idea.title || "아이디어"
-                                  }`}
-                                  isSelected={selectedIssue.includes(index)}
-                                  onSelect={() => handleCheckboxChange(index)}
-                                />
-                              )
-                            )} */}
+                              </div>
+                            ))}
                           </>
                         ) : (
                           <>
-                            {/* {issueGenerationList.map((idea, index) => (
-                              <MoleculeItemSelectCard
-                                FlexStart
-                                key={index}
-                                id={index}
-                                title={`${idea.selectedPurposes.customerList}`}
-                                // title={`${idea.updateDate.split(":")[0]}:${
-                                //   idea.updateDate.split(":")[1]
-                                // } - 문제점 & 니즈 - ${
-                                //   idea.title || "아이디어"
-                                // }`}
-                                isSelected={selectedIssue.includes(index)}
-                                onSelect={() => handleCheckboxChange(index)}
-                              />
-                            ))} */}
-
                             {issueGenerationList.map((idea, index) => (
-                              <MoleculeSelectItem
-                                key={index}
-                                title={`${idea.selectedPurposes.customerList}`}
-                                id={index}
-                                keywords={idea.issueGenerationSelectedStartPosition.map(
-                                  (item, itemIndex) => ({
-                                    id: `${index}-${itemIndex}`,
-                                    text: item.theme || "",
-                                  })
-                                )}
-                                // selectedKeywords={selectedIssue.includes(index) ? [`${index}`] : []}
-                                // onSelectionChange={() => {}}
-                                isSelected={selectedIssue.includes(index)}
-                                onCardSelect={() => handleCheckboxChange(index)}
-                              />
+                              <div key={index} style={{ marginBottom: "-22px" }}>
+                                <MoleculeSelectItem
+                                  title={`${idea.selectedPurposes.customerList}`}
+                                  id={index}
+                                  keywords={idea.issueGenerationSelectedStartPosition.map(
+                                    (item, itemIndex) => ({
+                                      id: `${index}-${itemIndex}`,
+                                      text: item.theme || "",
+                                    })
+                                  )}
+                                  isSelected={selectedIssue.includes(index)}
+                                  onCardSelect={() => handleCheckboxChange(index)}
+                                />
+                              </div>
                             ))}
                           </>
                         )}
                       </>
                     </div>
-                    <Button
-                      Other
-                      Primary
-                      Fill
-                      Round
-                      onClick={handleSubmitIssuList}
-                      disabled={
-                        isContentLoading ||
-                        toolSteps >= 1 ||
-                        selectedIssue.length === 0
-                      }
-                    >
-                      아이디어 키워드 추출
-                    </Button>
+                    <div style={{ marginTop: "20px" }}>
+                      <Button
+                        Other
+                        Primary
+                        Fill
+                        Round
+                        onClick={handleSubmitIssuList}
+                        disabled={
+                          isContentLoading ||
+                          toolSteps >= 1 ||
+                          selectedIssue.length === 0
+                        }
+                      >
+                        아이디어 키워드 추출
+                      </Button>
+                    </div>
                   </>
                 )}
               </TabContent5>
