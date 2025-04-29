@@ -162,8 +162,23 @@ const PageNeedsKeywordsGeneration = () => {
 
       if (toolLoading) {
         // 활성 탭 설정 (기본값 1)
-        setActiveTab(Math.min((toolStep ?? 1) + 1, 2));
-        setToolSteps(toolStep ?? 1);
+        // setActiveTab(Math.min((toolStep ?? 1) , 2));
+        // setToolSteps(toolStep ? 1 : 0 ? 2 : 2);
+        // 활성 탭 설정 (기본값 1)
+        if (toolStep === undefined || toolStep === 1) {
+          setActiveTab(1);
+          setToolSteps(0);
+          setCompletedSteps([]);
+        } else {
+          setActiveTab(Math.min(toolStep, 2));
+          setToolSteps(toolStep);
+          const completedStepsArray = [];
+          for (let i = 1; i <= toolStep; i++) {
+            completedStepsArray.push(i);
+          }
+          setCompletedSteps(completedStepsArray);
+        }
+      
         if (keywordsGenerationTag && keywordsGenerationTag.length > 0) {
           setKeywordsGenerationTag(keywordsGenerationTag ?? []);
         }
@@ -180,12 +195,12 @@ const PageNeedsKeywordsGeneration = () => {
           setSelectedIssue(issueIndexes);
         }
 
-        // 완료된 단계 설정
-        const completedStepsArray = [];
-        for (let i = 1; i <= (toolStep ?? 1); i++) {
-          completedStepsArray.push(i);
-        }
-        setCompletedSteps(completedStepsArray);
+        // // 완료된 단계 설정
+        // const completedStepsArray = [];
+        // for (let i = 1; i <= (toolStep ?? 1); i++) {
+        //   completedStepsArray.push(i);
+        // }
+        // setCompletedSteps(completedStepsArray);
 
         return;
       }
