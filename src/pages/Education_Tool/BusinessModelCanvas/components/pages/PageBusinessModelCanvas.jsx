@@ -65,6 +65,7 @@ import {
   CREDIT_CREATE_TOOL_LOADED,
   USER_CREDITS,
   EDUCATION_STATE,
+  EDUCATION_TOOL_COMPLETED_STATUS,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -105,6 +106,7 @@ import MoleculeBusinessModelPopup from "../molecules/MoleculeBusinessModelPopup"
 const PageBusinessModelCanvas = () => {
   const navigate = useNavigate();
 
+  const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
@@ -344,6 +346,9 @@ const PageBusinessModelCanvas = () => {
             completedStepsArray.push(i);
           }
           setCompletedSteps(completedStepsArray);
+        }
+        if(completedStatus) {
+          setCompletedStatus(true);
         }
         // setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
         // setToolSteps(toolStep ?? 1);
@@ -775,9 +780,11 @@ const PageBusinessModelCanvas = () => {
         {
           ideaEvaluateComparisonEducation: response.response.idea_evaluation_comparison_education,
           completedStep: 3,
+          completedStatus: true,
         },
         isLoggedIn
       );
+      setCompletedStatus(true);
 
 
       // setToolSteps(3);
@@ -1272,6 +1279,17 @@ const PageBusinessModelCanvas = () => {
                         </IdeaContainer>
                         
                       )}
+                       {completedStatus && (
+                          <Button
+                          Primary
+                          Edit
+                          Large
+                          onClick={() => navigate("/Tool")}
+                  
+                        >
+                          리서치 툴 리스트 바로가기 
+                        </Button>
+                        )}
                     </>
                   )}
                 </TabContent5>

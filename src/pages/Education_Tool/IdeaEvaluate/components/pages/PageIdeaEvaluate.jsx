@@ -48,6 +48,7 @@ import {
   USER_CREDITS,
   CREDIT_CREATE_TOOL_LOADED,
   IDEA_EVALUATE_GRAPH_DATA,
+  EDUCATION_TOOL_COMPLETED_STATUS,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -83,6 +84,7 @@ import ParetoCurveGraph from "../../../../../components/Charts/ParetoCurveGraph"
 const PageIdeaEvaluate = () => {
   const navigate = useNavigate();
 
+  const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
@@ -256,6 +258,9 @@ const PageIdeaEvaluate = () => {
         }
         if (ideaEvaluateGraphData && ideaEvaluateGraphData.length > 0) {
           setGraphData(ideaEvaluateGraphData);
+        }
+        if(completedStatus) {
+          setCompletedStatus(true);
         }
 
         // 활성 탭 설정 (기본값 1)
@@ -546,6 +551,7 @@ const PageIdeaEvaluate = () => {
         },
         isLoggedIn
       );
+      setCompletedStatus(true);
 
       setToolSteps(3);
       setCompletedSteps([...completedSteps, 3]);
@@ -1364,6 +1370,17 @@ const PageIdeaEvaluate = () => {
                           </>
                         )}
                       </InsightAnalysis>
+                      {completedStatus && (
+                          <Button
+                          Primary
+                          Edit
+                          Large
+                          onClick={() => navigate("/Tool")}
+                  
+                        >
+                          리서치 툴 리스트 바로가기 
+                        </Button>
+                        )}
                     </>
                   )}
                 </TabContent5>

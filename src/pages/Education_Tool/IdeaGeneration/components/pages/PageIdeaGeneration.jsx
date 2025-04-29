@@ -253,6 +253,9 @@ const PageIdeaGeneration = () => {
         if (ideaGenerationAdditionalData) {
           setIdeaGenerationAdditionalData(ideaGenerationAdditionalData ?? []);
         }
+        if(completedStatus) {
+          setCompletedStatus(true);
+        }
 
         // 완료된 단계 설정
         const completedStepsArray = [];
@@ -1173,7 +1176,7 @@ const PageIdeaGeneration = () => {
                           참여 페르소나들이 8개의 주제어를
                           바탕으로 아이디어를 발산하고 있어요.
                           <br />
-                          (3분 정도 걸려요)
+                          (5분 정도 걸려요)
                         </span>
                       }
                     />
@@ -1260,7 +1263,7 @@ const PageIdeaGeneration = () => {
                       )}
 
 {/* 
-<div className="content">
+                    <div className="content">
                               {ideaGenerationAdditionalData?.length > 0 && (
                                 <InsightContainer>
                                   <InsightSection>
@@ -1269,19 +1272,12 @@ const PageIdeaGeneration = () => {
                                     </InsightLabel>
                                     <InsightContent color="gray700">
                                       
-                               
-                                        <>
+                              
                                           {
-                                            quickSurveyReport[0]?.total_insight
-                                              ?.statistic
+                                            ideaGenerationAdditionalData?.theme_definition
+                                             
                                           }
-                                          <br />
-                                          <br />
-                                          {
-                                            quickSurveyReport[0]?.total_insight
-                                              ?.insight
-                                          }
-                                        </>
+                                    
                                   
                                     </InsightContent>
                                   </InsightSection>
@@ -1333,15 +1329,9 @@ const PageIdeaGeneration = () => {
                                     <InsightContent color="gray700">
                                       <>
                                         {
-                                          quickSurveyReport[0].age_insight
-                                            .statistic
+                                            ideaGenerationAdditionalData?.strategic_recommendation
                                         }
-                                        <br />
-                                        <br />
-                                        {
-                                          quickSurveyReport[0].age_insight
-                                            .insight
-                                        }
+                                       
                                       </>
                                     </InsightContent>
                                   </InsightSection>
@@ -1352,14 +1342,13 @@ const PageIdeaGeneration = () => {
                     </div>
                     {completedStatus && (
                           <Button
-                          Other
                           Primary
-                          Fill
-                          Round
+                          Edit
+                          Large
                           onClick={() => navigate("/Tool")}
                   
                         >
-                          툴로 이동하기
+                         리서치 툴 리스트 바로가기
                         </Button>
                         )}
                   </>

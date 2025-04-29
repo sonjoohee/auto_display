@@ -98,7 +98,7 @@ const MoleculeSelectItem = ({
           <KeywordGroupsContainer>
             <KeywordGroupsRow>
               <KeywordGroup>
-                {normalizedKeywords.slice(0, 4).map((keyword) => {ㄴㄴ
+                {normalizedKeywords.slice(0, 4).map((keyword) => {
                   // const isKeywordSelected = selected.includes(keyword.id);
                   const isEmptyKeyword = keyword.id ? keyword.id.toString().startsWith('empty-') : true;
                   

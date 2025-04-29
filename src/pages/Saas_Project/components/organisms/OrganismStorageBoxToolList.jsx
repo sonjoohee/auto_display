@@ -1295,6 +1295,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
 
         //! 아이디어 발상
         setToolStep(1);
+        setCompletedStatus(false);
         setIdeaGenerationSelectedPurpose([]);
         setIdeaGenerationProblemList([]);
         setIdeaGenerationProblemListTitle([]);
@@ -1326,9 +1327,11 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setIdeaGenerationAdditionalData(
           chatData?.ideaGenerationAdditionalData || []
         );
+        setCompletedStatus(chatData?.completedStatus || false);
 
         //!Kano Model
         setToolStep(1);
+        setCompletedStatus(false);
         setSelectedKanoModelIdea([]);
         setKanoModelClustering([]);
         setKanoModelClusteringName([]);
@@ -1345,9 +1348,11 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setKanoModelProductAnalysis(chatData?.kanoModelProductAnalysis || []);
         setKanoModelGraphData(chatData?.kanoModelGraphData || []);
         setKanoModelReportData(chatData?.kanoModelReportData || []);
+        setCompletedStatus(chatData?.completedStatus || false);
 
         //!아이디어 평가
         setToolStep(1);
+        setCompletedStatus(false);
         setIdeaEvaluateList([]);
         setIdeaEvaluateSelectedList([]);
         setIdeaEvaluateSelectedListIndex({});
@@ -1372,9 +1377,11 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           chatData?.selectedKanoModelIdeaIndex || []
         );
         setIdeaEvaluateGraphData(chatData?.paretoChartData || []);
+        setCompletedStatus(chatData?.completedStatus || false);
 
         //!컨셉 정의
         setToolStep(1);
+        setCompletedStatus(false);
         setConceptDefinitionSelectedPurpose({});
         setConceptDefinitionSelectedPersona([]);
         setConceptDefinitionFirstReport("");
@@ -1391,6 +1398,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setConceptDefinitionFinalReport(
           chatData?.conceptDefinitionFinalReport || ""
         );
+        setCompletedStatus(chatData?.completedStatus || false);
 
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);

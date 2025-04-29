@@ -730,14 +730,13 @@ const PageNeedsKeywordsGeneration = () => {
                 )}
                  {completedStatus && (
                           <Button
-                          Other
                           Primary
-                          Fill
-                          Round
+                          Edit
+                          Large
                           onClick={() => navigate("/Tool")}
                   
                         >
-                          툴로 이동하기
+                          리서치 툴 리스트 바로가기
                         </Button>
                         )}
               </TabContent5>

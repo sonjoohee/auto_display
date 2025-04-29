@@ -58,6 +58,7 @@ import {
   USER_CREDITS,
   CREDIT_CREATE_TOOL_LOADED,
   EDUCATION_STATE,
+  EDUCATION_TOOL_COMPLETED_STATUS,
 } from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import {
@@ -92,6 +93,7 @@ const prepareMarkdown = (text) => {
 const PageConceptDefinition = () => {
   const navigate = useNavigate();
 
+  const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
@@ -215,6 +217,10 @@ const PageConceptDefinition = () => {
           conceptDefinitionFinalReport.length > 0
         ) {
           setConceptDefinitionFinalReport(conceptDefinitionFinalReport ?? "");
+        }
+
+        if(completedStatus) {
+          setCompletedStatus(true);
         }
 
         return;
@@ -413,6 +419,7 @@ const PageConceptDefinition = () => {
           },
           isLoggedIn
         );
+        setCompletedStatus(true);
         setCompletedSteps([...completedSteps, 3]);
       } catch (error) {}
       setToolSteps(3);
@@ -973,6 +980,17 @@ const PageConceptDefinition = () => {
                           </Markdown>
                         </div>
                       </InsightAnalysis>
+                      {completedStatus && (
+                          <Button
+                          Primary
+                          Edit
+                          Large
+                          onClick={() => navigate("/Tool")}
+                  
+                        >
+                          리서치 툴 리스트 바로가기 
+                        </Button>
+                        )}
                     </>
                   )}
                 </TabContent5>
