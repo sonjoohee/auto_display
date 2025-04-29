@@ -412,6 +412,7 @@ const PageIdeaGeneration = () => {
           persona_group: persona_group,
         };
 
+
         const interviewResponse = await EducationToolsRequest(
           Data,
           isLoggedIn,
@@ -775,7 +776,7 @@ const PageIdeaGeneration = () => {
                                     key={index}
                                     onClick={() => {
                                       handlePurposeSelect(
-                                        `${item?.keywordsGenerationTag?.length || 0}개의 여정 지도 기반 핵심 키워드
+                                        `${item?.keywordsGenerationTag?.length || 0}개의 고객 여정 지도 기반 핵심 키워드
                                         (${(item.updateDate.split(":")[0])}:${
                                           (item.updateDate.split(":")[1])
                                         })`,
@@ -786,7 +787,7 @@ const PageIdeaGeneration = () => {
                                     }}
                                   >
                                     <Body2 color="gray500" align="left">
-                                      {item?.keywordsGenerationTag?.length || 0}개의 여정 지도 기반 핵심 키워드
+                                      {item?.keywordsGenerationTag?.length || 0}개의 고객 여정 지도 기반 핵심 키워드
                                       ({(item.updateDate.split(":")[0])}:{
                                           (item.updateDate.split(":")[1])
                                         })
@@ -1211,7 +1212,9 @@ const PageIdeaGeneration = () => {
                           </IdeaBox>
                           {/* ))} */}
                         </IdeaContainer>
+                        
                       )}
+                     
                     </div>
                   </>
                 )}

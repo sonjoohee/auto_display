@@ -47,6 +47,7 @@ import {
   EDUCATION_STATE,
   USER_CREDITS,
   CREDIT_CREATE_TOOL_LOADED,
+  IDEA_EVALUATE_GRAPH_DATA,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -117,6 +118,9 @@ const PageIdeaEvaluate = () => {
     ideaEvaluateSelectedKanoModelIndex,
     setIdeaEvaluateSelectedKanoModelIndex,
   ] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX);
+  const [ideaEvaluateGraphData, setIdeaEvaluateGraphData] = useAtom(
+    IDEA_EVALUATE_GRAPH_DATA
+  );
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
@@ -249,6 +253,9 @@ const PageIdeaEvaluate = () => {
           ideaEvaluateComparisonEducation.length > 0
         ) {
           setIdeaEvaluateComparisonEducation(ideaEvaluateComparisonEducation);
+        }
+        if (ideaEvaluateGraphData && ideaEvaluateGraphData.length > 0) {
+          setGraphData(ideaEvaluateGraphData);
         }
 
         // 활성 탭 설정 (기본값 1)
@@ -526,6 +533,7 @@ const PageIdeaEvaluate = () => {
       );
 
       setGraphData(response.response.pareto_chart_data);
+      setIdeaEvaluateGraphData(response.response.pareto_chart_data);
 
       await updateToolOnServer(
         toolId,
@@ -1064,11 +1072,12 @@ const PageIdeaEvaluate = () => {
                       <ListBoxGroup>
                         <li>
                           <Body2
-                            color="gray500"
                             style={{
                               whiteSpace: "nowrap",
                               marginBottom: "8px",
                               marginRight: "50px",
+                              alignSelf: "flex-start",
+                              color: "#8C8C8C"
                             }}
                           >
                             평가할 아이디어 리스트
@@ -1078,10 +1087,20 @@ const PageIdeaEvaluate = () => {
                               display: "flex",
                               flexDirection: "column",
                               textAlign: "left",
+                              alignItems: "flex-start",
+                              justifyContent: "flex-start",
+                              alignSelf: "flex-start",
+                              marginTop: "0",
+                              paddingTop: "0"
                             }}
                           >
                             <span
-                              style={{ color: "#8C8C8C", marginBottom: "4px" }}
+                              style={{ 
+                                color: "#8C8C8C", 
+                                marginBottom: "4px",
+                                alignSelf: "flex-start",
+                                display: "block"
+                              }}
                             >
                               {ideaEvaluateSelectedList.map((idea, index) => {
                                 const isLast =

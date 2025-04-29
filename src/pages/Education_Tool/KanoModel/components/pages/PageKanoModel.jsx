@@ -350,7 +350,7 @@ const PageKanoModel = () => {
         const newItems = (response || []).filter(
           (item) =>
             item?.type === "ix_idea_generation_education" &&
-            item?.completedStep === 4
+            item?.completedStep === 3
         );
 
         allItems = [...allItems, ...newItems];
@@ -1106,7 +1106,7 @@ const PageKanoModel = () => {
                             maxWidth: "100%",
                             textAlign: "left",
                             marginLeft: "50px",
-                            marginTop: "0",
+                            marginTop: "-2px",
                             paddingTop: "0",
                             display: "block",
                             alignSelf: "flex-start"
