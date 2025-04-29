@@ -68,11 +68,11 @@ import {
   UserCreditInfo,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
-import MoleculeDeleteForm from "../../../public/MoleculeDeleteForm";
-import MandalArtGraph from "../../../../../components/Charts/MandalArtGraph";
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 import MoleculeTagList from "../molecules/MoleculeTagList";
 import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
+import MoleculeNeedsKeywordResult from "../molecules/MoleculeNeedsKeywordResult";
+import MoleculeSelectItem from "../molecules/MoleculeSelectItem";
 
 const PageNeedsKeywordsGeneration = () => {
   const navigate = useNavigate();
@@ -543,6 +543,30 @@ const PageNeedsKeywordsGeneration = () => {
                         </div>
                         {showSelectedIssue ? (
                           <>
+
+
+                          {issueGenerationList.map(
+                            (idea, index) => (
+                              <MoleculeSelectItem 
+                              title={`${idea.updateDate.split(":")[0]}:${
+                                idea.updateDate.split(":")[1]
+                              } - 문제점 & 니즈 - ${
+                                idea.title || "아이디어"
+                              }`}
+                              keywords={idea.issueGenerationSelectedStartPosition.map((item) => ({
+                                main_theme: item.theme,
+                                raw_data: item.description,
+                              }))}
+                              // selectedKeywords={idea.selectedPurposes.customerList} 
+                              // onSelectionChange={setSelectedKeywords1} 
+                              isSelected={selectedIssue.includes(index)}
+                              onCardSelect={() => handleCheckboxChange(index)}
+                                />
+                              )
+                            )}
+                                
+
+
                             {keywordsGenerationSelectedIssue.map(
                               (idea, index) => (
                                 <MoleculeItemSelectCard
@@ -562,7 +586,7 @@ const PageNeedsKeywordsGeneration = () => {
                           </>
                         ) : (
                           <>
-                            {issueGenerationList.map((idea, index) => (
+                            {/* {issueGenerationList.map((idea, index) => (
                               <MoleculeItemSelectCard
                                 FlexStart
                                 key={index}
@@ -576,7 +600,23 @@ const PageNeedsKeywordsGeneration = () => {
                                 isSelected={selectedIssue.includes(index)}
                                 onSelect={() => handleCheckboxChange(index)}
                               />
-                            ))}
+                            ))} */}
+
+                            {issueGenerationList.map((idea, index) => (
+                                <MoleculeSelectItem
+                                  key={index}
+                                  title={`${idea.selectedPurposes.customerList}`}
+                                  id={index}
+                                  keywords={idea.issueGenerationSelectedStartPosition.map((item, itemIndex) => ({
+                                    id: `${index}-${itemIndex}`,
+                                    text: item.theme || ''
+                                  }))}
+                                  // selectedKeywords={selectedIssue.includes(index) ? [`${index}`] : []}
+                                  // onSelectionChange={() => {}} 
+                                  isSelected={selectedIssue.includes(index)}
+                                  onCardSelect={() => handleCheckboxChange(index)}
+                                />
+                              ))}
                           </>
                         )}
                       </>
@@ -618,7 +658,7 @@ const PageNeedsKeywordsGeneration = () => {
                   keywordsGenerationTag.length > 0 && (
                     <>
                       <div className="title">
-                        <H3 color="gray800">Idea Generation Theme</H3>
+                        <H3 color="gray800">Keyword Clustering</H3>
                         <Body3 color="gray800">
                           수집된 키워드를 그룹화하여, 아이디어 발산의 핵심
                           키워드를 최종 선정하세요

@@ -145,6 +145,7 @@ const PageIdeaGeneration = () => {
   const [businessDescriptionTitle, setBusinessDescriptionTitle] = useState("");
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
+  const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
   const [selectedPurposes, setSelectedPurposes] = useState({
     customerList: "",
   });
@@ -288,6 +289,7 @@ const PageIdeaGeneration = () => {
 
         allItems = [...allItems, ...newItems];
 
+
         setCustomerJourneyList(allItems);
       } catch (error) {
         setCustomerJourneyList([]); // Set empty array on error
@@ -304,13 +306,7 @@ const PageIdeaGeneration = () => {
     setShowPopupError(false);
   };
 
-  // handleInputChange 함수 수정
-  const handleInputChange = (field, value) => {
-    // formData 대신 개별 상태 업데이트
-    if (field === "projectDescription") {
-      setProjectDescription(value);
-    }
-  };
+
 
   const handleSubmitIdea = async () => {
     handleNextStep(1);
@@ -349,101 +345,12 @@ const PageIdeaGeneration = () => {
         ideaGenerationStartPosition: ideaGenerationStartPosition,
         ideaGenerationSelectedStartPosition:
           ideaGenerationSelectedStartPosition,
+        selectedPurposes: selectedPurposes,
       },
       isLoggedIn
     );
   };
 
-  // const currentProblemList = [...ideaGenerationProblemList];
-
-  // // 각 title을 currentProblemList의 해당 인덱스에 할당
-  // // 만약 currentProblemList가 더 짧다면 새 객체를 생성하여 추가
-  // const updatedProblemList = ideaGenerationProblemListTitle.map(
-  //   (title, index) => {
-  //     if (index < currentProblemList.length) {
-  //       // 기존 항목이 있으면 title만 업데이트
-  //       return {
-  //         ...currentProblemList[index],
-  //         title: title,
-  //       };
-  //     } else {
-  //       // 기존 항목이 없으면 새 객체 생성
-  //       return { title: title };
-  //     }
-  //   }
-
-  // 업데이트된 리스트로 상태 설정
-  //   setIdeaGenerationProblemList(updatedProblemList);
-
-  //   await updateToolOnServer(
-  //     toolId,
-  //     {
-  //       // completedStep: 1,
-  //       selectedPurposes: selectedPurposes,
-  //       ideaGenerationProblemList: ideaGenerationProblemList,
-  //       ideaGenerationProblemListTitle: ideaGenerationProblemListTitle,
-  //     },
-  //     isLoggedIn
-  //   );
-  //   try {
-  //     setIsLoading(true);
-  //     // 빈 문자열이나 공백만 있는 항목 제거
-  //     // const validItems = ideaGenerationProblemList.filter(
-  //     //   (item) => item.trim() !== ""
-  //     // );
-
-  //     // if (validItems.length === 0) {
-  //     //   // 유효한 항목이 없는 경우 처리
-  //     //   return;
-  //     // }
-
-  //     const Data = {
-  //       type: "ix_idea_generation_keyword_education",
-  //       business_info: business,
-  //       info: customerJourneyMapSelectedPersona,
-  //       problem_needs: ideaGenerationProblemList,
-  //       is_load: true,
-  //     };
-
-  //     const response = await EducationToolsRequest(Data, isLoggedIn);
-
-  //     setIdeaGenerationStartPosition(
-  //       response.response.idea_generation_keyword_education
-  //     );
-
-  //     setIsLoading(false);
-  //     await updateToolOnServer(
-  //       toolId,
-  //       {
-  //         completedStep: 1,
-  //         ideaGenerationStartPosition:
-  //           response.response.idea_generation_keyword_education,
-  //       },
-  //       isLoggedIn
-  //     );
-
-  //     setToolSteps(1);
-  //   } catch (error) {
-  //     console.error("Error submitting problems:", error);
-  //     setShowPopupError(true);
-  //   }
-  // };
-
-  const handleSubmitTheme = async () => {
-    handleNextStep(2);
-    setToolSteps(2);
-
-    // await updateToolOnServer(
-    //   responseToolId,
-    //   {
-    //     completedStep: 1,
-    //     ideaGenerationStartPosition: ideaGenerationStartPosition,
-    //     ideaGenerationSelectedStartPosition:
-    //       ideaGenerationSelectedStartPosition,
-    //   },
-    //   isLoggedIn
-    // );
-  };
 
   const handlePurposeSelect = (purpose, selectBoxId, item) => {
     setSelectedPurposes((prev) => ({
@@ -458,107 +365,7 @@ const PageIdeaGeneration = () => {
     }));
 
     setIdeaGenerationStartPosition(item.keywordsGenerationTag);
-
-    // if (selectBoxId === "customerList" && item) {
-    //   setSelectedJourneyMapData(item);
-
-    //   const persona = item.customerJourneyMapSelectedPersona;
-    //   const Customer = {
-    //     personaName: persona?.personaName || "",
-    //     personaCharacteristics: persona?.personaCharacteristics || "",
-    //     age: persona?.age || "",
-    //     gender: persona?.gender || "",
-    //     job: persona?.job || "",
-    //     keywords: persona?.keywords || [],
-    //     type: persona?.type || "",
-    //   };
-
-    //   setCustomerJourneyMapSelectedPersona(Customer);
-    //   setCustomerJourneyMapReport(item.customerJourneyMapReport);
-
-    //   // handleSubmitCustomerJourney ();
-    //   setShouldSubmit(true);
-    // }
-  };
-
-  const [shouldSubmit, setShouldSubmit] = useState(false);
-  useEffect(() => {
-    if (shouldSubmit) {
-      handleSubmitCustomerJourney();
-      setShouldSubmit(false); // Reset the flag
-    }
-  }, [selectedPurposes, shouldSubmit]);
-
-  const handleSubmitCustomerJourney = async () => {
-    setIsContentLoading(true);
-
-    setIdeaGenerationSelectedPurpose(selectedPurposes);
-
-    // const responseToolId = await createToolOnServer(
-    //   {
-    //     projectId: project._id,
-    //     type: "ix_idea_generation_education",
-    //   },
-    //   isLoggedIn
-    // );
-    // setToolId(responseToolId);
-
-    try {
-      if (selectedJourneyMapData) {
-        // setSelectedJourneyMapData(item);
-
-        const data = {
-          type: "ix_idea_generation_problem_education",
-          customer_journey_map_persona: customerJourneyMapSelectedPersona,
-          customer_journey_map_report: customerJourneyMapReport,
-        };
-
-        const response = await EducationToolsRequest(data, isLoggedIn);
-
-        setIdeaGenerationProblemList(
-          response.response.idea_generation_problem_education
-        );
-
-        setIdeaGenerationProblemListTitle(
-          response.response.idea_generation_problem_education.map(
-            (item) => item.title
-          )
-        );
-
-        // await updateToolOnServer(
-        //   responseToolId,
-        //   {
-        //     completedStep: 0,
-        //     selectedPurposes: selectedPurposes,
-        //     ideaGenerationProblemList:
-        //       response.response.idea_generation_problem_education,
-        //     ideaGenerationProblemListTitle:
-        //       response.response.idea_generation_problem_education.map(
-        //         (item) => item.title
-        //       ),
-        //   },
-        //   isLoggedIn
-        // );
-      }
-
-      //       await updateToolOnServer(
-      //         responseToolId,
-      //         {
-      //           completedStep: 0,
-      //           selectedPurposes: selectedPurposes,
-      //           ideaGenerationProblemList: ideaGenerationProblemList,
-      //           ideaGenerationProblemListTitle: ideaGenerationProblemListTitle,
-      //         },
-      //         isLoggedIn
-      //       );
-    } catch (error) {
-      console.error("Error in handlePurposeSelect:", error);
-      setShowPopupError(true);
-    } finally {
-      setTimeout(() => {
-        setIsContentLoading(false);
-      }, 500);
-    }
+ 
   };
 
   const handleMandalArt = async () => {
@@ -722,21 +529,6 @@ const PageIdeaGeneration = () => {
     }));
   };
 
-  const handleSelectBoxClick = (selectBoxId, ref) => {
-    // Don't open dropdown if toolSteps >= 1 for customerList
-    if (toolSteps >= 1) {
-      return;
-    }
-    if (ideaGenerationProblemList.length > 0) {
-      return;
-    }
-
-    calculateDropDirection(ref, selectBoxId);
-    setSelectBoxStates((prev) => ({
-      ...(prev || {}),
-      [selectBoxId]: !prev?.[selectBoxId],
-    }));
-  };
 
   const calculateDropDirection = (ref, selectBoxId) => {
     if (ref?.current) {
@@ -852,7 +644,7 @@ const PageIdeaGeneration = () => {
                 <span>01</span>
                 <div className="text" style={{ whiteSpace: "nowrap" }}>
                   <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
-                    문제 정의
+                    키워드 가져오기
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -867,11 +659,9 @@ const PageIdeaGeneration = () => {
                 <span>02</span>
                 <div className="text" style={{ whiteSpace: "nowrap" }}>
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                    아이디어 키워드 도출
+                 페르소나 확인
                   </Body1>
-                  {/* <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                    Design Sector
-                  </Body1> */}
+               
                 </div>
               </TabButtonType5>
               <TabButtonType5
@@ -885,27 +675,16 @@ const PageIdeaGeneration = () => {
                 <span>03</span>
                 <div className="text" style={{ whiteSpace: "nowrap" }}>
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    아이디어 발상
+                    아이디어 발산
                   </Body1>
                 </div>
               </TabButtonType5>
-              {/* <TabButtonType5
-                isActive={activeTab >= 4}
-                onClick={() => completedSteps.includes(3) && setActiveTab(4)}
-                disabled={!completedSteps.includes(3) || isLoading}
-              >
-                <span>04</span>
-                <div className="text" style={{ whiteSpace: "nowrap" }}>
-                  <Body1 color={activeTab >= 4 ? "gray700" : "gray300"}>
-                    아이디어 결과 보기
-                  </Body1>
-                </div>
-              </TabButtonType5> */}
+          
             </TabWrapType5>
 
             {activeTab === 1 && (
               <TabContent5>
-                {isLoading ? (
+                {isContentLoading ? (
                   <div
                     style={{
                       width: "100%",
@@ -918,202 +697,180 @@ const PageIdeaGeneration = () => {
                     <AtomPersonaLoader message="문제점 & 니즈 리스트를 불러오고 있어요..." />
                   </div>
                 ) : (
-                  <>
-                    <div className="content">
-                      {!ideaGenerationStartPosition.length > 0 ? (
-                        <>
-                          <div className="title">
-                            <H3 color="gray800">Problem & Needs</H3>
-                            <Body3 color="gray800">
-                              문제와 니즈를 창의적 해결 주제로 전환하여,
-                              아이디어 발상의 방향을 정해주세요.
-                            </Body3>
-                          </div>
-                          <TabContent5Item>
-                            <div className="title">
-                              <Body1 color="gray700">
-                                니즈 키워드 가져오기
-                              </Body1>
-                            </div>
-
-                            <SelectBox ref={customerListRef}>
-                              <SelectBoxTitle
-                                onClick={() =>
-                                  handleSelectBoxClick(
-                                    "customerList",
-                                    customerListRef
-                                  )
-                                }
-                                style={{
-                                  cursor:
-                                    toolSteps >= 1 || isContentLoading
-                                      ? "not-allowed"
-                                      : "pointer",
-                                }}
-                              >
-                                <Body2
-                                  color={
-                                    selectedPurposes.customerList
-                                      ? "gray800"
-                                      : "gray300"
-                                  }
-                                >
-                                  {selectedPurposes.customerList ||
-                                    "직접 문제점을 작성합니다."}
-                                </Body2>
-                                <images.ChevronDown
-                                  width="24px"
-                                  height="24px"
-                                  color={palette.gray500}
-                                  style={{
-                                    transform: selectBoxStates.customerList
-                                      ? "rotate(180deg)"
-                                      : "rotate(0deg)",
-                                    transition: "transform 0.3s ease",
-                                  }}
-                                />
-                              </SelectBoxTitle>
-
-                              {selectBoxStates.customerList && (
-                                <SelectBoxList
-                                  dropUp={dropUpStates.customerList}
-                                >
-                                  {customerJourneyList.length === 0 ? (
-                                    <SelectBoxItem
-                                      disabled={
-                                        toolSteps >= 1 ||
-                                        ideaGenerationProblemList.length > 0
-                                      }
-                                    >
-                                      <Body2 color="gray300" align="left">
-                                        직접 문제점을 작성합니다.
-                                      </Body2>
-                                    </SelectBoxItem>
-                                  ) : (
-                                    customerJourneyList.map((item, index) => (
-                                      <SelectBoxItem
-                                        disabled={
-                                          toolSteps >= 1 || isContentLoading
-                                        }
-                                        key={index}
-                                        onClick={() => {
-                                          handlePurposeSelect(
-                                            `${item.updateDate.split(":")[0]}:${
-                                              item.updateDate.split(":")[1]
-                                            }-키워드 아이디어`,
-                                            "customerList",
-                                            item
-                                          );
-                                        }}
-                                      >
-                                        <Body2 color="gray700" align="left">
-                                          {item.updateDate.split(":")[0]}:
-                                          {item.updateDate.split(":")[1]}-키워드
-                                          아이디어
-                                        </Body2>
-                                      </SelectBoxItem>
-                                    ))
-                                  )}
-                                </SelectBoxList>
-                              )}
-                            </SelectBox>
-                          </TabContent5Item>
-
-                          {!ideaGenerationStartPosition.length > 0 && (
-                            <BoxWrap
-                              NoData
-                              style={{ height: "300px", marginTop: "20px" }}
-                              onClick={() => navigate("/CustomerJourneyMap")}
-                            >
-                              <img src={images.PeopleFillPrimary2} alt="" />
-                              <Body2 color="gray700" align="center !important">
-                                니즈 키워드 툴을 선행하세요.
-                              </Body2>
-                            </BoxWrap>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          {isContentLoading ? (
-                            <div
+                  <div className="content">
+                    <div className="title">
+                      <H3 color="gray800">Select Idea Theme</H3>
+                      <Body3 color="gray800">
+                        정리된 키워드를 기반으로 아이디어 발산을 위한 주제어를 선택하세요.
+                      </Body3>
+                    </div>
+                    
+                    <TabContent5Item>
+                      <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
+                        <div className="selectBoxWrap">
+                          <Body2 color="gray500" style={{ width: "110px" }}>
+                            핵심 키워드
+                          </Body2>
+                          <SelectBox style={{ paddingRight: "20px" }}>
+                            <SelectBoxTitle
+                              onClick={() =>
+                                toolSteps >= 1
+                                  ? null
+                                  : setIsSelectBoxOpen(!isSelectBoxOpen)
+                              }
+                              None
                               style={{
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                minHeight: "200px",
-                                alignItems: "center",
+                                cursor: toolSteps >= 1 ? "not-allowed" : "pointer",
                               }}
                             >
-                              <AtomPersonaLoader message="문제점 & 니즈 리스트를 불러오고 있어요..." />
-                            </div>
-                          ) : (
-                            <>
-                              <div className="title">
-                                <H3 color="gray800">Idea Generation Theme</H3>
-                                <Body3 color="gray800">
-                                  문제와 니즈를 창의적 해결 주제로 전환하여,
-                                  아이디어 발상의 방향을 정해주세요.
-                                </Body3>
-                              </div>
-                              <div className="content">
-                                <ListBoxGroup>
-                                  <li>
-                                    <Body2 color="gray500">
-                                      분석 장면 선택
-                                    </Body2>
-
-                                    <Body2
-                                      color={
-                                        ideaGenerationSelectedStartPosition?.length >
-                                        0
-                                          ? "gray500"
-                                          : "gray300"
-                                      }
-                                      style={{
-                                        whiteSpace: "normal",
-                                        wordBreak: "keep-all",
-                                        wordWrap: "break-word",
-                                        overflow: "visible",
-                                        maxWidth: "100%",
-                                        textAlign: "left",
-                                      }}
-                                    >
-                                      {ideaGenerationSelectedStartPosition?.length >
-                                      0
-                                        ? ideaGenerationSelectedStartPosition
-                                            .map((item) => item.main_theme)
-                                            .join(", ")
-                                        : "선택해주세요"}
-                                    </Body2>
-                                  </li>
-                                </ListBoxGroup>
-                              </div>
-
-                              <div className="content">
-                                <Title style={{ marginBottom: "-18px" }}>
-                                  <Body1 color="gray700">
-                                    아이디어 시작점을 선택하세요 (8개 선택필수)
-                                  </Body1>
-                                </Title>
-
-                                <CardGroupWrap ideaGeneration>
-                                  <MoleculeTagList
-                                    items={
-                                      ideaGenerationStartPosition
-                                      // .map((item) => item.content)
-                                      // .flat() // 모든 content 배열을 하나로 합침
+                              {selectedPurposes?.customerList ? (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "4px",
+                                    paddingLeft: "20px",
+                                  }}
+                                >
+                                  <Body2
+                                    color={
+                                      selectedPurposes.customerList
+                                        ? "gray500"
+                                        : "gray300"
                                     }
-                                    disabled={toolSteps >= 1}
-                                  />
-                                </CardGroupWrap>
-                              </div>
-                            </>
-                          )}
-                        </>
-                      )}
-                    </div>
+                                  >
+                                    {selectedPurposes.customerList ||
+                                      "불러올 핵심키워드 리스트를 선택해주세요.  "}
+                                  </Body2>
+                                </div>
+                              ) : (
+                                <Body2
+                                  color="gray300"
+                                  style={{ paddingLeft: "20px" }}
+                                >
+                                  불러올 핵심키워드 리스트를 선택해주세요.  
+                                </Body2>
+                              )}
+                              <images.ChevronDown
+                                width="24px"
+                                height="24px"
+                                color={
+                                  toolSteps >= 1
+                                    ? palette.gray300
+                                    : palette.gray500
+                                }
+                                style={{
+                                  transform: isSelectBoxOpen
+                                    ? "rotate(180deg)"
+                                    : "rotate(0deg)",
+                                  transition: "transform 0.3s ease",
+                                }}
+                              />
+                            </SelectBoxTitle>
 
-                    <Button
+                            {isSelectBoxOpen && (
+                              <SelectBoxList>
+                                {customerJourneyList?.map((item, index) => (
+                                  <SelectBoxItem
+                                    key={index}
+                                    onClick={() => {
+                                      handlePurposeSelect(
+                                        `${item?.keywordsGenerationTag?.length || 0}개의 여정 지도 기반 핵심 키워드
+                                        (${(item.updateDate.split(":")[0])}:${
+                                          (item.updateDate.split(":")[1])
+                                        })`,
+                                        "customerList",
+                                        item
+                                      );
+                                      setIsSelectBoxOpen(false);
+                                    }}
+                                  >
+                                    <Body2 color="gray500" align="left">
+                                      {item?.keywordsGenerationTag?.length || 0}개의 여정 지도 기반 핵심 키워드
+                                      ({(item.updateDate.split(":")[0])}:{
+                                          (item.updateDate.split(":")[1])
+                                        })
+                                    </Body2>
+                                  </SelectBoxItem>
+                                ))}
+                              </SelectBoxList>
+                            )}
+                          </SelectBox>
+                        </div>
+
+                        <div className="selectBoxWrap">
+                          <Body2 color="gray500" style={{ width: "110px", alignSelf: "flex-start" }}>
+                            주제어 선택
+                          </Body2>
+                          <li style={{ 
+                            alignSelf: "flex-start",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start"
+                          }}>
+                            <Body2
+                              color={
+                                ideaGenerationSelectedStartPosition?.length > 0
+                                  ? "gray500"
+                                  : "gray300"
+                              }
+                              style={{
+                                whiteSpace: "normal",
+                                wordBreak: "keep-all",
+                                wordWrap: "break-word",
+                                overflow: "visible",
+                                maxWidth: "100%",
+                                textAlign: "left",
+                                marginLeft: "20px",
+                                marginTop: "0",
+                                paddingTop: "0",
+                                display: "block",
+                                alignSelf: "flex-start"
+                              }}
+                            >
+                              {ideaGenerationSelectedStartPosition?.length > 0
+                                ? ideaGenerationSelectedStartPosition
+                                    .map((item) => item.main_theme)
+                                    .join(", ")
+                                : "선택해주세요"}
+                            </Body2>
+                          </li>
+                        </div>
+
+                    
+                      </BoxWrap>
+
+                      {ideaGenerationStartPosition?.length === 0 ? (
+                        <BoxWrap
+                          NoData
+                          style={{ height: "300px", marginTop: "20px" }}
+                        >
+                          <img src={images.PeopleFillPrimary2} alt="" />
+                          <Body2 color="gray700" align="center !important">
+                            핵심 키워드 리스트를 선택해주세요
+                          </Body2>
+                        </BoxWrap>
+                      ) : (
+                        <div className="content">
+                          <Title style={{ marginBottom: "-18px" }}>
+                            <Body1 color="gray700">
+                            아이디어 발산의 주제어를 선택하세요 (8개 필수 선택) 
+                            </Body1>
+                          </Title>
+
+                          <CardGroupWrap ideaGeneration>
+                            <MoleculeTagList
+                              items={ideaGenerationStartPosition}
+                              disabled={toolSteps >= 1}
+                            />
+                          </CardGroupWrap>
+                        </div>
+                      )}
+                    </TabContent5Item>
+                  </div>
+                )}
+
+                <Button
                       Other
                       Primary
                       Fill
@@ -1126,9 +883,7 @@ const PageIdeaGeneration = () => {
                       }
                     >
                       아이디어 키워드 추출
-                    </Button>
-                  </>
-                )}
+                </Button>
               </TabContent5>
             )}
 
@@ -1156,54 +911,150 @@ const PageIdeaGeneration = () => {
                     </div>
 
                     <div className="content">
-                      <ListBoxGroup>
-                        {/* <li>
-                        <Body2 color="gray500">고객 여정 맵</Body2>
-
-                        <Body2 color="gray500">
-                          {selectedPurposes.customerList}
-                        </Body2>
-                      </li> */}
-
-                        <li>
-                          <Body2 color="gray500">분석 장면 선택</Body2>
-
-                          <Body2
-                            color={
-                              ideaGenerationSelectedStartPosition?.length > 0
-                                ? "gray500"
-                                : "gray300"
-                            }
-                            // style={{
-                            //   whiteSpace: "nowrap",
-                            //   overflow: "hidden",
-                            //   textOverflow: "ellipsis",
-                            //   maxWidth: "100%",
-                            // }}
-                            style={{
-                              whiteSpace: "normal",
-                              wordBreak: "keep-all",
-                              wordWrap: "break-word",
-                              overflow: "visible",
-                              maxWidth: "100%",
-                              textAlign: "left",
-                            }}
-                          >
-                            {ideaGenerationSelectedStartPosition?.length > 0
-                              ? ideaGenerationSelectedStartPosition
-                                  .map((item) => item.main_theme)
-                                  .join(", ")
-                              : "선택해주세요"}
+                    <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
+                        <div className="selectBoxWrap">
+                          <Body2 color="gray500" style={{ width: "110px" }}>
+                            핵심 키워드
                           </Body2>
-                        </li>
-                      </ListBoxGroup>
+                          <SelectBox style={{ paddingRight: "20px" }}>
+                            <SelectBoxTitle
+                              onClick={() =>
+                                toolSteps >= 1
+                                  ? null
+                                  : setIsSelectBoxOpen(!isSelectBoxOpen)
+                              }
+                              None
+                              style={{
+                                cursor: toolSteps >= 1 ? "not-allowed" : "pointer",
+                              }}
+                            >
+                              {selectedPurposes?.customerList ? (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "4px",
+                                    paddingLeft: "20px",
+                                  }}
+                                >
+                                  <Body2
+                                    color={
+                                      selectedPurposes.customerList
+                                        ? "gray500"
+                                        : "gray300"
+                                    }
+                                  >
+                                    {selectedPurposes.customerList ||
+                                      "불러올 핵심키워드 리스트를 선택해주세요.  "}
+                                  </Body2>
+                                </div>
+                              ) : (
+                                <Body2
+                                  color="gray300"
+                                  style={{ paddingLeft: "20px" }}
+                                >
+                                  불러올 핵심키워드 리스트를 선택해주세요.  
+                                </Body2>
+                              )}
+                              <images.ChevronDown
+                                width="24px"
+                                height="24px"
+                                color={
+                                  toolSteps >= 1
+                                    ? palette.gray300
+                                    : palette.gray500
+                                }
+                                style={{
+                                  transform: isSelectBoxOpen
+                                    ? "rotate(180deg)"
+                                    : "rotate(0deg)",
+                                  transition: "transform 0.3s ease",
+                                }}
+                              />
+                            </SelectBoxTitle>
+
+                            {isSelectBoxOpen && (
+                              <SelectBoxList>
+                                {customerJourneyList?.map((item, index) => (
+                                  <SelectBoxItem
+                                    key={index}
+                                    onClick={() => {
+                                      handlePurposeSelect(
+                                        `${item?.keywordsGenerationTag?.length || 0}개의 여정 지도 기반 핵심 키워드
+                                        (${(item.updateDate.split(":")[0])}:${
+                                          (item.updateDate.split(":")[1])
+                                        })`,
+                                        "customerList",
+                                        item
+                                      );
+                                      setIsSelectBoxOpen(false);
+                                    }}
+                                  >
+                                    <Body2 color="gray500" align="left">
+                                      {item?.keywordsGenerationTag?.length || 0}개의 여정 지도 기반 핵심 키워드
+                                      (${(item.updateDate.split(":")[0])}:${
+                                          (item.updateDate.split(":")[1])
+                                        })
+                                    </Body2>
+                                  </SelectBoxItem>
+                                ))}
+                              </SelectBoxList>
+                            )}
+                          </SelectBox>
+                        </div>
+
+                        <div className="selectBoxWrap">
+                          <Body2 color="gray500" style={{ width: "110px", alignSelf: "flex-start" }}>
+                            주제어 선택
+                          </Body2>
+                          <li style={{ 
+                            alignSelf: "flex-start",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start"
+                          }}>
+                            <Body2
+                              color={
+                                ideaGenerationSelectedStartPosition?.length > 0
+                                  ? "gray500"
+                                  : "gray300"
+                              }
+                              style={{
+                                whiteSpace: "normal",
+                                wordBreak: "keep-all",
+                                wordWrap: "break-word",
+                                overflow: "visible",
+                                maxWidth: "100%",
+                                textAlign: "left",
+                                marginLeft: "20px",
+                                marginTop: "0",
+                                paddingTop: "0",
+                                display: "block",
+                                alignSelf: "flex-start"
+                              }}
+                            >
+                              {ideaGenerationSelectedStartPosition?.length > 0
+                                ? ideaGenerationSelectedStartPosition
+                                    .map((item) => item.main_theme)
+                                    .join(", ")
+                                : "선택해주세요"}
+                            </Body2>
+                          </li>
+                        </div>
+
+                    
+                      </BoxWrap>
+
+                  
                     </div>
 
                     <div className="content">
                       <TabContent5Item style={{ marginTop: "20px" }}>
                         <div className="title">
                           <Body1 color="gray800">
-                            Favorite 페르소나 리스트
+                          아이데이션 참여 페르소나 {personaListSaas.filter(
+                          (item) => item.favorite === true
+                        ).length}명
                           </Body1>
                         </div>
                         {personaListSaas.filter(
@@ -1266,7 +1117,9 @@ const PageIdeaGeneration = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
+                    <AtomPersonaLoader 
+                      message={"참여 페르소나들이 8개의 주제어를 바탕으로 아이디어를 발산하고 있어요."}
+                    />
                   </div>
                 ) : (
                   <>
@@ -1278,11 +1131,7 @@ const PageIdeaGeneration = () => {
                     </div>
 
                     <div className="content">
-                      {/* <Title>
-                        <Body1 color="gray700">
-                          아이디어 시작점을 선택하세요 (8개 선택가능)
-                        </Body1>
-                      </Title> */}
+                  
 
                       <div
                         style={{
