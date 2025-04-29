@@ -525,12 +525,16 @@ const PageIdeaEvaluate = () => {
         response.response.idea_evaluation_comparison_education
       );
 
+      setGraphData(response.response.pareto_chart_data);
+
       await updateToolOnServer(
         toolId,
         {
           ideaEvaluateComparisonEducation:
             response.response.idea_evaluation_comparison_education,
+          paretoChartData: response.response.pareto_chart_data,
           completedStep: 3,
+          completedStatus: true,
         },
         isLoggedIn
       );
@@ -693,31 +697,31 @@ const PageIdeaEvaluate = () => {
     }));
   };
 
-  useEffect(() => {
-    if (
-      ideaEvaluateComparisonEducation &&
-      ideaEvaluateComparisonEducation.length > 0
-    ) {
-      // 각 아이디어별 선택된 횟수를 카운트
-      const ideaCount = {};
+  // useEffect(() => {
+  //   if (
+  //     ideaEvaluateComparisonEducation &&
+  //     ideaEvaluateComparisonEducation.length > 0
+  //   ) {
+  //     // 각 아이디어별 선택된 횟수를 카운트
+  //     const ideaCount = {};
 
-      ideaEvaluateComparisonEducation.forEach((comparison) => {
-        const selectedIdea = comparison.selected_idea;
-        ideaCount[selectedIdea] = (ideaCount[selectedIdea] || 0) + 1;
-      });
+  //     ideaEvaluateComparisonEducation.forEach((comparison) => {
+  //       const selectedIdea = comparison.selected_idea;
+  //       ideaCount[selectedIdea] = (ideaCount[selectedIdea] || 0) + 1;
+  //     });
 
-      // 파레토 그래프용 데이터 형식으로 변환
-      const paretoData = Object.entries(ideaCount)
-        .map(([name, value]) => ({
-          name,
-          value,
-        }))
-        .sort((a, b) => b.value - a.value); // 값이 큰 순서대로 정렬
+  //     // 파레토 그래프용 데이터 형식으로 변환
+  //     const paretoData = Object.entries(ideaCount)
+  //       .map(([name, value]) => ({
+  //         name,
+  //         value,
+  //       }))
+  //       .sort((a, b) => b.value - a.value); // 값이 큰 순서대로 정렬
 
-      // 파레토 그래프 데이터 설정
-      setGraphData(paretoData);
-    }
-  }, [ideaEvaluateComparisonEducation]);
+  //     // 파레토 그래프 데이터 설정
+  //     setGraphData(paretoData);
+  //   }
+  // }, [ideaEvaluateComparisonEducation]);
 
   const handleConfirmCredit = async () => {
     setShowCreatePersonaPopup(false);
