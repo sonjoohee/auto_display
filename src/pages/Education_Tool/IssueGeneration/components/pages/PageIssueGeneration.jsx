@@ -44,6 +44,7 @@ import {
   USER_CREDITS,
   CREDIT_CREATE_TOOL_LOADED,
   EDUCATION_STATE,
+  EDUCATION_TOOL_COMPLETED_STATUS
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -100,6 +101,7 @@ const PageIssueGeneration = () => {
   const [ideaGenerationMandalArtData, setIdeaGenerationMandalArtData] = useAtom(
     IDEA_GENERATION_MANDALART_DATA
   );
+  const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
 
   const [issueGenerationSelectedPurpose, setIssueGenerationSelectedPurpose] =
     useAtom(ISSUE_GENERATION_SELECTED_PURPOSE);
@@ -226,6 +228,10 @@ const PageIssueGeneration = () => {
         }
         if (ideaGenerationMandalArtData) {
           setIdeaGenerationMandalArtData(ideaGenerationMandalArtData ?? []);
+        }
+
+        if(completedStatus) {
+          setCompletedStatus(true);
         }
 
         // 완료된 단계 설정
@@ -1143,9 +1149,23 @@ const PageIssueGeneration = () => {
                         />
                       </TabContent5Item>
                     </div>
+                   
+                    {completedStatus && (
+                          <Button
+                          Other
+                          Primary
+                          Fill
+                          Round
+                          onClick={() => navigate("/Tool")}
+                  
+                        >
+                          툴로 이동하기
+                        </Button>
+                        )}
                   </>
                 )}
               </TabContent5>
+              
             )}
           </DesignAnalysisWrap>
         </MainContent>

@@ -594,6 +594,7 @@ export const QUICK_SURVEY_STATIC_DATA = atom({});
 export const QUICK_SURVEY_INTERVIEW_MODE_TYPE = atom("");
 
 //Education Tool
+export const EDUCATION_TOOL_COMPLETED_STATUS = atom(false);
 
 export const CUSTOMER_JOURNEY_MAP_MOMENT_ANALYSIS = atom([]);
 export const CUSTOMER_JOURNEY_MAP_SELECTED_PERSONA = atom({});
