@@ -62,6 +62,7 @@ import {
   EDUCATION_STATE,
   NPS_SELECTED_MODE_TYPE,
   NPS_FILE_NAME,
+  NPS_SURVEY_METHOD,
 } from "../../../../AtomStates";
 import {
   H4,
@@ -174,6 +175,7 @@ const PageNps = () => {
     NPS_SELECTED_MODE_TYPE
   );
   const [npsFileName, setNpsFileName] = useAtom(NPS_FILE_NAME);
+  const [npsSurveyMethod, setNpsSurveyMethod] = useAtom(NPS_SURVEY_METHOD);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
@@ -563,6 +565,7 @@ const PageNps = () => {
       // setIsLoading(true);
       try {
         // 비즈니스 데이터 추가
+        setIsLoading(true);
 
         const timeStamp = new Date().getTime();
         const Data = {
@@ -615,6 +618,7 @@ const PageNps = () => {
           );
         }
 
+        setNpsSurveyMethod(response.response.nps_conceptboard_multimodal);
         // setNpsConceptboardMultimodal(response.response.nps_conceptboard_multimodal);
 
         const responseToolId = await createToolOnServer(
@@ -667,7 +671,7 @@ const PageNps = () => {
       }
     } else {
       handleNextStep(1);
-      // setIsLoading(true);
+      setIsLoading(true);
 
       const Data = {
         type: "ix_quick_survey_custom_guide",
@@ -704,6 +708,7 @@ const PageNps = () => {
 
       setQuickSurveySurveyMethod(quickSurveyAnalysis[selectedQuestion]);
       setQuickSurveySelectedQuestion(selectedQuestion);
+      // setNpsSurveyMethod();
 
 
       const responseToolId = await createToolOnServer(
