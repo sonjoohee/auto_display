@@ -1441,8 +1441,8 @@ const PageNps = () => {
                   <div className="title">
                     <H3 color="gray800">Upload Your Concept </H3>
                     <Body3 color="gray800">
-                      페르소나 평가를 위해 컨셉보드 이미지 또는 제품/서비스
-                      설명을 등록해주세요
+                      페르소나 평가를 위해 컨셉보드 이미지 또는 제품/서비스의
+                      설명을 등록해주세요<Title style={{ marginBottom: "18px" }}></Title>
                     </Body3>
                   </div>
 

@@ -2859,9 +2859,9 @@ export const BoxWrap = styled.div`
   height: ${(props) => (props.NoData ? "200px" : "auto")};
   padding: ${(props) =>
     props.Small
-      ? `16px 20px`
+      ? `20px 20px`
       : props.NoneV
-      ? `16px 0 !important`
+      ? `20px 0 !important`
       : `20px 24px`};
   border-radius: 15px;
   border: ${(props) =>

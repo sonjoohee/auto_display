@@ -1091,7 +1091,9 @@ const PageIssueGeneration = () => {
                             color="gray500"
                             style={{
                               alignSelf: "flex-start",
-                              whiteSpace: "nowrap"
+                              whiteSpace: "nowrap",
+                              marginLeft: "20px",
+                              textAlign: "left"
                             }}
                           >
                             {selectedPurposes.customerList}
