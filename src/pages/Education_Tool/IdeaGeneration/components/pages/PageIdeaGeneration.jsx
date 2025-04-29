@@ -836,11 +836,8 @@ const PageIdeaGeneration = () => {
                           </SelectBox>
                         </div>
 
-                        <div className="selectBoxWrap">
-                          <Body2
-                            color="gray500"
-                            style={{ width: "110px", alignSelf: "flex-start" }}
-                          >
+                        <div className="selectBoxWrap" style={{ marginTop: "12px" }}>
+                          <Body2 color="gray500" style={{ width: "110px", alignSelf: "flex-start" }}>
                             주제어 선택
                           </Body2>
                           <li
@@ -862,7 +859,7 @@ const PageIdeaGeneration = () => {
                                 wordBreak: "keep-all",
                                 wordWrap: "break-word",
                                 overflow: "visible",
-                                maxWidth: "100%",
+                                maxWidth: "94%",
                                 textAlign: "left",
                                 marginLeft: "20px",
                                 marginTop: "0",
@@ -893,7 +890,7 @@ const PageIdeaGeneration = () => {
                         </BoxWrap>
                       ) : (
                         <div className="content">
-                          <Title style={{ marginBottom: "-18px", marginTop: "8px" }}>
+                          <Title style={{ marginBottom: "-18px", marginTop: "28px" }}>
                             <Body1 color="gray700">
                               아이디어 발산의 주제어를 선택하세요 (8개 필수
                               선택)
@@ -1051,11 +1048,8 @@ const PageIdeaGeneration = () => {
                           </SelectBox>
                         </div>
 
-                        <div className="selectBoxWrap">
-                          <Body2
-                            color="gray500"
-                            style={{ width: "110px", alignSelf: "flex-start" }}
-                          >
+                        <div className="selectBoxWrap" style={{ marginTop: "12px" }}>
+                          <Body2 color="gray500" style={{ width: "110px", alignSelf: "flex-start" }}>
                             주제어 선택
                           </Body2>
                           <li
@@ -1077,7 +1071,7 @@ const PageIdeaGeneration = () => {
                                 wordBreak: "keep-all",
                                 wordWrap: "break-word",
                                 overflow: "visible",
-                                maxWidth: "100%",
+                                maxWidth: "94%",
                                 textAlign: "left",
                                 marginLeft: "20px",
                                 marginTop: "0",
@@ -1098,7 +1092,7 @@ const PageIdeaGeneration = () => {
                     </div>
 
                     <div className="content">
-                      <TabContent5Item style={{ marginTop: "20px" }}>
+                      <TabContent5Item style={{ marginTop: "-4px" }}>
                         <div className="title">
                           <Body1 color="gray800">
                             아이데이션 참여 페르소나{" "}
@@ -1186,7 +1180,7 @@ const PageIdeaGeneration = () => {
                     <div className="title">
                       <H3 color="gray800">Define Your Key Customer</H3>
                       <Body3 color="gray800">
-                        고객 여정 분석을 원하는 주요 고객군을 선택하세요
+                        고객 여정 분석을 원하는 주요 고객군을 선택하세요<Title style={{ marginTop: "28px" }}></Title>
                       </Body3>
                     </div>
 
