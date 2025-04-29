@@ -1265,6 +1265,7 @@ const PageIdeaGeneration = () => {
                               </IdeaText>
                             </IdeaContent>
 
+                            <Divider />
                             <IdeaTitle>아이디어 별 설명</IdeaTitle>
                             <IdeaContent>
                               {ideaGenerationAdditionalData[
@@ -1276,6 +1277,7 @@ const PageIdeaGeneration = () => {
                               ))}
                             </IdeaContent>
 
+                            <Divider />
                             <IdeaTitle>전략적 제언</IdeaTitle>
                             <IdeaContent>
                               <IdeaText>
@@ -1732,4 +1734,10 @@ const ButtonContainer = styled.div`
   justify-content: center;
   margin-top: 24px;
   margin-bottom: 140px;
+`;
+
+const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${palette.outlineGray};
 `;
