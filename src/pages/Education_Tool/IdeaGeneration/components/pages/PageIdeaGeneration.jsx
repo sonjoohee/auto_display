@@ -57,7 +57,7 @@ import {
   USER_CREDITS,
   CREDIT_CREATE_TOOL_LOADED,
   IDEA_GENERATION_ADDITIONAL_DATA,
-  EDUCATION_TOOL_COMPLETED_STATUS
+  EDUCATION_TOOL_COMPLETED_STATUS,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -104,7 +104,9 @@ const PageIdeaGeneration = () => {
   const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
     CREDIT_CREATE_TOOL_LOADED
   );
-  const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
+  const [completedStatus, setCompletedStatus] = useAtom(
+    EDUCATION_TOOL_COMPLETED_STATUS
+  );
   const [educationState] = useAtom(EDUCATION_STATE);
   const [toolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -123,9 +125,8 @@ const PageIdeaGeneration = () => {
     useAtom(IDEA_GENERATION_POSSSESSION_TECH);
   const [ideaGenerationSelectedPurpose, setIdeaGenerationSelectedPurpose] =
     useAtom(IDEA_GENERATION_SELECTED_PURPOSE);
-  const [ideaGenerationAdditionalData, setIdeaGenerationAdditionalData] = useAtom(
-    IDEA_GENERATION_ADDITIONAL_DATA
-  );
+  const [ideaGenerationAdditionalData, setIdeaGenerationAdditionalData] =
+    useAtom(IDEA_GENERATION_ADDITIONAL_DATA);
   const [ideaGenerationProblemList, setIdeaGenerationProblemList] = useAtom(
     IDEA_GENERATION_PROBLEM_LIST
   );
@@ -253,7 +254,7 @@ const PageIdeaGeneration = () => {
         if (ideaGenerationAdditionalData) {
           setIdeaGenerationAdditionalData(ideaGenerationAdditionalData ?? []);
         }
-        if(completedStatus) {
+        if (completedStatus) {
           setCompletedStatus(true);
         }
 
@@ -378,8 +379,13 @@ const PageIdeaGeneration = () => {
     handleNextStep(2);
     setToolSteps(2);
     setIsLoadingReport(true);
-    const selectedStartPosition = ideaGenerationSelectedStartPosition.map(item => item.main_theme);
-    console.log("selectedStartPositiossssssssssssssssssn", selectedStartPosition);
+    const selectedStartPosition = ideaGenerationSelectedStartPosition.map(
+      (item) => item.main_theme
+    );
+    console.log(
+      "selectedStartPositiossssssssssssssssssn",
+      selectedStartPosition
+    );
 
     // 새 AbortController 생성
     abortControllerRef.current = new AbortController();
@@ -461,20 +467,21 @@ const PageIdeaGeneration = () => {
                   "idea_title" in item &&
                   "idea_description" in item
               )
-            ) ||
-            !(
-              Array.isArray(
-                reportResponse?.response?.idea_generation_report_education
-                  ?.additional_execution_ideas
-              ) &&
-              reportResponse.response.idea_generation_report_education.additional_execution_ideas.every(
-                (item) =>
-                  typeof item === "object" &&
-                  item !== null &&
-                  "idea_title" in item &&
-                  "idea_description" in item
-              )
             ))
+          // ||
+          // !(
+          //   Array.isArray(
+          //     reportResponse?.response?.idea_generation_report_education
+          //       ?.additional_execution_ideas
+          //   ) &&
+          //   reportResponse.response.idea_generation_report_education.additional_execution_ideas.every(
+          //     (item) =>
+          //       typeof item === "object" &&
+          //       item !== null &&
+          //       "idea_title" in item &&
+          //       "idea_description" in item
+          //   )
+          // )
         ) {
           reportResponse = await EducationToolsRequest(
             data,
@@ -514,37 +521,40 @@ const PageIdeaGeneration = () => {
 
       setIdeaGenerationMandalArtData(apiResults);
 
-     const data = {
-      main_theme_raw_data : {
-         main_theme: ideaGenerationSelectedStartPosition.map(item => item.main_theme),
-         core_ideas: apiResults.map(item => item.core_ideas.map(coreIdea => coreIdea.core_idea)),
-         detailed_execution_ideas: apiResults.map(item => item.detailed_execution_ideas)},
-         business: {
-          business: businessDescription,
-          business_model: project?.businessModel || "",
-          sector: project?.industryType || "",
-         },
-         type: "ix_idea_generation_additional_report_education",
-  
-      }
+      // const data = {
+      //   main_theme_raw_data: {
+      //     main_theme: ideaGenerationSelectedStartPosition.map(
+      //       (item) => item.main_theme
+      //     ),
+      //     core_ideas: apiResults.map((item) =>
+      //       item.core_ideas.map((coreIdea) => coreIdea.core_idea)
+      //     ),
+      //     detailed_execution_ideas: apiResults.map(
+      //       (item) => item.detailed_execution_ideas
+      //     ),
+      //   },
+      //   business: {
+      //     business: businessDescription,
+      //     business_model: project?.businessModel || "",
+      //     sector: project?.industryType || "",
+      //   },
+      //   type: "ix_idea_generation_additional_report_education",
+      // };
 
-      let Response = await EducationToolsRequest(
-        data,
-        isLoggedIn,
-        signal
+      // let Response = await EducationToolsRequest(data, isLoggedIn, signal);
+
+      setIdeaGenerationAdditionalData(
+        reportResponse.response.idea_generation_additional_report_education
       );
-
-      setIdeaGenerationAdditionalData(Response.response.idea_generation_additional_report_education);
 
       await updateToolOnServer(
         toolId,
         {
           completedStep: 3,
           ideaGenerationMandalArtData: apiResults,
-
           completedStatus: true,
-
-          ideaGenerationAdditionalData: Response.response.idea_generation_additional_report_education
+          ideaGenerationAdditionalData:
+            reportResponse.response.idea_generation_additional_report_education,
         },
         isLoggedIn
       );
@@ -734,8 +744,8 @@ const PageIdeaGeneration = () => {
                       <H3 color="gray800">Select Idea Theme</H3>
 
                       <Body3 color="gray800" style={{ marginBottom: "24px" }}>
-                        정리된 키워드를 기반으로 아이디어 발산을 위한 주제어를 선택하세요.
-
+                        정리된 키워드를 기반으로 아이디어 발산을 위한 주제어를
+                        선택하세요.
                       </Body3>
                     </div>
 
@@ -890,7 +900,11 @@ const PageIdeaGeneration = () => {
                         </BoxWrap>
                       ) : (
                         <div className="content">
-                          <Title style={{ marginBottom: "-18px", marginTop: "28px" }}>
+
+                          <Title
+                            style={{ marginBottom: "-18px", marginTop: "8px" }}
+                          >
+
                             <Body1 color="gray700">
                               아이디어 발산의 주제어를 선택하세요 (8개 필수
                               선택)
@@ -950,9 +964,7 @@ const PageIdeaGeneration = () => {
                     </div>
 
                     <div className="content">
-
-                    <BoxWrap Column NoneV style={{ marginBottom: "0px" }}>
-
+                      <BoxWrap Column NoneV style={{ marginBottom: "0px" }}>
                         <div className="selectBoxWrap">
                           <Body2 color="gray500" style={{ width: "110px" }}>
                             핵심 키워드
@@ -1167,8 +1179,8 @@ const PageIdeaGeneration = () => {
                     <AtomPersonaLoader
                       message={
                         <span>
-                          참여 페르소나들이 8개의 주제어를
-                          바탕으로 아이디어를 발산하고 있어요.
+                          참여 페르소나들이 8개의 주제어를 바탕으로 아이디어를
+                          발산하고 있어요.
                           <br />
                           (5분 정도 걸려요)
                         </span>
@@ -1256,7 +1268,7 @@ const PageIdeaGeneration = () => {
                         </IdeaContainer>
                       )}
 
-{/* 
+                      {/* 
                     <div className="content">
                               {ideaGenerationAdditionalData?.length > 0 && (
                                 <InsightContainer>
@@ -1332,19 +1344,17 @@ const PageIdeaGeneration = () => {
                                 </InsightContainer>
                               )}
                             </div> */}
-
                     </div>
                     {completedStatus && (
-                          <Button
-                          Primary
-                          Edit
-                          Large
-                          onClick={() => navigate("/Tool")}
-                  
-                        >
-                         리서치 툴 리스트 바로가기
-                        </Button>
-                        )}
+                      <Button
+                        Primary
+                        Edit
+                        Large
+                        onClick={() => navigate("/Tool")}
+                      >
+                        리서치 툴 리스트 바로가기
+                      </Button>
+                    )}
                   </>
                 )}
               </TabContent5>
