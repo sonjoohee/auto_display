@@ -476,6 +476,7 @@ const PageCustomerJourneyMap = () => {
             completedStep: 3,
             customerJourneyMapReport:
               response.response.customer_journey_map_report_education,
+            completedStatus: true,
           },
           isLoggedIn
         );

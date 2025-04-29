@@ -82,9 +82,11 @@ const PageIssueGeneration = () => {
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
   const [eventTitle] = useAtom(EVENT_TITLE);
-  const [creditCreateToolLow, ] = useAtom(CREDIT_CREATE_TOOL_LOW);
+  const [creditCreateToolLow] = useAtom(CREDIT_CREATE_TOOL_LOW);
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
-  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
+    CREDIT_CREATE_TOOL_LOADED
+  );
   const [educationState] = useAtom(EDUCATION_STATE);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep] = useAtom(TOOL_STEP);
@@ -152,7 +154,6 @@ const PageIssueGeneration = () => {
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
 
-
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const project = projectSaas;
@@ -164,20 +165,20 @@ const PageIssueGeneration = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
-      if(!creditCreateToolLoaded){
-      setShowCreatePersonaPopup(true);
-       // 크레딧 사용전 사용 확인
-       const creditPayload = {
-        // 기존 10 대신 additionalQuestionMount 사용
-        mount: creditCreateToolLow,
-      };
-      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+      if (!creditCreateToolLoaded) {
+        setShowCreatePersonaPopup(true);
+        // 크레딧 사용전 사용 확인
+        const creditPayload = {
+          // 기존 10 대신 additionalQuestionMount 사용
+          mount: creditCreateToolLow,
+        };
+        const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
 
-      if (creditResponse?.state !== "use") {
-        setShowCreditPopup(true);
-        return;
+        if (creditResponse?.state !== "use") {
+          setShowCreditPopup(true);
+          return;
+        }
       }
-    }
       const projectAnalysis =
         (project?.projectAnalysis.business_analysis
           ? project?.projectAnalysis.business_analysis
@@ -190,7 +191,6 @@ const PageIssueGeneration = () => {
           ? project?.projectAnalysis.file_analysis
           : "");
       const projectTitle = project?.projectTitle;
-    
 
       if (project) {
         setBusinessDescriptionTitle(projectTitle);
@@ -345,15 +345,16 @@ const PageIssueGeneration = () => {
       //   // 유효한 항목이 없는 경우 처리
       //   return;
       // }
-      
 
       const Data = {
         type: "ix_idea_generation_keyword_education",
         business_info: business,
         info: customerJourneyMapSelectedPersona,
-        problem_needs: issueGenerationProblemListTitle.map(title => {
+        problem_needs: issueGenerationProblemListTitle.map((title) => {
           // 기존 issueGenerationProblemList에서 일치하는 title을 가진 객체 찾기
-          const existingItem = issueGenerationProblemList.find(item => item.title === title);
+          const existingItem = issueGenerationProblemList.find(
+            (item) => item.title === title
+          );
           // 있으면 그 객체 반환, 없으면 새 객체 생성
           return existingItem || { title };
         }),
@@ -396,6 +397,7 @@ const PageIssueGeneration = () => {
         issueGenerationSelectedStartPosition:
           issueGenerationSelectedStartPosition,
         possessionTech: projectDescription,
+        completedStatus: true,
       },
       isLoggedIn
     );
@@ -435,7 +437,6 @@ const PageIssueGeneration = () => {
     }
   };
 
- 
   useEffect(() => {
     if (shouldSubmit) {
       handleSubmitCustomerJourney();
@@ -447,7 +448,7 @@ const PageIssueGeneration = () => {
     // 새 AbortController 생성
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
-    
+
     setIsContentLoading(true);
 
     setIssueGenerationSelectedPurpose(selectedPurposes);
@@ -473,9 +474,9 @@ const PageIssueGeneration = () => {
 
     // 크레딧 사용 후 사용자 정보 새로고침
 
-      const userCreditValue = await UserCreditInfo(isLoggedIn);
-      // 전역 상태의 크레딧 정보 업데이트
-      setUserCredits(userCreditValue);
+    const userCreditValue = await UserCreditInfo(isLoggedIn);
+    // 전역 상태의 크레딧 정보 업데이트
+    setUserCredits(userCreditValue);
 
     try {
       if (selectedJourneyMapData) {
@@ -658,7 +659,7 @@ const PageIssueGeneration = () => {
                 <span>01</span>
                 <div className="text" style={{ whiteSpace: "nowrap" }}>
                   <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
-                  MoT 정의
+                    MoT 정의
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -673,7 +674,7 @@ const PageIssueGeneration = () => {
                 <span>02</span>
                 <div className="text" style={{ whiteSpace: "nowrap" }}>
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                  핵심 니즈 정의​
+                    핵심 니즈 정의​
                   </Body1>
                   {/* <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Design Sector
@@ -691,7 +692,7 @@ const PageIssueGeneration = () => {
                 <span>03</span>
                 <div className="text" style={{ whiteSpace: "nowrap" }}>
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                  키워드 선택​
+                    키워드 선택​
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -728,7 +729,7 @@ const PageIssueGeneration = () => {
                     <div className="title">
                       <H3 color="gray800">Identify MoT Moment</H3>
                       <Body3 color="gray800">
-                      고객 여정에서 MoT를 찾아, 아이디어의 기회를 포착하세요​
+                        고객 여정에서 MoT를 찾아, 아이디어의 기회를 포착하세요​
                       </Body3>
                     </div>
 
@@ -857,7 +858,8 @@ const PageIssueGeneration = () => {
                                   color="gray700"
                                   align="center !important"
                                 >
-                                분석할 고객 여정 지도를 선택하고, <br /> 핵심 MoT를 도출하세요 
+                                  분석할 고객 여정 지도를 선택하고, <br /> 핵심
+                                  MoT를 도출하세요
                                 </Body2>
                               </BoxWrap>
                             ) : (
@@ -884,22 +886,23 @@ const PageIssueGeneration = () => {
                       </TabContent5Item>
                     </div>
 
-                    {issueGenerationProblemListTitle.length > 0  || !isContentLoading && (
-                      <Button
-                        Other
-                        Primary
-                        Fill
-                        Round
-                        onClick={handleSubmitProblem}
-                        disabled={
-                          isContentLoading ||
-                          toolSteps >= 1 ||
-                          selectedPurposes.customerList.length === 0
-                        }
-                      >
-                        아이디어 키워드 추출
-                      </Button>
-                    )}
+                    {issueGenerationProblemListTitle.length > 0 ||
+                      (!isContentLoading && (
+                        <Button
+                          Other
+                          Primary
+                          Fill
+                          Round
+                          onClick={handleSubmitProblem}
+                          disabled={
+                            isContentLoading ||
+                            toolSteps >= 1 ||
+                            selectedPurposes.customerList.length === 0
+                          }
+                        >
+                          아이디어 키워드 추출
+                        </Button>
+                      ))}
                   </>
                 )}
               </TabContent5>
@@ -924,7 +927,8 @@ const PageIssueGeneration = () => {
                     <div className="title">
                       <H3 color="gray800">Defining Key Needs</H3>
                       <Body3 color="gray800">
-                      문제 정의를 통해 도출된 니즈를 바탕으로 아이디어 방향을 설정합니다.
+                        문제 정의를 통해 도출된 니즈를 바탕으로 아이디어 방향을
+                        설정합니다.
                       </Body3>
                     </div>
 
@@ -933,11 +937,11 @@ const PageIssueGeneration = () => {
                         <li style={{ alignItems: "flex-start" }}>
                           <Body2 color="gray500">고객 여정 맵</Body2>
 
-                          <Body2 
+                          <Body2
                             color="gray500"
-                            style={{ 
+                            style={{
                               alignSelf: "flex-start",
-                              verticalAlign: "top"
+                              verticalAlign: "top",
                             }}
                           >
                             {selectedPurposes.customerList}
@@ -961,7 +965,7 @@ const PageIssueGeneration = () => {
                               maxWidth: "100%",
                               textAlign: "left",
                               alignSelf: "flex-start",
-                              verticalAlign: "top"
+                              verticalAlign: "top",
                             }}
                           >
                             {issueGenerationSelectedStartPosition?.length > 0
@@ -978,7 +982,8 @@ const PageIssueGeneration = () => {
                       <div className="content">
                         <Title style={{ marginBottom: "-18px" }}>
                           <Body1 color="gray700">
-                          MoT 기반으로 도출한 방향성 중, 아이디어 발산 키워드를 선택하세요. (8개 필수 선택)
+                            MoT 기반으로 도출한 방향성 중, 아이디어 발산
+                            키워드를 선택하세요. (8개 필수 선택)
                           </Body1>
                         </Title>
 
@@ -1013,7 +1018,7 @@ const PageIssueGeneration = () => {
             )}
 
             {activeTab === 3 && completedSteps.includes(2) && (
-              <TabContent5 >
+              <TabContent5>
                 {isLoadingReport ? (
                   <div
                     style={{
@@ -1030,17 +1035,20 @@ const PageIssueGeneration = () => {
                   <>
                     <div className="title">
                       <H3 color="gray800">Selected Keywords</H3>
-                      <Body3 color="gray800">고객 여정과 MoT 분석을 통해 최종 선택한 니즈 키워드를 확인하세요</Body3>
+                      <Body3 color="gray800">
+                        고객 여정과 MoT 분석을 통해 최종 선택한 니즈 키워드를
+                        확인하세요
+                      </Body3>
                     </div>
 
                     <div className="content">
                       <ListBoxGroup style={{ alignItems: "flex-start" }}>
-                        <li style={{ alignItems: "flex-start"}}>
+                        <li style={{ alignItems: "flex-start" }}>
                           <Body2 color="gray500">고객 여정 맵</Body2>
 
-                          <Body2 
+                          <Body2
                             color="gray500"
-                            style={{ 
+                            style={{
                               alignSelf: "flex-start",
                               verticalAlign: "top",
                             }}
@@ -1050,7 +1058,7 @@ const PageIssueGeneration = () => {
                         </li>
 
                         <li style={{ alignItems: "flex-start" }}>
-                          <Body2 color="gray500" >분석 장면 선택</Body2>
+                          <Body2 color="gray500">분석 장면 선택</Body2>
 
                           <Body2
                             color={
@@ -1067,7 +1075,6 @@ const PageIssueGeneration = () => {
                               textAlign: "left",
                               alignSelf: "flex-start",
                               verticalAlign: "top",
-                   
                             }}
                           >
                             {issueGenerationSelectedStartPosition?.length > 0
@@ -1083,7 +1090,9 @@ const PageIssueGeneration = () => {
                     <div className="content">
                       <TabContent5Item style={{ marginTop: "20px" }}>
                         <div className="title">
-                          <Body1 color="gray800">해당 니즈 키워드는 아이디어 발상하는 데 활용됩니다. </Body1>
+                          <Body1 color="gray800">
+                            해당 니즈 키워드는 아이디어 발상하는 데 활용됩니다.{" "}
+                          </Body1>
                         </div>
 
                         <MoleculeSelectedTagList
@@ -1141,9 +1150,8 @@ const PageIssueGeneration = () => {
           onConfirm={() => setShowPopupSave(false)}
         />
       )}
-    
 
-{showCreatePersonaPopup &&
+      {showCreatePersonaPopup &&
         (eventState && !educationState ? (
           <PopupWrap
             Event

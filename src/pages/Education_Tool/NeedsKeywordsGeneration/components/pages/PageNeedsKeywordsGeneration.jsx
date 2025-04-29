@@ -309,6 +309,7 @@ const PageNeedsKeywordsGeneration = () => {
             completedStep: 2,
             keywordsGenerationTag:
               response.response.needs_keywords_generation_clustering_education,
+            completedStatus: true,
           },
           isLoggedIn
         );
@@ -543,26 +544,27 @@ const PageNeedsKeywordsGeneration = () => {
                         </div>
                         {showSelectedIssue ? (
                           <>
-
-
-                          {keywordsGenerationSelectedIssue.map(
-                            (idea, index) => (
-                              <MoleculeSelectItem 
-                              title={`${idea.selectedPurposes.customerList}`}
-                              keywords={idea.issueGenerationSelectedStartPosition.map((item, itemIndex) => ({
-                                id: `${index}-${itemIndex}`,
-                                text: item.theme || ''
-                              }))}
-                              // selectedKeywords={idea.selectedPurposes.customerList} 
-                              // onSelectionChange={setSelectedKeywords1} 
-                              isSelected={selectedIssue.includes(index)}
-                              onCardSelect={() => handleCheckboxChange(index)}
+                            {keywordsGenerationSelectedIssue.map(
+                              (idea, index) => (
+                                <MoleculeSelectItem
+                                  title={`${idea.selectedPurposes.customerList}`}
+                                  keywords={idea.issueGenerationSelectedStartPosition.map(
+                                    (item, itemIndex) => ({
+                                      id: `${index}-${itemIndex}`,
+                                      text: item.theme || "",
+                                    })
+                                  )}
+                                  // selectedKeywords={idea.selectedPurposes.customerList}
+                                  // onSelectionChange={setSelectedKeywords1}
+                                  isSelected={selectedIssue.includes(index)}
+                                  onCardSelect={() =>
+                                    handleCheckboxChange(index)
+                                  }
                                 />
                               )
                             )}
-                                
 
-{/* 
+                            {/* 
                             {keywordsGenerationSelectedIssue.map(
                               (idea, index) => (
                                 <MoleculeItemSelectCard
@@ -599,20 +601,22 @@ const PageNeedsKeywordsGeneration = () => {
                             ))} */}
 
                             {issueGenerationList.map((idea, index) => (
-                                <MoleculeSelectItem
-                                  key={index}
-                                  title={`${idea.selectedPurposes.customerList}`}
-                                  id={index}
-                                  keywords={idea.issueGenerationSelectedStartPosition.map((item, itemIndex) => ({
+                              <MoleculeSelectItem
+                                key={index}
+                                title={`${idea.selectedPurposes.customerList}`}
+                                id={index}
+                                keywords={idea.issueGenerationSelectedStartPosition.map(
+                                  (item, itemIndex) => ({
                                     id: `${index}-${itemIndex}`,
-                                    text: item.theme || ''
-                                  }))}
-                                  // selectedKeywords={selectedIssue.includes(index) ? [`${index}`] : []}
-                                  // onSelectionChange={() => {}} 
-                                  isSelected={selectedIssue.includes(index)}
-                                  onCardSelect={() => handleCheckboxChange(index)}
-                                />
-                              ))}
+                                    text: item.theme || "",
+                                  })
+                                )}
+                                // selectedKeywords={selectedIssue.includes(index) ? [`${index}`] : []}
+                                // onSelectionChange={() => {}}
+                                isSelected={selectedIssue.includes(index)}
+                                onCardSelect={() => handleCheckboxChange(index)}
+                              />
+                            ))}
                           </>
                         )}
                       </>
@@ -675,14 +679,13 @@ const PageNeedsKeywordsGeneration = () => {
                         </Title> */}
 
                         <CardGroupWrap ideaGeneration>
-
-                        <MoleculeNeedsKeywordResult 
+                          <MoleculeNeedsKeywordResult
                             title={`${keywordsGenerationTag.length}개의 고객 여정 분석 결과를 통합해 정리한 핵심 니즈 키워드입니다.`}
                             keywords={
-                                keywordsGenerationTag
-                                  .map((item) => item.main_theme)
-                                  .flat() // 모든 content 배열을 하나로 합침
-                              }
+                              keywordsGenerationTag
+                                .map((item) => item.main_theme)
+                                .flat() // 모든 content 배열을 하나로 합침
+                            }
                           />
                           {/* <MoleculeTagList
                             items={

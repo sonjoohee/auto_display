@@ -728,6 +728,7 @@ const PageKanoModel = () => {
           kanoModelGraphData: graphData, // Save graph data
           kanoModelReportData: calculatedGroupedLegendData, // Save calculated report data
           completedStep: 3,
+          completedStatus: true,
         },
         isLoggedIn
       );
@@ -1084,7 +1085,6 @@ const PageKanoModel = () => {
                     <div className="content">
                       <ListBoxGroup>
                         <li>
-                    
                           <Body2
                             color="gray500"
                             style={{
@@ -1098,21 +1098,20 @@ const PageKanoModel = () => {
                             평가할 아이디어 리스트
                           </Body2>
                           <div
-                           style={{
-                            whiteSpace: "normal",
-                            wordBreak: "keep-all",
-                            wordWrap: "break-word",
-                            overflow: "visible",
-                            maxWidth: "100%",
-                            textAlign: "left",
-                            marginLeft: "50px",
-                            marginTop: "-2px",
-                            paddingTop: "0",
-                            display: "block",
-                            alignSelf: "flex-start"
-                          }}
+                            style={{
+                              whiteSpace: "normal",
+                              wordBreak: "keep-all",
+                              wordWrap: "break-word",
+                              overflow: "visible",
+                              maxWidth: "100%",
+                              textAlign: "left",
+                              marginLeft: "50px",
+                              marginTop: "-2px",
+                              paddingTop: "0",
+                              display: "block",
+                              alignSelf: "flex-start",
+                            }}
                           >
-                            
                             {selectedKanoModelIdea.map((idea, index) => (
                               <span
                                 key={index}
@@ -1121,11 +1120,14 @@ const PageKanoModel = () => {
                                   marginBottom: "4px",
                                 }}
                               >
-                                {idea.updateDate.split(":")[0] + ":" + 
-                                 idea.updateDate.split(":")[1] + 
-                                 " - 아이디어 발상 - " + 
-                                 (idea.title || "아이디어") + 
-                                 (index < selectedKanoModelIdea.length - 1 ? ", " : "")}
+                                {idea.updateDate.split(":")[0] +
+                                  ":" +
+                                  idea.updateDate.split(":")[1] +
+                                  " - 아이디어 발상 - " +
+                                  (idea.title || "아이디어") +
+                                  (index < selectedKanoModelIdea.length - 1
+                                    ? ", "
+                                    : "")}
                               </span>
                             ))}
                           </div>

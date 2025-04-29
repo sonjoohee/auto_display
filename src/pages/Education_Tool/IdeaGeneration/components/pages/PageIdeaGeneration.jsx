@@ -289,7 +289,6 @@ const PageIdeaGeneration = () => {
 
         allItems = [...allItems, ...newItems];
 
-
         setCustomerJourneyList(allItems);
       } catch (error) {
         setCustomerJourneyList([]); // Set empty array on error
@@ -305,8 +304,6 @@ const PageIdeaGeneration = () => {
     setActiveTab(currentStep + 1);
     setShowPopupError(false);
   };
-
-
 
   const handleSubmitIdea = async () => {
     handleNextStep(1);
@@ -351,7 +348,6 @@ const PageIdeaGeneration = () => {
     );
   };
 
-
   const handlePurposeSelect = (purpose, selectBoxId, item) => {
     setSelectedPurposes((prev) => ({
       ...(prev || {}),
@@ -365,7 +361,6 @@ const PageIdeaGeneration = () => {
     }));
 
     setIdeaGenerationStartPosition(item.keywordsGenerationTag);
- 
   };
 
   const handleMandalArt = async () => {
@@ -411,7 +406,6 @@ const PageIdeaGeneration = () => {
           idea_theme: ideaGenerationSelectedStartPosition[i],
           persona_group: persona_group,
         };
-
 
         const interviewResponse = await EducationToolsRequest(
           Data,
@@ -512,6 +506,7 @@ const PageIdeaGeneration = () => {
         {
           completedStep: 3,
           ideaGenerationMandalArtData: apiResults,
+          completedStatus: true,
         },
         isLoggedIn
       );
@@ -529,7 +524,6 @@ const PageIdeaGeneration = () => {
       [field]: value || "",
     }));
   };
-
 
   const calculateDropDirection = (ref, selectBoxId) => {
     if (ref?.current) {
@@ -660,9 +654,8 @@ const PageIdeaGeneration = () => {
                 <span>02</span>
                 <div className="text" style={{ whiteSpace: "nowrap" }}>
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                 페르소나 확인
+                    페르소나 확인
                   </Body1>
-               
                 </div>
               </TabButtonType5>
               <TabButtonType5
@@ -680,7 +673,6 @@ const PageIdeaGeneration = () => {
                   </Body1>
                 </div>
               </TabButtonType5>
-          
             </TabWrapType5>
 
             {activeTab === 1 && (
@@ -702,10 +694,11 @@ const PageIdeaGeneration = () => {
                     <div className="title">
                       <H3 color="gray800">Select Idea Theme</H3>
                       <Body3 color="gray800">
-                        정리된 키워드를 기반으로 아이디어 발산을 위한 주제어를 선택하세요.
+                        정리된 키워드를 기반으로 아이디어 발산을 위한 주제어를
+                        선택하세요.
                       </Body3>
                     </div>
-                    
+
                     <TabContent5Item>
                       <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
                         <div className="selectBoxWrap">
@@ -721,7 +714,8 @@ const PageIdeaGeneration = () => {
                               }
                               None
                               style={{
-                                cursor: toolSteps >= 1 ? "not-allowed" : "pointer",
+                                cursor:
+                                  toolSteps >= 1 ? "not-allowed" : "pointer",
                               }}
                             >
                               {selectedPurposes?.customerList ? (
@@ -749,7 +743,7 @@ const PageIdeaGeneration = () => {
                                   color="gray300"
                                   style={{ paddingLeft: "20px" }}
                                 >
-                                  불러올 핵심키워드 리스트를 선택해주세요.  
+                                  불러올 핵심키워드 리스트를 선택해주세요.
                                 </Body2>
                               )}
                               <images.ChevronDown
@@ -776,9 +770,12 @@ const PageIdeaGeneration = () => {
                                     key={index}
                                     onClick={() => {
                                       handlePurposeSelect(
-                                        `${item?.keywordsGenerationTag?.length || 0}개의 고객 여정 지도 기반 핵심 키워드
-                                        (${(item.updateDate.split(":")[0])}:${
-                                          (item.updateDate.split(":")[1])
+                                        `${
+                                          item?.keywordsGenerationTag?.length ||
+                                          0
+                                        }개의 고객 여정 지도 기반 핵심 키워드
+                                        (${item.updateDate.split(":")[0]}:${
+                                          item.updateDate.split(":")[1]
                                         })`,
                                         "customerList",
                                         item
@@ -787,10 +784,10 @@ const PageIdeaGeneration = () => {
                                     }}
                                   >
                                     <Body2 color="gray500" align="left">
-                                      {item?.keywordsGenerationTag?.length || 0}개의 고객 여정 지도 기반 핵심 키워드
-                                      ({(item.updateDate.split(":")[0])}:{
-                                          (item.updateDate.split(":")[1])
-                                        })
+                                      {item?.keywordsGenerationTag?.length || 0}
+                                      개의 고객 여정 지도 기반 핵심 키워드 (
+                                      {item.updateDate.split(":")[0]}:
+                                      {item.updateDate.split(":")[1]})
                                     </Body2>
                                   </SelectBoxItem>
                                 ))}
@@ -800,15 +797,20 @@ const PageIdeaGeneration = () => {
                         </div>
 
                         <div className="selectBoxWrap">
-                          <Body2 color="gray500" style={{ width: "110px", alignSelf: "flex-start" }}>
+                          <Body2
+                            color="gray500"
+                            style={{ width: "110px", alignSelf: "flex-start" }}
+                          >
                             주제어 선택
                           </Body2>
-                          <li style={{ 
-                            alignSelf: "flex-start",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start"
-                          }}>
+                          <li
+                            style={{
+                              alignSelf: "flex-start",
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "flex-start",
+                            }}
+                          >
                             <Body2
                               color={
                                 ideaGenerationSelectedStartPosition?.length > 0
@@ -826,7 +828,7 @@ const PageIdeaGeneration = () => {
                                 marginTop: "0",
                                 paddingTop: "0",
                                 display: "block",
-                                alignSelf: "flex-start"
+                                alignSelf: "flex-start",
                               }}
                             >
                               {ideaGenerationSelectedStartPosition?.length > 0
@@ -837,8 +839,6 @@ const PageIdeaGeneration = () => {
                             </Body2>
                           </li>
                         </div>
-
-                    
                       </BoxWrap>
 
                       {ideaGenerationStartPosition?.length === 0 ? (
@@ -855,7 +855,8 @@ const PageIdeaGeneration = () => {
                         <div className="content">
                           <Title style={{ marginBottom: "-18px" }}>
                             <Body1 color="gray700">
-                            아이디어 발산의 주제어를 선택하세요 (8개 필수 선택) 
+                              아이디어 발산의 주제어를 선택하세요 (8개 필수
+                              선택)
                             </Body1>
                           </Title>
 
@@ -872,18 +873,18 @@ const PageIdeaGeneration = () => {
                 )}
 
                 <Button
-                      Other
-                      Primary
-                      Fill
-                      Round
-                      onClick={handleSubmitIdea}
-                      disabled={
-                        isContentLoading ||
-                        toolSteps >= 1 ||
-                        ideaGenerationSelectedStartPosition.length < 8
-                      }
-                    >
-                      아이디어 키워드 추출
+                  Other
+                  Primary
+                  Fill
+                  Round
+                  onClick={handleSubmitIdea}
+                  disabled={
+                    isContentLoading ||
+                    toolSteps >= 1 ||
+                    ideaGenerationSelectedStartPosition.length < 8
+                  }
+                >
+                  아이디어 키워드 추출
                 </Button>
               </TabContent5>
             )}
@@ -912,7 +913,7 @@ const PageIdeaGeneration = () => {
                     </div>
 
                     <div className="content">
-                    <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
+                      <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
                         <div className="selectBoxWrap">
                           <Body2 color="gray500" style={{ width: "110px" }}>
                             핵심 키워드
@@ -926,7 +927,8 @@ const PageIdeaGeneration = () => {
                               }
                               None
                               style={{
-                                cursor: toolSteps >= 1 ? "not-allowed" : "pointer",
+                                cursor:
+                                  toolSteps >= 1 ? "not-allowed" : "pointer",
                               }}
                             >
                               {selectedPurposes?.customerList ? (
@@ -954,7 +956,7 @@ const PageIdeaGeneration = () => {
                                   color="gray300"
                                   style={{ paddingLeft: "20px" }}
                                 >
-                                  불러올 핵심키워드 리스트를 선택해주세요.  
+                                  불러올 핵심키워드 리스트를 선택해주세요.
                                 </Body2>
                               )}
                               <images.ChevronDown
@@ -981,9 +983,12 @@ const PageIdeaGeneration = () => {
                                     key={index}
                                     onClick={() => {
                                       handlePurposeSelect(
-                                        `${item?.keywordsGenerationTag?.length || 0}개의 여정 지도 기반 핵심 키워드
-                                        (${(item.updateDate.split(":")[0])}:${
-                                          (item.updateDate.split(":")[1])
+                                        `${
+                                          item?.keywordsGenerationTag?.length ||
+                                          0
+                                        }개의 여정 지도 기반 핵심 키워드
+                                        (${item.updateDate.split(":")[0]}:${
+                                          item.updateDate.split(":")[1]
                                         })`,
                                         "customerList",
                                         item
@@ -992,10 +997,10 @@ const PageIdeaGeneration = () => {
                                     }}
                                   >
                                     <Body2 color="gray500" align="left">
-                                      {item?.keywordsGenerationTag?.length || 0}개의 여정 지도 기반 핵심 키워드
-                                      (${(item.updateDate.split(":")[0])}:${
-                                          (item.updateDate.split(":")[1])
-                                        })
+                                      {item?.keywordsGenerationTag?.length || 0}
+                                      개의 여정 지도 기반 핵심 키워드 ($
+                                      {item.updateDate.split(":")[0]}:$
+                                      {item.updateDate.split(":")[1]})
                                     </Body2>
                                   </SelectBoxItem>
                                 ))}
@@ -1005,15 +1010,20 @@ const PageIdeaGeneration = () => {
                         </div>
 
                         <div className="selectBoxWrap">
-                          <Body2 color="gray500" style={{ width: "110px", alignSelf: "flex-start" }}>
+                          <Body2
+                            color="gray500"
+                            style={{ width: "110px", alignSelf: "flex-start" }}
+                          >
                             주제어 선택
                           </Body2>
-                          <li style={{ 
-                            alignSelf: "flex-start",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-start"
-                          }}>
+                          <li
+                            style={{
+                              alignSelf: "flex-start",
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "flex-start",
+                            }}
+                          >
                             <Body2
                               color={
                                 ideaGenerationSelectedStartPosition?.length > 0
@@ -1031,7 +1041,7 @@ const PageIdeaGeneration = () => {
                                 marginTop: "0",
                                 paddingTop: "0",
                                 display: "block",
-                                alignSelf: "flex-start"
+                                alignSelf: "flex-start",
                               }}
                             >
                               {ideaGenerationSelectedStartPosition?.length > 0
@@ -1042,20 +1052,20 @@ const PageIdeaGeneration = () => {
                             </Body2>
                           </li>
                         </div>
-
-                    
                       </BoxWrap>
-
-                  
                     </div>
 
                     <div className="content">
                       <TabContent5Item style={{ marginTop: "20px" }}>
                         <div className="title">
                           <Body1 color="gray800">
-                          아이데이션 참여 페르소나 {personaListSaas.filter(
-                          (item) => item.favorite === true
-                        ).length}명
+                            아이데이션 참여 페르소나{" "}
+                            {
+                              personaListSaas.filter(
+                                (item) => item.favorite === true
+                              ).length
+                            }
+                            명
                           </Body1>
                         </div>
                         {personaListSaas.filter(
@@ -1118,19 +1128,18 @@ const PageIdeaGeneration = () => {
                       alignItems: "center",
                     }}
                   >
-                   
-                <AtomPersonaLoader 
-                    message={
-                      <span>
-                        참여 페르소나들이 8개의 주제어를
-                        <br />
-                        바탕으로 아이디어를 발산하고 있어요.
-                        <br />
-                        (3분 정도 걸려요)
-                      </span>
-                    }
-                  />
-                           </div>
+                    <AtomPersonaLoader
+                      message={
+                        <span>
+                          참여 페르소나들이 8개의 주제어를
+                          <br />
+                          바탕으로 아이디어를 발산하고 있어요.
+                          <br />
+                          (3분 정도 걸려요)
+                        </span>
+                      }
+                    />
+                  </div>
                 ) : (
                   <>
                     <div className="title">
@@ -1141,8 +1150,6 @@ const PageIdeaGeneration = () => {
                     </div>
 
                     <div className="content">
-                  
-
                       <div
                         style={{
                           display: "flex",
@@ -1212,9 +1219,7 @@ const PageIdeaGeneration = () => {
                           </IdeaBox>
                           {/* ))} */}
                         </IdeaContainer>
-                        
                       )}
-                     
                     </div>
                   </>
                 )}
