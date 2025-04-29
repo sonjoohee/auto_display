@@ -372,6 +372,8 @@ const PageIdeaGeneration = () => {
     handleNextStep(2);
     setToolSteps(2);
     setIsLoadingReport(true);
+    // const selectedStartPosition = ideaGenerationSelectedStartPosition.map(item => item.main_theme);
+    // console.log("selectedStartPositiossssssssssssssssssn", selectedStartPosition);
 
     // 새 AbortController 생성
     abortControllerRef.current = new AbortController();
@@ -411,7 +413,6 @@ const PageIdeaGeneration = () => {
           idea_theme: ideaGenerationSelectedStartPosition[i],
           persona_group: persona_group,
         };
-
 
         const interviewResponse = await EducationToolsRequest(
           Data,
@@ -506,6 +507,14 @@ const PageIdeaGeneration = () => {
       }
 
       setIdeaGenerationMandalArtData(apiResults);
+      // console.log("apiResults", apiResults);
+   
+      // data = {
+      //    selectedStartPosition: ideaGenerationSelectedStartPosition.map(item => item.main_theme),
+      //    ideaGenerationMandalArtData: apiResults,
+      //    business: business,
+  
+      // }
 
       await updateToolOnServer(
         toolId,
@@ -1214,6 +1223,121 @@ const PageIdeaGeneration = () => {
                         </IdeaContainer>
                         
                       )}
+
+{/* <div className="content">
+                              {quickSurveyReport?.[0] && (
+                                <InsightContainer>
+                                  <InsightSection>
+                                    <InsightLabel color="gray700">
+                                      아이디어 발산 Theme 정의
+                                    </InsightLabel>
+                                    <InsightContent color="gray700">
+                                      {selectedQuestion[0] === "nps" ? (
+                                        <>
+                                          <div>
+                                            {
+                                              quickSurveyReport[0]
+                                                ?.total_insight
+                                                ?.nps_score_interpretation
+                                            }
+                                          </div>
+                                          <br />
+                                          <div>
+                                            {
+                                              quickSurveyReport[0]
+                                                ?.total_insight
+                                                ?.group_response_analysis
+                                            }
+                                          </div>
+                                          <br />
+                                          <div>
+                                            {
+                                              quickSurveyReport[0]
+                                                ?.total_insight
+                                                ?.enhancement_and_improvement_insight
+                                            }
+                                          </div>
+                                        </>
+                                      ) : (
+                                        // 기존 non-NPS 로직
+                                        <>
+                                          {
+                                            quickSurveyReport[0]?.total_insight
+                                              ?.statistic
+                                          }
+                                          <br />
+                                          <br />
+                                          {
+                                            quickSurveyReport[0]?.total_insight
+                                              ?.insight
+                                          }
+                                        </>
+                                      )}
+                                    </InsightContent>
+                                  </InsightSection>
+
+                                  <InsightSection>
+                                    <InsightLabel color="gray700">
+                                      아이디어 별 설명
+                                    </InsightLabel>
+                                    <InsightContent color="gray700">
+                                      <>
+                                        {
+                                          quickSurveyReport[0]?.gender_insight
+                                            ?.statistic
+                                        }
+                                        <br />
+                                        <br />
+                                        {
+                                          quickSurveyReport[0]?.gender_insight
+                                            ?.insight
+                                        }
+                                      </>
+                                    </InsightContent>
+                                  </InsightSection>
+
+                                  <InsightSection>
+                                    <InsightLabel color="gray700">
+                                     기타 의견
+                                    </InsightLabel>
+                                    <InsightContent color="gray700">
+                                      <>
+                                        {
+                                          quickSurveyReport[0].age_insight
+                                            .statistic
+                                        }
+                                        <br />
+                                        <br />
+                                        {
+                                          quickSurveyReport[0].age_insight
+                                            .insight
+                                        }
+                                      </>
+                                    </InsightContent>
+                                  </InsightSection>
+
+                                   <InsightSection>
+                                    <InsightLabel color="gray700">
+                                     전략적 제언
+                                    </InsightLabel>
+                                    <InsightContent color="gray700">
+                                      <>
+                                        {
+                                          quickSurveyReport[0].age_insight
+                                            .statistic
+                                        }
+                                        <br />
+                                        <br />
+                                        {
+                                          quickSurveyReport[0].age_insight
+                                            .insight
+                                        }
+                                      </>
+                                    </InsightContent>
+                                  </InsightSection>
+                                </InsightContainer>
+                              )}
+                            </div> */}
                      
                     </div>
                   </>

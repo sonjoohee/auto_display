@@ -814,7 +814,7 @@ const PageIssueGeneration = () => {
                                       );
                                     }}
                                   >
-                                    <Body2 color="gray700" align="left">
+                                    <Body2 color="gray700" textAlign="left">
                                       {item.customerJourneyMapSelectedPersona
                                         .personaName || "페르소나"}
                                       의{" "}
@@ -884,7 +884,7 @@ const PageIssueGeneration = () => {
                       </TabContent5Item>
                     </div>
 
-                    {issueGenerationProblemListTitle.length > 0  || !isContentLoading && (
+                    {issueGenerationProblemListTitle.length > 0  && !isContentLoading && selectedPurposes.customerList.length > 0 && (
                       <Button
                         Other
                         Primary
