@@ -414,73 +414,73 @@ const OrganismIncNavigation = () => {
     loadConversations();
   }, []);
 
-  // 대화 리스트 가져오기 (챗 리스트)
-  useEffect(() => {
-    const fetchChatList = async () => {
-      try {
-        const accessToken = sessionStorage.getItem("accessToken");
+  // // 대화 리스트 가져오기 (챗 리스트)
+  // useEffect(() => {
+  //   const fetchChatList = async () => {
+  //     try {
+  //       const accessToken = sessionStorage.getItem("accessToken");
 
-        if (!accessToken || !isLoggedIn) {
-          setChatList([]); // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
-          return;
-        }
-        const response_chat_list = await axios.get(
-          "https://wishresearch.kr/panels/chat_list",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        const response = await getToolListOnServer(1000, 1, isLoggedIn);
+  //       if (!accessToken || !isLoggedIn) {
+  //         setChatList([]); // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
+  //         return;
+  //       }
+  //       const response_chat_list = await axios.get(
+  //         "https://wishresearch.kr/panels/chat_list",
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${accessToken}`,
+  //           },
+  //         }
+  //       );
+  //       const response = await getToolListOnServer(1000, 1, isLoggedIn);
 
-        // 두 리스트 병합
-        const mergedList = [
-          ...response_chat_list.data.filter((item) => item.business_info),
-          ...response.data,
-        ];
+  //       // 두 리스트 병합
+  //       const mergedList = [
+  //         ...response_chat_list.data.filter((item) => item.business_info),
+  //         ...response.data,
+  //       ];
 
-        // 날짜 기준으로 정렬
-        const sortedChatList = mergedList.sort((a, b) => {
-          const dateA = b.timestamp;
-          const dateB = a.timestamp;
-          return dateA - dateB;
-        }); // 최근 날짜 순으로 정렬
+  //       // 날짜 기준으로 정렬
+  //       const sortedChatList = mergedList.sort((a, b) => {
+  //         const dateA = b.timestamp;
+  //         const dateB = a.timestamp;
+  //         return dateA - dateB;
+  //       }); // 최근 날짜 순으로 정렬
 
-        // console.log("🚀 ~ fetchChatList ~ sortedChatList:", sortedChatList);
-        setChatList(sortedChatList);
-      } catch (error) {
-        // console.error("대화 목록 가져오기 오류:", error);
-      }
-    };
-    fetchChatList();
-  }, [chatRefreshTrigger, isLoggedIn]);
+  //       // console.log("🚀 ~ fetchChatList ~ sortedChatList:", sortedChatList);
+  //       setChatList(sortedChatList);
+  //     } catch (error) {
+  //       // console.error("대화 목록 가져오기 오류:", error);
+  //     }
+  //   };
+  //   fetchChatList();
+  // }, [chatRefreshTrigger, isLoggedIn]);
 
-  useEffect(() => {
-    // 서버에서 보고서 목록을 가져오는 함수
-    const fetchReports = async () => {
-      try {
-        const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰 가져오기
+  // useEffect(() => {
+  //   // 서버에서 보고서 목록을 가져오는 함수
+  //   const fetchReports = async () => {
+  //     try {
+  //       const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰 가져오기
 
-        if (!accessToken || !isLoggedIn) {
-          setReports([]); // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
-          return;
-        }
-        const response = await axios.get(
-          "https://wishresearch.kr/panels/insight_list",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setReports(response.data); // 보고서 리스트를 상태로 설정
-      } catch (error) {
-        // console.error("보고서 목록 가져오기 오류:", error);
-      }
-    };
-    fetchReports();
-  }, [reportRefreshTrigger, isLoggedIn]);
+  //       if (!accessToken || !isLoggedIn) {
+  //         setReports([]); // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
+  //         return;
+  //       }
+  //       const response = await axios.get(
+  //         "https://wishresearch.kr/panels/insight_list",
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${accessToken}`,
+  //           },
+  //         }
+  //       );
+  //       setReports(response.data); // 보고서 리스트를 상태로 설정
+  //     } catch (error) {
+  //       // console.error("보고서 목록 가져오기 오류:", error);
+  //     }
+  //   };
+  //   fetchReports();
+  // }, [reportRefreshTrigger, isLoggedIn]);
 
   const handleLoginClick = () => {
     navigate("/Login");

@@ -155,11 +155,11 @@ const rescaleDataPoints = (dataPoints, averages) => {
 };
 
 const getQuadrantName = (x, y) => {
-  if (x > 50 && y > 50) return "One-dimensional";
-  if (x <= 50 && y > 50) return "Attractive";
-  if (x > 50 && y <= 50) return "Must-be";
-  if (x <= 50 && y <= 50) return "Indifferent";
-  return "";
+  if (x > 50 && y > 50) return "one_dimensional";
+  if (x <= 50 && y > 50) return "attractive";
+  if (x > 50 && y <= 50) return "must_be";
+  if (x <= 50 && y <= 50) return "indifferent";
+  return ""; // Should ideally not happen
 };
 
 const PageKanoModel = () => {
@@ -699,14 +699,19 @@ const PageKanoModel = () => {
         const quadrantName = getQuadrantName(rescaledPoint.x, rescaledPoint.y);
         return { ...item, quadrantName };
       });
+      // Initialize with new keys
       const calculatedGroupedLegendData = {
-        Attractive: [],
-        "One-dimensional": [],
-        "Must-be": [],
-        Indifferent: [],
+        one_dimensional: [],
+        attractive: [],
+        must_be: [],
+        indifferent: [],
       };
       legendData.forEach((item) => {
-        if (calculatedGroupedLegendData[item.quadrantName]) {
+        // Directly use the quadrantName returned by the modified getQuadrantName
+        if (
+          item.quadrantName &&
+          calculatedGroupedLegendData[item.quadrantName]
+        ) {
           calculatedGroupedLegendData[item.quadrantName].push(item.title);
         }
       });
