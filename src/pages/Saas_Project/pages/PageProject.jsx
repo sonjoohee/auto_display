@@ -262,6 +262,13 @@ const PageProject = () => {
     const loadProjectList = async () => {
       try {
         let savedProjectListInfo;
+        const educationStateResponse = await UserEducationStateInfo(isLoggedIn);
+
+        sessionStorage.setItem(
+          "educationState",
+          educationStateResponse.education_state
+        );
+        setEducationState(educationStateResponse.education_state);
 
         if (sessionStorage.getItem("educationState") === "true") {
           // if (projectEducationState === "education") {
