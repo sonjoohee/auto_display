@@ -220,6 +220,7 @@ import FileFill from "../images/file-fill.svg";
 import PeopleFillPrimary from "../images/people-fill-primary.svg";
 import PeopleFillPrimary2 from "../images/people-fill-primary2.svg";
 import PeopleStarFillPrimary from "../images/people-star-fill-primary.svg";
+import ListFillPrimary from "../images/list-fill-primary.svg";
 import NoAlarm from "../images/alarm-no.svg";
 import ExclamationCircle from "../images/exclamation-circle.svg";
 import ExclamationCircleFill from "../images/exclamation-circle-fill.svg";
@@ -602,6 +603,7 @@ const images = {
   FileFill,
   PeopleFillPrimary,
   PeopleFillPrimary2,
+  ListFillPrimary,
   PeopleStarFillPrimary,
   NoAlarm,
   ExclamationCircle,

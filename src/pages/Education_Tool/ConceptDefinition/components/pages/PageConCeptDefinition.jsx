@@ -964,6 +964,13 @@ const PageConceptDefinition = () => {
                           사업 아이템의 실행 전략을 정리한 초안입니다. 이를
                           기반으로 세부 내용을 구체화해보세요.​
                         </Body3>
+                        <style>
+                          {`
+                            .markdown-body {
+                              margin-top: 20px;
+                            }
+                          `}
+                        </style>
                       </BgBoxItem>
 
                       <InsightAnalysis>
@@ -985,6 +992,7 @@ const PageConceptDefinition = () => {
                           Primary
                           Edit
                           Large
+                          style={{ color: "#666666", border: "1px solid #E0E4EB" }}
                           onClick={() => navigate("/Tool")}
                   
                         >

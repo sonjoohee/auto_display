@@ -1037,6 +1037,7 @@ const PageCustomerJourneyMap = () => {
                           Primary
                           Edit
                           Large
+                          style={{ color: "#666666", border: "1px solid #E0E4EB" }}
                           onClick={() => navigate("/Tool")}
                   
                         >
