@@ -13,13 +13,22 @@ import {
   PRICE_PRODUCT,
   IS_EDITING_NOW,
   PROJECT_TOTAL_INFO,
+  CREDIT_CREATE_TOOL,
+  USER_CREDITS,
+  IS_LOGGED_IN,
+  PROJECT_SAAS,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
+import { UserCreditUse, UserCreditInfo } from "../../../../utils/indexedDB";
 
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculePriceStartButton = () => {
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [creditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
+  const [project] = useAtom(PROJECT_SAAS);
   const { saveConversation } = useSaveConversation();
   const [titleOfBusinessInfo] = useAtom(TITLE_OF_BUSINESS_INFORMATION);
   const [selectedExpertIndex, setSelectedExpertIndex] = useAtom(SELECTED_EXPERT_INDEX);
@@ -149,6 +158,22 @@ const MoleculePriceStartButton = () => {
     await saveConversation(
       { changingConversation: { conversation: updatedConversation, conversationStage: 3 } }
     );
+     // 크레딧이 사용 가능한 상태면 사용 API 호출
+     const creditUsePayload = {
+      title: project.projectTitle,
+      service_type: "가격 분석 전문가",
+      target: "",
+      state: "use",
+      mount: creditCreateTool,
+    };
+
+    await UserCreditUse(creditUsePayload, isLoggedIn);
+
+    // 크레딧 사용 후 사용자 정보 새로고침
+
+    const userCreditValue = await UserCreditInfo(isLoggedIn);
+    // 전역 상태의 크레딧 정보 업데이트
+    setUserCredits(userCreditValue);
   };
   return (
     <>

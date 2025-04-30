@@ -12,14 +12,23 @@ import {
   TITLE_OF_BUSINESS_INFORMATION,
   STRATEGY_CONSULTANT_REPORT_DATA,
   PROJECT_TOTAL_INFO,
+  CREDIT_CREATE_TOOL,
+  USER_CREDITS,
+  IS_LOGGED_IN,
+  PROJECT_SAAS,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
 
 import { palette } from "../../../../assets/styles/Palette";
+import { UserCreditUse, UserCreditInfo } from "../../../../utils/indexedDB";
 
 const MoleculeStrategyButton = ({strategyConsultantCount}) => {
   const { saveConversation } = useSaveConversation();
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [project] = useAtom(PROJECT_SAAS);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [creditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
@@ -103,6 +112,24 @@ const MoleculeStrategyButton = ({strategyConsultantCount}) => {
         conversationStage: 3,
       },
     });
+
+    // 크레딧이 사용 가능한 상태면 사용 API 호출
+    const creditUsePayload = {
+      title: project.projectTitle,
+      service_type: "전략 컨설턴트",
+      target: "",
+      state: "use",
+      mount: creditCreateTool,
+    };
+
+    await UserCreditUse(creditUsePayload, isLoggedIn);
+
+    // 크레딧 사용 후 사용자 정보 새로고침
+
+    const userCreditValue = await UserCreditInfo(isLoggedIn);
+    // 전역 상태의 크레딧 정보 업데이트
+    setUserCredits(userCreditValue);
+
   };
   return (
     <>

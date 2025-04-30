@@ -36,6 +36,13 @@ import {
   PSST_SELECTED_TEMPLETE,
   PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION,
   PROJECT_ANALYSIS_MULTIMODAL_KEYMESSAGE,
+  CREDIT_CREATE_TOOL,
+  CREDIT_CREATE_TOOL_LOADED,
+  USER_CREDITS,
+  EDUCATION_STATE,
+  EVENT_STATE,
+  TRIAL_STATE,
+  EVENT_TITLE,
 } from "../../../../AtomStates";
 import {
   H3,
@@ -48,6 +55,9 @@ import {
   updateToolOnServer,
   InterviewXPsstMultimodalRequest,
   InterviewXPsstAnalysisRequest,
+  UserCreditCheck,
+  UserCreditUse,
+  UserCreditInfo,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
@@ -85,6 +95,14 @@ const psstReportIndex = `문제 정의 (Problem)
 const PagePsstReport = () => {
   const navigate = useNavigate();
 
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
+    CREDIT_CREATE_TOOL_LOADED
+  );
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [educationState] = useAtom(EDUCATION_STATE);
+  const [eventState] = useAtom(EVENT_STATE);
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -124,6 +142,9 @@ const PagePsstReport = () => {
   const [toolSteps, setToolSteps] = useState(0);
   const [isCreateReportIndex, setIsCreateReportIndex] = useState(false);
   const [hideIndexButton, setHideIndexButton] = useState(false);
+  const [creditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
+  const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
   // 초기 상태를 빈 배열로 설정
 
   const [currentLoadingIndex, setCurrentLoadingIndex] = useState(1);
@@ -138,6 +159,22 @@ const PagePsstReport = () => {
 
   useEffect(() => {
     const interviewLoading = async () => {
+      if (!creditCreateToolLoaded) {
+        setShowCreatePersonaPopup(true);
+        // 크레딧 사용전 사용 확인
+        const creditPayload = {
+          // 기존 10 대신 additionalQuestionMount 사용
+          mount: creditCreateTool,
+        };
+        const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+
+        if (creditResponse?.state !== "use") {
+          setShowCreditPopup(true);
+          return;
+        }
+        setCreditCreateToolLoaded(true);
+      }
+
       if (toolLoading) {
         // 비즈니스 정보 설정 (Step 1)
         if (psstBusinessInfo) {
@@ -309,6 +346,24 @@ const PagePsstReport = () => {
       );
       setToolId(responseToolId);
 
+         // 크레딧이 사용 가능한 상태면 사용 API 호출
+         const creditUsePayload = {
+          title: project.projectTitle,
+          service_type: "PSST 리포트 생성기",
+          target: "",
+          state: "use",
+          mount: creditCreateTool,
+        };
+  
+        await UserCreditUse(creditUsePayload, isLoggedIn);
+  
+        // 크레딧 사용 후 사용자 정보 새로고침
+  
+        const userCreditValue = await UserCreditInfo(isLoggedIn);
+        // 전역 상태의 크레딧 정보 업데이트
+        setUserCredits(userCreditValue);
+
+
       await updateToolOnServer(
         responseToolId,
         {
@@ -381,6 +436,24 @@ const PagePsstReport = () => {
       isLoggedIn
     );
     setToolId(responseToolId);
+
+       // 크레딧이 사용 가능한 상태면 사용 API 호출
+       const creditUsePayload = {
+        title: project.projectTitle,
+        service_type: "PSST 리포트 생성기",
+        target: "",
+        state: "use",
+        mount: creditCreateTool,
+      };
+
+      await UserCreditUse(creditUsePayload, isLoggedIn);
+
+      // 크레딧 사용 후 사용자 정보 새로고침
+
+      const userCreditValue = await UserCreditInfo(isLoggedIn);
+      // 전역 상태의 크레딧 정보 업데이트
+      setUserCredits(userCreditValue);
+
 
     setHideIndexButton(true);
 
@@ -730,8 +803,12 @@ const PagePsstReport = () => {
     //   name: "IDEA PITCH 제안서",
     //   reason:
     //     "시장성, 차별성, 실행력을 강조하는 발표형 구조입니다.<br/>투자유치(IR), 경진대회, 피칭 행사에 적합합니다.​",
-    // },
+    // }
   ];
+
+  const handleConfirmCredit = async () => {
+    setShowCreatePersonaPopup(false);
+  };
 
   return (
     <>
@@ -1132,6 +1209,96 @@ const PagePsstReport = () => {
           isModal={false}
           onCancel={() => setShowPopupSave(false)}
           onConfirm={() => setShowPopupSave(false)}
+        />
+      )}
+
+{showCreatePersonaPopup &&
+        (eventState && !educationState ? (
+          <PopupWrap
+            Event
+            title="보고서 생성기"
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : trialState && !educationState ? (
+          <PopupWrap
+            Check
+            title="보고서 생성기"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="보고서 생성기"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ))}
+
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
+          onConfirm={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
         />
       )}
     </>

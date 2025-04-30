@@ -1071,7 +1071,7 @@ const PagePersona3Multiple = () => {
         (eventState && !educationState ? (
           <PopupWrap
             Event
-            title="심층 인터뷰 룸"
+            title="그룹 인터뷰 룸"
             message={
               <>
                 현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
@@ -1113,7 +1113,7 @@ const PagePersona3Multiple = () => {
         ) : (
           <PopupWrap
             Check
-            title="심층 인터뷰 룸"
+            title="그룹 인터뷰 룸"
             message={
               <>
                 해당 서비스 사용시 크레딧이 소진됩니다.

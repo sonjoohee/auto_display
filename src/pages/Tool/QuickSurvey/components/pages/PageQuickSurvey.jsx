@@ -48,6 +48,13 @@ import {
   QUICK_SURVEY_RECRUITING_CONDITION,
   QUICK_SURVEY_INTERVIEW_MODE_TYPE,
   QUICK_SURVEY_CUSTOM_QUESTION,
+  CREDIT_CREATE_TOOL_LOADED,
+  CREDIT_CREATE_TOOL,
+  USER_CREDITS,
+  EDUCATION_STATE,
+  EVENT_STATE,
+  TRIAL_STATE,
+  EVENT_TITLE,
 } from "../../../../AtomStates";
 import {
   H4,
@@ -61,6 +68,9 @@ import {
   InterviewXQuickSurveyRequest,
   createToolOnServer,
   updateToolOnServer,
+  UserCreditCheck,
+  UserCreditUse,
+  UserCreditInfo,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import MoleculeDesignItem from "../molecules/MoleculeDesignItem";
@@ -84,6 +94,14 @@ import MolculeQuickSurveyPopup from "../molecules/MolculeQuickSurveyPopup";
 const PageQuickSurvey = () => {
   const navigate = useNavigate();
 
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
+    CREDIT_CREATE_TOOL_LOADED
+  );
+const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+const [educationState] = useAtom(EDUCATION_STATE);
+const [eventState] = useAtom(EVENT_STATE);
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -177,6 +195,9 @@ const PageQuickSurvey = () => {
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
   const [isCustomPopupOpen, setIsCustomPopupOpen] = useState(false);
   const [isCustomLoading, setIsCustomLoading] = useState(false);
+  const [creditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
+  const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
   const project = projectSaas;
@@ -207,6 +228,23 @@ const PageQuickSurvey = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
+      if (!creditCreateToolLoaded) {
+        setShowCreatePersonaPopup(true);
+        // 크레딧 사용전 사용 확인
+        const creditPayload = {
+          // 기존 10 대신 additionalQuestionMount 사용
+          mount: creditCreateTool,
+        };
+        const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+
+        if (creditResponse?.state !== "use") {
+          setShowCreditPopup(true);
+          return;
+        }
+        setCreditCreateToolLoaded(true);
+      }
+
+
 
       const projectAnalysis =
         (project?.projectAnalysis?.business_analysis
@@ -483,6 +521,23 @@ const PageQuickSurvey = () => {
         );
 
         setToolId(responseToolId);
+
+         // 크레딧이 사용 가능한 상태면 사용 API 호출
+      const creditUsePayload = {
+        title: project.projectTitle,
+        service_type: "퀵 서베이",
+        target: "",
+        state: "use",
+        mount: creditCreateTool,
+      };
+
+      await UserCreditUse(creditUsePayload, isLoggedIn);
+
+      // 크레딧 사용 후 사용자 정보 새로고침
+
+      const userCreditValue = await UserCreditInfo(isLoggedIn);
+      // 전역 상태의 크레딧 정보 업데이트
+      setUserCredits(userCreditValue);
 
         setQuickSurveyAnalysis(response.response.quick_survey_question);
 
@@ -1145,7 +1200,10 @@ const PageQuickSurvey = () => {
     setIsCustomPopupOpen(false);
     setQuickSurveyCustomQuestion(null); // aiResponse 초기화
   };
-
+  const handleConfirmCredit = async () => {
+    setShowCreatePersonaPopup(false);
+  };
+   
   return (
     <>
       <DropzoneStyles />
@@ -2212,6 +2270,96 @@ const PageQuickSurvey = () => {
           isModal={false}
           onCancel={() => setShowPopupSave(false)}
           onConfirm={() => setShowPopupSave(false)}
+        />
+      )}
+     
+{showCreatePersonaPopup &&
+        (eventState && !educationState ? (
+          <PopupWrap
+            Event
+            title="퀵 서베이"
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : trialState && !educationState ? (
+          <PopupWrap
+            Check
+            title="퀵 서베이"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="퀵 서베이"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ))}
+
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
+          onConfirm={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
         />
       )}
     </>

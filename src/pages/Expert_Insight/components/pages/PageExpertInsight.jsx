@@ -5,6 +5,7 @@ import theme from "../../../../assets/styles/Theme";
 import { palette } from "../../../../assets/styles/Palette";
 import { useAtom } from "jotai";
 import image from "../../../../assets/styles/Images";
+import PopupWrap from "../../../../assets/styles/Popup";
 import {
   SELECTED_EXPERT_INDEX,
   INPUT_BUSINESS_INFO,
@@ -77,8 +78,16 @@ import {
   GROWTH_HACKER_SELECTED_SOLUTION,
   STRATEGY_CONSULTANT_REPORT_DATA,
   PROJECT_SAAS,
+  CREDIT_CREATE_TOOL,
+  CREDIT_CREATE_TOOL_LOADED,
+  USER_CREDITS,
+  EDUCATION_STATE,
+  EVENT_STATE,
+  TRIAL_STATE,
+  EVENT_TITLE,
 } from "../../../AtomStates";
 import { getConversationByIdFromIndexedDB } from "../../../../utils/indexedDB";
+import { UserCreditCheck, UserCreditUse, UserCreditInfo } from "../../../../utils/indexedDB";
 import { createChatOnServer } from "../../../../utils/indexedDB"; // 서버와 대화 ID 생성 함수
 import MoleculeStrategyButton from "../molecules/MoleculeStrategyButton";
 import OrganismStrategyConsultantReport from "../organisms/OrganismStrategyConsultantReport";
@@ -158,6 +167,15 @@ import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 const PageExpertInsight = () => {
   const navigate = useNavigate();
 
+  const [creditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
+  CREDIT_CREATE_TOOL_LOADED
+  );
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [educationState] = useAtom(EDUCATION_STATE);
+  const [eventState] = useAtom(EVENT_STATE);
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
   const [projectSaas] = useAtom(PROJECT_SAAS);
   const [strategyConsultantReportData, setStrategyConsultantReportData] =
     useAtom(STRATEGY_CONSULTANT_REPORT_DATA);
@@ -266,6 +284,8 @@ const PageExpertInsight = () => {
 
   const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
 
   let additionalReportCount = 0;
   let customerAdditionalReportCount = 0;
@@ -280,6 +300,7 @@ const PageExpertInsight = () => {
   };
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
+
 
   useEffect(() => {
     if (isMarketing && approachPath !== 2) {
@@ -417,6 +438,21 @@ const PageExpertInsight = () => {
 
   useEffect(() => {
     const loadConversation = async () => {
+      if (!creditCreateToolLoaded) {
+        setShowCreatePersonaPopup(true);
+        // 크레딧 사용전 사용 확인
+        const creditPayload = {
+          // 기존 10 대신 additionalQuestionMount 사용
+          mount: creditCreateTool,
+        };
+        const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+    
+        if (creditResponse?.state !== "use") {
+          setShowCreditPopup(true);
+          return;
+        }
+        setCreditCreateToolLoaded(true);
+      }
       // 1. 로그인 여부 확인
       if (isLoggedIn && !isMarketing) {
         // 2. 로그인 상태라면 서버에서 새로운 대화 ID를 생성하거나, 저장된 대화를 불러옴
@@ -737,6 +773,21 @@ const PageExpertInsight = () => {
   // 히스토로 진입할 때는 즉시 렌더링
   const itemsToRender = approachPath === 2 ? conversation : renderedItems;
 
+  const handleConfirmCredit = async () => {
+    setShowCreatePersonaPopup(false);
+  };
+
+  const renderItemsTitle = () => {
+    if (renderedItems.find(item => item.expertIndex === '1')) {
+      return "전략 컨설턴트";
+    } else if (renderedItems.find(item => item.expertIndex === '7')) {
+      return "가격 분석 전문가";
+    } else if (renderedItems.find(item => item.expertIndex === '9')) {
+      return "BM 전문가";
+    } else if (renderedItems.find(item => item.expertIndex === '6')) {
+      return "그로스 해커";
+    }
+  };
   return (
     <>
       <Header />
@@ -1226,6 +1277,96 @@ const PageExpertInsight = () => {
             </div>
           </Popup>
         )}
+       
+{showCreatePersonaPopup &&
+        (eventState && !educationState ? (
+          <PopupWrap
+            Event
+            title={renderItemsTitle()}
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : trialState && !educationState ? (
+          <PopupWrap
+            Check
+            title={renderItemsTitle()}
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title={renderItemsTitle()}
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ))}
+
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
+          onConfirm={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
+        />
+      )}
       </ThemeProvider>
     </>
   );

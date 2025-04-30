@@ -46,6 +46,13 @@ import {
   DESIGN_ANALYSIS_FILE_ID,
   PROJECT_SAAS,
   DESIGN_ANALYSIS_BUSINESS_TITLE,
+  CREDIT_CREATE_TOOL,
+  CREDIT_CREATE_TOOL_LOADED,
+  USER_CREDITS,
+  EDUCATION_STATE,
+  EVENT_STATE,
+  TRIAL_STATE,
+  EVENT_TITLE,
 } from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import {
@@ -62,6 +69,9 @@ import {
   InterviewXDesignEmotionScaleRequest,
   createToolOnServer,
   updateToolOnServer,
+  UserCreditCheck,
+  UserCreditUse,
+  UserCreditInfo,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
@@ -74,6 +84,18 @@ const PageDesignAnalysis = () => {
 
   const navigate = useNavigate();
 
+  const [showPopupFileSize, setShowPopupFileSize] = useState(false);
+  const [isEditingBusiness, setIsEditingBusiness] = useState(false);
+  const [toolSteps, setToolSteps] = useState(0);
+  const [creditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
+      CREDIT_CREATE_TOOL_LOADED
+    );
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [educationState] = useAtom(EDUCATION_STATE);
+  const [eventState] = useAtom(EVENT_STATE);
+  const [trialState] = useAtom(TRIAL_STATE);
+  const [eventTitle] = useAtom(EVENT_TITLE);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
@@ -115,9 +137,8 @@ const PageDesignAnalysis = () => {
     isExpanded: false,
     showQuestions: false,
   });
-  const [showPopupFileSize, setShowPopupFileSize] = useState(false);
-  const [isEditingBusiness, setIsEditingBusiness] = useState(false);
-  const [toolSteps, setToolSteps] = useState(0);
+  const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
+  const [showCreditPopup, setShowCreditPopup] = useState(false);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -130,6 +151,22 @@ const PageDesignAnalysis = () => {
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
+      if (!creditCreateToolLoaded) {
+        setShowCreatePersonaPopup(true);
+        // 크레딧 사용전 사용 확인
+        const creditPayload = {
+          // 기존 10 대신 additionalQuestionMount 사용
+          mount: creditCreateTool,
+        };
+        const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+
+        if (creditResponse?.state !== "use") {
+          setShowCreditPopup(true);
+          return;
+        }
+        setCreditCreateToolLoaded(true);
+      }
+
    
     if (designAnalysisBusinessInfo.length === 0) {
       const projectAnalysis =
@@ -301,6 +338,23 @@ const PageDesignAnalysis = () => {
 
       setToolId(responseToolId);
       setToolSteps(1);
+
+         // 크레딧이 사용 가능한 상태면 사용 API 호출
+         const creditUsePayload = {
+          title: project.projectTitle,
+          service_type: "디자인 감정 분석기",
+          target: "",
+          state: "use",
+          mount: creditCreateTool,
+        };
+  
+        await UserCreditUse(creditUsePayload, isLoggedIn);
+  
+        // 크레딧 사용 후 사용자 정보 새로고침
+  
+        const userCreditValue = await UserCreditInfo(isLoggedIn);
+        // 전역 상태의 크레딧 정보 업데이트
+        setUserCredits(userCreditValue);
 
       // API 응답에서 페르소나 데이터를 추출하여 atom에 저장
       setDesignAnalysisEmotionAnalysis(
@@ -623,6 +677,11 @@ const PageDesignAnalysis = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
+
+  const handleConfirmCredit = async () => {
+    setShowCreatePersonaPopup(false);
+  };
+  
 
   return (
     <>
@@ -1115,6 +1174,96 @@ const PageDesignAnalysis = () => {
           isModal={false}
           onCancel={() => setShowPopupSave(false)}
           onConfirm={() => setShowPopupSave(false)}
+        />
+      )}
+    
+{showCreatePersonaPopup &&
+        (eventState && !educationState ? (
+          <PopupWrap
+            Event
+            title="디자인 감성 분석기"
+            message={
+              <>
+                현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : trialState && !educationState ? (
+          <PopupWrap
+            Check
+            title="디자인 감성 분석기"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+                <br />
+                신규 가입 2주간 무료로 사용 가능합니다.
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ) : (
+          <PopupWrap
+            Check
+            title="디자인 감성 분석기"
+            message={
+              <>
+                해당 서비스 사용시 크레딧이 소진됩니다.
+                <br />({creditCreateTool} 크레딧)
+              </>
+            }
+            buttonType="Outline"
+            closeText="취소"
+            confirmText="시작하기"
+            isModal={false}
+            onCancel={() => {
+              setShowCreatePersonaPopup(false);
+              navigate("/Tool");
+            }}
+            onConfirm={handleConfirmCredit}
+          />
+        ))}
+
+      {showCreditPopup && (
+        <PopupWrap
+          Warning
+          title="크레딧이 모두 소진되었습니다"
+          message={
+            <>
+              보유한 크레딧이 부족합니다.
+              <br />
+              크레딧을 충전한 후 다시 시도해주세요.
+            </>
+          }
+          buttonType="Outline"
+          closeText="확인"
+          isModal={false}
+          onCancel={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
+          onConfirm={() => {
+            setShowCreditPopup(false);
+            navigate("/Tool");
+          }}
         />
       )}
     </>
