@@ -9,7 +9,6 @@ import {
 import { useAtom } from "jotai";
 
 const MoleculeMandalArtGraph = ({ mandalartData }) => {
-
   const [selectedItem, setSelectedItem] = useState(null);
   const [ideaGenerationSelectedStartPosition] = useAtom(
     IDEA_GENERATION_SELECTED_START_POSITION
@@ -23,58 +22,57 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
   );
   const [projectSaas] = useAtom(PROJECT_SAAS);
 
-
   const mandalartButtons = [
     // 1, 2, 3 위치 (왼쪽 상단, 중앙 상단, 오른쪽 상단)
     ...ideaGenerationSelectedStartPosition.slice(0, 3).map((item, index) => ({
       id: index + 1,
       text: item.main_theme,
       isCenter: false,
-      displayOrder: index + 1 // 1, 2, 3
+      displayOrder: index + 1, // 1, 2, 3
     })),
-    
+
     // 8 위치 (왼쪽 중앙)
     {
       id: 8,
       text: ideaGenerationSelectedStartPosition[7]?.main_theme || "",
       isCenter: false,
-      displayOrder: 4 // 표시 순서 4번째
+      displayOrder: 4, // 표시 순서 4번째
     },
-    
+
     // 0 위치 (중앙)
     {
       id: 0,
       text: projectSaas?.projectTitle || "아이디어 발상",
       isCenter: true,
-      displayOrder: 5 // 표시 순서 5번째
+      displayOrder: 5, // 표시 순서 5번째
     },
-    
+
     // 4 위치 (오른쪽 중앙)
     {
       id: 4,
       text: ideaGenerationSelectedStartPosition[3]?.main_theme || "",
       isCenter: false,
-      displayOrder: 6 // 표시 순서 6번째
+      displayOrder: 6, // 표시 순서 6번째
     },
-    
+
     // 7, 6, 5 위치 (왼쪽 하단, 중앙 하단, 오른쪽 하단)
     {
       id: 7,
       text: ideaGenerationSelectedStartPosition[6]?.main_theme || "",
       isCenter: false,
-      displayOrder: 7 // 표시 순서 7번째
+      displayOrder: 7, // 표시 순서 7번째
     },
     {
       id: 6,
       text: ideaGenerationSelectedStartPosition[5]?.main_theme || "",
       isCenter: false,
-      displayOrder: 8 // 표시 순서 8번째
+      displayOrder: 8, // 표시 순서 8번째
     },
     {
       id: 5,
       text: ideaGenerationSelectedStartPosition[4]?.main_theme || "",
       isCenter: false,
-      displayOrder: 9 // 표시 순서 9번째
+      displayOrder: 9, // 표시 순서 9번째
     },
   ];
 
@@ -84,7 +82,6 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
   const handleItemClick = (itemId) => {
     setSelectedItem(itemId);
     setIdeaGenerationSelectedMandalart(itemId);
-
   };
 
   const handleBackClick = () => {
@@ -93,7 +90,6 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
   };
 
   const getDetailButtons = () => {
-
     if (!selectedItem || !mandalartData) return [];
 
     // 선택된 아이템의 데이터 찾기
@@ -104,21 +100,23 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
     // detailed_execution_ideas에서 idea_title만 사용
     const detailButtons = [
       // 1, 2, 3 위치 (왼쪽 상단, 중앙 상단, 오른쪽 상단)
-      ...selectedData.detailed_execution_ideas.slice(0, 3).map((item, index) => ({
-        id: index + 1,
-        text: item.idea_title,
-        isCenter: false,
-        displayOrder: index + 1 // 1, 2, 3
-      })),
-      
+      ...selectedData.detailed_execution_ideas
+        .slice(0, 3)
+        .map((item, index) => ({
+          id: index + 1,
+          text: item.idea_title,
+          isCenter: false,
+          displayOrder: index + 1, // 1, 2, 3
+        })),
+
       // 8 위치 (왼쪽 중앙)
       {
         id: 8,
         text: selectedData.detailed_execution_ideas[7]?.idea_title || "",
         isCenter: false,
-        displayOrder: 4
+        displayOrder: 4,
       },
-      
+
       // 중앙 버튼
       {
         id: 0,
@@ -126,36 +124,36 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
           ideaGenerationSelectedStartPosition[selectedItem - 1].main_theme
         }`,
         isCenter: true,
-        displayOrder: 5
+        displayOrder: 5,
       },
-      
+
       // 4 위치 (오른쪽 중앙)
       {
         id: 4,
         text: selectedData.detailed_execution_ideas[3]?.idea_title || "",
         isCenter: false,
-        displayOrder: 6
+        displayOrder: 6,
       },
-      
+
       // 7, 6, 5 위치 (왼쪽 하단, 중앙 하단, 오른쪽 하단)
       {
         id: 7,
         text: selectedData.detailed_execution_ideas[6]?.idea_title || "",
         isCenter: false,
-        displayOrder: 7
+        displayOrder: 7,
       },
       {
         id: 6,
         text: selectedData.detailed_execution_ideas[5]?.idea_title || "",
         isCenter: false,
-        displayOrder: 8
+        displayOrder: 8,
       },
       {
         id: 5,
         text: selectedData.detailed_execution_ideas[4]?.idea_title || "",
         isCenter: false,
-        displayOrder: 9
-      }
+        displayOrder: 9,
+      },
     ];
 
     // displayOrder 기준으로 정렬
@@ -177,9 +175,10 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
               }
               hasOutline={true}
             >
-              {button.isCenter
-                ? button.text
-                : `Theme.${button.id} ${button.text}`}
+              {button.isCenter && button.text}
+              {!button.isCenter && `Theme.${button.id}`}
+              {!button.isCenter && <br />}
+              {!button.isCenter && `${button.text}`}
             </MandalartButton>
           ))}
         </MandalartGrid>
@@ -195,9 +194,11 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
               onClick={button.isCenter ? handleBackClick : undefined}
               hasOutline={true}
             >
-              {button.isCenter
-                ? button.text
-                : `Idea.${button.id} ${button.text}`}
+              {" "}
+              {button.isCenter && button.text}
+              {!button.isCenter && `Idea.${button.id}`}
+              {!button.isCenter && <br />}
+              {!button.isCenter && `${button.text}`}
               {button.isCenter && (
                 <BackNavigationText>
                   <BackIcon

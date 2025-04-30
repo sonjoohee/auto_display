@@ -7,7 +7,15 @@ import images from "../styles/Images";
 import personaImages from "../styles/PersonaImages";
 import PopupWrap from "../styles/Popup";
 import { CustomInput } from "../styles/InputStyle";
-import { Body1, H4, Helptext, Sub1, Sub2, Body2, Body3 } from "../styles/Typography";
+import {
+  Body1,
+  H4,
+  Helptext,
+  Sub1,
+  Sub2,
+  Body2,
+  Body3,
+} from "../styles/Typography";
 import { Persona } from "../styles/BusinessAnalysisStyle";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
@@ -36,39 +44,32 @@ import { InterviewXInterviewReportRequest } from "../../utils/indexedDB";
 import { InterviewXInterviewReportAdditionalRequest } from "../../utils/indexedDB";
 
 const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
-
-  const [selectedPersonaList,] = useAtom(
-    SELECTED_PERSONA_LIST
-  );
+  const [selectedPersonaList] = useAtom(SELECTED_PERSONA_LIST);
   const [, setReportId] = useAtom(PROJECT_REPORT_ID);
-  const [, setIsPersonaAccessible] = useAtom(
-    IS_PERSONA_ACCESSIBLE
-  );
+  const [, setIsPersonaAccessible] = useAtom(IS_PERSONA_ACCESSIBLE);
   const [, setInterviewReport] = useAtom(INTERVIEW_REPORT);
-  const [, setInterviewReportAdditional] = useAtom(
-    INTERVIEW_REPORT_ADDITIONAL
-  );
+  const [, setInterviewReportAdditional] = useAtom(INTERVIEW_REPORT_ADDITIONAL);
   const [interviewData, setInterviewData] = useAtom(INTERVIEW_DATA);
-  const [projectId, ] = useAtom(PROJECT_ID);
-  const [isLoggedIn, ] = useAtom(IS_LOGGED_IN);
+  const [projectId] = useAtom(PROJECT_ID);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
-  const [selectedInterviewPurpose, ] = useAtom(
-    SELECTED_INTERVIEW_PURPOSE
-  );
-  const [personaList, ] = useAtom(PERSONA_LIST);
+  const [selectedInterviewPurpose] = useAtom(SELECTED_INTERVIEW_PURPOSE);
+  const [personaList] = useAtom(PERSONA_LIST);
   const [interviewQuestionList, setInterviewQuestionList] = useAtom(
     INTERVIEW_QUESTION_LIST
   );
-  const [businessAnalysis, ] = useAtom(BUSINESS_ANALYSIS);
+  const [businessAnalysis] = useAtom(BUSINESS_ANALYSIS);
 
   const navigate = useNavigate();
 
   const [active, setActive] = useState(isActive);
   const [showWarning, setShowWarning] = useState(false);
   const [isLoadingPrepare, setIsLoadingPrepare] = useState(true);
-  const [interviewQuestionListState, setInterviewQuestionListState] = useState([]);
+  const [interviewQuestionListState, setInterviewQuestionListState] = useState(
+    []
+  );
   const [interviewStatus, setInterviewStatus] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -82,11 +83,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   const [showRegenerateButton1, setShowRegenerateButton1] = useState(false);
   const [showRegenerateButton2, setShowRegenerateButton2] = useState(false);
 
-
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const [showAddQuestion, setShowAddQuestion] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-
+  const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -99,53 +98,55 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
   //저장되었던 인터뷰 로드
   useEffect(() => {
-
     const interviewLoading = async () => {
       // 인터뷰 스크립트 보기, 인터뷰 상세보기로 진입 시 isComplete는 True
       if (isComplete) {
-          const questions = interviewData.map((item) => ({
-            question: item.question_1 || item.question_2 || item.question_3,
-          }));
-          setInterviewQuestionListState(questions);
-          // 모든 질문을 Complete 상태로 설정
-          const completedStatus = new Array(interviewData.length).fill(
-            "Complete"
-          );
-          setInterviewStatus(completedStatus);
+        const questions = interviewData.map((item) => ({
+          question: item.question_1 || item.question_2 || item.question_3,
+        }));
+        setInterviewQuestionListState(questions);
+        // 모든 질문을 Complete 상태로 설정
+        const completedStatus = new Array(interviewData.length).fill(
+          "Complete"
+        );
+        setInterviewStatus(completedStatus);
 
-          const newAnswers = {};
+        const newAnswers = {};
 
-          questions.forEach((_, index) => {
-            const answers = interviewData[index][`answer_${index + 1}`];
-              newAnswers[index] = (selectedPersonaList.length ? selectedPersonaList : personaList.selected).map((persona, pIndex) => {
-                // profile 문자열에서 정보 추출
-                const profileArray = persona.profile
-                  .replace(/['\[\]]/g, "")
-                  .split(", ");
-                const age = profileArray[0].split(": ")[1];
-                const gender =
-                  profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
-                const job = profileArray[2].split(": ")[1];
+        questions.forEach((_, index) => {
+          const answers = interviewData[index][`answer_${index + 1}`];
+          newAnswers[index] = (
+            selectedPersonaList.length
+              ? selectedPersonaList
+              : personaList.selected
+          ).map((persona, pIndex) => {
+            // profile 문자열에서 정보 추출
+            const profileArray = persona.profile
+              .replace(/['\[\]]/g, "")
+              .split(", ");
+            const age = profileArray[0].split(": ")[1];
+            const gender =
+              profileArray[1].split(": ")[1] === "남성" ? "남성" : "여성";
+            const job = profileArray[2].split(": ")[1];
 
-                return {
-                  persona: persona,
-                  gender: gender,
-                  age: age,
-                  job: job,
-                  answer: answers[pIndex],
-                };
-              });
-            }
-          );
-          setAnswers(newAnswers);
-
-          // 모든 답변을 보이도록 설정
-          const allVisible = {};
-          questions.forEach((_, index) => {
-            allVisible[index] = true;
+            return {
+              persona: persona,
+              gender: gender,
+              age: age,
+              job: job,
+              answer: answers[pIndex],
+            };
           });
-          setVisibleAnswers(allVisible);
-          setIsLoadingPrepare(false);
+        });
+        setAnswers(newAnswers);
+
+        // 모든 답변을 보이도록 설정
+        const allVisible = {};
+        questions.forEach((_, index) => {
+          allVisible[index] = true;
+        });
+        setVisibleAnswers(allVisible);
+        setIsLoadingPrepare(false);
 
         return; // isComplete가 True일 때 API 호출 없이 종료
       }
@@ -155,7 +156,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     interviewLoading();
   }, [personaButtonState3, isComplete]);
 
-  // 인터뷰 질문 생성 단계 
+  // 인터뷰 질문 생성 단계
   const loadInterviewQuestion = async () => {
     setShowRegenerateButton1(false);
     try {
@@ -168,8 +169,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           // 이미 질문이 생성된 상태하면 상태값 설정 후 5초 대기
           setInterviewQuestionListState(existingQuestions.questions.slice(2));
           await new Promise((resolve) => setTimeout(resolve, 5000));
-            setIsLoadingPrepare(false);
-            setInterviewStatus(["Pre","Pre","Pre"]);
+          setIsLoadingPrepare(false);
+          setInterviewStatus(["Pre", "Pre", "Pre"]);
         } else {
           // 생성된 질문이 없다면 API 요청
           let data = {
@@ -182,9 +183,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             theory_name: selectedInterviewPurpose,
           };
 
-        
           // 페르소나 인터뷰 생성 API  수정 예정
-          let response = await InterviewXPersonaInterviewModeratorRequest(data, isLoggedIn);
+          let response = await InterviewXPersonaInterviewModeratorRequest(
+            data,
+            isLoggedIn
+          );
 
           let questionList = response.response; //응답 반환하는 부분 (질문 받아옴)
           let retryCount = 0;
@@ -194,9 +197,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             retryCount < maxRetries &&
             (!response || !response.response || response.response.length !== 5)
           ) {
-       
             // 페르소나 인터뷰 생성 API  수정 예정
-            let response = await InterviewXPersonaInterviewModeratorRequest(data, isLoggedIn);
+            let response = await InterviewXPersonaInterviewModeratorRequest(
+              data,
+              isLoggedIn
+            );
             retryCount++;
             questionList = response.response;
           }
@@ -262,7 +267,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
     setShowRegenerateButton2(false);
     try {
       setIsAnalyzing(true);
-      const finalData1 = { 
+      const finalData1 = {
         business_idea: businessAnalysis,
         persona_info: personaInfoState,
         interview_data: [
@@ -281,9 +286,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       const maxRetries = 10;
 
       while (retryCount < maxRetries) {
-     
         // 인터뷰 결과 보고서 요청 API  수정 예정
-         response = await InterviewXInterviewReportRequest(finalData1, isLoggedIn);
+        response = await InterviewXInterviewReportRequest(
+          finalData1,
+          isLoggedIn
+        );
 
         // 응답 데이터가 유효한지 확인
         if (
@@ -326,9 +333,12 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
       retryCount = 0;
 
       while (retryCount < maxRetries) {
-    
         //인터뷰 결과 추가 보고서 요청 수정 예정
-        responseReportAdditional  = await InterviewXInterviewReportAdditionalRequest(finalData2, isLoggedIn);
+        responseReportAdditional =
+          await InterviewXInterviewReportAdditionalRequest(
+            finalData2,
+            isLoggedIn
+          );
 
         // 응답 데이터의 유효성 검사
 
@@ -452,21 +462,24 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
             };
 
             //수집된 답변들 api요청에 포함
-            const data = { 
+            const data = {
               business_analysis_data: businessAnalysis,
               question: interviewQuestionListState[currentQuestionIndex],
               persona_info: personaInfo,
               last_interview: lastInterview,
             };
 
-     
             // 페르소나 인터뷰 수행(단건) API  수정 예정
-            let response = await InterviewXPersonaBusinessInterviewModuleRequest(data, isLoggedIn);
+            let response =
+              await InterviewXPersonaBusinessInterviewModuleRequest(
+                data,
+                isLoggedIn
+              );
 
             let retryCount = 0;
             const maxRetries = 10;
 
-            //에러시 실행 
+            //에러시 실행
             while (
               retryCount < maxRetries &&
               (!response ||
@@ -474,9 +487,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 !response.response.hasOwnProperty("answer") ||
                 !response.response.answer)
             ) {
-            
               // 페르소나 인터뷰 수행(단건) API  수정 예정
-              response = await InterviewXPersonaBusinessInterviewModuleRequest(data, isLoggedIn);
+              response = await InterviewXPersonaBusinessInterviewModuleRequest(
+                data,
+                isLoggedIn
+              );
               retryCount++;
             }
 
@@ -515,8 +530,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
               ],
             }));
 
-
-// 한 질문에 대한 모든 페르소나의 답변이 완료되면 interviewData 업데이트
+            // 한 질문에 대한 모든 페르소나의 답변이 완료되면 interviewData 업데이트
             if (i === personaList.selected.length - 1) {
               setInterviewData((prev) => {
                 const newData = [...(prev || [])];
@@ -528,7 +542,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 return newData;
               });
 
-              newStatus[currentQuestionIndex] = "Complete"; 
+              newStatus[currentQuestionIndex] = "Complete";
               setInterviewStatus(newStatus); // 해당 질문 완료로 업데이트
 
               // 모든 인터뷰가 완료되었는지 확인
@@ -721,17 +735,19 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
 
   const handleAnswerToggle = (index) => {
     // 'Pre', 'Ing' 상태일 때는 토글 불가능
-    if (interviewStatus[index] === 'Pre' || interviewStatus[index] === 'Ing' || interviewStatus[index] === undefined) return;
+    if (
+      interviewStatus[index] === "Pre" ||
+      interviewStatus[index] === "Ing" ||
+      interviewStatus[index] === undefined
+    )
+      return;
     setVisibleAnswers((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
   // 인터뷰를 진행할 때 사용
   const renderInterviewItems = () => {
     return interviewQuestionListState.map((item, index) => (
-      <InterviewItem
-        key={index}
-        status={interviewStatus[index] || "Pre"}
-      >
+      <InterviewItem key={index} status={interviewStatus[index] || "Pre"}>
         <QuestionWrap
           onClick={() => handleAnswerToggle(index)}
           status={interviewStatus[index] || "Pre"}
@@ -758,11 +774,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   // 이미 완료된 인터뷰를 확인할 때 사용 ex)인터뷰 스크립트 보기, 인터뷰 상세보기
   const renderInterviewItemsComplete = () => {
     return interviewQuestionListState.map((item, index) => (
-      <InterviewItem
-        key={index}
-        status={"Complete"}
-      >
-        <QuestionWrap 
+      <InterviewItem key={index} status={"Complete"}>
+        <QuestionWrap
           onClick={() => handleAnswerToggle(index)}
           status={"Complete"}
           style={{ cursor: "pointer" }}
@@ -798,10 +811,10 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
   };
 
   const handleQuestionSelect = (index) => {
-    setSelectedQuestions(prev => {
+    setSelectedQuestions((prev) => {
       if (prev.includes(index)) {
         // 이미 선택된 항목이면 제거
-        return prev.filter(item => item !== index);
+        return prev.filter((item) => item !== index);
       } else {
         // 선택되지 않은 항목이면 추가
         return [...prev, index];
@@ -815,28 +828,55 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
         <ToastPopup Wide isActive={active}>
           <QuestionListWrap>
             {/* {businessAnalysis.title}의 {selectedInterviewPurpose} */}
-            <H4 color="gray700" align="left">문항 리스트</H4>
+            <H4 color="gray700" align="left">
+              문항 리스트
+            </H4>
 
             <QuestionList>
               <QuestionItem checked>
-                <Sub2 color="gray800">Q1. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰 이유는 무엇이라고 생각하시나요?</Sub2>
-                <span><img src={images.CheckGreen} alt="완료" /></span>
+                <Sub2 color="gray800">
+                  Q1. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
+                  이유는 무엇이라고 생각하시나요?
+                </Sub2>
+                <span>
+                  <img src={images.CheckGreen} alt="완료" />
+                </span>
               </QuestionItem>
               <QuestionItem checked>
-                <Sub2 color="gray800">Q2. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰 이유는 무엇이라고 생각하시나요?</Sub2>
-                <span><img src={images.CheckGreen} alt="완료" /></span>
+                <Sub2 color="gray800">
+                  Q2. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
+                  이유는 무엇이라고 생각하시나요?
+                </Sub2>
+                <span>
+                  <img src={images.CheckGreen} alt="완료" />
+                </span>
               </QuestionItem>
               <QuestionItem checked>
-                <Sub2 color="gray800">Q3. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰 이유는 무엇이라고 생각하시나요?</Sub2>
-                <span><img src={images.CheckGreen} alt="완료" /></span>
+                <Sub2 color="gray800">
+                  Q3. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
+                  이유는 무엇이라고 생각하시나요?
+                </Sub2>
+                <span>
+                  <img src={images.CheckGreen} alt="완료" />
+                </span>
               </QuestionItem>
               <QuestionItem>
-                <Sub2 color="gray800">Q4. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰 이유는 무엇이라고 생각하시나요?</Sub2>
-                <span><img src={images.CheckGreen} alt="완료" /></span>
+                <Sub2 color="gray800">
+                  Q4. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
+                  이유는 무엇이라고 생각하시나요?
+                </Sub2>
+                <span>
+                  <img src={images.CheckGreen} alt="완료" />
+                </span>
               </QuestionItem>
               <QuestionItem disabled>
-                <Sub2 color="gray800">Q5. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰 이유는 무엇이라고 생각하시나요?</Sub2>
-                <span><img src={images.CheckGreen} alt="완료" /></span>
+                <Sub2 color="gray800">
+                  Q5. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
+                  이유는 무엇이라고 생각하시나요?
+                </Sub2>
+                <span>
+                  <img src={images.CheckGreen} alt="완료" />
+                </span>
               </QuestionItem>
             </QuestionList>
           </QuestionListWrap>
@@ -861,7 +901,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                     참여 페르소나
                   </span>
                   <span>
-                    {personaList.selected.length || selectedPersonaList.length}명
+                    {personaList.selected.length || selectedPersonaList.length}
+                    명
                   </span>
                 </li>
               </ul>
@@ -890,7 +931,7 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                     다시 이어하기
                   </Button>
                 </div>
-              </ErrorAnswerItem> */} 
+              </ErrorAnswerItem> */}
 
               {isLoadingPrepare &&
                 (showRegenerateButton1 ? (
@@ -970,7 +1011,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   </Persona>
                   <ChatBox Persona>
                     <Sub1 color="gray800" align="left">
-                      전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동 중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가 공급되지 않는 환경에는 사용이 어려울 것 같습니다.
+                      전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동
+                      중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가
+                      공급되지 않는 환경에는 사용이 어려울 것 같습니다.
                     </Sub1>
                   </ChatBox>
                 </ChatItem>
@@ -984,7 +1027,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   </Persona>
                   <ChatBox Moder data-time="1 min ago">
                     <Sub1 color="gray800" align="left">
-                      Q1. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰 이유는 무엇이라고 생각하시나요?
+                      Q1. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
+                      이유는 무엇이라고 생각하시나요?
                     </Sub1>
                   </ChatBox>
                 </ChatItem>
@@ -994,7 +1038,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   </Persona>
                   <ChatBox Persona>
                     <Sub1 color="gray800" align="left">
-                      전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동 중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가 공급되지 않는 환경에는 사용이 어려울 것 같습니다.
+                      전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동
+                      중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가
+                      공급되지 않는 환경에는 사용이 어려울 것 같습니다.
                     </Sub1>
                   </ChatBox>
                 </ChatItem>
@@ -1008,7 +1054,8 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   </Persona>
                   <ChatBox Moder data-time="1 min ago">
                     <Sub1 color="gray800" align="left">
-                      Q1. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰 이유는 무엇이라고 생각하시나요?
+                      Q1. 경쟁 제품 사용자들이 특정 브랜드를 선택할 때 가장 큰
+                      이유는 무엇이라고 생각하시나요?
                     </Sub1>
                   </ChatBox>
                 </ChatItem>
@@ -1018,7 +1065,9 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                   </Persona>
                   <ChatBox Persona>
                     <Sub1 color="gray800" align="left">
-                      전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동 중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가 공급되지 않는 환경에는 사용이 어려울 것 같습니다.
+                      전기면도기를 사용하는 데 전원이 필요한데, 만약 외부 활동
+                      중 전원이 부족하다면 사용이 어려울 수 있습니다. 전기가
+                      공급되지 않는 환경에는 사용이 어려울 것 같습니다.
                     </Sub1>
                   </ChatBox>
                 </ChatItem>
@@ -1044,18 +1093,21 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
                 </Body1>
                 <Body3 color="gray800">1회 사용가능</Body3>
               </AddQuestionTitle>
-              
+
               <ul>
                 {[1, 2, 3].map((_, index) => (
-                  <li 
+                  <li
                     key={index}
                     onClick={() => handleQuestionSelect(index)}
-                    className={selectedQuestions.includes(index) ? 'selected' : ''}
+                    className={
+                      selectedQuestions.includes(index) ? "selected" : ""
+                    }
                   >
                     <Body3 color="gray800">
-                      Q{index + 1}. 페르소나의 특성 및 라이프스타일 등을 파악할 수 있는 질문 구성 입니다.
+                      Q{index + 1}. 페르소나의 특성 및 라이프스타일 등을 파악할
+                      수 있는 질문 구성 입니다.
                     </Body3>
-                    <div style={{ maxWidth: "48px", width: "100%", }}>
+                    <div style={{ maxWidth: "48px", width: "100%" }}>
                       <Body2 color="gray800" />
                     </div>
                   </li>
@@ -1102,11 +1154,11 @@ const OrganismToastPopup = ({ isActive, onClose, isComplete }) => {
           closeText="확인"
           onConfirm={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
           onCancel={() => {
             setShowErrorPopup(false);
-            window.location.href = "/";
+            window.location.href = "/Project";
           }}
         />
       )}
@@ -1180,10 +1232,13 @@ const QuestionItem = styled.li`
   width: 100%;
   padding: 17px 12px;
   border-radius: 8px;
-  border: ${({ checked }) => (checked ? `1px solid ${palette.outlineGray}` : "none")};
-  background: ${({ checked }) => (checked ? palette.white : `rgba(34, 111, 255, 0.10)`)};
+  border: ${({ checked }) =>
+    checked ? `1px solid ${palette.outlineGray}` : "none"};
+  background: ${({ checked }) =>
+    checked ? palette.white : `rgba(34, 111, 255, 0.10)`};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
-  filter: ${({ disabled }) => (disabled ? "grayscale(1) opacity(0.3)" : "grayscale(0) opacity(1)")};
+  filter: ${({ disabled }) =>
+    disabled ? "grayscale(1) opacity(0.3)" : "grayscale(0) opacity(1)"};
 
   > div {
     word-break: keep-all;
@@ -1205,7 +1260,9 @@ const QuestionItem = styled.li`
     opacity: 0;
   }
 
-  ${({ checked }) => checked && `
+  ${({ checked }) =>
+    checked &&
+    `
     img {
       opacity: 1;
     }
@@ -1232,15 +1289,14 @@ const ChatListWrap = styled.div`
 const ChatItem = styled.div`
   position: relative;
   display: flex;
-  flex-direction: ${(props) => (
-    props.Persona 
-    ? "row" 
-    : props.Moder
-    ? "row-reverse"
-    : props.Add
-    ? "column"
-    : "none"
-  )};
+  flex-direction: ${(props) =>
+    props.Persona
+      ? "row"
+      : props.Moder
+      ? "row-reverse"
+      : props.Add
+      ? "column"
+      : "none"};
   align-items: ${({ Add }) => (Add ? "flex-end" : "flex-start")};
   justify-content: flex-start;
   gap: ${({ Add }) => (Add ? "8px" : "12px")};
@@ -1254,27 +1310,20 @@ const ChatBox = styled.div`
   justify-content: flex-start;
   gap: 12px;
   max-width: 624px;
-  padding: ${(props) => (
-    props.Persona 
-    ? "12px" 
-    : props.Moder
-    ? "14px 20px"
-    : "0"
-  )};
-  border-radius: ${(props) => (
-    props.Persona 
-    ? "0 15px 15px 15px" 
-    : props.Moder
-    ? "15px 0 15px 15px"
-    : "0"
-  )};
-  background: ${(props) => (
-    props.Persona 
-    ? `rgba(34, 111, 255, 0.06)`
-    : props.Moder
-    ? palette.white
-    : "none"
-  )};
+  padding: ${(props) =>
+    props.Persona ? "12px" : props.Moder ? "14px 20px" : "0"};
+  border-radius: ${(props) =>
+    props.Persona
+      ? "0 15px 15px 15px"
+      : props.Moder
+      ? "15px 0 15px 15px"
+      : "0"};
+  background: ${(props) =>
+    props.Persona
+      ? `rgba(34, 111, 255, 0.06)`
+      : props.Moder
+      ? palette.white
+      : "none"};
 
   &:before {
     content: attr(data-time);
@@ -1395,31 +1444,33 @@ const ChatFooter = styled.div`
     height: 32px;
     font-size: 0;
     border: 0;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='33' height='32' viewBox='0 0 33 32' fill='none'%3E%3Cg clip-path='url(%23clip0_690_5724)'%3E%3Cpath d='M5.64515 11.6483L25.4734 5.18259C26.7812 4.75614 28.0145 6.00577 27.571 7.30785L20.9018 26.8849C20.4086 28.3327 18.39 28.41 17.7875 27.0042L15.036 20.5839C14.7672 19.9567 14.9072 19.229 15.3896 18.7463L20.4659 13.6676C20.8353 13.298 20.8353 12.6989 20.4657 12.3294C20.083 11.9466 19.4625 11.9466 19.0797 12.3294L14.036 17.373C13.5486 17.8605 12.8116 17.9982 12.1811 17.7195L5.488 14.7621C4.08754 14.1433 4.1895 12.123 5.64515 11.6483Z' fill='%23226FFF'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_690_5724'%3E%3Crect width='32' height='32' fill='white' transform='translate(0.5)'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E") center no-repeat;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='33' height='32' viewBox='0 0 33 32' fill='none'%3E%3Cg clip-path='url(%23clip0_690_5724)'%3E%3Cpath d='M5.64515 11.6483L25.4734 5.18259C26.7812 4.75614 28.0145 6.00577 27.571 7.30785L20.9018 26.8849C20.4086 28.3327 18.39 28.41 17.7875 27.0042L15.036 20.5839C14.7672 19.9567 14.9072 19.229 15.3896 18.7463L20.4659 13.6676C20.8353 13.298 20.8353 12.6989 20.4657 12.3294C20.083 11.9466 19.4625 11.9466 19.0797 12.3294L14.036 17.373C13.5486 17.8605 12.8116 17.9982 12.1811 17.7195L5.488 14.7621C4.08754 14.1433 4.1895 12.123 5.64515 11.6483Z' fill='%23226FFF'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_690_5724'%3E%3Crect width='32' height='32' fill='white' transform='translate(0.5)'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E")
+      center no-repeat;
     background-size: 100%;
     filter: grayscale(1) opacity(0.3);
-    transition: all .5s;
+    transition: all 0.5s;
     cursor: pointer;
 
     &:disabled {
       opacity: 0.3;
       cursor: not-allowed;
-      
+
       &:hover {
         opacity: 0.3;
       }
     }
 
     &:not(:disabled):hover {
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='33' height='32' viewBox='0 0 33 32' fill='none'%3E%3Cg clip-path='url(%23clip0_690_5724)'%3E%3Cpath d='M5.64515 11.6483L25.4734 5.18259C26.7812 4.75614 28.0145 6.00577 27.571 7.30785L20.9018 26.8849C20.4086 28.3327 18.39 28.41 17.7875 27.0042L15.036 20.5839C14.7672 19.9567 14.9072 19.229 15.3896 18.7463L20.4659 13.6676C20.8353 13.298 20.8353 12.6989 20.4657 12.3294C20.083 11.9466 19.4625 11.9466 19.0797 12.3294L14.036 17.373C13.5486 17.8605 12.8116 17.9982 12.1811 17.7195L5.488 14.7621C4.08754 14.1433 4.1895 12.123 5.64515 11.6483Z' fill='%23226FFF'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_690_5724'%3E%3Crect width='32' height='32' fill='white' transform='translate(0.5)'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E") center no-repeat;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='33' height='32' viewBox='0 0 33 32' fill='none'%3E%3Cg clip-path='url(%23clip0_690_5724)'%3E%3Cpath d='M5.64515 11.6483L25.4734 5.18259C26.7812 4.75614 28.0145 6.00577 27.571 7.30785L20.9018 26.8849C20.4086 28.3327 18.39 28.41 17.7875 27.0042L15.036 20.5839C14.7672 19.9567 14.9072 19.229 15.3896 18.7463L20.4659 13.6676C20.8353 13.298 20.8353 12.6989 20.4657 12.3294C20.083 11.9466 19.4625 11.9466 19.0797 12.3294L14.036 17.373C13.5486 17.8605 12.8116 17.9982 12.1811 17.7195L5.488 14.7621C4.08754 14.1433 4.1895 12.123 5.64515 11.6483Z' fill='%23226FFF'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_690_5724'%3E%3Crect width='32' height='32' fill='white' transform='translate(0.5)'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E")
+        center no-repeat;
       filter: grayscale(0) opacity(1);
-    }     
+    }
   }
 `;
 
 const AddQuestion = styled.div`
   position: sticky;
-  bottom: ${({ show }) => (show ? '58px' : '-100%')};
+  bottom: ${({ show }) => (show ? "58px" : "-100%")};
   left: 0;
   right: 0;
   display: flex;
@@ -1431,9 +1482,9 @@ const AddQuestion = styled.div`
   padding: 20px 20px 12px 20px;
   border-top: 1px solid ${palette.outlineGray};
   background: ${palette.white};
-  transform: translateY(${({ show }) => (show ? '0' : '100%')});
-  // opacity: ${({ show }) => (show ? '1' : '0')};
-  visibility: ${({ show }) => (show ? 'visible' : 'collapse')};
+  transform: translateY(${({ show }) => (show ? "0" : "100%")});
+  // opacity: ${({ show }) => (show ? "1" : "0")};
+  visibility: ${({ show }) => (show ? "visible" : "collapse")};
   transition: all 0.3s ease-in-out;
   z-index: 1;
 
@@ -1571,7 +1622,8 @@ const Contents = styled.div`
   align-items: center;
   gap: 20px;
   width: 100%;
-  height: ${({ showAddQuestion }) => (showAddQuestion ? 'calc(100% - 58px)' : '100%')};
+  height: ${({ showAddQuestion }) =>
+    showAddQuestion ? "calc(100% - 58px)" : "100%"};
   padding: 40px 32px;
   overflow-y: auto;
   background: ${palette.chatGray};
@@ -1743,7 +1795,6 @@ const QuestionWrap = styled.div`
       }
     `}
 `;
-
 
 const QuestionText = styled.div`
   font-size: 0.875rem;
