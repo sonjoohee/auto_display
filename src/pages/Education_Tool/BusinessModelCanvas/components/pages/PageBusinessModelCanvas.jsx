@@ -1206,6 +1206,7 @@ const PageBusinessModelCanvas = () => {
                           아이디어 방향성으로 전환
                         </Button>
                   ):(
+                    !isLoading && (
                     <Button
                           Other
                           Primary
@@ -1219,7 +1220,9 @@ const PageBusinessModelCanvas = () => {
                         >
                           다음
                         </Button>
+                    )
                   )}
+                  
              
                   
                 </>
