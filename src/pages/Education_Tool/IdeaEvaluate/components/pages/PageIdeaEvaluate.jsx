@@ -452,7 +452,10 @@ const PageIdeaEvaluate = () => {
       await updateToolOnServer(
         responseToolId,
         {
-          selectedKanoModelIdea: selectedKanoModelData,
+          selectedKanoModelIdea: {
+            kanoModelReportData : selectedKanoModelData.kanoModelReportData,
+            kanoModelClustering : selectedKanoModelData.kanoModelClustering,
+          },
           selectedKanoModelIdeaIndex: selectedPurposes,
           ideaEvaluateSelectedList: ideaEvaluateSelectedList,
           ideaEvaluateSelectedListIndex: ideaEvaluateSelect,
@@ -465,19 +468,7 @@ const PageIdeaEvaluate = () => {
     }
   };
 
-  useEffect(() => {
-    if (shouldRegenerate && Object.keys(quickSurveyAnalysis).length === 0) {
-      // handleSubmitBusinessInfo();
-      setShouldRegenerate(false); // 리셋
-    }
-  }, [quickSurveyAnalysis, shouldRegenerate]);
-
-  const handleRegenerate = () => {
-    setShouldRegenerate(true);
-    setSelectedQuestion([]); // 재생성 flag 설정
-    setQuickSurveyAnalysis({});
-    setQuickSurveyCustomQuestion([]);
-  };
+  
 
   const handleSubmitReport = async () => {
     // 새 AbortController 생성
@@ -874,7 +865,7 @@ const PageIdeaEvaluate = () => {
                                   }
                                 >
                                   <Body2 color="gray300" align="left">
-                                    직접 문제점을 작성합니다.
+                                    카노 모델 진행을 완료하신 경우, 정보를 가져올 수 있습니다.
                                   </Body2>
                                 </SelectBoxItem>
                               ) : (
@@ -939,26 +930,23 @@ const PageIdeaEvaluate = () => {
                             </Body1>
                           </div>
 
-                          {selectedKanoModelData.kanoModelReportData.attractive.map(
-                            (
-                              title,
-                              index // map의 첫 번째 인자 이름을 title로 변경 (가독성)
-                            ) => (
-                              <MoleculeItemSelectCard
-                                FlexStart
-                                key={`attractive-${index}`}
-                                id={`attractive-${index}`}
-                                title={title} // idea.name 대신 title (문자열 자체) 사용
-                                isSelected={ideaEvaluateSelect.includes(
-                                  `attractive-${index}`
-                                )}
-                                onSelect={() =>
-                                  handleCheckboxChange(`attractive-${index}`)
+                          {selectedKanoModelData.kanoModelReportData.attractive.map((title, index) => (
+                            <MoleculeItemSelectCard
+                              FlexStart
+                              key={`attractive-${index}`}
+                              id={`attractive-${index}`}
+                              title={title}
+                              isSelected={ideaEvaluateSelect.includes(`attractive-${index}`)}
+                              onSelect={() => {
+                                const isCurrentlySelected = ideaEvaluateSelect.includes(`attractive-${index}`);
+                                if (!isCurrentlySelected && ideaEvaluateSelect.length >= 9) {
+                                  return;
                                 }
-                                disabled={toolSteps >= 1}
-                              />
-                            )
-                          )}
+                                handleCheckboxChange(`attractive-${index}`);
+                              }}
+                              disabled={toolSteps >= 1 || (!ideaEvaluateSelect.includes(`attractive-${index}`) && ideaEvaluateSelect.length >= 9)}
+                            />
+                          ))}
 
                           <div
                             className="title"
@@ -972,28 +960,23 @@ const PageIdeaEvaluate = () => {
                               One-Dimensional (일차원 속성){" "}
                             </Body1>
                           </div>
-                          {selectedKanoModelData.kanoModelReportData.one_dimensional.map(
-                            (
-                              title,
-                              index // map의 첫 번째 인자 이름을 title로 변경, 키 접근 방식 변경
-                            ) => (
-                              <MoleculeItemSelectCard
-                                FlexStart
-                                key={`one-dimensional-${index}`}
-                                id={`one-dimensional-${index}`}
-                                title={title} // idea.name 대신 title (문자열 자체) 사용
-                                isSelected={ideaEvaluateSelect.includes(
-                                  `one_dimensional-${index}`
-                                )}
-                                onSelect={() =>
-                                  handleCheckboxChange(
-                                    `one_dimensional-${index}`
-                                  )
+                          {selectedKanoModelData.kanoModelReportData.one_dimensional.map((title, index) => (
+                            <MoleculeItemSelectCard
+                              FlexStart
+                              key={`one-dimensional-${index}`}
+                              id={`one-dimensional-${index}`}
+                              title={title}
+                              isSelected={ideaEvaluateSelect.includes(`one_dimensional-${index}`)}
+                              onSelect={() => {
+                                const isCurrentlySelected = ideaEvaluateSelect.includes(`one_dimensional-${index}`);
+                                if (!isCurrentlySelected && ideaEvaluateSelect.length >= 9) {
+                                  return;
                                 }
-                                disabled={toolSteps >= 1}
-                              />
-                            )
-                          )}
+                                handleCheckboxChange(`one_dimensional-${index}`);
+                              }}
+                              disabled={toolSteps >= 1 || (!ideaEvaluateSelect.includes(`one_dimensional-${index}`) && ideaEvaluateSelect.length >= 9)}
+                            />
+                          ))}
 
                           <div
                             className="title"
@@ -1008,26 +991,23 @@ const PageIdeaEvaluate = () => {
                             </Body1>
                           </div>
 
-                          {selectedKanoModelData.kanoModelReportData.must_be.map(
-                            (
-                              title,
-                              index // map의 첫 번째 인자 이름을 title로 변경, 키 접근 방식 변경
-                            ) => (
-                              <MoleculeItemSelectCard
-                                FlexStart
-                                key={`must-be-${index}`}
-                                id={`must-be-${index}`}
-                                title={title} // idea.name 대신 title (문자열 자체) 사용
-                                isSelected={ideaEvaluateSelect.includes(
-                                  `must_be-${index}`
-                                )}
-                                onSelect={() =>
-                                  handleCheckboxChange(`must_be-${index}`)
+                          {selectedKanoModelData.kanoModelReportData.must_be.map((title, index) => (
+                            <MoleculeItemSelectCard
+                              FlexStart
+                              key={`must-be-${index}`}
+                              id={`must-be-${index}`}
+                              title={title}
+                              isSelected={ideaEvaluateSelect.includes(`must_be-${index}`)}
+                              onSelect={() => {
+                                const isCurrentlySelected = ideaEvaluateSelect.includes(`must_be-${index}`);
+                                if (!isCurrentlySelected && ideaEvaluateSelect.length >= 9) {
+                                  return;
                                 }
-                                disabled={toolSteps >= 1}
-                              />
-                            )
-                          )}
+                                handleCheckboxChange(`must_be-${index}`);
+                              }}
+                              disabled={toolSteps >= 1 || (!ideaEvaluateSelect.includes(`must_be-${index}`) && ideaEvaluateSelect.length >= 9)}
+                            />
+                          ))}
                         </div>
                       )}
                     </TabContent5Item>

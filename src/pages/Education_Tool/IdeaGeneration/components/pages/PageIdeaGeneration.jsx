@@ -7,30 +7,18 @@ import { palette } from "../../../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
 import OrganismIncNavigation from "../../../../Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
-import { Button, IconButton } from "../../../../../assets/styles/ButtonStyle";
-import {
-  FormBox,
-  CustomTextarea,
-} from "../../../../../assets/styles/InputStyle";
+import { Button } from "../../../../../assets/styles/ButtonStyle";
 import PopupWrap from "../../../../../assets/styles/Popup";
 import {
   ContentsWrap,
   MainContent,
-  TabWrapType4,
-  TabButtonType4,
   TabWrapType5,
   TabButtonType5,
   TabContent5,
   TabContent5Item,
   CardGroupWrap,
-  BottomBar,
-  BgBoxItem,
-  StyledDropzone,
   DropzoneStyles,
-  OCEANRangeWrap,
-  RangeSlider,
   Title,
-  ListBoxGroup,
   BoxWrap,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
@@ -39,7 +27,6 @@ import {
   TOOL_STEP,
   TOOL_LOADING,
   PROJECT_SAAS,
-  DESIGN_ANALYSIS_BUSINESS_TITLE,
   IDEA_GENERATION_START_POSITION,
   IDEA_GENERATION_PROBLEM_LIST,
   PERSONA_LIST_SAAS,
@@ -67,13 +54,10 @@ import {
 } from "../../../../../assets/styles/InputStyle";
 import images from "../../../../../assets/styles/Images";
 import {
-  H4,
   H3,
-  Sub3,
   Body1,
   Body2,
   Body3,
-  Caption1,
 } from "../../../../../assets/styles/Typography";
 import {
   createToolOnServer,
@@ -85,8 +69,6 @@ import {
   UserCreditInfo,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
-import MoleculeDeleteForm from "../../../public/MoleculeDeleteForm";
-import MandalArtGraph from "../../../../../components/Charts/MandalArtGraph";
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
 import MoleculeTagList from "../molecules/MoleculeTagList";
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
@@ -382,10 +364,7 @@ const PageIdeaGeneration = () => {
     const selectedStartPosition = ideaGenerationSelectedStartPosition.map(
       (item) => item.main_theme
     );
-    console.log(
-      "selectedStartPositiossssssssssssssssssn",
-      selectedStartPosition
-    );
+ 
 
     // 새 AbortController 생성
     abortControllerRef.current = new AbortController();
@@ -469,20 +448,6 @@ const PageIdeaGeneration = () => {
                   "idea_description" in item
               )
             ))
-          // ||
-          // !(
-          //   Array.isArray(
-          //     reportResponse?.response?.idea_generation_report_education
-          //       ?.additional_execution_ideas
-          //   ) &&
-          //   reportResponse.response.idea_generation_report_education.additional_execution_ideas.every(
-          //     (item) =>
-          //       typeof item === "object" &&
-          //       item !== null &&
-          //       "idea_title" in item &&
-          //       "idea_description" in item
-          //   )
-          // )
         ) {
           reportResponse = await EducationToolsRequest(
             data,
@@ -524,28 +489,6 @@ const PageIdeaGeneration = () => {
       }
 
       setIdeaGenerationMandalArtData(apiResults);
-
-      // const data = {
-      //   main_theme_raw_data: {
-      //     main_theme: ideaGenerationSelectedStartPosition.map(
-      //       (item) => item.main_theme
-      //     ),
-      //     core_ideas: apiResults.map((item) =>
-      //       item.core_ideas.map((coreIdea) => coreIdea.core_idea)
-      //     ),
-      //     detailed_execution_ideas: apiResults.map(
-      //       (item) => item.detailed_execution_ideas
-      //     ),
-      //   },
-      //   business: {
-      //     business: businessDescription,
-      //     business_model: project?.businessModel || "",
-      //     sector: project?.industryType || "",
-      //   },
-      //   type: "ix_idea_generation_additional_report_education",
-      // };
-
-      // let Response = await EducationToolsRequest(data, isLoggedIn, signal);
 
       setIdeaGenerationAdditionalData(apiResultsAdditional);
 
@@ -1270,7 +1213,7 @@ const PageIdeaGeneration = () => {
                             <IdeaContent>
                               {ideaGenerationAdditionalData[
                                 ideaGenerationSelectedMandalart - 1
-                              ]?.priority_ideas.map((idea, index) => (
+                              ]?.priority_ideas?.map((idea, index) => (
                                 <IdeaText>
                                   {idea.title} : {idea.description}
                                 </IdeaText>
@@ -1287,88 +1230,13 @@ const PageIdeaGeneration = () => {
                                   ]?.strategic_recommendations
                                 }
                               </IdeaText>
-                                </IdeaContent>
-                              </IdeaBox>
-                          </IdeaContainer>
-                        )}
 
-                      {/* 
-                    <div className="content">
-                              {ideaGenerationAdditionalData?.length > 0 && (
-                                <InsightContainer>
-                                  <InsightSection>
-                                    <InsightLabel color="gray700">
-                                      아이디어 발산 Theme 정의
-                                    </InsightLabel>
-                                    <InsightContent color="gray700">
-                                      
-                              
-                                          {
-                                            ideaGenerationAdditionalData?.theme_definition
-                                             
-                                          }
-                                    
-                                  
-                                    </InsightContent>
-                                  </InsightSection>
+                            </IdeaContent>
+                          </IdeaBox>
+                        </IdeaContainer>
+                      )}
+                    </div>
 
-                                  <InsightSection>
-                                    <InsightLabel color="gray700">
-                                      아이디어 별 설명
-                                    </InsightLabel>
-                                    <InsightContent color="gray700">
-                                      <>
-                                        {
-                                          quickSurveyReport[0]?.gender_insight
-                                            ?.statistic
-                                        }
-                                        <br />
-                                        <br />
-                                        {
-                                          quickSurveyReport[0]?.gender_insight
-                                            ?.insight
-                                        }
-                                      </>
-                                    </InsightContent>
-                                  </InsightSection>
-
-                                  <InsightSection>
-                                    <InsightLabel color="gray700">
-                                     기타 의견
-                                    </InsightLabel>
-                                    <InsightContent color="gray700">
-                                      <>
-                                        {
-                                          quickSurveyReport[0].age_insight
-                                            .statistic
-                                        }
-                                        <br />
-                                        <br />
-                                        {
-                                          quickSurveyReport[0].age_insight
-                                            .insight
-                                        }
-                                      </>
-                                    </InsightContent>
-                                  </InsightSection>
-
-                                   <InsightSection>
-                                    <InsightLabel color="gray700">
-                                     전략적 제언
-                                    </InsightLabel>
-                                    <InsightContent color="gray700">
-                                      <>
-                                        {
-                                            ideaGenerationAdditionalData?.strategic_recommendation
-                                        }
-                                       
-                                      </>
-                                    </InsightContent>
-                                  </InsightSection>
-                                </InsightContainer>
-                              )}
-                            </div> */}
-                      </div>
                     {completedStatus && (
                       <Button
                         Primary
@@ -1537,145 +1405,6 @@ const DesignAnalysisWrap = styled.div`
   margin-top: 60px;
 `;
 
-const InsightAnalysis = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-
-  .title {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .content {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    text-align: left;
-  }
-`;
-
-const ViewInfo = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: $space-between;
-  gap: 4px;
-  width: 100%;
-  font-size: 0.875rem;
-  color: ${palette.gray800};
-
-  + div {
-    padding-top: 16px;
-    border-top: 1px solid ${palette.outlineGray};
-  }
-
-  .title {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
-    gap: 8px;
-    font-size: 0.875rem;
-    color: ${palette.black};
-
-    span {
-      font-size: 0.75rem;
-      font-weight: 300;
-      color: ${palette.gray500};
-    }
-  }
-
-  .info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
-
-    div {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 7px;
-      font-size: 0.875rem;
-      font-weight: 300;
-      color: ${palette.gray500};
-      line-height: 1.5;
-
-      + div:before {
-        position: absolute;
-        top: 50%;
-        left: -16px;
-        transform: translateY(-50%);
-        width: 1px;
-        height: 12px;
-        background-color: ${palette.outlineGray};
-        content: "";
-      }
-    }
-  }
-
-  .button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-
-    button {
-      font-family: "Pretendard", poppins;
-      font-size: 0.75rem;
-      font-weight: 300;
-      padding: 6px 10px;
-      border-radius: 6px;
-
-      &.view {
-        color: ${palette.black};
-        border: 1px solid ${palette.outlineGray};
-        background: ${palette.chatGray};
-      }
-
-      &.analysis {
-        color: ${palette.primary};
-        border: 1px solid ${palette.primary};
-        background: #e9f1ff;
-      }
-    }
-  }
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 12px;
-`;
-
-const EditButtonGroup = styled(ButtonGroup)`
-  justify-content: end;
-`;
-
-const InsightContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  border: 1px solid #e0e4e8;
-  border-radius: 10px;
-  padding: 16px;
-`;
-
-const InsightSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  border-bottom: 1px solid #e0e4e8;
-  padding-bottom: 16px;
-
-  &:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-`;
-
 const IdeaContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -1716,24 +1445,6 @@ const IdeaText = styled.p`
   line-height: 1.5;
   color: ${palette.gray600};
   margin: 0;
-`;
-
-const LoadingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 300px;
-  background: ${palette.white};
-  border-radius: 10px;
-  padding: 24px;
-  margin-top: 16px;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 24px;
-  margin-bottom: 140px;
 `;
 
 const Divider = styled.div`

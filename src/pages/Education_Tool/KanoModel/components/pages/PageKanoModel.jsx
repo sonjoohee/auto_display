@@ -980,7 +980,7 @@ const PageKanoModel = () => {
                                   <Body1 color="gray700">
                                     Kano Model 평가에 포함할 아이디어를 선택해
                                     주세요. (복수 선택 가능)
-                                  </Body1>
+                                  </Body1>ㅣ
                                 </div>
                                 {kanoModelIdeaGeneration.map((idea, index) => (
                                   <MoleculeItemSelectCard
@@ -1029,7 +1029,7 @@ const PageKanoModel = () => {
                   </div>
                   <>
                     {/* 버튼들을 content div 바깥으로 이동 */}
-                    {kanoModelIdeaGeneration.length > 0 && (
+                    {kanoModelIdeaGeneration.length > 0 && !isLoading && (
                       <div
                         style={{
                           display: "flex",
