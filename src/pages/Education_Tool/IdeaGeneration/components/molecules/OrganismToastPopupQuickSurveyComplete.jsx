@@ -279,7 +279,7 @@ const ToastPopup = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 40px;
+  gap: 16px;
   padding: 32px;
   border-radius: 15px 0 0 15px;
   background: ${palette.white};

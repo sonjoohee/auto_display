@@ -912,7 +912,7 @@ const PageIdeaEvaluate = () => {
                           <AtomPersonaLoader message="로딩 중..." />
                         </div>
                       ) : !showKanoModelList ? (
-                        <BoxWrap NoData style={{ height: "300px" }}>
+                        <BoxWrap NoData style={{ height: "300px", marginTop: "32px" }}>
                           <img src={images.PeopleFillPrimary2} alt="" />
                           <Body2 color="gray700" align="center !important">
                             Kano Model 결과가 보여집니다.
@@ -1017,6 +1017,7 @@ const PageIdeaEvaluate = () => {
                     Primary
                     Fill
                     Round
+                    style={{ marginTop: "20px" }}
                     onClick={handleCuratedIdea}
                     disabled={
                       !showKanoModelList
@@ -1355,6 +1356,7 @@ const PageIdeaEvaluate = () => {
                           Primary
                           Edit
                           Large
+                          style={{ color: "#666666", border: "1px solid #E0E4EB" }}
                           onClick={() => navigate("/Tool")}
                   
                         >

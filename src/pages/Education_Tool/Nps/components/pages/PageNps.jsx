@@ -1460,7 +1460,7 @@ const PageNps = () => {
                       </Title> */}
 
                       {/* <TabContent5Item> */}
-                      <InterviewModeSelection style={{ marginTop: "-16px" }}>
+                      <InterviewModeSelection style={{ marginTop: "-20px" }}>
                         <InterviewModeCard
                           isActive={interviewModeType === "explanation"}
                           onClick={() => {
@@ -2095,6 +2095,7 @@ const PageNps = () => {
                           Primary
                           Edit
                           Large
+                          style={{ color: "#666666", border: "1px solid #E0E4EB" }}
                           onClick={() => navigate("/Tool")}
                   
                         >

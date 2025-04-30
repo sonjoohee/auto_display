@@ -185,22 +185,22 @@ const PageIdeaGeneration = () => {
         }
       }
 
-      const projectAnalysis =
-        (project?.projectAnalysis.business_analysis
-          ? project?.projectAnalysis.business_analysis
-          : "") +
-        (project?.projectAnalysis.business_analysis &&
-        project?.projectAnalysis.file_analysis
-          ? "\n"
-          : "") +
-        (project?.projectAnalysis.file_analysis
-          ? project?.projectAnalysis.file_analysis
-          : "");
-      const projectTitle = project?.projectTitle;
+        const projectAnalysis =
+          (project?.projectAnalysis.business_analysis
+            ? project?.projectAnalysis.business_analysis
+            : "") +
+          (project?.projectAnalysis.business_analysis &&
+          project?.projectAnalysis.file_analysis
+            ? "\n"
+            : "") +
+          (project?.projectAnalysis.file_analysis
+            ? project?.projectAnalysis.file_analysis
+            : "");
+        const projectTitle = project?.projectTitle;
 
-      if (project) {
-        setBusinessDescriptionTitle(projectTitle);
-        setBusinessDescription(projectAnalysis);
+        if (project) {
+          setBusinessDescriptionTitle(projectTitle);
+          setBusinessDescription(projectAnalysis);
       }
 
       if (toolLoading) {
@@ -307,9 +307,9 @@ const PageIdeaGeneration = () => {
       {
         projectId: project._id,
         type: "ix_idea_generation_education",
-      },
-      isLoggedIn
-    );
+        },
+        isLoggedIn
+      );
     setToolId(responseToolId);
 
     // 크레딧이 사용 가능한 상태면 사용 API 호출
@@ -399,12 +399,12 @@ const PageIdeaGeneration = () => {
 
       //8번의 API 호출을 순차적으로 실행
       for (let i = 0; i < 8; i++) {
-        const Data = {
-          type: "ix_idea_generation_interview_education",
-          business: business,
+      const Data = {
+        type: "ix_idea_generation_interview_education",
+        business: business,
           idea_theme: ideaGenerationSelectedStartPosition[i],
-          persona_group: persona_group,
-        };
+        persona_group: persona_group,
+      };
 
         const interviewResponse = await EducationToolsRequest(
           Data,
@@ -412,7 +412,7 @@ const PageIdeaGeneration = () => {
           signal
         );
 
-        const data = {
+      const data = {
           type: "ix_idea_generation_report_education",
           business: business,
           idea_content: ideaGenerationSelectedStartPosition[i], // i 인덱스의 아이템만 선택
@@ -693,22 +693,22 @@ const PageIdeaGeneration = () => {
                       </Body3>
                     </div>
 
-                    <TabContent5Item>
+                      <TabContent5Item>
                       <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
                         <div className="selectBoxWrap">
                           <Body2 color="gray500" style={{ width: "110px" }}>
                             핵심 키워드
                           </Body2>
                           <SelectBox style={{ paddingRight: "20px" }}>
-                            <SelectBoxTitle
-                              onClick={() =>
+                          <SelectBoxTitle
+                            onClick={() =>
                                 toolSteps >= 1
                                   ? null
                                   : setIsSelectBoxOpen(!isSelectBoxOpen)
                               }
                               None
-                              style={{
-                                cursor:
+                            style={{
+                              cursor:
                                   toolSteps >= 1 ? "not-allowed" : "pointer",
                               }}
                             >
@@ -719,18 +719,18 @@ const PageIdeaGeneration = () => {
                                     alignItems: "center",
                                     gap: "4px",
                                     paddingLeft: "20px",
-                                  }}
-                                >
-                                  <Body2
-                                    color={
-                                      selectedPurposes.customerList
+                            }}
+                          >
+                            <Body2
+                              color={
+                                selectedPurposes.customerList
                                         ? "gray500"
-                                        : "gray300"
-                                    }
-                                  >
-                                    {selectedPurposes.customerList ||
+                                  : "gray300"
+                              }
+                            >
+                              {selectedPurposes.customerList ||
                                       "불러올 핵심키워드 리스트를 선택해주세요.  "}
-                                  </Body2>
+                            </Body2>
                                 </div>
                               ) : (
                                 <Body2
@@ -740,22 +740,22 @@ const PageIdeaGeneration = () => {
                                   불러올 핵심키워드 리스트를 선택해주세요.
                                 </Body2>
                               )}
-                              <images.ChevronDown
-                                width="24px"
-                                height="24px"
+                            <images.ChevronDown
+                              width="24px"
+                              height="24px"
                                 color={
                                   toolSteps >= 1
                                     ? palette.gray300
                                     : palette.gray500
                                 }
-                                style={{
+                              style={{
                                   transform: isSelectBoxOpen
-                                    ? "rotate(180deg)"
-                                    : "rotate(0deg)",
-                                  transition: "transform 0.3s ease",
-                                }}
-                              />
-                            </SelectBoxTitle>
+                                  ? "rotate(180deg)"
+                                  : "rotate(0deg)",
+                                transition: "transform 0.3s ease",
+                              }}
+                            />
+                          </SelectBoxTitle>
 
                             {isSelectBoxOpen && (
                               <SelectBoxList>
@@ -785,9 +785,9 @@ const PageIdeaGeneration = () => {
                                     </Body2>
                                   </SelectBoxItem>
                                 ))}
-                              </SelectBoxList>
-                            )}
-                          </SelectBox>
+                            </SelectBoxList>
+                          )}
+                        </SelectBox>
                         </div>
 
                         <div
@@ -835,7 +835,7 @@ const PageIdeaGeneration = () => {
                                 : "선택해주세요"}
                             </Body2>
                           </li>
-                        </div>
+                          </div>
                       </BoxWrap>
 
                       {ideaGenerationStartPosition?.length === 0 ? (
@@ -843,7 +843,7 @@ const PageIdeaGeneration = () => {
                           NoData
                           style={{ height: "300px", marginTop: "20px" }}
                         >
-                          <img src={images.PeopleFillPrimary2} alt="" />
+                          <img src={images.ListFillPrimary} alt="" />
                           <Body2 color="gray700" align="center !important">
                             핵심 키워드 리스트를 선택해주세요
                           </Body2>
@@ -851,12 +851,12 @@ const PageIdeaGeneration = () => {
                       ) : (
                         <div className="content">
                           <Title
-                            style={{ marginBottom: "-18px", marginTop: "8px" }}
+                            style={{ marginTop: "28px", }}
                           >
-                            <Body1 color="gray700">
+                              <Body1 color="gray700">
                               아이디어 발산의 주제어를 선택하세요 (8개 필수
                               선택)
-                            </Body1>
+                              </Body1>
                           </Title>
 
                           <CardGroupWrap ideaGeneration>
@@ -866,16 +866,16 @@ const PageIdeaGeneration = () => {
                             />
                           </CardGroupWrap>
                         </div>
-                      )}
-                    </TabContent5Item>
-                  </div>
+                        )}
+                      </TabContent5Item>
+                    </div>
                 )}
 
-                <Button
-                  Other
-                  Primary
-                  Fill
-                  Round
+                    <Button
+                      Other
+                      Primary
+                      Fill
+                      Round
                   onClick={handleSubmitIdea}
                   disabled={
                     isContentLoading ||
@@ -884,7 +884,7 @@ const PageIdeaGeneration = () => {
                   }
                 >
                   아이디어 키워드 추출
-                </Button>
+                    </Button>
               </TabContent5>
             )}
 
@@ -948,8 +948,8 @@ const PageIdeaGeneration = () => {
                                   >
                                     {selectedPurposes.customerList ||
                                       "불러올 핵심키워드 리스트를 선택해주세요.  "}
-                                  </Body2>
-                                </div>
+                            </Body2>
+                      </div>
                               ) : (
                                 <Body2
                                   color="gray300"
@@ -1019,9 +1019,9 @@ const PageIdeaGeneration = () => {
                             주제어 선택
                           </Body2>
                           <li
-                            style={{
+                    style={{
                               alignSelf: "flex-start",
-                              display: "flex",
+                      display: "flex",
                               flexDirection: "column",
                               alignItems: "flex-start",
                             }}
@@ -1053,7 +1053,7 @@ const PageIdeaGeneration = () => {
                                 : "선택해주세요"}
                             </Body2>
                           </li>
-                        </div>
+                  </div>
                       </BoxWrap>
                     </div>
 
@@ -1073,17 +1073,17 @@ const PageIdeaGeneration = () => {
                         {personaListSaas.filter(
                           (item) => item.favorite === true
                         ).length >= 20 ? (
-                          <MoleculePersonaSelectCard
-                            filteredPersonaList={personaListSaas}
-                            hideSelectButton={true}
-                          />
-                        ) : (
-                          <BoxWrap
+                        <MoleculePersonaSelectCard
+                          filteredPersonaList={personaListSaas}
+                          hideSelectButton={true}
+                        />
+                      ) : (
+                        <BoxWrap
                             Hover
-                            NoData
+                          NoData
                             Border
-                            onClick={() => navigate("/AiPersona")}
-                          >
+                          onClick={() => navigate("/AiPersona")}
+                        >
                             <img src={images.PeopleStarFillPrimary} alt="" />
                             <Body2 color="gray500" align="center !important">
                               페르소나 리스트를 확인하려면, 먼저 관심 있는
@@ -1094,9 +1094,9 @@ const PageIdeaGeneration = () => {
                                 ).length
                               }{" "}
                               / 20)
-                            </Body2>
-                          </BoxWrap>
-                        )}
+                          </Body2>
+                        </BoxWrap>
+                      )}
                       </TabContent5Item>
                     </div>
                   </>
@@ -1184,21 +1184,21 @@ const PageIdeaGeneration = () => {
                       응답자 의견 확인
                     </Button>
 
-                    <div className="content">
+                      <div className="content">
                       {ideaGenerationSelectedMandalart === null ? (
-                        <IdeaContainer>
-                          <IdeaBox>
-                            <IdeaContent>
-                              각 아이디어 주제를 클릭해보세요. 주제별로 연관된
-                              아이디어 8가지가 제시됩니다.
-                            </IdeaContent>
-                          </IdeaBox>
-                        </IdeaContainer>
-                      ) : (
-                        <IdeaContainer>
+                          <IdeaContainer>
+                            <IdeaBox>
+                              <IdeaContent>
+                                각 아이디어 주제를 클릭해보세요. 주제별로 연관된
+                                아이디어 8가지가 제시됩니다.
+                              </IdeaContent>
+                            </IdeaBox>
+                          </IdeaContainer>
+                        ) : (
+                          <IdeaContainer>
                           <IdeaBox>
                             <IdeaTitle>아이디어 발산 Theme 정의 </IdeaTitle>
-                            <IdeaContent>
+                                <IdeaContent>
                               <IdeaText>
                                 {
                                   ideaGenerationAdditionalData[
@@ -1217,8 +1217,8 @@ const PageIdeaGeneration = () => {
                                 <IdeaText>
                                   {idea.title} : {idea.description}
                                 </IdeaText>
-                              ))}
-                            </IdeaContent>
+                                  ))}
+                                </IdeaContent>
 
                             <Divider />
                             <IdeaTitle>전략적 제언</IdeaTitle>
@@ -1230,11 +1230,13 @@ const PageIdeaGeneration = () => {
                                   ]?.strategic_recommendations
                                 }
                               </IdeaText>
+
                             </IdeaContent>
                           </IdeaBox>
                         </IdeaContainer>
                       )}
                     </div>
+
                     {completedStatus && (
                       <Button
                         Primary

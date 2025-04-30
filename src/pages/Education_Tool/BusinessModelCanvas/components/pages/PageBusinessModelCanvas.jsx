@@ -1165,7 +1165,7 @@ const PageBusinessModelCanvas = () => {
                   ) : !showKanoModelList ? (
                     <BoxWrap
                       NoData
-                      style={{ height: "300px" }}
+                      style={{ height: "300px", marginTop: "32px" }}
                     >
                       <img src={images.PeopleFillPrimary2} alt="" />
                       <Body2 color="gray700" align="center !important">
@@ -1284,6 +1284,7 @@ const PageBusinessModelCanvas = () => {
                           Primary
                           Edit
                           Large
+                          style={{ color: "#666666", border: "1px solid #E0E4EB" }}
                           onClick={() => navigate("/Tool")}
                   
                         >
