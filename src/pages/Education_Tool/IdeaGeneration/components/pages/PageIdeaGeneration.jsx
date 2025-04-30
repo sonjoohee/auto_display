@@ -364,10 +364,7 @@ const PageIdeaGeneration = () => {
     const selectedStartPosition = ideaGenerationSelectedStartPosition.map(
       (item) => item.main_theme
     );
-    console.log(
-      "selectedStartPositiossssssssssssssssssn",
-      selectedStartPosition
-    );
+ 
 
     // 새 AbortController 생성
     abortControllerRef.current = new AbortController();
@@ -1216,7 +1213,7 @@ const PageIdeaGeneration = () => {
                             <IdeaContent>
                               {ideaGenerationAdditionalData[
                                 ideaGenerationSelectedMandalart - 1
-                              ]?.priority_ideas.map((idea, index) => (
+                              ]?.priority_ideas?.map((idea, index) => (
                                 <IdeaText>
                                   {idea.title} : {idea.description}
                                 </IdeaText>

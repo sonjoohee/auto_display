@@ -771,7 +771,7 @@ const PageIssueGeneration = () => {
                               }
                             >
                               {selectedPurposes.customerList ||
-                                "직접 문제점을 작성합니다."}
+                                "고객 여정 지도 결과를 불러 올 수 있습니다"}
                             </Body2>
                             <images.ChevronDown
                               width="24px"
@@ -796,7 +796,7 @@ const PageIssueGeneration = () => {
                                   }
                                 >
                                   <Body2 color="gray300" align="left">
-                                    직접 문제점을 작성합니다.
+                                  고객 여정 지도 진행을 완료하신 경우, 정보를 가져올 수 있습니다.
                                   </Body2>
                                 </SelectBoxItem>
                               ) : (
