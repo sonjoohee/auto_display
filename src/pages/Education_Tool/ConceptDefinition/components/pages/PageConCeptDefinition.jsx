@@ -898,7 +898,7 @@ const PageConceptDefinition = () => {
                       </InsightAnalysis>
                     )}
                   </div>
-                  {conceptDefinitionFirstReport &&
+                  {conceptDefinitionFirstReport  &&
                   conceptDefinitionFirstReport.length > 0 ? (
                     <div
                       style={{
@@ -919,12 +919,14 @@ const PageConceptDefinition = () => {
                       </Button>
                     </div>
                   ) : (
-                    <Button
-                      Other
-                      Primary
-                      Fill
-                      Round
-                      onClick={handleCheckValue}
+                    !isLoading && (
+                      
+                        <Button
+                          Other
+                          Primary
+                          Fill
+                          Round
+                        onClick={handleCheckValue}
                       disabled={
                         toolSteps > 2 ||
                         !selectedPurposes.customerList ||
@@ -933,6 +935,7 @@ const PageConceptDefinition = () => {
                     >
                       페르소나 & 핵심가치 확인
                     </Button>
+                    )
                   )}
                 </>
               </TabContent5>

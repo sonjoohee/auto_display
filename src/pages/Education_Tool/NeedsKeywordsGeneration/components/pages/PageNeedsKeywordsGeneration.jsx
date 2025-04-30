@@ -568,44 +568,58 @@ const PageNeedsKeywordsGeneration = () => {
                             방향으로 정리하세요
                           </Body1>
                         </div>
-                        {showSelectedIssue ? (
+
+                        
+                            {issueGenerationList.length === 0 ? (
+                              <BoxWrap
+                                NoData
+                                style={{ height: "300px" }}
+                                onClick={() => navigate("/IssueGeneration")}
+                              >
+                                <img src={images.PeopleFillPrimary2} alt="" />
+                                <Body2
+                                  color="gray700"
+                                  align="center !important"
+                                >
+                              핵심 문제 정의 툴으로 선행하세요
+                                </Body2>
+                              </BoxWrap>
+                            ) : (
                           <>
-                            {keywordsGenerationSelectedIssue.map((idea, index) => (
-                              <div key={index} style={{ marginBottom: "20px" }}>
-                                <MoleculeSelectItem
-                                  title={`${idea.selectedPurposes.customerList}`}
-                                  keywords={idea.issueGenerationSelectedStartPosition.map(
-                                    (item, itemIndex) => ({
-                                      id: `${index}-${itemIndex}`,
-                                      text: item.theme || "",
-                                    })
-                                  )}
-                                  // selectedKeywords={idea.selectedPurposes.customerList}
-                                  // onSelectionChange={setSelectedKeywords1}
-                                  isSelected={selectedIssue.includes(index)}
-                                  onCardSelect={() => handleCheckboxChange(index)}
-                                />
-                              </div>
-                            ))}
-                          </>
-                        ) : (
-                          <>
-                            {issueGenerationList.map((idea, index) => (
-                              <div key={index} style={{ marginBottom: "-22px" }}>
-                                <MoleculeSelectItem
-                                  title={`${idea.selectedPurposes.customerList}`}
-                                  id={index}
-                                  keywords={idea.issueGenerationSelectedStartPosition.map(
-                                    (item, itemIndex) => ({
-                                      id: `${index}-${itemIndex}`,
-                                      text: item.theme || "",
-                                    })
-                                  )}
-                                  isSelected={selectedIssue.includes(index)}
-                                  onCardSelect={() => handleCheckboxChange(index)}
-                                />
-                              </div>
-                            ))}
+                            {showSelectedIssue ? (
+                              keywordsGenerationSelectedIssue.map((idea, index) => (
+                                <div key={index} style={{ marginBottom: "20px" }}>
+                                  <MoleculeSelectItem
+                                    title={idea.selectedPurposes.customerList}
+                                    keywords={idea.issueGenerationSelectedStartPosition.map(
+                                      (item, itemIndex) => ({
+                                        id: `${index}-${itemIndex}`,
+                                        text: item.theme || ""
+                                      })
+                                    )}
+                                    isSelected={selectedIssue.includes(index)}
+                                    onCardSelect={() => handleCheckboxChange(index)}
+                                  />
+                                </div>
+                              ))
+                            ) : (
+                              issueGenerationList.map((idea, index) => (
+                                <div key={index} style={{ marginBottom: "-22px" }}>
+                                  <MoleculeSelectItem
+                                    title={idea.selectedPurposes.customerList}
+                                    id={index}
+                                    keywords={idea.issueGenerationSelectedStartPosition.map(
+                                      (item, itemIndex) => ({
+                                        id: `${index}-${itemIndex}`,
+                                        text: item.theme || ""
+                                      })
+                                    )}
+                                    isSelected={selectedIssue.includes(index)}
+                                    onCardSelect={() => handleCheckboxChange(index)}
+                                  />
+                                </div>
+                              ))
+                            )}
                           </>
                         )}
                       </>
