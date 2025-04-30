@@ -8,14 +8,23 @@ import {
   CONVERSATION_STAGE,
   IS_EDITING_NOW,
   SELECTED_EXPERT_INDEX,
+  CREDIT_CREATE_TOOL,
+  USER_CREDITS,
+  IS_LOGGED_IN,
+  PROJECT_SAAS,
 } from "../../../AtomStates";
 
 import { useSaveConversation } from "../atoms/AtomSaveConversation";
+import { UserCreditUse, UserCreditInfo } from "../../../../utils/indexedDB";
 
 import { palette } from "../../../../assets/styles/Palette";
 
 const MoleculeGrowthHackerStartButton = () => {
   const { saveConversation } = useSaveConversation();
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [isLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [creditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
+  const [project] = useAtom(PROJECT_SAAS);
   const [conversationStage, setConversationStage] = useAtom(CONVERSATION_STAGE);
   const [conversation, setConversation] = useAtom(CONVERSATION);
   const [isLoading, setIsLoading] = useAtom(IS_LOADING);
@@ -55,6 +64,22 @@ const MoleculeGrowthHackerStartButton = () => {
     await saveConversation(
       { changingConversation: { conversation: updatedConversation, conversationStage: 3 } }
     );
+     // 크레딧이 사용 가능한 상태면 사용 API 호출
+     const creditUsePayload = {
+      title: project.projectTitle,
+      service_type: "그로스 해커",
+      target: "",
+      state: "use",
+      mount: creditCreateTool,
+    };
+
+    await UserCreditUse(creditUsePayload, isLoggedIn);
+
+    // 크레딧 사용 후 사용자 정보 새로고침
+
+    const userCreditValue = await UserCreditInfo(isLoggedIn);
+    // 전역 상태의 크레딧 정보 업데이트
+    setUserCredits(userCreditValue);
   };
   return (
     <>

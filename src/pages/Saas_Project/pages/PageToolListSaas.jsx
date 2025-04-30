@@ -538,6 +538,7 @@ const PageToolListSaas = () => {
 
   // 초기화 useEffect
   useEffect(() => {
+    setCreditCreateToolLoaded(false);
     // !chat 초기화
     setSelectedExpertIndex("0");
     setConversationId(""); // 대화 ID 설정
@@ -645,6 +646,7 @@ const PageToolListSaas = () => {
     setToolStep(0);
     setToolId("");
     setCreditCreateToolLoaded(false);
+    setToolLoading(false);
 
     // Target Discovery 관련 atom 초기화
     setTargetDiscoveryInfo({});
