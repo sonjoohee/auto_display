@@ -194,8 +194,19 @@ const MoleculeMandalArtGraph = ({ mandalartData }) => {
               onClick={button.isCenter ? handleBackClick : undefined}
               hasOutline={true}
             >
-              {" "}
-              {button.isCenter && button.text}
+              {button.isCenter && (
+                <>
+                  {button.text.includes("Theme.") ? (
+                    <>
+                      Theme.{selectedItem}
+                      <br />
+                      {button.text.replace(/Theme\.\d+\s*/, "")}
+                    </>
+                  ) : (
+                    button.text
+                  )}
+                </>
+              )}
               {!button.isCenter && `Idea.${button.id}`}
               {!button.isCenter && <br />}
               {!button.isCenter && `${button.text}`}
