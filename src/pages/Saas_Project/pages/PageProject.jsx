@@ -281,12 +281,13 @@ const PageProject = () => {
         setEducationState(educationStateResponse.education_state);
 
         if (sessionStorage.getItem("educationState") === "true") {
-          // if (projectEducationState === "education") {
-          savedProjectListInfo =
-            await getProjectListSaasEducationByIdFromIndexedDB(
-              projectEducationCode,
-              true
-            );
+          if (projectEducationCode) {
+            savedProjectListInfo =
+              await getProjectListSaasEducationByIdFromIndexedDB(
+                projectEducationCode,
+                true
+              );
+          }
         } else {
           savedProjectListInfo = await getProjectListSaasByIdFromIndexedDB(
             true
