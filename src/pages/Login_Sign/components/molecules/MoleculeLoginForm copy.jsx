@@ -258,7 +258,6 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           setUserMembership(userInfo.membership);
           sessionStorage.setItem("userName", userInfo.name);
           sessionStorage.setItem("userEmail", userInfo.email);
-          sessionStorage.setItem("userMembership", userInfo.membership);
           sessionStorage.setItem("userCreatedAt", userInfo.signup_date); // 서버 토큰 저장
           const accessToken = sessionStorage.getItem("accessToken");
           if (accessToken) {

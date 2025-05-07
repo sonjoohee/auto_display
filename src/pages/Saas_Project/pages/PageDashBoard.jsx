@@ -33,6 +33,7 @@ import {
   PERSONA_LIST_SAAS,
   ACCESS_STATE_SAAS,
   DASHBOARD_TOOL_LIST_SAAS,
+  EDUCATION_STATE,
 } from "../../../pages/AtomStates";
 import {
   getPersonaListOnServer,
@@ -44,7 +45,7 @@ import FavoritePersonaStatus from "../../../components/Charts/FavoritePersonaSta
 
 const PageDashBoard = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
-
+  const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
   const [projectSaas] = useAtom(PROJECT_SAAS);
   const [, setAccessStateSaas] = useAtom(ACCESS_STATE_SAAS);
   const [personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
@@ -406,7 +407,7 @@ const PageDashBoard = () => {
         <MainContent Wide1030>
           <DashBoardWrap>
             <DashBoardItem>
-              {sessionStorage.getItem("educationState") === "true" ? (
+              {educationState ? (
                 <div
                   style={{ display: "flex", flexDirection: "row", gap: "10px" }}
                 >
@@ -479,7 +480,7 @@ const PageDashBoard = () => {
                   Persona Status
                 </H2>
 
-                {sessionStorage.getItem("educationState") === "false" && (
+                {!educationState && (
                   <TooltipButton onClick={() => setShowTooltip(!showTooltip)}>
                     <Sub3 color="gray500">페르소나 상태 알아보기</Sub3>
                     {showTooltip && (
@@ -526,8 +527,7 @@ const PageDashBoard = () => {
                 )}
               </div>
 
-              {personaListSaas?.length > 0 &&
-              sessionStorage.getItem("educationState") === "false" ? (
+              {personaListSaas?.length > 0 && !educationState ? (
                 <PersonaStatusWrap>
                   <div
                     onClick={() => navigateToAiPersonaTab("macro_segment")}
@@ -805,7 +805,7 @@ const PageDashBoard = () => {
                   </div>
                 </PersonaStatusWrap>
               ) : personaListSaas?.length > 0 &&
-                sessionStorage.getItem("educationState") === "true" ? (
+                educationState ? (
                 <FavoritePersonaStatus
                   maxPersonaCount={20} // 최대 페르소나 수 (기본값 20명)
                   totalPersona={{
