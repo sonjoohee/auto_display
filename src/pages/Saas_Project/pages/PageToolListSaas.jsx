@@ -2065,7 +2065,7 @@ const PageToolListSaas = () => {
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
-                        핵심 키워드 추출
+                       통합 니즈 작성
                       </Body1>
 
                       <div
@@ -2078,7 +2078,7 @@ const PageToolListSaas = () => {
 
                         <div className="text">
                           <Body1 color="white">
-                            <em>준비중</em>핵심 키워드 추출
+                            <em>준비중</em>통합 니즈 작성
                           </Body1>
                           <Caption1 color="white" align="left">
                             고객의 니즈를 키워드로 정리하는 툴
@@ -2115,7 +2115,7 @@ const PageToolListSaas = () => {
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
-                        아이디어 발상
+                        아이디어 발산
                       </Body1>
                       <div
                         className="overlay"
@@ -2127,7 +2127,7 @@ const PageToolListSaas = () => {
 
                         <div className="text">
                           <Body1 color="white">
-                            <em>준비중</em>아이디어 발상
+                            <em>준비중</em>아이디어 발산
                           </Body1>
                           <Caption1 color="white" align="left">
                             고객의 불편과 니즈를 기반으로 다양한 AI 페르소나와
@@ -2253,7 +2253,7 @@ const PageToolListSaas = () => {
                       anything
                       key="report-1"
                     >
-                      <span>비즈니스 구체화</span>
+                      <span>비즈니스 모델링</span>
                       <p>
                         <img src={images.ImgExplore22} alt="" />
                       </p>
@@ -2267,7 +2267,7 @@ const PageToolListSaas = () => {
                           navigate("/ConceptDefinition");
                         }}
                       >
-                        <span>비즈니스 구체화</span>
+                        <span>비즈니스 모델링</span>
 
                         <div className="text">
                           <Body1 color="white">
@@ -2301,7 +2301,7 @@ const PageToolListSaas = () => {
                       anything
                       key="report-1"
                     >
-                      <span>비즈니스 구체화</span>
+                      <span>비즈니스 모델링</span>
                       <p>
                         <img src={images.ImgExplore23} alt="" />
                       </p>
@@ -2315,7 +2315,7 @@ const PageToolListSaas = () => {
                           navigate("/NPS");
                         }}
                       >
-                        <span>비즈니스 구체화</span>
+                        <span>비즈니스 모델링</span>
 
                         <div className="text">
                           <Body1 color="white">
@@ -2349,7 +2349,7 @@ const PageToolListSaas = () => {
                       anything
                       key="report-1"
                     >
-                      <span>비즈니스 구체화</span>
+                      <span>비즈니스 모델링</span>
                       <p>
                         <img src={images.ImgExplore24} alt="" />
                       </p>
@@ -2363,7 +2363,7 @@ const PageToolListSaas = () => {
                           navigate("/BusinessModelCanvas");
                         }}
                       >
-                        <span>비즈니스 구체화</span>
+                        <span>비즈니스 모델링</span>
 
                         <div className="text">
                           <Body1 color="white">
@@ -2397,7 +2397,7 @@ const PageToolListSaas = () => {
                       anything
                       key="report-1"
                     >
-                      <span>비즈니스 구체화</span>
+                      <span>비즈니스 모델링</span>
                       <p>
                         <img src={images.ImgExplore25} alt="" />
                       </p>
@@ -2411,7 +2411,7 @@ const PageToolListSaas = () => {
                           navigate("/PRFAQ");
                         }}
                       >
-                        <span>비즈니스 구체화</span>
+                        <span>비즈니스 모델링</span>
 
                         <div className="text">
                           <Body1 color="white">

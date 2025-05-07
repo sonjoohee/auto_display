@@ -699,7 +699,7 @@ const PageIssueGeneration = () => {
                 <span>03</span>
                 <div className="text" style={{ whiteSpace: "nowrap" }}>
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    키워드 선택​
+                   핵심 문제 정의
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -860,7 +860,7 @@ const PageIssueGeneration = () => {
                                 style={{ height: "300px" }}
                                 onClick={() => navigate("/CustomerJourneyMap")}
                               >
-                                <img src={images.PeopleFillPrimary2} alt="" />
+                                <img src={images.ListFillPrimary} alt="" />
                                 <Body2
                                   color="gray700"
                                   align="center !important"
@@ -906,7 +906,7 @@ const PageIssueGeneration = () => {
                           selectedPurposes.customerList.length === 0
                         }
                       >
-                        아이디어 키워드 추출
+                        키워드 추출
                       </Button>
                     )}
 

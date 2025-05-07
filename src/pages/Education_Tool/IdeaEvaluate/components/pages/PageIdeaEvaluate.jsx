@@ -800,7 +800,7 @@ const PageIdeaEvaluate = () => {
                 <span>03</span>
                 <div className="text">
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    최종 인사이트 분석
+                    아이디어 평가
                   </Body1>
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     {/* Sentiment Analysis */}
@@ -927,7 +927,7 @@ const PageIdeaEvaluate = () => {
                           NoData
                           style={{ height: "300px", marginTop: "32px" }}
                         >
-                          <img src={images.PeopleFillPrimary2} alt="" />
+                          <img src={images.ListFillPrimary} alt="" />
                           <Body2 color="gray700" align="center !important">
                             Kano Model 결과가 보여집니다.
                           </Body2>
