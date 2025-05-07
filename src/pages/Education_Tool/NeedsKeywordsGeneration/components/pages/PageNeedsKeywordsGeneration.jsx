@@ -495,7 +495,7 @@ const PageNeedsKeywordsGeneration = () => {
                 <span>02</span>
                 <div className="text" style={{ whiteSpace: "nowrap" }}>
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                    키워드 클러스터링
+                    통합니즈 작성
                   </Body1>
                   {/* <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Design Sector
@@ -576,7 +576,7 @@ const PageNeedsKeywordsGeneration = () => {
                                 style={{ height: "300px" }}
                                 onClick={() => navigate("/IssueGeneration")}
                               >
-                                <img src={images.PeopleFillPrimary2} alt="" />
+                                <img src={images.ListFillPrimary} alt="" />
                                 <Body2
                                   color="gray700"
                                   align="center !important"
@@ -637,7 +637,7 @@ const PageNeedsKeywordsGeneration = () => {
                           selectedIssue.length === 0
                         }
                       >
-                        아이디어 키워드 추출
+                        다음
                       </Button>
                     </div>
                   </>

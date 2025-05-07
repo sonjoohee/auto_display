@@ -64,6 +64,7 @@ import {
   NPS_FILE_NAME,
   NPS_SURVEY_METHOD,
   EDUCATION_TOOL_COMPLETED_STATUS,
+
 } from "../../../../AtomStates";
 import {
   H4,
@@ -1103,7 +1104,8 @@ const PageNps = () => {
       );
 
       setToolSteps(3);
-      setCompletedSteps([...completedSteps, 3]);
+      setCompletedStatus(true);
+      setCompletedSteps(prev => [...prev, 3]);
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {
@@ -1434,7 +1436,7 @@ const PageNps = () => {
                 <span>03</span>
                 <div className="text">
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    최종 인사이트 분석
+                    NPS 분석
                   </Body1>
                 </div>
               </TabButtonType5>
@@ -1622,6 +1624,20 @@ const PageNps = () => {
                             NPS 평가를 받을 컨셉정의서를 선택해주세요.{" "}
                           </Body1>
                         </div>
+                        {npsConceptDefinition.length === 0 ? (
+                          <BoxWrap
+                            NoData
+                            style={{ height: "300px" }}
+                          >
+                            <img src={images.ListFillPrimary} alt="" />
+                            <Body2 color="gray700" align="center !important">
+                            컨셉정의서 툴을 먼저 완료해주세요​
+                            </Body2>
+                          </BoxWrap>
+                        ) : (
+                          <>
+                        
+
                         {npsConceptDefinition.map((idea, index) => (
                           <MoleculeItemSelectCard
                             style
@@ -1635,6 +1651,8 @@ const PageNps = () => {
                             onSelect={() => handleCheckboxChange(index)}
                           />
                         ))}
+                        </>
+                        )}
                       </>
                     )}
                   </div>

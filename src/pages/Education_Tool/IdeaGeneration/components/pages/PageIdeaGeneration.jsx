@@ -1327,7 +1327,7 @@ const PageIdeaGeneration = () => {
         (eventState && !educationState ? (
           <PopupWrap
             Event
-            title="아이디어 발상"
+            title="아이디어 발산"
             message={
               <>
                 현재 {eventTitle} 기간으로 이벤트 크레딧이 소진됩니다.
@@ -1347,7 +1347,7 @@ const PageIdeaGeneration = () => {
         ) : trialState && !educationState ? (
           <PopupWrap
             Check
-            title="아이디어 발상"
+            title="아이디어 발산"
             message={
               <>
                 해당 서비스 사용시 크레딧이 소진됩니다.
@@ -1369,7 +1369,7 @@ const PageIdeaGeneration = () => {
         ) : (
           <PopupWrap
             Check
-            title="아이디어 발상"
+            title="아이디어 발산"
             message={
               <>
                 해당 서비스 사용시 크레딧이 소진됩니다.

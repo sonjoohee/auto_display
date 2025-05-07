@@ -488,7 +488,7 @@ const PageCustomerJourneyMap = () => {
         setCompletedStatus(true);
       } catch (error) {}
       setToolSteps(3);
-      setCompletedSteps([...completedSteps, 3]);
+      setCompletedSteps(prev => [...prev, 3]);
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {

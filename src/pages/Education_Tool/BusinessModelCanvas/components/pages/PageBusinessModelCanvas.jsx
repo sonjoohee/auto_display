@@ -1042,7 +1042,7 @@ const PageBusinessModelCanvas = () => {
                 <span>02</span>
                 <div className="text">
                   <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
-                  비즈니스 모델 캔버스 작성
+                  비즈니스 모델 캔버스 도출
                   </Body1>
                   {/* <Body1 color={activeTab >= 2 ? "gray700" : "gray300"}>
                     Participating Persona
@@ -1167,9 +1167,9 @@ const PageBusinessModelCanvas = () => {
                       NoData
                       style={{ height: "300px", marginTop: "32px" }}
                     >
-                      <img src={images.PeopleFillPrimary2} alt="" />
+                      <img src={images.ListFillPrimary} alt="" />
                       <Body2 color="gray700" align="center !important">
-                      Kano Model 결과가 보여집니다.
+                      컨셉정의서 툴을 먼저 완료해주세요
                       </Body2>
                      
                     </BoxWrap>
