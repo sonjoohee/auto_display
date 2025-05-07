@@ -181,6 +181,7 @@ import {
   IDEA_EVALUATE_GRAPH_DATA,
   EDUCATION_TOOL_COMPLETED_STATUS,
   ADMIN_STATE,
+  EDUCATION_STATE,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -208,6 +209,7 @@ const PageToolListSaas = () => {
   const navigate = useNavigate();
   const [adminState, setAdminState] = useAtom(ADMIN_STATE);
   const [projectEducationState] = useAtom(PROJECT_EDUCATION_STATE);
+  const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
   const [, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
 
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -1204,7 +1206,7 @@ const PageToolListSaas = () => {
               <div
                 style={{ display: "flex", flexDirection: "row", gap: "10px" }}
               >
-                {sessionStorage.getItem("educationState") === "true" && (
+                {educationState && (
                   <LogoCard>
                     <img src={images.dcbLogo} alt="logo" />
                   </LogoCard>
@@ -1222,7 +1224,7 @@ const PageToolListSaas = () => {
               </div>
             </ToolListTitle>
             <ExploreWrap>
-              {sessionStorage.getItem("educationState") === "false" ? (
+              {!educationState ? (
                 <TabWrapType4>
                   <TabButtonType4Main
                     isActive={activeTab === "all"}
@@ -1260,7 +1262,7 @@ const PageToolListSaas = () => {
               )}
 
               <ExploreList>
-                {sessionStorage.getItem("educationState") === "false" ? (
+                {!educationState ? (
                   <>
                     {[
                       // Expert 카드들

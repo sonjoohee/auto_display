@@ -93,7 +93,6 @@ const MoleculeGoogleLoginForm = () => {
 
           // 유저 정보 저장
           setUserMembership(userInfo.membership);
-          sessionStorage.setItem("userMembership", userInfo.membership);
           sessionStorage.setItem("userCreatedAt", userInfo.signup_date);
         } else {
           console.error("유저 정보를 불러오는 중 오류가 발생했습니다.");

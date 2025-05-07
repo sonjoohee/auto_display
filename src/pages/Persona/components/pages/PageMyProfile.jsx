@@ -24,6 +24,7 @@ import {
   USER_MEMBERSHIP,
   IS_SOCIAL_LOGGED_IN,
   ADMIN_STATE,
+  EDUCATION_STATE,
 } from "../../../AtomStates";
 import {
   ButtonGroup,
@@ -52,6 +53,8 @@ import { unixDay } from "d3";
 
 const PageMyProfile = () => {
   const navigate = useNavigate();
+  const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
+  const [userMembership, setUserMembership] = useAtom(USER_MEMBERSHIP);
   const [adminState, setAdminState] = useAtom(ADMIN_STATE);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [isSocialLoggedIn, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN);
@@ -174,7 +177,7 @@ const PageMyProfile = () => {
         closeMemberDeletePopup();
 
         let url_address = "/";
-        if (sessionStorage.getItem("educationState") === "true") {
+        if (educationState) {
           url_address = "/DCB-Education";
         }
         // sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
@@ -338,7 +341,7 @@ const PageMyProfile = () => {
                 <div className="text">
                   <div className="name">
                     <H4 color="gray800">{userName}</H4>
-                    {sessionStorage.getItem("userMembership") === "Normal" ? (
+                    {userMembership === "Normal" ? (
                       <Grade General />
                     ) : (
                       <Grade />
@@ -384,9 +387,7 @@ const PageMyProfile = () => {
                   <div>
                     <Sub3 color="gray500">요금제 </Sub3>
                     <Sub3 color="gray800">
-                      {sessionStorage.getItem("userMembership") === "Normal"
-                        ? "일반 사용자"
-                        : "구독 사용자"}
+                      {userMembership === "Normal" ? "일반 사용자" : "구독 사용자"}
                     </Sub3>
                   </div>
                 </ProfileContentItem>

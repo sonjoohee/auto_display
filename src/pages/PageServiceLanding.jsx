@@ -7,9 +7,10 @@ import Landingimages from "../assets/styles/Landingimages";
 import images from "../assets/styles/Images";
 import { media } from "../assets/styles/Breakpoints";
 import { useAtom } from "jotai";
-import { IS_LOGGED_IN } from "./AtomStates";
+import { IS_LOGGED_IN, EDUCATION_STATE } from "./AtomStates";
 
 const PageServiceLanding = () => {
+  const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -242,7 +243,7 @@ const PageServiceLanding = () => {
               Primary
               Fill
               onClick={() => {
-                sessionStorage.setItem("educationState", "false");
+                setEducationState(false);
                 navigate("/Project");
               }}
               className="web"
@@ -277,7 +278,7 @@ const PageServiceLanding = () => {
             // type="button"
             style={{ paddingTop: "10px" }}
             onClick={() => {
-              sessionStorage.setItem("educationState", "false");
+              setEducationState(false);
               navigate("/Project");
             }}
           >
@@ -370,7 +371,7 @@ const PageServiceLanding = () => {
               // type="button"
               style={{ paddingTop: "6.5px" }}
               onClick={() => {
-                sessionStorage.setItem("educationState", "false");
+                setEducationState(false);
                 navigate("/Project");
               }}
             >

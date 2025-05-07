@@ -241,12 +241,10 @@ function App() {
           });
         } catch (error) {
           sessionStorage.removeItem("accessToken");
-          sessionStorage.removeItem("educationState");
           sessionStorage.removeItem("lastUrl");
           sessionStorage.removeItem("userCreatedAt");
           sessionStorage.removeItem("userName");
           sessionStorage.removeItem("userEmail");
-          sessionStorage.removeItem("userMembership");
           sessionStorage.removeItem("isSocialLogin");
           localStorage.removeItem("userName");
           localStorage.removeItem("userEmail");
@@ -273,12 +271,10 @@ function App() {
             setIsServerDown(true);
 
             sessionStorage.removeItem("accessToken");
-            sessionStorage.removeItem("educationState");
             sessionStorage.removeItem("lastUrl");
             sessionStorage.removeItem("userCreatedAt");
             sessionStorage.removeItem("userName");
             sessionStorage.removeItem("userEmail");
-            sessionStorage.removeItem("userMembership");
             sessionStorage.removeItem("isSocialLogin");
             localStorage.removeItem("userName");
             localStorage.removeItem("userEmail");

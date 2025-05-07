@@ -6,9 +6,12 @@ import { palette } from "../assets/styles/Palette";
 import Landingimages from "../assets/styles/Landingimages";
 import images from "../assets/styles/Images";
 import { media } from "../assets/styles/Breakpoints";
+import { EDUCATION_STATE } from "./AtomStates";
+import { useAtom } from "jotai";
 
 const PageServiceLandingDCBeducation = () => {
   const navigate = useNavigate();
+  const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [buttonColor, setButtonColor] = useState(palette.white);
   const totalSlides = 3;
@@ -150,7 +153,7 @@ const PageServiceLandingDCBeducation = () => {
               Primary
               Fill
               onClick={() => {
-                sessionStorage.setItem("educationState", "true");
+                setEducationState(false);
                 navigate("/Project");
               }}
               className="web"
@@ -198,7 +201,7 @@ const PageServiceLandingDCBeducation = () => {
               background: "linear-gradient(to right, #E6007E, #B70D7F)",
             }}
             onClick={() => {
-              sessionStorage.setItem("educationState", "true");
+              setEducationState(false);
               navigate("/Project");
             }}
           >
@@ -294,7 +297,7 @@ const PageServiceLandingDCBeducation = () => {
                 background: "linear-gradient(to right, #E6007E, #B70D7F)",
               }}
               onClick={() => {
-                sessionStorage.setItem("educationState", "true");
+                setEducationState(false);
                 navigate("/Project");
               }}
             >

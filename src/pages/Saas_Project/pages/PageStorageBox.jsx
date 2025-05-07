@@ -13,7 +13,7 @@ import {
   MainContent,
 } from "../../../assets/styles/BusinessAnalysisStyle";
 import OrganismStorageBoxToolList from "../components/organisms/OrganismStorageBoxToolList";
-import { TOOL_LIST_SAAS, PROJECT_SAAS } from "../../AtomStates";
+import { TOOL_LIST_SAAS, PROJECT_SAAS, EDUCATION_STATE } from "../../AtomStates";
 import images from "../../../assets/styles/Images";
 import { H1, Body3, Sub3, Caption1 } from "../../../assets/styles/Typography";
 
@@ -29,6 +29,7 @@ import { useDynamicViewport } from "../../../assets/DynamicViewport";
 const PageStorageBox = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const navigate = useNavigate();
+  const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
   const [projectSaas] = useAtom(PROJECT_SAAS);
   const [toolListSaas, setToolListSaas] = useAtom(TOOL_LIST_SAAS);
   const project = projectSaas;
@@ -363,7 +364,7 @@ const PageStorageBox = () => {
               <div
                 style={{ display: "flex", flexDirection: "row", gap: "10px" }}
               >
-                {sessionStorage.getItem("educationState") === "true" && (
+                {educationState && (
                   <LogoCard>
                     <img src={images.dcbLogo} alt="logo" />
                   </LogoCard>

@@ -144,10 +144,6 @@ const PageProject = () => {
 
           // 교육 상태 설정
           if (educationStateResponse) {
-            sessionStorage.setItem(
-              "educationState",
-              educationStateResponse.education_state
-            );
             setEducationState(educationStateResponse.education_state);
             
             if (educationStateResponse.education_state === true) {
@@ -274,13 +270,9 @@ const PageProject = () => {
         let savedProjectListInfo;
         const educationStateResponse = await UserEducationStateInfo(isLoggedIn);
 
-        sessionStorage.setItem(
-          "educationState",
-          educationStateResponse.education_state
-        );
         setEducationState(educationStateResponse.education_state);
 
-        if (sessionStorage.getItem("educationState") === "true") {
+        if (educationStateResponse.education_state) {
           if (projectEducationCode) {
             savedProjectListInfo =
               await getProjectListSaasEducationByIdFromIndexedDB(
@@ -348,7 +340,7 @@ const PageProject = () => {
               <div
                 style={{ display: "flex", flexDirection: "row", gap: "10px" }}
               >
-                {sessionStorage.getItem("educationState") === "true" && (
+                {educationState && (
                   <LogoCard>
                     <img src={images.dcbLogo} alt="logo" />
                   </LogoCard>

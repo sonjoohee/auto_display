@@ -43,6 +43,7 @@ import {
   EVENT_STATE,
   TRIAL_STATE,
   EVENT_TITLE,
+  EDUCATION_STATE,
 } from "../../../../pages/AtomStates";
 import PopupWrap from "../../../../assets/styles/Popup.jsx";
 
@@ -61,6 +62,7 @@ const OrganismPersonaCardList = ({
   setLoadingTabs,
 }) => {
   const navigate = useNavigate();
+  const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
   const [eventTitle] = useAtom(EVENT_TITLE);
@@ -127,13 +129,12 @@ const OrganismPersonaCardList = ({
   const toggleFavorite = async (persona) => {
     if (!persona) return;
 
-    const isEducation = sessionStorage.getItem("educationState") === "true";
     const currentFavoriteCount = personaData.filter(
       (p) => p.favorite === true
     ).length;
 
     // 교육 상태이고, 즐겨찾기 수가 20개 이상이며, 현재 페르소나를 즐겨찾기 하려는 경우
-    if (isEducation && currentFavoriteCount >= 20 && !persona.favorite) {
+    if (educationState && currentFavoriteCount >= 20 && !persona.favorite) {
       setShowFavoriteLimitPopup(true);
       return;
     }
