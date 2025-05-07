@@ -17,7 +17,7 @@ export const SIGN_UP_ROLE = atom("user");
 export const SIGN_UP_STATUS = atom("active");
 export const USER_NAME = atom("");
 export const USER_EMAIL = atom("");
-export const USER_MEMBERSHIP = atom("");
+export const USER_MEMBERSHIP = atom("Normal");
 export const EDUCATION_STATE = atom(false);
 export const ADMIN_STATE = atom(false);
 
