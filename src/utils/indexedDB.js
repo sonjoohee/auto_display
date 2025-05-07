@@ -1243,10 +1243,10 @@ export const UserCreditInfo = async (isLoggedIn) => {
 
 // 유저 교육 상태 조회
 export const UserEducationStateInfo = async (isLoggedIn) => {
-  if (!isLoggedIn) {
-    console.error("로그인이 필요합니다.");
-    return null;
-  }
+  // if (!isLoggedIn) {
+  //   console.error("로그인이 필요합니다.");
+  //   return null;
+  // }
 
   try {
     const token = sessionStorage.getItem("accessToken");
