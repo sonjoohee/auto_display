@@ -241,7 +241,6 @@ function App() {
           });
         } catch (error) {
           sessionStorage.removeItem("accessToken");
-          sessionStorage.removeItem("adminState");
           sessionStorage.removeItem("educationState");
           sessionStorage.removeItem("lastUrl");
           sessionStorage.removeItem("userCreatedAt");
@@ -274,7 +273,6 @@ function App() {
             setIsServerDown(true);
 
             sessionStorage.removeItem("accessToken");
-            sessionStorage.removeItem("adminState");
             sessionStorage.removeItem("educationState");
             sessionStorage.removeItem("lastUrl");
             sessionStorage.removeItem("userCreatedAt");

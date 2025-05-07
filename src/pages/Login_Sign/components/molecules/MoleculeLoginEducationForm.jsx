@@ -190,7 +190,6 @@ const MoleculeLoginEducationForm = ({ onClosePopup }) => {
           sessionStorage.setItem("userMembership", userInfo.membership);
           sessionStorage.setItem("userCreatedAt", userInfo.signup_date); // 서버 토큰 저장
           sessionStorage.setItem("educationState", userInfo.education_state);
-          sessionStorage.setItem("adminState", userInfo.is_admin);
           const accessToken = sessionStorage.getItem("accessToken");
           if (accessToken) {
             const userCreditValue = await UserCreditInfo(true);
