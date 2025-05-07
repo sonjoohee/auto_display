@@ -23,6 +23,7 @@ import {
   USER_CREDIT_DATA,
   USER_MEMBERSHIP,
   IS_SOCIAL_LOGGED_IN,
+  ADMIN_STATE,
 } from "../../../AtomStates";
 import {
   ButtonGroup,
@@ -51,6 +52,7 @@ import { unixDay } from "d3";
 
 const PageMyProfile = () => {
   const navigate = useNavigate();
+  const [adminState, setAdminState] = useAtom(ADMIN_STATE);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [isSocialLoggedIn, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN);
   const [isServiceMenuOpen, setIsServiceMenuOpen] = useState(false);
@@ -258,7 +260,7 @@ const PageMyProfile = () => {
               </H2>
 
               <ButtonGroup>
-                {sessionStorage.getItem("adminState") === "true" ? (
+                {adminState === true ? (
                   <>
                     <Button Primary onClick={() => navigate("/Project")}>
                       <images.CoinSmall

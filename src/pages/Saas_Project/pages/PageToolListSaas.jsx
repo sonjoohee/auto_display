@@ -179,7 +179,8 @@ import {
   IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX,
   IDEA_EVALUATE_COMPARISON_EDUCATION,
   IDEA_EVALUATE_GRAPH_DATA,
-  EDUCATION_TOOL_COMPLETED_STATUS
+  EDUCATION_TOOL_COMPLETED_STATUS,
+  ADMIN_STATE,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -205,6 +206,7 @@ const PageToolListSaas = () => {
   }, []);
 
   const navigate = useNavigate();
+  const [adminState, setAdminState] = useAtom(ADMIN_STATE);
   const [projectEducationState] = useAtom(PROJECT_EDUCATION_STATE);
   const [, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
 
@@ -1998,7 +2000,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-09T00:00:00.000Z")
                         )
                       }
@@ -2047,7 +2049,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-09T00:00:00.000Z")
                         )
                       }
@@ -2097,8 +2099,8 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
-                          new Date() >= new Date("2025-16-05T00:00:00.000Z")
+                          adminState ||
+                          new Date() >= new Date("2025-05-16T00:00:00.000Z")
                         )
                       }
                       Report
@@ -2145,7 +2147,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-16T00:00:00.000Z")
                         )
                       }
@@ -2193,7 +2195,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-16T00:00:00.000Z")
                         )
                       }
@@ -2241,7 +2243,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-23T00:00:00.000Z")
                         )
                       }
@@ -2289,7 +2291,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-23T00:00:00.000Z")
                         )
                       }
@@ -2337,7 +2339,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-23T00:00:00.000Z")
                         )
                       }
@@ -2385,7 +2387,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-23T00:00:00.000Z")
                         )
                       }
