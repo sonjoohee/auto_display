@@ -187,10 +187,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           setAdminState(userInfo.is_admin);
           sessionStorage.setItem("userName", userInfo.name);
           sessionStorage.setItem("userEmail", userInfo.email);
-          sessionStorage.setItem("userMembership", userInfo.membership);
           sessionStorage.setItem("userCreatedAt", userInfo.signup_date); // 서버 토큰 저장
-          sessionStorage.setItem("educationState", userInfo.education_state);
-          sessionStorage.setItem("adminState", userInfo.is_admin);
 
           const accessToken = sessionStorage.getItem("accessToken");
           if (accessToken) {
@@ -418,9 +415,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  const educationState =
-                    sessionStorage.getItem("educationState");
-                  if (educationState === "true") {
+                  if (educationState) {
                     window.location.href = "/SignupEducation";
                   } else {
                     window.location.href = "/Signin";

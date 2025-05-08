@@ -201,7 +201,7 @@ import {
   KEYWORDS_GENERATION_SELECTED_ISSUE_INDEX,
   KEYWORDS_GENERATION_TAG,
   CREDIT_CREATE_TOOL_LOADED,
-  EDUCATION_TOOL_COMPLETED_STATUS
+  EDUCATION_TOOL_COMPLETED_STATUS,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -710,7 +710,16 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
               .join("") || "상세 내용 없음"
           );
         case "ix_idea_evaluation_education":
-          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+          return (
+            tool.ideaEvaluateSelectedList
+              ?.map((item, index) =>
+                index === tool.ideaEvaluateSelectedList.length - 1
+                  ? item
+                  : item + ", "
+              )
+              .join("") || "상세 내용 없음"
+          );
+
         case "ix_concept_definition_education":
           return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
         case "ix_issue_generation_education":

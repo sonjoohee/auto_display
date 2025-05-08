@@ -32,6 +32,7 @@ import {
   getProjectDeleteListOnServer,
   CreditInfo,
   UserEducationStateInfo,
+  UserAdminStateInfo,
 } from "../../../utils/indexedDB";
 import OrganismProjectItem from "../components/organisms/OrganismProjectItem";
 import {
@@ -57,6 +58,7 @@ import {
   PROJECT_EDUCATION_CODE,
   CREDIT_CREATE_TOOL_LOW,
   CREDIT_CREATE_TOOL_HIGH,
+  ADMIN_STATE,
 } from "../../AtomStates";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 
@@ -95,6 +97,7 @@ const PageProject = () => {
   const [projectEducationCode, setProjectEducationCode] = useAtom(
     PROJECT_EDUCATION_CODE
   );
+  const [adminState, setAdminState] = useAtom(ADMIN_STATE);
 
   const [isWarningPopupOpen, setIsWarningPopupOpen] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
@@ -116,7 +119,9 @@ const PageProject = () => {
           const educationStateResponse = await UserEducationStateInfo(
             isLoggedIn
           );
+          const adminStateResponse = await UserAdminStateInfo(isLoggedIn);
 
+          // 크레딧 정보 설정
           if (response) {
             // console.log("🚀 ~ fetchCreditInfo ~ response:", response);
             setCreditRequestCustomPersona(response.request_custom_persona);
@@ -136,23 +141,24 @@ const PageProject = () => {
             setCreditCreateToolLow(response.create_tool_low);
             setCreditCreateToolHigh(response.create_tool_high);
           }
-          sessionStorage.setItem(
-            "educationState",
-            educationStateResponse.education_state
-          );
-          setEducationState(educationStateResponse.education_state);
 
-          // console.log(
-          //   "🚀 ~ fetchCreditInfo ~ educationStateResponse:",
-          //   educationStateResponse
-          // );
-          if (educationStateResponse.education_state === true) {
+          // 교육 상태 설정
+          if (educationStateResponse) {
+            setEducationState(educationStateResponse.education_state);
+            
+            if (educationStateResponse.education_state === true) {
+              setProjectEducationState("education");
+              setProjectEducationCode("edu_000001");
+            }
+          }
+
+          // 관리자 상태 설정
+          if (adminStateResponse) {
+            setAdminState(adminStateResponse.is_admin);
             // console.log(
-            //   "🚀 ~ fetchCreditInfo ~ educationStateResponse:",
-            //   educationStateResponse
+            //   "🚀 ~ fetchCreditInfo ~ adminStateResponse:",
+            //   adminStateResponse
             // );
-            setProjectEducationState("education");
-            setProjectEducationCode("edu_000001");
           }
         }
       } catch (error) {
@@ -264,19 +270,16 @@ const PageProject = () => {
         let savedProjectListInfo;
         const educationStateResponse = await UserEducationStateInfo(isLoggedIn);
 
-        sessionStorage.setItem(
-          "educationState",
-          educationStateResponse.education_state
-        );
         setEducationState(educationStateResponse.education_state);
 
-        if (sessionStorage.getItem("educationState") === "true") {
-          // if (projectEducationState === "education") {
-          savedProjectListInfo =
-            await getProjectListSaasEducationByIdFromIndexedDB(
-              projectEducationCode,
-              true
-            );
+        if (educationStateResponse.education_state) {
+          if (projectEducationCode) {
+            savedProjectListInfo =
+              await getProjectListSaasEducationByIdFromIndexedDB(
+                projectEducationCode,
+                true
+              );
+          }
         } else {
           savedProjectListInfo = await getProjectListSaasByIdFromIndexedDB(
             true
@@ -337,7 +340,7 @@ const PageProject = () => {
               <div
                 style={{ display: "flex", flexDirection: "row", gap: "10px" }}
               >
-                {sessionStorage.getItem("educationState") === "true" && (
+                {educationState && (
                   <LogoCard>
                     <img src={images.dcbLogo} alt="logo" />
                   </LogoCard>

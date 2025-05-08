@@ -84,7 +84,9 @@ import ParetoCurveGraph from "../../../../../components/Charts/ParetoCurveGraph"
 const PageIdeaEvaluate = () => {
   const navigate = useNavigate();
 
-  const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
+  const [completedStatus, setCompletedStatus] = useAtom(
+    EDUCATION_TOOL_COMPLETED_STATUS
+  );
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
@@ -259,7 +261,7 @@ const PageIdeaEvaluate = () => {
         if (ideaEvaluateGraphData && ideaEvaluateGraphData.length > 0) {
           setGraphData(ideaEvaluateGraphData);
         }
-        if(completedStatus) {
+        if (completedStatus) {
           setCompletedStatus(true);
         }
 
@@ -356,27 +358,36 @@ const PageIdeaEvaluate = () => {
     setIdeaEvaluateSelect((prev) => {
       if (prev.includes(ideaId)) {
         // 이미 선택된 아이템이면 제거
-        const newSelected = prev.filter((id) => id !== ideaId);
-        return newSelected;
+        return prev.filter((id) => id !== ideaId);
       } else {
-        // 새로운 아이템 추가
-        const newSelected = [...prev, ideaId];
-        return newSelected;
+        // 새로운 아이템 추가 (최대 9개 제한 확인)
+        if (prev.length < 9) {
+          return [...prev, ideaId];
+        }
+        return prev; // 9개 이상이면 변경 없음
       }
     });
-
-    // 선택된 아이템들의 실제 데이터를 가져옴
-    setIdeaEvaluateSelectedList((prev) => {
-      const selectedItems = ideaEvaluateSelect.map((ideaId) => {
-        const [category, index] = ideaId.split("-");
-        const categoryKey = category.replace("-", "_");
-        return selectedKanoModelData.kanoModelReportData[categoryKey][
-          parseInt(index)
-        ];
-      });
-      return selectedItems;
-    });
+    // ideaEvaluateSelectedList 업데이트 로직 제거
   };
+
+  // useEffect를 사용하여 ideaEvaluateSelect 변경 시 ideaEvaluateSelectedList 업데이트
+  useEffect(() => {
+    // ideaEvaluateSelect 상태가 변경될 때마다 실행
+    const selectedItems = ideaEvaluateSelect
+      .map((ideaId) => {
+        const parts = ideaId.split("-");
+        const index = parseInt(parts.pop()); // 마지막 부분을 인덱스로 사용
+        const categoryKey = parts.join("_"); // 나머지 부분을 카테고리 키로 사용 (예: 'one_dimensional')
+
+        // categoryKey와 index를 사용하여 데이터 접근
+        return selectedKanoModelData?.kanoModelReportData?.[categoryKey]?.[
+          index
+        ];
+      })
+      .filter((item) => item !== undefined); // 유효한 아이템만 필터링
+
+    setIdeaEvaluateSelectedList(selectedItems);
+  }, [ideaEvaluateSelect, selectedKanoModelData]); // ideaEvaluateSelect 또는 selectedKanoModelData 변경 시 실행
 
   // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -453,8 +464,8 @@ const PageIdeaEvaluate = () => {
         responseToolId,
         {
           selectedKanoModelIdea: {
-            kanoModelReportData : selectedKanoModelData.kanoModelReportData,
-            kanoModelClustering : selectedKanoModelData.kanoModelClustering,
+            kanoModelReportData: selectedKanoModelData.kanoModelReportData,
+            kanoModelClustering: selectedKanoModelData.kanoModelClustering,
           },
           selectedKanoModelIdeaIndex: selectedPurposes,
           ideaEvaluateSelectedList: ideaEvaluateSelectedList,
@@ -467,8 +478,6 @@ const PageIdeaEvaluate = () => {
       setToolSteps(1);
     }
   };
-
-  
 
   const handleSubmitReport = async () => {
     // 새 AbortController 생성
@@ -791,7 +800,7 @@ const PageIdeaEvaluate = () => {
                 <span>03</span>
                 <div className="text">
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    최종 인사이트 분석
+                    아이디어 평가
                   </Body1>
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     {/* Sentiment Analysis */}
@@ -861,11 +870,13 @@ const PageIdeaEvaluate = () => {
                                   disabled={
                                     toolSteps >= 1 ||
                                     selectedKanoModelData?.kanoModelClustering
-                                      ?.attractive.length > 0 || customerJourneyList?.length === 0
+                                      ?.attractive.length > 0 ||
+                                    customerJourneyList?.length === 0
                                   }
                                 >
                                   <Body2 color="gray300" align="left">
-                                    카노 모델 진행을 완료하신 경우, 정보를 가져올 수 있습니다.
+                                    카노 모델 진행을 완료하신 경우, 정보를
+                                    가져올 수 있습니다.
                                   </Body2>
                                 </SelectBoxItem>
                               ) : (
@@ -912,8 +923,11 @@ const PageIdeaEvaluate = () => {
                           <AtomPersonaLoader message="로딩 중..." />
                         </div>
                       ) : !showKanoModelList ? (
-                        <BoxWrap NoData style={{ height: "300px", marginTop: "32px" }}>
-                          <img src={images.PeopleFillPrimary2} alt="" />
+                        <BoxWrap
+                          NoData
+                          style={{ height: "300px", marginTop: "32px" }}
+                        >
+                          <img src={images.ListFillPrimary} alt="" />
                           <Body2 color="gray700" align="center !important">
                             Kano Model 결과가 보여집니다.
                           </Body2>
@@ -930,23 +944,39 @@ const PageIdeaEvaluate = () => {
                             </Body1>
                           </div>
 
-                          {selectedKanoModelData.kanoModelReportData.attractive.map((title, index) => (
-                            <MoleculeItemSelectCard
-                              FlexStart
-                              key={`attractive-${index}`}
-                              id={`attractive-${index}`}
-                              title={title}
-                              isSelected={ideaEvaluateSelect.includes(`attractive-${index}`)}
-                              onSelect={() => {
-                                const isCurrentlySelected = ideaEvaluateSelect.includes(`attractive-${index}`);
-                                if (!isCurrentlySelected && ideaEvaluateSelect.length >= 9) {
-                                  return;
+                          {selectedKanoModelData.kanoModelReportData.attractive.map(
+                            (title, index) => (
+                              <MoleculeItemSelectCard
+                                FlexStart
+                                key={`attractive-${index}`}
+                                id={`attractive-${index}`}
+                                title={title}
+                                isSelected={ideaEvaluateSelect.includes(
+                                  `attractive-${index}`
+                                )}
+                                onSelect={() => {
+                                  const isCurrentlySelected =
+                                    ideaEvaluateSelect.includes(
+                                      `attractive-${index}`
+                                    );
+                                  if (
+                                    !isCurrentlySelected &&
+                                    ideaEvaluateSelect.length >= 9
+                                  ) {
+                                    return;
+                                  }
+                                  handleCheckboxChange(`attractive-${index}`);
+                                }}
+                                disabled={
+                                  toolSteps >= 1 ||
+                                  (!ideaEvaluateSelect.includes(
+                                    `attractive-${index}`
+                                  ) &&
+                                    ideaEvaluateSelect.length >= 9)
                                 }
-                                handleCheckboxChange(`attractive-${index}`);
-                              }}
-                              disabled={toolSteps >= 1 || (!ideaEvaluateSelect.includes(`attractive-${index}`) && ideaEvaluateSelect.length >= 9)}
-                            />
-                          ))}
+                              />
+                            )
+                          )}
 
                           <div
                             className="title"
@@ -960,23 +990,41 @@ const PageIdeaEvaluate = () => {
                               One-Dimensional (일차원 속성){" "}
                             </Body1>
                           </div>
-                          {selectedKanoModelData.kanoModelReportData.one_dimensional.map((title, index) => (
-                            <MoleculeItemSelectCard
-                              FlexStart
-                              key={`one-dimensional-${index}`}
-                              id={`one-dimensional-${index}`}
-                              title={title}
-                              isSelected={ideaEvaluateSelect.includes(`one_dimensional-${index}`)}
-                              onSelect={() => {
-                                const isCurrentlySelected = ideaEvaluateSelect.includes(`one_dimensional-${index}`);
-                                if (!isCurrentlySelected && ideaEvaluateSelect.length >= 9) {
-                                  return;
+                          {selectedKanoModelData.kanoModelReportData.one_dimensional.map(
+                            (title, index) => (
+                              <MoleculeItemSelectCard
+                                FlexStart
+                                key={`one-dimensional-${index}`}
+                                id={`one-dimensional-${index}`}
+                                title={title}
+                                isSelected={ideaEvaluateSelect.includes(
+                                  `one_dimensional-${index}`
+                                )}
+                                onSelect={() => {
+                                  const isCurrentlySelected =
+                                    ideaEvaluateSelect.includes(
+                                      `one_dimensional-${index}`
+                                    );
+                                  if (
+                                    !isCurrentlySelected &&
+                                    ideaEvaluateSelect.length >= 9
+                                  ) {
+                                    return;
+                                  }
+                                  handleCheckboxChange(
+                                    `one_dimensional-${index}`
+                                  );
+                                }}
+                                disabled={
+                                  toolSteps >= 1 ||
+                                  (!ideaEvaluateSelect.includes(
+                                    `one_dimensional-${index}`
+                                  ) &&
+                                    ideaEvaluateSelect.length >= 9)
                                 }
-                                handleCheckboxChange(`one_dimensional-${index}`);
-                              }}
-                              disabled={toolSteps >= 1 || (!ideaEvaluateSelect.includes(`one_dimensional-${index}`) && ideaEvaluateSelect.length >= 9)}
-                            />
-                          ))}
+                              />
+                            )
+                          )}
 
                           <div
                             className="title"
@@ -991,23 +1039,39 @@ const PageIdeaEvaluate = () => {
                             </Body1>
                           </div>
 
-                          {selectedKanoModelData.kanoModelReportData.must_be.map((title, index) => (
-                            <MoleculeItemSelectCard
-                              FlexStart
-                              key={`must-be-${index}`}
-                              id={`must-be-${index}`}
-                              title={title}
-                              isSelected={ideaEvaluateSelect.includes(`must_be-${index}`)}
-                              onSelect={() => {
-                                const isCurrentlySelected = ideaEvaluateSelect.includes(`must_be-${index}`);
-                                if (!isCurrentlySelected && ideaEvaluateSelect.length >= 9) {
-                                  return;
+                          {selectedKanoModelData.kanoModelReportData.must_be.map(
+                            (title, index) => (
+                              <MoleculeItemSelectCard
+                                FlexStart
+                                key={`must-be-${index}`}
+                                id={`must-be-${index}`}
+                                title={title}
+                                isSelected={ideaEvaluateSelect.includes(
+                                  `must_be-${index}`
+                                )}
+                                onSelect={() => {
+                                  const isCurrentlySelected =
+                                    ideaEvaluateSelect.includes(
+                                      `must_be-${index}`
+                                    );
+                                  if (
+                                    !isCurrentlySelected &&
+                                    ideaEvaluateSelect.length >= 9
+                                  ) {
+                                    return;
+                                  }
+                                  handleCheckboxChange(`must_be-${index}`);
+                                }}
+                                disabled={
+                                  toolSteps >= 1 ||
+                                  (!ideaEvaluateSelect.includes(
+                                    `must_be-${index}`
+                                  ) &&
+                                    ideaEvaluateSelect.length >= 9)
                                 }
-                                handleCheckboxChange(`must_be-${index}`);
-                              }}
-                              disabled={toolSteps >= 1 || (!ideaEvaluateSelect.includes(`must_be-${index}`) && ideaEvaluateSelect.length >= 9)}
-                            />
-                          ))}
+                              />
+                            )
+                          )}
                         </div>
                       )}
                     </TabContent5Item>
@@ -1022,7 +1086,9 @@ const PageIdeaEvaluate = () => {
                     disabled={
                       !showKanoModelList
                         ? selectedKanoModelData.length === 0 || toolSteps >= 1
-                        : ideaEvaluateSelect.length < 7 || toolSteps >= 1 ||ideaEvaluateSelect.length >9
+                        : ideaEvaluateSelect.length < 7 ||
+                          toolSteps >= 1 ||
+                          ideaEvaluateSelect.length > 9
                     }
                   >
                     아이디어 방향성으로 전환
@@ -1064,7 +1130,7 @@ const PageIdeaEvaluate = () => {
                               marginBottom: "8px",
                               marginRight: "50px",
                               alignSelf: "flex-start",
-                              color: "#8C8C8C"
+                              color: "#8C8C8C",
                             }}
                           >
                             평가할 아이디어 리스트
@@ -1078,15 +1144,17 @@ const PageIdeaEvaluate = () => {
                               justifyContent: "flex-start",
                               alignSelf: "flex-start",
                               marginTop: "0",
-                              paddingTop: "0"
+                              paddingTop: "0",
                             }}
                           >
                             <span
+
                               style={{ 
                                 color: "gray800", 
+
                                 marginBottom: "4px",
                                 alignSelf: "flex-start",
-                                display: "block"
+                                display: "block",
                               }}
                             >
                               {ideaEvaluateSelectedList.map((idea, index) => {
@@ -1352,17 +1420,19 @@ const PageIdeaEvaluate = () => {
                         )}
                       </InsightAnalysis>
                       {completedStatus && (
-                          <Button
+                        <Button
                           Primary
                           Edit
                           Large
-                          style={{ color: "#666666", border: "1px solid #E0E4EB" }}
+                          style={{
+                            color: "#666666",
+                            border: "1px solid #E0E4EB",
+                          }}
                           onClick={() => navigate("/Tool")}
-                  
                         >
-                          리서치 툴 리스트 바로가기 
+                          리서치 툴 리스트 바로가기
                         </Button>
-                        )}
+                      )}
                     </>
                   )}
                 </TabContent5>

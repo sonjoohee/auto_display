@@ -179,7 +179,9 @@ import {
   IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX,
   IDEA_EVALUATE_COMPARISON_EDUCATION,
   IDEA_EVALUATE_GRAPH_DATA,
-  EDUCATION_TOOL_COMPLETED_STATUS
+  EDUCATION_TOOL_COMPLETED_STATUS,
+  ADMIN_STATE,
+  EDUCATION_STATE,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -205,7 +207,9 @@ const PageToolListSaas = () => {
   }, []);
 
   const navigate = useNavigate();
+  const [adminState, setAdminState] = useAtom(ADMIN_STATE);
   const [projectEducationState] = useAtom(PROJECT_EDUCATION_STATE);
+  const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
   const [, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
 
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
@@ -1202,7 +1206,7 @@ const PageToolListSaas = () => {
               <div
                 style={{ display: "flex", flexDirection: "row", gap: "10px" }}
               >
-                {sessionStorage.getItem("educationState") === "true" && (
+                {educationState && (
                   <LogoCard>
                     <img src={images.dcbLogo} alt="logo" />
                   </LogoCard>
@@ -1220,7 +1224,7 @@ const PageToolListSaas = () => {
               </div>
             </ToolListTitle>
             <ExploreWrap>
-              {sessionStorage.getItem("educationState") === "false" ? (
+              {!educationState ? (
                 <TabWrapType4>
                   <TabButtonType4Main
                     isActive={activeTab === "all"}
@@ -1258,7 +1262,7 @@ const PageToolListSaas = () => {
               )}
 
               <ExploreList>
-                {sessionStorage.getItem("educationState") === "false" ? (
+                {!educationState ? (
                   <>
                     {[
                       // Expert 카드들
@@ -1998,7 +2002,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-09T00:00:00.000Z")
                         )
                       }
@@ -2047,7 +2051,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-09T00:00:00.000Z")
                         )
                       }
@@ -2061,7 +2065,7 @@ const PageToolListSaas = () => {
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
-                        핵심 키워드 추출
+                       통합 니즈 작성
                       </Body1>
 
                       <div
@@ -2074,7 +2078,7 @@ const PageToolListSaas = () => {
 
                         <div className="text">
                           <Body1 color="white">
-                            <em>준비중</em>핵심 키워드 추출
+                            <em>준비중</em>통합 니즈 작성
                           </Body1>
                           <Caption1 color="white" align="left">
                             고객의 니즈를 키워드로 정리하는 툴
@@ -2097,8 +2101,8 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
-                          new Date() >= new Date("2025-16-05T00:00:00.000Z")
+                          adminState ||
+                          new Date() >= new Date("2025-05-16T00:00:00.000Z")
                         )
                       }
                       Report
@@ -2145,7 +2149,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-16T00:00:00.000Z")
                         )
                       }
@@ -2193,7 +2197,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-16T00:00:00.000Z")
                         )
                       }
@@ -2241,7 +2245,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-23T00:00:00.000Z")
                         )
                       }
@@ -2249,7 +2253,7 @@ const PageToolListSaas = () => {
                       anything
                       key="report-1"
                     >
-                      <span>비즈니스 구체화</span>
+                      <span>비즈니스 모델링</span>
                       <p>
                         <img src={images.ImgExplore22} alt="" />
                       </p>
@@ -2263,7 +2267,7 @@ const PageToolListSaas = () => {
                           navigate("/ConceptDefinition");
                         }}
                       >
-                        <span>비즈니스 구체화</span>
+                        <span>비즈니스 모델링</span>
 
                         <div className="text">
                           <Body1 color="white">
@@ -2289,7 +2293,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-23T00:00:00.000Z")
                         )
                       }
@@ -2297,7 +2301,7 @@ const PageToolListSaas = () => {
                       anything
                       key="report-1"
                     >
-                      <span>비즈니스 구체화</span>
+                      <span>비즈니스 모델링</span>
                       <p>
                         <img src={images.ImgExplore23} alt="" />
                       </p>
@@ -2311,7 +2315,7 @@ const PageToolListSaas = () => {
                           navigate("/NPS");
                         }}
                       >
-                        <span>비즈니스 구체화</span>
+                        <span>비즈니스 모델링</span>
 
                         <div className="text">
                           <Body1 color="white">
@@ -2337,7 +2341,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-23T00:00:00.000Z")
                         )
                       }
@@ -2345,7 +2349,7 @@ const PageToolListSaas = () => {
                       anything
                       key="report-1"
                     >
-                      <span>비즈니스 구체화</span>
+                      <span>비즈니스 모델링</span>
                       <p>
                         <img src={images.ImgExplore24} alt="" />
                       </p>
@@ -2359,7 +2363,7 @@ const PageToolListSaas = () => {
                           navigate("/BusinessModelCanvas");
                         }}
                       >
-                        <span>비즈니스 구체화</span>
+                        <span>비즈니스 모델링</span>
 
                         <div className="text">
                           <Body1 color="white">
@@ -2385,7 +2389,7 @@ const PageToolListSaas = () => {
                     <ExploreCard
                       ReadyEducation={
                         !(
-                          sessionStorage.getItem("adminState") === "true" ||
+                          adminState ||
                           new Date() >= new Date("2025-05-23T00:00:00.000Z")
                         )
                       }
@@ -2393,7 +2397,7 @@ const PageToolListSaas = () => {
                       anything
                       key="report-1"
                     >
-                      <span>비즈니스 구체화</span>
+                      <span>비즈니스 모델링</span>
                       <p>
                         <img src={images.ImgExplore25} alt="" />
                       </p>
@@ -2407,7 +2411,7 @@ const PageToolListSaas = () => {
                           navigate("/PRFAQ");
                         }}
                       >
-                        <span>비즈니스 구체화</span>
+                        <span>비즈니스 모델링</span>
 
                         <div className="text">
                           <Body1 color="white">

@@ -44,6 +44,8 @@ import {
   PROJECT_REFRESH_TRIGGER,
   CUSTOM_PERSONA_LIST,
   ACCESS_DASHBOARD,
+  EDUCATION_STATE,
+  USER_MEMBERSHIP,
 } from "../../../pages/AtomStates";
 import {
   getAllConversationsFromIndexedDB,
@@ -58,6 +60,8 @@ const OrganismIncNavigation = () => {
   const navigate = useNavigate();
 
   const [accessDashboard] = useAtom(ACCESS_DASHBOARD);
+  const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
+  const [userMembership, setUserMembership] = useAtom(USER_MEMBERSHIP);
   const [, setCustomPersonaList] = useAtom(CUSTOM_PERSONA_LIST);
   const [, setRefreshTrigger] = useAtom(PROJECT_REFRESH_TRIGGER);
   const [, setProjectLoadButtonState] = useAtom(PROJECT_LOAD_BUTTON_STATE);
@@ -511,7 +515,7 @@ const OrganismIncNavigation = () => {
   const handleLogoutConfirm = () => {
     // 로그아웃 확인 버튼을 눌렀을 때 실행
     let url_address = "/";
-    if (sessionStorage.getItem("educationState") === "true") {
+    if (educationState) {
       url_address = "/DCB-Education";
     }
     sessionStorage.clear(); // 세션 스토리지 모두 삭제
@@ -958,7 +962,7 @@ const OrganismIncNavigation = () => {
                   <div className="userName">
                     <strong>{sessionStorage.getItem("userName")}</strong>
                     {/* 일반일때 Grade General */}
-                    {sessionStorage.getItem("userMembership") === "Normal" ? (
+                    {userMembership === "Normal" ? (
                       <Grade General />
                     ) : (
                       <Grade />

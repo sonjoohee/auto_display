@@ -986,7 +986,7 @@ const PagePRFAQ = () => {
                 <span>03</span>
                 <div className="text">
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    최종 PRFAQ
+                    PRFAQ 도출
                   </Body1>
                 </div>
               </TabButtonType5>

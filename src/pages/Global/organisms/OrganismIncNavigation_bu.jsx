@@ -1451,7 +1451,7 @@ const OrganismIncNavigation = () => {
                   <div className="userName">
                     <strong>{sessionStorage.getItem("userName")}</strong>
                     {/* 일반일때 Grade General */}
-                    {sessionStorage.getItem("userMembership") === "Normal" ? (
+                    {userMembership === "Normal" ? (
                       <Grade General />
                     ) : (
                       <Grade />

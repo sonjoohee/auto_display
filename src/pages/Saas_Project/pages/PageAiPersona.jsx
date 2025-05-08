@@ -71,6 +71,7 @@ import {
   TRIAL_STATE,
   EVENT_TITLE,
   PROJECT_PERSONA_LIST,
+  EDUCATION_STATE,
 } from "../../../pages/AtomStates";
 import AtomPersonaLoader from "../../Global/atoms/AtomPersonaLoader";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
@@ -80,7 +81,7 @@ const PageAiPersona = () => {
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
   const navigate = useNavigate();
   const location = useLocation();
-
+  const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
   const [project] = useAtom(PROJECT_SAAS);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectId] = useAtom(PROJECT_ID);
@@ -1251,7 +1252,7 @@ const PageAiPersona = () => {
               <div
                 style={{ display: "flex", flexDirection: "row", gap: "10px" }}
               >
-                {sessionStorage.getItem("educationState") === "true" && (
+                {educationState && (
                   <LogoCard>
                     <img src={images.dcbLogo} alt="logo" />
                   </LogoCard>
@@ -1404,7 +1405,7 @@ const PageAiPersona = () => {
                     }
                   >
                     Favorite
-                    {sessionStorage.getItem("educationState") === "true" &&
+                    {educationState &&
                       ` (${favoriteCount} / 20)`}
                   </TabButtonType3>
                 </TabWrapType3>

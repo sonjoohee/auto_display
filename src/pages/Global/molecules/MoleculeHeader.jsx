@@ -23,6 +23,7 @@ import {
   USER_CREDITS,
   IS_LOGGED_IN,
   PROJECT_SAAS,
+  EDUCATION_STATE,
 } from "../../../pages/AtomStates";
 import { UserCreditInfo } from "../../../utils/indexedDB";
 import { AlarmList } from "../../../utils/indexedDB";
@@ -43,6 +44,7 @@ const MoleculeHeader = () => {
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [alarms, setAlarms] = useState([]);
   const [projectSaas] = useAtom(PROJECT_SAAS);
+  const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
 
   // Persona/3 경로 체크를 위한 조건 수정
   // const isPersona3Page =
@@ -355,7 +357,7 @@ const MoleculeHeader = () => {
               <Sub2
                 style={{ cursor: "pointer" }}
                 onClick={() => {
-                  if (sessionStorage.getItem("educationState") === "true") {
+                  if (educationState) {
                     navigate("/DCB-education");
                   } else {
                     navigate("/");
@@ -409,7 +411,6 @@ const MoleculeHeader = () => {
                   <div className="title">
                     <Sub1 color="gray700">크레딧 내역</Sub1>
                     {isLoggedInState && (
-                      // sessionStorage.getItem("adminState") === "true" &&
                       <button onClick={() => navigate("/Payment")}>
                         <Caption2 color="primary">충전하기</Caption2>
                       </button>

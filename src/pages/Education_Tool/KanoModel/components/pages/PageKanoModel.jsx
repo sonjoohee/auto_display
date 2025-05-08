@@ -905,7 +905,7 @@ const PageKanoModel = () => {
                 <span>03</span>
                 <div className="text">
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
-                    최종 인사이트 분석
+                    카노 모델 분석
                   </Body1>
                   <Body1 color={activeTab >= 3 ? "gray700" : "gray300"}>
                     {/* Sentiment Analysis */}
@@ -943,21 +943,20 @@ const PageKanoModel = () => {
                         {kanoModelClusteringName.length === 0 ? (
                           // 아이디어 선택 화면
                           <>
-                            {kanoModelIdeaGeneration.length === 0 ? (
+                            {kanoModelIdeaGeneration.length  === 0 ? (
                               <BoxWrap
                                 NoData
                                 style={{ height: "300px" }}
                                 onClick={() => navigate("/IdeaGeneration")}
                               >
-                                <img src={images.PeopleFillPrimary2} alt="" />
+                                <img src={images.ListFillPrimary} alt="" />
                                 <Body2
                                   color="gray700"
                                   align="center !important"
                                 >
-                                  아이디어 발상 단계를 통해 도출된 아이디어를
-                                  통합하세요
+                                  아이디어 발산 툴을 먼저 완료해주세요​
                                 </Body2>
-                                <Button
+                                {/* <Button
                                   Medium
                                   Outline
                                   Fill
@@ -966,7 +965,7 @@ const PageKanoModel = () => {
                                   <Caption1 color="gray700">
                                     아이디어 가져오기
                                   </Caption1>
-                                </Button>
+                                </Button> */}
                               </BoxWrap>
                             ) : (
                               <>

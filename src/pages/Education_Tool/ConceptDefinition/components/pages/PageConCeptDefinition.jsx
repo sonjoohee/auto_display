@@ -280,17 +280,17 @@ const PageConceptDefinition = () => {
     handleNextStep(1);
     setToolSteps(1);
 
-    const responseToolId = await createToolOnServer(
-      {
-        projectId: project._id,
-        type: "ix_concept_definition_education",
-        selectedPersonas: selectedPersonas,
-        completedStep: 1,
-      },
-      isLoggedIn
-    );
+    // const responseToolId = await createToolOnServer(
+    //   {
+    //     projectId: project._id,
+    //     type: "ix_concept_definition_education",
+    //     selectedPersonas: selectedPersonas,
+    //     completedStep: 1,
+    //   },
+    //   isLoggedIn
+    // );
 
-    setToolId(responseToolId);
+    // setToolId(responseToolId);
   };
 
   const handleCheckValue = async () => {
@@ -324,8 +324,21 @@ const PageConceptDefinition = () => {
         response.response.concept_definition_report_education
       );
 
+      
+    const responseToolId = await createToolOnServer(
+      {
+        projectId: project._id,
+        type: "ix_concept_definition_education",
+        selectedPersonas: selectedPersonas,
+        completedStep: 1,
+      },
+      isLoggedIn
+    );
+
+    setToolId(responseToolId);
+
       await updateToolOnServer(
-        toolId,
+        responseToolId,
         {
           completedStep: 2,
           selectedKanoModel: selectedPurposes,
@@ -420,7 +433,7 @@ const PageConceptDefinition = () => {
           isLoggedIn
         );
         setCompletedStatus(true);
-        setCompletedSteps([...completedSteps, 3]);
+        setCompletedSteps(prev => [...prev, 3]);
       } catch (error) {}
       setToolSteps(3);
     } catch (error) {
@@ -564,10 +577,11 @@ const PageConceptDefinition = () => {
               <TabButtonType5
                 Num3
                 isActive={activeTab >= 3}
-                onClick={() =>
-                  completedSteps.includes(2) ||
-                  (completedSteps.includes(3) && setActiveTab(3))
-                }
+                // onClick={() =>
+                //   completedSteps.includes(2) ||
+                //   (completedSteps.includes(3) && setActiveTab(3))
+                // }
+                onClick={() => completedSteps.includes(2) && setActiveTab(3)}
                 disabled={
                   !completedSteps.includes(3) || isLoading || isLoadingReport
                 }
@@ -898,7 +912,7 @@ const PageConceptDefinition = () => {
                       </InsightAnalysis>
                     )}
                   </div>
-                  {conceptDefinitionFirstReport  &&
+                  {conceptDefinitionFirstReport  && !isLoading &&
                   conceptDefinitionFirstReport.length > 0 ? (
                     <div
                       style={{
