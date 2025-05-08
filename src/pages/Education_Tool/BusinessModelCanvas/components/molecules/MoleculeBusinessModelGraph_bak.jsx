@@ -1,20 +1,13 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../../assets/styles/Palette';
 import MoleculeBusinessModelPopup from "./MoleculeBusinessModelPopup";
-import { useAtom } from "jotai";
-import { BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS, BUSINESS_MODEL_CANVAS_POPUP_OPTIONS ,BUSINESS_MODEL_CANVAS_GRAPH_ITEMS} from "../../../../AtomStates";
 
 // 비즈니스 모델 그래프 컴포넌트
-const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () => {}, setSelectedBoxId, selectedBoxId, }) => {
-  const [bmCanvasSelectedPopupOptions, setBMCanvasSelectedPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS);
-  const [bmCanvasPopupOptions, setBMCanvasPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_POPUP_OPTIONS);
-  const [businessModelCanvasGraphItems, setBusinessModelCanvasGraphItems] = useAtom(BUSINESS_MODEL_CANVAS_GRAPH_ITEMS);
+const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () => {}, setSelectedBoxId, selectedBoxId, graphItems }) => {
   // const [showPopup, setShowPopup] = useState(false);
   // 9개의 비즈니스 모델 영역 정의
-  useEffect(() => {
-    console.log("Graph items updated:", businessModelCanvasGraphItems);
-  }, [businessModelCanvasGraphItems]);
+  console.log("graphItems", graphItems)
   const businessAreas = [
     { id: 8, title: '핵심 파트너십' },
     { id: 7, title: '핵심활동' },
@@ -30,30 +23,16 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
   // 선택된 박스 ID 상태 관리
   // const [selectedBoxId, setSelectedBoxId] = useState(null);
 
-  // // 박스 클릭 핸들러
-  // const handleBoxClick = (id) => {
-  //   setSelectedBoxId(id);
-  //   // if (onBoxClick) {
-  //     // onBoxClick(id);
-  //     setShowPopup(id);
-  //   // }
-  // };
-
+  // 박스 클릭 핸들러
   const handleBoxClick = (id) => {
-    // bmCanvasGraphItems의 길이 + 1보다 큰 id는 클릭 불가
-    if (id > businessModelCanvasGraphItems.length + 1) {
-      return; // 팝업이 열리지 않음s
-    }
     setSelectedBoxId(id);
-    setShowPopup(id);
+    // if (onBoxClick) {
+      // onBoxClick(id);
+      setShowPopup(id);
+    // }
   };
 
 
-  // 박스의 활성화 상태를 확인하는 함수
-  const isBoxActive = (id) => {
-    return id <= businessModelCanvasGraphItems.length + 1;
-  };
-console.log("businessModelCanvasGraphItems!!!!!!!!!!!!!",businessModelCanvasGraphItems)
   return (
     <GraphContainer>
       <TopSection>
@@ -63,14 +42,9 @@ console.log("businessModelCanvasGraphItems!!!!!!!!!!!!!",businessModelCanvasGrap
           <ModelBox 
             title={businessAreas[0].title} 
             id={businessAreas[0].id}
-            items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[0].id)?.items || []}
+            items={data[businessAreas[0].id] || []}
             onClick={() => handleBoxClick(businessAreas[0].id)}
             isSelected={selectedBoxId === businessAreas[0].id}
-            isActive={isBoxActive(businessAreas[0].id)}
-            style={{
-              cursor: isBoxActive(businessAreas[0].id) ? 'pointer' : 'not-allowed',
-              opacity: isBoxActive(businessAreas[0].id) ? 1 : 0.7
-            }}
           />
         </LeftColumn>
 
@@ -80,51 +54,29 @@ console.log("businessModelCanvasGraphItems!!!!!!!!!!!!!",businessModelCanvasGrap
             <ModelBox 
               title={businessAreas[1].title} 
               id={businessAreas[1].id}
-              items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[1].id)?.items || []}
+              items={data[businessAreas[1].id] || []}
               onClick={() => handleBoxClick(businessAreas[1].id)}
               isSelected={selectedBoxId === businessAreas[1].id}
-              isActive={isBoxActive(businessAreas[1].id)}
-              style={{
-                cursor: isBoxActive(businessAreas[1].id) ? 'pointer' : 'not-allowed',
-                opacity: isBoxActive(businessAreas[1].id) ? 1 : 0.7
-              }}
             />
             {/* 핵심자원 */}
             <ModelBox 
               title={businessAreas[2].title} 
               id={businessAreas[2].id}
-              items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[2].id)?.items || []}
+              items={data[businessAreas[2].id] || []}
               onClick={() => handleBoxClick(businessAreas[2].id)}
               isSelected={selectedBoxId === businessAreas[2].id}
-              isActive={isBoxActive(businessAreas[2].id)}
-              style={{
-                cursor: isBoxActive(businessAreas[2].id) ? 'pointer' : 'not-allowed',
-                opacity: isBoxActive(businessAreas[2].id) ? 1 : 0.7
-              }}
             />
           </Column>
 
           <Column>
             {/* 가치 제안 */}
-            {/* <ModelBox 
-              title={businessAreas[3].title} 
-              id={businessAreas[3].id}
-              items={graphItems[businessAreas[3].id] || []}
-              onClick={() => handleBoxClick(businessAreas[3].id)}
-              isSelected={selectedBoxId === businessAreas[3].id}
-            /> */}
             <ModelBox 
               title={businessAreas[3].title} 
               id={businessAreas[3].id}
-              items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[3].id)?.items || []}
+              items={data[businessAreas[3].id] || []}
               onClick={() => handleBoxClick(businessAreas[3].id)}
               isSelected={selectedBoxId === businessAreas[3].id}
-              isActive={isBoxActive(businessAreas[3].id)}
-              style={{
-                cursor: isBoxActive(businessAreas[3].id) ? 'pointer' : 'not-allowed',
-                opacity: isBoxActive(businessAreas[3].id) ? 1 : 0.7
-              }}
-            />  
+            />
           </Column>
 
           <Column>
@@ -132,27 +84,17 @@ console.log("businessModelCanvasGraphItems!!!!!!!!!!!!!",businessModelCanvasGrap
             <ModelBox 
               title={businessAreas[4].title} 
               id={businessAreas[4].id}
-              items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[4].id)?.items || []}
+              items={data[businessAreas[4].id] || []}
               onClick={() => handleBoxClick(businessAreas[4].id)}
               isSelected={selectedBoxId === businessAreas[4].id}
-              isActive={isBoxActive(businessAreas[4].id)}
-              style={{
-                cursor: isBoxActive(businessAreas[4].id) ? 'pointer' : 'not-allowed',
-                opacity: isBoxActive(businessAreas[4].id) ? 1 : 0.7
-              }}
             />
             {/* 채널 */}
             <ModelBox 
               title={businessAreas[5].title} 
               id={businessAreas[5].id}
-              items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[5].id)?.items || []}
+              items={data[businessAreas[5].id] || []}
               onClick={() => handleBoxClick(businessAreas[5].id)}
               isSelected={selectedBoxId === businessAreas[5].id}
-              isActive={isBoxActive(businessAreas[5].id)}
-              style={{
-                cursor: isBoxActive(businessAreas[5].id) ? 'pointer' : 'not-allowed',
-                opacity: isBoxActive(businessAreas[5].id) ? 1 : 0.7
-              }}
             />
           </Column>
         </MiddleColumns>
@@ -162,22 +104,10 @@ console.log("businessModelCanvasGraphItems!!!!!!!!!!!!!",businessModelCanvasGrap
           <ModelBox 
             title={businessAreas[6].title} 
             id={businessAreas[6].id}
-            items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[6].id)?.items || []}
+            items={data[businessAreas[6].id] || []}
             onClick={() => handleBoxClick(businessAreas[6].id)}
             isSelected={selectedBoxId === businessAreas[6].id}
-            isActive={isBoxActive(businessAreas[6].id)}
-            style={{
-              cursor: isBoxActive(businessAreas[6].id) ? 'pointer' : 'not-allowed',
-              opacity: isBoxActive(businessAreas[6].id) ? 1 : 0.7
-            }}
           />
-          {/* <ModelBox 
-            title={businessAreas[6].title} 
-            id={businessAreas[6].id}
-            items={graphItems[businessAreas[6].id] || []}
-            onClick={() => handleBoxClick(businessAreas[6].id)}
-            isSelected={selectedBoxId === businessAreas[6].id}
-          /> */}
         </RightColumn>
       </TopSection>
 
@@ -186,26 +116,16 @@ console.log("businessModelCanvasGraphItems!!!!!!!!!!!!!",businessModelCanvasGrap
         <ModelBox 
           title={businessAreas[7].title} 
           id={businessAreas[7].id}
-          items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[7].id)?.items || []}
+          items={data[businessAreas[7].id] || []}
           onClick={() => handleBoxClick(businessAreas[7].id)}
           isSelected={selectedBoxId === businessAreas[7].id}
-          isActive={isBoxActive(businessAreas[7].id)}
-          style={{
-            cursor: isBoxActive(businessAreas[7].id) ? 'pointer' : 'not-allowed',
-            opacity: isBoxActive(businessAreas[7].id) ? 1 : 0.7
-          }}
         />
         <ModelBox 
           title={businessAreas[8].title} 
           id={businessAreas[8].id}
-          items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[8].id)?.items || []}
+          items={data[businessAreas[8].id] || []}
           onClick={() => handleBoxClick(businessAreas[8].id)}
           isSelected={selectedBoxId === businessAreas[8].id}
-          isActive={isBoxActive(businessAreas[8].id)}
-          style={{
-            cursor: isBoxActive(businessAreas[8].id) ? 'pointer' : 'not-allowed',
-            opacity: isBoxActive(businessAreas[8].id) ? 1 : 0.7
-          }}
         />
       </BottomSection>
 
@@ -223,17 +143,17 @@ console.log("businessModelCanvasGraphItems!!!!!!!!!!!!!",businessModelCanvasGrap
 };
 
 // 비즈니스 모델 박스 컴포넌트
-const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, style }) => {
+const ModelBox = ({ title, id, items = [], onClick, isSelected }) => {
   const [isHovered, setIsHovered] = useState(false);
+  
+  // 상태에 따른 렌더링
   const hasItems = items.length > 0;
 
   return (
     <BoxWrapper 
-      onMouseEnter={() => isActive && setIsHovered(true)}
+      onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
-      isActive={isActive}
-      style={style}
     >
       <ModelHeader>
         <NumberCircle>{id}</NumberCircle>
@@ -244,24 +164,20 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, style 
         hasItems={hasItems} 
         isHovered={isHovered}
         isSelected={isSelected && !hasItems}
-        isActive={isActive}
       >
         {hasItems ? (
           <ItemList>
             {items.map((item, index) => (
-              <ItemRow key={index} style={{textAlign: "left"}}>
+              <ItemRow key={index}>
                 <CheckMarkIcon />
                 <ItemText>{item}</ItemText>
               </ItemRow>
             ))}
           </ItemList>
         ) : (
-          <EmptyText 
-            isHovered={isHovered} 
-            isSelected={isSelected}
-            isActive={isActive}
-          >
-            {isActive ? "여기를 눌러\n내용을 작성하세요" : "이전 단계를 먼저 완료해주세요"}
+          <EmptyText isHovered={isHovered} isSelected={isSelected}>
+            여기를 눌러<br />
+            내용을 작성하세요
           </EmptyText>
         )}
       </ContentBox>
@@ -330,7 +246,6 @@ const BoxWrapper = styled.div`
   gap: 4px;
   flex: 1;
   cursor: pointer;
-  opacity: 1;
 `;
 
 const ModelHeader = styled.div`
@@ -377,6 +292,7 @@ const ContentBox = styled.div`
   transition: all 0.2s ease;
   overflow-y: auto;
   
+  /* 상태에 따른 스타일 변화 */
   background-color: ${props => {
     if (props.hasItems) return '#FFFFFF';
     if (props.isSelected) return '#FFFFFF'; 
@@ -384,6 +300,7 @@ const ContentBox = styled.div`
     return '#F7F8FA';
   }};
   
+  /* 테두리 색상 */
   border: 1px solid ${props => {
     if (props.isSelected) return '#E0E4EB';
     if (props.isHovered) return '#226FFF';
@@ -409,8 +326,8 @@ const EmptyText = styled.div`
   letter-spacing: -0.03em;
   text-align: center;
   
+  /* 상태에 따른 텍스트 색상 변화 */
   color: ${props => {
-    if (!props.isActive) return '#CCCCCC';
     if (props.isSelected) return '#666666';
     if (props.isHovered) return '#226FFF';
     return '#CCCCCC';
