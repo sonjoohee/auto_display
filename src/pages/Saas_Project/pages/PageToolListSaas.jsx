@@ -182,6 +182,9 @@ import {
   EDUCATION_TOOL_COMPLETED_STATUS,
   ADMIN_STATE,
   EDUCATION_STATE,
+  BUSINESS_MODEL_CANVAS_GRAPH_ITEMS,
+  BUSINESS_MODEL_CANVAS_POPUP_OPTIONS,
+  BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -539,7 +542,13 @@ const PageToolListSaas = () => {
     IDEA_EVALUATE_COMPARISON_EDUCATION
   );
   const [, setIdeaEvaluateGraphData] = useAtom(IDEA_EVALUATE_GRAPH_DATA);
-
+  const [, setBusinessModelCanvasGraphItems] = useAtom(
+    BUSINESS_MODEL_CANVAS_GRAPH_ITEMS
+  );
+  const [, setBMCanvasPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_POPUP_OPTIONS);
+  const [, setBMCanvasSelectedPopupOptions] = useAtom(
+    BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS
+  );
   // 초기화 useEffect
   useEffect(() => {
     setCreditCreateToolLoaded(false);
@@ -752,6 +761,9 @@ const PageToolListSaas = () => {
 
     //business model canvas education 초기화
     setBusinessModelCanvasMarkdown("");
+    setBusinessModelCanvasGraphItems([]);
+    setBMCanvasPopupOptions([]);
+    setBMCanvasSelectedPopupOptions([]);
   }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   useEffect(() => {

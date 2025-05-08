@@ -653,6 +653,11 @@ export const CONCEPT_DEFINITION_FIRST_REPORT = atom("");
 export const CONCEPT_DEFINITION_FINAL_REPORT = atom("");
 
 export const BUSINESS_MODEL_CANVAS_MARKDOWN = atom("");
+export const BUSINESS_MODEL_CANVAS_GRAPH_ITEMS = atom([]);
+export const BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA = atom([]);
+export const BUSINESS_MODEL_CANVAS_POPUP_OPTIONS = atom([]);
+export const BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS = atom([]);
+export const SELECTED_CONCEPT_DEFINITION_FINAL_REPORT = atom([]);
 
 //!saas
 // 프로젝트 생성 페이지

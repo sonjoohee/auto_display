@@ -4,7 +4,7 @@ import { palette } from "../../../../../assets/styles/Palette";
 import { Button } from "../../../../../assets/styles/ButtonStyle";
 import { Body1, Body2, Caption1 } from "../../../../../assets/styles/Typography";
 import { useAtom } from "jotai";
-import { QUICK_SURVEY_STATIC_DATA } from "../../../../../AtomStates";
+import { BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS, BUSINESS_MODEL_CANVAS_POPUP_OPTIONS ,BUSINESS_MODEL_CANVAS_GRAPH_ITEMS,BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA} from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import { CheckBoxButton, RadioButton } from "../../../../../assets/styles/InputStyle";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
@@ -21,100 +21,21 @@ const businessModelItems = [
   { id: 9, title: "비용구조", value: "9비용구조" }
 ];
 
-// 모델 유형별 기본 선택지 정의
-const defaultOptions = {
-  1: [
-    "개인 소비자",
-    "기업 고객",
-    "정부 및 공공기관",
-    "교육 기관",
-    "소상공인 및 자영업자",
-    "특정 산업군 종사자",
-    "특정 연령층"
-  ],
-  2: [
-    "혁신적인 제품/서비스",
-    "맞춤형 솔루션",
-    "비용 절감",
-    "접근성 향상",
-    "편의성/사용 용이성",
-    "브랜드 가치/지위",
-    "디자인/미적 요소"
-  ],
-  3: [
-    "오프라인 매장",
-    "온라인 웹사이트",
-    "모바일 앱",
-    "소셜 미디어",
-    "파트너십/제휴",
-    "직접 판매/영업",
-    "구독 서비스"
-  ],
-  4: [
-    "자동화된 서비스",
-    "개인 맞춤형 지원",
-    "셀프 서비스",
-    "전담 매니저",
-    "커뮤니티 기반",
-    "공동 창조",
-    "고객 피드백 시스템"
-  ],
-  5: [
-    "제품 판매",
-    "서비스 이용료",
-    "구독료",
-    "라이센싱",
-    "광고 수익",
-    "프리미엄 서비스",
-    "수수료 수익"
-  ],
-  6: [
-    "인적 자원",
-    "지적 재산권",
-    "물리적 자산",
-    "기술/소프트웨어",
-    "브랜드/평판",
-    "데이터/정보",
-    "파트너십/네트워크"
-  ],
-  7: [
-    "제품 개발",
-    "마케팅/영업",
-    "플랫폼 운영",
-    "공급망 관리",
-    "문제 해결",
-    "고객 지원",
-    "네트워크 구축"
-  ],
-  8: [
-    "공급업체",
-    "전략적 제휴",
-    "공동 벤처",
-    "경쟁자와의 협력",
-    "투자자/자금 제공자",
-    "연구 기관",
-    "유통 파트너"
-  ],
-  9: [
-    "고정 비용",
-    "변동 비용",
-    "인건비",
-    "마케팅 비용",
-    "기술 개발 비용",
-    "운영 비용",
-    "시설 유지 비용"
-  ]
-};
 
 /**
  * 비즈니스 모델 설정을 위한 팝업 컴포넌트
  */
 const MoleculeBusinessModelPopup = ({ 
   isOpen = false, 
+  
   onClose = () => {}, 
   onSave = () => {},
   currentModelId = 3, // 기본값으로 채널(id: 3) 설정
-  isLoading 
+  isLoading,
+  onCardSelect,
+  isSelected=false,
+  selectedKeys = [], // isSelected 대신 selectedKeys 배열 받기
+  // popupOptions = []  // API 응답의 items 배열
 }) => {
   // 팝업 상태 관리
   const [isVisible, setIsVisible] = useState(isOpen);
@@ -123,8 +44,12 @@ const MoleculeBusinessModelPopup = ({
   const [userOptions, setUserOptions] = useState([]);
   const [inputFields, setInputFields] = useState([]); // 입력 필드 관리
   const [inputValues, setInputValues] = useState({}); // 입력 값 관리
+  const [bmCanvasSelectedPopupOptions, setBMCanvasSelectedPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS);
+  const [bmCanvasPopupOptions, setBMCanvasPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_POPUP_OPTIONS);
+  const [businessModelCanvasGraphItems, setBusinessModelCanvasGraphItems] = useAtom(BUSINESS_MODEL_CANVAS_GRAPH_ITEMS);
+  const [bmCanvasInitialGraphData, setBMCanvasInitialGraphData] = useAtom(BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA);
   // const [isLoading, setIsLoading] = useState(false);
-  
+
   // isOpen props가 변경될 때 상태 업데이트
   useEffect(() => {
     setIsVisible(isOpen);
@@ -139,8 +64,28 @@ const MoleculeBusinessModelPopup = ({
     setInputFields([]); // 입력 필드 초기화
     setInputValues({}); // 입력 값 초기화
   }, [currentModelId]);
+
+   // 또는 더 엄격하게 처리하려면
+// useEffect(() => {
+//   let isMounted = true;
+
+//   if (isOpen && isMounted) {
+//     const existingData = bmCanvasInitialGraphData.find(item => item.id === currentModel.id);
+//     if (existingData) {
+//       setBMCanvasSelectedPopupOptions(existingData.items);
+//       setBMCanvasPopupOptions(existingData.items);
+//     } else {
+//       setBMCanvasSelectedPopupOptions([]);
+//       setBMCanvasPopupOptions([]);
+//     }
+//   }
+
+//   return () => {
+//     isMounted = false;
+//   };
+// }, [isOpen, currentModel.id, bmCanvasInitialGraphData]);
   
-  // 팝업 닫기 처리
+//   // 팝업 닫기 처리
   const handleClose = () => {
     setIsVisible(false);
     setSelectedOption(null);
@@ -149,8 +94,23 @@ const MoleculeBusinessModelPopup = ({
     setInputValues({});
     if (onClose) {
       onClose();
+  //     // 현재 모델의 items도 초기화
+  // setBusinessModelCanvasGraphItems(prev => 
+  //   prev.map(item => 
+  //     item.id === currentModel.id 
+  //       ? { ...item, items: [] } 
+  //       : item
+  //   )
+  // );
+  // setBMCanvasSelectedPopupOptions([]);
+  // setBMCanvasPopupOptions([]);
     }
+  //   setBMCanvasSelectedPopupOptions([]);
+  // setBMCanvasPopupOptions([]);
+
+
   };
+  console.log("businessModelCanvasGraphItems", businessModelCanvasGraphItems)
 
   // 옵션 선택 처리
   const handleOptionSelect = (option) => {
@@ -190,22 +150,58 @@ const MoleculeBusinessModelPopup = ({
     }
   };
 
-  // 적용하기 버튼 클릭 처리
-  const handleApply = () => {
-    if (!selectedOption) {
-      alert("항목을 선택해주세요.");
-      return;
-    }
-
-    onSave({
-      modelId: currentModel.id,
-      modelTitle: currentModel.title,
-      selectedOption: selectedOption
-    });
+//   // 적용하기 버튼 클릭 처리
+//   const handleApply = () => {
+//     if (!selectedOption) {
+//       alert("항목을 선택해주세요.");
+//       return;
+//     }
+// console.log("selectedOption", selectedOption)
+//     onSave({
+//       modelId: currentModel.id,
+//       modelTitle: currentModel.title,
+//       selectedOption: selectedOption
+//     });
     
-    handleClose();
-  };
+//     handleClose();
+//   };
 
+const handleApply = () => {
+  // 선택된 옵션이 없으면 경고
+  if (bmCanvasSelectedPopupOptions.length === 0) {
+    alert("항목을 선택해주세요.");
+    return;
+  }
+
+  setBusinessModelCanvasGraphItems(prev => {
+    // 이전 상태가 없거나 배열이 아닌 경우 빈 배열로 초기화
+    const prevItems = Array.isArray(prev) ? [...prev] : [];
+    
+    // 현재 모델의 데이터를 찾거나 새로 생성
+    const currentModelData = {
+      id: currentModel.id,
+      title: currentModel.title,
+      items: [...bmCanvasSelectedPopupOptions],
+      content: currentModel.content
+    };
+  
+    // 이전 항목들 중 현재 모델 ID와 일치하는 항목이 있는지 확인
+    const existingIndex = prevItems.findIndex(item => item.id === currentModel.id);
+    console.log("existingIndex", existingIndex)
+    if (existingIndex !== -1) {
+      // 기존 항목이 있으면 해당 위치의 항목만 업데이트
+      prevItems[existingIndex] = currentModelData;
+      return prevItems; // 여기서 바로 반환
+    } else {
+      // 기존 항목이 없으면 새로 추가
+      return [...prevItems, currentModelData];
+    }
+  
+  
+  });
+  handleClose();
+};
+console.log("businessModelCanvasGraphItems",businessModelCanvasGraphItems)
   // 엔터키 입력시 옵션 추가
   const handleKeyDown = (id, e) => {
     if (e.key === 'Enter' && inputValues[id]?.trim()) {
@@ -256,18 +252,21 @@ const MoleculeBusinessModelPopup = ({
               <SectionTitle>원하는 항목을 선택하세요</SectionTitle>
               <OptionsContainer>
                 {/* 기본 제공 옵션 */}
-                {defaultOptions[currentModel.id]?.map((option, index) => (
+                {bmCanvasPopupOptions?.map((option, index) => (
                   <OptionItem 
                     key={`default-${index}`} 
                     onClick={() => handleOptionSelect(option)}
                   >
                     <OptionFlex>
                       <div>
-                        <RadioButton 
-                          id={`radio-default-${index}`}
-                          name="modelOptionGroup"
-                          checked={selectedOption === option}
-                          onChange={() => handleOptionSelect(option)}
+                        <CheckBoxButton
+                          id={index}
+                          name={index}
+                          // checked={selectedOption === option}
+                          checked={selectedKeys.includes(option)} // 각 옵션별로 체크
+                          // onChange={() => onCardSelect && onCardSelect(!isSelected)} 
+                          onChange={() => onCardSelect && onCardSelect(option)} 
+                          // onChange={() => handleOptionSelect(option)}
                         />
                       </div>
                       <OptionText>{option}</OptionText>
