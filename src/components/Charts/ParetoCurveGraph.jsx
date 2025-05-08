@@ -342,7 +342,7 @@ const ParetoCurveGraph = ({
       .call(y1Axis)
       .selectAll("text")
       .attr("font-size", "16px")
-      .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
+      .attr("font-family", "'Pretendard', 'Poppins'")
       .attr("fill", palette.gray700);
 
     g.selectAll(".y-axis line")
@@ -358,7 +358,7 @@ const ParetoCurveGraph = ({
       .call(y2Axis)
       .selectAll("text")
       .attr("font-size", "16px")
-      .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
+      .attr("font-family", "'Pretendard', 'Poppins'")
       .attr("fill", palette.gray700)
       .attr("dx", "4px");
 
@@ -370,7 +370,7 @@ const ParetoCurveGraph = ({
       .attr("x", -innerHeight / 2)
       .attr("text-anchor", "middle")
       .attr("font-size", "16px")
-      .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
+      .attr("font-family", "'Pretendard', 'Poppins'")
       .attr("fill", palette.gray700)
       .text("누적 값");
 
@@ -381,7 +381,7 @@ const ParetoCurveGraph = ({
       .attr("x", -innerHeight / 2)
       .attr("text-anchor", "middle")
       .attr("font-size", "16px")
-      .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
+      .attr("font-family", "'Pretendard', 'Poppins'")
       .attr("fill", palette.gray700)
       .text("누적 백분율 (%)");
 
@@ -443,7 +443,7 @@ const ParetoCurveGraph = ({
       .attr("text-anchor", "middle")
       .attr("font-size", "14px")
       .attr("font-weight", "bold")
-      .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
+      .attr("font-family", "'Pretendard', 'Poppins'")
       .attr("opacity", 0)
       .each(function (d) {
         const barHeight = innerHeight - y1(d.cumulativeValue);
@@ -475,7 +475,7 @@ const ParetoCurveGraph = ({
       .attr("text-anchor", "start")
       .attr("font-size", "14px")
       .attr("font-weight", "bold")
-      .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
+      .attr("font-family", "'Pretendard', 'Poppins'")
       .attr("fill", palette.gray800)
       .attr("opacity", 0)
       .text((d) => `${d.cumulativePercentage.toFixed(0)}%`);
@@ -705,6 +705,6 @@ const GraphContainer = styled.div`
   margin: 0 auto;
   background-color: ${palette.white};
   border-radius: 8px;
-  font-family: "Pretendard", "Poppins", sans-serif;
+  font-family: "Pretendard", "Poppins";
   color: ${palette.gray800};
 `;

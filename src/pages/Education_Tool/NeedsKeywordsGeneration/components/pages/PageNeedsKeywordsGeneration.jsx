@@ -565,7 +565,7 @@ const PageNeedsKeywordsGeneration = () => {
                         >
                           <Body1 color="gray700">
                             필요한 니즈 키워드를 선택하여, 아이디어 발산
-                            방향으로 정리하세요
+                            방향으로 정리하세요 (복수 선택 가능)
                           </Body1>
                         </div>
 

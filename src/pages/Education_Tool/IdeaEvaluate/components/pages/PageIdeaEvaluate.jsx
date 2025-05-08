@@ -1083,7 +1083,7 @@ const PageIdeaEvaluate = () => {
                           >
                             <span
                               style={{ 
-                                color: "#8C8C8C", 
+                                color: "gray800", 
                                 marginBottom: "4px",
                                 alignSelf: "flex-start",
                                 display: "block"

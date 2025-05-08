@@ -364,7 +364,7 @@ const PageIdeaGeneration = () => {
     const selectedStartPosition = ideaGenerationSelectedStartPosition.map(
       (item) => item.main_theme
     );
- 
+
 
     // 새 AbortController 생성
     abortControllerRef.current = new AbortController();
@@ -724,7 +724,7 @@ const PageIdeaGeneration = () => {
                             <Body2
                               color={
                                 selectedPurposes.customerList
-                                        ? "gray500"
+                                        ? "gray800"
                                   : "gray300"
                               }
                             >
@@ -746,7 +746,7 @@ const PageIdeaGeneration = () => {
                                 color={
                                   toolSteps >= 1
                                     ? palette.gray300
-                                    : palette.gray500
+                                    : palette.gray800
                                 }
                               style={{
                                   transform: isSelectBoxOpen
@@ -811,7 +811,7 @@ const PageIdeaGeneration = () => {
                             <Body2
                               color={
                                 ideaGenerationSelectedStartPosition?.length > 0
-                                  ? "gray500"
+                                  ? "gray800"
                                   : "gray300"
                               }
                               style={{
@@ -942,7 +942,7 @@ const PageIdeaGeneration = () => {
                                   <Body2
                                     color={
                                       selectedPurposes.customerList
-                                        ? "gray500"
+                                        ? "gray800"
                                         : "gray300"
                                     }
                                   >
@@ -1029,7 +1029,7 @@ const PageIdeaGeneration = () => {
                             <Body2
                               color={
                                 ideaGenerationSelectedStartPosition?.length > 0
-                                  ? "gray500"
+                                  ? "gray800"
                                   : "gray300"
                               }
                               style={{
@@ -1231,17 +1231,18 @@ const PageIdeaGeneration = () => {
                                 }
                               </IdeaText>
 
-                            </IdeaContent>
-                          </IdeaBox>
-                        </IdeaContainer>
-                      )}
-                    </div>
+                                </IdeaContent>
+                              </IdeaBox>
+                          </IdeaContainer>
+                        )}
+                      </div>
 
                     {completedStatus && (
                       <Button
                         Primary
                         Edit
                         Large
+                        style={{ color: "#666666", border: "1px solid #E0E4EB" }}
                         onClick={() => navigate("/Tool")}
                       >
                         리서치 툴 리스트 바로가기

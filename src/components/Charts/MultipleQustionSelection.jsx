@@ -288,7 +288,7 @@ const QuestionNumber = styled.span`
 `;
 
 const QuestionText = styled.span`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-weight: 400;
   font-size: 16px;
   color: #666666;
@@ -362,7 +362,7 @@ const OptionContent = styled.div`
 `;
 
 const OptionPrefix = styled.span`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-weight: 400;
   font-size: 16px;
   color: ${props => props.isSelected ? '#FFFFFF' : '#666666'};
@@ -370,7 +370,7 @@ const OptionPrefix = styled.span`
 `;
 
 const OptionText = styled.span`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-weight: 400;
   font-size: 16px;
   color: ${props => props.isSelected ? '#FFFFFF' : '#666666'};

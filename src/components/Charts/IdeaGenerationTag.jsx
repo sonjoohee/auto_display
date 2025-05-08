@@ -22,7 +22,7 @@ const TagContainer = styled.div`
 `;
 
 const TagText = styled.span`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-size: 16px;
   font-weight: ${props => props.selected ? '600' : '400'};
   line-height: 155%;

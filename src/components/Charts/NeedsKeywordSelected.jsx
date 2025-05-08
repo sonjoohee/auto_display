@@ -305,7 +305,7 @@ const TitleRow = styled.div`
 `;
 
 const Title = styled.h2`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-weight: 600;
   font-size: 20px;
   line-height: 1.55;
@@ -363,7 +363,7 @@ const CheckCircleSmall = styled.div`
 `;
 
 const KeywordText = styled.span`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.55;

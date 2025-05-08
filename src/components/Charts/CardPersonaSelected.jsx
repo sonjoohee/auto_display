@@ -94,7 +94,7 @@ const TitleFrame = styled.div`
 `;
 
 const Title = styled.h3`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-weight: 700;
   font-size: 16px;
   line-height: 1.2;
@@ -113,7 +113,7 @@ const DescriptionFrame = styled.div`
 `;
 
 const Description = styled.p`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-weight: 400;
   font-size: 14px;
   line-height: 1.3;

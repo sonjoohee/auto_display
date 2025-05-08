@@ -188,7 +188,7 @@ const PlaceholderText = styled.span`
 
 const InputField = styled.textarea`
   width: 100%;
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-weight: 500;
   font-size: 16px;
   line-height: 1.55;
@@ -217,7 +217,7 @@ const IconContainer = styled.div`
 `;
 
 const RegisterButton = styled.button`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-weight: 500;
   font-size: 14px;
   line-height: 1.2;

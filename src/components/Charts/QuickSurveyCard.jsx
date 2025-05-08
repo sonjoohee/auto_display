@@ -133,7 +133,7 @@ const Dot = styled.div`
 `;
 
 const LogoText = styled.span`
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', Poppins;
   font-weight: 500;
   font-size: 12px;
   line-height: 1.55em;
@@ -172,7 +172,7 @@ const TitleContainer = styled.div`
 `;
 
 const Title = styled.h3`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-weight: 900;
   font-size: 16px;
   line-height: 1.55em;
@@ -231,7 +231,7 @@ const HoverBottomSection = styled.div`
 `;
 
 const Description = styled.p`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-weight: 400;
   font-size: 12px;
   line-height: 1.5em;

@@ -596,7 +596,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         case "ix_customer_journey_map_education":
           return "고객 여정 지도";
         case "ix_idea_generation_education":
-          return "아이디어 발상";
+          return "아이디어 발산";
         case "ix_kano_model_education":
           return "카노 모델";
         case "ix_idea_evaluation_education":

@@ -2111,7 +2111,7 @@ const PageToolListSaas = () => {
                       </p>
                       <Body1 color="gray800">
                         <em>준비중</em>
-                        아이디어 발상
+                        아이디어 발산
                       </Body1>
                       <div
                         className="overlay"
@@ -2123,7 +2123,7 @@ const PageToolListSaas = () => {
 
                         <div className="text">
                           <Body1 color="white">
-                            <em>준비중</em>아이디어 발상
+                            <em>준비중</em>아이디어 발산
                           </Body1>
                           <Caption1 color="white" align="left">
                             고객의 불편과 니즈를 기반으로 다양한 AI 페르소나와

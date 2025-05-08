@@ -957,7 +957,7 @@ const PageIssueGeneration = () => {
                           </Body2>
 
                           <Body2
-                            color="gray500"
+                            color="gray800"
                             style={{
                               alignSelf: "flex-start",
 
@@ -990,7 +990,7 @@ const PageIssueGeneration = () => {
                           <Body2
                             color={
                               issueGenerationSelectedStartPosition?.length > 0
-                                ? "gray500"
+                                ? "gray800"
                                 : "gray300"
                             }
                             style={{
@@ -1015,7 +1015,7 @@ const PageIssueGeneration = () => {
                         </li>
                       </ListBoxGroup>
                       <div className="content">
-                        <Title style={{ marginBottom: "-18px" }}>
+                        <Title style={{ marginBottom: "-18px", marginTop: "20px" }}>
                           <Body1 color="gray700">
                             MoT 기반으로 도출한 방향성 중, 아이디어 발산
                             키워드를 선택하세요. (8개 필수 선택)
@@ -1089,7 +1089,7 @@ const PageIssueGeneration = () => {
                           <Body2 color="gray500">고객 여정 맵</Body2>
 
                           <Body2
-                            color="gray500"
+                            color="gray800"
                             style={{
                               alignSelf: "flex-start",
                               whiteSpace: "nowrap",
@@ -1107,7 +1107,7 @@ const PageIssueGeneration = () => {
                           <Body2
                             color={
                               issueGenerationSelectedStartPosition?.length > 0
-                                ? "gray500"
+                                ? "gray800"
                                 : "gray300"
                             }
                             style={{
@@ -1135,7 +1135,7 @@ const PageIssueGeneration = () => {
                     </div>
 
                     <div className="content">
-                      <TabContent5Item style={{ marginTop: "20px" }}>
+                      <TabContent5Item style={{ marginTop: "0px" }}>
                         <div className="title">
                           <Body1 color="gray800">
                             해당 니즈 키워드는 아이디어 발상하는 데 활용됩니다.{" "}

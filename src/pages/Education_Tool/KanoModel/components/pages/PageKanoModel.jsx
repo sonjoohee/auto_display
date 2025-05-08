@@ -980,7 +980,7 @@ const PageKanoModel = () => {
                                   <Body1 color="gray700">
                                     Kano Model 평가에 포함할 아이디어를 선택해
                                     주세요. (복수 선택 가능)
-                                  </Body1>ㅣ
+                                  </Body1>
                                 </div>
                                 {kanoModelIdeaGeneration.map((idea, index) => (
                                   <MoleculeItemSelectCard
@@ -1122,7 +1122,7 @@ const PageKanoModel = () => {
                               <span
                                 key={index}
                                 style={{
-                                  color: "#8C8C8C",
+                                  color: "gray800",
                                   marginBottom: "4px",
                                 }}
                               >
