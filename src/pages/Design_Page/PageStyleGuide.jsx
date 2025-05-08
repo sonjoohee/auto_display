@@ -102,6 +102,9 @@ import StakeHolderTag from "../../components/Charts/StakeHolderTag";
 import NeedsKeywordSelected from "../../components/Charts/NeedsKeywordSelected";
 import NeedsKeywordResult from "../../components/Charts/NeedsKeywordResult";
 import MultipleQustionSelection from "../../components/Charts/MultipleQustionSelection";
+import ParticipationTeamList from "../../components/Charts/ParticipationTeamList";
+import ParticipationTeamList2 from "../../components/Charts/ParticipationTeamList2";
+import NoticeBoxContent from "../../components/Charts/NoticeBoxContent";
 import { useAtom } from "jotai";
 import { KANO_MODEL_GRAPH_DATA } from "../../pages/AtomStates";
 
@@ -300,6 +303,9 @@ const PageStyleGuide = () => {
           <NeedsKeywordSelected />
           <NeedsKeywordResult />
           <MultipleQustionSelection />
+          <ParticipationTeamList />
+          <ParticipationTeamList2 />
+          <NoticeBoxContent />
         </FlexContainer>
         <MacroSegTag />
         <StakeHolderTag />

@@ -250,7 +250,7 @@ const NumberCircle = styled.div`
   padding: 2px;
   
   color: white;
-  font-family: 'Pretendard', 'Poppins', sans-serif;
+  font-family: 'Pretendard', 'Poppins';
   font-size: 10px;
   font-weight: 600;
   text-align: center;
@@ -259,7 +259,7 @@ const NumberCircle = styled.div`
 `;
 
 const Title = styled.div`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-size: 16px;
   font-weight: 600;
   line-height: 1.55em;
@@ -304,7 +304,7 @@ const ContentBox = styled.div`
 `;
 
 const EmptyText = styled.div`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-size: 16px;
   font-weight: 600;
   line-height: 1.55em;
@@ -348,7 +348,7 @@ const CheckMark = styled.div`
 `;
 
 const ItemText = styled.div`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-size: 16px;
   font-weight: 600;
   line-height: 1.55em;

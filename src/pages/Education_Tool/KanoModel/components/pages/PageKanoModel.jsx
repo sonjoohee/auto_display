@@ -1121,7 +1121,7 @@ const PageKanoModel = () => {
                               <span
                                 key={index}
                                 style={{
-                                  color: "#8C8C8C",
+                                  color: "gray800",
                                   marginBottom: "4px",
                                 }}
                               >

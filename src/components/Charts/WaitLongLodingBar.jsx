@@ -153,7 +153,7 @@ const CenterCircle = styled.div`
 // 스텝 텍스트 스타일
 const StepText = styled.div`
   color: white;
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', Poppins;
   font-size: 20px;
   font-weight: 700;
   text-align: center;

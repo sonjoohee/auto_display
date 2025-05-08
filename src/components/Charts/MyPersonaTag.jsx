@@ -22,7 +22,7 @@ const TagContainer = styled.div`
 `;
 
 const TagText = styled.span`
-  font-family: "Pretendard", sans-serif;
+  font-family: "Pretendard", "Poppins";
 
   color: #222e84;
   white-space: nowrap;

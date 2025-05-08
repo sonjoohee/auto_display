@@ -182,7 +182,7 @@ const ParetoCurveGraph = ({
       .call(y1Axis)
       .selectAll("text")
       .attr("font-size", "16px")
-      .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
+      .attr("font-family", "'Pretendard', 'Poppins'")
       .attr("fill", palette.gray700);
 
     g.selectAll(".y-axis line")
@@ -198,7 +198,7 @@ const ParetoCurveGraph = ({
       .call(y2Axis)
       .selectAll("text")
       .attr("font-size", "16px")
-      .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
+      .attr("font-family", "'Pretendard', 'Poppins'")
       .attr("fill", palette.gray700)
       .attr("dx", "4px");
 
@@ -210,7 +210,7 @@ const ParetoCurveGraph = ({
       .attr("x", -innerHeight / 2)
       .attr("text-anchor", "middle")
       .attr("font-size", "16px")
-      .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
+      .attr("font-family", "'Pretendard', 'Poppins'")
       .attr("fill", palette.gray700)
       .text("누적 값");
 
@@ -221,7 +221,7 @@ const ParetoCurveGraph = ({
       .attr("x", -innerHeight / 2)
       .attr("text-anchor", "middle")
       .attr("font-size", "16px")
-      .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
+      .attr("font-family", "'Pretendard', 'Poppins'")
       .attr("fill", palette.gray700)
       .text("누적 백분율 (%)");
 
@@ -282,7 +282,7 @@ const ParetoCurveGraph = ({
       .attr("text-anchor", "middle")
       .attr("font-size", "14px")
       .attr("font-weight", "bold")
-      .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
+      .attr("font-family", "'Pretendard', 'Poppins'")
       .attr("opacity", 0)
       .each(function (d) {
         const barHeight = innerHeight - y1(d.cumulativeValue);
@@ -311,7 +311,7 @@ const ParetoCurveGraph = ({
       .attr("text-anchor", "start")
       .attr("font-size", "14px")
       .attr("font-weight", "bold")
-      .attr("font-family", "'Pretendard', 'Poppins', sans-serif")
+      .attr("font-family", "'Pretendard', 'Poppins'")
       .attr("fill", palette.gray800)
       .attr("opacity", 0)
       .text((d) => `${d.cumulativePercentage.toFixed(0)}%`);
@@ -529,9 +529,10 @@ const GraphContainer = styled.div`
   box-sizing: border-box;
   margin: 20px auto; // 위아래 여백 추가
   background-color: ${palette.white};
-  /* border-radius: 8px; // 전체 컨테이너에 적용 */
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // 약간의 그림자 효과 */
-  font-family: "Pretendard", "Poppins", sans-serif;
+
+  border-radius: 8px;
+  font-family: "Pretendard", "Poppins";
+
   color: ${palette.gray800};
   /* border: 1px solid ${palette.outlineGray}; // 전체 테두리 제거 */
 `;

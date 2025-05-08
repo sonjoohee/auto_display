@@ -183,7 +183,7 @@ const BackNavigationText = styled.div`
   display: flex;
   align-items: center;
   margin-top: 12px;
-  font-family: "Pretendard", sans-serif;
+  font-family: "Pretendard", Poppins;
   font-weight: 400;
   font-size: 12px;
   color: #8C8C8C;

@@ -114,8 +114,7 @@ const InnerCircle = styled.div`
 // 스텝 텍스트
 const StepText = styled.span`
   color: white;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 8px;
+  font-family: 'Pretendard', Poppins;
   font-weight: 600;
   text-align: center;
 `;
