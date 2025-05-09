@@ -204,6 +204,10 @@ import {
   EDUCATION_TOOL_COMPLETED_STATUS,
   BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION,
   BUSINESS_MODEL_CANVAS_MARKDOWN,
+  BUSINESS_MODEL_CANVAS_GRAPH_ITEMS,
+  BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA,
+  BUSINESS_MODEL_CANVAS_POPUP_OPTIONS,
+  BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -546,8 +550,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setBusinessModelCanvasSelectedConceptDefinition] = useAtom(
     BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION
   );
- 
   const [, setBusinessModelCanvasMarkdown] = useAtom(BUSINESS_MODEL_CANVAS_MARKDOWN);
+  const [, setBusinessModelCanvasGraphItems] = useAtom(BUSINESS_MODEL_CANVAS_GRAPH_ITEMS);
+  const [, setBusinessModelCanvasInitialGraphData] = useAtom(BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA);
+  const [, setBusinessModelCanvasPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_POPUP_OPTIONS);
+  const [, setBusinessModelCanvasSelectedPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS);
 
   const saveConversation = (data) => {};
 
@@ -827,7 +834,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         case "ix_nps_education":
           return tool.completedStep === 3 ? "완료" : "진행중";
         case "ix_business_model_canvas_education":
-          return tool.completedStatus === "true" ? "완료" : "진행중";
+          return tool.completedStep === 2 ? "완료" : "진행중";
         default:
           return "-";
       }
@@ -1419,8 +1426,17 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setCompletedStatus(false); 
         setBusinessModelCanvasSelectedConceptDefinition({});
         setBusinessModelCanvasMarkdown("");
+        setBusinessModelCanvasGraphItems([]);
+        setBusinessModelCanvasInitialGraphData([]);
+        setBusinessModelCanvasPopupOptions([]);
         setBusinessModelCanvasSelectedConceptDefinition(chatData?.selectedConceptDefinition || {});
         setBusinessModelCanvasMarkdown(chatData?.businessModelCanvasMarkdown || "");
+        setBusinessModelCanvasGraphItems(chatData?.bmCanvasGraphItems || []);
+        setBusinessModelCanvasInitialGraphData(chatData?.bmCanvasInitialGraphData || []);
+        setBusinessModelCanvasPopupOptions(chatData?.bmCanvasPopupOptions || []);
+        setBusinessModelCanvasSelectedPopupOptions(chatData?.bmCanvasSelectedPopupOptions || {});
+        setCompletedStatus(chatData?.completedStatus || false);
+        setToolStep(chatData?.completedStep);
   
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);

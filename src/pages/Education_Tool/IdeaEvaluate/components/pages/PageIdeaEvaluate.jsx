@@ -170,6 +170,7 @@ const PageIdeaEvaluate = () => {
   const [graphData, setGraphData] = useState([]);
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
+  const [isSelectBoxOpen, setIsSelectBoxOpen] = useState(false);
 
   const customerListRef = useRef(null);
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -321,38 +322,6 @@ const PageIdeaEvaluate = () => {
 
     getAllTargetDiscovery();
   }, [isLoggedIn, projectSaas]);
-
-  // const handleCheckboxChange = (personaId) => {
-  //   if (toolSteps >= 2) return;
-  //   setIdeaEvaluateSelectedList((prev) => {
-  //     // 하나만 선택되도록 변경, 다른 항목 선택 시 해당 항목으로 변경
-  //     if (prev.includes(personaId)) {
-  //       return []; // 이미 선택된 항목을 다시 클릭하면 선택 해제
-  //     } else {
-  //       return [personaId]; // 새 항목 선택
-  //     }
-  //   });
-  // };
-
-  // const handleCheckboxChange = (ideaId) => {
-  //   setIdeaEvaluateSelect((prev) => {
-  //     if (prev.includes(ideaId)) {
-  //       // 이미 선택된 아이템이면 제거
-  //       const newSelected = prev.filter(id => id !== ideaId);
-  //       // 선택된 데이터들 업데이트
-  //       const selectedDataList = newSelected.map(id => ideaEvaluateList[id]);
-  //       setIdeaEvaluateSelectedList(selectedDataList);
-  //       return newSelected;
-  //     } else {
-  //       // 새로운 아이템 추가
-  //       const newSelected = [...prev, ideaId];
-  //       // 선택된 데이터들 업데이트
-  //       const selectedDataList = newSelected.map(id => ideaEvaluateList[id]);
-  //       setIdeaEvaluateSelectedList(selectedDataList);
-  //       return newSelected;
-  //     }
-  //   });
-  // };
 
   const handleCheckboxChange = (ideaId) => {
     setIdeaEvaluateSelect((prev) => {
@@ -628,7 +597,7 @@ const PageIdeaEvaluate = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
       // console.log("currentUrl", currentUrl);
-      if (currentUrl.toLowerCase().includes("quicksurvey")) {
+      if (currentUrl.toLowerCase().includes("ideaevaluate")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         // console.log("세션 스토리지에서 마지막 URL 가져오기");
 
@@ -711,31 +680,6 @@ const PageIdeaEvaluate = () => {
     }));
   };
 
-  // useEffect(() => {
-  //   if (
-  //     ideaEvaluateComparisonEducation &&
-  //     ideaEvaluateComparisonEducation.length > 0
-  //   ) {
-  //     // 각 아이디어별 선택된 횟수를 카운트
-  //     const ideaCount = {};
-
-  //     ideaEvaluateComparisonEducation.forEach((comparison) => {
-  //       const selectedIdea = comparison.selected_idea;
-  //       ideaCount[selectedIdea] = (ideaCount[selectedIdea] || 0) + 1;
-  //     });
-
-  //     // 파레토 그래프용 데이터 형식으로 변환
-  //     const paretoData = Object.entries(ideaCount)
-  //       .map(([name, value]) => ({
-  //         name,
-  //         value,
-  //       }))
-  //       .sort((a, b) => b.value - a.value); // 값이 큰 순서대로 정렬
-
-  //     // 파레토 그래프 데이터 설정
-  //     setGraphData(paretoData);
-  //   }
-  // }, [ideaEvaluateComparisonEducation]);
 
   const handleConfirmCredit = async () => {
     setShowCreatePersonaPopup(false);
@@ -827,87 +771,248 @@ const PageIdeaEvaluate = () => {
                           <Body1 color="gray700">kano기반 아이디어 선택 </Body1>
                         </div>
 
-                        <SelectBox ref={customerListRef}>
-                          <SelectBoxTitle
-                            onClick={() =>
-                              handleSelectBoxClick(
-                                "customerList",
-                                customerListRef
-                              )
-                            }
-                            style={{
-                              cursor:
-                                toolSteps >= 1 ? "not-allowed" : "pointer",
-                            }}
-                          >
-                            <Body2
-                              color={
-                                selectedPurposes.customerList
-                                  ? "gray800"
-                                  : "gray300"
+                        {showKanoModelList ? (
+                          <div className="content">
+                            <BoxWrap Column NoneV style={{ marginBottom: "0px" }}>
+                              <div className="selectBoxWrap">
+                                <Body2 color="gray500" style={{ width: "110px" }}>
+                                  핵심 가치
+                                </Body2>
+                               
+                                  <SelectBox style={{ paddingRight: "20px" }}>
+                            <SelectBoxTitle
+                              onClick={() =>
+                                toolSteps >= 1
+                                  ? null
+                                  : setIsSelectBoxOpen(!isSelectBoxOpen)
                               }
-                            >
-                              {selectedPurposes.customerList ||
-                                "Kano Model 결과를 불러 올 수 있습니다"}
-                            </Body2>
-                            <images.ChevronDown
-                              width="24px"
-                              height="24px"
-                              color={palette.gray500}
+                              None
                               style={{
-                                transform: selectBoxStates.customerList
-                                  ? "rotate(180deg)"
-                                  : "rotate(0deg)",
-                                transition: "transform 0.3s ease",
+                                cursor:
+                                  toolSteps >= 1 ? "not-allowed" : "pointer",
                               }}
-                            />
-                          </SelectBoxTitle>
-
-                          {selectBoxStates.customerList && (
-                            <SelectBoxList dropUp={dropUpStates.customerList}>
-                              {customerJourneyList?.length === 0 ? (
-                                <SelectBoxItem
-                                  disabled={
-                                    toolSteps >= 1 ||
-                                    selectedKanoModelData?.kanoModelClustering
-                                      ?.attractive.length > 0 ||
-                                    customerJourneyList?.length === 0
-                                  }
+                            >
+                              {selectedPurposes?.customerList ? (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "4px",
+                                    paddingLeft: "20px",
+                                  }}
                                 >
-                                  <Body2 color="gray300" align="left">
-                                    카노 모델 진행을 완료하신 경우, 정보를
-                                    가져올 수 있습니다.
+                                  <Body2
+                                    color={
+                                      selectedPurposes.customerList
+                                        ? "gray800"
+                                        : "gray300"
+                                    }
+                                  >
+                                    {selectedPurposes.customerList ||
+                                      "불러올 핵심키워드 리스트를 선택해주세요.  "}
                                   </Body2>
-                                </SelectBoxItem>
+                                </div>
                               ) : (
-                                customerJourneyList?.map((item, index) => (
-                                  <SelectBoxItem
-                                    // disabled={
-                                    //   toolSteps >= 1
-                                    // }
-                                    key={index}
-                                    onClick={() => {
-                                      handlePurposeSelect(
-                                        `${item.updateDate.split(":")[0]}:${
-                                          item.updateDate.split(":")[1]
-                                        } - kano기반 아이디어 선택기 
-                                    `,
-                                        "customerList",
-                                        item
-                                      );
+                                <Body2
+                                  color="gray300"
+                                  style={{ paddingLeft: "20px" }}
+                                >
+                                  불러올 핵심키워드 리스트를 선택해주세요.
+                                </Body2>
+                              )}
+                              <images.ChevronDown
+                                width="24px"
+                                height="24px"
+                                color={
+                                  toolSteps >= 1
+                                    ? palette.gray300
+                                    : palette.gray500
+                                }
+                                style={{
+                                  transform: isSelectBoxOpen
+                                    ? "rotate(180deg)"
+                                    : "rotate(0deg)",
+                                  transition: "transform 0.3s ease",
+                                }}
+                              />
+                            </SelectBoxTitle>
+
+                                  {isSelectBoxOpen && (
+                                    <SelectBoxList noBorder={true}>
+                                      {customerJourneyList?.map((item, index) => (
+                                        <SelectBoxItem
+                                          key={index}
+                                          onClick={() => {
+                                            handlePurposeSelect(
+                                              `${item.updateDate.split(":")[0]}:${
+                                                item.updateDate.split(":")[1]
+                                              } - kano기반 아이디어 선택기 
+                                          `,
+                                              "customerList",
+                                              item
+                                            );
+                                          }}
+                                        >
+                                          <Body2 color="gray500" align="left">
+                                          {item.updateDate.split(":")[0]}:
+                                        {item.updateDate.split(":")[1]} kano기반
+                                        아이디어 선택기
+                                          </Body2>
+                                        </SelectBoxItem>
+                                      ))}
+                                    </SelectBoxList>
+                                  )}
+                                </SelectBox>
+                              </div>
+
+                              <div className="selectBoxWrap" style={{ marginTop: "12px" }}>
+                                <Body2 color="gray500" style={{ width: "110px", alignSelf: "flex-start" }}>
+                               평가 아이디어
+                                </Body2>
+                                <li style={{
+                                  alignSelf: "flex-start",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "flex-start",
+                                }}>
+                                  <Body2
+                                    color={ideaEvaluateSelect?.length > 0 ? "gray800" : "gray300"}
+                                    style={{
+                                      whiteSpace: "normal",
+                                      wordBreak: "keep-all",
+                                      // wordWrap: "break-word",
+                                      overflow: "visible",
+                                      maxWidth: "100%",
+                                      textAlign: "left",
+                                      marginLeft: "20px",
+                                      marginTop: "0",
+                                      paddingTop: "0",
+                                      display: "block",
+                                      alignSelf: "flex-start",
                                     }}
                                   >
-                                    <Body2 color="gray700" align="left">
-                                      {item.updateDate.split(":")[0]}:
-                                      {item.updateDate.split(":")[1]} kano기반
-                                      아이디어 선택기
+                                 {/* {ideaEvaluateSelectedList.length === 0 ? (
+                                        <Body2 color="red" style={{ marginLeft: "20px" }}>
+                                          최소 7개 ~ 최대 9개를 선택해주세요
+                                        </Body2>
+                                      ) : ideaEvaluateSelectedList.length < 7 || ideaEvaluateSelectedList.length > 9 ? (
+                                        <Body2 color="red" style={{ marginLeft: "20px" }}>
+                                          최소 7개 ~ 최대 9개를 선택해주세요
+                                        </Body2>
+                                      ) : (
+                                        ideaEvaluateSelectedList.map((idea, index) => {
+                                          const isLast = index === ideaEvaluateSelectedList.length - 1;
+                                          const totalText = ideaEvaluateSelectedList
+                                            .slice(0, index + 1)
+                                            .map((i) => i)
+                                            .join(", ");
+
+                                          if (totalText.length > 100 && !isLast) {
+                                            return null;
+                                          }
+                                          if (totalText.length > 100) {
+                                            return idea + "...";
+                                          }
+                                          return idea + (isLast ? "" : ", ");
+                                        })
+                                      )} */}
+                                   
+                                       {ideaEvaluateSelectedList.length > 0 && (
+                                        <span>{ideaEvaluateSelectedList.join(", ")}</span>
+                                      )}
+                                      {(!ideaEvaluateSelectedList.length > 0) && (
+                                        <span style={{ color: "grey300", marginLeft: "8px" }}>
+                                          최소 7개 ~ 최대 9개를 선택해주세요
+                                        </span>
+                                      )} 
+                                                                  </Body2>
+                                </li>
+                              </div>
+                            </BoxWrap>
+                          </div>
+                        ) : (
+                          <SelectBox ref={customerListRef}>
+                            <SelectBoxTitle
+                              onClick={() =>
+                                handleSelectBoxClick(
+                                  "customerList",
+                                  customerListRef
+                                )
+                              }
+                              style={{
+                                cursor:
+                                  toolSteps >= 1 ? "not-allowed" : "pointer",
+                              }}
+                            >
+                              <Body2
+                                color={
+                                  selectedPurposes.customerList
+                                    ? "gray800"
+                                    : "gray300"
+                                }
+                              >
+                                {selectedPurposes.customerList ||
+                                  "Kano Model 결과를 불러 올 수 있습니다"}
+                              </Body2>
+                              <images.ChevronDown
+                                width="24px"
+                                height="24px"
+                                color={palette.gray500}
+                                style={{
+                                  transform: selectBoxStates.customerList
+                                    ? "rotate(180deg)"
+                                    : "rotate(0deg)",
+                                  transition: "transform 0.3s ease",
+                                }}
+                              />
+                            </SelectBoxTitle>
+
+                            {selectBoxStates.customerList && (
+                              <SelectBoxList dropUp={dropUpStates.customerList}>
+                                {customerJourneyList?.length === 0 ? (
+                                  <SelectBoxItem
+                                    disabled={
+                                      toolSteps >= 1 ||
+                                      selectedKanoModelData?.kanoModelClustering
+                                        ?.attractive.length > 0 ||
+                                      customerJourneyList?.length === 0
+                                    }
+                                  >
+                                    <Body2 color="gray300" align="left">
+                                      카노 모델 진행을 완료하신 경우, 정보를
+                                      가져올 수 있습니다.
                                     </Body2>
                                   </SelectBoxItem>
-                                ))
-                              )}
-                            </SelectBoxList>
-                          )}
-                        </SelectBox>
+                                ) : (
+                                  customerJourneyList?.map((item, index) => (
+                                    <SelectBoxItem
+                                      // disabled={
+                                      //   toolSteps >= 1
+                                      // }
+                                      key={index}
+                                      onClick={() => {
+                                        handlePurposeSelect(
+                                          `${item.updateDate.split(":")[0]}:${
+                                            item.updateDate.split(":")[1]
+                                          } - kano기반 아이디어 선택기 
+                                      `,
+                                          "customerList",
+                                          item
+                                        );
+                                      }}
+                                    >
+                                      <Body2 color="gray700" align="left">
+                                        {item.updateDate.split(":")[0]}:
+                                        {item.updateDate.split(":")[1]} kano기반
+                                        아이디어 선택기
+                                      </Body2>
+                                    </SelectBoxItem>
+                                  ))
+                                )}
+                              </SelectBoxList>
+                            )}
+                          </SelectBox>
+                        )}
                       </TabContent5Item>
 
                       {isLoading ? (

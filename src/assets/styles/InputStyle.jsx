@@ -59,6 +59,7 @@ export const Label = styled.span`
 export const SelectBox = styled.div`
   position: relative;
   width: 100%;
+ 
 `;
 
 export const SelectBoxItem = styled.div`
@@ -146,6 +147,8 @@ export const SelectBoxList = styled.div`
     padding: 13px 20px;
   }
 `;
+
+
 
 export const CustomInput = styled.input`
   width: ${(props) => props.width || "100%"};

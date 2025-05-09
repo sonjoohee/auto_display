@@ -136,7 +136,7 @@ const PageCustomerJourneyMap = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
+  console.log(completedSteps);
   useEffect(() => {
     const interviewLoading = async () => {
       if (!creditCreateToolLoaded) {
@@ -620,10 +620,11 @@ const PageCustomerJourneyMap = () => {
               <TabButtonType5
                 Num3
                 isActive={activeTab >= 3}
-                onClick={() =>
-                  completedSteps.includes(2) ||
-                  (completedSteps.includes(3) && setActiveTab(3))
-                }
+                // onClick={() =>
+                //   completedSteps.includes(2) ||
+                //   (completedSteps.includes(3) && setActiveTab(3))
+                // }
+                onClick={() => completedSteps.includes(2) && setActiveTab(3)}
                 disabled={
                   !completedSteps.includes(3) || isLoading || isLoadingReport
                 }

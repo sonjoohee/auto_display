@@ -477,15 +477,15 @@ const PageConceptDefinition = () => {
     const detectRefresh = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
-      if (currentUrl.toLowerCase().includes("ConceptDefinition")) {
+      if (currentUrl.toLowerCase().includes("conceptdefinition")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         const lastUrl = sessionStorage.getItem("lastUrl");
-
-        // 마지막 URL이 현재 URL과 같으면 새로고침
+       // 마지막 URL이 현재 URL과 같으면 새로고침
         if (lastUrl && lastUrl === currentUrl) {
           navigate("/Project");
           return true;
         }
+       
         // 현재 URL 저장
         sessionStorage.setItem("lastUrl", currentUrl);
       }
