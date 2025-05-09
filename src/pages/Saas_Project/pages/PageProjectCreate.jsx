@@ -374,6 +374,23 @@ const PageProjectCreate = () => {
         if (!container.dataset.filename) {
           container.dataset.filename = file.name;
           container.dataset.size = sizeStr;
+
+          // 이미지 파일인 경우 PDF처럼 파일명 요소 추가
+          if (file.type.startsWith("image/")) {
+            // 기존 dzu-previewFileName이 없는 경우에만 추가
+            if (!container.querySelector(".dzu-previewFileName")) {
+              const nameSpan = document.createElement("span");
+              nameSpan.className = "dzu-previewFileName";
+              nameSpan.textContent = `${file.name}, ${sizeStr}`;
+
+              // 컨테이너의 첫 번째 자식으로 추가
+              if (container.firstChild) {
+                container.insertBefore(nameSpan, container.firstChild);
+              } else {
+                container.appendChild(nameSpan);
+              }
+            }
+          }
         }
       });
     }, 0);
@@ -1077,7 +1094,6 @@ const PageProjectCreate = () => {
                                       : selectedValues.country === "미국"
                                       ? images.ProjectUsa
                                       : // : selectedValues.country === "중국"
-                                      // ? images.ProjectChina
                                       selectedValues.country === "일본"
                                       ? images.ProjectJapan
                                       : selectedValues.country === "베트남"
@@ -1197,7 +1213,7 @@ const PageProjectCreate = () => {
                         canRemove={true}
                         canRestart={false}
                         disabled={completedSteps.includes(2)}
-                        accept="image/*, application/pdf"
+                        accept="image/jpg, image/jpeg, image/png, image/gif, image/bmp, application/pdf"
                         maxSizeBytes={20 * 1024 * 1024}
                         inputWithFilesContent={
                           <>
