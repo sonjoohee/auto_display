@@ -136,7 +136,7 @@ const PageCustomerJourneyMap = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  console.log(completedSteps);
+
   useEffect(() => {
     const interviewLoading = async () => {
       if (!creditCreateToolLoaded) {
