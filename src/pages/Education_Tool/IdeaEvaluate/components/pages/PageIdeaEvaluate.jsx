@@ -776,7 +776,7 @@ const PageIdeaEvaluate = () => {
                             <BoxWrap Column NoneV style={{ marginBottom: "0px" }}>
                               <div className="selectBoxWrap">
                                 <Body2 color="gray500" style={{ width: "110px" }}>
-                                  핵심 키워드
+                                  핵심 가치
                                 </Body2>
                                
                                   <SelectBox style={{ paddingRight: "20px" }}>
@@ -867,7 +867,7 @@ const PageIdeaEvaluate = () => {
 
                               <div className="selectBoxWrap" style={{ marginTop: "12px" }}>
                                 <Body2 color="gray500" style={{ width: "110px", alignSelf: "flex-start" }}>
-                                  주제어 선택
+                               평가 아이디어
                                 </Body2>
                                 <li style={{
                                   alignSelf: "flex-start",
@@ -880,9 +880,9 @@ const PageIdeaEvaluate = () => {
                                     style={{
                                       whiteSpace: "normal",
                                       wordBreak: "keep-all",
-                                      wordWrap: "break-word",
+                                      // wordWrap: "break-word",
                                       overflow: "visible",
-                                      maxWidth: "94%",
+                                      maxWidth: "100%",
                                       textAlign: "left",
                                       marginLeft: "20px",
                                       marginTop: "0",
@@ -916,7 +916,7 @@ const PageIdeaEvaluate = () => {
                                           return idea + (isLast ? "" : ", ");
                                         })
                                       )} */}
-                                     
+                                   
                                        {ideaEvaluateSelectedList.length > 0 && (
                                         <span>{ideaEvaluateSelectedList.join(", ")}</span>
                                       )}
@@ -924,8 +924,8 @@ const PageIdeaEvaluate = () => {
                                         <span style={{ color: "grey300", marginLeft: "8px" }}>
                                           최소 7개 ~ 최대 9개를 선택해주세요
                                         </span>
-                                      )}
-                                                                        </Body2>
+                                      )} 
+                                                                  </Body2>
                                 </li>
                               </div>
                             </BoxWrap>
