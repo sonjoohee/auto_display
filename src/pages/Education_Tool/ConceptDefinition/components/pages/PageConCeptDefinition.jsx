@@ -610,6 +610,11 @@ const PageConceptDefinition = () => {
                       <ListBoxGroup>
                         <li>
                           <Body2 color="gray500">페르소나 선택</Body2>
+                          <div
+                            style={{
+                              paddingLeft: "8px",
+                            }}
+                          ></div>
                           {selectedPersonas ? (
                             <PersonaGroup>
                               {Array.isArray(selectedPersonas) ? (
@@ -732,6 +737,11 @@ const PageConceptDefinition = () => {
                         <Body2 color="gray500" style={{ width: "110px" }}>
                           페르소나 선택
                         </Body2>
+                        <div
+                        style={{
+                          paddingLeft: "8px",
+                        }}
+                        ></div>
                         {selectedPersonas ? (
                           <PersonaGroup>
                             {Array.isArray(selectedPersonas) ? (
