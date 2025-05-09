@@ -48,6 +48,7 @@ const MoleculeBusinessModelPopup = ({
   const [bmCanvasPopupOptions, setBMCanvasPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_POPUP_OPTIONS);
   const [businessModelCanvasGraphItems, setBusinessModelCanvasGraphItems] = useAtom(BUSINESS_MODEL_CANVAS_GRAPH_ITEMS);
   const [bmCanvasInitialGraphData, setBMCanvasInitialGraphData] = useAtom(BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA);
+  const [applyOptions, setApplyOptions] = useState(false);
   // const [isLoading, setIsLoading] = useState(false);
 
   // isOpen props가 변경될 때 상태 업데이트
@@ -86,31 +87,39 @@ const MoleculeBusinessModelPopup = ({
 // }, [isOpen, currentModel.id, bmCanvasInitialGraphData]);
   
 //   // 팝업 닫기 처리
-  const handleClose = () => {
+  const handleClose = (isApplied = false) => {
     setIsVisible(false);
     setSelectedOption(null);
     setUserOptions([]);
     setInputFields([]);
     setInputValues({});
-    if (onClose) {
-      onClose();
-  //     // 현재 모델의 items도 초기화
-  // setBusinessModelCanvasGraphItems(prev => 
-  //   prev.map(item => 
-  //     item.id === currentModel.id 
-  //       ? { ...item, items: [] } 
-  //       : item
-  //   )
-  // );
-  // setBMCanvasSelectedPopupOptions([]);
-  // setBMCanvasPopupOptions([]);
+   
+    const shouldApply = typeof isApplied === 'boolean' ? isApplied : false;
+    setBMCanvasSelectedPopupOptions([]);
+    setBMCanvasPopupOptions([]);
+  
+  if(!shouldApply){
+  setBusinessModelCanvasGraphItems(prev => 
+    prev.map(item => 
+      item.id === currentModel.id 
+        ? { ...item, items: [] } 
+        : item
+    )
+  );
+ }else{
+  setApplyOptions(false);
+ }
+ if (onClose) {
+  onClose();
+
+
     }
   //   setBMCanvasSelectedPopupOptions([]);
   // setBMCanvasPopupOptions([]);
 
 
   };
-  console.log("businessModelCanvasGraphItems", businessModelCanvasGraphItems)
+
 
   // 옵션 선택 처리
   const handleOptionSelect = (option) => {
@@ -169,13 +178,14 @@ const MoleculeBusinessModelPopup = ({
 const handleApply = () => {
   // 선택된 옵션이 없으면 경고
   if (bmCanvasSelectedPopupOptions.length === 0) {
-    alert("항목을 선택해주세요.");
     return;
   }
+  console.log("bmCanvasSelectedPopupOptions",bmCanvasSelectedPopupOptions)
 
   setBusinessModelCanvasGraphItems(prev => {
     // 이전 상태가 없거나 배열이 아닌 경우 빈 배열로 초기화
     const prevItems = Array.isArray(prev) ? [...prev] : [];
+    console.log("prevItems", prevItems)
     
     // 현재 모델의 데이터를 찾거나 새로 생성
     const currentModelData = {
@@ -184,13 +194,14 @@ const handleApply = () => {
       items: [...bmCanvasSelectedPopupOptions],
       content: currentModel.content
     };
+    console.log("currentModelData", currentModelData)
   
     // 이전 항목들 중 현재 모델 ID와 일치하는 항목이 있는지 확인
     const existingIndex = prevItems.findIndex(item => item.id === currentModel.id);
-    console.log("existingIndex", existingIndex)
     if (existingIndex !== -1) {
       // 기존 항목이 있으면 해당 위치의 항목만 업데이트
       prevItems[existingIndex] = currentModelData;
+      console.log("prevItems", prevItems)
       return prevItems; // 여기서 바로 반환
     } else {
       // 기존 항목이 없으면 새로 추가
@@ -199,9 +210,12 @@ const handleApply = () => {
   
   
   });
-  handleClose();
+
+ 
+  setApplyOptions(true);
+  handleClose(true); 
 };
-console.log("businessModelCanvasGraphItems",businessModelCanvasGraphItems)
+
   // 엔터키 입력시 옵션 추가
   const handleKeyDown = (id, e) => {
     if (e.key === 'Enter' && inputValues[id]?.trim()) {
@@ -333,10 +347,15 @@ console.log("businessModelCanvasGraphItems",businessModelCanvasGraphItems)
 
             <ButtonContainer>
               <div></div> {/* 왼쪽 공간 유지용 */}
-              <ApplyButton 
+              {/* <ApplyButton 
                 isActive={!!selectedOption}
-                onClick={handleApply}
+                onClick={handleApply}ㄴㄴ
                 disabled={!selectedOption}
+              > */}
+               <ApplyButton 
+                isActive={bmCanvasSelectedPopupOptions.length > 0}
+                onClick={handleApply}
+                disabled={bmCanvasSelectedPopupOptions.length === 0}
               >
                 적용하기
               </ApplyButton>

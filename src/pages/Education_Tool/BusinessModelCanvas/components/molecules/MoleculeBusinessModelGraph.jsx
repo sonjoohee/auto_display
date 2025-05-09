@@ -40,20 +40,45 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
   // };
 
   const handleBoxClick = (id) => {
-    // bmCanvasGraphItems의 길이 + 1보다 큰 id는 클릭 불가
-    if (id > businessModelCanvasGraphItems.length + 1) {
-      return; // 팝업이 열리지 않음s
+    // 첫 번째 박스는 항상 클릭 가능
+    if (id === 1) {
+      setSelectedBoxId(id);
+      setShowPopup(id);
+      return;
     }
+  
+    // 이전 박스의 items가 채워져 있는지 확인
+    const previousBox = businessModelCanvasGraphItems.find(item => item.id === id - 1); // 이전 박스
+    console.log("previousBox", previousBox);
+    const isPreviousBoxFilled = previousBox?.items && previousBox.items.length > 0;
+    console.log("isPreviousBoxFilled", isPreviousBoxFilled);
+    
+    // 이전 박스가 없거나 items가 비어있으면 클릭 불가
+    if (!isPreviousBoxFilled) {
+      return; // 팝업이 열리지 않음
+    }
+    
     setSelectedBoxId(id);
     setShowPopup(id);
   };
-
-
+  
   // 박스의 활성화 상태를 확인하는 함수
   const isBoxActive = (id) => {
-    return id <= businessModelCanvasGraphItems.length + 1;
+    // 첫 번째 박스는 항상 활성화
+    if (id === 1) return true;
+    
+    // 이전 박스의 items가 채워져 있는지 확인
+    const previousBox = businessModelCanvasGraphItems.find(item => item.id === id - 1); // 이전 박스
+    console.log("previousBox",previousBox)
+    const isPreviousBoxFilled = previousBox?.items && previousBox.items.length > 0;
+    console.log("isPreviousBoxFilled",isPreviousBoxFilled)
+    // 이전 박스가 없거나 items가 비어있으면 비활성화
+    if (!isPreviousBoxFilled) {
+      return false;
+    }
+    
+    return true;
   };
-console.log("businessModelCanvasGraphItems!!!!!!!!!!!!!",businessModelCanvasGraphItems)
   return (
     <GraphContainer>
       <TopSection>
@@ -272,7 +297,7 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, style 
 // 체크마크 아이콘 컴포넌트
 const CheckMarkIcon = () => (
   <CheckMark>
-    <img src="/images/business-model/checkmark.svg" alt="✓" />
+    <img src="/images/CheckMark.svg" alt="✓" />
   </CheckMark>
 );
 

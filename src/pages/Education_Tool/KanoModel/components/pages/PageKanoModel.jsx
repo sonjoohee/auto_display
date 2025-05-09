@@ -319,6 +319,7 @@ const PageKanoModel = () => {
         }
 
         // 활성 탭 설정 (기본값 1)
+
         if (toolStep === undefined || toolStep === 1) {
           setActiveTab(1);
           setToolSteps(0);
@@ -544,27 +545,10 @@ const PageKanoModel = () => {
     handleNextStep(1);
     setToolSteps(1);
 
-    // const updatedClustering = { ...kanoModelClustering };
-
-    // // 각 카테고리 순회
-    // Object.keys(updatedClustering).forEach(category => {
-    //   if (Array.isArray(updatedClustering[category])) {
-    //     // 해당 카테고리의 아이템 중 kanoModelClusteringName에 포함된 이름만 남김
-    //     updatedClustering[category] = updatedClustering[category].filter(
-    //       item => kanoModelClusteringName.includes(item.name)
-    //     );
-    //   }
-    // });
-
-    // // 업데이트된 상태 설정
-    // setKanoModelClustering(updatedClustering);
-
     await updateToolOnServer(
       toolId,
       {
         completedStep: 2,
-        // kanoModelClusteringName: kanoModelClusteringName,
-        // kanoModelClustering: kanoModelClustering,
       },
       isLoggedIn
     );
@@ -936,7 +920,7 @@ const PageKanoModel = () => {
                           alignItems: "center",
                         }}
                       >
-                        <AtomPersonaLoader message="로딩 중..." />
+                        <AtomPersonaLoader message="평가를 위해 발산된 아이디어를 정리하고 있어요" />
                       </div>
                     ) : (
                       <>
@@ -977,8 +961,7 @@ const PageKanoModel = () => {
                                   }}
                                 >
                                   <Body1 color="gray700">
-                                    Kano Model 평가에 포함할 아이디어를 선택해
-                                    주세요. (복수 선택 가능)
+                                  Kano Model 평가를 진행할 아이디어를 선택해주세요 (복수 선택 가능)
                                   </Body1>
                                 </div>
                                 {kanoModelIdeaGeneration.map((idea, index) => (
@@ -986,11 +969,9 @@ const PageKanoModel = () => {
                                     FlexStart
                                     key={index}
                                     id={index}
-                                    title={`${idea.updateDate.split(":")[0]}:${
+                                    title={`${idea.ideaGenerationSelectedStartPosition[0].main_theme} 외 7개 아이디어 발산 (${idea.updateDate.split(":")[0]}:${
                                       idea.updateDate.split(":")[1]
-                                    } - 아이디어 발상 - ${
-                                      idea.title || "아이디어"
-                                    }`}
+                                    })`}
                                     isSelected={selectedIdea.includes(index)}
                                     onSelect={() => handleCheckboxChange(index)}
                                   />
@@ -1009,7 +990,7 @@ const PageKanoModel = () => {
                               }}
                             >
                               <Body1 color="gray700">
-                                아이디어 도출 과정을 통해 선정된 아이디어 리스트{" "}
+                              Kano Model 평가를 진행할 아이디어 리스트
                               </Body1>
                             </div>
                             <MoleculeDeleteForm
@@ -1036,17 +1017,14 @@ const PageKanoModel = () => {
                           justifyContent: "flex-end",
                         }}
                       >
-                        <Button
-                          Other
-                          Primary
-                          Fill
-                          Round
+                        {kanoModelClustering.length === 0 ? (
+                          <Button
+                            Other
+                            Primary
+                            Fill
+                            Round
                           onClick={() => {
-                            if (kanoModelClustering.length === 0) {
-                              handleSubmitIdeaList();
-                            } else {
-                              handleSubmitClustering();
-                            }
+                            handleSubmitIdeaList();
                           }}
                           disabled={
                             toolSteps > 1 ||
@@ -1056,6 +1034,24 @@ const PageKanoModel = () => {
                         >
                           아이디어 방향성으로 전환
                         </Button>
+                        ) : (
+                          <Button
+                            Other
+                            Primary
+                            Fill
+                            Round
+                            onClick={() => {
+                              handleSubmitClustering();
+                            }}
+                            disabled={
+                              toolSteps > 1 ||
+                              selectedKanoModelIdea.length === 0 ||
+                              isLoading
+                            }
+                          >
+                            다음
+                          </Button>
+                        )}
                       </div>
                     )}
                   </>
@@ -1117,7 +1113,7 @@ const PageKanoModel = () => {
                               alignSelf: "flex-start",
                             }}
                           >
-                            {selectedKanoModelIdea.map((idea, index) => (
+                            {kanoModelClusteringName.map((idea, index) => (
                               <span
                                 key={index}
                                 style={{
@@ -1125,14 +1121,15 @@ const PageKanoModel = () => {
                                   marginBottom: "4px",
                                 }}
                               >
-                                {idea.updateDate.split(":")[0] +
-                                  ":" +
-                                  idea.updateDate.split(":")[1] +
-                                  " - 아이디어 발상 - " +
-                                  (idea.title || "아이디어") +
-                                  (index < selectedKanoModelIdea.length - 1
-                                    ? ", "
-                                    : "")}
+                                  {index < 5 ? (
+                              // 처음 5개 항목은 상세 정보 표시
+                              idea +
+                              (index < Math.min(4, kanoModelClusteringName.length - 1) ? ", " : "")
+                            ) : index === 5 ? (
+                              // 6번째 항목에서 외 N개 표시
+                              ` 외 ${kanoModelClusteringName.length - 5}개`
+                            ) : null}
+                                
                               </span>
                             ))}
                           </div>
@@ -1224,7 +1221,7 @@ const PageKanoModel = () => {
                         alignItems: "center",
                       }}
                     >
-                      <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
+                      <AtomPersonaLoader message="페르소나들이 아이디어를 평가하고 있어요 " />
                     </div>
                   ) : (
                     <>
