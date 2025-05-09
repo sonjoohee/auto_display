@@ -153,7 +153,7 @@ const PageServiceLandingDCBeducation = () => {
               Primary
               Fill
               onClick={() => {
-                setEducationState(false);
+                setEducationState(true);
                 navigate("/Project");
               }}
               className="web"
@@ -201,7 +201,7 @@ const PageServiceLandingDCBeducation = () => {
               background: "linear-gradient(to right, #E6007E, #B70D7F)",
             }}
             onClick={() => {
-              setEducationState(false);
+              setEducationState(true);
               navigate("/Project");
             }}
           >
@@ -297,7 +297,7 @@ const PageServiceLandingDCBeducation = () => {
                 background: "linear-gradient(to right, #E6007E, #B70D7F)",
               }}
               onClick={() => {
-                setEducationState(false);
+                setEducationState(true);
                 navigate("/Project");
               }}
             >
