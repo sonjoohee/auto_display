@@ -359,14 +359,14 @@ const PageProject = () => {
                 style={{ display: "flex", flexDirection: "row", gap: "10px" }}
               >
                 <Button
-                  ExLarge
+                  Large
                   Primary
                   Fill
                   onClick={() => setIsWarningPopupOpen(true)}
                 >
-                  <Sub1 color="white">새 프로젝트</Sub1>
+                  <Caption1 color="white">새 프로젝트</Caption1>
                 </Button>
-                <Button Outline onClick={() => setIsTrashModalOpen(true)}>
+                <Button Outline radius="4px" onClick={() => setIsTrashModalOpen(true)}>
                   <img src={images.Trash} alt="" />
                   <Caption1 color="gray700">임시 삭제함</Caption1>
                 </Button>
@@ -655,9 +655,9 @@ const PageProject = () => {
                   ))
                 ) : (
                   <div style={{ padding: "20px 0", textAlign: "center" }}>
-                    <Caption1 color="gray500">
+                    <Body2 color="gray500">
                       임시 삭제된 항목이 없습니다.
-                    </Caption1>
+                    </Body2>
                   </div>
                 )}
               </div>

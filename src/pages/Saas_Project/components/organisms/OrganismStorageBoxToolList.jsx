@@ -608,7 +608,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         case "ix_issue_generation_education":
           return "핵심 문제 정의";
         case "ix_needs_keywords_generation_education":
-          return "핵심 키워드 추출";
+          return "통합 니즈 작성";
         default:
           return tool.type;
       }

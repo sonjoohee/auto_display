@@ -15,7 +15,7 @@ import {
 import OrganismStorageBoxToolList from "../components/organisms/OrganismStorageBoxToolList";
 import { TOOL_LIST_SAAS, PROJECT_SAAS, EDUCATION_STATE } from "../../AtomStates";
 import images from "../../../assets/styles/Images";
-import { H1, Body3, Sub3, Caption1 } from "../../../assets/styles/Typography";
+import { H1, Body3, Sub3, Caption1, H2, Body1, Body2 } from "../../../assets/styles/Typography";
 
 import {
   getToolListOnServerSaas,
@@ -379,8 +379,14 @@ const PageStorageBox = () => {
                   </Body3>
                 </div>
               </div>
-              <Button Outline onClick={() => setIsTrashModalOpen(true)}>
+              <Button
+                Outline
+                radius="4px"
+                onClick={() => setIsTrashModalOpen(true)}
+                style={{ marginTop: "38px" }}
+              >
                 <img src={images.Trash} alt="" />
+                <div style={{ minHeight: "24px", marginRight: "-4px" }}></div>
                 <Caption1 color="gray700">임시 삭제함</Caption1>
               </Button>
             </StorageBoxTitle>
@@ -436,9 +442,9 @@ const PageStorageBox = () => {
                   ))
                 ) : (
                   <div style={{ padding: "20px 0", textAlign: "center" }}>
-                    <Caption1 color="gray500">
+                    <Body2 color="gray500">
                       임시 삭제된 항목이 없습니다.
-                    </Caption1>
+                    </Body2>
                   </div>
                 )}
               </div>
