@@ -1734,7 +1734,7 @@ const PageNps = () => {
 
                         <li>
                           <Body2 color="gray500">페르소나 선택</Body2>
-                          <Body2 color="gray500">
+                          <Body2 color="gray800">
                             NPS는 favorite 페르소나를 기반으로 무작위 패널
                             100명을 섭외하여 진행합니다.
                           </Body2>
