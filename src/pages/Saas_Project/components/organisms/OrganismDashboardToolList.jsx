@@ -202,6 +202,8 @@ import {
   KEYWORDS_GENERATION_TAG,
   CREDIT_CREATE_TOOL_LOADED,
   EDUCATION_TOOL_COMPLETED_STATUS,
+  BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION,
+  BUSINESS_MODEL_CANVAS_MARKDOWN,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -541,6 +543,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setConceptDefinitionFinalReport] = useAtom(
     CONCEPT_DEFINITION_FINAL_REPORT
   );
+  const [, setBusinessModelCanvasSelectedConceptDefinition] = useAtom(
+    BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION
+  );
+ 
+  const [, setBusinessModelCanvasMarkdown] = useAtom(BUSINESS_MODEL_CANVAS_MARKDOWN);
 
   const saveConversation = (data) => {};
 
@@ -594,6 +601,8 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           return "핵심 키워드 추출";
         case "ix_nps_education":
           return "NPS";
+        case "ix_business_model_canvas_education":
+          return "비즈니스 모델 캔버스";
         default:
           return tool.type;
       }
@@ -817,6 +826,8 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           return tool.completedStep === 3 ? "완료" : "진행중";
         case "ix_nps_education":
           return tool.completedStep === 3 ? "완료" : "진행중";
+        case "ix_business_model_canvas_education":
+          return tool.completedStatus === "true" ? "완료" : "진행중";
         default:
           return "-";
       }
@@ -1403,6 +1414,14 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         );
         setCompletedStatus(chatData?.completedStatus || false);
 
+        //!비즈니스 모델 캔버스
+        setToolStep(1);
+        setCompletedStatus(false); 
+        setBusinessModelCanvasSelectedConceptDefinition({});
+        setBusinessModelCanvasMarkdown("");
+        setBusinessModelCanvasSelectedConceptDefinition(chatData?.selectedConceptDefinition || {});
+        setBusinessModelCanvasMarkdown(chatData?.businessModelCanvasMarkdown || "");
+  
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);
 
@@ -1448,7 +1467,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         } else if (chatData.type === "ix_nps_education") {
           setToolLoading(true);
           navigate("/Nps");
+        } else if (chatData.type === "ix_business_model_canvas_education") {
+          setToolLoading(true);
+          navigate("/BusinessModelCanvas");
         }
+
       } catch (error) {}
     } else if (conversationType === "interviewSingle") {
       setProjectId(project._id);

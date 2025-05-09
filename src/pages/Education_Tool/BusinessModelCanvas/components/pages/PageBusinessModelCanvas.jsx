@@ -71,6 +71,7 @@ import {
   BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS,
 SELECTED_CONCEPT_DEFINITION_FINAL_REPORT,
 BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA,
+  BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -112,6 +113,7 @@ const PageBusinessModelCanvas = () => {
   const navigate = useNavigate();
 
   const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
+  const [selectedConceptDefinition, setSelectedConceptDefinition] = useAtom(BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION);
   const [bmCanvasInitialGraphData, setBMCanvasInitialGraphData] = useAtom(BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA);
   const [selectedConceptDefinitionFinalReport, setSelectedConceptDefinitionFinalReport] = useAtom(SELECTED_CONCEPT_DEFINITION_FINAL_REPORT);
   const [bmCanvasSelectedPopupOptions, setBMCanvasSelectedPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS);
@@ -249,7 +251,6 @@ const PageBusinessModelCanvas = () => {
   const [selectedKeys, setSelectedKeys] = useState([]);
 
  
-
   
   const customerListRef = useRef(null);
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -321,6 +322,12 @@ const PageBusinessModelCanvas = () => {
 
       if (toolLoading) {
 
+        if (Object.keys(selectedConceptDefinition).length > 0) {
+          setSelectedPurposes(selectedConceptDefinition);
+        }
+        if (businessModelCanvasMarkdown.length > 0) {
+          setBusinessModelCanvasMarkdown(businessModelCanvasMarkdown);
+        }
         // 비즈니스 정보 설정 (Step 1)
         if (Object.keys(ideaEvaluateSelectedKanoModel).length > 0) {
           setSelectedKanoModelData(ideaEvaluateSelectedKanoModel);
@@ -489,6 +496,35 @@ const PageBusinessModelCanvas = () => {
   
 
 
+  // const handleCheckboxChange = (ideaId) => {
+  //   if (toolSteps >= 1) {
+  //     return;
+  //   }
+  //   setSelectedKeys((prev) => {
+  //     if (prev.includes(ideaId)) {
+  //       // 이미 선택된 아이템이면 제거
+  //       const newSelected = prev.filter((id) => id !== ideaId);
+  //       // 선택된 옵션에서도 제거
+  //       setBMCanvasSelectedPopupOptions(prevOptions => 
+  //         prevOptions.filter(option => option !== bmCanvasPopupOptions[prev.indexOf(ideaId)])
+  //       );
+  //       return newSelected;
+  //     } else {
+  //       // 새로운 아이템 추가
+  //       if (prev.length >= 3) {
+  //         return prev; // 3개 이상이면 현재 상태 유지
+  //       }
+  //       const newSelected = [...prev, ideaId];
+  //       // 선택된 옵션 추가
+  //       setBMCanvasSelectedPopupOptions(prevOptions => [
+  //         ...prevOptions,
+  //         bmCanvasPopupOptions[newSelected.length - 1]
+  //       ]);
+  //       return newSelected;
+  //     }
+  //   });
+   
+  // };
   const handleCheckboxChange = (ideaId) => {
     if (toolSteps >= 1) {
       return;
@@ -499,7 +535,7 @@ const PageBusinessModelCanvas = () => {
         const newSelected = prev.filter((id) => id !== ideaId);
         // 선택된 옵션에서도 제거
         setBMCanvasSelectedPopupOptions(prevOptions => 
-          prevOptions.filter(option => option !== bmCanvasPopupOptions[prev.indexOf(ideaId)])
+          prevOptions.filter((_, index) => index !== prev.indexOf(ideaId))
         );
         return newSelected;
       } else {
@@ -511,14 +547,12 @@ const PageBusinessModelCanvas = () => {
         // 선택된 옵션 추가
         setBMCanvasSelectedPopupOptions(prevOptions => [
           ...prevOptions,
-          bmCanvasPopupOptions[newSelected.length - 1]
+          bmCanvasPopupOptions[ideaId] // ideaId를 인덱스로 사용
         ]);
         return newSelected;
       }
     });
-   
   };
-
 
 // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -598,20 +632,7 @@ const PageBusinessModelCanvas = () => {
     }
   };
 
-  useEffect(() => {
-    if (shouldRegenerate && Object.keys(quickSurveyAnalysis).length === 0) {
-      // handleSubmitBusinessInfo();
-      setShouldRegenerate(false); // 리셋
-    }
-  }, [quickSurveyAnalysis, shouldRegenerate]);
-
-  const handleRegenerate = () => {
-    setShouldRegenerate(true);
-    setSelectedQuestion([]); // 재생성 flag 설정
-    setQuickSurveyAnalysis({});
-    setQuickSurveyCustomQuestion([]);
-  };
-
+ 
   const handleSubmitConcept = async () => {
     // 새 AbortController 생성
     abortControllerRef.current = new AbortController();
@@ -622,61 +643,125 @@ const PageBusinessModelCanvas = () => {
     // setIsLoadingReport(true);
 
     try {
+   await new Promise(resolve => setTimeout(resolve, 1000));
 
-      const persona_group = personaListSaas
-      .filter((persona) => persona?.favorite === true)
-      .map((persona) => ({
-        personaName: persona.personaName,
-        personaCharacteristics: persona.personaCharacteristics,
-        type: persona.type,
-        age: persona.age,
-        gender: persona.gender,
-        job: persona.job,
-        keywords: persona.keywords,
-        userExperience: persona.userExperience,
-        consumptionPattern: persona.consumptionPattern,
-        interests: persona.interests,
-        lifestyle: persona.lifestyle,
-      }));
+      // const persona_group = personaListSaas
+      // .filter((persona) => persona?.favorite === true)
+      // .map((persona) => ({
+      //   personaName: persona.personaName,
+      //   personaCharacteristics: persona.personaCharacteristics,
+      //   type: persona.type,
+      //   age: persona.age,
+      //   gender: persona.gender,
+      //   job: persona.job,
+      //   keywords: persona.keywords,
+      //   userExperience: persona.userExperience,
+      //   consumptionPattern: persona.consumptionPattern,
+      //   interests: persona.interests,
+      //   lifestyle: persona.lifestyle,
+      // }));
 
-      const Data = {
-        type: "ix_idea_evaluation_comparison_education",
-        business: business,
-        idea_list: ideaEvaluateSelectedList, 
-        persona: persona_group,
-      };
+      // const Data = {
+      //   type: "ix_idea_evaluation_comparison_education",
+      //   business: business,
+      //   idea_list: ideaEvaluateSelectedList, 
+      //   persona: persona_group,
+      // };
 
-      let response = await EducationToolsRequest (Data, isLoggedIn, signal);
+      // let response = await EducationToolsRequest (Data, isLoggedIn, signal);
 
-       let retryCount = 0;
-      const maxRetries = 10;
-        while (retryCount < maxRetries &&
-          (!response ||
-           !response?.response ||
-           !response?.response?.idea_evaluation_comparison_education ||
-           !Array.isArray(response?.response?.idea_evaluation_comparison_education)
-          )
-         ) {
-           response = await EducationToolsRequest(Data, isLoggedIn, signal);
-           maxRetries++;
+      //  let retryCount = 0;
+      // const maxRetries = 10;
+      //   while (retryCount < maxRetries &&
+      //     (!response ||
+      //      !response?.response ||
+      //      !response?.response?.idea_evaluation_comparison_education ||
+      //      !Array.isArray(response?.response?.idea_evaluation_comparison_education)
+      //     )
+      //    ) {
+      //      response = await EducationToolsRequest(Data, isLoggedIn, signal);
+      //      maxRetries++;
           
-         }
-           if (retryCount >= maxRetries) {
-           setShowPopupError(true);
-           return;
-         }
+      //    }
+      //      if (retryCount >= maxRetries) {
+      //      setShowPopupError(true);
+      //      return;
+      //    }
 
       // setIdeaEvaluateComparisonEducation(response.response.idea_evaluation_comparison_education)
-      setBusinessModelCanvasMarkdown(response.response.idea_evaluation_comparison_education)
+                  const dummyMarkdown = `
+            # 비즈니스 모델 캔버스 분석
 
-      await updateToolOnServer(
-        toolId,
+            ## 1. 고객 세그먼트
+            - 개인 소비자
+            - 기업 고객
+            - 소상공인
+
+            ## 2. 가치 제안
+            - 맞춤형 솔루션
+            - 비용 효율성
+            - 사용자 친화적 UI
+
+            ## 3. 채널
+            - 웹사이트
+            - 모바일 앱
+            - 소셜 미디어
+
+            ## 4. 고객 관계
+            - 자동화된 지원
+            - 개인화된 서비스
+            - 커뮤니티
+
+            ## 5. 수익원
+            - 구독 서비스
+            - 프리미엄 기능
+            - 파트너십
+
+            ## 6. 핵심 자원
+            - 개발팀
+            - 인프라
+            - 전문가 팀
+
+            ## 7. 핵심 활동
+            - 제품 개발
+            - 마케팅
+            - 고객 지원
+
+            ## 8. 핵심 파트너
+            - 기술 제공업체
+            - 마케팅 파트너
+            - 유통 파트너
+
+            ## 9. 비용 구조
+            - 개발 비용
+            - 마케팅 비용
+            - 운영 비용
+            `;
+            setBusinessModelCanvasMarkdown(dummyMarkdown);
+
+      // setBusinessModelCanvasMarkdown(response.response.idea_evaluation_comparison_education)
+
+      const responseToolId = await createToolOnServer(
         {
-          ideaEvaluateComparisonEducation: response.response.idea_evaluation_comparison_education,
-          completedStep: 3,
+          projectId: project._id,
+          type: "ix_business_model_canvas_education",
+          selectedConceptDefinition: selectedPurposes,
+          businessModelCanvasMarkdown: dummyMarkdown,
+          completedStep: 1,
         },
         isLoggedIn
       );
+      setToolId(responseToolId);
+      setSelectedConceptDefinition(selectedPurposes);
+
+      // await updateToolOnServer(
+      //   responseToolId,
+      //   {
+          
+      //     completedStep: 1,
+      //   },
+      //   isLoggedIn
+      // );
 
 
       // setToolSteps(3);
@@ -806,8 +891,7 @@ const PageBusinessModelCanvas = () => {
   
   const handleShowPopup = async (id) => {
     setShowPopup(true);
-    abortControllerRef.current = new AbortController();
-    const signal = abortControllerRef.current.signal;
+
     // 해당 ID의 데이터가 이미 있는지 확인
   const existingData = bmCanvasInitialGraphData.find(item => item.id === id);
   
@@ -818,6 +902,8 @@ const PageBusinessModelCanvas = () => {
     return;
   }
     setIsLoading(true);
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
     // setBMCanvasPopupOptions([])
     // setBMCanvasSelectedPopupOptions([])
 
@@ -1297,7 +1383,7 @@ const PageBusinessModelCanvas = () => {
                     >
                       <AtomPersonaLoader message="로딩 중..." />
                     </div>
-                  ) : !showKanoModelList ? (
+                  ) :  !businessModelCanvasMarkdown.length > 0 ? (
                     <BoxWrap
                       NoData
                       style={{ height: "300px", marginTop: "32px" }}
@@ -1327,7 +1413,7 @@ const PageBusinessModelCanvas = () => {
                   )}
                     </TabContent5Item>
                   </div>   
-                  {businessModelCanvasMarkdown.length > 0 ? (
+                  {businessModelCanvasMarkdown.length > 0 && !isLoading ? (
                         <Button
                           Other
                           Primary

@@ -185,6 +185,7 @@ import {
   BUSINESS_MODEL_CANVAS_GRAPH_ITEMS,
   BUSINESS_MODEL_CANVAS_POPUP_OPTIONS,
   BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS,
+  BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -549,6 +550,9 @@ const PageToolListSaas = () => {
   const [, setBMCanvasSelectedPopupOptions] = useAtom(
     BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS
   );
+  const [, setBusinessModelCanvasSelectedConceptDefinition] = useAtom(
+    BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION
+  );
   // 초기화 useEffect
   useEffect(() => {
     setCreditCreateToolLoaded(false);
@@ -760,6 +764,7 @@ const PageToolListSaas = () => {
     setConceptDefinitionFinalReport("");
 
     //business model canvas education 초기화
+    setBusinessModelCanvasSelectedConceptDefinition({});
     setBusinessModelCanvasMarkdown("");
     setBusinessModelCanvasGraphItems([]);
     setBMCanvasPopupOptions([]);
