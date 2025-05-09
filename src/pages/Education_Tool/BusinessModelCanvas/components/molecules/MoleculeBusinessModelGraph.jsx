@@ -10,11 +10,10 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
   const [bmCanvasSelectedPopupOptions, setBMCanvasSelectedPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS);
   const [bmCanvasPopupOptions, setBMCanvasPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_POPUP_OPTIONS);
   const [businessModelCanvasGraphItems, setBusinessModelCanvasGraphItems] = useAtom(BUSINESS_MODEL_CANVAS_GRAPH_ITEMS);
+
   // const [showPopup, setShowPopup] = useState(false);
   // 9개의 비즈니스 모델 영역 정의
-  useEffect(() => {
-    console.log("Graph items updated:", businessModelCanvasGraphItems);
-  }, [businessModelCanvasGraphItems]);
+
   const businessAreas = [
     { id: 8, title: '핵심 파트너십' },
     { id: 7, title: '핵심활동' },
@@ -27,17 +26,6 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
     { id: 5, title: '수익원' }
   ];
 
-  // 선택된 박스 ID 상태 관리
-  // const [selectedBoxId, setSelectedBoxId] = useState(null);
-
-  // // 박스 클릭 핸들러
-  // const handleBoxClick = (id) => {
-  //   setSelectedBoxId(id);
-  //   // if (onBoxClick) {
-  //     // onBoxClick(id);
-  //     setShowPopup(id);
-  //   // }
-  // };
 
   const handleBoxClick = (id) => {
     // 첫 번째 박스는 항상 클릭 가능
@@ -49,10 +37,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
   
     // 이전 박스의 items가 채워져 있는지 확인
     const previousBox = businessModelCanvasGraphItems.find(item => item.id === id - 1); // 이전 박스
-    console.log("previousBox", previousBox);
     const isPreviousBoxFilled = previousBox?.items && previousBox.items.length > 0;
-    console.log("isPreviousBoxFilled", isPreviousBoxFilled);
-    
+ 
     // 이전 박스가 없거나 items가 비어있으면 클릭 불가
     if (!isPreviousBoxFilled) {
       return; // 팝업이 열리지 않음
@@ -69,9 +55,9 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
     
     // 이전 박스의 items가 채워져 있는지 확인
     const previousBox = businessModelCanvasGraphItems.find(item => item.id === id - 1); // 이전 박스
-    console.log("previousBox",previousBox)
+
     const isPreviousBoxFilled = previousBox?.items && previousBox.items.length > 0;
-    console.log("isPreviousBoxFilled",isPreviousBoxFilled)
+
     // 이전 박스가 없거나 items가 비어있으면 비활성화
     if (!isPreviousBoxFilled) {
       return false;
@@ -275,7 +261,14 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, style 
           <ItemList>
             {items.map((item, index) => (
               <ItemRow key={index} style={{textAlign: "left"}}>
-                <CheckMarkIcon />
+                {/* <CheckMarkIcon /> */}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M5 12L10 17L19 8" 
+                            stroke={  "black"} 
+                            strokeWidth="2" 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round"/>
+                        </svg>
                 <ItemText>{item}</ItemText>
               </ItemRow>
             ))}

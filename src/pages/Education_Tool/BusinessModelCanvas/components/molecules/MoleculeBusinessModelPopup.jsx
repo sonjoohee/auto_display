@@ -4,10 +4,22 @@ import { palette } from "../../../../../assets/styles/Palette";
 import { Button } from "../../../../../assets/styles/ButtonStyle";
 import { Body1, Body2, Caption1 } from "../../../../../assets/styles/Typography";
 import { useAtom } from "jotai";
-import { BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS, BUSINESS_MODEL_CANVAS_POPUP_OPTIONS ,BUSINESS_MODEL_CANVAS_GRAPH_ITEMS,BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA} from "../../../../AtomStates";
+import {
+  updateToolOnServer,
+} from "../../../../../utils/indexedDB";
+import { 
+  BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS, 
+  BUSINESS_MODEL_CANVAS_POPUP_OPTIONS ,
+  BUSINESS_MODEL_CANVAS_GRAPH_ITEMS,
+  BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA,
+  TOOL_ID ,
+  IS_LOGGED_IN,
+  BUSINESS_MODEL_CANVAS_USER_OPTIONS
+} from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import { CheckBoxButton, RadioButton } from "../../../../../assets/styles/InputStyle";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
+
 
 const businessModelItems = [
   { id: 1, title: "고객 세그먼트", value: "1고객 세그먼트" },
@@ -49,8 +61,18 @@ const MoleculeBusinessModelPopup = ({
   const [businessModelCanvasGraphItems, setBusinessModelCanvasGraphItems] = useAtom(BUSINESS_MODEL_CANVAS_GRAPH_ITEMS);
   const [bmCanvasInitialGraphData, setBMCanvasInitialGraphData] = useAtom(BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA);
   const [applyOptions, setApplyOptions] = useState(false);
+  const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
+  const [bmCanvasUserOptions, setBMCanvasUserOptions] = useAtom(BUSINESS_MODEL_CANVAS_USER_OPTIONS);
   // const [isLoading, setIsLoading] = useState(false);
 
+
+  useEffect(() => {
+    // bmCanvasUserOptions에 데이터가 있으면 setUserOptions에 설정
+    if (bmCanvasUserOptions && bmCanvasUserOptions.length > 0) {
+      setUserOptions(bmCanvasUserOptions);
+    }
+  }, [bmCanvasUserOptions]); // bmCanvasUserOptions가 변경될 때마다 실행
   // isOpen props가 변경될 때 상태 업데이트
   useEffect(() => {
     setIsVisible(isOpen);
@@ -66,49 +88,31 @@ const MoleculeBusinessModelPopup = ({
     setInputValues({}); // 입력 값 초기화
   }, [currentModelId]);
 
-   // 또는 더 엄격하게 처리하려면
-// useEffect(() => {
-//   let isMounted = true;
-
-//   if (isOpen && isMounted) {
-//     const existingData = bmCanvasInitialGraphData.find(item => item.id === currentModel.id);
-//     if (existingData) {
-//       setBMCanvasSelectedPopupOptions(existingData.items);
-//       setBMCanvasPopupOptions(existingData.items);
-//     } else {
-//       setBMCanvasSelectedPopupOptions([]);
-//       setBMCanvasPopupOptions([]);
-//     }
-//   }
-
-//   return () => {
-//     isMounted = false;
-//   };
-// }, [isOpen, currentModel.id, bmCanvasInitialGraphData]);
+  
   
 //   // 팝업 닫기 처리
-  const handleClose = (isApplied = false) => {
+  const handleClose = () => {
     setIsVisible(false);
     setSelectedOption(null);
     setUserOptions([]);
     setInputFields([]);
     setInputValues({});
    
-    const shouldApply = typeof isApplied === 'boolean' ? isApplied : false;
+    // const shouldApply = typeof isApplied === 'boolean' ? isApplied : false;
     setBMCanvasSelectedPopupOptions([]);
     setBMCanvasPopupOptions([]);
   
-  if(!shouldApply){
-  setBusinessModelCanvasGraphItems(prev => 
-    prev.map(item => 
-      item.id === currentModel.id 
-        ? { ...item, items: [] } 
-        : item
-    )
-  );
- }else{
-  setApplyOptions(false);
- }
+//   if(!shouldApply){
+//   setBusinessModelCanvasGraphItems(prev => 
+//     prev.map(item => 
+//       item.id === currentModel.id 
+//         ? { ...item, items: [] } 
+//         : item
+//     )
+//   );
+//  }else{
+//   setApplyOptions(false);
+//  }
  if (onClose) {
   onClose();
 
@@ -141,13 +145,41 @@ const MoleculeBusinessModelPopup = ({
     setInputValues({...inputValues, [id]: value});
   };
 
-  // 체크 버튼 클릭 시 사용자 정의 옵션 추가
-  const handleAddUserOption = (id) => {
+
+  const handleAddUserOption = async (id) => {
     const value = inputValues[id]?.trim();
     if (value) {
       // 새로운 옵션 추가
       const newUserOptions = [...userOptions, value];
       setUserOptions(newUserOptions);
+      setBMCanvasSelectedPopupOptions([...bmCanvasSelectedPopupOptions, value]);
+      
+      // bmCanvasInitialGraphData의 items에 추가
+      const updatedInitialGraphData = bmCanvasInitialGraphData.map(item => {
+        if (item.id === currentModel.id) {
+          return {
+            ...item,
+            items: [...item.items, value]
+          };
+        }
+        return item;
+      });
+      
+      setBMCanvasInitialGraphData(updatedInitialGraphData);
+      
+      // 서버 업데이트
+      try {
+        await updateToolOnServer(
+          toolId,
+          {
+      
+            bmCanvasInitialGraphData: updatedInitialGraphData,
+          },
+          isLoggedIn
+        );
+      } catch (error) {
+        console.error("Error updating tool on server:", error);
+      }
       
       // 입력 필드 제거
       setInputFields(inputFields.filter(fieldId => fieldId !== id));
@@ -159,61 +191,48 @@ const MoleculeBusinessModelPopup = ({
     }
   };
 
-//   // 적용하기 버튼 클릭 처리
-//   const handleApply = () => {
-//     if (!selectedOption) {
-//       alert("항목을 선택해주세요.");
-//       return;
-//     }
-// console.log("selectedOption", selectedOption)
-//     onSave({
-//       modelId: currentModel.id,
-//       modelTitle: currentModel.title,
-//       selectedOption: selectedOption
-//     });
-    
-//     handleClose();
-//   };
 
-const handleApply = () => {
-  // 선택된 옵션이 없으면 경고
+const handleApply = async () => {
   if (bmCanvasSelectedPopupOptions.length === 0) {
     return;
   }
-  console.log("bmCanvasSelectedPopupOptions",bmCanvasSelectedPopupOptions)
 
-  setBusinessModelCanvasGraphItems(prev => {
-    // 이전 상태가 없거나 배열이 아닌 경우 빈 배열로 초기화
-    const prevItems = Array.isArray(prev) ? [...prev] : [];
-    console.log("prevItems", prevItems)
-    
-    // 현재 모델의 데이터를 찾거나 새로 생성
+  try {
+    // 현재 상태를 기반으로 새로운 데이터 생성
     const currentModelData = {
       id: currentModel.id,
       title: currentModel.title,
       items: [...bmCanvasSelectedPopupOptions],
       content: currentModel.content
     };
-    console.log("currentModelData", currentModelData)
-  
-    // 이전 항목들 중 현재 모델 ID와 일치하는 항목이 있는지 확인
-    const existingIndex = prevItems.findIndex(item => item.id === currentModel.id);
-    if (existingIndex !== -1) {
-      // 기존 항목이 있으면 해당 위치의 항목만 업데이트
-      prevItems[existingIndex] = currentModelData;
-      console.log("prevItems", prevItems)
-      return prevItems; // 여기서 바로 반환
-    } else {
-      // 기존 항목이 없으면 새로 추가
-      return [...prevItems, currentModelData];
-    }
-  
-  
-  });
 
- 
-  setApplyOptions(true);
-  handleClose(true); 
+    // 새로운 상태 계산
+    const newGraphItems = [...businessModelCanvasGraphItems];
+    const existingIndex = newGraphItems.findIndex(item => item.id === currentModel.id);
+    
+    if (existingIndex !== -1) {
+      newGraphItems[existingIndex] = currentModelData;
+    } else {
+      newGraphItems.push(currentModelData);
+    }
+console.log("newGraphItems", newGraphItems)
+    // 서버 업데이트
+    await updateToolOnServer(
+      toolId,
+      {
+        bmCanvasGraphItems: newGraphItems,
+        // bmCanvasInitialGraphData: newGraphItems,
+      },
+      isLoggedIn
+    );
+
+    // 서버 업데이트 성공 후 상태 업데이트
+    setBusinessModelCanvasGraphItems(newGraphItems);
+
+    handleClose();
+  } catch (error) {
+    console.error("Error updating server:", error);
+  }
 };
 
   // 엔터키 입력시 옵션 추가
@@ -227,7 +246,7 @@ const handleApply = () => {
   const isInputFieldEmpty = (id) => !inputValues[id]?.trim();
 
   // 사용자 추가 옵션과 현재 입력 필드를 합쳐서 3개일 때 버튼 숨김
-  const hideAddButton = userOptions.length + inputFields.length >= 3;
+  const hideAddButton = userOptions.length + inputFields.length >= 3 || bmCanvasPopupOptions.length + inputFields.length >= 7;
 
   if (!isVisible) return null;
 
@@ -276,11 +295,8 @@ const handleApply = () => {
                         <CheckBoxButton
                           id={index}
                           name={index}
-                          // checked={selectedOption === option}
                           checked={selectedKeys.includes(option)} // 각 옵션별로 체크
-                          // onChange={() => onCardSelect && onCardSelect(!isSelected)} 
                           onChange={() => onCardSelect && onCardSelect(option)} 
-                          // onChange={() => handleOptionSelect(option)}
                         />
                       </div>
                       <OptionText>{option}</OptionText>
@@ -293,11 +309,17 @@ const handleApply = () => {
                   <OptionItem key={`user-${index}`} onClick={() => handleOptionSelect(option)}>
                     <OptionFlex>
                       <div>
-                        <RadioButton 
+                        {/* <CheckBoxButton 
                           id={`radio-user-${index}`}
                           name="modelOptionGroup"
                           checked={selectedOption === option}
                           onChange={() => handleOptionSelect(option)}
+                        /> */}
+                         <CheckBoxButton
+                          id={index}
+                          name={index}
+                          checked={selectedKeys.includes(option)} // 각 옵션별로 체크
+                          onChange={() => onCardSelect && onCardSelect(option)} 
                         />
                       </div>
                       <OptionText>{option}</OptionText>
@@ -353,9 +375,9 @@ const handleApply = () => {
                 disabled={!selectedOption}
               > */}
                <ApplyButton 
-                isActive={bmCanvasSelectedPopupOptions.length > 0}
+                isActive={selectedKeys.length > 0}
                 onClick={handleApply}
-                disabled={bmCanvasSelectedPopupOptions.length === 0}
+                disabled={selectedKeys.length === 0}
               >
                 적용하기
               </ApplyButton>

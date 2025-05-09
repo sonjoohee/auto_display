@@ -10,10 +10,6 @@ import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
 import { Button } from "../../../../../assets/styles/ButtonStyle";
 import Markdown from "markdown-to-jsx";
 import images from "../../../../../assets/styles/Images";
-import {
-  CustomTextarea,
-  FormBox,
-} from "../../../../../assets/styles/InputStyle";
 import PopupWrap from "../../../../../assets/styles/Popup";
 import {
   ContentsWrap,
@@ -38,18 +34,7 @@ import {
   PROJECT_SAAS,
   QUICK_SURVEY_PROJECT_DESCRIPTION,
   QUICK_SURVEY_ANALYSIS,
-  QUICK_SURVEY_CUSTOM_GUIDE,
-  QUICK_SURVEY_PRESET_DATA,
-  QUICK_SURVEY_PERSONA_GROUP,
-  QUICK_SURVEY_INTERVIEW,
-  QUICK_SURVEY_REPORT,
-  QUICK_SURVEY_STATIC_DATA,
   QUICK_SURVEY_SELECTED_QUESTION,
-  QUICK_SURVEY_SURVEY_METHOD,
-  QUICK_SURVEY_DETAIL_INFO,
-  QUICK_SURVEY_RECRUITING_CONDITION,
-  QUICK_SURVEY_INTERVIEW_MODE_TYPE,
-  QUICK_SURVEY_CUSTOM_QUESTION,
   PERSONA_LIST_SAAS,
   IDEA_EVALUATE_SELECTED_LIST,
   IDEA_EVALUATE_LIST,
@@ -69,9 +54,10 @@ import {
   BUSINESS_MODEL_CANVAS_GRAPH_ITEMS,
   BUSINESS_MODEL_CANVAS_POPUP_OPTIONS,
   BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS,
-SELECTED_CONCEPT_DEFINITION_FINAL_REPORT,
-BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA,
+  SELECTED_CONCEPT_DEFINITION_FINAL_REPORT,
+  BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA,
   BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION,
+  BUSINESS_MODEL_CANVAS_USER_OPTIONS,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -98,13 +84,7 @@ import {
   UserCreditInfo,
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
-
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
-import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
-import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
-import ParetoCurveGraph from "../../../../../components/Charts/ParetoCurveGraph";
-import BusinessModelPopup from "../../../../../components/Charts/BusinessModelPopup";
-import BusinessModelGraph from "../../../../../components/Charts/BusinessModelGraph";
 import MoleculeBusinessModelGraph from "../molecules/MoleculeBusinessModelGraph";
 import MoleculeBusinessModelPopup from "../molecules/MoleculeBusinessModelPopup";
 
@@ -113,6 +93,7 @@ const PageBusinessModelCanvas = () => {
   const navigate = useNavigate();
 
   const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
+  const [bmCanvasUserOptions, setBMCanvasUserOptions] = useAtom(BUSINESS_MODEL_CANVAS_USER_OPTIONS);
   const [selectedConceptDefinition, setSelectedConceptDefinition] = useAtom(BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION);
   const [bmCanvasInitialGraphData, setBMCanvasInitialGraphData] = useAtom(BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA);
   const [selectedConceptDefinitionFinalReport, setSelectedConceptDefinitionFinalReport] = useAtom(SELECTED_CONCEPT_DEFINITION_FINAL_REPORT);
@@ -130,7 +111,6 @@ const PageBusinessModelCanvas = () => {
   const [educationState] = useAtom(EDUCATION_STATE);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
-  const[personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [quickSurveyAnalysis, setQuickSurveyAnalysis] = useAtom(
     QUICK_SURVEY_ANALYSIS
   );
@@ -139,47 +119,10 @@ const PageBusinessModelCanvas = () => {
   const [quickSurveySelectedQuestion, setQuickSurveySelectedQuestion] = useAtom(
     QUICK_SURVEY_SELECTED_QUESTION
   );
-  const [quickSurveyCustomGuide, setQuickSurveyCustomGuide] = useAtom(
-    QUICK_SURVEY_CUSTOM_GUIDE
-  );
-  const [quickSurveyPresetData, setQuickSurveyPresetData] = useAtom(
-    QUICK_SURVEY_PRESET_DATA
-  );
-  const [quickSurveyPersonaGroup, setquickSurveyPersonaGroup] = useAtom(
-    QUICK_SURVEY_PERSONA_GROUP
-  );
-  const [quickSurveyInterview, setQuickSurveyInterview] = useAtom(
-    QUICK_SURVEY_INTERVIEW
-  );
-  const [quickSurveySurveyMethod, setQuickSurveySurveyMethod] = useAtom(
-    QUICK_SURVEY_SURVEY_METHOD
-  );
-  const [quickSurveyDetailInfo] = useAtom(QUICK_SURVEY_DETAIL_INFO);
-  const [quickSurveyRecruitingCondition] = useAtom(
-    QUICK_SURVEY_RECRUITING_CONDITION
-  );
-  const [quickSurveyInterviewModeType] = useAtom(
-    QUICK_SURVEY_INTERVIEW_MODE_TYPE
-  );
-  const [quickSurveyReport, setQuickSurveyReport] =
-    useAtom(QUICK_SURVEY_REPORT);
-  const [quickSurveyStaticData, setQuickSurveyStaticData] = useAtom(
-    QUICK_SURVEY_STATIC_DATA
-  );
-  const [ideaEvaluateSelectedKanoModel, setIdeaEvaluateSelectedKanoModel] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL);
-  const [ideaEvaluateSelectedList, setIdeaEvaluateSelectedList] = useAtom(IDEA_EVALUATE_SELECTED_LIST);
+  const [ideaEvaluateSelectedList, ] = useAtom(IDEA_EVALUATE_SELECTED_LIST);
   const [ideaEvaluateList, setIdeaEvaluateList] = useAtom(IDEA_EVALUATE_LIST);
-  const [quickSurveyProjectDescription, setQuickSurveyProjectDescription] =
-    useAtom(QUICK_SURVEY_PROJECT_DESCRIPTION);
-  const [quickSurveyStaticDataState, setQuickSurveyStaticDataState] = useState(
-    {}
-  );
   const [businessModelCanvasMarkdown, setBusinessModelCanvasMarkdown] = useAtom(BUSINESS_MODEL_CANVAS_MARKDOWN);
-  // const [quickSurveyCustomQuestion, setQuickSurveyCustomQuestion] = useAtom(
-  //   QUICK_SURVEY_CUSTOM_QUESTION
-  // );
   const [businessModelCanvasGraphItems, setBusinessModelCanvasGraphItems] = useAtom(BUSINESS_MODEL_CANVAS_GRAPH_ITEMS);
-  const [ideaEvaluateSelectedKanoModelIndex, setIdeaEvaluateSelectedKanoModelIndex] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState([]);
@@ -187,27 +130,10 @@ const PageBusinessModelCanvas = () => {
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [activeDesignTab, setActiveDesignTab] = useState("emotion");
   const [isLoadingReport, setIsLoadingReport] = useState(false);
-  const [isLoadingDetailSetting, setIsLoadingDetailSetting] = useState(false);
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
   const [projectDescription, setProjectDescription] = useState("");
-  const [descriptionLength, setDescriptionLength] = useState(0);
-  const [recruitingCondition, setRecruitingCondition] = useState("");
-  const [quickSurveyCustomQuestion, setQuickSurveyCustomQuestion] = useState(
-    []
-  );
-  const [
-    customerJourneyMapSelectedPersona,
-    setCustomerJourneyMapSelectedPersona,
-  ] = useState([]);
-  const [customPersonaForm, setCustomPersonaForm] = useState({
-    gender: "",
-    age: [],
-    residence: [],
-    income: [],
-  });
   const [selectBoxStates, setSelectBoxStates] = useState({
     customerList: false,
   });
@@ -222,23 +148,6 @@ const PageBusinessModelCanvas = () => {
     purpose: "",
     content: "",
   });
-  const [selectedValues, setSelectedValues] = useState({
-    gender: "",
-    age: "",
-    residence: "",
-    income: "",
-  });
-  const [interviewModeType, setInterviewModeType] = useState("");
-  const [isLoadingPreset, setIsLoadingPreset] = useState(false);
-  const [selectedPresetCards, setSelectedPresetCards] = useState({});
-  const [shouldRegenerate, setShouldRegenerate] = useState(false);
-  const [selectedPersona, setSelectedPersona] = useState(null);
-  const [showToast, setShowToast] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
-  const [isCustomPopupOpen, setIsCustomPopupOpen] = useState(false);
-  const [isCustomLoading, setIsCustomLoading] = useState(false);
-  const [customerJourneyList, setCustomerJourneyList] = useState([]);
   const [selectedKanoModelData, setSelectedKanoModelData] = useState([]);
   const [showKanoModelList, setshowKanoModelList] = useState(false);
   const [ideaEvaluateSelect, setIdeaEvaluateSelect] = useState([]);
@@ -267,24 +176,8 @@ const PageBusinessModelCanvas = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    // 팝업이 열려있을 때 배경 스크롤 맊음
-    if (showToast) {
-      document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = "15px"; // 스크롤바 자리만큼 패딩 추가
-    }
-    // 팝업이 닫혔을 때
-    else {
-      document.body.style.overflow = "auto";
-      document.body.style.paddingRight = "0";
-    }
 
-    // 컴포넌트 언마운트 시 원래대로 복구
-    return () => {
-      document.body.style.overflow = "auto";
-      document.body.style.paddingRight = "0";
-    };
-  }, [showToast]);
+
 
   useEffect(() => {
     const interviewLoading = async () => {
@@ -329,28 +222,7 @@ const PageBusinessModelCanvas = () => {
           setBusinessModelCanvasMarkdown(businessModelCanvasMarkdown);
         }
         // 비즈니스 정보 설정 (Step 1)
-        if (Object.keys(ideaEvaluateSelectedKanoModel).length > 0) {
-          setSelectedKanoModelData(ideaEvaluateSelectedKanoModel);
-          setshowKanoModelList(true);
         
-        }
-        if (Object.keys(ideaEvaluateSelectedKanoModelIndex).length > 0) {
-          setSelectedPurposes(ideaEvaluateSelectedKanoModelIndex);
-          
-        }
-        if (ideaEvaluateList && ideaEvaluateList.length > 0) {
-          setIdeaEvaluateList(ideaEvaluateList);
-        }
-        if (ideaEvaluateSelectedList && ideaEvaluateSelectedList.length > 0) {
-          setIdeaEvaluateSelectedList(ideaEvaluateSelectedList);
-        }
-        if (Object.keys(ideaEvaluateSelectedListIndex).length > 0) {
-          setIdeaEvaluateSelect(ideaEvaluateSelectedListIndex);
-        }
-
-        if (ideaEvaluateComparisonEducation && ideaEvaluateComparisonEducation.length > 0) {
-          setIdeaEvaluateComparisonEducation(ideaEvaluateComparisonEducation);
-        }
 
         // 활성 탭 설정 (기본값 1)
         if (toolStep === undefined || toolStep === 1) {
@@ -369,92 +241,27 @@ const PageBusinessModelCanvas = () => {
         if(completedStatus) {
           setCompletedStatus(true);
         }
-        // setActiveTab(Math.min((toolStep ?? 1) + 1, 3));
-        // setToolSteps(toolStep ?? 1);
-
-        // 완료된 단계 설정
-        // const completedStepsArray = [];
-        // for (let i = 1; i <= (toolStep ?? 1); i++) {
-        //   completedStepsArray.push(i);
-        // }
-        // setCompletedSteps(completedStepsArray);
-
-        // 페르소나 설정 (Step 2)
-
-        // if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0) {
-        //   setQuickSurveySurveyMethod(quickSurveySurveyMethod);
-        // }
-
-        if (
-          quickSurveyInterviewModeType &&
-          quickSurveyInterviewModeType.length > 0
-        ) {
-          setInterviewModeType(quickSurveyInterviewModeType);
+        
+        if(businessModelCanvasGraphItems && businessModelCanvasGraphItems.length > 0){
+          setBusinessModelCanvasGraphItems(businessModelCanvasGraphItems);
+        }
+        if(bmCanvasInitialGraphData && bmCanvasInitialGraphData.length > 0){
+          setBMCanvasInitialGraphData(bmCanvasInitialGraphData);
+        }
+        if(bmCanvasPopupOptions && bmCanvasPopupOptions.length > 0){
+          setBMCanvasPopupOptions(bmCanvasPopupOptions);
+        }
+        if(bmCanvasSelectedPopupOptions && bmCanvasSelectedPopupOptions.length > 0){
+          setBMCanvasSelectedPopupOptions(bmCanvasSelectedPopupOptions);
+        }
+        if(bmCanvasUserOptions && bmCanvasUserOptions.length > 0){
+          setBMCanvasUserOptions(bmCanvasUserOptions);
         }
 
-        if (
-          quickSurveyDetailInfo &&
-          Object.keys(quickSurveyDetailInfo || {}).length > 0
-        ) {
-          // customPersonaForm 설정
-          setCustomPersonaForm(quickSurveyDetailInfo);
 
-          // selectedValues용으로 데이터 가공
-          const processedValues = {
-            gender:
-              quickSurveyDetailInfo?.gender === "male"
-                ? "남성"
-                : quickSurveyDetailInfo?.gender === "female"
-                ? "여성"
-                : quickSurveyDetailInfo?.gender || "", // "상관없음"은 그대로
+        
+        
 
-            age: Array.isArray(quickSurveyDetailInfo?.age)
-              ? quickSurveyDetailInfo?.age[0] === "상관없음"
-                ? "상관없음"
-                : quickSurveyDetailInfo?.age.join(", ")
-              : "",
-
-            residence: Array.isArray(quickSurveyDetailInfo?.residence)
-              ? quickSurveyDetailInfo?.residence[0] === "상관없음"
-                ? "상관없음"
-                : quickSurveyDetailInfo?.residence.join(", ")
-              : "",
-
-            income: Array.isArray(quickSurveyDetailInfo.income)
-              ? quickSurveyDetailInfo.income[0] === "상관없음"
-                ? "상관없음"
-                : quickSurveyDetailInfo.income.join(", ")
-              : "",
-          };
-
-          setSelectedValues(processedValues);
-        }
-
-        if (
-          quickSurveyRecruitingCondition &&
-          quickSurveyRecruitingCondition.length > 0
-        ) {
-          setRecruitingCondition(quickSurveyRecruitingCondition);
-        }
-
-        if (quickSurveyPersonaGroup && quickSurveyPersonaGroup.length > 0) {
-          setquickSurveyPersonaGroup(quickSurveyPersonaGroup);
-        }
-
-        if (quickSurveyInterview && quickSurveyInterview.length > 0) {
-          setQuickSurveyInterview(quickSurveyInterview);
-        }
-
-        if (quickSurveyReport && quickSurveyReport.length > 0) {
-          setQuickSurveyReport(quickSurveyReport);
-        }
-        if (
-          quickSurveyStaticData &&
-          Object.keys(quickSurveyStaticData).length > 0
-        ) {
-          setQuickSurveyStaticData(quickSurveyStaticData);
-          setQuickSurveyStaticDataState(quickSurveyStaticData);
-        }
       }
     };
     interviewLoading();
@@ -525,34 +332,7 @@ const PageBusinessModelCanvas = () => {
   //   });
    
   // };
-  const handleCheckboxChange = (ideaId) => {
-    if (toolSteps >= 1) {
-      return;
-    }
-    setSelectedKeys((prev) => {
-      if (prev.includes(ideaId)) {
-        // 이미 선택된 아이템이면 제거
-        const newSelected = prev.filter((id) => id !== ideaId);
-        // 선택된 옵션에서도 제거
-        setBMCanvasSelectedPopupOptions(prevOptions => 
-          prevOptions.filter((_, index) => index !== prev.indexOf(ideaId))
-        );
-        return newSelected;
-      } else {
-        // 새로운 아이템 추가
-        if (prev.length >= 3) {
-          return prev; // 3개 이상이면 현재 상태 유지
-        }
-        const newSelected = [...prev, ideaId];
-        // 선택된 옵션 추가
-        setBMCanvasSelectedPopupOptions(prevOptions => [
-          ...prevOptions,
-          bmCanvasPopupOptions[ideaId] // ideaId를 인덱스로 사용
-        ]);
-        return newSelected;
-      }
-    });
-  };
+  
 
 // 다음 단계로 이동하는 함수
   const handleNextStep = (currentStep) => {
@@ -851,19 +631,21 @@ const PageBusinessModelCanvas = () => {
       // setIdeaEvaluateComparisonEducation(response.response.idea_evaluation_comparison_education)
       
 
-      // await updateToolOnServer(
-      //   toolId,
-      //   {
-      //     ideaEvaluateComparisonEducation: response.response.idea_evaluation_comparison_education,
-      //     completedStep: 3,
-      //     completedStatus: true,
-      //   },
-      //   isLoggedIn
-      // );
-      // setCompletedStatus(true);
+      await updateToolOnServer(
+        toolId,
+        {
+          bmCanvasGraphItems: dummydata,
+          bmCanvasInitialGraphData: dummydata,
+          completedStep: 2, 
+          completedStatus: true,
+         
+        },
+        isLoggedIn
+      );
+      setCompletedStatus(true);
 
 
-      // setToolSteps(3);
+      setToolSteps(1);
       // setCompletedSteps([...completedSteps, 3]);
     } catch (error) {
       setShowPopupError(true);
@@ -887,18 +669,91 @@ const PageBusinessModelCanvas = () => {
     }
   };
 
+  // const handleCheckboxChange = (ideaId) => {
+  //   // if (toolSteps >= 1) {
+  //   //   return;
+  //   // }
+  
+  //   setSelectedKeys((prev) => {
+  //     if (prev.includes(ideaId)) {
+  //       // 이미 선택된 아이템이면 제거
+  //       const newSelected = prev.filter((id) => id !== ideaId);
+  //       // 선택된 옵션에서도 제거
+  //       setBMCanvasSelectedPopupOptions(prevOptions => 
+  //         prevOptions.filter((_, index) => index !== prev.indexOf(ideaId))
+  //       );
+  //       return newSelected;
+  //     } else {
+  //       // 새로운 아이템 추가
+  //       if (prev.length >= 3) {
+  //         return prev; // 3개 이상이면 현재 상태 유지
+  //       }
+  //       const newSelected = [...prev, ideaId];
+  //       // 선택된 옵션 추가
+  //       setBMCanvasSelectedPopupOptions(prevOptions => {
+  //         // 중복 체크
+  //         if (prevOptions.includes(ideaId)) {
+  //           return prevOptions; // 이미 있는 값이면 그대로 반환
+  //         }
+  //         const updatedOptions = [...prevOptions, ideaId];
+  //         console.log("Updated options:", updatedOptions);
+  //         return updatedOptions;
+  //       });
+  //       return newSelected;
+  //     }
+  //   });
+  // };
 
+  const handleCheckboxChange = (ideaId) => {
+    setSelectedKeys((prev) => {
+      // prev가 배열이 아닌 경우 빈 배열로 초기화
+      const currentSelected = Array.isArray(prev) ? prev : [];
+      
+      if (currentSelected.includes(ideaId)) {
+        // 이미 선택된 아이템이면 제거
+        const newSelected = currentSelected.filter((id) => id !== ideaId);
+        // 선택된 옵션에서도 제거
+        setBMCanvasSelectedPopupOptions(prevOptions => {
+          const currentOptions = Array.isArray(prevOptions) ? prevOptions : [];
+          return currentOptions.filter((_, index) => index !== currentSelected.indexOf(ideaId));
+        });
+        return newSelected;
+      } else {
+        // 새로운 아이템 추가
+        if (currentSelected.length >= 3) {
+          return currentSelected; // 3개 이상이면 현재 상태 유지
+        }
+        const newSelected = [...currentSelected, ideaId];
+        // 선택된 옵션 추가
+        setBMCanvasSelectedPopupOptions(prevOptions => {
+          const currentOptions = Array.isArray(prevOptions) ? prevOptions : [];
+          // 중복 체크
+          if (currentOptions.includes(ideaId)) {
+            return currentOptions; // 이미 있는 값이면 그대로 반환
+          }
+          const updatedOptions = [...currentOptions, ideaId];
+          console.log("Updated options:", updatedOptions);
+          return updatedOptions;
+        });
+        return newSelected;
+      }
+    });
+  };
   
   const handleShowPopup = async (id) => {
     setShowPopup(true);
+    setSelectedKeys([])
 
     // 해당 ID의 데이터가 이미 있는지 확인
+
   const existingData = bmCanvasInitialGraphData.find(item => item.id === id);
+  const selectedData = businessModelCanvasGraphItems.find(item => item.id === id);
   
   if (existingData) {
     // // 이미 데이터가 있으면 로딩 없이 바로 보여주기
     setBMCanvasPopupOptions(existingData.items);
-    setBMCanvasSelectedPopupOptions(existingData.items);
+    setBMCanvasSelectedPopupOptions(selectedData.items);
+    setSelectedKeys(selectedData.items);
     return;
   }
     setIsLoading(true);
@@ -999,6 +854,12 @@ const PageBusinessModelCanvas = () => {
       title: "고객 세그먼트",
       items: ["개인 소비자", "기업 고객", "소상공인"],
       content: "고객 세그먼트는 비즈니스의 핵심 고객층을 정의합니다. 개인 소비자, 기업 고객, 소상공인 등 다양한 고객 그룹을 대상으로 합니다."
+    },
+    {
+      id: 4,
+      title: "가치 제안",
+      items: ["혁신적인 제품/서비스", "맞춤형 솔루션", "비용 절감"],
+      content: "가치 제안은 고객에게 제공하는 핵심 가치를 설명합니다. 혁신적인 제품과 서비스, 맞춤형 솔루션, 비용 절감 등이 포함됩니다."
     }
    ]
 
@@ -1011,37 +872,53 @@ const PageBusinessModelCanvas = () => {
   //  console.log("Popup Options:", selectedData.items);  // 팝업 옵션 확인
  }
 
-   // 팝업의 옵션 업데이트
+ 
+  const newGraphItems = [...businessModelCanvasGraphItems];
+const newInitialGraphData = [...bmCanvasInitialGraphData];
 
-    // 기존 데이터에 새로운 데이터 추가
-    setBusinessModelCanvasGraphItems(prev => {
-      // 이미 해당 ID의 데이터가 있는지 확인
-      const exists = prev.some(item => item.id === id);
-      if (exists) {
-        // 있다면 해당 ID의 데이터만 업데이트
-        return prev.map(item => 
-          item.id === id ? dummydata[0] : item  // dummydata[0]로 수정
-        );
-      } else {
-        // 없다면 새로운 데이터 추가
-        return [...prev, dummydata[0]];  // dummydata[0]로 수정
-      }
-    });
+// 이미 해당 ID의 데이터가 있는지 확인
+const exists = newGraphItems.some(item => item.id === id);
+if (exists) {
+  // 있다면 해당 ID의 데이터만 업데이트
+  const updatedGraphItems = newGraphItems.map(item => 
+    item.id === id ? dummydata[0] : item
+  );
+  const updatedInitialData = newInitialGraphData.map(item => 
+    item.id === id ? dummydata[0] : item
+  );
 
-    setBMCanvasInitialGraphData(prev => {
-      // 이미 해당 ID의 데이터가 있는지 확인
-      const exists = prev.some(item => item.id === id);
-      if (exists) {
-        // 있다면 해당 ID의 데이터만 업데이트
-        return prev.map(item => 
-          item.id === id ? dummydata[0] : item  // dummydata[0]로 수정
-        );
-      } else {
-        // 없다면 새로운 데이터 추가
-        return [...prev, dummydata[0]];  // dummydata[0]로 수정
-      }
-    });
+  // 서버 업데이트
+  await updateToolOnServer(
+    toolId,
+    {
+      bmCanvasGraphItems: updatedGraphItems,
+      bmCanvasInitialGraphData: updatedInitialData,
+    },  
+    isLoggedIn
+  );
 
+  // 서버 업데이트 성공 후 상태 업데이트
+  setBusinessModelCanvasGraphItems(updatedGraphItems);
+  setBMCanvasInitialGraphData(updatedInitialData);
+} else {
+  // 없다면 새로운 데이터 추가
+  const updatedGraphItems = [...newGraphItems, dummydata[0]];
+  const updatedInitialData = [...newInitialGraphData, dummydata[0]];
+
+  // 서버 업데이트
+  await updateToolOnServer(
+    toolId,
+    {
+      bmCanvasGraphItems: updatedGraphItems,
+      bmCanvasInitialGraphData: updatedInitialData,
+    },  
+    isLoggedIn
+  );
+
+  // 서버 업데이트 성공 후 상태 업데이트
+  setBusinessModelCanvasGraphItems(updatedGraphItems);
+  setBMCanvasInitialGraphData(updatedInitialData);
+}
   } catch (error) {
     console.error("Error fetching data:", error);
   } finally {
@@ -1223,6 +1100,19 @@ const PageBusinessModelCanvas = () => {
       setGraphData(paretoData);
     }
   }, [ideaEvaluateComparisonEducation]);
+
+  // MoleculeBusinessModelPopup.jsx
+const businessModelItems = [
+  { id: 1, title: "고객 세그먼트", value: "1고객 세그먼트" },
+  { id: 2, title: "가치 제안", value: "2가치 제안" },
+  { id: 3, title: "채널", value: "3채널" },
+  { id: 4, title: "고객관계", value: "4고객관계" },
+  { id: 5, title: "수익원", value: "5수익원" },
+  { id: 6, title: "핵심자원", value: "6핵심자원" },
+  { id: 7, title: "핵심활동", value: "7핵심활동" },
+  { id: 8, title: "핵심파트너십", value: "8핵심파트너십" },
+  { id: 9, title: "비용구조", value: "9비용구조" }
+];
   
 
   return (
@@ -1421,7 +1311,7 @@ const PageBusinessModelCanvas = () => {
                           Round
                           onClick={handleSubmitReport}
                           // disabled={
-                          
+                          //  toolSteps >= 1 || isLoading
                           // }
                         >
                           아이디어 방향성으로 전환
@@ -1498,7 +1388,7 @@ const PageBusinessModelCanvas = () => {
                           <IdeaBox>
                           <HeaderTitle>
                             <NumberCircle>{selectedBoxId}</NumberCircle>
-                            <HeaderTitleText>{selectedBoxId}</HeaderTitleText>
+                            <HeaderTitleText> {businessModelItems.find(item => item.id === selectedBoxId)?.title || ''}</HeaderTitleText>
                           </HeaderTitle>
               
                             <IdeaContent>

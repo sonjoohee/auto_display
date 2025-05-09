@@ -659,6 +659,7 @@ export const BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA = atom([]);
 export const BUSINESS_MODEL_CANVAS_POPUP_OPTIONS = atom([]);
 export const BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS = atom([]);
 export const SELECTED_CONCEPT_DEFINITION_FINAL_REPORT = atom([]);
+export const BUSINESS_MODEL_CANVAS_USER_OPTIONS = atom([]);
 
 //!saas
 // 프로젝트 생성 페이지
