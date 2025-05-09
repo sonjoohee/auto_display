@@ -1209,7 +1209,7 @@ const PageNps = () => {
       // 현재 URL 확인
       const currentUrl = window.location.href;
       // console.log("currentUrl", currentUrl);
-      if (currentUrl.toLowerCase().includes("NPS")) {
+      if (currentUrl.toLowerCase().includes("nps")) {
         // 세션 스토리지에서 마지막 URL 가져오기
         // console.log("세션 스토리지에서 마지막 URL 가져오기");
 
