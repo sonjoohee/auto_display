@@ -875,7 +875,7 @@ const PageIdeaGeneration = () => {
                         </BoxWrap>
                       ) : (
                         <div className="content">
-                          <Title style={{ marginTop: "28px" }}>
+                          <Title style={{ marginTop: "28px", marginBottom: "-20px" }}>
                             <Body1 color="gray700">
                               아이디어 발산의 주제어를 선택하세요 (8개 필수
                               선택)
