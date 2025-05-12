@@ -592,7 +592,7 @@ const PageIdeaEvaluate = () => {
 
   const getTableData = () => {
     const matchingIdea = ideaEvaluateSelectedList.reduce((obj, key, index) => {
-      obj[key] = ideaEvaluateSelectedListIndex[index];
+      obj[key] = ideaEvaluateSelect[index];
       return obj;
     }, {});
 
