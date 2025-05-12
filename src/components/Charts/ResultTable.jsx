@@ -11,62 +11,7 @@ import { palette } from "../../assets/styles/Palette";
  * @param {number} bodyColumnGap - 본문 영역의 아이디어명과 카노모델 속성 사이의 간격 (px 단위)
  */
 const ResultTable = ({
-  data = [
-    { 
-      rank: 1, 
-      ideaName: "개인 정보 보호 및 보안", 
-      kanoAttribute: "Attractive", 
-      percentage: 24 
-    },
-    { 
-      rank: 2, 
-      ideaName: "모바일 & 반응형 웹 최적화", 
-      kanoAttribute: "One-dementional", 
-      percentage: 19 
-    },
-    { 
-      rank: 3, 
-      ideaName: "원자력 용어 해설 콘텐츠", 
-      kanoAttribute: "One-dementional", 
-      percentage: 12 
-    },
-    { 
-      rank: 4, 
-      ideaName: "흥미로운 원자력 이해 콘텐츠", 
-      kanoAttribute: "Must-be", 
-      percentage: 12 
-    },
-    { 
-      rank: 5, 
-      ideaName: "시각화 기반 정보 접근성 강화", 
-      kanoAttribute: "One-dementional", 
-      percentage: 12 
-    },
-    { 
-      rank: 6, 
-      ideaName: "IT 기술 트렌드 반영", 
-      kanoAttribute: "One-dementional", 
-      percentage: 12 
-    },
-    { 
-      rank: 7, 
-      ideaName: "맞춤형 정보 제공 시스템", 
-      kanoAttribute: "One-dementional", 
-      percentage: 12 
-    },
-    { 
-      rank: 8, 
-      ideaName: "시민 참여형 정보 플랫폼", 
-      kanoAttribute: "Must-be", 
-      percentage: 12 
-    },
-    { 
-      rank: 9, 
-      ideaName: "지역 경제 활성화 연계", 
-      kanoAttribute: "Must-be", 
-      percentage: 12 
-    }
-  ],
+  data,
   headerColumnGap = 308,
   bodyColumnGap = 180
 }) => {
