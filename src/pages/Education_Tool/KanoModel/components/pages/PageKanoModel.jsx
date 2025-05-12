@@ -48,7 +48,8 @@ import {
   EDUCATION_STATE,
   USER_CREDITS,
   CREDIT_CREATE_TOOL_LOADED,
-  EDUCATION_TOOL_COMPLETED_STATUS
+  EDUCATION_TOOL_COMPLETED_STATUS,
+  KANO_MODEL_INSIGHT
 } from "../../../../AtomStates";
 import {
   H4,
@@ -166,6 +167,7 @@ const getQuadrantName = (x, y) => {
 const PageKanoModel = () => {
   const navigate = useNavigate();
 
+  const [kanoModelInsight, setKanoModelInsight] = useAtom(KANO_MODEL_INSIGHT);
   const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [eventState] = useAtom(EVENT_STATE);
@@ -293,7 +295,6 @@ const PageKanoModel = () => {
         if (selectedKanoModelIdea) {
           setSelectedKanoModelIdea(selectedKanoModelIdea);
         }
-
         if (kanoModelClustering) {
           setKanoModelClustering(kanoModelClustering);
         }
@@ -431,6 +432,11 @@ const PageKanoModel = () => {
     try {
       const clusteringData = {
         type: "ix_kano_model_clustering_education",
+        business: {
+          business: businessDescription,
+          business_model: project?.businessModel || "",
+          sector: project?.industryType || "",
+        },
         idea_list: flattenedIdeaList,
       };
 
@@ -443,34 +449,39 @@ const PageKanoModel = () => {
       let reportRetryCount = 0;
       const reportMaxRetries = 10;
 
-      // while (reportRetryCount < reportMaxRetries) {
-      //   try {
-      //     responseReport = await EducationToolsRequest(
-      //       reportData,
-      //       isLoggedIn
-      //     );
+      while (reportRetryCount < reportMaxRetries && 
+              !responseReport &&
+              !responseReport?.response &&
+              !responseReport?.response?.kano_model_evaluation_education &&
+              !responseReport?.response?.kano_model_evaluation_education.attractive &&
+              responseReport?.response?.kano_model_evaluation_education.attractive.length === 0 &&
+              !responseReport?.response?.kano_model_evaluation_education.must_be &&
+              responseReport?.response?.kano_model_evaluation_education.must_be.length === 0 &&
+              !responseReport?.response?.kano_model_evaluation_education.one_dimensional &&
+              responseReport?.response?.kano_model_evaluation_education.one_dimensional.length === 0 &&
+              !responseReport?.response?.kano_model_evaluation_education.indifferent &&
+              responseReport?.response?.kano_model_evaluation_education.indifferent.length === 0 &&
+              !responseReport?.response?.kano_model_insight &&
+              !responseReport?.response?.kano_model_insight.total_summary &&
+              !responseReport?.response?.kano_model_insight.detailed_analysis &&
+              !responseReport?.response?.kano_model_insight.total_evaluation
+            ) {
+        try {
+          responseReport = await EducationToolsRequest(
+            clusteringData,
+            isLoggedIn,
+            signal
+          );
 
-      //     // 응답 형식 검증
-      //     if (
-      //       responseReport.response &&
-      //       responseReport.response.quick_survey_report &&
-      //       responseReport.response.statistics_data
-      //     ) {
-      //       break; // 올바른 응답 형식이면 루프 종료
-      //     }
-      //     reportRetryCount++;
-      //   } catch (error) {
-      //     reportRetryCount++;
-      //     if (reportRetryCount >= reportMaxRetries) throw error;
-      //   }
-      // }
-
-      if (reportRetryCount >= reportMaxRetries) {
-        throw new Error(
-          "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
-        );
+          reportRetryCount++;
+          if (reportRetryCount >= reportMaxRetries) throw new Error("올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다.");
+        } catch (error) {
+          throw error;
+        }
       }
-
+      setKanoModelInsight(
+        responseReport.response.kano_model_insight
+      );
       setKanoModelClustering(
         responseReport.response.kano_model_evaluation_education
       );
@@ -489,6 +500,7 @@ const PageKanoModel = () => {
           projectId: project._id,
           completedStep: 1,
           kanoModelSelectedIdea: selectedKanoModelIdea,
+          kanoModelInsight: responseReport.response.kano_model_insight,
           kanoModelClustering:
             responseReport.response.kano_model_evaluation_education,
           kanoModelClusteringName: Object.values(
@@ -711,8 +723,7 @@ const PageKanoModel = () => {
       await updateToolOnServer(
         toolId,
         {
-          kanoModelProductAnalysis:
-            response.response.kano_model_product_analysis_education,
+          kanoModelProductAnalysis: response.response.kano_model_product_analysis_education,
           kanoModelEvaluation: flattenedEvaluation,
           kanoModelGraphData: graphData, // Save graph data
           kanoModelReportData: calculatedGroupedLegendData, // Save calculated report data
@@ -1236,8 +1247,43 @@ const PageKanoModel = () => {
                       <InsightAnalysis>
                         <KanoModelGraph />
                       </InsightAnalysis>
+
+                      <IdeaContainer>
+                        <IdeaBox>
+                          <IdeaTitle>총평</IdeaTitle>
+                          <IdeaContent>
+                            <IdeaText>
+                              {kanoModelInsight.total_summary}
+                            </IdeaText>  
+                          </IdeaContent>
+
+                          <Divider />
+                          <IdeaTitle>상세분석</IdeaTitle>
+                          <IdeaContent>
+                            <IdeaText>
+                              {kanoModelInsight.detailed_analysis.must_be}
+                            </IdeaText>
+                            <IdeaText>
+                              {kanoModelInsight.detailed_analysis.one_dimensional}
+                            </IdeaText>
+                            <IdeaText>
+                              {kanoModelInsight.detailed_analysis.attractive}
+                            </IdeaText>
+                            <IdeaText>
+                              {kanoModelInsight.detailed_analysis.indifferent}
+                            </IdeaText>
+                          </IdeaContent>
+
+                          <Divider />
+                          <IdeaTitle>전략적 제언</IdeaTitle>
+                          <IdeaContent>
+                            <IdeaText>
+                              {kanoModelInsight.total_evaluation}
+                            </IdeaText>
+                          </IdeaContent>
+                        </IdeaBox>
+                      </IdeaContainer>
                     </>
-                    
                   )}
                   {completedStatus && (
                           <Button
@@ -1904,4 +1950,52 @@ export const DiagramContainer = styled.div`
   justify-content: center;
   align-items: center;
   overflow: visible;
+`;
+
+const IdeaContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  padding: 20px;
+`;
+
+const IdeaBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: ${palette.white};
+  border: 1px solid ${palette.outlineGray};
+  border-radius: 8px;
+  text-align: left;
+`;
+
+const IdeaTitle = styled.h3`
+  font-family: "Pretendard", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: ${palette.gray800};
+  margin: 0;
+`;
+
+const IdeaContent = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const IdeaText = styled.p`
+  font-family: "Pretendard", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: ${palette.gray600};
+  margin: 0;
+`;
+
+const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${palette.outlineGray};
 `;
