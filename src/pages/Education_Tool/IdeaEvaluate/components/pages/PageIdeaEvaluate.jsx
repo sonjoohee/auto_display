@@ -590,6 +590,34 @@ const PageIdeaEvaluate = () => {
     }
   };
 
+  const getTableData = () => {
+    const matchingIdea = ideaEvaluateSelectedList.reduce((obj, key, index) => {
+      obj[key] = ideaEvaluateSelectedListIndex[index];
+      return obj;
+    }, {});
+
+    const tableData = ideaEvaluateGraphData?.map((data, index) => {
+      const indexInfo = matchingIdea[data.name];
+
+      let kanoAttribute = "Attractive";
+      if (indexInfo) {
+        if (indexInfo.includes("one_dimensional")) {
+          kanoAttribute = "One-dementional";
+        } else if (indexInfo.includes("must_be")) {
+          kanoAttribute = "Must-be";
+        }
+      }
+
+      return {
+        rank: index + 1,
+        ideaName: data.name,
+        kanoAttribute: kanoAttribute,
+        percentage: Math.round(data.value*100),
+      };
+    }) || [];
+    return tableData;
+  };
+
   const abortControllerRef = useRef(null);
 
   useEffect(() => {
@@ -1394,7 +1422,7 @@ const PageIdeaEvaluate = () => {
                             아이디어 평가 결과
                           </H4>
                         </div>
-                        <ResultTable data={ideaEvaluateSelectedList} />
+                        <ResultTable data={getTableData()} />
                       </InsightAnalysis>
 
                       <InsightAnalysis>
