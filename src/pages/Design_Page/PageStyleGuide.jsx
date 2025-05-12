@@ -105,6 +105,7 @@ import MultipleQustionSelection from "../../components/Charts/MultipleQustionSel
 import ParticipationTeamList from "../../components/Charts/ParticipationTeamList";
 import ParticipationTeamList2 from "../../components/Charts/ParticipationTeamList2";
 import NoticeBoxContent from "../../components/Charts/NoticeBoxContent";
+import ResultTable from "../../components/Charts/ResultTable";
 import { useAtom } from "jotai";
 import { KANO_MODEL_GRAPH_DATA } from "../../pages/AtomStates";
 
@@ -306,6 +307,7 @@ const PageStyleGuide = () => {
           <ParticipationTeamList />
           <ParticipationTeamList2 />
           <NoticeBoxContent />
+          <ResultTable />
         </FlexContainer>
         <MacroSegTag />
         <StakeHolderTag />
