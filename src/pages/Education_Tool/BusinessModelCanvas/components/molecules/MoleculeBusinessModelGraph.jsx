@@ -11,8 +11,6 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
   const [bmCanvasPopupOptions, setBMCanvasPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_POPUP_OPTIONS);
   const [businessModelCanvasGraphItems, setBusinessModelCanvasGraphItems] = useAtom(BUSINESS_MODEL_CANVAS_GRAPH_ITEMS);
 
-  // const [showPopup, setShowPopup] = useState(false);
-  // 9개의 비즈니스 모델 영역 정의
 
   const businessAreas = [
     { id: 8, title: '핵심 파트너십' },
@@ -27,44 +25,74 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
   ];
 
 
+  // const handleBoxClick = (id) => {
+  //   // 첫 번째 박스는 항상 클릭 가능
+  //   if (id === 1) {
+  //     setSelectedBoxId(id);
+  //     setShowPopup(id);
+  //     return;
+  //   }
+  
+  //   // 이전 박스의 데이터 가져오기 (id-2: 0번, 1번 ...)
+  //   const previousBox = businessModelCanvasGraphItems[id - 2];
+  //   const isPreviousBoxFilled = previousBox && Object.values(previousBox).length > 0;
+  
+  //   if (!isPreviousBoxFilled) {
+  //     return; // 팝업이 열리지 않음
+  //   }
+  
+  //   setSelectedBoxId(id);
+  //   setShowPopup(id);
+  // };
+  
+  // const isBoxActive = (id) => {
+  //   if (id === 1) return true;
+  
+  //   const previousBox = businessModelCanvasGraphItems[id - 2];
+  //   const isPreviousBoxFilled = previousBox && Object.values(previousBox).length > 0;
+  
+  //   if (!isPreviousBoxFilled) {
+  //     return false;
+  //   }
+  
+  //   return true;
+  // };
+
   const handleBoxClick = (id) => {
-    // 첫 번째 박스는 항상 클릭 가능
-    if (id === 1) {
-      setSelectedBoxId(id);
-      setShowPopup(id);
+    // id가 1이나 2일 때는 클릭 불가
+    if (id === 1 || id === 2) {
       return;
     }
   
-    // 이전 박스의 items가 채워져 있는지 확인
-    const previousBox = businessModelCanvasGraphItems.find(item => item.id === id - 1); // 이전 박스
-    const isPreviousBoxFilled = previousBox?.items && previousBox.items.length > 0;
- 
-    // 이전 박스가 없거나 items가 비어있으면 클릭 불가
+    // 이전 박스의 데이터 가져오기 (id-2: 0번, 1번 ...)
+    const previousBox = businessModelCanvasGraphItems[id - 2];
+    const isPreviousBoxFilled = previousBox && Object.values(previousBox).length > 0;
+  
     if (!isPreviousBoxFilled) {
       return; // 팝업이 열리지 않음
     }
-    
+  
     setSelectedBoxId(id);
     setShowPopup(id);
   };
   
-  // 박스의 활성화 상태를 확인하는 함수
   const isBoxActive = (id) => {
-    // 첫 번째 박스는 항상 활성화
-    if (id === 1) return true;
-    
-    // 이전 박스의 items가 채워져 있는지 확인
-    const previousBox = businessModelCanvasGraphItems.find(item => item.id === id - 1); // 이전 박스
-
-    const isPreviousBoxFilled = previousBox?.items && previousBox.items.length > 0;
-
-    // 이전 박스가 없거나 items가 비어있으면 비활성화
+    // id가 1이나 2일 때는 비활성화
+    if (id === 1 || id === 2) {
+      return false;
+    }
+  
+    const previousBox = businessModelCanvasGraphItems[id - 2];
+    const isPreviousBoxFilled = previousBox && Object.values(previousBox).length > 0;
+  
     if (!isPreviousBoxFilled) {
       return false;
     }
-    
+  
     return true;
   };
+
+
   return (
     <GraphContainer>
       <TopSection>
@@ -74,7 +102,11 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
           <ModelBox 
             title={businessAreas[0].title} 
             id={businessAreas[0].id}
-            items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[0].id)?.items || []}
+            // items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[0].id)?.items || []}
+            items={Array.isArray(businessModelCanvasGraphItems[7]) ? 
+              businessModelCanvasGraphItems[7].slice(0, 7).map(item => item.title) : 
+              []
+            }
             onClick={() => handleBoxClick(businessAreas[0].id)}
             isSelected={selectedBoxId === businessAreas[0].id}
             isActive={isBoxActive(businessAreas[0].id)}
@@ -91,7 +123,12 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
             <ModelBox 
               title={businessAreas[1].title} 
               id={businessAreas[1].id}
-              items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[1].id)?.items || []}
+              // items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[1].id)?.items || []}
+              items={
+                businessModelCanvasGraphItems[6]?.business_model_canvas_report_education
+                  ? businessModelCanvasGraphItems[6].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                  : []
+              }
               onClick={() => handleBoxClick(businessAreas[1].id)}
               isSelected={selectedBoxId === businessAreas[1].id}
               isActive={isBoxActive(businessAreas[1].id)}
@@ -104,7 +141,12 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
             <ModelBox 
               title={businessAreas[2].title} 
               id={businessAreas[2].id}
-              items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[2].id)?.items || []}
+              // items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[2].id)?.items || []}
+              items={
+                businessModelCanvasGraphItems[5]?.business_model_canvas_report_education
+                  ? businessModelCanvasGraphItems[5].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                  : []
+              }
               onClick={() => handleBoxClick(businessAreas[2].id)}
               isSelected={selectedBoxId === businessAreas[2].id}
               isActive={isBoxActive(businessAreas[2].id)}
@@ -127,7 +169,16 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
             <ModelBox 
               title={businessAreas[3].title} 
               id={businessAreas[3].id}
-              items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[3].id)?.items || []}
+              // items={
+              //   businessModelCanvasGraphItems?.value_propositions
+              //     ? Object.values(businessModelCanvasGraphItems.value_propositions).slice(0, 7)
+              //     : []
+              // }
+              items={
+                Array.isArray(businessModelCanvasGraphItems) && businessModelCanvasGraphItems[1]
+                  ? Object.values(businessModelCanvasGraphItems[1]).slice(0, 7)
+                  : []
+              }
               onClick={() => handleBoxClick(businessAreas[3].id)}
               isSelected={selectedBoxId === businessAreas[3].id}
               isActive={isBoxActive(businessAreas[3].id)}
@@ -143,7 +194,16 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
             <ModelBox 
               title={businessAreas[4].title} 
               id={businessAreas[4].id}
-              items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[4].id)?.items || []}
+              // items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[4].id)?.items || []}
+              // items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[4].id)?.items.flatMap(item => 
+              //   item.examples.map(example => example.split(':')[0].trim())
+              // ) || []}
+              items={
+                businessModelCanvasGraphItems[3]?.business_model_canvas_report_education
+                  ? businessModelCanvasGraphItems[3].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                  : []
+              }
+    
               onClick={() => handleBoxClick(businessAreas[4].id)}
               isSelected={selectedBoxId === businessAreas[4].id}
               isActive={isBoxActive(businessAreas[4].id)}
@@ -156,7 +216,13 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
             <ModelBox 
               title={businessAreas[5].title} 
               id={businessAreas[5].id}
-              items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[5].id)?.items || []}
+              // items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[5].id)?.items || []}
+              // items={businessModelCanvasGraphItems[1]?.map(item => item.title) || []}
+              items={
+                businessModelCanvasGraphItems[2]?.business_model_canvas_report_education
+                  ? businessModelCanvasGraphItems[2].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                  : []
+              }
               onClick={() => handleBoxClick(businessAreas[5].id)}
               isSelected={selectedBoxId === businessAreas[5].id}
               isActive={isBoxActive(businessAreas[5].id)}
@@ -173,7 +239,18 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
           <ModelBox 
             title={businessAreas[6].title} 
             id={businessAreas[6].id}
-            items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[6].id)?.items || []}
+            // items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[6].id)?.items || []}
+          
+            // items={
+            //   businessModelCanvasGraphItems?.customer_segments
+            //     ? Object.values(businessModelCanvasGraphItems.customer_segments).slice(0, 7)
+            //     : []
+            // }
+            items={
+              Array.isArray(businessModelCanvasGraphItems) && businessModelCanvasGraphItems[0]
+                ? Object.values(businessModelCanvasGraphItems[0]).slice(0, 7)
+                : []
+            }
             onClick={() => handleBoxClick(businessAreas[6].id)}
             isSelected={selectedBoxId === businessAreas[6].id}
             isActive={isBoxActive(businessAreas[6].id)}
@@ -182,13 +259,7 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
               opacity: isBoxActive(businessAreas[6].id) ? 1 : 0.7
             }}
           />
-          {/* <ModelBox 
-            title={businessAreas[6].title} 
-            id={businessAreas[6].id}
-            items={graphItems[businessAreas[6].id] || []}
-            onClick={() => handleBoxClick(businessAreas[6].id)}
-            isSelected={selectedBoxId === businessAreas[6].id}
-          /> */}
+    
         </RightColumn>
       </TopSection>
 
@@ -197,7 +268,13 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
         <ModelBox 
           title={businessAreas[7].title} 
           id={businessAreas[7].id}
-          items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[7].id)?.items || []}
+          // items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[7].id)?.items || []}
+          items={
+            businessModelCanvasGraphItems[8]?.business_model_canvas_report_education
+              ? businessModelCanvasGraphItems[8].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+              : []
+          }
+          // items={businessModelCanvasGraphItems[1]?.map(item => item.title) || []}
           onClick={() => handleBoxClick(businessAreas[7].id)}
           isSelected={selectedBoxId === businessAreas[7].id}
           isActive={isBoxActive(businessAreas[7].id)}
@@ -209,7 +286,12 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
         <ModelBox 
           title={businessAreas[8].title} 
           id={businessAreas[8].id}
-          items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[8].id)?.items || []}
+          // items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[8].id)?.items || []}
+          items={
+            businessModelCanvasGraphItems[4]?.business_model_canvas_report_education
+              ? businessModelCanvasGraphItems[4].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+              : []
+          }
           onClick={() => handleBoxClick(businessAreas[8].id)}
           isSelected={selectedBoxId === businessAreas[8].id}
           isActive={isBoxActive(businessAreas[8].id)}
