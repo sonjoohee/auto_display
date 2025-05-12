@@ -83,7 +83,7 @@ const ParetoCurveGraph = ({
     let cumulativeValue = 0;
     const processed = limitedData.map((item, index) => {
       cumulativeValue += item.value;
-      const indexLabel = String.fromCharCode(65 + index); // A, B, C... 할당
+      const indexLabel = `${index + 1}`; // 1, 2, 3... 할당
 
       return {
         name: item.name || `${index + 1}단계`, // 원본 이름 유지

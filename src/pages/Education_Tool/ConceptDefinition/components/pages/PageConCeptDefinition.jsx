@@ -903,7 +903,7 @@ const PageConceptDefinition = () => {
                           alignItems: "center",
                         }}
                       >
-                        <AtomPersonaLoader message={`분석 중이예요 ...`} />
+                        <AtomPersonaLoader message={`페르소나 핵심 가치를 분석 중이예요 ...`} />
                       </div>
                     ) : (
                       <InsightAnalysis>
