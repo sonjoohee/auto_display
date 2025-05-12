@@ -186,6 +186,7 @@ import {
   BUSINESS_MODEL_CANVAS_POPUP_OPTIONS,
   BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS,
   BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION,
+  KANO_MODEL_INSIGHT,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -492,6 +493,7 @@ const PageToolListSaas = () => {
   const [, setSelectedKanoModelIdea] = useAtom(KANO_MODEL_SELECTED_IDEA);
   const [, setKanoModelClustering] = useAtom(KANO_MODEL_CLUSTERING);
   const [, setKanoModelClusteringName] = useAtom(KANO_MODEL_CLUSTERING_NAME);
+  const [, setKanoModelInsight] = useAtom(KANO_MODEL_INSIGHT);
   const [, setKanoModelEvaluation] = useAtom(KANO_MODEL_EVALUATION);
   const [, setKanoModelProductAnalysis] = useAtom(KANO_MODEL_PRODUCT_ANALYSIS);
   const [, setCustomerJourneyMapSelectedPersona] = useAtom(
@@ -599,6 +601,7 @@ const PageToolListSaas = () => {
     setGrowthHackerDetailReportData([]);
     setGrowthHackerSelectedSolution([]);
     setKpiQuestionList([]);
+    setKanoModelInsight({});
 
     setPriceReportData({});
     setPriceScrapData({});
@@ -753,6 +756,7 @@ const PageToolListSaas = () => {
     setKanoModelClusteringName([]);
     setKanoModelEvaluation([]);
     setKanoModelProductAnalysis([]);
+    setKanoModelInsight({});
 
     setIdeaEvaluateSelectedList([]);
     setIdeaEvaluateSelectedKanoModelIndex([]);
