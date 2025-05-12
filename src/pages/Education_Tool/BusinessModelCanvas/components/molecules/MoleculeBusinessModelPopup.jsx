@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { palette } from "../../../../../assets/styles/Palette";
 import { Button } from "../../../../../assets/styles/ButtonStyle";
@@ -14,7 +14,8 @@ import {
   BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA,
   TOOL_ID ,
   IS_LOGGED_IN,
-  BUSINESS_MODEL_CANVAS_USER_OPTIONS
+  BUSINESS_MODEL_CANVAS_USER_OPTIONS,
+
 } from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
 import { CheckBoxButton, RadioButton } from "../../../../../assets/styles/InputStyle";
@@ -45,26 +46,41 @@ const MoleculeBusinessModelPopup = ({
   currentModelId = 3, // 기본값으로 채널(id: 3) 설정
   isLoading,
   onCardSelect,
-  isSelected=false,
-  selectedKeys = [], // isSelected 대신 selectedKeys 배열 받기
-  // popupOptions = []  // API 응답의 items 배열
+  selectedKeys = [],
 }) => {
-  // 팝업 상태 관리
   const [isVisible, setIsVisible] = useState(isOpen);
   const [selectedOption, setSelectedOption] = useState(null);
   const [currentModel, setCurrentModel] = useState(businessModelItems.find(item => item.id === currentModelId) || businessModelItems[2]);
   const [userOptions, setUserOptions] = useState([]);
-  const [inputFields, setInputFields] = useState([]); // 입력 필드 관리
-  const [inputValues, setInputValues] = useState({}); // 입력 값 관리
+  const [inputFields, setInputFields] = useState([]);
+  const [inputValues, setInputValues] = useState({});
   const [bmCanvasSelectedPopupOptions, setBMCanvasSelectedPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS);
-  const [bmCanvasPopupOptions, setBMCanvasPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_POPUP_OPTIONS);
+  const [BMCanvasPopupOptions, setBMCanvasPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_POPUP_OPTIONS);
   const [businessModelCanvasGraphItems, setBusinessModelCanvasGraphItems] = useAtom(BUSINESS_MODEL_CANVAS_GRAPH_ITEMS);
   const [bmCanvasInitialGraphData, setBMCanvasInitialGraphData] = useAtom(BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA);
-  const [applyOptions, setApplyOptions] = useState(false);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [bmCanvasUserOptions, setBMCanvasUserOptions] = useAtom(BUSINESS_MODEL_CANVAS_USER_OPTIONS);
-  // const [isLoading, setIsLoading] = useState(false);
+  console.log("BMCanvasPopupOptions", BMCanvasPopupOptions)
+  // 현재 모델의 데이터 가져오기
+  // const currentModelData = businessModelCanvasGraphItems.find(item => item.id === currentModelId);
+  
+  // 팝업에 표시할 옵션들 계산
+  // const popupOptions = currentModelData?.items.flatMap(item => 
+  //   item.examples.map(example => example.split(':')[0].trim())
+  // ) || [];
+// 팝업에 표시할 옵션들 계산
+
+// const popupOptions = bmCanvasInitialGraphData[currentModelId - 2]?.map(item => item.title) || [];
+
+
+const getTitles = (data, currentModelId) => {
+  if (data[currentModelId - 1] && data[currentModelId - 1]) {
+    return data[currentModelId - 1].business_model_canvas_report_education.map(item => item.title);
+  }
+  return [];
+};
+const titles = getTitles(bmCanvasInitialGraphData, currentModelId);
 
 
   useEffect(() => {
@@ -89,7 +105,7 @@ const MoleculeBusinessModelPopup = ({
   }, [currentModelId]);
 
   
-  
+
 //   // 팝업 닫기 처리
   const handleClose = () => {
     setIsVisible(false);
@@ -100,19 +116,17 @@ const MoleculeBusinessModelPopup = ({
    
     // const shouldApply = typeof isApplied === 'boolean' ? isApplied : false;
     setBMCanvasSelectedPopupOptions([]);
-    setBMCanvasPopupOptions([]);
   
-//   if(!shouldApply){
-//   setBusinessModelCanvasGraphItems(prev => 
-//     prev.map(item => 
-//       item.id === currentModel.id 
-//         ? { ...item, items: [] } 
-//         : item
-//     )
-//   );
-//  }else{
-//   setApplyOptions(false);
-//  }
+    // if (Object.keys(bmCanvasSelectedPopupOptions).length === 0 && popupOpenCount[currentModelId] === 1) {
+
+    //   setBusinessModelCanvasGraphItems(prev => 
+    //     prev.map(item => 
+    //       item.id === currentModel.id 
+    //         ? { ...item, items: [] } 
+    //         : item
+    //     )
+    //   );
+    // }
  if (onClose) {
   onClose();
 
@@ -146,24 +160,105 @@ const MoleculeBusinessModelPopup = ({
   };
 
 
+  // const handleAddUserOption = async (id) => {
+  //   const value = inputValues[id]?.trim();
+  //   if (value) {
+  //     // 새로운 옵션 추가
+  //     const newUserOptions = [...userOptions, value];
+  //     setUserOptions(newUserOptions);
+  //     setBMCanvasSelectedPopupOptions([...bmCanvasSelectedPopupOptions, value]);
+      
+  //     // bmCanvasInitialGraphData의 items에 추가
+  //     const updatedInitialGraphData = bmCanvasInitialGraphData.map(item => {
+  //       if (item.id === currentModel.id) {
+  //         return {
+  //           ...item,
+  //           items: [...item.items, value]
+  //         };
+  //       }
+  //       return item;
+  //     });
+      
+  //     setBMCanvasInitialGraphData(updatedInitialGraphData);
+      
+  //     // 서버 업데이트
+  //     try {
+  //       await updateToolOnServer(
+  //         toolId,
+  //         {
+      
+  //           bmCanvasInitialGraphData: updatedInitialGraphData,
+  //         },
+  //         isLoggedIn
+  //       );
+  //     } catch (error) {
+  //       console.error("Error updating tool on server:", error);
+  //     }
+      
+  //     // 입력 필드 제거
+  //     setInputFields(inputFields.filter(fieldId => fieldId !== id));
+      
+  //     // 필드 값 상태에서도 제거
+  //     const newInputValues = { ...inputValues };
+  //     delete newInputValues[id];
+  //     setInputValues(newInputValues);
+  //   }
+  // };
   const handleAddUserOption = async (id) => {
     const value = inputValues[id]?.trim();
     if (value) {
       // 새로운 옵션 추가
-      const newUserOptions = [...userOptions, value];
-      setUserOptions(newUserOptions);
-      setBMCanvasSelectedPopupOptions([...bmCanvasSelectedPopupOptions, value]);
-      
-      // bmCanvasInitialGraphData의 items에 추가
-      const updatedInitialGraphData = bmCanvasInitialGraphData.map(item => {
-        if (item.id === currentModel.id) {
-          return {
-            ...item,
-            items: [...item.items, value]
-          };
+  
+      // // bmCanvasSelectedPopupOptions 업데이트 - 안전하게 처리
+      // const currentOptions = Array.isArray(bmCanvasSelectedPopupOptions) ? bmCanvasSelectedPopupOptions : [];
+      // setBMCanvasSelectedPopupOptions([...currentOptions, value]);
+  // 이미 userOptions에 존재하면 추가하지 않음
+        if (userOptions.includes(value)) {
+          // 입력 필드만 제거
+          setInputFields(inputFields.filter(fieldId => fieldId !== id));
+          const newInputValues = { ...inputValues };
+          delete newInputValues[id];
+          setInputValues(newInputValues);
+          return;
         }
-        return item;
-      });
+          // setBMCanvasSelectedPopupOptions([...bmCanvasSelectedPopupOptions, value]);
+    
+      // 새로운 데이터 구조에 맞게 업데이트
+      const updatedInitialGraphData = [...bmCanvasInitialGraphData];
+      
+      if (currentModelId === 1) {
+        // customer_segments인 경우
+        updatedInitialGraphData[0] = {
+          ...updatedInitialGraphData[0],
+          customer_segments: {
+            ...updatedInitialGraphData[0].customer_segments,
+            [`custom_${Date.now()}`]: value
+          }
+        };
+      } else {
+        // 다른 섹션인 경우
+        const newItem = {
+          type: "사용자 정의",
+          approach: "사용자가 직접 추가한 항목입니다.",
+          title: value,
+          description: "사용자가 직접 추가한 항목입니다."
+        };
+        //  setBMCanvasUserOptions([...bmCanvasUserOptions, value])
+        //  console.log("bmCanvasUserOptions",[...bmCanvasUserOptions, value])
+    
+        // 기존 배열이 없으면 빈 배열로 초기화
+        // if (!Array.isArray(updatedInitialGraphData[1])) {
+        //   updatedInitialGraphData[1] = [];
+        // }
+        
+        // 새 아이템 추가하고 7개로 제한
+        const updatedItems = [...updatedInitialGraphData[currentModelId - 2], newItem];
+ 
+        updatedInitialGraphData[currentModelId - 2] = updatedItems;
+      }
+    
+      
+      console.log("updatedInitialGraphData", updatedInitialGraphData);
       
       setBMCanvasInitialGraphData(updatedInitialGraphData);
       
@@ -172,7 +267,6 @@ const MoleculeBusinessModelPopup = ({
         await updateToolOnServer(
           toolId,
           {
-      
             bmCanvasInitialGraphData: updatedInitialGraphData,
           },
           isLoggedIn
@@ -190,50 +284,65 @@ const MoleculeBusinessModelPopup = ({
       setInputValues(newInputValues);
     }
   };
+  console.log("bmCanvasSelectedPopupOptions", bmCanvasSelectedPopupOptions)
 
-
-const handleApply = async () => {
+ // 현재 모델의 데이터 가져오기
+ const handleApply = async () => {
   if (bmCanvasSelectedPopupOptions.length === 0) {
     return;
   }
 
   try {
-    // 현재 상태를 기반으로 새로운 데이터 생성
-    const currentModelData = {
-      id: currentModel.id,
-      title: currentModel.title,
-      items: [...bmCanvasSelectedPopupOptions],
-      content: currentModel.content
-    };
-
-    // 새로운 상태 계산
     const newGraphItems = [...businessModelCanvasGraphItems];
-    const existingIndex = newGraphItems.findIndex(item => item.id === currentModel.id);
     
-    if (existingIndex !== -1) {
-      newGraphItems[existingIndex] = currentModelData;
+    if (currentModelId === 1) {
+      // customer_segments인 경우 (기존 로직 유지)
+      const newCustomerSegments = { ...newGraphItems[0].customer_segments };
+      bmCanvasSelectedPopupOptions.forEach(option => {
+        const [key, value] = option.split(':').map(item => item.trim());
+        if (key && value) {
+          newCustomerSegments[key] = value;
+        }
+      });
+      
+      newGraphItems[0] = {
+        ...newGraphItems[0],
+        customer_segments: newCustomerSegments
+      };
     } else {
-      newGraphItems.push(currentModelData);
+      // 다른 섹션인 경우 business_model_canvas_report_education 구조로 저장
+      const newItems = bmCanvasSelectedPopupOptions.map(option => {
+        const originalItem = businessModelCanvasGraphItems[currentModelId - 1]?.business_model_canvas_report_education?.find(item => item.title === option);
+        return originalItem || { 
+          type: option.type || "",
+          approach: option.approach || "",
+          title: option.title || option,
+          description: option.description || ""
+        };
+      });
+
+      newGraphItems[currentModelId - 1] = {
+        business_model_canvas_report_education: newItems
+      };
     }
-console.log("newGraphItems", newGraphItems)
+
     // 서버 업데이트
     await updateToolOnServer(
       toolId,
       {
         bmCanvasGraphItems: newGraphItems,
-        // bmCanvasInitialGraphData: newGraphItems,
       },
       isLoggedIn
     );
-
-    // 서버 업데이트 성공 후 상태 업데이트
-    setBusinessModelCanvasGraphItems(newGraphItems);
-
     handleClose();
+
+    // 상태 업데이트
+    setBusinessModelCanvasGraphItems(newGraphItems);
   } catch (error) {
-    console.error("Error updating server:", error);
+    console.error('Error applying changes:', error);
   }
 };
+
 
   // 엔터키 입력시 옵션 추가
   const handleKeyDown = (id, e) => {
@@ -246,10 +355,23 @@ console.log("newGraphItems", newGraphItems)
   const isInputFieldEmpty = (id) => !inputValues[id]?.trim();
 
   // 사용자 추가 옵션과 현재 입력 필드를 합쳐서 3개일 때 버튼 숨김
-  const hideAddButton = userOptions.length + inputFields.length >= 3 || bmCanvasPopupOptions.length + inputFields.length >= 7;
+  // const hideAddButton = userOptions.length + inputFields.length >= 3 || bmCanvasPopupOptions.length + inputFields.length >= 7;
+  // const hideAddButton = userOptions.length + inputFields.length >= 3 ;
+  const savedUserOptions = bmCanvasInitialGraphData[currentModelId - 1]
+  ? bmCanvasInitialGraphData[currentModelId - 1].business_model_canvas_report_education.filter(item => item.type === "사용자 정의")
+  : [];
+  // const savedUserOptions = bmCanvasInitialGraphData[(currentModelId - 1)]
+  // ? Object.values(bmCanvasInitialGraphData[(currentModelId - 1)]).filter(item => item.type === "사용자 정의")
+  // : [];
+
+
+const hideAddButton =
+  userOptions.length + inputFields.length >= 3 ||
+  savedUserOptions.length + inputFields.length >= 3;
 
   if (!isVisible) return null;
-
+  const validSelectedKeys = Array.isArray(selectedKeys) ? selectedKeys : [];
+console.log("validSelectedKeys", validSelectedKeys)
   return (
     <PopupOverlay>
 
@@ -284,22 +406,25 @@ console.log("newGraphItems", newGraphItems)
             <PopupContent>
               <SectionTitle>원하는 항목을 선택하세요</SectionTitle>
               <OptionsContainer>
-                {/* 기본 제공 옵션 */}
-                {bmCanvasPopupOptions?.map((option, index) => (
+                {/* {popupOptions.map((option, index) => (
                   <OptionItem 
                     key={`default-${index}`} 
                     onClick={() => handleOptionSelect(option)}
-                  >
+                  > */}
+                     {titles.map((title, index) => (
+                  <OptionItem key={`title-${index}`} onClick={() => handleOptionSelect(title)}>
                     <OptionFlex>
                       <div>
                         <CheckBoxButton
                           id={index}
                           name={index}
-                          checked={selectedKeys.includes(option)} // 각 옵션별로 체크
-                          onChange={() => onCardSelect && onCardSelect(option)} 
+                          // checked={selectedKeys?.includes(title)}
+                          checked={validSelectedKeys.includes(title)}
+                          onChange={() => onCardSelect && onCardSelect(title)}
                         />
                       </div>
-                      <OptionText>{option}</OptionText>
+                      <OptionText>{title}</OptionText>
+                      
                     </OptionFlex>
                   </OptionItem>
                 ))}

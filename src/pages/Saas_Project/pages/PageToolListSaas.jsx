@@ -186,6 +186,7 @@ import {
   BUSINESS_MODEL_CANVAS_POPUP_OPTIONS,
   BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS,
   BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION,
+  BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA,
   KANO_MODEL_INSIGHT,
 } from "../../AtomStates";
 import {
@@ -555,6 +556,9 @@ const PageToolListSaas = () => {
   const [, setBusinessModelCanvasSelectedConceptDefinition] = useAtom(
     BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION
   );
+  const [, setBMCanvasInitialGraphData] = useAtom(
+    BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA
+  );
   // 초기화 useEffect
   useEffect(() => {
     setCreditCreateToolLoaded(false);
@@ -771,6 +775,7 @@ const PageToolListSaas = () => {
     setBusinessModelCanvasSelectedConceptDefinition({});
     setBusinessModelCanvasMarkdown("");
     setBusinessModelCanvasGraphItems([]);
+    setBMCanvasInitialGraphData([]);
     setBMCanvasPopupOptions([]);
     setBMCanvasSelectedPopupOptions([]);
   }, []); // 컴포넌트 마운트 시 한 번만 실행
