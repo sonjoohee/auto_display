@@ -208,10 +208,12 @@ import {
   BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA,
   BUSINESS_MODEL_CANVAS_POPUP_OPTIONS,
   BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS,
+  KANO_MODEL_INSIGHT,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [projectSaas] = useAtom(PROJECT_SAAS);
+  const [kanoModelInsight, setKanoModelInsight] = useAtom(KANO_MODEL_INSIGHT);
   const project = projectSaas;
   const navigate = useNavigate();
   const [isLoading] = React.useState(false);
@@ -1365,6 +1367,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setSelectedKanoModelIdea(chatData?.kanoModelSelectedIdea || []);
         setKanoModelClustering(chatData?.kanoModelClustering || []);
         setKanoModelClusteringName(chatData?.kanoModelClusteringName || []);
+        setKanoModelInsight(chatData?.kanoModelInsight || {});
         setKanoModelEvaluation(chatData?.kanoModelEvaluation || []);
         setKanoModelProductAnalysis(chatData?.kanoModelProductAnalysis || []);
         setKanoModelGraphData(chatData?.kanoModelGraphData || []);

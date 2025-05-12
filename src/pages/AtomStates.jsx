@@ -633,6 +633,7 @@ export const KANO_MODEL_CLUSTERING_NAME = atom([]);
 export const KANO_MODEL_EVALUATION = atom([]);
 export const KANO_MODEL_GRAPH_DATA = atom({});
 export const KANO_MODEL_REPORT_DATA = atom([]);
+export const KANO_MODEL_INSIGHT = atom({});
 
 export const IDEA_EVALUATE_SELECTED_KANO_MODEL = atom({});
 export const IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX = atom({});

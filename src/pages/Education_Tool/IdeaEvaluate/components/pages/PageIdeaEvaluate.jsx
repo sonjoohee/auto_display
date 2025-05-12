@@ -80,6 +80,7 @@ import OrganismToastPopupQuickSurveyComplete from "../organisms/OrganismToastPop
 import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
 import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
 import ParetoCurveGraph from "../../../../../components/Charts/ParetoCurveGraph";
+import ResultTable from "../../../../../components/Charts/ResultTable";
 
 const PageIdeaEvaluate = () => {
   const navigate = useNavigate();
@@ -589,6 +590,34 @@ const PageIdeaEvaluate = () => {
     }
   };
 
+  const getTableData = () => {
+    const matchingIdea = ideaEvaluateSelectedList.reduce((obj, key, index) => {
+      obj[key] = ideaEvaluateSelect[index];
+      return obj;
+    }, {});
+
+    const tableData = ideaEvaluateGraphData?.map((data, index) => {
+      const indexInfo = matchingIdea[data.name];
+
+      let kanoAttribute = "Attractive";
+      if (indexInfo) {
+        if (indexInfo.includes("one_dimensional")) {
+          kanoAttribute = "One-dementional";
+        } else if (indexInfo.includes("must_be")) {
+          kanoAttribute = "Must-be";
+        }
+      }
+
+      return {
+        rank: index + 1,
+        ideaName: data.name,
+        kanoAttribute: kanoAttribute,
+        percentage: Math.round(data.value*100),
+      };
+    }) || [];
+    return tableData;
+  };
+
   const abortControllerRef = useRef(null);
 
   useEffect(() => {
@@ -759,7 +788,7 @@ const PageIdeaEvaluate = () => {
                   <div className="title">
                     <H3 color="gray800">Curated Ideas</H3>
                     <Body3 color="gray800">
-                      선별된 아이디어를 사용자 의견으로 다시 평가하여 우선순위를
+                      선별된 아이디어를 사용자 기준으로 우선순위를
                       도출하세요
                     </Body3>
                   </div>
@@ -768,7 +797,7 @@ const PageIdeaEvaluate = () => {
                     <TabContent5Item required>
                       <TabContent5Item>
                         <div className="title">
-                          <Body1 color="gray700">kano기반 아이디어 선택 </Body1>
+                          <Body1 color="gray700">kano Model 결과 가져오기 </Body1>
                         </div>
 
                         {showKanoModelList ? (
@@ -878,11 +907,11 @@ const PageIdeaEvaluate = () => {
                                   <Body2
                                     color={ideaEvaluateSelect?.length > 0 ? "gray800" : "gray300"}
                                     style={{
+                                      maxWidth: '658px',
+                                      overflow: 'hidden',
                                       whiteSpace: "normal",
                                       wordBreak: "keep-all",
                                       // wordWrap: "break-word",
-                                      overflow: "visible",
-                                      maxWidth: "100%",
                                       textAlign: "left",
                                       marginLeft: "20px",
                                       marginTop: "0",
@@ -921,7 +950,7 @@ const PageIdeaEvaluate = () => {
                                         <span>{ideaEvaluateSelectedList.join(", ")}</span>
                                       )}
                                       {(!ideaEvaluateSelectedList.length > 0) && (
-                                        <span style={{ color: "grey300", marginLeft: "8px" }}>
+                                        <span style={{ color: "grey300", marginLeft: "0px" }}>
                                           최소 7개 ~ 최대 9개를 선택해주세요
                                         </span>
                                       )} 
@@ -952,7 +981,7 @@ const PageIdeaEvaluate = () => {
                                 }
                               >
                                 {selectedPurposes.customerList ||
-                                  "Kano Model 결과를 불러 올 수 있습니다"}
+                                  "Kano Model 결과를 선택하세요"}
                               </Body2>
                               <images.ChevronDown
                                 width="24px"
@@ -994,7 +1023,7 @@ const PageIdeaEvaluate = () => {
                                         handlePurposeSelect(
                                           `${item.updateDate.split(":")[0]}:${
                                             item.updateDate.split(":")[1]
-                                          } - kano기반 아이디어 선택기 
+                                          } - Kano Model 결과
                                       `,
                                           "customerList",
                                           item
@@ -1003,8 +1032,8 @@ const PageIdeaEvaluate = () => {
                                     >
                                       <Body2 color="gray700" align="left">
                                         {item.updateDate.split(":")[0]}:
-                                        {item.updateDate.split(":")[1]} kano기반
-                                        아이디어 선택기
+                                        {item.updateDate.split(":")[1]} Kano Model
+                                        결과
                                       </Body2>
                                     </SelectBoxItem>
                                   ))
@@ -1196,7 +1225,7 @@ const PageIdeaEvaluate = () => {
                           ideaEvaluateSelect.length > 9
                     }
                   >
-                    아이디어 방향성으로 전환
+                    다음
                   </Button>
                 </>
               </TabContent5>
@@ -1221,8 +1250,8 @@ const PageIdeaEvaluate = () => {
                     <div className="title">
                       <H3 color="gray800">Participating Persona</H3>
                       <Body3 color="gray800">
-                        Quick Survey에 참여할 페르소나에 대해서 알려주세요. 바로
-                        리크루팅해드릴게요 !
+                        아이디어 우선순위를 평가할 페르소나를
+                        확인해보세요
                       </Body3>
                     </div>
 
@@ -1293,8 +1322,7 @@ const PageIdeaEvaluate = () => {
                           color="gray800"
                           style={{ textAlign: "left", marginBottom: "-20px" }}
                         >
-                          아이디어 평가 참여 페르소나 (불러온 Kano Model에
-                          참여한 페르소나와 동일)
+                          아이디어 평가 참여 페르소나
                         </Body1>
                       </div>
 
@@ -1375,17 +1403,27 @@ const PageIdeaEvaluate = () => {
                         alignItems: "center",
                       }}
                     >
-                      <AtomPersonaLoader message="결과보고서를 작성하고 있습니다" />
+                      <AtomPersonaLoader message="페르소나가 아이디어를 평가하고 있습니다" />
                     </div>
                   ) : (
                     <>
                       <BgBoxItem primaryLightest>
-                        <H3 color="gray800">아이디어 선호도 평가</H3>
+                        <H3 color="gray800">아이디어 우선순위 평가</H3>
                         <Body3 color="gray800">
                           아이디어에 대해 선호도를 평가한 결과입니다. 어떤
                           아이디어가 더 매력적인지 확인해보세요.
                         </Body3>
                       </BgBoxItem>
+
+                      <div></div>
+                      <InsightAnalysis>
+                        <div className="title">
+                          <H4 color="gray800" align="left">
+                            아이디어 평가 결과
+                          </H4>
+                        </div>
+                        <ResultTable data={getTableData()} />
+                      </InsightAnalysis>
 
                       <InsightAnalysis>
                         <div className="title">
@@ -1418,7 +1456,7 @@ const PageIdeaEvaluate = () => {
                       <InsightAnalysis>
                         <div className="title">
                           <H4 color="gray800" align="left">
-                            아이디어 파레토 커브
+                            아이디어 우선순위 비중 그래프
                           </H4>
                         </div>
 

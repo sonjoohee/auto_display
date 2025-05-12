@@ -203,6 +203,7 @@ import {
   KEYWORDS_GENERATION_TAG,
   CREDIT_CREATE_TOOL_LOADED,
   EDUCATION_TOOL_COMPLETED_STATUS,
+  KANO_MODEL_INSIGHT,
 } from "../../../AtomStates";
 import {
   updateToolOnServer,
@@ -213,6 +214,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [completedStatus, setCompletedStatus] = useAtom(
     EDUCATION_TOOL_COMPLETED_STATUS
   );
+  const [kanoModelInsight, setKanoModelInsight] = useAtom(KANO_MODEL_INSIGHT);
   const [projectSaas] = useAtom(PROJECT_SAAS);
   const project = projectSaas;
   const navigate = useNavigate();
@@ -1354,6 +1356,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setSelectedKanoModelIdea(chatData?.kanoModelSelectedIdea || []);
         setKanoModelClustering(chatData?.kanoModelClustering || []);
         setKanoModelClusteringName(chatData?.kanoModelClusteringName || []);
+        setKanoModelInsight(chatData?.kanoModelInsight || {});
         setKanoModelEvaluation(chatData?.kanoModelEvaluation || []);
         setKanoModelProductAnalysis(chatData?.kanoModelProductAnalysis || []);
         setKanoModelGraphData(chatData?.kanoModelGraphData || []);
