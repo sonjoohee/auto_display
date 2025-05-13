@@ -26,7 +26,7 @@ const MoleculeBarChartLikertScale11 = ({
 
     return result;
   };
-
+ 
   // NPS 점수 계산
   const calculateNpsScore = () => {
     const total = npsStaticData["총합"]["전체총합"] || 0;
