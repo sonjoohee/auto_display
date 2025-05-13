@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { palette } from '../../../../../assets/styles/Palette';
 import MoleculeBusinessModelPopup from "./MoleculeBusinessModelPopup";
 import { useAtom } from "jotai";
@@ -29,11 +29,37 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
 
   // 다음 활성화될 버튼 ID를 찾는 함수
   const findNextActiveBoxId = () => {
-    for (const area of businessAreas) {
-      if (isBoxActive(area.id) && area.id !== selectedBoxId) {
-        return area.id;
+    // 버튼 활성화 순서 정의 (비즈니스 모델 캔버스 작성 순서)
+    const activationOrder = [3, 4, 5, 6, 7, 8, 9];
+    
+    // 현재 선택된 버튼의 인덱스 찾기
+    const currentIndex = activationOrder.indexOf(selectedBoxId);
+    
+    // 현재 선택된 버튼이 없거나 마지막 버튼이면 첫 번째 활성화 버튼 반환
+    if (currentIndex === -1 || currentIndex === activationOrder.length - 1) {
+      // 활성화된 첫 번째 버튼 찾기
+      for (const id of activationOrder) {
+        if (isBoxActive(id) && !isBoxClicked(id)) {
+          return id;
+        }
+      }
+      return activationOrder[0]; // 기본값으로 첫 번째 버튼 반환
+    }
+    
+    // 다음 버튼이 활성화되었는지 확인
+    const nextId = activationOrder[currentIndex + 1];
+    if (isBoxActive(nextId)) {
+      return nextId;
+    }
+    
+    // 활성화된 다음 버튼 찾기
+    for (let i = currentIndex + 2; i < activationOrder.length; i++) {
+      const id = activationOrder[i];
+      if (isBoxActive(id)) {
+        return id;
       }
     }
+    
     return null;
   };
 
@@ -70,15 +96,26 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
     if (id === 1 || id === 2) {
       return false;
     }
-  
-    const previousBox = businessModelCanvasGraphItems[id - 2];
-    const isPreviousBoxFilled = previousBox && Object.values(previousBox).length > 0;
-  
-    if (!isPreviousBoxFilled) {
-      return false;
+
+    // 버튼 활성화 순서 정의 (비즈니스 모델 캔버스 작성 순서)
+    const activationOrder = [3, 4, 5, 6, 7, 8, 9];
+    const currentIndex = activationOrder.indexOf(id);
+    
+    // 첫 번째 버튼(id=3)은 항상 활성화
+    if (currentIndex === 0) {
+      return true;
     }
-  
-    return true;
+    
+    // 이전 단계 버튼이 완료되었는지 확인
+    const previousId = activationOrder[currentIndex - 1];
+    const previousBox = businessModelCanvasGraphItems[previousId - 1];
+    const isPreviousBoxFilled = previousBox && Object.values(previousBox).length > 0;
+    
+    // 이전 단계가 완료되었거나, 이미 현재 버튼이 데이터를 가지고 있으면 활성화
+    const currentBox = businessModelCanvasGraphItems[id - 1];
+    const isCurrentBoxFilled = currentBox && Object.values(currentBox).length > 0;
+    
+    return isPreviousBoxFilled || isCurrentBoxFilled;
   };
 
   // 박스가 이미 클릭되었는지 확인하는 함수
@@ -92,214 +129,217 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
   };
 
   return (
-    <GraphContainer>
-      <TopSection>
-        {/* 상단 섹션: 핵심 파트너십, 핵심활동, 핵심자원, 가치 제안, 고객 관계, 채널, 고객 세그먼트 */}
-        <LeftColumn>
-          {/* 핵심 파트너십 */}
+    <>
+      <GlobalStyle />
+      <GraphContainer>
+        <TopSection>
+          {/* 상단 섹션: 핵심 파트너십, 핵심활동, 핵심자원, 가치 제안, 고객 관계, 채널, 고객 세그먼트 */}
+          <LeftColumn>
+            {/* 핵심 파트너십 */}
+            <ModelBox 
+              title={businessAreas[0].title} 
+              id={businessAreas[0].id}
+
+              // items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[0].id)?.items || []}
+              items={
+                businessModelCanvasGraphItems[7]?.business_model_canvas_report_education
+                  ? businessModelCanvasGraphItems[7].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                  : []
+
+              }
+              onClick={() => handleBoxClick(businessAreas[0].id)}
+              isSelected={selectedBoxId === businessAreas[0].id}
+              isActive={isBoxActive(businessAreas[0].id)}
+              isClicked={isBoxClicked(businessAreas[0].id)}
+              isNextActive={isNextActiveBox(businessAreas[0].id)}
+              style={{
+                cursor: isBoxActive(businessAreas[0].id) ? 'pointer' : 'not-allowed',
+                opacity: isBoxActive(businessAreas[0].id) ? 1 : 0.7
+              }}
+            />
+          </LeftColumn>
+
+          <MiddleColumns>
+            <Column>
+              {/* 핵심활동 */}
+              <ModelBox 
+                title={businessAreas[1].title} 
+                id={businessAreas[1].id}
+                items={
+                  businessModelCanvasGraphItems[6]?.business_model_canvas_report_education
+                    ? businessModelCanvasGraphItems[6].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                    : []
+                }
+                onClick={() => handleBoxClick(businessAreas[1].id)}
+                isSelected={selectedBoxId === businessAreas[1].id}
+                isActive={isBoxActive(businessAreas[1].id)}
+                isClicked={isBoxClicked(businessAreas[1].id)}
+                isNextActive={isNextActiveBox(businessAreas[1].id)}
+                style={{
+                  cursor: isBoxActive(businessAreas[1].id) ? 'pointer' : 'not-allowed',
+                  opacity: isBoxActive(businessAreas[1].id) ? 1 : 0.7
+                }}
+              />
+              {/* 핵심자원 */}
+              <ModelBox 
+                title={businessAreas[2].title} 
+                id={businessAreas[2].id}
+                items={
+                  businessModelCanvasGraphItems[5]?.business_model_canvas_report_education
+                    ? businessModelCanvasGraphItems[5].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                    : []
+                }
+                onClick={() => handleBoxClick(businessAreas[2].id)}
+                isSelected={selectedBoxId === businessAreas[2].id}
+                isActive={isBoxActive(businessAreas[2].id)}
+                isClicked={isBoxClicked(businessAreas[2].id)}
+                isNextActive={isNextActiveBox(businessAreas[2].id)}
+                style={{
+                  cursor: isBoxActive(businessAreas[2].id) ? 'pointer' : 'not-allowed',
+                  opacity: isBoxActive(businessAreas[2].id) ? 1 : 0.7
+                }}
+              />
+            </Column>
+
+            <Column>
+              {/* 가치 제안 */}
+              <ModelBox 
+                title={businessAreas[3].title} 
+                id={businessAreas[3].id}
+                items={
+                  Array.isArray(businessModelCanvasGraphItems) && businessModelCanvasGraphItems[1]
+                    ? Object.values(businessModelCanvasGraphItems[1]).slice(0, 7)
+                    : []
+                }
+                onClick={() => handleBoxClick(businessAreas[3].id)}
+                isSelected={selectedBoxId === businessAreas[3].id}
+                isActive={isBoxActive(businessAreas[3].id)}
+                isClicked={isBoxClicked(businessAreas[3].id)}
+                isNextActive={isNextActiveBox(businessAreas[3].id)}
+                style={{
+                  cursor: isBoxActive(businessAreas[3].id) ? 'pointer' : 'not-allowed',
+                  opacity: isBoxActive(businessAreas[3].id) ? 1 : 0.7
+                }}
+              />  
+            </Column>
+
+            <Column>
+              {/* 고객 관계 */}
+              <ModelBox 
+                title={businessAreas[4].title} 
+                id={businessAreas[4].id}
+                items={
+                  businessModelCanvasGraphItems[3]?.business_model_canvas_report_education
+                    ? businessModelCanvasGraphItems[3].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                    : []
+                }
+                onClick={() => handleBoxClick(businessAreas[4].id)}
+                isSelected={selectedBoxId === businessAreas[4].id}
+                isActive={isBoxActive(businessAreas[4].id)}
+                isClicked={isBoxClicked(businessAreas[4].id)}
+                isNextActive={isNextActiveBox(businessAreas[4].id)}
+                style={{
+                  cursor: isBoxActive(businessAreas[4].id) ? 'pointer' : 'not-allowed',
+                  opacity: isBoxActive(businessAreas[4].id) ? 1 : 0.7
+                }}
+              />
+              {/* 채널 */}
+              <ModelBox 
+                title={businessAreas[5].title} 
+                id={businessAreas[5].id}
+                items={
+                  businessModelCanvasGraphItems[2]?.business_model_canvas_report_education
+                    ? businessModelCanvasGraphItems[2].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                    : []
+                }
+                onClick={() => handleBoxClick(businessAreas[5].id)}
+                isSelected={selectedBoxId === businessAreas[5].id}
+                isActive={isBoxActive(businessAreas[5].id)}
+                isClicked={isBoxClicked(businessAreas[5].id)}
+                isNextActive={isNextActiveBox(businessAreas[5].id)}
+                style={{
+                  cursor: isBoxActive(businessAreas[5].id) ? 'pointer' : 'not-allowed',
+                  opacity: isBoxActive(businessAreas[5].id) ? 1 : 0.7
+                }}
+              />
+            </Column>
+          </MiddleColumns>
+
+          <RightColumn>
+            {/* 고객 세그먼트 */}
+            <ModelBox 
+              title={businessAreas[6].title} 
+              id={businessAreas[6].id}
+              items={
+                Array.isArray(businessModelCanvasGraphItems) && businessModelCanvasGraphItems[0]
+                  ? Object.values(businessModelCanvasGraphItems[0]).slice(0, 7)
+                  : []
+              }
+              onClick={() => handleBoxClick(businessAreas[6].id)}
+              isSelected={selectedBoxId === businessAreas[6].id}
+              isActive={isBoxActive(businessAreas[6].id)}
+              isClicked={isBoxClicked(businessAreas[6].id)}
+              isNextActive={isNextActiveBox(businessAreas[6].id)}
+              style={{
+                cursor: isBoxActive(businessAreas[6].id) ? 'pointer' : 'not-allowed',
+                opacity: isBoxActive(businessAreas[6].id) ? 1 : 0.7
+              }}
+            />
+        
+          </RightColumn>
+        </TopSection>
+
+        <BottomSection>
+          {/* 하단 섹션: 비용구조, 수익원 */}
           <ModelBox 
-            title={businessAreas[0].title} 
-            id={businessAreas[0].id}
-
-            // items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[0].id)?.items || []}
+            title={businessAreas[7].title} 
+            id={businessAreas[7].id}
             items={
-              businessModelCanvasGraphItems[7]?.business_model_canvas_report_education
-                ? businessModelCanvasGraphItems[7].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+              businessModelCanvasGraphItems[8]?.business_model_canvas_report_education
+                ? businessModelCanvasGraphItems[8].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
                 : []
-
             }
-            onClick={() => handleBoxClick(businessAreas[0].id)}
-            isSelected={selectedBoxId === businessAreas[0].id}
-            isActive={isBoxActive(businessAreas[0].id)}
-            isClicked={isBoxClicked(businessAreas[0].id)}
-            isNextActive={isNextActiveBox(businessAreas[0].id)}
+            onClick={() => handleBoxClick(businessAreas[7].id)}
+            isSelected={selectedBoxId === businessAreas[7].id}
+            isActive={isBoxActive(businessAreas[7].id)}
+            isClicked={isBoxClicked(businessAreas[7].id)}
+            isNextActive={isNextActiveBox(businessAreas[7].id)}
             style={{
-              cursor: isBoxActive(businessAreas[0].id) ? 'pointer' : 'not-allowed',
-              opacity: isBoxActive(businessAreas[0].id) ? 1 : 0.7
+              cursor: isBoxActive(businessAreas[7].id) ? 'pointer' : 'not-allowed',
+              opacity: isBoxActive(businessAreas[7].id) ? 1 : 0.7
             }}
           />
-        </LeftColumn>
-
-        <MiddleColumns>
-          <Column>
-            {/* 핵심활동 */}
-            <ModelBox 
-              title={businessAreas[1].title} 
-              id={businessAreas[1].id}
-              items={
-                businessModelCanvasGraphItems[6]?.business_model_canvas_report_education
-                  ? businessModelCanvasGraphItems[6].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
-                  : []
-              }
-              onClick={() => handleBoxClick(businessAreas[1].id)}
-              isSelected={selectedBoxId === businessAreas[1].id}
-              isActive={isBoxActive(businessAreas[1].id)}
-              isClicked={isBoxClicked(businessAreas[1].id)}
-              isNextActive={isNextActiveBox(businessAreas[1].id)}
-              style={{
-                cursor: isBoxActive(businessAreas[1].id) ? 'pointer' : 'not-allowed',
-                opacity: isBoxActive(businessAreas[1].id) ? 1 : 0.7
-              }}
-            />
-            {/* 핵심자원 */}
-            <ModelBox 
-              title={businessAreas[2].title} 
-              id={businessAreas[2].id}
-              items={
-                businessModelCanvasGraphItems[5]?.business_model_canvas_report_education
-                  ? businessModelCanvasGraphItems[5].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
-                  : []
-              }
-              onClick={() => handleBoxClick(businessAreas[2].id)}
-              isSelected={selectedBoxId === businessAreas[2].id}
-              isActive={isBoxActive(businessAreas[2].id)}
-              isClicked={isBoxClicked(businessAreas[2].id)}
-              isNextActive={isNextActiveBox(businessAreas[2].id)}
-              style={{
-                cursor: isBoxActive(businessAreas[2].id) ? 'pointer' : 'not-allowed',
-                opacity: isBoxActive(businessAreas[2].id) ? 1 : 0.7
-              }}
-            />
-          </Column>
-
-          <Column>
-            {/* 가치 제안 */}
-            <ModelBox 
-              title={businessAreas[3].title} 
-              id={businessAreas[3].id}
-              items={
-                Array.isArray(businessModelCanvasGraphItems) && businessModelCanvasGraphItems[1]
-                  ? Object.values(businessModelCanvasGraphItems[1]).slice(0, 7)
-                  : []
-              }
-              onClick={() => handleBoxClick(businessAreas[3].id)}
-              isSelected={selectedBoxId === businessAreas[3].id}
-              isActive={isBoxActive(businessAreas[3].id)}
-              isClicked={isBoxClicked(businessAreas[3].id)}
-              isNextActive={isNextActiveBox(businessAreas[3].id)}
-              style={{
-                cursor: isBoxActive(businessAreas[3].id) ? 'pointer' : 'not-allowed',
-                opacity: isBoxActive(businessAreas[3].id) ? 1 : 0.7
-              }}
-            />  
-          </Column>
-
-          <Column>
-            {/* 고객 관계 */}
-            <ModelBox 
-              title={businessAreas[4].title} 
-              id={businessAreas[4].id}
-              items={
-                businessModelCanvasGraphItems[3]?.business_model_canvas_report_education
-                  ? businessModelCanvasGraphItems[3].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
-                  : []
-              }
-              onClick={() => handleBoxClick(businessAreas[4].id)}
-              isSelected={selectedBoxId === businessAreas[4].id}
-              isActive={isBoxActive(businessAreas[4].id)}
-              isClicked={isBoxClicked(businessAreas[4].id)}
-              isNextActive={isNextActiveBox(businessAreas[4].id)}
-              style={{
-                cursor: isBoxActive(businessAreas[4].id) ? 'pointer' : 'not-allowed',
-                opacity: isBoxActive(businessAreas[4].id) ? 1 : 0.7
-              }}
-            />
-            {/* 채널 */}
-            <ModelBox 
-              title={businessAreas[5].title} 
-              id={businessAreas[5].id}
-              items={
-                businessModelCanvasGraphItems[2]?.business_model_canvas_report_education
-                  ? businessModelCanvasGraphItems[2].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
-                  : []
-              }
-              onClick={() => handleBoxClick(businessAreas[5].id)}
-              isSelected={selectedBoxId === businessAreas[5].id}
-              isActive={isBoxActive(businessAreas[5].id)}
-              isClicked={isBoxClicked(businessAreas[5].id)}
-              isNextActive={isNextActiveBox(businessAreas[5].id)}
-              style={{
-                cursor: isBoxActive(businessAreas[5].id) ? 'pointer' : 'not-allowed',
-                opacity: isBoxActive(businessAreas[5].id) ? 1 : 0.7
-              }}
-            />
-          </Column>
-        </MiddleColumns>
-
-        <RightColumn>
-          {/* 고객 세그먼트 */}
           <ModelBox 
-            title={businessAreas[6].title} 
-            id={businessAreas[6].id}
+            title={businessAreas[8].title} 
+            id={businessAreas[8].id}
             items={
-              Array.isArray(businessModelCanvasGraphItems) && businessModelCanvasGraphItems[0]
-                ? Object.values(businessModelCanvasGraphItems[0]).slice(0, 7)
+              businessModelCanvasGraphItems[4]?.business_model_canvas_report_education
+                ? businessModelCanvasGraphItems[4].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
                 : []
             }
-            onClick={() => handleBoxClick(businessAreas[6].id)}
-            isSelected={selectedBoxId === businessAreas[6].id}
-            isActive={isBoxActive(businessAreas[6].id)}
-            isClicked={isBoxClicked(businessAreas[6].id)}
-            isNextActive={isNextActiveBox(businessAreas[6].id)}
+            onClick={() => handleBoxClick(businessAreas[8].id)}
+            isSelected={selectedBoxId === businessAreas[8].id}
+            isActive={isBoxActive(businessAreas[8].id)}
+            isClicked={isBoxClicked(businessAreas[8].id)}
+            isNextActive={isNextActiveBox(businessAreas[8].id)}
             style={{
-              cursor: isBoxActive(businessAreas[6].id) ? 'pointer' : 'not-allowed',
-              opacity: isBoxActive(businessAreas[6].id) ? 1 : 0.7
+              cursor: isBoxActive(businessAreas[8].id) ? 'pointer' : 'not-allowed',
+              opacity: isBoxActive(businessAreas[8].id) ? 1 : 0.7
             }}
           />
-    
-        </RightColumn>
-      </TopSection>
+        </BottomSection>
 
-      <BottomSection>
-        {/* 하단 섹션: 비용구조, 수익원 */}
-        <ModelBox 
-          title={businessAreas[7].title} 
-          id={businessAreas[7].id}
-          items={
-            businessModelCanvasGraphItems[8]?.business_model_canvas_report_education
-              ? businessModelCanvasGraphItems[8].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
-              : []
-          }
-          onClick={() => handleBoxClick(businessAreas[7].id)}
-          isSelected={selectedBoxId === businessAreas[7].id}
-          isActive={isBoxActive(businessAreas[7].id)}
-          isClicked={isBoxClicked(businessAreas[7].id)}
-          isNextActive={isNextActiveBox(businessAreas[7].id)}
-          style={{
-            cursor: isBoxActive(businessAreas[7].id) ? 'pointer' : 'not-allowed',
-            opacity: isBoxActive(businessAreas[7].id) ? 1 : 0.7
-          }}
-        />
-        <ModelBox 
-          title={businessAreas[8].title} 
-          id={businessAreas[8].id}
-          items={
-            businessModelCanvasGraphItems[4]?.business_model_canvas_report_education
-              ? businessModelCanvasGraphItems[4].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
-              : []
-          }
-          onClick={() => handleBoxClick(businessAreas[8].id)}
-          isSelected={selectedBoxId === businessAreas[8].id}
-          isActive={isBoxActive(businessAreas[8].id)}
-          isClicked={isBoxClicked(businessAreas[8].id)}
-          isNextActive={isNextActiveBox(businessAreas[8].id)}
-          style={{
-            cursor: isBoxActive(businessAreas[8].id) ? 'pointer' : 'not-allowed',
-            opacity: isBoxActive(businessAreas[8].id) ? 1 : 0.7
-          }}
-        />
-      </BottomSection>
-
-      {/* MoleculeBusinessModelPopup 컴포넌트 추가 */}
-      {/* {showPopup && (
-        <MoleculeBusinessModelPopup
-          isOpen={showPopup}
-          onClose={handleClosePopup}
-          onSave={handleSavePopup}
-          currentModelId={selectedBoxId}
-        />
-      )} */}
-    </GraphContainer>
+        {/* MoleculeBusinessModelPopup 컴포넌트 추가 */}
+        {/* {showPopup && (
+          <MoleculeBusinessModelPopup
+            isOpen={showPopup}
+            onClose={handleClosePopup}
+            onSave={handleSavePopup}
+            currentModelId={selectedBoxId}
+          />
+        )} */}
+      </GraphContainer>
+    </>
   );
 };
 
@@ -307,23 +347,29 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
 const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClicked, isNextActive, style }) => {
   const [isHovered, setIsHovered] = useState(false);
   const hasItems = items.length > 0;
+  
+  // 1번과 2번 영역은 특별 처리
+  const isSpecialArea = id === 1 || id === 2;
 
   return (
     <BoxWrapper 
       onMouseEnter={() => isActive && setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseLeave={() => isActive && setIsHovered(false)}
       onClick={onClick}
       isActive={isActive}
       style={style}
     >
       <ModelHeader>
         <NumberCircle>{id}</NumberCircle>
-        <Title>{title}</Title>
+        {/* 1, 2번 영역의 제목 폰트도 동일하게 설정 */}
+        <Title style={isSpecialArea ? { color: '#1A1A1A' } : {}}>
+          {title}
+        </Title>
       </ModelHeader>
       
       <ContentBox 
         hasItems={hasItems} 
-        isHovered={isHovered}
+        isHovered={isHovered && isActive}
         isSelected={isSelected && !hasItems}
         isActive={isActive}
         isClicked={isClicked}
@@ -333,20 +379,32 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClic
           <ItemList>
             {items.map((item, index) => (
               <ItemRow key={index} style={{textAlign: "left"}}>
-                <ItemText>{item}</ItemText>
+                {/* 항목 텍스트도 동일하게 설정 */}
+                <ItemText style={isSpecialArea ? { color: '#1A1A1A' } : {}}>
+                  {item}
+                </ItemText>
               </ItemRow>
             ))}
           </ItemList>
         ) : (
-          <EmptyText 
-            isHovered={isHovered} 
-            isSelected={isSelected}
-            isActive={isActive}
-            isClicked={isClicked}
-            isNextActive={isNextActive}
-          >
+          // 1, 2번 영역의 빈 텍스트는 활성화된 버튼의 스타일로 설정
+          <div style={{
+            fontFamily: 'Pretendard, sans-serif',
+            fontSize: '16px',
+            fontWeight: 600,
+            lineHeight: '1.55em',
+            letterSpacing: '-0.03em',
+            textAlign: 'center',
+            // 1, 2번 영역은 활성화된 버튼의 텍스트 색상(#000000)으로 설정
+            color: isSpecialArea ? '#1A1A1A' : 
+                  !isActive ? '#CCCCCC' : 
+                  isSelected ? '#666666' : 
+                  isClicked ? '#666666' : 
+                  (isActive && isHovered) ? '#226FFF' : 
+                  (isActive && isNextActive) ? '#226FFF' : '#666666'
+          }}>
             {isActive ? "여기를 눌러\n내용을 작성하세요" : "이전 단계를 먼저 완료해주세요"}
-          </EmptyText>
+          </div>
         )}
       </ContentBox>
     </BoxWrapper>
@@ -366,7 +424,7 @@ const GraphContainer = styled.div`
   flex-direction: column;
   gap: 16px;
   width: 820px;
-  height: 720px;
+  height: 780px;
 `;
 
 const TopSection = styled.div`
@@ -490,24 +548,6 @@ const ContentBox = styled.div`
   }
 `;
 
-const EmptyText = styled.div`
-  font-family: 'Pretendard', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.55em;
-  letter-spacing: -0.03em;
-  text-align: center;
-  
-  color: ${props => {
-    if (!props.isActive) return '#CCCCCC';
-    if (props.isSelected) return '#666666';
-    if (props.isClicked) return '#666666';
-    if (props.isActive && props.isHovered) return '#226FFF';
-    // 다음 활성화 버튼만 primary 색상 텍스트, 나머지 활성화 버튼은 일반 텍스트 색상
-    return props.isActive ? (props.isNextActive ? '#226FFF' : '#666666') : '#CCCCCC';
-  }};
-`;
-
 const ItemList = styled.div`
   display: flex;
   flex-direction: column;
@@ -550,6 +590,16 @@ const ItemText = styled.div`
   color: #666666;
   flex: 1;
   padding-left: 4px;
+`;
+
+// 전역 스타일 수정을 위한 추가 코드
+// 1, 2번 영역의 모든 텍스트 스타일을 활성화된 버튼과 동일하게 설정
+const GlobalStyle = createGlobalStyle`
+  /* 1, 2번 영역의 모든 텍스트에 적용될 스타일 */
+  #box-1 *, #box-2 * {
+    color: #000000 !important;
+    font-weight: 600 !important;
+  }
 `;
 
 export default MoleculeBusinessModelGraph; 
