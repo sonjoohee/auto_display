@@ -556,7 +556,7 @@ setBMCanvasInitialGraphData(Object.values(response.response.business_model_canva
  
 
   const handleCheckboxChange = (ideaId) => {
-    console.log("SelectedKeys", selectedKeys)
+    // console.log("SelectedKeys", selectedKeys)
     setSelectedKeys((prev) => {
       // prev가 배열이 아닌 경우 빈 배열로 초기화
       const currentSelected = Array.isArray(prev) ? prev : [];
@@ -585,7 +585,7 @@ setBMCanvasInitialGraphData(Object.values(response.response.business_model_canva
             return currentOptions; // 이미 있는 값이면 그대로 반환
           }
           const updatedOptions = [...currentOptions, ideaId];
-      console.log("updatedOptions", updatedOptions)
+      // console.log("updatedOptions", updatedOptions)
           return updatedOptions;
         });
 
@@ -635,7 +635,7 @@ if (existingData) {
   }
   return;
 }
-console.log("setSelectedKeys([id - 1]", selectedKeys)
+// console.log("setSelectedKeys([id - 1]", selectedKeys)
     setIsLoading(true);
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
@@ -730,12 +730,8 @@ let response = await EducationToolsRequest(apiRequest, isLoggedIn, signal);
 
 
 
- // 해당 ID에 맞는 데이터 찾기
-// ...
 const dataToProcess = response.response; // 또는 다른 변수일 수 있습니다.
 const processedValues = dataToProcess ? Object.values(dataToProcess) : []; // 수정된 부분
-// ...
-console.log("processedValues", processedValues)
 
 
 // if (selectedData) {
@@ -747,7 +743,6 @@ console.log("processedValues", processedValues)
 //   setBMCanvasPopupOptions((prev) => [...prev, ...options]);
 // }
 
- 
 const newGraphItems = [ ...businessModelCanvasGraphItems ];
 const newInitialGraphData = [ ...bmCanvasInitialGraphData ];
 
@@ -763,9 +758,6 @@ const updatedInitialData = [
 ];
 
 
-
-
-
   // 서버 업데이트
   await updateToolOnServer(
     toolId,
@@ -779,8 +771,6 @@ const updatedInitialData = [
   // 서버 업데이트 성공 후 상태 업데이트
   setBusinessModelCanvasGraphItems(updatedGraphItems);
   setBMCanvasInitialGraphData(updatedInitialData);
-
-//
 
 
   } catch (error) {
@@ -1156,9 +1146,9 @@ const businessModelItems = [
                           Fill
                           Round
                           onClick={handleSubmitReport}
-                          // disabled={
-                          //  toolSteps >= 1 || isLoading
-                          // }
+                          disabled={
+                           toolSteps >= 1 || isLoading
+                          }
                         >
                           아이디어 방향성으로 전환
                         </Button>
@@ -1237,18 +1227,17 @@ const businessModelItems = [
                           </HeaderTitle>
               
               
-                            <IdeaContent>
-                          
-                                  <IdeaText>
-                                  {bmCanvasInitialGraphData[selectedBoxId - 1].business_model_canvas_report_education?.map((item, index) => (
-                                    <div key={index}>
-                                      {index + 1}. {item.title}: {item.description}
-                                    </div>
-                                  ))}
-                              
-                                  </IdeaText>
-                          
-                            </IdeaContent>
+                          <IdeaContent>
+                            <IdeaText>
+                              {bmCanvasInitialGraphData[selectedBoxId - 1].business_model_canvas_report_education
+                                ?.filter(item => item.type !== "사용자 정의")  // 사용자 정의 타입 제외
+                                .map((item, index) => (
+                                  <div key={index}>
+                                    {index + 1}. {item.title}: {item.description}
+                                  </div>
+                                ))}
+                            </IdeaText>
+                          </IdeaContent>
                           </IdeaBox>
                
                         </IdeaContainer>

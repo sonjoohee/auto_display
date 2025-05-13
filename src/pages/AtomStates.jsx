@@ -646,7 +646,8 @@ export const IDEA_EVALUATE_GRAPH_DATA = atom([]);
 export const NPS_SELECTED_CONCEPT = atom([]);
 export const NPS_SELECTED_MODE_TYPE = atom("");
 export const NPS_FILE_NAME = atom([]);
-export const NPS_SURVEY_METHOD = atom([]);
+export const NPS_SURVEY_METHOD = atom({});
+export const NPS_PERSONA_LIST = atom([]);
 
 export const CONCEPT_DEFINITION_SELECTED_PURPOSE = atom({});
 export const CONCEPT_DEFINITION_SELECTED_PERSONA = atom([]);
