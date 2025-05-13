@@ -106,6 +106,7 @@ import ParticipationTeamList from "../../components/Charts/ParticipationTeamList
 import ParticipationTeamList2 from "../../components/Charts/ParticipationTeamList2";
 import NoticeBoxContent from "../../components/Charts/NoticeBoxContent";
 import ResultTable from "../../components/Charts/ResultTable";
+import BusinessModelResult from "../../components/Charts/BusinessModelResult";
 import { useAtom } from "jotai";
 import { KANO_MODEL_GRAPH_DATA } from "../../pages/AtomStates";
 
@@ -287,17 +288,17 @@ const PageStyleGuide = () => {
           <GraphChartScale2 />
           <GraphChartScale5 />
           <GraphChartScale11 /> */}
-          <ImportanceButtonGroup />
+          {/* <ImportanceButtonGroup />
           <ImportanceButtonLevel />
           <QuickSurveyCard />
           <KanoModelGraph />
           <QuckSurveyPopup />
           <MandalArtGraph />
-          <WriteSelfCard />
+          <WriteSelfCard /> */}
           <IdeaGenerationTag text="경험 기반 쇼핑 큐레이션" />
           <ParetoCurveGraph data={paretoDummyData} />
           <BusinessModelPopup isOpen={true} />
-          <WaitLongLodingBar />
+          {/* <WaitLongLodingBar />
           <BusinessModelGraph />
           <FavoritePersonaStatus />
           <MyPersonaTag />
@@ -307,7 +308,8 @@ const PageStyleGuide = () => {
           <ParticipationTeamList />
           <ParticipationTeamList2 />
           <NoticeBoxContent />
-          <ResultTable />
+          <ResultTable /> */}
+          <BusinessModelResult />
         </FlexContainer>
         <MacroSegTag />
         <StakeHolderTag />
