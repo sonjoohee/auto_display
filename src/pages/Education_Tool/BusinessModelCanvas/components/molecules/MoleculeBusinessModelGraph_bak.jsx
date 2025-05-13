@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { palette } from '../../../../../assets/styles/Palette';
 import MoleculeBusinessModelPopup from "./MoleculeBusinessModelPopup";
+import { useAtom } from 'jotai';
+import { BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS } from '../../../../AtomStates';
 
 // 비즈니스 모델 그래프 컴포넌트
-const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () => {}, setSelectedBoxId, selectedBoxId, graphItems }) => {
-  // const [showPopup, setShowPopup] = useState(false);
+const MoleculeBusinessModelGraph = ({ 
+  data = {}, 
+  onBoxClick, 
+  setShowPopup = () => {}, 
+  setSelectedBoxId, 
+  selectedBoxId, 
+  graphItems,
+  showPopup = false // 팝업 표시 상태를 props로 받음
+}) => {
+  // 선택된 옵션 상태 가져오기
+  const [selectedKeys] = useAtom(BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS);
+  
   // 9개의 비즈니스 모델 영역 정의
-  console.log("graphItems", graphItems)
   const businessAreas = [
     { id: 8, title: '핵심 파트너십' },
     { id: 7, title: '핵심활동' },
@@ -20,18 +31,11 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
     { id: 5, title: '수익원' }
   ];
 
-  // 선택된 박스 ID 상태 관리
-  // const [selectedBoxId, setSelectedBoxId] = useState(null);
-
   // 박스 클릭 핸들러
   const handleBoxClick = (id) => {
     setSelectedBoxId(id);
-    // if (onBoxClick) {
-      // onBoxClick(id);
-      setShowPopup(id);
-    // }
+    setShowPopup(id);
   };
-
 
   return (
     <GraphContainer>
@@ -45,6 +49,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
             items={data[businessAreas[0].id] || []}
             onClick={() => handleBoxClick(businessAreas[0].id)}
             isSelected={selectedBoxId === businessAreas[0].id}
+            showPopup={showPopup}
+            selectedKeys={selectedKeys}
           />
         </LeftColumn>
 
@@ -57,6 +63,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
               items={data[businessAreas[1].id] || []}
               onClick={() => handleBoxClick(businessAreas[1].id)}
               isSelected={selectedBoxId === businessAreas[1].id}
+              showPopup={showPopup}
+              selectedKeys={selectedKeys}
             />
             {/* 핵심자원 */}
             <ModelBox 
@@ -65,6 +73,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
               items={data[businessAreas[2].id] || []}
               onClick={() => handleBoxClick(businessAreas[2].id)}
               isSelected={selectedBoxId === businessAreas[2].id}
+              showPopup={showPopup}
+              selectedKeys={selectedKeys}
             />
           </Column>
 
@@ -76,6 +86,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
               items={data[businessAreas[3].id] || []}
               onClick={() => handleBoxClick(businessAreas[3].id)}
               isSelected={selectedBoxId === businessAreas[3].id}
+              showPopup={showPopup}
+              selectedKeys={selectedKeys}
             />
           </Column>
 
@@ -87,6 +99,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
               items={data[businessAreas[4].id] || []}
               onClick={() => handleBoxClick(businessAreas[4].id)}
               isSelected={selectedBoxId === businessAreas[4].id}
+              showPopup={showPopup}
+              selectedKeys={selectedKeys}
             />
             {/* 채널 */}
             <ModelBox 
@@ -95,6 +109,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
               items={data[businessAreas[5].id] || []}
               onClick={() => handleBoxClick(businessAreas[5].id)}
               isSelected={selectedBoxId === businessAreas[5].id}
+              showPopup={showPopup}
+              selectedKeys={selectedKeys}
             />
           </Column>
         </MiddleColumns>
@@ -107,6 +123,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
             items={data[businessAreas[6].id] || []}
             onClick={() => handleBoxClick(businessAreas[6].id)}
             isSelected={selectedBoxId === businessAreas[6].id}
+            showPopup={showPopup}
+            selectedKeys={selectedKeys}
           />
         </RightColumn>
       </TopSection>
@@ -119,6 +137,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
           items={data[businessAreas[7].id] || []}
           onClick={() => handleBoxClick(businessAreas[7].id)}
           isSelected={selectedBoxId === businessAreas[7].id}
+          showPopup={showPopup}
+          selectedKeys={selectedKeys}
         />
         <ModelBox 
           title={businessAreas[8].title} 
@@ -126,28 +146,31 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
           items={data[businessAreas[8].id] || []}
           onClick={() => handleBoxClick(businessAreas[8].id)}
           isSelected={selectedBoxId === businessAreas[8].id}
+          showPopup={showPopup}
+          selectedKeys={selectedKeys}
         />
       </BottomSection>
-
-      {/* MoleculeBusinessModelPopup 컴포넌트 추가 */}
-      {/* {showPopup && (
-        <MoleculeBusinessModelPopup
-          isOpen={showPopup}
-          onClose={handleClosePopup}
-          onSave={handleSavePopup}
-          currentModelId={selectedBoxId}
-        />
-      )} */}
     </GraphContainer>
   );
 };
 
 // 비즈니스 모델 박스 컴포넌트
-const ModelBox = ({ title, id, items = [], onClick, isSelected }) => {
+const ModelBox = ({ 
+  title, 
+  id, 
+  items = [], 
+  onClick, 
+  isSelected,
+  showPopup,
+  selectedKeys = []
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   
   // 상태에 따른 렌더링
   const hasItems = items.length > 0;
+
+  // 팝업이 열려있고 현재 박스가 선택된 경우, 선택된 항목만 표시
+  const shouldFilterItems = showPopup && isSelected;
 
   return (
     <BoxWrapper 
@@ -167,12 +190,33 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected }) => {
       >
         {hasItems ? (
           <ItemList>
-            {items.map((item, index) => (
-              <ItemRow key={index}>
-                <CheckMarkIcon />
-                <ItemText>{item}</ItemText>
-              </ItemRow>
-            ))}
+            {shouldFilterItems ? (
+              // 팝업이 열려있고 현재 박스가 선택된 경우, 선택된 항목만 표시
+              selectedKeys.length > 0 ? (
+                // 선택된 항목이 있을 경우
+                items
+                  .filter(item => selectedKeys.includes(item))
+                  .map((item, index) => (
+                    <ItemRow key={index}>
+                      <CheckMarkIcon />
+                      <ItemText>{item}</ItemText>
+                    </ItemRow>
+                  ))
+              ) : (
+                // 선택된 항목이 없을 경우 메시지 표시
+                <EmptyText>
+                  선택한 항목이 여기에 표시됩니다
+                </EmptyText>
+              )
+            ) : (
+              // 팝업이 닫혀있거나 현재 박스가 선택되지 않은 경우, 모든 항목 표시
+              items.map((item, index) => (
+                <ItemRow key={index}>
+                  <CheckMarkIcon />
+                  <ItemText>{item}</ItemText>
+                </ItemRow>
+              ))
+            )}
           </ItemList>
         ) : (
           <EmptyText isHovered={isHovered} isSelected={isSelected}>

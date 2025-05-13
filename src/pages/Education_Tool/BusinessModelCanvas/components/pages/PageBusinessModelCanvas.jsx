@@ -760,7 +760,9 @@ const updatedInitialData = [
 
 
   const handleClosePopup = () => {
+    // 팝업을 닫을 때 selectedBoxId는 유지 (선택 상태 유지)
     setShowPopup(false);
+    // selectedBoxId 상태는 그대로 유지
   };
   
   // 팝업 저장 핸들러
@@ -1197,8 +1199,7 @@ const businessModelItems = [
 
                       {selectedBoxId && businessModelCanvasGraphItems[selectedBoxId - 1] && (
                       <IdeaContainer>
-              
-                          <IdeaBox>
+                        <IdeaBox>
                           <HeaderTitle>
                             <NumberCircle>{selectedBoxId}</NumberCircle>
                             <HeaderTitleText> {businessModelItems.find(item => item.id === selectedBoxId)?.title || ''}</HeaderTitleText>
@@ -1207,7 +1208,8 @@ const businessModelItems = [
               
                           <IdeaContent>
                             <IdeaText>
-                              {bmCanvasInitialGraphData[selectedBoxId - 1].business_model_canvas_report_education
+                              {/* 선택된 박스 ID에 해당하는 데이터만 필터링하여 표시 */}
+                              {bmCanvasInitialGraphData[selectedBoxId - 1]?.business_model_canvas_report_education
                                 ?.filter(item => item.type !== "사용자 정의")  // 사용자 정의 타입 제외
                                 .map((item, index) => (
                                   <div key={index}>
