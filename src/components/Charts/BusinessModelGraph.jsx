@@ -183,21 +183,21 @@ const GraphContainer = styled.div`
   flex-direction: column;
   gap: 16px;
   width: 820px;
-  height: 608px;
+  height: 800px;
 `;
 
 const TopSection = styled.div`
   display: flex;
   gap: 16px;
   width: 100%;
-  height: 400px;
+  height: 523px;
 `;
 
 const BottomSection = styled.div`
   display: flex;
   gap: 16px;
   width: 100%;
-  height: 192px; /* 608 - 400 - 16(gap) = 192 */
+  height: 261px;
 `;
 
 const LeftColumn = styled.div`
