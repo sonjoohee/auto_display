@@ -100,9 +100,13 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
           <ModelBox 
             title={businessAreas[0].title} 
             id={businessAreas[0].id}
-            items={Array.isArray(businessModelCanvasGraphItems[7]) ? 
-              businessModelCanvasGraphItems[7].slice(0, 7).map(item => item.title) : 
-              []
+
+            // items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[0].id)?.items || []}
+            items={
+              businessModelCanvasGraphItems[7]?.business_model_canvas_report_education
+                ? businessModelCanvasGraphItems[7].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                : []
+
             }
             onClick={() => handleBoxClick(businessAreas[0].id)}
             isSelected={selectedBoxId === businessAreas[0].id}
