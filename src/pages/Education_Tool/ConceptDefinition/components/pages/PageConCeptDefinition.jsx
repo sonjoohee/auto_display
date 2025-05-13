@@ -784,10 +784,10 @@ const PageConceptDefinition = () => {
                         )}
                       </div>
                       <div className="selectBoxWrap">
-                        <Body2 color="gray500" style={{ width: "110px" }}>
+                        <Body2 color="gray500" style={{ width: "110px", marginTop: "12px" }}>
                           핵심 가치 선택
                         </Body2>
-                        <SelectBox style={{ paddingRight: "20px" }}>
+                        <SelectBox style={{ paddingRight: "20px", marginTop: "12px" }}>
                           <SelectBoxTitle
                             onClick={() =>
                               toolSteps >= 2

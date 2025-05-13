@@ -1125,7 +1125,7 @@ const businessModelItems = [
                     <div
                       className="markdown-body"
                       style={{
-                        textAlign: "left",
+                        textAlign: "left", marginTop: "40px"
                       }}
                     >
                       <Markdown>
@@ -1824,8 +1824,9 @@ const IdeaContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  width: 100%;
-  padding: 20px;
+  width: 820px; /* MoleculeBusinessModelGraph와 동일한 너비로 설정 */
+  margin: 0 auto; /* 중앙 정렬 */
+  padding: 20px 0; /* 좌우 패딩 제거, 상하 패딩만 유지 */
 `;
 
 const IdeaBox = styled.div`
