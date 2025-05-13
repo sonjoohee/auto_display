@@ -72,11 +72,9 @@ const MoleculeBusinessModelPopup = ({
 // 팝업에 표시할 옵션들 계산
 
 // const popupOptions = bmCanvasInitialGraphData[currentModelId - 2]?.map(item => item.title) || [];
-
-// console.log("bmCanvasInitialGraphData", bmCanvasInitialGraphData)
 const getTitles = (data, currentModelId) => {
   if (data[currentModelId - 1] && data[currentModelId - 1]) {
-    return data[currentModelId - 1].business_model_canvas_report_education.map(item => item.title);
+    return data[currentModelId - 1]?.business_model_canvas_report_education?.map(item => item.title);
   }
   return [];
 };
@@ -107,36 +105,88 @@ const titles = getTitles(bmCanvasInitialGraphData, currentModelId);
   
 
 //   // 팝업 닫기 처리
-  const handleClose = () => {
+//   const handleClose = () => {
+//     setIsVisible(false);
+//     setSelectedOption(null);
+//     setUserOptions([]);
+//     setInputFields([]);
+//     setInputValues({});
+   
+//     // const shouldApply = typeof isApplied === 'boolean' ? isApplied : false;
+//     setBMCanvasSelectedPopupOptions([]);
+  
+//     // if (Object.keys(bmCanvasSelectedPopupOptions).length === 0 && popupOpenCount[currentModelId] === 1) {
+
+//     //   setBusinessModelCanvasGraphItems(prev => 
+//     //     prev.map(item => 
+//     //       item.id === currentModel.id 
+//     //         ? { ...item, items: [] } 
+//     //         : item
+//     //     )
+//     //   );
+//     // }
+//  if (onClose) {
+//   onClose();
+
+
+//     }
+
+//   };
+
+
+const handleClose = async () => {
+  // 적용하지 않고 닫을 때만 선택 초기화
+  if (!Array.isArray(bmCanvasSelectedPopupOptions) || bmCanvasSelectedPopupOptions.length === 0) {
+ 
     setIsVisible(false);
     setSelectedOption(null);
     setUserOptions([]);
     setInputFields([]);
     setInputValues({});
-   
-    // const shouldApply = typeof isApplied === 'boolean' ? isApplied : false;
     setBMCanvasSelectedPopupOptions([]);
-  
-    // if (Object.keys(bmCanvasSelectedPopupOptions).length === 0 && popupOpenCount[currentModelId] === 1) {
 
-    //   setBusinessModelCanvasGraphItems(prev => 
-    //     prev.map(item => 
-    //       item.id === currentModel.id 
-    //         ? { ...item, items: [] } 
-    //         : item
-    //     )
-    //   );
-    // }
- if (onClose) {
-  onClose();
+     // 기존 데이터를 복사하고 business_model_canvas_report_education 속성을 제거
+  // const newGraphItems = [...businessModelCanvasGraphItems];
+  // delete newGraphItems[currentModelId - 1].business_model_canvas_report_education;
 
-
+  // setBusinessModelCanvasGraphItems(newGraphItems);
+  // // setBMCanvasInitialGraphData(bmCanvasInitialGraphData);
+  const newGraphItems = businessModelCanvasGraphItems.map((item, index) => {
+    if (index === currentModelId - 1) {
+      const newItem = { ...item };
+      delete newItem.business_model_canvas_report_education;
+      return newItem;
     }
-  //   setBMCanvasSelectedPopupOptions([]);
-  // setBMCanvasPopupOptions([]);
+    return item;
+  });
 
+  setBusinessModelCanvasGraphItems(newGraphItems);
 
-  };
+  await updateToolOnServer(
+    toolId,
+    {
+      bmCanvasGraphItems: newGraphItems,
+      // bmCanvasInitialGraphData: bmCanvasInitialGraphData,
+    },
+    isLoggedIn
+  );
+    
+    if (onClose) {
+      onClose(true); // true는 선택 초기화가 필요함을 나타냄
+    }
+  } else {
+    // 이미 선택하고 적용한 항목이 있으면 선택 유지
+    setIsVisible(false);
+    setSelectedOption(null);
+    setUserOptions([]);
+    setInputFields([]);
+    setInputValues({});
+    setBMCanvasSelectedPopupOptions([]);
+    if (onClose) {
+      onClose(false); // false는 선택을 유지함을 나타냄
+    }
+  }
+};
 
 
   // 옵션 선택 처리
@@ -243,7 +293,8 @@ const titles = getTitles(bmCanvasInitialGraphData, currentModelId);
     } else {
       // 다른 섹션인 경우 business_model_canvas_report_education 구조로 저장
       const newItems = bmCanvasSelectedPopupOptions.map(option => {
-        const originalItem = businessModelCanvasGraphItems[currentModelId - 1]?.business_model_canvas_report_education?.find(item => item.title === option);
+        // const originalItem = businessModelCanvasGraphItems[currentModelId - 1]?.business_model_canvas_report_education?.find(item => item.title === option);
+        const originalItem = bmCanvasInitialGraphData[currentModelId - 1]?.business_model_canvas_report_education?.find(item => item.title === option);
         return originalItem || { 
           type: option.type || "",
           approach: option.approach || "",
@@ -265,6 +316,8 @@ const titles = getTitles(bmCanvasInitialGraphData, currentModelId);
       },
       isLoggedIn
     );
+    // handleClose();
+    setIsVisible(false);
     handleClose();
 
     // 상태 업데이트
@@ -289,7 +342,7 @@ const titles = getTitles(bmCanvasInitialGraphData, currentModelId);
   // const hideAddButton = userOptions.length + inputFields.length >= 3 || bmCanvasPopupOptions.length + inputFields.length >= 7;
   // const hideAddButton = userOptions.length + inputFields.length >= 3 ;
   const savedUserOptions = bmCanvasInitialGraphData[currentModelId - 1]
-  ? bmCanvasInitialGraphData[currentModelId - 1].business_model_canvas_report_education.filter(item => item.type === "사용자 정의")
+  ? bmCanvasInitialGraphData[currentModelId - 1]?.business_model_canvas_report_education?.filter(item => item.type === "사용자 정의")
   : [];
   // const savedUserOptions = bmCanvasInitialGraphData[(currentModelId - 1)]
   // ? Object.values(bmCanvasInitialGraphData[(currentModelId - 1)]).filter(item => item.type === "사용자 정의")
@@ -297,8 +350,8 @@ const titles = getTitles(bmCanvasInitialGraphData, currentModelId);
 
 
 const hideAddButton =
-  userOptions.length + inputFields.length >= 3 ||
-  savedUserOptions.length + inputFields.length >= 3;
+  userOptions?.length + inputFields?.length >= 3 ||
+  savedUserOptions?.length + inputFields?.length >= 3;
 
   if (!isVisible) return null;
   const validSelectedKeys = Array.isArray(selectedKeys) ? selectedKeys : [];
@@ -342,7 +395,7 @@ const hideAddButton =
                     key={`default-${index}`} 
                     onClick={() => handleOptionSelect(option)}
                   > */}
-                     {titles.map((title, index) => (
+                     {titles?.map((title, index) => (
                   <OptionItem key={`title-${index}`} onClick={() => handleOptionSelect(title)}>
                     <OptionFlex>
                       <div>
@@ -361,7 +414,7 @@ const hideAddButton =
                 ))}
                 
                 {/* 사용자 정의 옵션 */}
-                {userOptions.map((option, index) => (
+                {userOptions?.map((option, index) => (
                   <OptionItem key={`user-${index}`} onClick={() => handleOptionSelect(option)}>
                     <OptionFlex>
                       <div>

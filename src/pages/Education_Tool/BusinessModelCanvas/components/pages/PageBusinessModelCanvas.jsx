@@ -177,8 +177,6 @@ const PageBusinessModelCanvas = () => {
   }, []);
 
 
-
-
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
@@ -598,27 +596,7 @@ setBMCanvasInitialGraphData(Object.values(response.response.business_model_canva
     setShowPopup(true);
     setSelectedKeys([])
 
-    // 해당 ID의 데이터가 이미 있는지 확인
-
-  // const existingData = bmCanvasInitialGraphData.find(item => item.id === id);
-  // const selectedData = businessModelCanvasGraphItems.find(item => item.id === id);
-  
-  // if (existingData) {
-  //   // // 이미 데이터가 있으면 로딩 없이 바로 보여주기
-  //   setBMCanvasPopupOptions(existingData?.items.flatMap(item => 
-  //     item.examples.map(example => example.split(':')[0].trim())
-  //   ));
-  //   setBMCanvasSelectedPopupOptions(selectedData?.items.flatMap(item => 
-  //     item.examples.map(example => example.split(':')[0].trim())
-  //   ));
-  //   setSelectedKeys(selectedData?.items.flatMap(item => 
-  //     item.examples.map(example => example.split(':')[0].trim())
-  //   ));
-  //   return;
-  // }
   const existingData = bmCanvasInitialGraphData[id - 1];
-const selectedData = businessModelCanvasGraphItems[id - 1];
-
 
 if (existingData) {
   // 이미 데이터가 있으면 로딩 없이 바로 보여주기
@@ -630,8 +608,8 @@ if (existingData) {
   } else {
     // 다른 섹션인 경우 (title만 가져오기)
     // setBMCanvasPopupOptions(Object.values(businessModelCanvasGraphItems[id - 1]).slice(0, 7));
-    setBMCanvasSelectedPopupOptions(businessModelCanvasGraphItems[id - 1].business_model_canvas_report_education.map(item => item.title));
-    setSelectedKeys(businessModelCanvasGraphItems[id - 1].business_model_canvas_report_education.map(item => item.title));
+    setBMCanvasSelectedPopupOptions(businessModelCanvasGraphItems[id - 1]?.business_model_canvas_report_education?.map(item => item.title));
+    setSelectedKeys(businessModelCanvasGraphItems[id - 1]?.business_model_canvas_report_education?.map(item => item.title));
   }
   return;
 }
