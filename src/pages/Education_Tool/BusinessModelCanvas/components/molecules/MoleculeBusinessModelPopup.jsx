@@ -61,7 +61,7 @@ const MoleculeBusinessModelPopup = ({
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
   const [bmCanvasUserOptions, setBMCanvasUserOptions] = useAtom(BUSINESS_MODEL_CANVAS_USER_OPTIONS);
-  console.log("BMCanvasPopupOptions", BMCanvasPopupOptions)
+  // console.log("BMCanvasPopupOptions", BMCanvasPopupOptions)
   // 현재 모델의 데이터 가져오기
   // const currentModelData = businessModelCanvasGraphItems.find(item => item.id === currentModelId);
   
@@ -73,7 +73,7 @@ const MoleculeBusinessModelPopup = ({
 
 // const popupOptions = bmCanvasInitialGraphData[currentModelId - 2]?.map(item => item.title) || [];
 
-
+// console.log("bmCanvasInitialGraphData", bmCanvasInitialGraphData)
 const getTitles = (data, currentModelId) => {
   if (data[currentModelId - 1] && data[currentModelId - 1]) {
     return data[currentModelId - 1].business_model_canvas_report_education.map(item => item.title);
@@ -160,109 +160,43 @@ const titles = getTitles(bmCanvasInitialGraphData, currentModelId);
   };
 
 
-  // const handleAddUserOption = async (id) => {
-  //   const value = inputValues[id]?.trim();
-  //   if (value) {
-  //     // 새로운 옵션 추가
-  //     const newUserOptions = [...userOptions, value];
-  //     setUserOptions(newUserOptions);
-  //     setBMCanvasSelectedPopupOptions([...bmCanvasSelectedPopupOptions, value]);
-      
-  //     // bmCanvasInitialGraphData의 items에 추가
-  //     const updatedInitialGraphData = bmCanvasInitialGraphData.map(item => {
-  //       if (item.id === currentModel.id) {
-  //         return {
-  //           ...item,
-  //           items: [...item.items, value]
-  //         };
-  //       }
-  //       return item;
-  //     });
-      
-  //     setBMCanvasInitialGraphData(updatedInitialGraphData);
-      
-  //     // 서버 업데이트
-  //     try {
-  //       await updateToolOnServer(
-  //         toolId,
-  //         {
-      
-  //           bmCanvasInitialGraphData: updatedInitialGraphData,
-  //         },
-  //         isLoggedIn
-  //       );
-  //     } catch (error) {
-  //       console.error("Error updating tool on server:", error);
-  //     }
-      
-  //     // 입력 필드 제거
-  //     setInputFields(inputFields.filter(fieldId => fieldId !== id));
-      
-  //     // 필드 값 상태에서도 제거
-  //     const newInputValues = { ...inputValues };
-  //     delete newInputValues[id];
-  //     setInputValues(newInputValues);
-  //   }
-  // };
+
   const handleAddUserOption = async (id) => {
     const value = inputValues[id]?.trim();
     if (value) {
-      // 새로운 옵션 추가
+      if (userOptions.includes(value)) {
+        setInputFields(inputFields.filter(fieldId => fieldId !== id));
+        const newInputValues = { ...inputValues };
+        delete newInputValues[id];
+        setInputValues(newInputValues);
+        return;
+      }
   
-      // // bmCanvasSelectedPopupOptions 업데이트 - 안전하게 처리
-      // const currentOptions = Array.isArray(bmCanvasSelectedPopupOptions) ? bmCanvasSelectedPopupOptions : [];
-      // setBMCanvasSelectedPopupOptions([...currentOptions, value]);
-  // 이미 userOptions에 존재하면 추가하지 않음
-        if (userOptions.includes(value)) {
-          // 입력 필드만 제거
-          setInputFields(inputFields.filter(fieldId => fieldId !== id));
-          const newInputValues = { ...inputValues };
-          delete newInputValues[id];
-          setInputValues(newInputValues);
-          return;
-        }
-          // setBMCanvasSelectedPopupOptions([...bmCanvasSelectedPopupOptions, value]);
-    
-      // 새로운 데이터 구조에 맞게 업데이트
       const updatedInitialGraphData = [...bmCanvasInitialGraphData];
       
-      if (currentModelId === 1) {
-        // customer_segments인 경우
-        updatedInitialGraphData[0] = {
-          ...updatedInitialGraphData[0],
-          customer_segments: {
-            ...updatedInitialGraphData[0].customer_segments,
-            [`custom_${Date.now()}`]: value
-          }
+      // business_model_canvas_report_education 처리
+      if (!updatedInitialGraphData[currentModelId - 1]) {
+        updatedInitialGraphData[currentModelId - 1] = {
+          business_model_canvas_report_education: []
         };
-      } else {
-        // 다른 섹션인 경우
-        const newItem = {
-          type: "사용자 정의",
-          approach: "사용자가 직접 추가한 항목입니다.",
-          title: value,
-          description: "사용자가 직접 추가한 항목입니다."
-        };
-        //  setBMCanvasUserOptions([...bmCanvasUserOptions, value])
-        //  console.log("bmCanvasUserOptions",[...bmCanvasUserOptions, value])
-    
-        // 기존 배열이 없으면 빈 배열로 초기화
-        // if (!Array.isArray(updatedInitialGraphData[1])) {
-        //   updatedInitialGraphData[1] = [];
-        // }
-        
-        // 새 아이템 추가하고 7개로 제한
-        const updatedItems = [...updatedInitialGraphData[currentModelId - 2], newItem];
- 
-        updatedInitialGraphData[currentModelId - 2] = updatedItems;
       }
-    
-      
-      console.log("updatedInitialGraphData", updatedInitialGraphData);
+  
+      const newItem = {
+        type: "사용자 정의",
+        approach: "사용자가 직접 추가한 항목입니다.",
+        title: value,
+        description: "사용자가 직접 추가한 항목입니다."
+      };
+  
+      if (!updatedInitialGraphData[currentModelId - 1].business_model_canvas_report_education) {
+        updatedInitialGraphData[currentModelId - 1].business_model_canvas_report_education = [];
+      }
+  
+      updatedInitialGraphData[currentModelId - 1].business_model_canvas_report_education.push(newItem);
+  
       
       setBMCanvasInitialGraphData(updatedInitialGraphData);
       
-      // 서버 업데이트
       try {
         await updateToolOnServer(
           toolId,
@@ -275,16 +209,13 @@ const titles = getTitles(bmCanvasInitialGraphData, currentModelId);
         console.error("Error updating tool on server:", error);
       }
       
-      // 입력 필드 제거
       setInputFields(inputFields.filter(fieldId => fieldId !== id));
-      
-      // 필드 값 상태에서도 제거
       const newInputValues = { ...inputValues };
       delete newInputValues[id];
       setInputValues(newInputValues);
     }
   };
-  console.log("bmCanvasSelectedPopupOptions", bmCanvasSelectedPopupOptions)
+
 
  // 현재 모델의 데이터 가져오기
  const handleApply = async () => {
@@ -371,7 +302,7 @@ const hideAddButton =
 
   if (!isVisible) return null;
   const validSelectedKeys = Array.isArray(selectedKeys) ? selectedKeys : [];
-console.log("validSelectedKeys", validSelectedKeys)
+// console.log("validSelectedKeys", validSelectedKeys)
   return (
     <PopupOverlay>
 

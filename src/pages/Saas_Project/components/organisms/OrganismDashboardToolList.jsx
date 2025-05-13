@@ -209,6 +209,11 @@ import {
   BUSINESS_MODEL_CANVAS_POPUP_OPTIONS,
   BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS,
   KANO_MODEL_INSIGHT,
+  NPS_SELECTED_MODE_TYPE,
+  NPS_FILE_NAME,
+  NPS_SURVEY_METHOD,
+  NPS_PERSONA_LIST,
+  NPS_SELECTED_CONCEPT,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -557,6 +562,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setBusinessModelCanvasInitialGraphData] = useAtom(BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA);
   const [, setBusinessModelCanvasPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_POPUP_OPTIONS);
   const [, setBusinessModelCanvasSelectedPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS);
+  const [, setNpsPersonaList] = useAtom(NPS_PERSONA_LIST);  
+  const [, setNpsSelectedModeType] = useAtom(NPS_SELECTED_MODE_TYPE);
+  const [, setNpsFileName] = useAtom(NPS_FILE_NAME);
+  const [, setNpsSurveyMethod] = useAtom(NPS_SURVEY_METHOD);
+  const [, setNPSSelectedConcept] = useAtom(NPS_SELECTED_CONCEPT);
 
   const saveConversation = (data) => {};
 
@@ -1440,6 +1450,34 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setBusinessModelCanvasSelectedPopupOptions(chatData?.bmCanvasSelectedPopupOptions || {});
         setCompletedStatus(chatData?.completedStatus || false);
         setToolStep(chatData?.completedStep);
+
+        //!NPS
+        setToolStep(1);
+        setCompletedStatus(false);
+        setNpsPersonaList([]);
+        setNPSSelectedConcept([]);
+        setNpsSurveyMethod({});
+        setNpsPersonaList(chatData?.npsPersonaList || []);
+        setNPSSelectedConcept(chatData?.npsSelectedConcept || []);
+        setNpsSurveyMethod(chatData?.npsSurveyMethod|| {});
+        setCompletedStatus(chatData?.completedStatus || false);
+        setNpsSelectedModeType(chatData?.interviewModeType || "");
+        setNpsFileName(
+          chatData?.fileName
+            ? Array.isArray(chatData.fileName)
+              ? chatData.fileName.map((file) =>
+                  typeof file === "object" ? file.name : file
+                )
+              : [
+                  typeof chatData.fileName === "object"
+                    ? chatData.fileName.name
+                    : chatData.fileName,
+                ]
+            : []
+        );
+        setToolStep(chatData?.completedStep);
+
+
   
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);

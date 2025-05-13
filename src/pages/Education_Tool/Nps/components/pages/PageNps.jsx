@@ -64,6 +64,7 @@ import {
   NPS_FILE_NAME,
   NPS_SURVEY_METHOD,
   EDUCATION_TOOL_COMPLETED_STATUS,
+  NPS_PERSONA_LIST,
 
 } from "../../../../AtomStates";
 import {
@@ -133,9 +134,7 @@ const PageNps = () => {
     projectAnalysisMultimodalDescription,
     setProjectAnalysisMultimodalDescription,
   ] = useAtom(PROJECT_ANALYSIS_MULTIMODAL_DESCRIPTION);
-  // const [npsConceptDefinition, setNpsConceptDefinition] = useAtom(
-  //   NPS_CONCEPT_DEFINITION
-  // );
+
   const [quickSurveyAnalysis, setQuickSurveyAnalysis] = useAtom(
     QUICK_SURVEY_ANALYSIS
   );
@@ -179,6 +178,7 @@ const PageNps = () => {
   const [npsSelectedModeType, setNpsSelectedModeType] = useAtom(
     NPS_SELECTED_MODE_TYPE
   );
+  const [npsPersonaList, setNpsPersonaList] = useAtom(NPS_PERSONA_LIST);
   const [npsFileName, setNpsFileName] = useAtom(NPS_FILE_NAME);
   const [npsSurveyMethod, setNpsSurveyMethod] = useAtom(NPS_SURVEY_METHOD);
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -194,7 +194,6 @@ const PageNps = () => {
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
   const [projectDescription, setProjectDescription] = useState("");
-  const [descriptionLength, setDescriptionLength] = useState(0);
   const [recruitingCondition, setRecruitingCondition] = useState("");
   const [quickSurveyCustomQuestion, setQuickSurveyCustomQuestion] = useState(
     []
@@ -202,7 +201,6 @@ const PageNps = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [fileNames, setFileNames] = useState([]);
   const [selectedConcept, setSelectedConcept] = useState([]);
-  const [conceptList, setConceptList] = useState([]);
   const [customPersonaForm, setCustomPersonaForm] = useState({
     gender: "",
     age: [],
@@ -262,7 +260,8 @@ const PageNps = () => {
       document.body.style.paddingRight = "0";
     };
   }, [showToast]);
-
+ 
+console.log("npsSurveyMethod", npsSurveyMethod)
   useEffect(() => {
     const interviewLoading = async () => {
       if (!creditCreateToolLoaded) {
@@ -302,17 +301,25 @@ const PageNps = () => {
         if (quickSurveyProjectDescription) {
           setProjectDescription(quickSurveyProjectDescription);
         }
-        // if (fileNames) {
-        //   setFileNames(fileNames ?? []);
-        //   setUploadedFiles(fileNames ?? []);
-        // }
-
-        if (
-          quickSurveyAnalysis &&
-          Object.keys(quickSurveyAnalysis || {}).length > 0
-        ) {
-          setQuickSurveyAnalysis(quickSurveyAnalysis);
+        if (npsFileName) {
+          setFileNames(npsFileName ?? []);
+          setUploadedFiles(npsFileName ?? []);
         }
+
+       if(npsSelectedModeType) {
+        setNpsSelectedModeType(npsSelectedModeType);
+       }
+
+       if(npsSelectedConcept) {
+        setNPSSelectedConcept(npsSelectedConcept);
+       }
+       if(Object.keys(npsSurveyMethod).length > 0) {
+        setNpsSurveyMethod(npsSurveyMethod);
+       }
+       if(npsPersonaList) {
+        setNpsPersonaList(npsPersonaList);
+       }
+
         if (
           quickSurveyAnalysis.custom_question &&
           quickSurveyAnalysis.custom_question.length > 0
@@ -321,13 +328,6 @@ const PageNps = () => {
         }
         if (quickSurveySurveyMethod && quickSurveySurveyMethod.length > 0) {
           setQuickSurveySurveyMethod(quickSurveySurveyMethod);
-        }
-
-        if (
-          quickSurveySelectedQuestion &&
-          quickSurveySelectedQuestion.length > 0
-        ) {
-          setSelectedQuestion(quickSurveySelectedQuestion);
         }
 
         // 활성 탭 설정 (기본값 1)
@@ -360,12 +360,12 @@ const PageNps = () => {
         //   setQuickSurveySurveyMethod(quickSurveySurveyMethod);
         // }
 
-        if (
-          quickSurveyInterviewModeType &&
-          quickSurveyInterviewModeType.length > 0
-        ) {
-          setInterviewModeType(quickSurveyInterviewModeType);
-        }
+        // if (
+        //   quickSurveyInterviewModeType &&
+        //   quickSurveyInterviewModeType.length > 0
+        // ) {
+        //   setInterviewModeType(quickSurveyInterviewModeType);
+        // }
 
         if (
           quickSurveyDetailInfo &&
@@ -484,6 +484,7 @@ const PageNps = () => {
   // };
 
   const handleCheckboxChange = (ideaId) => {
+    console.log("selectedConcept", selectedConcept)
     setSelectedConcept((prev) => {
       if (prev.includes(ideaId)) {
         // 이미 선택된 아이템이면 제거
@@ -504,7 +505,7 @@ const PageNps = () => {
         );
         setNPSSelectedConcept(selectedDataList);
         setNpsSelectedConceptDefinitionFinalReport(npsConceptDefinition[ideaId].conceptDefinitionFinalReport);
-        console.log(npsConceptDefinition[ideaId].conceptDefinitionFinalReport);
+        // console.log(npsConceptDefinition[ideaId].conceptDefinitionFinalReport);
         return newSelected;
       }
     });
@@ -635,7 +636,7 @@ const PageNps = () => {
         const Data = {
           type: "ix_nps_description_education",
           business: businessDescription,
-          concept_definition: projectDescription,
+          // concept_definition: projectDescription,
           concept_definition: npsSelectedConceptDefinitionFinalReport,
         };
 
@@ -685,31 +686,71 @@ const PageNps = () => {
         persona_list: favoritePersonaList,
       };
 
-      let retryCount = 0;
-      const maxRetries = 10;
+      let responses = [];
 
-      while (retryCount < maxRetries) {
-        response = await EducationToolsRequest(Data, isLoggedIn, signal);
+      // 2번의 API 호출을 위한 for문
+      for (let apiCall = 0; apiCall < 2; apiCall++) {
+        let retryCount = 0;
+        const maxRetries = 10;
+        let currentResponse;
 
-        // if (
-        //   response.response &&
-        //   response.response.nps_description_education &&
-        //   response.response.nps_description_education.question &&
-        //   response.response.nps_description_education.options &&
-        //   response.response.nps_description_education.follow_up
-        // ) {
-        //   break; // 올바른 응답 형식이면 루프 종료
-        // }
+        while (retryCount < maxRetries) {
+          currentResponse = await EducationToolsRequest(Data, isLoggedIn, signal);
+          console.log("currentResponse", Array.isArray(currentResponse.response.nps_persona_generation_education))
+          if (
+            currentResponse.response &&
+            Array.isArray(currentResponse.response.nps_persona_generation_education) &&
+            currentResponse.response.nps_persona_generation_education.length > 0
+          ) {
+            // 각 응답의 페르소나에 imageKey 추가
+            currentResponse.response.nps_persona_generation_education = 
+              currentResponse.response.nps_persona_generation_education.map(persona => ({
+                ...persona,
+                imageKey: `persona_${persona.gender === "남성" ? "m" : "f"}_${
+                  Math.floor(
+                    (persona.age ? parseInt(persona.age.replace("세", "")) : 20) / 10
+                  ) * 10
+                }_${String(Math.floor(Math.random() * 10) + 1).padStart(2, "0")}`
+              }));
+            
+            responses.push(currentResponse);
+            break;
+          }
+          console.log(`API call ${apiCall + 1}, response:`, currentResponse);
 
-        retryCount++;
-        if (retryCount >= maxRetries) {
-          throw new Error(
-            "응답 형식이 올바르지 않습니다. 최대 재시도 횟수를 초과했습니다."
-          );
+          retryCount++;
+          if (retryCount >= maxRetries) {
+            throw new Error(
+              `응답 형식이 올바르지 않습니다. API 호출 ${apiCall + 1} 최대 재시도 횟수를 초과했습니다.`
+            );
+          }
         }
       }
 
-      // setNpsPersonaList(response.response.nps_description_education);
+        // 두 응답 결과 합치기
+        if (responses.length === 2) {
+          response = {
+            ...responses[0],
+            response: {
+              ...responses[0].response,
+              nps_persona_generation_education: [
+                ...responses[0].response.nps_persona_generation_education,
+                ...responses[1].response.nps_persona_generation_education
+              ]
+            }
+          };
+        }
+
+  
+      
+      console.log(response.response.nps_persona_generation_education)
+      // 모든 응답을 하나로 합치기
+
+      setNpsPersonaList(response.response.nps_persona_generation_education);
+      setNpsPersonaList([
+        ...response.response.nps_persona_generation_education,
+        ...favoritePersonaList
+      ]);
 
 
       const responseToolId = await createToolOnServer(
@@ -725,14 +766,23 @@ const PageNps = () => {
       await updateToolOnServer(
         responseToolId,
         {
-          completedStep: 1,
+          completedStep: 2,
           npsSelectedConcept: npsSelectedConcept,
-          npsSurveyMethod: interviewModeType == "conceptBoard" ? response.response.nps_conceptboard_multimodal : response.response.nps_description_education,
+          // npsSurveyMethod: interviewModeType == "conceptBoard" ? response.response.nps_conceptboard_multimodal : response.response.nps_description_education,
+          // npsSurveyMethod: npsSurveyMethod,
+          npsSurveyMethod: interviewModeType === "conceptBoard" 
+          ? npsSurveyMethod
+          : response.response.nps_description_education,
+          
           fileName: uploadedFiles.map((file) => ({
             id: "file_" + timeStamp,
             name: fileNames,
           })),
           interviewModeType: interviewModeType == "conceptBoard" ? "conceptBoard" : "explanation",
+          npsPersonaList: [
+            ...response.response.nps_persona_generation_education,
+            ...favoritePersonaList
+          ]
         },
         isLoggedIn
       );
@@ -760,299 +810,340 @@ const PageNps = () => {
     }
   };
 
-  useEffect(() => {
-    if (shouldRegenerate && Object.keys(quickSurveyAnalysis).length === 0) {
-      handleSubmitConcept();
-      setShouldRegenerate(false); // 리셋
-    }
-  }, [quickSurveyAnalysis, shouldRegenerate]);
 
-  const handleRegenerate = () => {
-    setShouldRegenerate(true);
-    setSelectedQuestion([]); // 재생성 flag 설정
-    setQuickSurveyAnalysis({});
-    setQuickSurveyCustomQuestion([]);
-  };
 
-  const handleSubmitSelfSelect = async () => {
-    // setToolSteps(2);
-    setIsLoadingDetailSetting(true);
 
-    try {
-      let Data;
+  // const handleSubmitSelfSelect = async () => {
+  //   // setToolSteps(2);
+  //   setIsLoadingDetailSetting(true);
 
-      if (interviewModeType === "conceptBoard") {
-        const detail_info = {
-          gender: customPersonaForm.gender || "상관없음",
-          age:
-            customPersonaForm.age?.length > 0
-              ? customPersonaForm.age
-              : ["상관없음"],
-          residence:
-            customPersonaForm.residence?.length > 0
-              ? customPersonaForm.residence
-              : ["상관없음"],
-          income:
-            customPersonaForm.income?.length > 0
-              ? customPersonaForm.income
-              : ["상관없음"],
-        };
-        Data = {
-          type: "ix_quick_survey_persona_group",
-          business: business,
-          goal: projectDescription,
-          recruitment_criteria: recruitingCondition || "상관없음",
-          survey_method: quickSurveyAnalysis[selectedQuestion],
-          detail_info: detail_info,
-        };
-      } else {
-        // 선택된 카드의 ID 찾기
-        // const selectedCardId = Object.entries(selectedPresetCards).find(([_, isSelected]) => isSelected)?.[0];
+  //   try {
+  //     let Data;
 
-        // const selectedPersona = quickSurveyPresetData.find(persona => persona._id === selectedCardId);
-        Data = {
-          type: "ix_quick_survey_persona_group",
-          business: business,
-          goal: projectDescription,
-          survey_method: quickSurveyAnalysis[selectedQuestion],
-          // recruitment_criteria: selectedPersona?.original_description || "",
-          recruitment_criteria: selectedPersona?.personaName || "",
-        };
-      }
+  //     if (interviewModeType === "conceptBoard") {
+  //       const detail_info = {
+  //         gender: customPersonaForm.gender || "상관없음",
+  //         age:
+  //           customPersonaForm.age?.length > 0
+  //             ? customPersonaForm.age
+  //             : ["상관없음"],
+  //         residence:
+  //           customPersonaForm.residence?.length > 0
+  //             ? customPersonaForm.residence
+  //             : ["상관없음"],
+  //         income:
+  //           customPersonaForm.income?.length > 0
+  //             ? customPersonaForm.income
+  //             : ["상관없음"],
+  //       };
+  //       Data = {
+  //         type: "ix_quick_survey_persona_group",
+  //         business: business,
+  //         goal: projectDescription,
+  //         recruitment_criteria: recruitingCondition || "상관없음",
+  //         survey_method: quickSurveyAnalysis[selectedQuestion],
+  //         detail_info: detail_info,
+  //       };
+  //     } else {
+  //       // 선택된 카드의 ID 찾기
+  //       // const selectedCardId = Object.entries(selectedPresetCards).find(([_, isSelected]) => isSelected)?.[0];
 
-      let response;
-      let retryCount = 0;
-      const maxRetries = 10;
+  //       // const selectedPersona = quickSurveyPresetData.find(persona => persona._id === selectedCardId);
+  //       Data = {
+  //         type: "ix_quick_survey_persona_group",
+  //         business: business,
+  //         goal: projectDescription,
+  //         survey_method: quickSurveyAnalysis[selectedQuestion],
+  //         // recruitment_criteria: selectedPersona?.original_description || "",
+  //         recruitment_criteria: selectedPersona?.personaName || "",
+  //       };
+  //     }
 
-      while (retryCount < maxRetries) {
-        try {
-          response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+  //     let response;
+  //     let retryCount = 0;
+  //     const maxRetries = 10;
 
-          // 응답 형식 검증
-          if (
-            response.response &&
-            response.response.quick_survey_persona_group &&
-            Array.isArray(response.response.quick_survey_persona_group) &&
-            response.response.quick_survey_persona_group.length > 0 &&
-            response.response.quick_survey_persona_group[0].name &&
-            response.response.quick_survey_persona_group[0].gender &&
-            response.response.quick_survey_persona_group[0].age &&
-            response.response.quick_survey_persona_group[0].job &&
-            response.response.quick_survey_persona_group[0].profile &&
-            response.response.quick_survey_persona_group[0].insight
-          ) {
-            break; // 올바른 응답 형식이면 루프 종료
-          }
+  //     while (retryCount < maxRetries) {
+  //       try {
+  //         response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
 
-          retryCount++;
-        } catch (error) {
-          retryCount++;
-          if (retryCount >= maxRetries) {
-            throw error; // 최대 재시도 횟수 초과 시 에러 던지기
-          }
-        }
-      }
+  //         // 응답 형식 검증
+  //         if (
+  //           response.response &&
+  //           response.response.quick_survey_persona_group &&
+  //           Array.isArray(response.response.quick_survey_persona_group) &&
+  //           response.response.quick_survey_persona_group.length > 0 &&
+  //           response.response.quick_survey_persona_group[0].name &&
+  //           response.response.quick_survey_persona_group[0].gender &&
+  //           response.response.quick_survey_persona_group[0].age &&
+  //           response.response.quick_survey_persona_group[0].job &&
+  //           response.response.quick_survey_persona_group[0].profile &&
+  //           response.response.quick_survey_persona_group[0].insight
+  //         ) {
+  //           break; // 올바른 응답 형식이면 루프 종료
+  //         }
 
-      const personaGroupWithImage =
-        response.response.quick_survey_persona_group.map((persona) => ({
-          ...persona,
-          imageKey: `persona_${persona.gender === "남성" ? "m" : "f"}_${
-            Math.floor(
-              (persona.age ? parseInt(persona.age.replace("세", "")) : 20) / 10
-            ) * 10
-          }_${String(Math.floor(Math.random() * 10) + 1).padStart(2, "0")}`,
-        }));
+  //         retryCount++;
+  //       } catch (error) {
+  //         retryCount++;
+  //         if (retryCount >= maxRetries) {
+  //           throw error; // 최대 재시도 횟수 초과 시 에러 던지기
+  //         }
+  //       }
+  //     }
 
-      setquickSurveyPersonaGroup(personaGroupWithImage);
+  //     const personaGroupWithImage =
+  //       response.response.quick_survey_persona_group.map((persona) => ({
+  //         ...persona,
+  //         imageKey: `persona_${persona.gender === "남성" ? "m" : "f"}_${
+  //           Math.floor(
+  //             (persona.age ? parseInt(persona.age.replace("세", "")) : 20) / 10
+  //           ) * 10
+  //         }_${String(Math.floor(Math.random() * 10) + 1).padStart(2, "0")}`,
+  //       }));
 
-      // setquickSurveyPersonaGroup(response.response.quick_survey_persona_group)
+  //     setquickSurveyPersonaGroup(personaGroupWithImage);
 
-      await updateToolOnServer(
-        toolId,
-        {
-          detailInfo: customPersonaForm,
-          recruitmentCriteria:
-            interviewModeType === "conceptBoard"
-              ? recruitingCondition
-              : selectedPersona?.original_description,
-          personaGroup: personaGroupWithImage,
-          interviewModeType: interviewModeType,
-          completedStep: 2,
-        },
-        isLoggedIn
-      );
-    } catch (error) {
-      setShowPopupError(true);
-      if (error.response) {
-        switch (error.response.status) {
-          case 500:
-            setShowPopupError(true);
-            break;
-          case 504:
-            setShowPopupError(true);
-            break;
-          default:
-            setShowPopupError(true);
-            break;
-        }
-      } else {
-        setShowPopupError(true);
-      }
-    } finally {
-      setIsLoadingDetailSetting(false);
-    }
-  };
+  //     // setquickSurveyPersonaGroup(response.response.quick_survey_persona_group)
 
-  const handlePresetPersona = async () => {
-    // setToolSteps(2);
-    setIsLoadingPreset(true);
-    try {
-      const Data = {
-        type: "ix_quick_survey_preset",
-        business: business,
-        goal: projectDescription,
-        survey_method: {
-          question: quickSurveyAnalysis[selectedQuestion].question,
-          follow_up: quickSurveyAnalysis[selectedQuestion].follow_up,
-        },
-      };
+  //     await updateToolOnServer(
+  //       toolId,
+  //       {
+  //         detailInfo: customPersonaForm,
+  //         recruitmentCriteria:
+  //           interviewModeType === "conceptBoard"
+  //             ? recruitingCondition
+  //             : selectedPersona?.original_description,
+  //         personaGroup: personaGroupWithImage,
+  //         interviewModeType: interviewModeType,
+  //         completedStep: 2,
+  //       },
+  //       isLoggedIn
+  //     );
+  //   } catch (error) {
+  //     setShowPopupError(true);
+  //     if (error.response) {
+  //       switch (error.response.status) {
+  //         case 500:
+  //           setShowPopupError(true);
+  //           break;
+  //         case 504:
+  //           setShowPopupError(true);
+  //           break;
+  //         default:
+  //           setShowPopupError(true);
+  //           break;
+  //       }
+  //     } else {
+  //       setShowPopupError(true);
+  //     }
+  //   } finally {
+  //     setIsLoadingDetailSetting(false);
+  //   }
+  // };
 
-      let response;
-      let retryCount = 0;
-      const maxRetries = 10;
+  // const handlePresetPersona = async () => {
+  //   // setToolSteps(2);
+  //   setIsLoadingPreset(true);
+  //   try {
+  //     const Data = {
+  //       type: "ix_quick_survey_preset",
+  //       business: business,
+  //       goal: projectDescription,
+  //       survey_method: {
+  //         question: quickSurveyAnalysis[selectedQuestion].question,
+  //         follow_up: quickSurveyAnalysis[selectedQuestion].follow_up,
+  //       },
+  //     };
 
-      while (retryCount < maxRetries) {
-        try {
-          response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+  //     let response;
+  //     let retryCount = 0;
+  //     const maxRetries = 10;
 
-          // 응답 형식 확인
-          if (
-            response?.response?.quick_survey_preset?.low_user_group &&
-            response?.response?.quick_survey_preset?.general_user_group &&
-            response?.response?.quick_survey_preset?.high_user_group
-          ) {
-            break; // 올바른 형식이면 루프 종료
-          }
+  //     while (retryCount < maxRetries) {
+  //       try {
+  //         response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
 
-          retryCount++;
-        } catch (error) {
-          retryCount++;
-        }
-      }
+  //         // 응답 형식 확인
+  //         if (
+  //           response?.response?.quick_survey_preset?.low_user_group &&
+  //           response?.response?.quick_survey_preset?.general_user_group &&
+  //           response?.response?.quick_survey_preset?.high_user_group
+  //         ) {
+  //           break; // 올바른 형식이면 루프 종료
+  //         }
 
-      if (retryCount >= maxRetries) {
-        throw new Error(
-          "최대 재시도 횟수를 초과했습니다. 응답 형식이 올바르지 않습니다."
-        );
-      }
+  //         retryCount++;
+  //       } catch (error) {
+  //         retryCount++;
+  //       }
+  //     }
 
-      // 여기서 데이터 가공
-      const allPersonas = [
-        ...response.response.quick_survey_preset.low_user_group,
-        ...response.response.quick_survey_preset.general_user_group,
-        ...response.response.quick_survey_preset.high_user_group,
-      ].map((persona, index) => ({
-        _id: String(index + 1),
-        personaName: persona.preset_name,
-        personaCharacteristics: persona.preset_description,
-        status: "complete",
-        original_description: persona.preset_description, // recruitment_criteria용으로 원본 저장
-      }));
+  //     if (retryCount >= maxRetries) {
+  //       throw new Error(
+  //         "최대 재시도 횟수를 초과했습니다. 응답 형식이 올바르지 않습니다."
+  //       );
+  //     }
 
-      setQuickSurveyPresetData(allPersonas);
+  //     // 여기서 데이터 가공
+  //     const allPersonas = [
+  //       ...response.response.quick_survey_preset.low_user_group,
+  //       ...response.response.quick_survey_preset.general_user_group,
+  //       ...response.response.quick_survey_preset.high_user_group,
+  //     ].map((persona, index) => ({
+  //       _id: String(index + 1),
+  //       personaName: persona.preset_name,
+  //       personaCharacteristics: persona.preset_description,
+  //       status: "complete",
+  //       original_description: persona.preset_description, // recruitment_criteria용으로 원본 저장
+  //     }));
 
-      await updateToolOnServer(
-        toolId,
-        {
-          quickSurveyPresetData: allPersonas,
-        },
-        isLoggedIn
-      );
-    } catch (error) {
-      setShowPopupError(true);
-      if (error.response) {
-        switch (error.response.status) {
-          case 500:
-            setShowPopupError(true);
-            break;
-          case 504:
-            setShowPopupError(true);
-            break;
-          default:
-            setShowPopupError(true);
-            break;
-        }
-      } else {
-        setShowPopupError(true);
-      }
-    } finally {
-      setIsLoadingPreset(false);
-    }
-  };
+  //     setQuickSurveyPresetData(allPersonas);
+
+  //     await updateToolOnServer(
+  //       toolId,
+  //       {
+  //         quickSurveyPresetData: allPersonas,
+  //       },
+  //       isLoggedIn
+  //     );
+  //   } catch (error) {
+  //     setShowPopupError(true);
+  //     if (error.response) {
+  //       switch (error.response.status) {
+  //         case 500:
+  //           setShowPopupError(true);
+  //           break;
+  //         case 504:
+  //           setShowPopupError(true);
+  //           break;
+  //         default:
+  //           setShowPopupError(true);
+  //           break;
+  //       }
+  //     } else {
+  //       setShowPopupError(true);
+  //     }
+  //   } finally {
+  //     setIsLoadingPreset(false);
+  //   }
+  // };
 
   const handleSubmitReport = async () => {
     handleNextStep(2);
     // setToolSteps(2);
     setIsLoadingReport(true);
-
+    
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
     try {
-      const Data = {
-        type: "ix_quick_survey_interview",
-        business: business,
-        survey_method: {
-          ...quickSurveyAnalysis[selectedQuestion],
-          type: "nps",
-          // type: selectedQuestion.toString(),
-        },
-        persona_group: quickSurveyPersonaGroup,
-      };
+      
+      // const Data = {
+      //   type: "ix_quick_survey_interview",
+      //   business: business,
+      //   survey_method: {
+      //     ...npsSurveyMethod,
+      //     type: "nps",
+      //     // type: selectedQuestion.toString(),
+      //   },
+      //   persona_group: npsPersonaList,
+      // };
 
-      let response;
-      let retryCount = 0;
-      const maxRetries = 10;
+      // console.log("Data", Data)
 
-      while (retryCount < maxRetries) {
-        try {
-          response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
+      // let response;
+      // let retryCount = 0;
+      // const maxRetries = 10;
 
-          // 응답 형식 검증
-          if (
-            response.response &&
-            response.response.quick_survey_interview &&
-            Array.isArray(response.response.quick_survey_interview) &&
-            response.response.quick_survey_interview.length > 0
-          ) {
-            break; // 올바른 응답 형식이면 루프 종료
-          }
+      // while (retryCount < maxRetries) {
+      //   try {
+      //     response = await InterviewXQuickSurveyRequest(Data, isLoggedIn);
 
-          retryCount++;
-        } catch (error) {
-          retryCount++;
-          if (retryCount >= maxRetries) throw error;
-        }
-      }
+      //     console.log("response", response)
 
-      if (retryCount >= maxRetries) {
-        throw new Error(
-          "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
-        );
-      }
+      //     // 응답 형식 검증
+      //     if (
+      //       response.response &&
+      //       response.response.quick_survey_interview &&
+      //       Array.isArray(response.response.quick_survey_interview) &&
+      //       response.response.quick_survey_interview.length > 0
+      //     ) {
+      //       break; // 올바른 응답 형식이면 루프 종료
+      //     }
 
-      const combinedInterviews = response.response.quick_survey_interview.map(
-        (interview, index) => {
-          const matchedPersona = quickSurveyPersonaGroup.find(
+      //     retryCount++;
+      //   } catch (error) {
+      //     retryCount++;
+      //     if (retryCount >= maxRetries) throw error;
+      //   }
+      // }
+
+      // if (retryCount >= maxRetries) {
+      //   throw new Error(
+      //     "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
+      //   );
+      // }
+
+      let responses = [];
+const chunkSize = 30; // 한 번에 처리할 페르소나 수
+
+// npsPersonaList를 30개씩 나누어 처리
+for (let i = 0; i < npsPersonaList.length; i += chunkSize) {
+  const personaChunk = npsPersonaList.slice(i, i + chunkSize);
+  console.log("personaChunk", personaChunk)
+  
+  const Data = {
+    type: "ix_quick_survey_interview",
+    business: business,
+    survey_method: {
+      ...npsSurveyMethod,
+      type: "nps",
+    },
+    persona_group: personaChunk,
+  };
+
+  let retryCount = 0;
+  const maxRetries = 10;
+  let currentResponse;
+
+  while (retryCount < maxRetries) {
+    currentResponse = await EducationToolsRequest(Data, isLoggedIn, signal);
+
+    if (
+      currentResponse.response &&
+      Array.isArray(currentResponse.response.quick_survey_interview) &&
+      currentResponse.response.quick_survey_interview.length > 0
+    ) {
+      responses.push(currentResponse);
+      break;
+    }
+    console.log(`API call chunk ${i/chunkSize + 1}, response:`, currentResponse);
+
+    retryCount++;
+    if (retryCount >= maxRetries) {
+      throw new Error(
+        `응답 형식이 올바르지 않습니다. API 호출 ${i/chunkSize + 1} 최대 재시도 횟수를 초과했습니다.`
+      );
+    }
+    
+  }
+}
+
+      const combinedInterviews = responses.map(
+        (response, index) => {
+          const matchedPersona = npsPersonaList.find(
             (persona, pIndex) =>
-              pIndex === index && persona.name === interview.persona_name
+              pIndex === index && persona.name === response.response.quick_survey_interview.persona_name
           );
 
           if (matchedPersona) {
             const { name, ...personaInfoWithoutName } = matchedPersona;
             return {
-              ...interview,
+              ...response.response.quick_survey_interview,
               ...personaInfoWithoutName,
             };
           }
-          return interview;
+          return response.response.quick_survey_interview;
         }
       );
 
@@ -1063,11 +1154,12 @@ const PageNps = () => {
         business: business,
         goal: projectDescription,
         survey_method: {
-          ...quickSurveyAnalysis[selectedQuestion],
-          type: selectedQuestion.toString(),
+          ...npsSurveyMethod,
+          type: "nps",
+          // type: selectedQuestion.toString(),
         },
-        persona_group: quickSurveyPersonaGroup,
-        quick_survey_interview: response.response.quick_survey_interview,
+        persona_group: npsPersonaList,
+        quick_survey_interview: combinedInterviews,
       };
 
       let responseReport;
@@ -1142,29 +1234,6 @@ const PageNps = () => {
     } finally {
       setIsLoadingReport(false);
     }
-  };
-
-  const handlePresetCardSelection = (personaId) => {
-    const newSelectedCards = { ...selectedPresetCards };
-    // 현재 선택 상태 확인
-    const isCurrentlySelected = newSelectedCards[personaId];
-
-    // 모든 카드 선택 해제
-    Object.keys(newSelectedCards).forEach((key) => {
-      newSelectedCards[key] = false;
-    });
-
-    // 현재 카드가 선택되지 않은 상태였다면 선택
-    if (!isCurrentlySelected) {
-      newSelectedCards[personaId] = true;
-      const persona = quickSurveyPresetData.find((p) => p._id === personaId);
-      setSelectedPersona(persona);
-    } else {
-      // 이미 선택된 카드를 다시 클릭하면 선택 해제
-      setSelectedPersona(null);
-    }
-
-    setSelectedPresetCards(newSelectedCards);
   };
 
   const handleEnterInterviewRoom = () => {
@@ -1290,107 +1359,6 @@ const PageNps = () => {
     };
   }, [navigate]);
 
-  // handleInputChange 함수 수정
-  const handleInputChange = (field, value) => {
-    // formData 대신 개별 상태 업데이트
-    if (field === "projectDescription") {
-      setProjectDescription(value);
-    }
-  };
-
-  const getQuestionTitle = (type) => {
-    switch (type) {
-      case "ab_test":
-        return "[A/B 테스트]";
-      case "importance":
-        return "[경험 평가 질문]";
-      case "nps":
-        return "[NPS 질문]";
-      case "single_choice":
-        return "[단일 선택형]";
-      default:
-        return "";
-    }
-  };
-
-  const handleAnswerChange = (id, option) => {
-    setQuickSurveyAnalysis((prev) => ({
-      ...prev,
-      [id]: {
-        ...prev[id],
-        answer: option,
-      },
-    }));
-  };
-
-  // AI 다듬기 처리 함수
-  const handleAiRefine = async (data) => {
-    setIsCustomLoading(true);
-
-    const options_length = data.options.length;
-
-    try {
-      data = {
-        type: "ix_quick_survey_custom_question",
-        business: business,
-        goal: projectDescription,
-        user_question: data.questionText,
-        user_options: data.options,
-      };
-
-      // API 호출
-      const response = await InterviewXQuickSurveyRequest(data, isLoggedIn);
-
-      // 응답에서 받은 옵션 중 사용자가 입력한 옵션 수만큼만 사용
-      const refinedQuestion = response.response.quick_survey_custom_question;
-      const limitedOptions = refinedQuestion.options.slice(0, options_length);
-
-      setQuickSurveyCustomQuestion({
-        question: refinedQuestion.question,
-        options: limitedOptions,
-      });
-    } catch (error) {
-      console.error("AI 다듬기 실패:", error);
-      // 에러 처리
-    } finally {
-      setIsCustomLoading(false);
-    }
-  };
-
-  // 저장 처리 함수
-  const handleSaveCustomSurvey = async (data) => {
-    try {
-      // API 호출
-
-      // 기존 quickSurveyAnalysis에 추가
-      setQuickSurveyAnalysis((prev) => ({
-        ...prev,
-        [`custom_question`]: data,
-      }));
-
-      setIsCustomPopupOpen(false);
-      setQuickSurveyCustomQuestion(data);
-
-      await updateToolOnServer(
-        toolId,
-        {
-          quickSurveyAnalysis: {
-            ...quickSurveyAnalysis,
-            [`custom_question`]: data,
-          },
-        },
-        isLoggedIn
-      );
-    } catch (error) {
-      console.error("커스텀 설문 저장 실패:", error);
-      // 에러 처리
-    }
-  };
-
-  const handleCloseCustomPopup = () => {
-    setIsCustomPopupOpen(false);
-    setQuickSurveyCustomQuestion(null); // aiResponse 초기화
-  };
 
   const handleConfirmCredit = async () => {
     setShowCreatePersonaPopup(false);
@@ -1881,7 +1849,7 @@ const PageNps = () => {
                       <InsightAnalysis>
                         <div className="title">
                           <H4 color="gray800" align="left">
-                            Q. {quickSurveyAnalysis[selectedQuestion].question}
+                            Q. {npsSurveyMethod.question}
                           </H4>
                         </div>
 
