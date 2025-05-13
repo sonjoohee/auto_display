@@ -9,9 +9,10 @@ import { useAtom } from "jotai";
 import {
   PERSONA_BUTTON_STATE_3,
   PROJECT_TOTAL_INFO,
-  QUICK_SURVEY_INTERVIEW,
-  QUICK_SURVEY_SURVEY_METHOD,
   QUICK_SURVEY_SELECTED_QUESTION,
+  NPS_REPORT,
+  NPS_INTERVIEW,
+  NPS_SURVEY_METHOD,
 } from "../../../../AtomStates";
 import personaImages from "../../../../../assets/styles/PersonaImages";
 
@@ -25,14 +26,15 @@ const OrganismToastPopupQuickSurveyComplete = ({
   const [personaButtonState3, setPersonaButtonState3] = useAtom(
     PERSONA_BUTTON_STATE_3
   );
-  const [quickSurveyInterview] = useAtom(QUICK_SURVEY_INTERVIEW);
-  const [quickSurveySurveyMethod] = useAtom(QUICK_SURVEY_SURVEY_METHOD);
+
+  const [npsSurveyMethod, setNpsSurveyMethod] = useAtom(NPS_SURVEY_METHOD);
   const [projectTotalInfo] = useAtom(PROJECT_TOTAL_INFO);
+  const [npsReport] = useAtom(NPS_REPORT);
+  const [npsInterview] = useAtom(NPS_INTERVIEW);
 
   const [active, setActive] = useState(isActive);
   const [showWarning, setShowWarning] = useState(false);
   const [isLoadingPrepare, setIsLoadingPrepare] = useState(true);
-  const [quickSurveySelectedQuestion] = useAtom(QUICK_SURVEY_SELECTED_QUESTION);
   const [, setInterviewStatus] = useState([]);
   const [answers, setAnswers] = useState({});
   const [visibleAnswers, setVisibleAnswers] = useState(false);
@@ -47,9 +49,9 @@ const OrganismToastPopupQuickSurveyComplete = ({
         // 단일 질문에 대한 Complete 상태 설정
         const completedStatus = ["Complete"];
         setInterviewStatus(completedStatus);
-
-        // quickSurveyInterview를 기반으로 답변 구성
-        const processedAnswers = quickSurveyInterview.map((interviewItem) => {
+        console.log("npsInterview", npsInterview)
+        // npsInterview를 기반으로 답변 구성
+        const processedAnswers = npsInterview.map((interviewItem) => {
           return {
             persona: interviewItem,
             imageKey: interviewItem.imageKey,
@@ -62,6 +64,8 @@ const OrganismToastPopupQuickSurveyComplete = ({
             },
           };
         });
+
+        console.log("processedAnswers", processedAnswers)
 
         setAnswers(processedAnswers);
 
@@ -128,41 +132,23 @@ const OrganismToastPopupQuickSurveyComplete = ({
             <TextContainer>
               <div>
                 {answer?.answer?.main &&
-                  quickSurveySurveyMethod?.options &&
+                  npsSurveyMethod?.options &&
                   (() => {
-                    const index = quickSurveySurveyMethod.options.indexOf(
+                    const index = npsSurveyMethod.options.indexOf(
                       answer.answer.main
                     );
 
-                    if (
-                      quickSurveySelectedQuestion[0] === "ab_test" &&
-                      selectedOptionIndex == null
-                    ) {
-                      return `${String.fromCharCode(
-                        65 +
-                          (answer.answer.main ===
-                          quickSurveySurveyMethod.options[0]
-                            ? 0
-                            : 1)
-                      )}. ${answer.answer.main}`;
-                    }
+                    
 
-                    if (
-                      (quickSurveySelectedQuestion[0] === "importance" ||
-                        quickSurveySelectedQuestion[0] === "single_choice" ||
-                        quickSurveySelectedQuestion[0] === "custom_question") &&
-                      selectedOptionIndex == null
-                    ) {
-                      return `${index + 1}. ${answer.answer.main}`;
-                    }
+                   
 
-                    if (quickSurveySelectedQuestion[0] === "nps") {
+               
                       return answer.answer.main;
-                    }
+              
 
-                    return `${
-                      selectedOptionIndex ? `${selectedOptionIndex}. ` : ""
-                    }${answer.answer.main}`;
+                    // return `${
+                    //   selectedOptionIndex ? `${selectedOptionIndex}. ` : ""
+                    // }${answer.answer.main}`;
                   })()}
               </div>
               <div style={{ marginTop: "16px" }}>
@@ -211,7 +197,7 @@ const OrganismToastPopupQuickSurveyComplete = ({
     return (
       <InterviewItem status={"Complete"}>
         <QuestionWrap status={"Complete"} isOpen={visibleAnswers}>
-          <QuestionText>Q. {quickSurveySurveyMethod?.question}</QuestionText>
+          <QuestionText>Q. {npsSurveyMethod?.question}</QuestionText>
         </QuestionWrap>
         {visibleAnswers && <AnswerWrap>{renderAnswersComplete()}</AnswerWrap>}
       </InterviewItem>

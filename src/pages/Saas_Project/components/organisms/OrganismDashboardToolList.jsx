@@ -214,6 +214,10 @@ import {
   NPS_SURVEY_METHOD,
   NPS_PERSONA_LIST,
   NPS_SELECTED_CONCEPT,
+  NPS_STATIC_DATA,
+  NPS_REPORT,
+  NPS_INTERVIEW,
+  NPS_SELECTED_CONCEPT_INDEX,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -567,7 +571,10 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setNpsFileName] = useAtom(NPS_FILE_NAME);
   const [, setNpsSurveyMethod] = useAtom(NPS_SURVEY_METHOD);
   const [, setNPSSelectedConcept] = useAtom(NPS_SELECTED_CONCEPT);
-
+  const [, setNpsStaticData] = useAtom(NPS_STATIC_DATA);
+  const [, setNpsReport] = useAtom(NPS_REPORT);
+  const [, setNpsInterview] = useAtom(NPS_INTERVIEW);
+  const [, setNpsSelectedConceptIndex] = useAtom(NPS_SELECTED_CONCEPT_INDEX);
   const saveConversation = (data) => {};
 
   // 서버에서 툴 정보 가져오기 함수
@@ -1457,6 +1464,12 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setNpsPersonaList([]);
         setNPSSelectedConcept([]);
         setNpsSurveyMethod({});
+        setNpsFileName([]);
+        setNpsSelectedModeType("");
+        setNpsStaticData([]);
+        setNpsSelectedConceptIndex([]);
+        setNpsReport([]);
+        setNpsInterview([]);
         setNpsPersonaList(chatData?.npsPersonaList || []);
         setNPSSelectedConcept(chatData?.npsSelectedConcept || []);
         setNpsSurveyMethod(chatData?.npsSurveyMethod|| {});
@@ -1475,7 +1488,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
                 ]
             : []
         );
+        setNpsStaticData(chatData?.npsStaticData || []);
+        setNpsReport(chatData?.npsReport || []);
+        setNpsInterview(chatData?.npsInterview || []);
         setToolStep(chatData?.completedStep);
+        setNpsSelectedConceptIndex(chatData?.selectedConceptIndex || []);
 
 
   
