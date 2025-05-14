@@ -686,6 +686,8 @@ const PageNps = () => {
 
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
+
+    let isBreak = false;
     try {
       
       let responses = [];
@@ -693,9 +695,14 @@ const PageNps = () => {
 
         // npsPersonaList를 20개씩 나누어 처리
         for (let i = 0; i < npsPersonaList.length; i += chunkSize) {
+
           let personaChunk;
 
-          if (i === 79) {
+          if (isBreak) {
+            break;
+          }
+
+          if (i == 80) {
             let restPersonas = 0;
             if (npsPersonaList.length > 100) {
               restPersonas = npsPersonaList.length % chunkSize;
@@ -708,6 +715,7 @@ const PageNps = () => {
             else {
               personaChunk = npsPersonaList.slice(i, i + chunkSize);
             }
+            isBreak = true;
           }
           else {
             personaChunk = npsPersonaList.slice(i, i + chunkSize);
