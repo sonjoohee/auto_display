@@ -405,21 +405,6 @@ const PageConceptDefinition = () => {
           response.response.concept_definition_final_report_education
         );
 
-        // const maxAttempts = 10;
-        // let attempts = 0;
-
-        // while (attempts < maxAttempts && (!response || !response?.response)) {
-        //   response = await InterviewXPsstAnalysisRequest(
-        //     apiRequestData,
-        //     isLoggedIn
-        //   );
-        //   attempts++;
-        // }
-        // if (attempts >= maxAttempts) {
-        //   setShowPopupError(true);
-        //   return;
-        // }
-
         setIsLoadingReport(false);
 
         await updateToolOnServer(
@@ -429,6 +414,7 @@ const PageConceptDefinition = () => {
             conceptDefinitionFinalReport:
               response.response.concept_definition_final_report_education,
             completedStatus: true,
+            personaTitle : response.response.concept_definition_final_report_education_persona_title,
           },
           isLoggedIn
         );
@@ -914,9 +900,7 @@ const PageConceptDefinition = () => {
                           }}
                         >
                           <Markdown>
-                            {prepareMarkdown(
-                              conceptDefinitionFirstReport ?? ""
-                            )}
+                            {conceptDefinitionFirstReport ?? ""}
                           </Markdown>
                         </div>
                       </InsightAnalysis>
@@ -1007,9 +991,7 @@ const PageConceptDefinition = () => {
                           }}
                         >
                           <Markdown>
-                            {prepareMarkdown(
-                              conceptDefinitionFinalReport ?? ""
-                            )}
+                            {conceptDefinitionFinalReport ?? ""}
                           </Markdown>
                         </div>
                       </InsightAnalysis>

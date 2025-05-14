@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { palette } from "../../../../../assets/styles/Palette";
-import { Button } from "../../../../../assets/styles/ButtonStyle";
-import { Body1, Body2, Caption1 } from "../../../../../assets/styles/Typography";
 import { useAtom } from "jotai";
 import {
   updateToolOnServer,
@@ -14,7 +12,6 @@ import {
   BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA,
   TOOL_ID ,
   IS_LOGGED_IN,
-  BUSINESS_MODEL_CANVAS_USER_OPTIONS,
 
 } from "../../../../AtomStates";
 import images from "../../../../../assets/styles/Images";
@@ -35,9 +32,7 @@ const businessModelItems = [
 ];
 
 
-/**
- * 비즈니스 모델 설정을 위한 팝업 컴포넌트
- */
+
 const MoleculeBusinessModelPopup = ({ 
   isOpen = false, 
   
@@ -60,33 +55,18 @@ const MoleculeBusinessModelPopup = ({
   const [bmCanvasInitialGraphData, setBMCanvasInitialGraphData] = useAtom(BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA);
   const [toolId, setToolId] = useAtom(TOOL_ID);
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN);
-  const [bmCanvasUserOptions, setBMCanvasUserOptions] = useAtom(BUSINESS_MODEL_CANVAS_USER_OPTIONS);
-  // console.log("BMCanvasPopupOptions", BMCanvasPopupOptions)
-  // 현재 모델의 데이터 가져오기
-  // const currentModelData = businessModelCanvasGraphItems.find(item => item.id === currentModelId);
   
-  // 팝업에 표시할 옵션들 계산
-  // const popupOptions = currentModelData?.items.flatMap(item => 
-  //   item.examples.map(example => example.split(':')[0].trim())
-  // ) || [];
-// 팝업에 표시할 옵션들 계산
-
-// const popupOptions = bmCanvasInitialGraphData[currentModelId - 2]?.map(item => item.title) || [];
 const getTitles = (data, currentModelId) => {
   if (data[currentModelId - 1] && data[currentModelId - 1]) {
-    return data[currentModelId - 1]?.business_model_canvas_report_education?.map(item => item.title);
+
+    return data[currentModelId - 1]?.map(item => item.title);
   }
   return [];
 };
+
 const titles = getTitles(bmCanvasInitialGraphData, currentModelId);
 
 
-  useEffect(() => {
-    // bmCanvasUserOptions에 데이터가 있으면 setUserOptions에 설정
-    if (bmCanvasUserOptions && bmCanvasUserOptions.length > 0) {
-      setUserOptions(bmCanvasUserOptions);
-    }
-  }, [bmCanvasUserOptions]); // bmCanvasUserOptions가 변경될 때마다 실행
   // isOpen props가 변경될 때 상태 업데이트
   useEffect(() => {
     setIsVisible(isOpen);
@@ -102,36 +82,6 @@ const titles = getTitles(bmCanvasInitialGraphData, currentModelId);
     setInputValues({}); // 입력 값 초기화
   }, [currentModelId]);
 
-  
-
-//   // 팝업 닫기 처리
-//   const handleClose = () => {
-//     setIsVisible(false);
-//     setSelectedOption(null);
-//     setUserOptions([]);
-//     setInputFields([]);
-//     setInputValues({});
-   
-//     // const shouldApply = typeof isApplied === 'boolean' ? isApplied : false;
-//     setBMCanvasSelectedPopupOptions([]);
-  
-//     // if (Object.keys(bmCanvasSelectedPopupOptions).length === 0 && popupOpenCount[currentModelId] === 1) {
-
-//     //   setBusinessModelCanvasGraphItems(prev => 
-//     //     prev.map(item => 
-//     //       item.id === currentModel.id 
-//     //         ? { ...item, items: [] } 
-//     //         : item
-//     //     )
-//     //   );
-//     // }
-//  if (onClose) {
-//   onClose();
-
-
-//     }
-
-//   };
 
 
 const handleClose = async () => {
@@ -145,20 +95,11 @@ const handleClose = async () => {
     setInputValues({});
     setBMCanvasSelectedPopupOptions([]);
 
-     // 기존 데이터를 복사하고 business_model_canvas_report_education 속성을 제거
-  // const newGraphItems = [...businessModelCanvasGraphItems];
-  // delete newGraphItems[currentModelId - 1].business_model_canvas_report_education;
+    const newGraphItems = businessModelCanvasGraphItems.filter((item, index) => 
+      index !== currentModelId - 1
+    );
 
-  // setBusinessModelCanvasGraphItems(newGraphItems);
-  // // setBMCanvasInitialGraphData(bmCanvasInitialGraphData);
-  const newGraphItems = businessModelCanvasGraphItems.map((item, index) => {
-    if (index === currentModelId - 1) {
-      const newItem = { ...item };
-      delete newItem.business_model_canvas_report_education;
-      return newItem;
-    }
-    return item;
-  });
+
 
   setBusinessModelCanvasGraphItems(newGraphItems);
 
@@ -213,14 +154,9 @@ const handleClose = async () => {
 
   const handleAddUserOption = async (id) => {
     const value = inputValues[id]?.trim();
+
     if (value) {
-      if (userOptions.includes(value)) {
-        setInputFields(inputFields.filter(fieldId => fieldId !== id));
-        const newInputValues = { ...inputValues };
-        delete newInputValues[id];
-        setInputValues(newInputValues);
-        return;
-      }
+
   
       const updatedInitialGraphData = [...bmCanvasInitialGraphData];
       
@@ -232,18 +168,20 @@ const handleClose = async () => {
       }
   
       const newItem = {
-        type: "사용자 정의",
-        approach: "사용자가 직접 추가한 항목입니다.",
         title: value,
         description: "사용자가 직접 추가한 항목입니다."
       };
   
-      if (!updatedInitialGraphData[currentModelId - 1].business_model_canvas_report_education) {
-        updatedInitialGraphData[currentModelId - 1].business_model_canvas_report_education = [];
+      if (!updatedInitialGraphData[currentModelId - 1]) {
+        updatedInitialGraphData[currentModelId - 1] = [];
       }
   
-      updatedInitialGraphData[currentModelId - 1].business_model_canvas_report_education.push(newItem);
-  
+      updatedInitialGraphData[currentModelId - 1].push(newItem);
+      // userOptions 상태 업데이트 (화면 표시용 - 사용자 추가 항목의 "title" 문자열 배열)
+      const userAddedItemTitles = updatedInitialGraphData[currentModelId - 1]
+      .filter(item => item && item.description === "사용자가 직접 추가한 항목입니다.") // 사용자 추가 항목 필터링
+      .map(item => item.title); // title만 추출
+    setUserOptions(userAddedItemTitles);
       
       setBMCanvasInitialGraphData(updatedInitialGraphData);
       
@@ -267,6 +205,41 @@ const handleClose = async () => {
   };
 
 
+
+
+const handleDeleteUserOption = async (titleToDelete) => {
+
+  const newUserOptionTitles = userOptions.filter(title => title !== titleToDelete);
+  setUserOptions(newUserOptionTitles); // 필터링된 title 문자열 배열로 상태 업데이트
+
+  const updatedInitialGraphData = bmCanvasInitialGraphData ? [...bmCanvasInitialGraphData] : [];
+
+  if (updatedInitialGraphData[currentModelId - 1] && Array.isArray(updatedInitialGraphData[currentModelId - 1])) {
+    const newModelData = updatedInitialGraphData[currentModelId - 1].filter(item => {
+
+      return !(item.title === titleToDelete && item.description === "사용자가 직접 추가한 항목입니다.");
+    });
+
+    updatedInitialGraphData[currentModelId - 1] = newModelData;
+    setBMCanvasInitialGraphData(updatedInitialGraphData);
+
+
+    try {
+      await updateToolOnServer(
+        toolId,
+        {
+          bmCanvasInitialGraphData: updatedInitialGraphData,
+        },
+        isLoggedIn
+      );
+    } catch (error) {
+    }
+  } else {
+    console.warn(`bmCanvasInitialGraphData for model ID ${currentModelId} not found or not an array. Cannot update after deletion.`);
+  }
+};
+
+
  // 현재 모델의 데이터 가져오기
  const handleApply = async () => {
   if (bmCanvasSelectedPopupOptions.length === 0) {
@@ -276,25 +249,28 @@ const handleClose = async () => {
   try {
     const newGraphItems = [...businessModelCanvasGraphItems];
     
-    if (currentModelId === 1) {
+    if (currentModelId === 1 || currentModelId === 2) {
       // customer_segments인 경우 (기존 로직 유지)
-      const newCustomerSegments = { ...newGraphItems[0].customer_segments };
-      bmCanvasSelectedPopupOptions.forEach(option => {
-        const [key, value] = option.split(':').map(item => item.trim());
-        if (key && value) {
-          newCustomerSegments[key] = value;
-        }
+      const newItemsArray = bmCanvasSelectedPopupOptions.map(option => {
+   
+        let selectedTitle = typeof option === 'string' ? option : (option && option.title);
+    
+        const initialDataItems = Array.isArray(bmCanvasInitialGraphData[currentModelId - 1]) ? bmCanvasInitialGraphData[currentModelId - 1] : [];
+
+        const originalItem = initialDataItems.find(item => item && item.title === selectedTitle);
+        
+        return originalItem || { 
+          title: selectedTitle || "제목 없음", // option이 객체이고 title이 없을 수도 있으니 대비
+          description: (originalItem && originalItem.description) || "설명 없음"
+        };
       });
-      
-      newGraphItems[0] = {
-        ...newGraphItems[0],
-        customer_segments: newCustomerSegments
-      };
+
+      // newGraphItems[0] (또는 currentModelId - 1)에 배열 자체를 할당합니다.
+      newGraphItems[currentModelId - 1] = newItemsArray; 
     } else {
       // 다른 섹션인 경우 business_model_canvas_report_education 구조로 저장
       const newItems = bmCanvasSelectedPopupOptions.map(option => {
-        // const originalItem = businessModelCanvasGraphItems[currentModelId - 1]?.business_model_canvas_report_education?.find(item => item.title === option);
-        const originalItem = bmCanvasInitialGraphData[currentModelId - 1]?.business_model_canvas_report_education?.find(item => item.title === option);
+        const originalItem = bmCanvasInitialGraphData[currentModelId - 1]?.find(item => item.title === option);
         return originalItem || { 
           type: option.type || "",
           approach: option.approach || "",
@@ -303,9 +279,7 @@ const handleClose = async () => {
         };
       });
 
-      newGraphItems[currentModelId - 1] = {
-        business_model_canvas_report_education: newItems
-      };
+      newGraphItems[currentModelId - 1] = newItems;
     }
 
     // 서버 업데이트
@@ -338,15 +312,9 @@ const handleClose = async () => {
   // 입력 필드 값이 존재하는지 확인하는 함수
   const isInputFieldEmpty = (id) => !inputValues[id]?.trim();
 
-  // 사용자 추가 옵션과 현재 입력 필드를 합쳐서 3개일 때 버튼 숨김
-  // const hideAddButton = userOptions.length + inputFields.length >= 3 || bmCanvasPopupOptions.length + inputFields.length >= 7;
-  // const hideAddButton = userOptions.length + inputFields.length >= 3 ;
   const savedUserOptions = bmCanvasInitialGraphData[currentModelId - 1]
-  ? bmCanvasInitialGraphData[currentModelId - 1]?.business_model_canvas_report_education?.filter(item => item.type === "사용자 정의")
+  ? bmCanvasInitialGraphData[currentModelId - 1]?.filter(item => item.description === "사용자가 직접 추가한 항목입니다.")
   : [];
-  // const savedUserOptions = bmCanvasInitialGraphData[(currentModelId - 1)]
-  // ? Object.values(bmCanvasInitialGraphData[(currentModelId - 1)]).filter(item => item.type === "사용자 정의")
-  // : [];
 
 
 const hideAddButton =
@@ -390,12 +358,9 @@ const hideAddButton =
             <PopupContent>
               <SectionTitle>원하는 항목을 선택하세요</SectionTitle>
               <OptionsContainer>
-                {/* {popupOptions.map((option, index) => (
-                  <OptionItem 
-                    key={`default-${index}`} 
-                    onClick={() => handleOptionSelect(option)}
-                  > */}
+               
                      {titles?.map((title, index) => (
+                      
                   <OptionItem key={`title-${index}`} onClick={() => handleOptionSelect(title)}>
                     <OptionFlex>
                       <div>
@@ -408,34 +373,18 @@ const hideAddButton =
                         />
                       </div>
                       <OptionText>{title}</OptionText>
-                      
+                      {userOptions.includes(title) && (
+                      <DeleteButton 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteUserOption(title);
+                        }}
+                      />
+                      )}
                     </OptionFlex>
                   </OptionItem>
                 ))}
-                
-                {/* 사용자 정의 옵션 */}
-                {userOptions?.map((option, index) => (
-                  <OptionItem key={`user-${index}`} onClick={() => handleOptionSelect(option)}>
-                    <OptionFlex>
-                      <div>
-                        {/* <CheckBoxButton 
-                          id={`radio-user-${index}`}
-                          name="modelOptionGroup"
-                          checked={selectedOption === option}
-                          onChange={() => handleOptionSelect(option)}
-                        /> */}
-                         <CheckBoxButton
-                          id={index}
-                          name={index}
-                          checked={selectedKeys.includes(option)} // 각 옵션별로 체크
-                          onChange={() => onCardSelect && onCardSelect(option)} 
-                        />
-                      </div>
-                      <OptionText>{option}</OptionText>
-                    </OptionFlex>
-                  </OptionItem>
-                ))}
-                
+                    
                 {/* 입력 필드 */}
                 {inputFields.map(id => (
                   <OptionItem key={`input-${id}`} as="div">
@@ -460,6 +409,12 @@ const hideAddButton =
                             strokeLinejoin="round"/>
                         </svg>
                       </CheckButton>
+                      {/* <DeleteButton 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteUserOption(id);
+                        }}
+                      />   */}
                     </OptionFlex>
                   </OptionItem>
                 ))}
@@ -668,12 +623,39 @@ const OptionFlex = styled.div`
   position: relative;
 `;
 
+
 const OptionText = styled.div`
   font-family: "Pretendard", "Poppins";
   font-size: 16px;
   font-weight: 400;
   color: ${palette.gray800};
+  // width: calc(100% - 24px); /* 체크버튼 공간 확보 */
+// `;
+
+
+const DeleteButton = styled.button`
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: url(${images.Trash}) no-repeat center;
+  background-size: contain;
+  cursor: pointer;
+  opacity: 0.6;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
 `;
+
 
 const CheckButton = styled.button`
   position: absolute;
@@ -769,5 +751,10 @@ const BottomSpacer = styled.div`
   width: 100%;
   height: 30px; // 리스트 영역에서 줄인 30px 만큼 하단 여백 추가
 `;
+
+
+
+
+
 
 export default MoleculeBusinessModelPopup; 

@@ -171,7 +171,6 @@ const PageNps = () => {
   }, [showToast]);
  
 
-
   useEffect(() => {
     const interviewLoading = async () => {
       if (!creditCreateToolLoaded) {
@@ -217,7 +216,7 @@ const PageNps = () => {
         }
 
        if(npsSelectedModeType) {
-        setNpsSelectedModeType(npsSelectedModeType);
+        setInterviewModeType(npsSelectedModeType);
        }
 
        if(npsSelectedConcept) {
@@ -241,7 +240,7 @@ const PageNps = () => {
 
        if(npsInterview && npsInterview.length > 0) {
         setNpsInterview(npsInterview);
-       }
+        }
 
         // 활성 탭 설정 (기본값 1)
         if (toolStep === undefined || toolStep === 1) {
@@ -356,37 +355,39 @@ const PageNps = () => {
 
     handleNextStep(1);
     let response;
-    let responseToolId;
+    // let responseToolId;
+    let conceptBoardSurveyMethod;
+    let descriptionSurveyMethod;
 
     try {
       // 컨셉 보드로 평가받기
       if (interviewModeType === "conceptBoard") {
-          // 비즈니스 데이터 추가
+        // 비즈니스 데이터 추가
           setIsLoading(true);
 
          
-          const Data = {
+        const Data = {
             business: businessDescription,
-            tool_id: "file_" + timeStamp,
-            files: uploadedFiles,
-          };
+          tool_id: "file_" + timeStamp,
+          files: uploadedFiles,
+        };
 
-          // setPsstFileId(["file_" + timeStamp]);
-          setFileNames(uploadedFiles.map((file) => file.name));
+        // setPsstFileId(["file_" + timeStamp]);
+        setFileNames(uploadedFiles.map((file) => file.name));
           
 
-          // setQuickSurveyProjectDescription(projectDescription);
+        // setQuickSurveyProjectDescription(projectDescription);
 
-          // API 요청
-          let retryCount = 0;
-          const maxRetries = 10;
+        // API 요청
+        let retryCount = 0;
+        const maxRetries = 10;
 
-          while (retryCount < maxRetries) {
-            try {
-              response = await InterviewXNPSConceptboardMultimodalRequest(
-                Data,
-                isLoggedIn
-              );
+        while (retryCount < maxRetries) {
+          try {
+            response = await InterviewXNPSConceptboardMultimodalRequest(
+              Data,
+              isLoggedIn
+            );
 
               if (
                 response.response &&
@@ -398,93 +399,103 @@ const PageNps = () => {
                 break; // 올바른 응답 형식이면 루프 종료
               }
 
-              retryCount++;
-            } catch (error) {
-              retryCount++;
-              if (retryCount >= maxRetries) throw error;
-            }
+            retryCount++;
+          } catch (error) {
+            retryCount++;
+            if (retryCount >= maxRetries) throw error;
           }
+        }
 
-          if (retryCount >= maxRetries) {
-            throw new Error(
-              "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
-            );
-          }
+        if (retryCount >= maxRetries) {
+          throw new Error(
+            "올바른 응답을 받지 못했습니다. 최대 재시도 횟수를 초과했습니다."
+          );
+        }
 
           // setNpsSurveyMethod(response.response.nps_conceptboard_multimodal);
           setNpsSurveyMethod({
             ...response.response.nps_conceptboard_multimodal,
             options: ["0","1","2","3","4","5","6","7","8","9","10"]
           });
-          // setNpsConceptboardMultimodal(response.response.nps_conceptboard_multimodal);
-           responseToolId = await createToolOnServer(
-            {
-              projectId: project._id,
-              type: "ix_nps_education",
-              completedStep: 1,
-              npsSurveyMethod: {
-                ...response.response.nps_conceptboard_multimodal,
-                options: ["0","1","2","3","4","5","6","7","8","9","10"]
-              },
-            },
-            isLoggedIn
-          );
-          setToolId(responseToolId);
+        // setNpsConceptboardMultimodal(response.response.nps_conceptboard_multimodal);
+          conceptBoardSurveyMethod ={
+            ...response.response.nps_conceptboard_multimodal,
+            options: ["0","1","2","3","4","5","6","7","8","9","10"]
+          };
+          //  responseToolId = await createToolOnServer(
+          //   {
+          //     projectId: project._id,
+          //     type: "ix_nps_education",
+          //     completedStep: 1,
+          //     // npsSurveyMethod: {
+          //     //   ...response.response.nps_conceptboard_multimodal,
+          //     //   options: ["0","1","2","3","4","5","6","7","8","9","10"]
+          //     // },
+          //     npsSurveyMethod: conceptBoardSurveyMethod,
+          //   },
+          //   isLoggedIn
+          // );
+          // setToolId(responseToolId);
     
-      } else {
+        } else {
         // 설명만으로 평가받기
         setIsLoading(true);
 
-        const Data = {
+      const Data = {
           type: "ix_nps_description_education",
           business: businessDescription,
           // concept_definition: projectDescription,
           concept_definition: npsSelectedConceptDefinitionFinalReport,
         };
 
-        let retryCount = 0;
-        const maxRetries = 10;
+      let retryCount = 0;
+      const maxRetries = 10;
 
-        while (retryCount < maxRetries) {
+      while (retryCount < maxRetries) {
           response = await EducationToolsRequest(Data, isLoggedIn, signal);
 
-          if (
-            response.response &&
+        if (
+          response.response &&
             response.response.nps_description_education &&
             response.response.nps_description_education.question &&
             response.response.nps_description_education.options &&
             response.response.nps_description_education.follow_up
           ) {
             break; // 올바른 응답 형식이면 루프 종료
-          }
-
-          retryCount++;
-          if (retryCount >= maxRetries) {
-            throw new Error(
-              "응답 형식이 올바르지 않습니다. 최대 재시도 횟수를 초과했습니다."
-            );
-          }
         }
+
+        retryCount++;
+        if (retryCount >= maxRetries) {
+          throw new Error(
+            "응답 형식이 올바르지 않습니다. 최대 재시도 횟수를 초과했습니다."
+          );
+        }
+      }
 
         setNpsSurveyMethod({
           ...response.response.nps_description_education,
           options: ["0","1","2","3","4","5","6","7","8","9","10"]
         });
+        descriptionSurveyMethod ={
+          ...response.response.nps_description_education,
+          options: ["0","1","2","3","4","5","6","7","8","9","10"]
+        };
 
-        responseToolId = await createToolOnServer(
-          {
-            projectId: project._id,
-            type: "ix_nps_education",
-            completedStep: 1,
-            npsSurveyMethod: {
-              ...response.response.nps_description_education,
-              options: ["0","1","2","3","4","5","6","7","8","9","10"]
-            },
-            selectedConceptIndex:selectedConcept,
-          },
-          isLoggedIn
-        );
-        setToolId(responseToolId);
+        // responseToolId = await createToolOnServer(
+        //   {
+        //     projectId: project._id,
+        //     type: "ix_nps_education",
+        //     completedStep: 1,
+        //     // npsSurveyMethod: {
+        //     //   ...response.response.nps_description_education,
+        //     //   options: ["0","1","2","3","4","5","6","7","8","9","10"]
+        //     // },
+        //     npsSurveyMethod: descriptionSurveyMethod,
+        //     selectedConceptIndex:selectedConcept,
+        //   },
+        //   isLoggedIn
+        // );
+        // setToolId(responseToolId);
       }
 
       const favoritePersonaList = personaListSaas
@@ -510,11 +521,11 @@ const PageNps = () => {
 
       // 2번의 API 호출을 위한 for문
       for (let apiCall = 0; apiCall < 2; apiCall++) {
-        let retryCount = 0;
-        const maxRetries = 10;
+      let retryCount = 0;
+      const maxRetries = 10;
         let currentResponse;
 
-        while (retryCount < maxRetries) {
+      while (retryCount < maxRetries) {
           currentResponse = await EducationToolsRequest(Data, isLoggedIn, signal);
  
           if (
@@ -525,11 +536,11 @@ const PageNps = () => {
             // 각 응답의 페르소나에 imageKey 추가
             currentResponse.response.nps_persona_generation_education = 
               currentResponse.response.nps_persona_generation_education.map(persona => ({
-                ...persona,
-                imageKey: `persona_${persona.gender === "남성" ? "m" : "f"}_${
-                  Math.floor(
-                    (persona.age ? parseInt(persona.age.replace("세", "")) : 20) / 10
-                  ) * 10
+          ...persona,
+          imageKey: `persona_${persona.gender === "남성" ? "m" : "f"}_${
+            Math.floor(
+              (persona.age ? parseInt(persona.age.replace("세", "")) : 20) / 10
+            ) * 10
                 }_${String(Math.floor(Math.random() * 10) + 1).padStart(2, "0")}`
               }));
             
@@ -575,6 +586,7 @@ const PageNps = () => {
           name: persona.personaName,
           age: persona.age,
           gender: persona.gender,
+          job: persona.job,
           imageKey:persona.imageKey
         }));
     
@@ -582,6 +594,26 @@ const PageNps = () => {
         ...response.response.nps_persona_generation_education,
         ...favoritePersonas
       ]);
+
+   
+      const responseToolId = await createToolOnServer(
+          {
+            projectId: project._id,
+            type: "ix_nps_education",
+            completedStep: 1,
+            // npsSurveyMethod: {
+            //   ...response.response.nps_description_education,
+            //   options: ["0","1","2","3","4","5","6","7","8","9","10"]
+            // },
+            // npsSurveyMethod: descriptionSurveyMethod,
+            selectedConceptIndex:selectedConcept,
+          },
+          isLoggedIn
+        );
+        setToolId(responseToolId);
+      
+
+
 
       await updateToolOnServer(
         responseToolId,
@@ -594,6 +626,7 @@ const PageNps = () => {
             name: fileNames,
           })),
           interviewModeType: interviewModeType == "conceptBoard" ? "conceptBoard" : "explanation",
+          npsSurveyMethod: interviewModeType == "conceptBoard" ? conceptBoardSurveyMethod : descriptionSurveyMethod,
           npsPersonaList: [
             ...response.response.nps_persona_generation_education,
             ...favoritePersonas
@@ -650,33 +683,50 @@ const PageNps = () => {
     handleNextStep(2);
     // setToolSteps(2);
     setIsLoadingReport(true);
-    
+
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
     try {
       
       let responses = [];
-        const chunkSize = 30; // 한 번에 처리할 페르소나 수
+        const chunkSize = 20; // 한 번에 처리할 페르소나 수
 
-        // npsPersonaList를 30개씩 나누어 처
+        // npsPersonaList를 20개씩 나누어 처리
         for (let i = 0; i < npsPersonaList.length; i += chunkSize) {
-          const personaChunk = npsPersonaList.slice(i, i + chunkSize);
+          let personaChunk;
+
+          if (i === 79) {
+            let restPersonas = 0;
+            if (npsPersonaList.length > 100) {
+              restPersonas = npsPersonaList.length % chunkSize;
+              personaChunk = npsPersonaList.slice(i, i + chunkSize + restPersonas);
+            }
+            else if (npsPersonaList.length < 100) {
+              restPersonas = 100 - npsPersonaList.length;
+              personaChunk = npsPersonaList.slice(i, i + chunkSize - restPersonas);
+            }
+            personaChunk = npsPersonaList.slice(i, i + chunkSize);
+          }
+          else {
+            personaChunk = npsPersonaList.slice(i, i + chunkSize);
+          }
           
-          const Data = {
-            type: "ix_quick_survey_interview",
-            business: business,
-            survey_method: {
+      const Data = {
+        type: "ix_quick_survey_interview",
+        business: business,
+        survey_method: {
               ...npsSurveyMethod,
-              type: "nps",
-            },
+          type: "nps",
+        },
             persona_group: personaChunk,
+            survey_type: "nps",
           };
 
-          let retryCount = 0;
-          const maxRetries = 10;
+      let retryCount = 0;
+      const maxRetries = 10;
           let currentResponse;
 
-          while (retryCount < maxRetries) {
+      while (retryCount < maxRetries) {
             currentResponse = await EducationToolsRequest(Data, isLoggedIn, signal);
 
             if (
@@ -689,9 +739,9 @@ const PageNps = () => {
             }
             // console.log(`API call chunk ${i/chunkSize + 1}, response:`, currentResponse);
 
-            retryCount++;
-            if (retryCount >= maxRetries) {
-              throw new Error(
+          retryCount++;
+      if (retryCount >= maxRetries) {
+        throw new Error(
                 `응답 형식이 올바르지 않습니다. API 호출 ${i/chunkSize + 1} 최대 재시도 횟수를 초과했습니다.`
               );
             }
@@ -707,7 +757,7 @@ const PageNps = () => {
           const matchedPersona = npsPersonaList.find(
             (persona) => persona.name === interview.persona_name
           );
-      
+
           if (matchedPersona) {
             const { name, ...personaInfoWithoutName } = matchedPersona;
             return {
@@ -1026,15 +1076,21 @@ const PageNps = () => {
                       <InterviewModeSelection style={{ marginTop: "-20px" }}>
                         <InterviewModeCard
                           isActive={interviewModeType === "explanation"}
+                          // onClick={() => {
+                          //   setInterviewModeType("explanation");
+                          //   // if (
+                          //   //   !quickSurveyPresetData ||
+                          //   //   quickSurveyPresetData.length === 0
+                          //   // ) {
+                          //   //   handlePresetPersona();
+                          //   // }
+                          // }}
+
                           onClick={() => {
+                            if (toolSteps >= 1 || isLoadingPreset) return; // 여기서 조건 체크
                             setInterviewModeType("explanation");
-                            // if (
-                            //   !quickSurveyPresetData ||
-                            //   quickSurveyPresetData.length === 0
-                            // ) {
-                            //   handlePresetPersona();
-                            // }
                           }}
+                          disabled={toolSteps >= 1 || isLoadingPreset}
                         >
                           <CardWrapper>
                             <CheckboxWrapper>
@@ -1077,10 +1133,10 @@ const PageNps = () => {
                         <InterviewModeCard
                           isActive={interviewModeType === "conceptBoard"}
                           onClick={() => {
-                            if (toolSteps >= 2 || isLoadingPreset) return; // 여기서 조건 체크
+                            if (toolSteps >= 1 || isLoadingPreset) return; // 여기서 조건 체크
                             setInterviewModeType("conceptBoard");
                           }}
-                          disabled={toolSteps >= 2 || isLoadingPreset}
+                          disabled={toolSteps >= 1 || isLoadingPreset}
                         >
                           <CardWrapper>
                             <CheckboxWrapper>
@@ -1182,9 +1238,9 @@ const PageNps = () => {
                             FlexStart
                             key={index}
                             id={index}
-                            title={`${idea.updateDate.split(":")[0]}:${
+                            title={` ${idea.personaTitle} ( ${idea.updateDate.split(":")[0]}:${
                               idea.updateDate.split(":")[1]
-                            } - 컨셉 정의 `}
+                            }  )`}
                             isSelected={selectedConcept.includes(index)}
                             onSelect={() => handleCheckboxChange(index)}
                           />
@@ -1415,10 +1471,10 @@ const PageNps = () => {
                           <>
                          
                               <MoleculeBarChartLikertScale11
-                                onOptionSelect={setSelectedOption}
-                                onOptionSelectIndex={setSelectedOptionIndex}
-                                onBarClick={() => setShowToast(true)}
-                              />
+                                  onOptionSelect={setSelectedOption}
+                                  onOptionSelectIndex={setSelectedOptionIndex}
+                                  onBarClick={() => setShowToast(true)}
+                                />
                      
 
                             {/* Insight 섹션 */}
@@ -1431,8 +1487,8 @@ const PageNps = () => {
                                     </InsightLabel>
                                     <InsightContent color="gray700">
                                      
-                                        <>   
-                                         <div>
+                                        <>
+                                          <div>
                                             {
                                               npsReport[0]
                                                 ?.total_insight
@@ -1499,6 +1555,26 @@ const PageNps = () => {
                                       </>
                                     </InsightContent>
                                   </InsightSection>
+
+                                  {/* <InsightSection>
+                                    <InsightLabel color="gray700">
+                                      페르소나별 의견 정리
+                                    </InsightLabel>
+                                    <InsightContent color="gray700">
+                                      <>
+                                        {
+                                          npsReport[0].persona_insight
+                                            .statistic
+                                        }
+                                        <br />
+                                        <br />
+                                        {
+                                          npsReport[0].persona_insight
+                                            .insight
+                                        }
+                                      </>
+                                    </InsightContent>
+                                  </InsightSection> */}
                                 </InsightContainer>
                               )}
                             </div>

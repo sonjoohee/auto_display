@@ -667,6 +667,11 @@ export const BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS = atom([]);
 export const SELECTED_CONCEPT_DEFINITION_FINAL_REPORT = atom([]);
 export const BUSINESS_MODEL_CANVAS_USER_OPTIONS = atom([]);
 
+export const PRFAQ_CONCEPT_DEFINITION = atom([]);
+export const PRFAQ_BUSINESS_MODEL_CANVAS = atom([]);
+export const PRFAQ_KEY_CONTENT_EDUCATION = atom([]);
+export const PRFAQ_FINAL_REPORT_EDUCATION = atom([]);
+
 //!saas
 // 프로젝트 생성 페이지
 export const PROJECT_CREATE_INFO = atom({});
