@@ -914,9 +914,7 @@ const PageConceptDefinition = () => {
                           }}
                         >
                           <Markdown>
-                            {prepareMarkdown(
-                              conceptDefinitionFirstReport ?? ""
-                            )}
+                            {conceptDefinitionFirstReport ?? ""}
                           </Markdown>
                         </div>
                       </InsightAnalysis>
@@ -1008,9 +1006,7 @@ const PageConceptDefinition = () => {
                           }}
                         >
                           <Markdown>
-                            {prepareMarkdown(
-                              conceptDefinitionFinalReport ?? ""
-                            )}
+                            {conceptDefinitionFinalReport ?? ""}
                           </Markdown>
                         </div>
                       </InsightAnalysis>
