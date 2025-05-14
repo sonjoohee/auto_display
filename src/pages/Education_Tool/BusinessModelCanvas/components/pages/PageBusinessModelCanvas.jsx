@@ -1037,9 +1037,9 @@ const businessModelItems = [
               <TabContent5>
                 <>
                   <div className="title">
-                    <H3 color="gray800">Curated Ideas</H3>
+                    <H3 color="gray800">Concept Selection</H3>
                     <Body3 color="gray800">
-                    선별된 아이디어를 사용자 의견으로 다시 평가하여 우선순위를 도출하세요
+                    컨셉 정의서를 기반으로 타겟 고객과 가치 제안을 설정하세요
                     </Body3>
                   </div>
 
@@ -1049,7 +1049,7 @@ const businessModelItems = [
 
                       <TabContent5Item>
                         <div className="title">
-                          <Body1 color="gray700">컨셉 정의서 </Body1>
+                          <Body1 color="gray700">컨셉 정의서 가져오기 </Body1>
                         </div>
 
                         <SelectBox ref={customerListRef}>
@@ -1075,7 +1075,7 @@ const businessModelItems = [
                               }
                             >
                               {selectedPurposes?.customerList ||
-                                "컨셉 정의서를 불러 올 수 있습니다"}
+                                "컨셉 정의서를 선택하세요"}
                             </Body2>
                             <images.ChevronDown
                               width="24px"
@@ -1150,7 +1150,7 @@ const businessModelItems = [
                     >
                       <img src={images.ListFillPrimary} alt="" />
                       <Body2 color="gray700" align="center !important">
-                      컨셉정의서 툴을 먼저 완료해주세요
+                      컨셉 정의서를 선택하신 후, 다음을 눌러주세요
                       </Body2>
                      
                     </BoxWrap>
@@ -1184,7 +1184,7 @@ const businessModelItems = [
                            toolSteps >= 1 || isLoading
                           }
                         >
-                          아이디어 방향성으로 전환
+                          비즈니스 모델 캔버스 시작하기
                         </Button>
                   ):(
                     !isLoading && (
