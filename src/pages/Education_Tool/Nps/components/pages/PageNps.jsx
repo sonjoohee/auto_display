@@ -592,6 +592,7 @@ const PageNps = () => {
           name: persona.personaName,
           age: persona.age,
           gender: persona.gender,
+          job: persona.job,
           imageKey:persona.imageKey
         }));
     
