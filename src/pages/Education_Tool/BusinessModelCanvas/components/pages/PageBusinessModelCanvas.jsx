@@ -1163,9 +1163,7 @@ const businessModelItems = [
                       }}
                     >
                       <Markdown>
-                        {prepareMarkdown(
-                         businessModelCanvasMarkdown ?? ""
-                        )}
+                        {businessModelCanvasMarkdown ?? ""}
                       </Markdown>
                     </div>
                   </InsightAnalysis>
