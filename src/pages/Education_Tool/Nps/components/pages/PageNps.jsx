@@ -319,7 +319,6 @@ const PageNps = () => {
           (id) => npsConceptDefinition[id]
         );
         setNPSSelectedConcept(selectedDataList);
-        setNpsSelectedConceptDefinitionFinalReport("")
         return newSelected;
       } else {
         // 새로운 아이템 추가
@@ -695,11 +694,27 @@ const PageNps = () => {
     try {
       
       let responses = [];
-        const chunkSize = 30; // 한 번에 처리할 페르소나 수
+        const chunkSize = 20; // 한 번에 처리할 페르소나 수
 
-        // npsPersonaList를 30개씩 나누어 처
+        // npsPersonaList를 20개씩 나누어 처리
         for (let i = 0; i < npsPersonaList.length; i += chunkSize) {
-          const personaChunk = npsPersonaList.slice(i, i + chunkSize);
+          let personaChunk;
+
+          if (i === 79) {
+            let restPersonas = 0;
+            if (npsPersonaList.length > 100) {
+              restPersonas = npsPersonaList.length % chunkSize;
+              personaChunk = npsPersonaList.slice(i, i + chunkSize + restPersonas);
+            }
+            else if (npsPersonaList.length < 100) {
+              restPersonas = 100 - npsPersonaList.length;
+              personaChunk = npsPersonaList.slice(i, i + chunkSize - restPersonas);
+            }
+            personaChunk = npsPersonaList.slice(i, i + chunkSize);
+          }
+          else {
+            personaChunk = npsPersonaList.slice(i, i + chunkSize);
+          }
           
           const Data = {
             type: "ix_quick_survey_interview",
@@ -709,6 +724,7 @@ const PageNps = () => {
               type: "nps",
             },
             persona_group: personaChunk,
+            survey_type: "nps",
           };
 
           let retryCount = 0;
