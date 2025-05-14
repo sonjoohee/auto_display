@@ -62,6 +62,10 @@ import {
   EVENT_TITLE,
   CREDIT_CREATE_TOOL, 
   EDUCATION_STATE,
+  PRFAQ_CONCEPT_DEFINITION,
+  PRFAQ_BUSINESS_MODEL_CANVAS,
+  PRFAQ_KEY_CONTENT_EDUCATION,
+  PRFAQ_FINAL_REPORT_EDUCATION,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -154,9 +158,11 @@ const PagePRFAQ = () => {
   const [quickSurveyStaticDataState, setQuickSurveyStaticDataState] = useState(
     {}
   );
-  // const [quickSurveyCustomQuestion, setQuickSurveyCustomQuestion] = useAtom(
-  //   QUICK_SURVEY_CUSTOM_QUESTION
-  // );
+  const [prfaqConceptDefinition, setPrfaqConceptDefinition] = useAtom(PRFAQ_CONCEPT_DEFINITION);
+  const [prfaqBusinessModelCanvas, setPrfaqBusinessModelCanvas] = useAtom(PRFAQ_BUSINESS_MODEL_CANVAS);
+  const [prfaqKeyContentEducation, setPrfaqKeyContentEducation] = useAtom(PRFAQ_KEY_CONTENT_EDUCATION);
+  const [prfaqFinalReport, setPrfaqFinalReport] = useAtom(PRFAQ_FINAL_REPORT_EDUCATION);
+
   const [ideaEvaluateSelectedKanoModelIndex, setIdeaEvaluateSelectedKanoModelIndex] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
@@ -225,6 +231,7 @@ const PagePRFAQ = () => {
   const [ideaEvaluateSelect, setIdeaEvaluateSelect] = useState([]);
   const [graphData, setGraphData] = useState([]);
   const [conceptDefinitionList, setConceptDefinitionList] = useState([]);
+  const [businessModelCanvasReport, setBusinessModelCanvasReport] = useState([]);
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
  
 
@@ -442,6 +449,7 @@ const PagePRFAQ = () => {
         let page = 1;
         const size = 10;
         let allItems = [];
+        let bmAllItems = [];
 
         const response = await getFindToolListOnServerSaas(
           projectSaas?._id ?? "",
@@ -459,8 +467,27 @@ const PagePRFAQ = () => {
         allItems = [...allItems, ...newItems];
   
         setConceptDefinitionList(allItems);
+        console.log("allItems", allItems)
+
+        const bmResponse = await getFindToolListOnServerSaas(
+          projectSaas?._id ?? "",
+          "ix_business_model_canvas_education",
+          isLoggedIn
+        );
+        const bmNewItems = (bmResponse || []).filter(
+          (item) =>
+            item?.type === "ix_business_model_canvas_education" &&
+            item?.completedStep === 2
+        );
+
+        bmAllItems = [...bmAllItems, ...bmNewItems];
+        console.log("bmAllItems", bmAllItems)
+
+        setBusinessModelCanvasReport(bmAllItems);
+
       } catch (error) {
         setConceptDefinitionList([]); // Set empty array on error
+        setBusinessModelCanvasReport([]);
       }
     };
 
@@ -542,21 +569,56 @@ const PagePRFAQ = () => {
   };
 
 
-  const handlePurposeSelect = (purpose, selectBoxId,item) => {
-    setSelectedPurposes((prev) => ({
-      ...(prev || {}),
-      [selectBoxId]: purpose || "",
-    }));
-    handleContactInputChange("purpose", purpose || "");
-    setSelectBoxStates((prev) => ({
-      ...(prev || {}),
-      [selectBoxId]: false,
-    }));
+  // const handlePurposeSelect = (purpose, selectBoxId,item) => {
+  //   console.log("purpose", purpose)
+  //   console.log("selectBoxId", selectBoxId)
+  //   console.log("item", item)
+  
+  //   setSelectedPurposes((prev) => ({
+  //     ...(prev || {}),
+  //     [selectBoxId]: purpose || "",
+  //   }));
+  //   handleContactInputChange("purpose", purpose || "");
+  //   setSelectBoxStates((prev) => ({
+  //     ...(prev || {}),
+  //     [selectBoxId]: false,
+  //   }));
 
-    if (selectBoxId === "customerList") {
-      setBusinessDescription(purpose || "");
-    }
-    setSelectedKanoModelData(item);
+  //   if (selectBoxId === "customerList") {
+  //     setBusinessDescription(purpose || "");
+  //   }
+  //   if(selectBoxId === "personaList"){
+  //     setPrfaqConceptDefinition(item);
+  //     setPrfaqBusinessModelCanvas(item);
+  //   }
+    
+  // };
+
+  const handleConceptDefinitionSelect = (displayText, listType, item) => {
+    setSelectedPurposes(prev => ({
+      ...prev,
+      [listType]: displayText
+    }));
+    setPrfaqConceptDefinition(item);
+    // 다른 필요한 로직들...
+    setSelectBoxStates(prev => ({
+      ...prev,
+      [listType]: false
+    }));
+  };
+  
+  // 비즈니스 모델 캔버스용 핸들러
+  const handleBusinessModelCanvasSelect = (displayText, listType, item) => {
+    setSelectedPurposes(prev => ({
+      ...prev,
+      [listType]: displayText
+    }));
+    setPrfaqBusinessModelCanvas(item);
+    // 다른 필요한 로직들...
+    setSelectBoxStates(prev => ({
+      ...prev,
+      [listType]: false
+    }));
   };
 
 
@@ -608,62 +670,66 @@ const PagePRFAQ = () => {
 
  
 
-  const handleSubmitReport = async () => {
+  const handleSubmit = async () => {
     // 새 AbortController 생성
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
     
     handleNextStep(1);
+    // setIsLoading(true);
     // setToolSteps(2);
     // setIsLoadingReport(true);
 
     try {
 
-      const persona_group = personaListSaas
-      .filter((persona) => persona?.favorite === true)
-      .map((persona) => ({
-        personaName: persona.personaName,
-        personaCharacteristics: persona.personaCharacteristics,
-        type: persona.type,
-        age: persona.age,
-        gender: persona.gender,
-        job: persona.job,
-        keywords: persona.keywords,
-        userExperience: persona.userExperience,
-        consumptionPattern: persona.consumptionPattern,
-        interests: persona.interests,
-        lifestyle: persona.lifestyle,
+      // const persona_group = personaListSaas
+      // .filter((persona) => persona?.favorite === true)
+      // .map((persona) => ({
+      //   personaName: persona.personaName,
+      //   personaCharacteristics: persona.personaCharacteristics,
+      //   type: persona.type,
+      //   age: persona.age,
+      //   gender: persona.gender,
+      //   job: persona.job,
+      //   keywords: persona.keywords,
+      //   userExperience: persona.userExperience,
+      //   consumptionPattern: persona.consumptionPattern,
+      //   interests: persona.interests,
+      //   lifestyle: persona.lifestyle,
       
-      }));
+      // }));
 
       const Data = {
-        type: "ix_idea_evaluation_comparison_education",
-        business: business,
-        idea_list: ideaEvaluateSelectedList, 
-        persona: persona_group,
-      };
+        type: "ix_prfaq_key_content_education",
+        concept_definition_final_report: prfaqConceptDefinition.conceptDefinitionFinalReport,
+        business_model_canvas_report: prfaqBusinessModelCanvas.bmCanvasGraphItems,
+      }
+
+      console.log("Data", Data)
 
       let response = await EducationToolsRequest (Data, isLoggedIn, signal);
+      console.log("response", response)
 
-       let retryCount = 0;
-      const maxRetries = 10;
-        while (retryCount < maxRetries &&
-          (!response ||
-           !response?.response ||
-           !response?.response?.idea_evaluation_comparison_education ||
-           !Array.isArray(response?.response?.idea_evaluation_comparison_education)
-          )
-         ) {
-           response = await EducationToolsRequest(Data, isLoggedIn, signal);
-           maxRetries++;
+      //  let retryCount = 0;
+      // const maxRetries = 10;
+      //   while (retryCount < maxRetries &&
+      //     (!response ||
+      //      !response?.response ||
+      //      !response?.response?.idea_evaluation_comparison_education ||
+      //      !Array.isArray(response?.response?.idea_evaluation_comparison_education)
+      //     )
+      //    ) {
+      //      response = await EducationToolsRequest(Data, isLoggedIn, signal);
+      //      maxRetries++;
           
-         }
-           if (retryCount >= maxRetries) {
-           setShowPopupError(true);
-           return;
-         }
+      //    }
+      //      if (retryCount >= maxRetries) {
+      //      setShowPopupError(true);
+      //      return;
+      //    }
 
-      setIdeaEvaluateComparisonEducation(response.response.idea_evaluation_comparison_education)
+      // setIdeaEvaluateComparisonEducation(response.response.idea_evaluation_comparison_education)
+      setPrfaqKeyContentEducation(response.response.prfaq_key_content_education)
       
 
       await updateToolOnServer(
@@ -696,7 +762,7 @@ const PagePRFAQ = () => {
         setShowPopupError(true);
       }
     } finally {
-      setIsLoadingReport(false);
+      setIsLoading(false);
     }
   };
 
@@ -715,14 +781,15 @@ const PagePRFAQ = () => {
       // );
 
       try {
-        // const apiRequestData = {
-        //   type: "ix_concept_definition_final_report_education",
-        //   concept_definition_report_education: conceptDefinitionFirstReport,
-        // };
+        const apiRequestData = {
+          type: "ix_prfaq_final_report_education",
+          business_description: businessDescription,
+          prfaq_key_content: prfaqKeyContentEducation,
+        };
 
-        // let response = await EducationToolsRequest(apiRequestData, isLoggedIn);
-        // console.log("response", response);
-        // setConceptDefinitionFinalReport(response.response);
+        let response = await EducationToolsRequest(apiRequestData, isLoggedIn);
+        console.log("response", response);
+        setPrfaqFinalReport(response.response.prfaq_final_report_education);
 
         // const maxAttempts = 10;
         // let attempts = 0;
@@ -1067,12 +1134,19 @@ const PagePRFAQ = () => {
                                     //   toolSteps >= 1 
                                     // }
                                     key={index}
+                                    // onClick={() => {
+                                    //   handlePurposeSelect(
+                                    //     `${item.updateDate.split(":")[0]}:${
+                                    //       item.updateDate.split(":")[1]
+                                    //     } - 컨셉 정의서
+                                    // `,
+                                    //     "customerList",
+                                    //     item
+                                    //   );
+                                    // }}
                                     onClick={() => {
-                                      handlePurposeSelect(
-                                        `${item.updateDate.split(":")[0]}:${
-                                          item.updateDate.split(":")[1]
-                                        } - 컨셉 정의서
-                                    `,
+                                      handleConceptDefinitionSelect(
+                                        `${item.updateDate.split(":")[0]}:${item.updateDate.split(":")[1]} - 컨셉 정의서`,
                                         "customerList",
                                         item
                                       );
@@ -1133,7 +1207,7 @@ const PagePRFAQ = () => {
 
                           {selectBoxStates.businessModelCanvas && (
                             <SelectBoxList dropUp={dropUpStates.businessModelCanvas}>
-                              {conceptDefinitionList.length === 0 ? (
+                              {businessModelCanvasReport.length === 0 ? (
                                 <SelectBoxItem 
                                 disabled={toolSteps >= 1 }
                                 >
@@ -1142,18 +1216,25 @@ const PagePRFAQ = () => {
                                   </Body2>
                                 </SelectBoxItem>
                               ) : (
-                                conceptDefinitionList.map((item, index) => (
+                                businessModelCanvasReport.map((item, index) => (
                                   <SelectBoxItem
                                     // disabled={
                                     //   toolSteps >= 1 
                                     // }
                                     key={index}
+                                    // onClick={() => {
+                                    //   handlePurposeSelect(
+                                    //     `${item.updateDate.split(":")[0]}:${
+                                    //       item.updateDate.split(":")[1]
+                                    //     } - 비즈니스 모델 캔버스 
+                                    // `,
+                                    //     "businessModelCanvas",
+                                    //     item
+                                    //   );
+                                    // }}
                                     onClick={() => {
-                                      handlePurposeSelect(
-                                        `${item.updateDate.split(":")[0]}:${
-                                          item.updateDate.split(":")[1]
-                                        } - 비즈니스 모델 캔버스 
-                                    `,
+                                      handleBusinessModelCanvasSelect(
+                                        `${item.updateDate.split(":")[0]}:${item.updateDate.split(":")[1]} - 비즈니스 모델 캔버스`,
                                         "businessModelCanvas",
                                         item
                                       );
@@ -1222,7 +1303,7 @@ const PagePRFAQ = () => {
                           Primary
                           Fill
                           Round
-                          onClick={handleSubmitReport}
+                          onClick={handleSubmit}
                           disabled={
                             !selectedPurposes.customerList ||
                             !selectedPurposes.businessModelCanvas ||
@@ -1254,6 +1335,7 @@ const PagePRFAQ = () => {
                     <AtomPersonaLoader message={`분석 중이예요 ...`} />
                   </div>
                 ) : (
+                prfaqKeyContentEducation.length > 0 && (
                  <>
                     <div className="title">
                       <H3 color="gray800">Core Value Analysis</H3>
@@ -1281,14 +1363,31 @@ const PagePRFAQ = () => {
                         >
                           {/* <Markdown>
                             {prepareMarkdown(
-                              conceptDefinitionFirstReport ?? ""
+                              prfaqKeyContentEducation ?? ""
                             )}
                           </Markdown> */}
                         </div>
                       </InsightAnalysis>
                     </div>
-                    </>
-                )}
+                  </>
+                )
+                )
+                }
+
+<Button
+                          Other
+                          Primary
+                          Fill
+                          Round
+                          onClick={handleReportRequest}
+                          // disabled={
+                          //   !selectedPurposes.customerList ||
+                          //   !selectedPurposes.businessModelCanvas ||
+                          //   toolSteps >= 1 
+                          // }
+                        >
+                  다음
+                        </Button>
                   </TabContent5>
                 )}
               
@@ -1314,7 +1413,7 @@ const PagePRFAQ = () => {
                   ) : (
                     <>
                       <BgBoxItem primaryLightest>
-                        <H3 color="gray800">컨셉 정의서</H3>
+                        <H3 color="gray800">PRFAQ</H3>
                         <Body3 color="gray800">
                           사업 아이템의 실행 전략을 정리한 초안입니다. 이를
                           기반으로 세부 내용을 구체화해보세요.​
@@ -1328,7 +1427,7 @@ const PagePRFAQ = () => {
                             textAlign: "left",
                           }}
                         >
-                          {/* <Markdown>{prepareMarkdown(psstReport ?? "")}</Markdown> */}
+                          <Markdown>{prepareMarkdown(prfaqFinalReport ?? "")}</Markdown>
                         </div>
                       </InsightAnalysis>
                     </>
