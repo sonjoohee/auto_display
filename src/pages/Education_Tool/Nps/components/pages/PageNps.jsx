@@ -705,7 +705,9 @@ const PageNps = () => {
               restPersonas = 100 - npsPersonaList.length;
               personaChunk = npsPersonaList.slice(i, i + chunkSize - restPersonas);
             }
-            personaChunk = npsPersonaList.slice(i, i + chunkSize);
+            else {
+              personaChunk = npsPersonaList.slice(i, i + chunkSize);
+            }
           }
           else {
             personaChunk = npsPersonaList.slice(i, i + chunkSize);
