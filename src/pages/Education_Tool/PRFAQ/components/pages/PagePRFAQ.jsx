@@ -1146,15 +1146,16 @@ const PagePRFAQ = () => {
                                     // }}
                                     onClick={() => {
                                       handleConceptDefinitionSelect(
-                                        `${item.updateDate.split(":")[0]}:${item.updateDate.split(":")[1]} - 컨셉 정의서`,
-                                        "customerList",
-                                        item
+                                          `${item.personaTitle} ( ${item.updateDate.split(":")[0]}:${item.updateDate.split(":")[1]} ) `,
+                                          "customerList",
+                                          item
                                       );
                                     }}
+
+                        
                                   >
                                     <Body2 color="gray700" align="left">
-                                      {item.updateDate.split(":")[0]}:
-                                      {item.updateDate.split(":")[1]} 컨셉 정의서
+                                      {item.personaTitle} ( {item.updateDate.split(":")[0]}:{item.updateDate.split(":")[1]} ) 
                                      
                                     </Body2>
                                   </SelectBoxItem>
