@@ -171,7 +171,6 @@ const PageNps = () => {
   }, [showToast]);
  
 
-
   useEffect(() => {
     const interviewLoading = async () => {
       if (!creditCreateToolLoaded) {
@@ -217,7 +216,7 @@ const PageNps = () => {
         }
 
        if(npsSelectedModeType) {
-        setNpsSelectedModeType(npsSelectedModeType);
+        setInterviewModeType(npsSelectedModeType);
        }
 
        if(npsSelectedConcept) {
@@ -362,7 +361,9 @@ const PageNps = () => {
 
     handleNextStep(1);
     let response;
-    let responseToolId;
+    // let responseToolId;
+    let conceptBoardSurveyMethod;
+    let descriptionSurveyMethod;
 
     try {
       // 컨셉 보드로 평가받기
@@ -423,19 +424,24 @@ const PageNps = () => {
             options: ["0","1","2","3","4","5","6","7","8","9","10"]
           });
           // setNpsConceptboardMultimodal(response.response.nps_conceptboard_multimodal);
-           responseToolId = await createToolOnServer(
-            {
-              projectId: project._id,
-              type: "ix_nps_education",
-              completedStep: 1,
-              npsSurveyMethod: {
-                ...response.response.nps_conceptboard_multimodal,
-                options: ["0","1","2","3","4","5","6","7","8","9","10"]
-              },
-            },
-            isLoggedIn
-          );
-          setToolId(responseToolId);
+          conceptBoardSurveyMethod ={
+            ...response.response.nps_conceptboard_multimodal,
+            options: ["0","1","2","3","4","5","6","7","8","9","10"]
+          };
+          //  responseToolId = await createToolOnServer(
+          //   {
+          //     projectId: project._id,
+          //     type: "ix_nps_education",
+          //     completedStep: 1,
+          //     // npsSurveyMethod: {
+          //     //   ...response.response.nps_conceptboard_multimodal,
+          //     //   options: ["0","1","2","3","4","5","6","7","8","9","10"]
+          //     // },
+          //     npsSurveyMethod: conceptBoardSurveyMethod,
+          //   },
+          //   isLoggedIn
+          // );
+          // setToolId(responseToolId);
     
       } else {
         // 설명만으로 평가받기
@@ -476,21 +482,26 @@ const PageNps = () => {
           ...response.response.nps_description_education,
           options: ["0","1","2","3","4","5","6","7","8","9","10"]
         });
+        descriptionSurveyMethod ={
+          ...response.response.nps_description_education,
+          options: ["0","1","2","3","4","5","6","7","8","9","10"]
+        };
 
-        responseToolId = await createToolOnServer(
-          {
-            projectId: project._id,
-            type: "ix_nps_education",
-            completedStep: 1,
-            npsSurveyMethod: {
-              ...response.response.nps_description_education,
-              options: ["0","1","2","3","4","5","6","7","8","9","10"]
-            },
-            selectedConceptIndex:selectedConcept,
-          },
-          isLoggedIn
-        );
-        setToolId(responseToolId);
+        // responseToolId = await createToolOnServer(
+        //   {
+        //     projectId: project._id,
+        //     type: "ix_nps_education",
+        //     completedStep: 1,
+        //     // npsSurveyMethod: {
+        //     //   ...response.response.nps_description_education,
+        //     //   options: ["0","1","2","3","4","5","6","7","8","9","10"]
+        //     // },
+        //     npsSurveyMethod: descriptionSurveyMethod,
+        //     selectedConceptIndex:selectedConcept,
+        //   },
+        //   isLoggedIn
+        // );
+        // setToolId(responseToolId);
       }
 
       const favoritePersonaList = personaListSaas
@@ -589,6 +600,26 @@ const PageNps = () => {
         ...favoritePersonas
       ]);
 
+   
+      const responseToolId = await createToolOnServer(
+          {
+            projectId: project._id,
+            type: "ix_nps_education",
+            completedStep: 1,
+            // npsSurveyMethod: {
+            //   ...response.response.nps_description_education,
+            //   options: ["0","1","2","3","4","5","6","7","8","9","10"]
+            // },
+            // npsSurveyMethod: descriptionSurveyMethod,
+            selectedConceptIndex:selectedConcept,
+          },
+          isLoggedIn
+        );
+        setToolId(responseToolId);
+      
+
+
+
       await updateToolOnServer(
         responseToolId,
         {
@@ -600,6 +631,7 @@ const PageNps = () => {
             name: fileNames,
           })),
           interviewModeType: interviewModeType == "conceptBoard" ? "conceptBoard" : "explanation",
+          npsSurveyMethod: interviewModeType == "conceptBoard" ? conceptBoardSurveyMethod : descriptionSurveyMethod,
           npsPersonaList: [
             ...response.response.nps_persona_generation_education,
             ...favoritePersonas
@@ -1032,15 +1064,21 @@ const PageNps = () => {
                       <InterviewModeSelection style={{ marginTop: "-20px" }}>
                         <InterviewModeCard
                           isActive={interviewModeType === "explanation"}
+                          // onClick={() => {
+                          //   setInterviewModeType("explanation");
+                          //   // if (
+                          //   //   !quickSurveyPresetData ||
+                          //   //   quickSurveyPresetData.length === 0
+                          //   // ) {
+                          //   //   handlePresetPersona();
+                          //   // }
+                          // }}
+
                           onClick={() => {
+                            if (toolSteps >= 1 || isLoadingPreset) return; // 여기서 조건 체크
                             setInterviewModeType("explanation");
-                            // if (
-                            //   !quickSurveyPresetData ||
-                            //   quickSurveyPresetData.length === 0
-                            // ) {
-                            //   handlePresetPersona();
-                            // }
                           }}
+                          disabled={toolSteps >= 1 || isLoadingPreset}
                         >
                           <CardWrapper>
                             <CheckboxWrapper>
@@ -1083,10 +1121,10 @@ const PageNps = () => {
                         <InterviewModeCard
                           isActive={interviewModeType === "conceptBoard"}
                           onClick={() => {
-                            if (toolSteps >= 2 || isLoadingPreset) return; // 여기서 조건 체크
+                            if (toolSteps >= 1 || isLoadingPreset) return; // 여기서 조건 체크
                             setInterviewModeType("conceptBoard");
                           }}
-                          disabled={toolSteps >= 2 || isLoadingPreset}
+                          disabled={toolSteps >= 1 || isLoadingPreset}
                         >
                           <CardWrapper>
                             <CheckboxWrapper>
