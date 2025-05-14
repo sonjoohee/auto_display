@@ -939,7 +939,7 @@ const PageConceptDefinition = () => {
                         onClick={handleReportRequest}
                         disabled={toolSteps > 2}
                       >
-                        컨셉 정의 작성하기
+                        컨셉 정의서 만들기
                       </Button>
                     </div>
                   ) : (
@@ -979,8 +979,7 @@ const PageConceptDefinition = () => {
                       }}
                     >
                       <AtomPersonaLoader
-                        message={`결과보고서를 작성하고 있습니다.
-                        1분 정도 소요 될 수 있어요.`}
+                        message={`컨셉 정의서 최종본을 작성하고 있어요`}
                       />
                     </div>
                   ) : (

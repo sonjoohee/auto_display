@@ -311,27 +311,21 @@ const PageNps = () => {
     if(toolSteps > 1) {
       return;
     }
+    
     setSelectedConcept((prev) => {
       if (prev.includes(ideaId)) {
-        // 이미 선택된 아이템이면 제거
-        const newSelected = prev.filter((id) => id !== ideaId);
-        // 선택된 데이터들 업데이트
-        const selectedDataList = newSelected.map(
-          (id) => npsConceptDefinition[id]
-        );
-        setNPSSelectedConcept(selectedDataList);
-        setNpsSelectedConceptDefinitionFinalReport("")
+        // 이미 선택된 아이템을 클릭하면 선택 해제
+        const newSelected = [];
+        setNPSSelectedConcept([]);
+        setNpsSelectedConceptDefinitionFinalReport("");
         return newSelected;
       } else {
-        // 새로운 아이템 추가
-        const newSelected = [...prev, ideaId];
-        // 선택된 데이터들 업데이트
-        const selectedDataList = newSelected.map(
-          (id) => npsConceptDefinition[id]
-        );
-        setNPSSelectedConcept(selectedDataList);
+        // 새 아이템 선택 시 이전 선택은 모두 지우고 새 아이템만 선택
+        const newSelected = [ideaId];
+        // 하나의 데이터만 업데이트
+        const selectedData = npsConceptDefinition[ideaId];
+        setNPSSelectedConcept([selectedData]);
         setNpsSelectedConceptDefinitionFinalReport(npsConceptDefinition[ideaId].conceptDefinitionFinalReport);
-        // console.log(npsConceptDefinition[ideaId].conceptDefinitionFinalReport);
         return newSelected;
       }
     });
@@ -1015,8 +1009,8 @@ const PageNps = () => {
                   <div className="title">
                     <H3 color="gray800">Upload Your Concept </H3>
                     <Body3 color="gray800">
-                      페르소나 평가를 위해 컨셉보드 이미지 또는 제품/서비스의
-                      설명을 등록해주세요<Title style={{ marginBottom: "18px" }}></Title>
+                      페르소나의 추천 의향을 시뮬레이션할
+                      컨셉 자료를 선택해주세요<Title style={{ marginBottom: "18px" }}></Title>
                     </Body3>
                   </div>
 
@@ -1073,8 +1067,8 @@ const PageNps = () => {
                                       : "gray500"
                                   }
                                 >
-                                  페르소나에게 전달하고 싶은 제품/서비스 설명을
-                                  입력하고, 추천 의향을 확인해보세요.
+                                  작성된 컨셉 정의서 중 하나를 선택하여 페르소나의
+                                  추천 가능성을 시뮬레이션해보세요.
                                 </Body3>
                               </div>
                             </CardContent>
@@ -1247,40 +1241,30 @@ const PageNps = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="로딩 중..." />
+                    <AtomPersonaLoader message="NPS 평가를 위한 페르소나 100명을 모집하고 있어요" />
                   </div>
                 ) : (
                   <>
                     <div className="title">
-                      <H3 color="gray800">NPS 평가 페르소나 </H3>
-                      <Body3 color="gray800">평가 페르소나 리스트입니다</Body3>
+                      <H3 color="gray800">Participating Persona</H3>
+                      <Body3 color="gray800">NPS 시뮬레이션 대상 페르소나를 확인해주세요</Body3>
                     </div>
 
                     <div className="content">
                       <ListBoxGroup>
                         <li>
                           <Body2 color="gray500">설문 문항</Body2>
-                          <div
-                            style={{
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              maxWidth: "100%", // 또는 특정 픽셀값
-                            }}
-                          >
-                            {/* <span style={{ color: "#8C8C8C" }}>
-                              {" "}
-                              {`${getQuestionTitle(selectedQuestion[0])} `}{" "}
-                            </span>{" "} */}
-                            {npsSurveyMethod.question}
-                          </div>
+                          <Body2 color="gray800">
+                            제시된 컨셉을 다른 사람에게 추천할
+                            가능성은 얼마나 되시나요?
+                          </Body2>
                         </li>
 
                         <li>
                           <Body2 color="gray500">페르소나 선택</Body2>
                           <Body2 color="gray800">
-                            NPS는 favorite 페르소나를 기반으로 무작위 패널
-                            100명을 섭외하여 진행합니다.
+                            Favorite 페르소나에 기반한 유사 패널
+                            100명을 무작위로 모집해 진행합니다.
                           </Body2>
                         </li>
                       </ListBoxGroup>
@@ -1292,7 +1276,7 @@ const PageNps = () => {
                               color="gray800"
                               style={{ textAlign: "left" }}
                             >
-                              Favorite 페르소나 리스트
+                              Favorite 페르소나를 확인하세요
                             </Body1>
                           </div>
 
@@ -1362,20 +1346,30 @@ const PageNps = () => {
               (completedSteps.includes(2) || completedSteps.includes(3)) && (
                 <TabContent5 Small>
                   {isLoadingReport ? (
-                    <LoadingContainer>
-                      <WaitLongLodingBar />
-                      <LoadingText color="gray700">
-                      참여 페르소나를 모집하고 있어요 
-                      (100명 내외 무작위 패널)
-                      </LoadingText>
-                    </LoadingContainer>
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        minHeight: "200px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <AtomPersonaLoader
+                      message= {
+                        <span>
+                        100명의 페르소나가 추천 의향을 평가하고 있어요
+                        </span>
+                      }
+                      />
+                    </div>
                   ) : (
                     <>
                       <BgBoxItem primaryLightest>
-                        <H3 color="gray800">NPS 평가</H3>
+                        <H3 color="gray800">NPS 결과 분석</H3>
                         <Body3 color="gray800">
-                          페르소나가 지인에게 추천할 가능성을 기반으로 한 NPS
-                          분석입니다.
+                          페르소나의 점수와 의견을 종합하여 결과를를
+                          정리했습니다.
                         </Body3>
                       </BgBoxItem>
 
@@ -1409,9 +1403,12 @@ const PageNps = () => {
 
                       <InsightAnalysis>
                         <div className="title">
-                          <H4 color="gray800" align="left">
-                            Q. {npsSurveyMethod.question}
+                          <li>
+                          <H4 color="gray800">
+                            제시된 컨셉을 다른 사람에게 추천할
+                            가능성은 얼마나 되시나요?
                           </H4>
+                        </li>
                         </div>
 
                         {activeDesignTab === "emotion" && (
