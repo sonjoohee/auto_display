@@ -1,18 +1,13 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import { palette } from '../../../../../assets/styles/Palette';
-import MoleculeBusinessModelPopup from "./MoleculeBusinessModelPopup";
 import { useAtom } from "jotai";
-import { BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS, BUSINESS_MODEL_CANVAS_POPUP_OPTIONS ,BUSINESS_MODEL_CANVAS_GRAPH_ITEMS} from "../../../../AtomStates";
+import { BUSINESS_MODEL_CANVAS_GRAPH_ITEMS} from "../../../../AtomStates";
 
 // 비즈니스 모델 그래프 컴포넌트
 const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () => {}, setSelectedBoxId, selectedBoxId, }) => {
-  const [bmCanvasSelectedPopupOptions, setBMCanvasSelectedPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS);
-  const [bmCanvasPopupOptions, setBMCanvasPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_POPUP_OPTIONS);
   const [businessModelCanvasGraphItems, setBusinessModelCanvasGraphItems] = useAtom(BUSINESS_MODEL_CANVAS_GRAPH_ITEMS);
-  // 이미 클릭한 버튼들을 추적하는 상태 추가
   const [clickedBoxes, setClickedBoxes] = useState([]);
-  // 현재 활성화된 다음 단계의 버튼 ID를 추적
   const [nextActiveBoxId, setNextActiveBoxId] = useState(null);
 
   const businessAreas = [
@@ -30,10 +25,11 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
   // 다음 활성화될 버튼 ID를 찾는 함수
   const findNextActiveBoxId = () => {
     // 버튼 활성화 순서 정의 (비즈니스 모델 캔버스 작성 순서)
-    const activationOrder = [3, 4, 5, 6, 7, 8, 9];
+    const activationOrder = [2,3, 4, 5, 6, 7, 8, 9];
     
     // 현재 선택된 버튼의 인덱스 찾기
     const currentIndex = activationOrder.indexOf(selectedBoxId);
+
     
     // 현재 선택된 버튼이 없거나 마지막 버튼이면 첫 번째 활성화 버튼 반환
     if (currentIndex === -1 || currentIndex === activationOrder.length - 1) {
@@ -69,54 +65,52 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
   }, [selectedBoxId, businessModelCanvasGraphItems]);
 
   const handleBoxClick = (id) => {
-    // id가 1이나 2일 때는 클릭 불가
-    if (id === 1 || id === 2) {
+
+    if(id === 1 ){
+      setSelectedBoxId(id);
+      setShowPopup(id);
       return;
     }
-  
-    // 이전 박스의 데이터 가져오기 (id-2: 0번, 1번 ...)
-    const previousBox = businessModelCanvasGraphItems[id - 2];
-    const isPreviousBoxFilled = previousBox && Object.values(previousBox).length > 0;
-  
-    if (!isPreviousBoxFilled) {
-      return; // 팝업이 열리지 않음
-    }
-  
-    // 클릭한 박스 ID를 클릭된 박스 목록에 추가
-    if (!clickedBoxes.includes(id)) {
-      setClickedBoxes([...clickedBoxes, id]);
-    }
-    
-    setSelectedBoxId(id);
-    setShowPopup(id);
-  };
-  
-  const isBoxActive = (id) => {
-    // id가 1이나 2일 때는 비활성화
-    if (id === 1 || id === 2) {
-      return false;
-    }
 
-    // 버튼 활성화 순서 정의 (비즈니스 모델 캔버스 작성 순서)
-    const activationOrder = [3, 4, 5, 6, 7, 8, 9];
-    const currentIndex = activationOrder.indexOf(id);
-    
-    // 첫 번째 버튼(id=3)은 항상 활성화
-    if (currentIndex === 0) {
+    else{
+ // 이전 박스의 데이터 가져오기 (id-2: 0번, 1번 ...)
+ const previousBox = businessModelCanvasGraphItems[id - 2];
+ const isPreviousBoxFilled = previousBox && Object.values(previousBox).length > 0;
+
+ if (!isPreviousBoxFilled) {
+   return; // 팝업이 열리지 않음
+ }
+
+ // 클릭한 박스 ID를 클릭된 박스 목록에 추가
+ if (!clickedBoxes.includes(id)) {
+   setClickedBoxes([...clickedBoxes, id]);
+ }
+ 
+ setSelectedBoxId(id);
+ setShowPopup(id);
+    }
+  
+  };
+
+  const isBoxActive = (id) => {
+   
+    if (id === 1 ) {
       return true;
     }
-    
-    // 이전 단계 버튼이 완료되었는지 확인
-    const previousId = activationOrder[currentIndex - 1];
-    const previousBox = businessModelCanvasGraphItems[previousId - 1];
-    const isPreviousBoxFilled = previousBox && Object.values(previousBox).length > 0;
-    
-    // 이전 단계가 완료되었거나, 이미 현재 버튼이 데이터를 가지고 있으면 활성화
-    const currentBox = businessModelCanvasGraphItems[id - 1];
-    const isCurrentBoxFilled = currentBox && Object.values(currentBox).length > 0;
-    
+
+    const previousBoxData = businessModelCanvasGraphItems[id - 2];
+ 
+    const isPreviousBoxFilled = previousBoxData && Object.values(previousBoxData).length > 0;
+
+    // 또는 현재 박스 자체가 이미 데이터로 채워져 있는 경우에도 활성화합니다.
+    const currentBoxData = businessModelCanvasGraphItems[id - 1]; // 0-indexed 접근
+    const isCurrentBoxFilled = currentBoxData && Object.values(currentBoxData).length > 0;
+
     return isPreviousBoxFilled || isCurrentBoxFilled;
+
+ 
   };
+
 
   // 박스가 이미 클릭되었는지 확인하는 함수
   const isBoxClicked = (id) => {
@@ -129,7 +123,9 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
   };
 
   return (
+    
     <>
+   
       <GlobalStyle />
       <GraphContainer>
         <TopSection>
@@ -142,8 +138,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
 
               // items={businessModelCanvasGraphItems.find(item => item.id === businessAreas[0].id)?.items || []}
               items={
-                businessModelCanvasGraphItems[7]?.business_model_canvas_report_education
-                  ? businessModelCanvasGraphItems[7].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                businessModelCanvasGraphItems[7]
+                  ? businessModelCanvasGraphItems[7]?.slice(0, 7).map(item => item.title)
                   : []
 
               }
@@ -166,8 +162,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
                 title={businessAreas[1].title} 
                 id={businessAreas[1].id}
                 items={
-                  businessModelCanvasGraphItems[6]?.business_model_canvas_report_education
-                    ? businessModelCanvasGraphItems[6].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                  businessModelCanvasGraphItems[6]
+                    ? businessModelCanvasGraphItems[6]?.slice(0, 7).map(item => item.title)
                     : []
                 }
                 onClick={() => handleBoxClick(businessAreas[1].id)}
@@ -185,8 +181,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
                 title={businessAreas[2].title} 
                 id={businessAreas[2].id}
                 items={
-                  businessModelCanvasGraphItems[5]?.business_model_canvas_report_education
-                    ? businessModelCanvasGraphItems[5].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                  businessModelCanvasGraphItems[5]
+                    ? businessModelCanvasGraphItems[5]?.slice(0, 7).map(item => item.title)
                     : []
                 }
                 onClick={() => handleBoxClick(businessAreas[2].id)}
@@ -206,9 +202,20 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
               <ModelBox 
                 title={businessAreas[3].title} 
                 id={businessAreas[3].id}
+                // items={
+                //   Array.isArray(businessModelCanvasGraphItems) && businessModelCanvasGraphItems[1]
+                //     ? Object.values(businessModelCanvasGraphItems[1]).slice(0, 7)
+                //     : []
+                // }
+                // items={
+                //   businessModelCanvasGraphItems[1]
+                //     ? businessModelCanvasGraphItems[1]?.slice(0, 7).map(item => item.title)
+                //     : []
+                // }
                 items={
-                  Array.isArray(businessModelCanvasGraphItems) && businessModelCanvasGraphItems[1]
-                    ? Object.values(businessModelCanvasGraphItems[1]).slice(0, 7)
+                  // businessModelCanvasGraphItems[1]이 배열인지 먼저 확인
+                  Array.isArray(businessModelCanvasGraphItems[1])
+                    ? businessModelCanvasGraphItems[1].slice(0, 7).map(item => item && item.title) // item이 유효한지 확인 후 title 접근
                     : []
                 }
                 onClick={() => handleBoxClick(businessAreas[3].id)}
@@ -229,8 +236,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
                 title={businessAreas[4].title} 
                 id={businessAreas[4].id}
                 items={
-                  businessModelCanvasGraphItems[3]?.business_model_canvas_report_education
-                    ? businessModelCanvasGraphItems[3].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                  businessModelCanvasGraphItems[3]
+                    ? businessModelCanvasGraphItems[3]?.slice(0, 7).map(item => item && item.title)
                     : []
                 }
                 onClick={() => handleBoxClick(businessAreas[4].id)}
@@ -248,8 +255,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
                 title={businessAreas[5].title} 
                 id={businessAreas[5].id}
                 items={
-                  businessModelCanvasGraphItems[2]?.business_model_canvas_report_education
-                    ? businessModelCanvasGraphItems[2].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+                  businessModelCanvasGraphItems[2]
+                    ? businessModelCanvasGraphItems[2].slice(0, 7).map(item => item && item.title)
                     : []
                 }
                 onClick={() => handleBoxClick(businessAreas[5].id)}
@@ -270,11 +277,18 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
             <ModelBox 
               title={businessAreas[6].title} 
               id={businessAreas[6].id}
+              // items={
+              //   Array.isArray(businessModelCanvasGraphItems) && businessModelCanvasGraphItems[0]
+              //     ? Object.values(businessModelCanvasGraphItems[0]).slice(0, 7)
+              //     : []
+              // }
               items={
-                Array.isArray(businessModelCanvasGraphItems) && businessModelCanvasGraphItems[0]
-                  ? Object.values(businessModelCanvasGraphItems[0]).slice(0, 7)
+                // businessModelCanvasGraphItems[0]이 배열인지 먼저 확인
+                Array.isArray(businessModelCanvasGraphItems[0])
+                  ? businessModelCanvasGraphItems[0].slice(0, 7).map(item => item && item.title) // item이 유효한지 확인 후 title 접근
                   : []
               }
+              
               onClick={() => handleBoxClick(businessAreas[6].id)}
               isSelected={selectedBoxId === businessAreas[6].id}
               isActive={isBoxActive(businessAreas[6].id)}
@@ -294,9 +308,14 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
           <ModelBox 
             title={businessAreas[7].title} 
             id={businessAreas[7].id}
+            // items={
+            //   businessModelCanvasGraphItems[8]?
+            //     ? businessModelCanvasGraphItems[8].business_model_canvas_report_education.slice(0, 7).map(item => item && item.title)
+            //     : []
+            // }
             items={
-              businessModelCanvasGraphItems[8]?.business_model_canvas_report_education
-                ? businessModelCanvasGraphItems[8].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+              businessModelCanvasGraphItems[8]
+                ? businessModelCanvasGraphItems[8]?.slice(0, 7).map(item => item && item.title)
                 : []
             }
             onClick={() => handleBoxClick(businessAreas[7].id)}
@@ -313,8 +332,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
             title={businessAreas[8].title} 
             id={businessAreas[8].id}
             items={
-              businessModelCanvasGraphItems[4]?.business_model_canvas_report_education
-                ? businessModelCanvasGraphItems[4].business_model_canvas_report_education.slice(0, 7).map(item => item.title)
+              businessModelCanvasGraphItems[4]
+                ? businessModelCanvasGraphItems[4]?.slice(0, 7).map(item => item && item.title)
                 : []
             }
             onClick={() => handleBoxClick(businessAreas[8].id)}
@@ -329,15 +348,6 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
           />
         </BottomSection>
 
-        {/* MoleculeBusinessModelPopup 컴포넌트 추가 */}
-        {/* {showPopup && (
-          <MoleculeBusinessModelPopup
-            isOpen={showPopup}
-            onClose={handleClosePopup}
-            onSave={handleSavePopup}
-            currentModelId={selectedBoxId}
-          />
-        )} */}
       </GraphContainer>
     </>
   );
@@ -349,7 +359,7 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClic
   const hasItems = items.length > 0;
   
   // 1번과 2번 영역은 특별 처리
-  const isSpecialArea = id === 1 || id === 2;
+  // const isSpecialArea = id === 1 || id === 2;
 
   return (
     <BoxWrapper 
@@ -362,7 +372,7 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClic
       <ModelHeader>
         <NumberCircle>{id}</NumberCircle>
         {/* 1, 2번 영역의 제목 폰트도 동일하게 설정 */}
-        <Title style={isSpecialArea ? { color: '#1A1A1A' } : {}}>
+        <Title >
           {title}
         </Title>
       </ModelHeader>
@@ -380,7 +390,7 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClic
             {items.map((item, index) => (
               <ItemRow key={index} style={{textAlign: "left"}}>
                 {/* 항목 텍스트도 동일하게 설정 */}
-                <ItemText style={isSpecialArea ? { color: '#1A1A1A' } : {}}>
+                <ItemText>
                   {item}
                 </ItemText>
               </ItemRow>
@@ -396,7 +406,7 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClic
             letterSpacing: '-0.03em',
             textAlign: 'center',
             // 1, 2번 영역은 활성화된 버튼의 텍스트 색상(#000000)으로 설정
-            color: isSpecialArea ? '#1A1A1A' : 
+            color: 
                   !isActive ? '#CCCCCC' : 
                   isSelected ? '#666666' : 
                   isClicked ? '#666666' : 
