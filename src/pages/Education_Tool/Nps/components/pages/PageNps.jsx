@@ -1243,9 +1243,9 @@ const PageNps = () => {
                             FlexStart
                             key={index}
                             id={index}
-                            title={`${idea.updateDate.split(":")[0]}:${
+                            title={` ${idea.personaTitle} ( ${idea.updateDate.split(":")[0]}:${
                               idea.updateDate.split(":")[1]
-                            } - 컨셉 정의 `}
+                            }  )`}
                             isSelected={selectedConcept.includes(index)}
                             onSelect={() => handleCheckboxChange(index)}
                           />
