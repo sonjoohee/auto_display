@@ -28,11 +28,13 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
   }, []);
 
   const findNextActiveBoxId = () => {
+
     if (isInitialRender && selectedBoxId === null) {
       return 1;
     }
 
     const activationOrder = [2,3, 4, 5, 6, 7, 8, 9];
+
     
     const currentIndex = activationOrder.indexOf(selectedBoxId);
     
@@ -107,11 +109,13 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
   };
 
   const isBoxActive = (id) => {
+
     if (id === 1) {
       return isInitialRender && nextActiveBoxId === 1;
     }
 
     return id === nextActiveBoxId;
+
   };
 
   const isBoxClicked = (id) => {
@@ -120,6 +124,12 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
 
   const isNextActiveBox = (id) => {
     return id === nextActiveBoxId;
+  };
+
+  // 모든 비즈니스 모델 항목이 채워졌는지 확인하는 함수
+  const areAllBoxesFilled = () => {
+    // 모든 비즈니스 모델 항목이 채워졌는지 확인 (적어도 하나의 항목이 있는지)
+    return businessModelCanvasGraphItems.filter(item => item && Object.values(item).length > 0).length === 9;
   };
 
   return (
@@ -141,9 +151,13 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
               isActive={isBoxActive(businessAreas[0].id)}
               isClicked={isBoxClicked(businessAreas[0].id)}
               isNextActive={isNextActiveBox(businessAreas[0].id)}
+              areAllBoxesFilled={areAllBoxesFilled()}
+              selectedBoxId={selectedBoxId}
               style={{
+
                 cursor: isBoxDataFilled(businessAreas[0].id) ? 'pointer' : 'not-allowed',
                 opacity: isBoxDataFilled(businessAreas[0].id) ? 1 : 0.7
+
               }}
             />
           </LeftColumn>
@@ -163,6 +177,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
                 isActive={isBoxActive(businessAreas[1].id)}
                 isClicked={isBoxClicked(businessAreas[1].id)}
                 isNextActive={isNextActiveBox(businessAreas[1].id)}
+                areAllBoxesFilled={areAllBoxesFilled()}
+                selectedBoxId={selectedBoxId}
                 style={{
                   cursor: isBoxDataFilled(businessAreas[1].id) ? 'pointer' : 'not-allowed',
                   opacity: isBoxDataFilled(businessAreas[1].id) ? 1 : 0.7
@@ -181,6 +197,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
                 isActive={isBoxActive(businessAreas[2].id)}
                 isClicked={isBoxClicked(businessAreas[2].id)}
                 isNextActive={isNextActiveBox(businessAreas[2].id)}
+                areAllBoxesFilled={areAllBoxesFilled()}
+                selectedBoxId={selectedBoxId}
                 style={{
                   cursor: isBoxDataFilled(businessAreas[2].id) ? 'pointer' : 'not-allowed',
                   opacity: isBoxDataFilled(businessAreas[2].id) ? 1 : 0.7
@@ -202,6 +220,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
                 isActive={isBoxActive(businessAreas[3].id)}
                 isClicked={isBoxClicked(businessAreas[3].id)}
                 isNextActive={isNextActiveBox(businessAreas[3].id)}
+                areAllBoxesFilled={areAllBoxesFilled()}
+                selectedBoxId={selectedBoxId}
                 style={{
                   cursor: isBoxDataFilled(businessAreas[3].id) ? 'pointer' : 'not-allowed',
                   opacity: isBoxDataFilled(businessAreas[3].id) ? 1 : 0.7
@@ -223,6 +243,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
                 isActive={isBoxActive(businessAreas[4].id)}
                 isClicked={isBoxClicked(businessAreas[4].id)}
                 isNextActive={isNextActiveBox(businessAreas[4].id)}
+                areAllBoxesFilled={areAllBoxesFilled()}
+                selectedBoxId={selectedBoxId}
                 style={{
                   cursor: isBoxDataFilled(businessAreas[4].id) ? 'pointer' : 'not-allowed',
                   opacity: isBoxDataFilled(businessAreas[4].id) ? 1 : 0.7
@@ -241,6 +263,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
                 isActive={isBoxActive(businessAreas[5].id)}
                 isClicked={isBoxClicked(businessAreas[5].id)}
                 isNextActive={isNextActiveBox(businessAreas[5].id)}
+                areAllBoxesFilled={areAllBoxesFilled()}
+                selectedBoxId={selectedBoxId}
                 style={{
                   cursor: isBoxDataFilled(businessAreas[5].id) ? 'pointer' : 'not-allowed',
                   opacity: isBoxDataFilled(businessAreas[5].id) ? 1 : 0.7
@@ -263,6 +287,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
               isActive={isBoxActive(businessAreas[6].id)}
               isClicked={isBoxClicked(businessAreas[6].id)}
               isNextActive={isNextActiveBox(businessAreas[6].id)}
+              areAllBoxesFilled={areAllBoxesFilled()}
+              selectedBoxId={selectedBoxId}
               style={{
                 cursor: true ? 'pointer' : 'not-allowed',
                 opacity: 1
@@ -285,6 +311,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
             isActive={isBoxActive(businessAreas[7].id)}
             isClicked={isBoxClicked(businessAreas[7].id)}
             isNextActive={isNextActiveBox(businessAreas[7].id)}
+            areAllBoxesFilled={areAllBoxesFilled()}
+            selectedBoxId={selectedBoxId}
             style={{
               cursor: isBoxDataFilled(businessAreas[7].id) ? 'pointer' : 'not-allowed',
               opacity: isBoxDataFilled(businessAreas[7].id) ? 1 : 0.7
@@ -303,6 +331,8 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
             isActive={isBoxActive(businessAreas[8].id)}
             isClicked={isBoxClicked(businessAreas[8].id)}
             isNextActive={isNextActiveBox(businessAreas[8].id)}
+            areAllBoxesFilled={areAllBoxesFilled()}
+            selectedBoxId={selectedBoxId}
             style={{
               cursor: isBoxDataFilled(businessAreas[8].id) ? 'pointer' : 'not-allowed',
               opacity: isBoxDataFilled(businessAreas[8].id) ? 1 : 0.7
@@ -314,28 +344,54 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
   );
 };
 
+
 const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClicked, isNextActive, style }) => {
   const [isHovered, setIsHovered] = useState(false);
   const hasItems = items.length > 0;
   
+
   return (
     <BoxWrapper 
-      onMouseEnter={() => isActive && setIsHovered(true)}
-      onMouseLeave={() => isActive && setIsHovered(false)}
+      onMouseEnter={() => {
+        // 모든 항목이 채워졌거나 1번 영역이 채워진 경우 호버 효과 없음
+        if (areAllBoxesFilled || (id === 1 && isFirstBoxFilled)) {
+          return;
+        }
+        
+        if (isActive) {
+          setIsHovered(true);
+        }
+      }}
+      onMouseLeave={() => {
+        // 모든 항목이 채워졌거나 1번 영역이 채워진 경우 호버 효과 없음
+        if (areAllBoxesFilled || (id === 1 && isFirstBoxFilled)) {
+          return;
+        }
+        
+        if (isActive) {
+          setIsHovered(false);
+        }
+      }}
       onClick={onClick}
       isActive={isActive}
-      style={style}
+      style={{
+        ...style,
+        // 모든 항목이 채워졌을 때는 항상 포인터 커서로 설정
+        cursor: areAllBoxesFilled ? 'pointer' : style.cursor
+      }}
     >
       <ModelHeader>
         <NumberCircle>{id}</NumberCircle>
+
         <Title >
+
           {title}
         </Title>
       </ModelHeader>
       
       <ContentBox 
         hasItems={hasItems} 
-        isHovered={isHovered && isActive}
+        isHovered={(areAllBoxesFilled || (id === 1 && isFirstBoxFilled)) ? false : (isHovered && isActive)}
         isSelected={isSelected && !hasItems}
         isActive={isActive}
         isClicked={isClicked}
@@ -488,12 +544,22 @@ const ContentBox = styled.div`
   }};
   
   border: 1px solid ${props => {
+    // 채워진 박스는 회색 테두리
+    if (props.hasItems) return '#E0E4EB';
+    
+    // 선택된 박스는 회색 테두리
     if (props.isSelected) return '#E0E4EB';
+    
+    // 클릭된 박스는 회색 테두리
     if (props.isClicked) return '#E0E4EB';
+    
+    // 활성화된 박스 중 호버 상태인 경우 파란색 테두리
     if (props.isActive && props.isHovered) return '#226FFF';
+
     if (props.isActive) {
       return props.isNextActive ? '#226FFF' : '#E0E4EB';
     }
+
     return '#E0E4EB';
   }};
   
