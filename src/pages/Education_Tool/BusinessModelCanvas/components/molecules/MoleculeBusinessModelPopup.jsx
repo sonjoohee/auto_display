@@ -635,7 +635,7 @@ const OptionText = styled.div`
 
 const DeleteButton = styled.button`
   position: absolute;
-  right: 16px;
+  right: 0px;
   top: 50%;
   transform: translateY(-50%);
   width: 20px;
