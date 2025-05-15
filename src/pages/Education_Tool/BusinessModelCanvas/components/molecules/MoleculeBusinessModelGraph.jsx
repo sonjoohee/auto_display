@@ -32,6 +32,7 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
     if (isInitialRender && selectedBoxId === null) {
       return 1;
     }
+    if (selectedBoxId === null) return null;
 
     const activationOrder = [2,3, 4, 5, 6, 7, 8, 9];
 
@@ -347,7 +348,17 @@ const MoleculeBusinessModelGraph = ({ data = {}, onBoxClick, setShowPopup = () =
 
 const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClicked, isNextActive, style }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [businessModelCanvasGraphItems, setBusinessModelCanvasGraphItems] = useAtom(BUSINESS_MODEL_CANVAS_GRAPH_ITEMS);
   const hasItems = items.length > 0;
+  const areAllBoxesFilled = () => {
+    // 모든 비즈니스 모델 항목이 채워졌는지 확인 (적어도 하나의 항목이 있는지)
+    return businessModelCanvasGraphItems.filter(item => item && Object.values(item).length > 0).length === 9;
+  };
+  const isFirstBoxFilled = () => {
+    // 첫 번째 박스(인덱스 0) 데이터 확인
+    const firstBoxData = businessModelCanvasGraphItems[0];
+    return firstBoxData && Object.values(firstBoxData).length > 0;
+  };
   
 
   return (

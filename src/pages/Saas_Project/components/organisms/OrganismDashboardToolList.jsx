@@ -218,6 +218,11 @@ import {
   NPS_REPORT,
   NPS_INTERVIEW,
   NPS_SELECTED_CONCEPT_INDEX,
+  PRFAQ_SELECTED_PURPOSE,
+  PRFAQ_FINAL_REPORT_EDUCATION,
+  PRFAQ_CONCEPT_DEFINITION,
+  PRFAQ_BUSINESS_MODEL_CANVAS,
+  PRFAQ_KEY_CONTENT_EDUCATION,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -575,6 +580,12 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setNpsReport] = useAtom(NPS_REPORT);
   const [, setNpsInterview] = useAtom(NPS_INTERVIEW);
   const [, setNpsSelectedConceptIndex] = useAtom(NPS_SELECTED_CONCEPT_INDEX);
+  const [, setPrfaqSelectedPurpose] = useAtom(PRFAQ_SELECTED_PURPOSE);
+  const [, setPrfaqFinalReportEducation] = useAtom(PRFAQ_FINAL_REPORT_EDUCATION);
+  const [, setPrfaqSelectedConceptDefinition] = useAtom(PRFAQ_CONCEPT_DEFINITION);
+  const [, setPrfaqSelectedBusinessModelCanvas] = useAtom(PRFAQ_BUSINESS_MODEL_CANVAS);
+  const [, setPrfaqKeyContentEducation] = useAtom(PRFAQ_KEY_CONTENT_EDUCATION);
+
   const saveConversation = (data) => {};
 
   // 서버에서 툴 정보 가져오기 함수
@@ -1494,8 +1505,20 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setToolStep(chatData?.completedStep);
         setNpsSelectedConceptIndex(chatData?.selectedConceptIndex || []);
 
-
-  
+        //!PRFAQ
+        setToolStep(1);
+        setCompletedStatus(false);
+        setPrfaqSelectedPurpose( {});
+        setPrfaqFinalReportEducation( []);
+        setPrfaqSelectedConceptDefinition( {});
+        setPrfaqSelectedBusinessModelCanvas( []);
+        setPrfaqKeyContentEducation("");
+        setPrfaqFinalReportEducation(chatData?.prfaqFinalReportEducation || []);
+        setPrfaqSelectedPurpose(chatData?.selectedPurposes || {});
+        setPrfaqKeyContentEducation(chatData?.prfaqKeyContentEducation || "");
+        setPrfaqSelectedConceptDefinition(chatData?.selectedConceptDefinition || {});
+        setPrfaqSelectedBusinessModelCanvas(chatData?.selectedBusinessModelCanvas || []);
+        
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);
 
@@ -1544,7 +1567,11 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         } else if (chatData.type === "ix_business_model_canvas_education") {
           setToolLoading(true);
           navigate("/BusinessModelCanvas");
+        } else if (chatData.type === "ix_prfaq_key_ducation") {
+          setToolLoading(true);
+          navigate("/PRFAQ");
         }
+
 
       } catch (error) {}
     } else if (conversationType === "interviewSingle") {
