@@ -204,6 +204,21 @@ import {
   CREDIT_CREATE_TOOL_LOADED,
   EDUCATION_TOOL_COMPLETED_STATUS,
   KANO_MODEL_INSIGHT,
+  BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION,
+  BUSINESS_MODEL_CANVAS_MARKDOWN,
+  BUSINESS_MODEL_CANVAS_GRAPH_ITEMS,
+  BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA,
+  BUSINESS_MODEL_CANVAS_POPUP_OPTIONS,
+  BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS,
+  NPS_SELECTED_MODE_TYPE,
+  NPS_FILE_NAME,
+  NPS_SURVEY_METHOD,
+  NPS_PERSONA_LIST,
+  NPS_SELECTED_CONCEPT,
+  NPS_STATIC_DATA,
+  NPS_REPORT,
+  NPS_INTERVIEW,
+  NPS_SELECTED_CONCEPT_INDEX,
 } from "../../../AtomStates";
 import {
   updateToolOnServer,
@@ -558,6 +573,23 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [, setConceptDefinitionFinalReport] = useAtom(
     CONCEPT_DEFINITION_FINAL_REPORT
   );
+  const [, setBusinessModelCanvasSelectedConceptDefinition] = useAtom(
+    BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION
+  );
+  const [, setBusinessModelCanvasMarkdown] = useAtom(BUSINESS_MODEL_CANVAS_MARKDOWN);
+  const [, setBusinessModelCanvasGraphItems] = useAtom(BUSINESS_MODEL_CANVAS_GRAPH_ITEMS);
+  const [, setBusinessModelCanvasInitialGraphData] = useAtom(BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA);
+  const [, setBusinessModelCanvasPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_POPUP_OPTIONS);
+  const [, setBusinessModelCanvasSelectedPopupOptions] = useAtom(BUSINESS_MODEL_CANVAS_SELECTED_POPUP_OPTIONS);
+  const [, setNpsPersonaList] = useAtom(NPS_PERSONA_LIST);  
+  const [, setNpsSelectedModeType] = useAtom(NPS_SELECTED_MODE_TYPE);
+  const [, setNpsFileName] = useAtom(NPS_FILE_NAME);
+  const [, setNpsSurveyMethod] = useAtom(NPS_SURVEY_METHOD);
+  const [, setNPSSelectedConcept] = useAtom(NPS_SELECTED_CONCEPT);
+  const [, setNpsStaticData] = useAtom(NPS_STATIC_DATA);
+  const [, setNpsReport] = useAtom(NPS_REPORT);
+  const [, setNpsInterview] = useAtom(NPS_INTERVIEW);
+  const [, setNpsSelectedConceptIndex] = useAtom(NPS_SELECTED_CONCEPT_INDEX);
 
   const saveConversation = (data) => {
     // 대화 저장 로직 구현
@@ -827,6 +859,12 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           return tool.completedStep === 2 ? "완료" : "진행중";
         case "ix_concept_definition_education":
           return tool.completedStep === 3 ? "완료" : "진행중";
+          case "ix_prfaq_education":
+            return tool.completedStep === 3 ? "완료" : "진행중";
+          case "ix_nps_education":
+            return tool.completedStep === 3 ? "완료" : "진행중";
+          case "ix_business_model_canvas_education":
+            return tool.completedStep === 2 ? "완료" : "진행중";
         default:
           return "-";
       }
@@ -1413,6 +1451,59 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         );
         setCompletedStatus(chatData?.completedStatus || false);
 
+         //!비즈니스 모델 캔버스
+         setToolStep(1);
+         setCompletedStatus(false); 
+         setBusinessModelCanvasSelectedConceptDefinition({});
+         setBusinessModelCanvasMarkdown("");
+         setBusinessModelCanvasGraphItems([]);
+         setBusinessModelCanvasInitialGraphData([]);
+         setBusinessModelCanvasPopupOptions([]);
+         setBusinessModelCanvasSelectedConceptDefinition(chatData?.selectedConceptDefinition || {});
+         setBusinessModelCanvasMarkdown(chatData?.businessModelCanvasMarkdown || "");
+         setBusinessModelCanvasGraphItems(chatData?.bmCanvasGraphItems || []);
+         setBusinessModelCanvasInitialGraphData(chatData?.bmCanvasInitialGraphData || []);
+         setBusinessModelCanvasPopupOptions(chatData?.bmCanvasPopupOptions || []);
+         setBusinessModelCanvasSelectedPopupOptions(chatData?.bmCanvasSelectedPopupOptions || {});
+         setCompletedStatus(chatData?.completedStatus || false);
+         setToolStep(chatData?.completedStep);
+ 
+         //!NPS
+         setToolStep(1);
+         setCompletedStatus(false);
+         setNpsPersonaList([]);
+         setNPSSelectedConcept([]);
+         setNpsSurveyMethod({});
+         setNpsFileName([]);
+         setNpsSelectedModeType("");
+         setNpsStaticData([]);
+         setNpsSelectedConceptIndex([]);
+         setNpsReport([]);
+         setNpsInterview([]);
+         setNpsPersonaList(chatData?.npsPersonaList || []);
+         setNPSSelectedConcept(chatData?.npsSelectedConcept || []);
+         setNpsSurveyMethod(chatData?.npsSurveyMethod|| {});
+         setCompletedStatus(chatData?.completedStatus || false);
+         setNpsSelectedModeType(chatData?.interviewModeType || "");
+         setNpsFileName(
+           chatData?.fileName
+             ? Array.isArray(chatData.fileName)
+               ? chatData.fileName.map((file) =>
+                   typeof file === "object" ? file.name : file
+                 )
+               : [
+                   typeof chatData.fileName === "object"
+                     ? chatData.fileName.name
+                     : chatData.fileName,
+                 ]
+             : []
+         );
+         setNpsStaticData(chatData?.npsStaticData || []);
+         setNpsReport(chatData?.npsReport || []);
+         setNpsInterview(chatData?.npsInterview || []);
+         setToolStep(chatData?.completedStep);
+         setNpsSelectedConceptIndex(chatData?.selectedConceptIndex || []);
+
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);
 
@@ -1455,6 +1546,16 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         } else if (chatData.type === "ix_needs_keywords_generation_education") {
           setToolLoading(true);
           navigate("/NeedsKeywordsGeneration");
+        }
+        else if (chatData.type === "ix_nps_education") {
+          setToolLoading(true);
+          navigate("/Nps");
+        } else if (chatData.type === "ix_business_model_canvas_education") {
+          setToolLoading(true);
+          navigate("/BusinessModelCanvas");
+        } else if (chatData.type === "ix_prfaq_key_ducation") {
+          setToolLoading(true);
+          navigate("/PRFAQ");
         }
       } catch (error) {}
     } else if (conversationType === "interviewSingle") {

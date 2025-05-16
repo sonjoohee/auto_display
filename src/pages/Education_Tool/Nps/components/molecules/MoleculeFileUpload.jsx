@@ -9,6 +9,7 @@ const MoleculeFileUpload = ({
   handleChangeStatus, 
   toolSteps
 }) => {
+
   return (
     <TabContent5Item required>
       <div className="title">
@@ -21,8 +22,9 @@ const MoleculeFileUpload = ({
         canRemove={true}
         canRestart={false}
         disabled={toolSteps >= 1}
-        accept="application/pdf, image/*"
+        accept="image/jpg, image/jpeg, image/png, image/gif, image/bmp, application/pdf"
         maxSizeBytes={20 * 1024 * 1024}
+
         inputWithFilesContent={
           <>
             <img src={images.ImagePrimary} alt="" />

@@ -66,6 +66,8 @@ import {
   PRFAQ_BUSINESS_MODEL_CANVAS,
   PRFAQ_KEY_CONTENT_EDUCATION,
   PRFAQ_FINAL_REPORT_EDUCATION,
+  USER_CREDITS,
+  PRFAQ_SELECTED_PURPOSE 
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -88,6 +90,9 @@ import {
   getFindToolListOnServerSaas,
   EducationToolsRequest,
   UserCreditCheck,
+  UserCreditUse,
+  UserCreditInfo,
+
 } from "../../../../../utils/indexedDB";
 import "react-dropzone-uploader/dist/styles.css";
 
@@ -104,6 +109,7 @@ const PagePRFAQ = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
@@ -162,6 +168,7 @@ const PagePRFAQ = () => {
   const [prfaqBusinessModelCanvas, setPrfaqBusinessModelCanvas] = useAtom(PRFAQ_BUSINESS_MODEL_CANVAS);
   const [prfaqKeyContentEducation, setPrfaqKeyContentEducation] = useAtom(PRFAQ_KEY_CONTENT_EDUCATION);
   const [prfaqFinalReport, setPrfaqFinalReport] = useAtom(PRFAQ_FINAL_REPORT_EDUCATION);
+  const [prfaqSelectedPurpose, setPrfaqSelectedPurpose] = useAtom(PRFAQ_SELECTED_PURPOSE);
 
   const [ideaEvaluateSelectedKanoModelIndex, setIdeaEvaluateSelectedKanoModelIndex] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX);
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -312,28 +319,44 @@ const PagePRFAQ = () => {
       if (toolLoading) {
 
         // 비즈니스 정보 설정 (Step 1)
-        if (Object.keys(ideaEvaluateSelectedKanoModel).length > 0) {
-          setSelectedKanoModelData(ideaEvaluateSelectedKanoModel);
-          setshowKanoModelList(true);
-        
+        if(prfaqKeyContentEducation && prfaqKeyContentEducation.length > 0){
+          setPrfaqKeyContentEducation(prfaqKeyContentEducation);
         }
-        if (Object.keys(ideaEvaluateSelectedKanoModelIndex).length > 0) {
-          setSelectedPurposes(ideaEvaluateSelectedKanoModelIndex);
-          
+        if(Object.keys(prfaqSelectedPurpose).length > 0){
+          setPrfaqSelectedPurpose(prfaqSelectedPurpose);
         }
-        if (ideaEvaluateList && ideaEvaluateList.length > 0) {
-          setIdeaEvaluateList(ideaEvaluateList);
+        if(prfaqConceptDefinition && prfaqConceptDefinition.length > 0){
+          setPrfaqConceptDefinition(prfaqConceptDefinition);
         }
-        if (ideaEvaluateSelectedList && ideaEvaluateSelectedList.length > 0) {
-          setIdeaEvaluateSelectedList(ideaEvaluateSelectedList);
+        if(prfaqBusinessModelCanvas && prfaqBusinessModelCanvas.length > 0){
+          setPrfaqBusinessModelCanvas(prfaqBusinessModelCanvas);
         }
-        if (Object.keys(ideaEvaluateSelectedListIndex).length > 0) {
-          setIdeaEvaluateSelect(ideaEvaluateSelectedListIndex);
+        if(prfaqFinalReport && prfaqFinalReport.length > 0){
+          setPrfaqFinalReport(prfaqFinalReport);
         }
 
-        if (ideaEvaluateComparisonEducation && ideaEvaluateComparisonEducation.length > 0) {
-          setIdeaEvaluateComparisonEducation(ideaEvaluateComparisonEducation);
-        }
+        // if (Object.keys(ideaEvaluateSelectedKanoModel).length > 0) {
+        //   setSelectedKanoModelData(ideaEvaluateSelectedKanoModel);
+        //   setshowKanoModelList(true);
+        
+        // }
+        // if (Object.keys(ideaEvaluateSelectedKanoModelIndex).length > 0) {
+        //   setSelectedPurposes(ideaEvaluateSelectedKanoModelIndex);
+          
+        // }
+        // if (ideaEvaluateList && ideaEvaluateList.length > 0) {
+        //   setIdeaEvaluateList(ideaEvaluateList);
+        // }
+        // if (ideaEvaluateSelectedList && ideaEvaluateSelectedList.length > 0) {
+        //   setIdeaEvaluateSelectedList(ideaEvaluateSelectedList);
+        // }
+        // if (Object.keys(ideaEvaluateSelectedListIndex).length > 0) {
+        //   setIdeaEvaluateSelect(ideaEvaluateSelectedListIndex);
+        // }
+
+        // if (ideaEvaluateComparisonEducation && ideaEvaluateComparisonEducation.length > 0) {
+        //   setIdeaEvaluateComparisonEducation(ideaEvaluateComparisonEducation);
+        // }
 
         // 활성 탭 설정 (기본값 1)
         if (toolStep === undefined || toolStep === 1) {
@@ -372,43 +395,6 @@ const PagePRFAQ = () => {
           setInterviewModeType(quickSurveyInterviewModeType);
         }
 
-        if (
-          quickSurveyDetailInfo &&
-          Object.keys(quickSurveyDetailInfo || {}).length > 0
-        ) {
-          // customPersonaForm 설정
-          setCustomPersonaForm(quickSurveyDetailInfo);
-
-          // selectedValues용으로 데이터 가공
-          const processedValues = {
-            gender:
-              quickSurveyDetailInfo?.gender === "male"
-                ? "남성"
-                : quickSurveyDetailInfo?.gender === "female"
-                ? "여성"
-                : quickSurveyDetailInfo?.gender || "", // "상관없음"은 그대로
-
-            age: Array.isArray(quickSurveyDetailInfo?.age)
-              ? quickSurveyDetailInfo?.age[0] === "상관없음"
-                ? "상관없음"
-                : quickSurveyDetailInfo?.age.join(", ")
-              : "",
-
-            residence: Array.isArray(quickSurveyDetailInfo?.residence)
-              ? quickSurveyDetailInfo?.residence[0] === "상관없음"
-                ? "상관없음"
-                : quickSurveyDetailInfo?.residence.join(", ")
-              : "",
-
-            income: Array.isArray(quickSurveyDetailInfo.income)
-              ? quickSurveyDetailInfo.income[0] === "상관없음"
-                ? "상관없음"
-                : quickSurveyDetailInfo.income.join(", ")
-              : "",
-          };
-
-          setSelectedValues(processedValues);
-        }
 
         if (
           quickSurveyRecruitingCondition &&
@@ -674,7 +660,7 @@ const PagePRFAQ = () => {
     // 새 AbortController 생성
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
-    
+  
     handleNextStep(1);
     // setIsLoading(true);
     // setToolSteps(2);
@@ -731,19 +717,41 @@ const PagePRFAQ = () => {
       // setIdeaEvaluateComparisonEducation(response.response.idea_evaluation_comparison_education)
       setPrfaqKeyContentEducation(response.response.prfaq_key_content_education)
       
-
-      await updateToolOnServer(
-        toolId,
+      const responseToolId = await createToolOnServer(
         {
-          ideaEvaluateComparisonEducation: response.response.idea_evaluation_comparison_education,
-          completedStep: 3,
+          projectId: project._id,
+          type: "ix_prfaq_education",
+          completedStep: 1,
+          prfaqKeyContentEducation: response.response.prfaq_key_content_education,
+          selectedConceptDefinition: prfaqConceptDefinition.conceptDefinitionFinalReport,
+          selectedBusinessModelCanvas: prfaqBusinessModelCanvas.bmCanvasGraphItems,
+          selectedPurposes: selectedPurposes,
         },
         isLoggedIn
       );
+      setToolId(responseToolId);
+
+      
+      const creditUsePayload = {
+        title: project.projectTitle,
+        service_type: "prfaq",
+        target: "",
+        state: "use",
+        mount: creditCreateTool,
+      };
+  
+      await UserCreditUse(creditUsePayload, isLoggedIn);
+  
+      // 크레딧 사용 후 사용자 정보 새로고침
+  
+      const userCreditValue = await UserCreditInfo(isLoggedIn);
+      // 전역 상태의 크레딧 정보 업데이트
+      setUserCredits(userCreditValue);
+  
 
 
-      setToolSteps(3);
-      setCompletedSteps([...completedSteps, 3]);
+      setToolSteps(1);
+      // setCompletedSteps([...completedSteps, 3]);
     } catch (error) {
       setShowPopupError(true);
       if (error.response) {

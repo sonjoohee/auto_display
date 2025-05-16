@@ -11,6 +11,7 @@ import { Button } from "../../../../../assets/styles/ButtonStyle";
 import Markdown from "markdown-to-jsx";
 import images from "../../../../../assets/styles/Images";
 import PopupWrap from "../../../../../assets/styles/Popup";
+import MoleculeBMResult from "../molecules/MoleculeBMResult";
 import {
   ContentsWrap,
   MainContent,
@@ -39,8 +40,6 @@ import {
   IDEA_EVALUATE_SELECTED_LIST,
   IDEA_EVALUATE_LIST,
   IDEA_EVALUATE_COMPARISON_EDUCATION,
-  IDEA_EVALUATE_SELECTED_KANO_MODEL,
-  IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX,
   IDEA_EVALUATE_SELECTED_LIST_INDEX,
   BUSINESS_MODEL_CANVAS_MARKDOWN,
   EVENT_STATE,
@@ -114,13 +113,8 @@ const PageBusinessModelCanvas = () => {
   const [quickSurveyAnalysis, setQuickSurveyAnalysis] = useAtom(
     QUICK_SURVEY_ANALYSIS
   );
-  const [ideaEvaluateSelectedListIndex, setIdeaEvaluateSelectedListIndex] = useAtom(IDEA_EVALUATE_SELECTED_LIST_INDEX);
   const [ideaEvaluateComparisonEducation, setIdeaEvaluateComparisonEducation] = useAtom(IDEA_EVALUATE_COMPARISON_EDUCATION)
-  const [quickSurveySelectedQuestion, setQuickSurveySelectedQuestion] = useAtom(
-    QUICK_SURVEY_SELECTED_QUESTION
-  );
   const [ideaEvaluateSelectedList, ] = useAtom(IDEA_EVALUATE_SELECTED_LIST);
-  const [ideaEvaluateList, setIdeaEvaluateList] = useAtom(IDEA_EVALUATE_LIST);
   const [businessModelCanvasMarkdown, setBusinessModelCanvasMarkdown] = useAtom(BUSINESS_MODEL_CANVAS_MARKDOWN);
   const [businessModelCanvasGraphItems, setBusinessModelCanvasGraphItems] = useAtom(BUSINESS_MODEL_CANVAS_GRAPH_ITEMS);
   const [showPopupSave, setShowPopupSave] = useState(false);
@@ -133,7 +127,6 @@ const PageBusinessModelCanvas = () => {
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
-  const [projectDescription, setProjectDescription] = useState("");
   const [selectBoxStates, setSelectBoxStates] = useState({
     customerList: false,
   });
@@ -149,8 +142,6 @@ const PageBusinessModelCanvas = () => {
     content: "",
   });
   const [selectedKanoModelData, setSelectedKanoModelData] = useState([]);
-  const [showKanoModelList, setshowKanoModelList] = useState(false);
-  const [ideaEvaluateSelect, setIdeaEvaluateSelect] = useState([]);
   const [graphData, setGraphData] = useState([]);
   const [conceptDefinitionList, setConceptDefinitionList] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -415,6 +406,23 @@ const PageBusinessModelCanvas = () => {
       setToolId(responseToolId);
       setSelectedConceptDefinition(selectedPurposes);
 
+       // 크레딧이 사용 가능한 상태면 사용 API 호출
+       const creditUsePayload = {
+        title: project.projectTitle,
+        service_type: "비즈니스 모델 캔버스",
+        target: "",
+        state: "use",
+        mount: creditCreateTool,
+      };
+
+      await UserCreditUse(creditUsePayload, isLoggedIn);
+
+      // 크레딧 사용 후 사용자 정보 새로고침
+
+      const userCreditValue = await UserCreditInfo(isLoggedIn);
+      // 전역 상태의 크레딧 정보 업데이트
+      setUserCredits(userCreditValue);
+
 
 
       // setToolSteps(3);
@@ -457,89 +465,6 @@ const PageBusinessModelCanvas = () => {
     setCompletedStatus(true);
   }
 
-//   const handleSubmitReport = async () => {
-//     // 새 AbortController 생성
-//     abortControllerRef.current = new AbortController();
-//     const signal = abortControllerRef.current.signal;
- 
-
-//     handleNextStep(1);
-//     // setToolSteps(2);
-//     setIsLoadingReport(true);
-
-//     try {
-           
-
-
-//       const Data = {
-//         type: "ix_business_model_canvas_report_education",
-//         concept_definition_final_report: businessModelCanvasMarkdown,
-//         business: business,
-//         bm_type: "customer_segment_value_proposition"
-//       };
-
-//       let response = await EducationToolsRequest (Data, isLoggedIn, signal);
-//       //  let retryCount = 0;
-//       // const maxRetries = 10;
-//       //   while (retryCount < maxRetries &&
-//       //     (!response ||
-//       //      !response?.response ||
-//       //      !response?.response?.idea_evaluation_comparison_education ||
-//       //      !Array.isArray(response?.response?.idea_evaluation_comparison_education)
-//       //     )
-//       //    ) {
-//       //      response = await EducationToolsRequest(Data, isLoggedIn, signal);
-//       //      maxRetries++;
-          
-//       //    }
-//       //      if (retryCount >= maxRetries) {
-//       //      setShowPopupError(true);
-//       //      return;
-//       //      }
-
-//     //  setBusinessModelCanvasGraphItems(response.response.business_model_canvas_report_education)
-//     //   setBMCanvasInitialGraphData(response.response.business_model_canvas_report_education)
-//     setBusinessModelCanvasGraphItems(Object.values(response.response.business_model_canvas_report_education));
-// setBMCanvasInitialGraphData(Object.values(response.response.business_model_canvas_report_education));
-      
-
-//       await updateToolOnServer(
-//         toolId,
-//         {
-//           bmCanvasGraphItems: response.response.business_model_canvas_report_education,
-//           bmCanvasInitialGraphData: response.response.business_model_canvas_report_education,
-//           completedStep: 2, 
-//           completedStatus: true,
-         
-//         },
-//         isLoggedIn
-//       );
-//       setCompletedStatus(true);
-
-
-//       // setToolSteps(1);
-//       // setCompletedSteps([...completedSteps, 3]);
-//     } catch (error) {
-//       setShowPopupError(true);
-//       if (error.response) {
-//         switch (error.response.status) {
-//           case 500:
-//             setShowPopupError(true);
-//             break;
-//           case 504:
-//             setShowPopupError(true);
-//             break;
-//           default:
-//             setShowPopupError(true);
-//             break;
-//         }
-//       } else {
-//         setShowPopupError(true);
-//       }
-//     } finally {
-//       setIsLoadingReport(false);
-//     }
-//   };
 
  
 
@@ -627,7 +552,6 @@ const PageBusinessModelCanvas = () => {
       let response = await EducationToolsRequest (Data, isLoggedIn, signal);
 
       const firstItemresponse = Object.values(response.response.business_model_canvas_report_education)
-      console.log("firstItemresponse", firstItemresponse)
       
       // 명확하게 배열로 정의
       const firstItem = [firstItemresponse[0]] 
@@ -786,20 +710,20 @@ const PageBusinessModelCanvas = () => {
           ];
 
     
-            await updateToolOnServer(
-              toolId,
-              {
-                bmCanvasGraphItems: updatedGraphItems,
-                bmCanvasInitialGraphData: updatedInitialData,
-              },  
-              isLoggedIn
-            );
+        await updateToolOnServer(
+          toolId,
+          {
+            bmCanvasGraphItems: updatedGraphItems,
+            bmCanvasInitialGraphData: updatedInitialData,
+          },  
+          isLoggedIn
+        );
 
-            // 서버 업데이트 성공 후 상태 업데이트
-            setBusinessModelCanvasGraphItems(updatedGraphItems);
-            setBMCanvasInitialGraphData(updatedInitialData);
-        
-    }
+        // 서버 업데이트 성공 후 상태 업데이트
+        setBusinessModelCanvasGraphItems(updatedGraphItems);
+        setBMCanvasInitialGraphData(updatedInitialData);
+              
+      }
 
 
   } catch (error) {
@@ -821,7 +745,6 @@ const PageBusinessModelCanvas = () => {
     // 저장 로직 구현
     setShowPopup(false);
   }
-console.log("bmCanvasInitialGraphData",bmCanvasInitialGraphData)
 
   const handleContactInputChange = (field, value) => {
     setContactForm((prev) => ({
@@ -1108,19 +1031,16 @@ const businessModelItems = [
                                     // }
                                     key={index}
                                     onClick={() => {
-                                      handlePurposeSelect(
-                                        `${item.updateDate.split(":")[0]}:${
-                                          item.updateDate.split(":")[1]
-                                        } - 컨셉 정의서 
-                                    `,
+                                    handlePurposeSelect(
+                                        `${item.personaTitle} 대상 컨셉 정의서 ( ${item.updateDate.split(":")[0]}:${item.updateDate.split(":")[1]} ) `,
                                         "customerList",
                                         item
-                                      );
-                                    }}
+                                    );
+                                  }}
+
                                   >
                                     <Body2 color="gray700" align="left">
-                                      {item.updateDate.split(":")[0]}:
-                                      {item.updateDate.split(":")[1]} 컨셉 정의서
+                                    {item.personaTitle} 대상 컨셉 정의서 ( {item.updateDate.split(":")[0]}:{item.updateDate.split(":")[1]} ) 
                                     </Body2>
                                   </SelectBoxItem>
                                 ))
@@ -1249,7 +1169,7 @@ const businessModelItems = [
 } 
                       
 
-                      {selectedBoxId && businessModelCanvasGraphItems[selectedBoxId - 1] && (
+                      {/* {selectedBoxId && businessModelCanvasGraphItems[selectedBoxId - 1] && (
                       <IdeaContainer>
                           <IdeaBox>
                           <HeaderTitle>
@@ -1261,7 +1181,7 @@ const businessModelItems = [
                           <IdeaContent>
                                   <IdeaText>
                               {/* 선택된 박스 ID에 해당하는 데이터만 필터링하여 표시 */}
-                              {bmCanvasInitialGraphData[selectedBoxId - 1]?.
+                              {/* {businessModelCanvasGraphItems[selectedBoxId - 1]?.
                                 filter(item => item.type !== "사용자 정의")  // 사용자 정의 타입 제외
                                 .map((item, index) => (
                                   <div key={index}>
@@ -1274,6 +1194,15 @@ const businessModelItems = [
                
                         </IdeaContainer>
                         
+                      )}  */}
+
+                      { businessModelCanvasGraphItems &&  businessModelCanvasGraphItems.length > 0 && (
+                        
+                        <MoleculeBMResult
+                        style={{
+                          marginTop: "80px"
+                        }}
+                        />
                       )}
                        {completedStatus && (
                           <Button

@@ -10,6 +10,7 @@ import MoleculeHeader from "../../../../Global/molecules/MoleculeHeader";
 import { Button } from "../../../../../assets/styles/ButtonStyle";
 import images from "../../../../../assets/styles/Images";
 import PopupWrap from "../../../../../assets/styles/Popup";
+import Markdown from "markdown-to-jsx";
 import {
   ContentsWrap,
   MainContent,
@@ -24,6 +25,7 @@ import {
   Title,
   ListBoxGroup,
   BoxWrap,
+  InterviewPopup,
 } from "../../../../../assets/styles/BusinessAnalysisStyle";
 import {
   IS_LOGGED_IN,
@@ -83,6 +85,7 @@ import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard
 import WaitLongLodingBar from "../../../../../components/Charts/WaitLongLodingBar";
 import MoleculeGraphChartScale11 from "../molecules/MoleculeGraphChartScale11";
 import MoleculeBarChartLikertScale11 from "../molecules/MoleculeBarChartLikertScale11";
+import MoleculeConceptSelectCard from "../molecules/MoleculeConceptSelectCard";
 
 const PageNps = () => {
   const navigate = useNavigate();
@@ -96,7 +99,7 @@ const PageNps = () => {
   const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(
     CREDIT_CREATE_TOOL_LOADED
   );
-  const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
+  const [, setUserCredits] = useAtom(USER_CREDITS);
   const [educationState] = useAtom(EDUCATION_STATE);
   const [personaListSaas] = useAtom(PERSONA_LIST_SAAS);
   const [toolStep, setToolStep] = useAtom(TOOL_STEP);
@@ -142,6 +145,9 @@ const PageNps = () => {
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [npsSelectedConceptDefinitionFinalReport, setNpsSelectedConceptDefinitionFinalReport] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedConceptId, setSelectedConceptId] = useState(null);
+  const [selectedPersona, setSelectedPersona] = useState(null);
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
 
@@ -730,7 +736,7 @@ const PageNps = () => {
         },
             persona_group: personaChunk,
             survey_type: "nps",
-          };
+      };
 
       let retryCount = 0;
       const maxRetries = 10;
@@ -879,10 +885,10 @@ const PageNps = () => {
     setShowToast(true);
   };
 
+
   // 파일 업로드 핸들러
   const handleChangeStatus = ({ meta, file, remove }, status) => {
-    // 20MB 크기 제한 체크
-    const maxSize = 20 * 1024 * 1024; // 20MB in bytes
+    const maxSize = 20 * 1024 * 1024; // 20MB
     if (file.size > maxSize && status !== "removed") {
       setShowPopupFileSize(true);
       remove();
@@ -892,7 +898,6 @@ const PageNps = () => {
     // 파일 상태 업데이트
     if (status === "done" || status === "preparing" || status === "uploading") {
       setUploadedFiles((prev) => {
-        // 이미 존재하는 파일이 아닌 경우에만 추가
         if (!prev.find((f) => f.name === file.name)) {
           setFileNames((prev) => [...prev, file.name]);
           return [...prev, file];
@@ -918,10 +923,28 @@ const PageNps = () => {
         if (!container.dataset.filename) {
           container.dataset.filename = file.name;
           container.dataset.size = sizeStr;
+
+          // 이미지 파일인 경우 PDF처럼 파일명 요소 추가
+          if (file.type.startsWith("image/")) {
+            // 기존 dzu-previewFileName이 없는 경우에만 추가
+            if (!container.querySelector(".dzu-previewFileName")) {
+              const nameSpan = document.createElement("span");
+              nameSpan.className = "dzu-previewFileName";
+              nameSpan.textContent = `${file.name}, ${sizeStr}`;
+
+              // 컨테이너의 첫 번째 자식으로 추가
+              if (container.firstChild) {
+                container.insertBefore(nameSpan, container.firstChild);
+              } else {
+                container.appendChild(nameSpan);
+              }
+            }
+          }
         }
       });
     }, 0);
   };
+
 
   const abortControllerRef = useRef(null);
 
@@ -1243,7 +1266,7 @@ const PageNps = () => {
                         
 
                         {npsConceptDefinition.map((idea, index) => (
-                          <MoleculeItemSelectCard
+                          <MoleculeConceptSelectCard
                             style
                             FlexStart
                             key={index}
@@ -1252,6 +1275,11 @@ const PageNps = () => {
                               idea.updateDate.split(":")[1]
                             }  )`}
                             isSelected={selectedConcept.includes(index)}
+                            onShowPopup={(show, conceptId) => {
+                              setShowPopup(show);
+                              setSelectedConceptId(conceptId);
+                 
+                            }}
                             onSelect={() => handleCheckboxChange(index)}
                           />
                         ))}
@@ -1534,15 +1562,15 @@ const PageNps = () => {
                                       <>
                                         {
                                           npsReport[0]?.gender_insight
-                                            ?.statistic
-                                        }
-                                        <br />
-                                        <br />
-                                        {
+                                              ?.statistic
+                                          }
+                                          <br />
+                                          <br />
+                                          {
                                           npsReport[0]?.gender_insight
-                                            ?.insight
-                                        }
-                                      </>
+                                              ?.insight
+                                          }
+                                        </>
                                     </InsightContent>
                                   </InsightSection>
 
@@ -1627,6 +1655,53 @@ const PageNps = () => {
           </DesignAnalysisWrap>
         </MainContent>
       </ContentsWrap>
+
+      {showPopup && (
+    <>
+   <InterviewPopup>
+  <div style={{ maxWidth: "560px" }}>
+    <div className="header">
+          <H4 style={{ 
+          fontSize: "16px", 
+          marginBottom: "16px" 
+        }}>
+        {npsConceptDefinition[selectedConceptId]?.personaTitle || "컨셉 정보"} 대상 컨셉정의 내용 보기
+        <span className="close" onClick={() => setShowPopup(false)} />
+      </H4>
+      <div style={{ 
+        width: "100%", 
+        height: "1px", 
+        backgroundColor: "#E0E4EB", 
+        marginBottom: "16px" 
+      }} />
+        
+    </div>
+
+      <div className="content" style={{ 
+        maxHeight: "400px", 
+        overflowY: "auto", 
+        // padding: "10px",
+        // marginBottom: "16px"
+      }}>
+        <div>
+          
+          <div
+            className="markdown-body"
+            style={{
+              textAlign: "left"
+            }}
+          >
+            <Markdown>
+              {npsConceptDefinition[selectedConceptId]?.conceptDefinitionFinalReport || "내용 없음"}
+            </Markdown>
+          </div>
+        </div>
+      </div>
+
+  </div>
+</InterviewPopup>
+    </>
+  )}
 
       {showPopupError && (
         <PopupWrap
