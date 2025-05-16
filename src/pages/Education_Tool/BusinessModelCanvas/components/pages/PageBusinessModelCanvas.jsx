@@ -168,8 +168,6 @@ const PageBusinessModelCanvas = () => {
   }, []);
 
 
-  console.log("completedSteps", completedSteps)
-  console.log("toolStep", toolStep)
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
@@ -1034,7 +1032,7 @@ const businessModelItems = [
                                     key={index}
                                     onClick={() => {
                                     handlePurposeSelect(
-                                        `${item.personaTitle} 대상 컨셉 정의서 ( ${item.updateDate.split(":")[0]}:${item.updateDate.split(":")[1]} ) `,
+                                        `${item.personaTitle} 대상 컨셉 정의서 (${item.updateDate.split(":")[0]}:${item.updateDate.split(":")[1]}) `,
                                         "customerList",
                                         item
                                     );
@@ -1042,7 +1040,7 @@ const businessModelItems = [
 
                                   >
                                     <Body2 color="gray700" align="left">
-                                    {item.personaTitle} 대상 컨셉 정의서 ( {item.updateDate.split(":")[0]}:{item.updateDate.split(":")[1]} ) 
+                                    {item.personaTitle} 대상 컨셉 정의서 ({item.updateDate.split(":")[0]}:{item.updateDate.split(":")[1]}) 
                                     </Body2>
                                   </SelectBoxItem>
                                 ))

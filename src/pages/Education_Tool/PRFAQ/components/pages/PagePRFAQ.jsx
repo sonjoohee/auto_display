@@ -906,7 +906,7 @@ const PagePRFAQ = () => {
                           </SelectBoxTitle>
 
                           {selectBoxStates.customerList && (
-                            <SelectBoxList dropUp={dropUpStates.customerList}>
+                            <SelectBoxList dropUp={dropUpStates.customerList} style={{zIndex: "1000"}}>
                               {conceptDefinitionList.length === 0 ? (
                                 <SelectBoxItem 
                                 disabled={toolSteps >= 1 }
@@ -934,7 +934,7 @@ const PagePRFAQ = () => {
                                     // }}
                                     onClick={() => {
                                       handleConceptDefinitionSelect(
-                                          `${item.personaTitle} ( ${item.updateDate.split(":")[0]}:${item.updateDate.split(":")[1]} ) `,
+                                          `${item.personaTitle} (${item.updateDate.split(":")[0]}:${item.updateDate.split(":")[1]}) `,
                                           "customerList",
                                           item
                                       );
@@ -942,8 +942,8 @@ const PagePRFAQ = () => {
 
                         
                                   >
-                                    <Body2 color="gray700" align="left">
-                                      {item.personaTitle} ( {item.updateDate.split(":")[0]}:{item.updateDate.split(":")[1]} ) 
+                                    <Body2 color="gray700" align="left" >
+                                      {item.personaTitle} ({item.updateDate.split(":")[0]}:{item.updateDate.split(":")[1]}) 
                                      
                                     </Body2>
                                   </SelectBoxItem>
@@ -1023,15 +1023,14 @@ const PagePRFAQ = () => {
                                     // }}
                                     onClick={() => {
                                       handleBusinessModelCanvasSelect(
-                                        `${item.updateDate.split(":")[0]}:${item.updateDate.split(":")[1]} - 비즈니스 모델 캔버스`,
+                                        ` 비즈니스 모델 캔버스 (${item.updateDate.split(":")[0]}:${item.updateDate.split(":")[1]})`,
                                         "businessModelCanvas",
                                         item
                                       );
                                     }}
                                   >
                                     <Body2 color="gray700" align="left">
-                                      {item.updateDate.split(":")[0]}:
-                                      {item.updateDate.split(":")[1]} 비즈니스 모델 캔버스 
+                                      비즈니스 모델 캔버스 ({item.updateDate.split(":")[0]}:{item.updateDate.split(":")[1]}) 
                                      
                                     </Body2>
                                   </SelectBoxItem>

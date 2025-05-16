@@ -300,7 +300,6 @@ const PageNps = () => {
         );
 
         allItems = [...allItems, ...newItems];
-        // console.log(allItems);
 
         setNpsConceptDefinition(allItems);
       } catch (error) {

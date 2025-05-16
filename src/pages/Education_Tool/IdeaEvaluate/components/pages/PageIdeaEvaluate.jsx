@@ -1021,19 +1021,15 @@ const PageIdeaEvaluate = () => {
                                       key={index}
                                       onClick={() => {
                                         handlePurposeSelect(
-                                          `${item.updateDate.split(":")[0]}:${
-                                            item.updateDate.split(":")[1]
-                                          } - Kano Model 결과
+                                            `Kano Model 결과 (${item.updateDate.split(":")[0]}:${item.updateDate.split(":")[1]})
                                       `,
                                           "customerList",
                                           item
                                         );
-                                      }}
+                                      }} 
                                     >
                                       <Body2 color="gray700" align="left">
-                                        {item.updateDate.split(":")[0]}:
-                                        {item.updateDate.split(":")[1]} Kano Model
-                                        결과
+                                        Kano Model 결과 ({item.updateDate.split(":")[0]}:{item.updateDate.split(":")[1]})
                                       </Body2>
                                     </SelectBoxItem>
                                   ))
