@@ -115,7 +115,7 @@ const Title = styled.h3`
   line-height: 1.2;
   text-align: center;
   letter-spacing: -0.03em;
-  color: #323232;
+  color: ${palette.gray800};
   width: 100%;
   white-space: pre-line;
 `;
@@ -133,7 +133,7 @@ const Description = styled.p`
   font-size: 14px;
   line-height: 1.3;
   letter-spacing: -0.03em;
-  color: #8C8C8C;
+  color: ${palette.gray500};
   width: 150px;
   text-align: left;
   
@@ -162,8 +162,8 @@ const StyledButton = styled(Button)`
   `}
   
   ${props => props.customBackground && css`
-    background-color: #F7F8FA;
-    color: #8C8C8C;
+    background-color: ${palette.chatGray};
+    color: ${palette.gray500};
     border: none;
   `}
 `;

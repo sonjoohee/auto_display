@@ -256,8 +256,8 @@ const ImportanceButton = styled.div`
   justify-content: center;
   align-items: center;
   padding: 12px;
-  background-color: ${props => props.isSelected ? '#226FFF' : '#F7F8FA'};
-  border: 1px solid #E0E4EB;
+  background-color: ${props => props.isSelected ? palette.primary : palette.chatGray};
+  border: 1px solid ${palette.outlineGray};
   border-radius: 10px;
   height: 80px;
   flex: 1;
@@ -276,7 +276,7 @@ const ImportanceButtonText = styled.span`
   line-height: 1.55;
   letter-spacing: -0.03em;
   text-align: center;
-  color: ${props => props.isSelected ? '#FFFFFF' : '#666666'};
+  color: ${props => props.isSelected ? palette.white : palette.gray700};
   white-space: pre-line;
 `;
 
@@ -292,7 +292,7 @@ const NPSContainer = styled.div`
 const NPSDivider = styled.div`
   width: 100%;
   height: 1px;
-  background-color: #E0E4EB;
+  background-color: ${palette.outlineGray};
 `;
 
 const NPSButtonsWrapper = styled.div`
@@ -309,8 +309,8 @@ const NPSButton = styled.div`
   justify-content: center;
   align-items: center;
   padding: 8px 12px;
-  background-color: ${props => props.isSelected ? '#226FFF' : '#F7F8FA'};
-  border: 1px solid #E0E4EB;
+  background-color: ${props => props.isSelected ? palette.primary : palette.chatGray};
+  border: 1px solid ${palette.outlineGray};
   border-radius: 10px;
   height: 64px;
   flex: 1;
@@ -329,7 +329,7 @@ const NPSButtonText = styled.span`
   line-height: 1.55;
   letter-spacing: -0.03em;
   text-align: center;
-  color: ${props => props.isSelected ? '#FFFFFF' : '#666666'};
+  color: ${props => props.isSelected ? palette.white : palette.gray700};
 `;
 
 const NPSLabelContainer = styled.div`
@@ -345,5 +345,5 @@ const NPSLabel = styled.span`
   font-size: 16px;
   line-height: 1.55;
   letter-spacing: -0.03em;
-  color: #666666;
+  color: ${palette.gray700};
 `;

@@ -153,7 +153,7 @@ const ButtonColumn = styled.div`
     right: 0;
     bottom: 0;
     width: 1px;
-    background-color: #E0E4EB;
+    background-color: ${palette.outlineGray};
     z-index: 1;
   }
 `;
@@ -164,10 +164,10 @@ const ButtonFrame = styled.div`
   justify-content: center;
   border-radius: 10px 0 0 10px;
   cursor: pointer;
-  background-color: ${props => props.isSelected ? '#FFFFFF' : '#F6F6F6'};
-  border-top: 1px solid #E0E4EB;
-  border-bottom: 1px solid #E0E4EB;
-  border-left: 1px solid #E0E4EB;
+  background-color: ${props => props.isSelected ? palette.white : palette.gray100};
+  border-top: 1px solid ${palette.outlineGray};
+  border-bottom: 1px solid ${palette.outlineGray};
+  border-left: 1px solid ${palette.outlineGray};
   border-right: none;
   position: relative;
   z-index: ${props => props.isSelected ? '2' : '1'};
@@ -175,7 +175,7 @@ const ButtonFrame = styled.div`
   padding: 0; /* 패딩 제거하고 높이로 통일 */
   
   &:hover {
-    background-color: ${props => props.isSelected ? '#FFFFFF' : '#F0F0F0'};
+    background-color: ${props => props.isSelected ? palette.white : palette.gray100};
   }
 `;
 
@@ -183,7 +183,7 @@ const NumberCircle = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: ${props => props.isSelected ? '#000000' : '#CCCCCC'};
+  background-color: ${props => props.isSelected ? palette.black : palette.gray300};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -203,12 +203,13 @@ const ContentFrame = styled.div`
   gap: 20px;
   flex: 1;
   padding: 12px 20px;
-  border: 1px solid #E0E4EB;
+  border: 1px solid ${palette.outlineGray};
   border-left: none;
   border-radius: 0 10px 10px 0;
-  background-color: #FFFFFF;
+  background-color: ${palette.white};
   overflow: hidden; /* 내용이 넘치지 않도록 설정 */
   position: relative;
+  width: calc(100% - 44px); // ButtonColumn 너비(44px)를 제외한 너비
 `;
 
 const ContentHeader = styled.div`
@@ -223,15 +224,17 @@ const ContentTitle = styled.div`
   font-weight: 600;
   line-height: 1.55em;
   letter-spacing: -0.03em;
-  color: #323232;
+  color: ${palette.gray800};
 `;
 
 const ContentBody = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  overflow-y: auto;
+  overflow-y: auto; // 세로 스크롤만 허용
+  overflow-x: hidden; // 가로 스크롤 비활성화
   height: 100%;
+  width: 100%; // 너비 100% 설정
   
   /* 스크롤바 스타일 */
   &::-webkit-scrollbar {
@@ -251,9 +254,12 @@ const ContentItem = styled.div`
   font-weight: 500;
   line-height: 1.55em;
   letter-spacing: -0.03em;
-  color: #666666;
+  color: ${palette.gray700};
   text-align: left;
   align-items: flex-start;
+  width: 100%; // 너비 100% 설정
+  overflow-wrap: break-word; // 긴 단어 줄바꿈
+  word-break: break-word; // 긴 단어 줄바꿈
 `;
 
 const ItemNumber = styled.div`
@@ -266,6 +272,10 @@ const ItemContent = styled.div`
   flex: 1;
   white-space: pre-wrap; /* 줄바꿈 유지 */
   line-height: 155%; /* 행간 간격을 155%로 설정 */
+  overflow: hidden; // 내용이 넘치지 않도록 설정
+  text-overflow: ellipsis; // 넘치는 텍스트는 ...으로 표시
+  word-break: break-word; // 긴 단어 줄바꿈
+  overflow-wrap: break-word; // 긴 단어 줄바꿈
 `;
 
 const UserChip = styled.div`
@@ -274,7 +284,7 @@ const UserChip = styled.div`
   justify-content: center;
   padding: 6px 8px;
   margin-left: 8px;
-  background-color: #F7F8FA;
+  background-color: ${palette.chatGray};
   border-radius: 12px;
   color: ${palette.gray200};
   font-size: 12px;
@@ -290,7 +300,7 @@ const EmptyContent = styled.div`
   height: 100%;
   color: ${palette.gray500};
   font-family: 'Pretendard', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
   text-align: center;
 `;

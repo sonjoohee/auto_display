@@ -1335,7 +1335,7 @@ const PageNps = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message="NPS 평가를 위한 페르소나 100명을 모집하고 있어요" />
+                    <AtomPersonaLoader message="NPS 평가에 참여할 페르소나를 모집하고 있어요 (100명 내외)" />
                   </div>
                 ) : (
                   <>
@@ -1452,7 +1452,7 @@ const PageNps = () => {
                       <AtomPersonaLoader
                       message= {
                         <span>
-                        100명의 페르소나가 추천 의향을 평가하고 있어요
+                        참여 페르소나가 NPS 평가를 하고 있어요
                         </span>
                       }
                       />
@@ -1657,51 +1657,61 @@ const PageNps = () => {
       </ContentsWrap>
 
       {showPopup && (
-    <>
-   <InterviewPopup>
-  <div style={{ maxWidth: "560px" }}>
-    <div className="header">
-          <H4 style={{ 
-          fontSize: "16px", 
-          marginBottom: "16px" 
-        }}>
-        {npsConceptDefinition[selectedConceptId]?.personaTitle || "컨셉 정보"} 대상 컨셉정의 내용 보기
-        <span className="close" onClick={() => setShowPopup(false)} />
-      </H4>
-      <div style={{ 
-        width: "100%", 
-        height: "1px", 
-        backgroundColor: "#E0E4EB", 
-        marginBottom: "16px" 
-      }} />
-        
-    </div>
+        <>
+          <InterviewPopup>
+            <div style={{ 
+              maxWidth: "700px",  // 기존 450px에서 변경 (원하는 크기로 조정)
+              width: "100%",
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              gap: "20px",
+              padding: "32px 32px",
+              borderRadius: "15px",
+              background: "#FFFFFF",
+              boxShadow: "4px 4px 30px rgba(0, 0, 0, 0.15)"
+            }}>
+              <div className="header">
+                <H4 style={{ 
+                  fontSize: "16px", 
+                  marginBottom: "16px" 
+                }}>
+                  {npsConceptDefinition[selectedConceptId]?.personaTitle || "컨셉 정보"} 대상 컨셉정의 내용 보기
+                  <span className="close" onClick={() => setShowPopup(false)} />
+                </H4>
+                <div style={{ 
+                  width: "100%", 
+                  height: "1px", 
+                  backgroundColor: "#E0E4EB", 
+                  marginBottom: "16px" 
+                }} />
+              </div>
 
-      <div className="content" style={{ 
-        maxHeight: "400px", 
-        overflowY: "auto", 
-        // padding: "10px",
-        // marginBottom: "16px"
-      }}>
-        <div>
-          
-          <div
-            className="markdown-body"
-            style={{
-              textAlign: "left"
-            }}
-          >
-            <Markdown>
-              {npsConceptDefinition[selectedConceptId]?.conceptDefinitionFinalReport || "내용 없음"}
-            </Markdown>
-          </div>
-        </div>
-      </div>
-
-  </div>
-</InterviewPopup>
-    </>
-  )}
+              <div className="content" style={{ 
+                maxHeight: "500px",  // 기존 400px에서 변경 (원하는 높이로 조정)
+                overflowY: "auto"
+              }}>
+                <div>
+                  <div
+                    className="markdown-body"
+                    style={{
+                      textAlign: "left"
+                    }}
+                  >
+                    <Markdown>
+                      {npsConceptDefinition[selectedConceptId]?.conceptDefinitionFinalReport || "내용 없음"}
+                    </Markdown>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </InterviewPopup>
+        </>
+      )}
 
       {showPopupError && (
         <PopupWrap

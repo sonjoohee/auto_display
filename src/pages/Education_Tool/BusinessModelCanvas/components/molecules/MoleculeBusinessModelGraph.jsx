@@ -427,11 +427,11 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClic
             letterSpacing: '-0.03em',
             textAlign: 'center',
             color: 
-                  !isActive ? '#CCCCCC' : 
-                  isSelected ? '#666666' : 
-                  isClicked ? '#666666' : 
-                  (isActive && isHovered) ? '#226FFF' : 
-                  (isActive && isNextActive) ? '#226FFF' : '#666666'
+                  !isActive ? palette.gray500 : 
+                  isSelected ? palette.gray700 : 
+                  isClicked ? palette.gray700 : 
+                  (isActive && isHovered) ? palette.primary : 
+                  (isActive && isNextActive) ? palette.primary : palette.gray700
           }}>
             {isActive ? "여기를 눌러\n내용을 작성하세요" : "이전 단계를 먼저 완료해주세요"}
           </div>
@@ -453,6 +453,7 @@ const GraphContainer = styled.div`
   gap: 16px;
   width: 820px;
   height: 780px;
+  overflow: hidden;
 `;
 
 const TopSection = styled.div`
@@ -460,6 +461,8 @@ const TopSection = styled.div`
   gap: 16px;
   width: 100%;
   flex: 2;
+  min-height: 0;
+  max-height: 100%;
 `;
 
 const BottomSection = styled.div`
@@ -467,24 +470,32 @@ const BottomSection = styled.div`
   gap: 16px;
   width: 100%;
   flex: 1;
+  min-height: 0;
+  max-height: 100%;
 `;
 
 const LeftColumn = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  max-height: 100%;
 `;
 
 const RightColumn = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  max-height: 100%;
 `;
 
 const MiddleColumns = styled.div`
   flex: 3;
   display: flex;
   gap: 16px;
+  min-height: 0;
+  max-height: 100%;
 `;
 
 const Column = styled.div`
@@ -492,6 +503,8 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-height: 0;
+  max-height: 100%;
 `;
 
 const BoxWrapper = styled.div`
@@ -501,6 +514,8 @@ const BoxWrapper = styled.div`
   flex: 1;
   cursor: pointer;
   opacity: 1;
+  min-height: 0;
+  max-height: 100%;
 `;
 
 const ModelHeader = styled.div`
@@ -513,7 +528,7 @@ const NumberCircle = styled.div`
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: #000000;
+  background-color: ${palette.black};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -534,7 +549,7 @@ const Title = styled.div`
   font-weight: 600;
   line-height: 1.55em;
   letter-spacing: -0.03em;
-  color: #666666;
+  color: ${palette.gray700};
 `;
 
 const ContentBox = styled.div`
@@ -546,12 +561,16 @@ const ContentBox = styled.div`
   border-radius: 10px;
   transition: all 0.2s ease;
   overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  max-height: 100%;
+  box-sizing: border-box;
   
   background-color: ${props => {
-    if (props.hasItems) return '#FFFFFF';
-    if (props.isSelected) return '#FFFFFF'; 
-    if (props.isActive && props.isHovered) return '#E9F1FF';
-    return '#F7F8FA';
+    if (props.hasItems) return palette.white;
+    if (props.isSelected) return palette.white; 
+    if (props.isActive && props.isHovered) return palette.brightBlue;
+    return palette.chatGray;
   }};
   
   border: 1px solid ${props => {
@@ -590,6 +609,8 @@ const ItemList = styled.div`
   justify-content: flex-start;
   width: 100%;
   gap: 0;
+  overflow-x: hidden;
+  max-width: 100%;
 `;
 
 const ItemRow = styled.div`
@@ -623,14 +644,20 @@ const ItemText = styled.div`
   font-weight: 600;
   line-height: 1.55em;
   letter-spacing: -0.03em;
-  color: #666666;
+  color: ${palette.gray700};
   flex: 1;
   padding-left: 4px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 `;
 
 const GlobalStyle = createGlobalStyle`
   #box-1 *, #box-2 * {
-    color: #000000 !important;
+    color: ${palette.black} !important;
     font-weight: 600 !important;
   }
 `;

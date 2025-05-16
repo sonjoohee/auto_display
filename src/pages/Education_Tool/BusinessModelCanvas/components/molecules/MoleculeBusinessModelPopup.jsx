@@ -329,25 +329,25 @@ const hideAddButton =
   const getPromptByModelId = (id) => {
     switch (id) {
       case 1:
-        return '주요 타겟 페르소나는 누구인가요?​';
+        return '주요 타겟 페르소나는 누구인가요? (최대 3개 선택 가능)​';
       case 2:
-        return '고객이 기대하는 가치와 차별화된 가치는 무엇인가요?';
+        return '고객이 기대하는 가치와 차별화된 가치는 무엇인가요? (최대 3개 선택 가능) ';
       case 3:
-        return '고객에게 가치를 전달하는 방식과 접점은 무엇인가요? ';
+        return '고객에게 가치를 전달하는 방식과 접점은 무엇인가요? (최대 3개 선택 가능)  ';
       case 4:
-        return '고객과 어떤 관계를 맺고 유지할 계획인가요?​';
+        return '고객과 어떤 관계를 맺고 유지할 계획인가요? (최대 3개 선택 가능) ​';
       case 5:
-        return '수익은 어떤 방식과 구조로 발생하나요? ';
+        return '수익은 어떤 방식과 구조로 발생하나요? (최대 3개 선택 가능)';
       case 6:
-        return '비즈니스 운영에 꼭 필요한 자산은 무엇인가요?​';
+        return '비즈니스 운영에 꼭 필요한 자산은 무엇인가요? (최대 3개 선택 가능)​';
       case 7:
-        return '비즈니스를 위해 꼭 수행해야 할 핵심 활동은 무엇인가요?';
+        return '비즈니스를 위해 꼭 수행해야 할 핵심 활동은 무엇인가요? (최대 3개 선택 가능)';
       case 8:
-        return '비즈니스에 필요한 외부 협력자나 파트너는 누구인가요?';
+        return '비즈니스에 필요한 외부 협력자나 파트너는 누구인가요? (최대 3개 선택 가능)';
       case 9:
-        return '주로 발생하는 핵심 비용은 무엇인가요?';
+        return '주로 발생하는 핵심 비용은 무엇인가요? (최대 3개 선택 가능)';
       default:
-        return '원하는 항목을 선택하세요';
+        return '원하는 항목을 선택하세요 (최대 3개 선택 가능)';
     }
   };
 
@@ -540,7 +540,7 @@ const NumberCircle = styled.div`
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: #323232;
+  background-color: ${palette.gray800};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -558,7 +558,7 @@ const HeaderTitleText = styled.div`
   font-weight: 600;
   line-height: 1.3em;
   letter-spacing: -0.03em;
-  color: #666666;
+  color: ${palette.gray700};
 `;
 
 const PopupContent = styled.div`
@@ -587,6 +587,7 @@ const OptionsContainer = styled.div`
   width: 100%;
   max-height: 320px; /* 350에서 30 줄임 */
   overflow-y: auto;
+  overflow-x: hidden; // 가로 스크롤 방지
   padding-right: 8px;
   
   &::-webkit-scrollbar {
@@ -656,8 +657,11 @@ const OptionText = styled.div`
   font-size: 16px;
   font-weight: 400;
   color: ${palette.gray800};
-  // width: calc(100% - 24px); /* 체크버튼 공간 확보 */
-// `;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 44px); // 휴지통 아이콘(20px) + 간격(24px)
+`;
 
 
 const DeleteButton = styled.button`

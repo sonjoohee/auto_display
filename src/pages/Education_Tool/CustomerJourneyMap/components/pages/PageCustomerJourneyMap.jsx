@@ -1038,7 +1038,7 @@ const PageCustomerJourneyMap = () => {
                           Primary
                           Edit
                           Large
-                          style={{ color: "#666666", border: "1px solid #E0E4EB", marginTop: "24px" }}
+                          style={{ color: palette.gray700, border: "1px solid #E0E4EB", marginTop: "24px" }}
                           onClick={() => navigate("/Tool")}
                   
                         >
@@ -1296,18 +1296,18 @@ const InputField = styled.input`
   width: 100%;
   height: 65px;
   padding: 24px 20px;
-  border: 1px solid #e0e4eb;
+  border: 1px solid ${palette.outlineGray};
   border-radius: 8px;
   font-size: 14px;
-  color: #333;
+  color: ${palette.gray800};
 
   &::placeholder {
-    color: #999;
+    color: ${palette.gray500};
   }
 
   &:focus {
     outline: none; // 기본 포커스 아웃라인 제거
-    border-color: #e0e4eb; // 기존 테두리 색상 유지
+    border-color: ${palette.outlineGray}; // 기존 테두리 색상 유지
   }
 `;
 
