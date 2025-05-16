@@ -365,7 +365,7 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClic
     <BoxWrapper 
       onMouseEnter={() => {
         // 모든 항목이 채워졌거나 1번 영역이 채워진 경우 호버 효과 없음
-        if (areAllBoxesFilled || (id === 1 && isFirstBoxFilled)) {
+        if (areAllBoxesFilled() || (id === 1 && isFirstBoxFilled())) {
           return;
         }
         
@@ -375,7 +375,7 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClic
       }}
       onMouseLeave={() => {
         // 모든 항목이 채워졌거나 1번 영역이 채워진 경우 호버 효과 없음
-        if (areAllBoxesFilled || (id === 1 && isFirstBoxFilled)) {
+        if (areAllBoxesFilled() || (id === 1 && isFirstBoxFilled())) {
           return;
         }
         
@@ -388,7 +388,7 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClic
       style={{
         ...style,
         // 모든 항목이 채워졌을 때는 항상 포인터 커서로 설정
-        cursor: areAllBoxesFilled ? 'pointer' : style.cursor
+        cursor: areAllBoxesFilled() ? 'pointer' : style.cursor
       }}
     >
       <ModelHeader>
@@ -402,7 +402,7 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClic
       
       <ContentBox 
         hasItems={hasItems} 
-        isHovered={(areAllBoxesFilled || (id === 1 && isFirstBoxFilled)) ? false : (isHovered && isActive)}
+        isHovered={(areAllBoxesFilled() || (id === 1 && isFirstBoxFilled())) ? false : (isHovered && isActive)}
         isSelected={isSelected && !hasItems}
         isActive={isActive}
         isClicked={isClicked}

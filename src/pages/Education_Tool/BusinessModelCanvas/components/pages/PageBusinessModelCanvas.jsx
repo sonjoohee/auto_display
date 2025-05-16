@@ -1200,9 +1200,10 @@ const businessModelItems = [
                         
                         <MoleculeBMResult
                         style={{
-                          marginTop: "80px"
+                          marginTop: "20px"
                         }}
-                        />
+                        parentSelectedId={selectedBoxId}
+                      />
                       )}
                        {completedStatus && (
                           <Button
