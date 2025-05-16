@@ -168,6 +168,8 @@ const PageBusinessModelCanvas = () => {
   }, []);
 
 
+  console.log("completedSteps", completedSteps)
+  console.log("toolStep", toolStep)
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)

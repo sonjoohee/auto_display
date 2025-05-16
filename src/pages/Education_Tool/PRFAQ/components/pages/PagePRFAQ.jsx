@@ -67,7 +67,9 @@ import {
   PRFAQ_KEY_CONTENT_EDUCATION,
   PRFAQ_FINAL_REPORT_EDUCATION,
   USER_CREDITS,
-  PRFAQ_SELECTED_PURPOSE 
+  PRFAQ_SELECTED_PURPOSE,
+  CREDIT_CREATE_TOOL_LOADED,
+  EDUCATION_TOOL_COMPLETED_STATUS,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -97,18 +99,15 @@ import {
 import "react-dropzone-uploader/dist/styles.css";
 
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
-import MoleculePersonaSelectCard from "../../../public/MoleculePersonaSelectCard";
-import MoleculeItemSelectCard from "../../../public/MoleculeItemSelectCard";
-import ParetoCurveGraph from "../../../../../components/Charts/ParetoCurveGraph";
-import BusinessModelPopup from "../../../../../components/Charts/BusinessModelPopup";
-import BusinessModelGraph from "../../../../../components/Charts/BusinessModelGraph";
-// import MoleculeBusinessModelGraph from "../molecules/MoleculeBusinessModelGraph";
+
 
 
 const PagePRFAQ = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
+  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [eventState] = useAtom(EVENT_STATE);
@@ -228,11 +227,6 @@ const PagePRFAQ = () => {
   const [shouldRegenerate, setShouldRegenerate] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState(null);
   const [showToast, setShowToast] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
-  const [isCustomPopupOpen, setIsCustomPopupOpen] = useState(false);
-  const [isCustomLoading, setIsCustomLoading] = useState(false);
-  const [customerJourneyList, setCustomerJourneyList] = useState([]);
   const [selectedKanoModelData, setSelectedKanoModelData] = useState([]);
   const [showKanoModelList, setshowKanoModelList] = useState(false);
   const [ideaEvaluateSelect, setIdeaEvaluateSelect] = useState([]);
@@ -258,46 +252,23 @@ const PagePRFAQ = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    // 팝업이 열려있을 때 배경 스크롤 맊음
-    if (showToast) {
-      document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = "15px"; // 스크롤바 자리만큼 패딩 추가
-    }
-    // 팝업이 닫혔을 때
-    else {
-      document.body.style.overflow = "auto";
-      document.body.style.paddingRight = "0";
-    }
-
-    // 컴포넌트 언마운트 시 원래대로 복구
-    return () => {
-      document.body.style.overflow = "auto";
-      document.body.style.paddingRight = "0";
-    };
-  }, [showToast]);
-
-
-
-
-  // console.log("ideaEvaluateSelectedList", ideaEvaluateSelectedList);
-  // console.log("ideaEvaluateSelectedListIndex", ideaEvaluateSelectedListIndex);
-
 
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
-      setShowCreatePersonaPopup(true);
-      // 크레딧 사용전 사용 확인
-      const creditPayload = {
-        // 기존 10 대신 additionalQuestionMount 사용
-        mount: creditCreateTool,
-      };
-      const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
+      if (!creditCreateToolLoaded) {
+        setShowCreatePersonaPopup(true);
+        // 크레딧 사용전 사용 확인
+        const creditPayload = {
+          // 기존 10 대신 additionalQuestionMount 사용
+          mount: creditCreateTool,
+        };
+        const creditResponse = await UserCreditCheck(creditPayload, isLoggedIn);
 
-      if (creditResponse?.state !== "use") {
-        setShowCreditPopup(true);
-        return;
+        if (creditResponse?.state !== "use") {
+          setShowCreditPopup(true);
+          return;
+        }
       }
 
       const projectAnalysis =
@@ -320,43 +291,21 @@ const PagePRFAQ = () => {
 
         // 비즈니스 정보 설정 (Step 1)
         if(prfaqKeyContentEducation && prfaqKeyContentEducation.length > 0){
-          setPrfaqKeyContentEducation(prfaqKeyContentEducation);
+          setPrfaqKeyContentEducation(prfaqKeyContentEducation || []);
         }
         if(Object.keys(prfaqSelectedPurpose).length > 0){
-          setPrfaqSelectedPurpose(prfaqSelectedPurpose);
+          setSelectedPurposes(prfaqSelectedPurpose || {});
         }
         if(prfaqConceptDefinition && prfaqConceptDefinition.length > 0){
-          setPrfaqConceptDefinition(prfaqConceptDefinition);
+          setPrfaqConceptDefinition(prfaqConceptDefinition || []);
         }
         if(prfaqBusinessModelCanvas && prfaqBusinessModelCanvas.length > 0){
-          setPrfaqBusinessModelCanvas(prfaqBusinessModelCanvas);
+          setPrfaqBusinessModelCanvas(prfaqBusinessModelCanvas || []);
         }
-        if(prfaqFinalReport && prfaqFinalReport.length > 0){
-          setPrfaqFinalReport(prfaqFinalReport);
+        if(prfaqFinalReport){
+          setPrfaqFinalReport(prfaqFinalReport || "");
         }
 
-        // if (Object.keys(ideaEvaluateSelectedKanoModel).length > 0) {
-        //   setSelectedKanoModelData(ideaEvaluateSelectedKanoModel);
-        //   setshowKanoModelList(true);
-        
-        // }
-        // if (Object.keys(ideaEvaluateSelectedKanoModelIndex).length > 0) {
-        //   setSelectedPurposes(ideaEvaluateSelectedKanoModelIndex);
-          
-        // }
-        // if (ideaEvaluateList && ideaEvaluateList.length > 0) {
-        //   setIdeaEvaluateList(ideaEvaluateList);
-        // }
-        // if (ideaEvaluateSelectedList && ideaEvaluateSelectedList.length > 0) {
-        //   setIdeaEvaluateSelectedList(ideaEvaluateSelectedList);
-        // }
-        // if (Object.keys(ideaEvaluateSelectedListIndex).length > 0) {
-        //   setIdeaEvaluateSelect(ideaEvaluateSelectedListIndex);
-        // }
-
-        // if (ideaEvaluateComparisonEducation && ideaEvaluateComparisonEducation.length > 0) {
-        //   setIdeaEvaluateComparisonEducation(ideaEvaluateComparisonEducation);
-        // }
 
         // 활성 탭 설정 (기본값 1)
         if (toolStep === undefined || toolStep === 1) {
@@ -388,39 +337,7 @@ const PagePRFAQ = () => {
         //   setQuickSurveySurveyMethod(quickSurveySurveyMethod);
         // }
 
-        if (
-          quickSurveyInterviewModeType &&
-          quickSurveyInterviewModeType.length > 0
-        ) {
-          setInterviewModeType(quickSurveyInterviewModeType);
-        }
-
-
-        if (
-          quickSurveyRecruitingCondition &&
-          quickSurveyRecruitingCondition.length > 0
-        ) {
-          setRecruitingCondition(quickSurveyRecruitingCondition);
-        }
-
-        if (quickSurveyPersonaGroup && quickSurveyPersonaGroup.length > 0) {
-          setquickSurveyPersonaGroup(quickSurveyPersonaGroup);
-        }
-
-        if (quickSurveyInterview && quickSurveyInterview.length > 0) {
-          setQuickSurveyInterview(quickSurveyInterview);
-        }
-
-        if (quickSurveyReport && quickSurveyReport.length > 0) {
-          setQuickSurveyReport(quickSurveyReport);
-        }
-        if (
-          quickSurveyStaticData &&
-          Object.keys(quickSurveyStaticData).length > 0
-        ) {
-          setQuickSurveyStaticData(quickSurveyStaticData);
-          setQuickSurveyStaticDataState(quickSurveyStaticData);
-        }
+        
       }
     };
     interviewLoading();
@@ -453,8 +370,7 @@ const PagePRFAQ = () => {
         allItems = [...allItems, ...newItems];
   
         setConceptDefinitionList(allItems);
-        console.log("allItems", allItems)
-
+       
         const bmResponse = await getFindToolListOnServerSaas(
           projectSaas?._id ?? "",
           "ix_business_model_canvas_education",
@@ -467,8 +383,7 @@ const PagePRFAQ = () => {
         );
 
         bmAllItems = [...bmAllItems, ...bmNewItems];
-        console.log("bmAllItems", bmAllItems)
-
+  
         setBusinessModelCanvasReport(bmAllItems);
 
       } catch (error) {
@@ -480,64 +395,6 @@ const PagePRFAQ = () => {
     getAllTargetDiscovery();
   }, [isLoggedIn, projectSaas]);
 
-  // const handleCheckboxChange = (personaId) => {
-  //   if (toolSteps >= 2) return;
-  //   setIdeaEvaluateSelectedList((prev) => {
-  //     // 하나만 선택되도록 변경, 다른 항목 선택 시 해당 항목으로 변경
-  //     if (prev.includes(personaId)) {
-  //       return []; // 이미 선택된 항목을 다시 클릭하면 선택 해제
-  //     } else {
-  //       return [personaId]; // 새 항목 선택
-  //     }
-  //   });
-  // };
-
-
-  // const handleCheckboxChange = (ideaId) => {
-  //   setIdeaEvaluateSelect((prev) => {
-  //     if (prev.includes(ideaId)) {
-  //       // 이미 선택된 아이템이면 제거
-  //       const newSelected = prev.filter(id => id !== ideaId);
-  //       // 선택된 데이터들 업데이트
-  //       const selectedDataList = newSelected.map(id => ideaEvaluateList[id]);
-  //       setIdeaEvaluateSelectedList(selectedDataList);
-  //       return newSelected;
-  //     } else {
-  //       // 새로운 아이템 추가
-  //       const newSelected = [...prev, ideaId];
-  //       // 선택된 데이터들 업데이트
-  //       const selectedDataList = newSelected.map(id => ideaEvaluateList[id]);
-  //       setIdeaEvaluateSelectedList(selectedDataList);
-  //       return newSelected;
-  //     }
-  //   });
-  // };
-
-
-  const handleCheckboxChange = (ideaId) => {
-    setIdeaEvaluateSelect((prev) => {
-      if (prev.includes(ideaId)) {
-        // 이미 선택된 아이템이면 제거
-        const newSelected = prev.filter(id => id !== ideaId);
-        return newSelected;
-      } else {
-        // 새로운 아이템 추가
-        const newSelected = [...prev, ideaId];
-        return newSelected;
-      }
-    });
-  
-    // 선택된 아이템들의 실제 데이터를 가져옴
-    setIdeaEvaluateSelectedList((prev) => {
-      const selectedItems = ideaEvaluateSelect.map(ideaId => {
-        const [category, index] = ideaId.split('-');
-        const categoryKey = category.replace('-', '_');
-        return selectedKanoModelData.kanoModelClustering[categoryKey][parseInt(index)];
-      });
-      return selectedItems;
-    });
-  };
-
 
 
 // 다음 단계로 이동하는 함수
@@ -547,38 +404,6 @@ const PagePRFAQ = () => {
     setShowPopupError(false);
   };
 
-  const toggleSelectBox = (type) => {
-    setSelectBoxStates((prev) => ({
-      ...prev,
-      [type]: !prev[type],
-    }));
-  };
-
-
-  // const handlePurposeSelect = (purpose, selectBoxId,item) => {
-  //   console.log("purpose", purpose)
-  //   console.log("selectBoxId", selectBoxId)
-  //   console.log("item", item)
-  
-  //   setSelectedPurposes((prev) => ({
-  //     ...(prev || {}),
-  //     [selectBoxId]: purpose || "",
-  //   }));
-  //   handleContactInputChange("purpose", purpose || "");
-  //   setSelectBoxStates((prev) => ({
-  //     ...(prev || {}),
-  //     [selectBoxId]: false,
-  //   }));
-
-  //   if (selectBoxId === "customerList") {
-  //     setBusinessDescription(purpose || "");
-  //   }
-  //   if(selectBoxId === "personaList"){
-  //     setPrfaqConceptDefinition(item);
-  //     setPrfaqBusinessModelCanvas(item);
-  //   }
-    
-  // };
 
   const handleConceptDefinitionSelect = (displayText, listType, item) => {
     setSelectedPurposes(prev => ({
@@ -660,30 +485,15 @@ const PagePRFAQ = () => {
     // 새 AbortController 생성
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
+
   
     handleNextStep(1);
-    // setIsLoading(true);
+    setIsLoading(true);
     // setToolSteps(2);
     // setIsLoadingReport(true);
 
     try {
 
-      // const persona_group = personaListSaas
-      // .filter((persona) => persona?.favorite === true)
-      // .map((persona) => ({
-      //   personaName: persona.personaName,
-      //   personaCharacteristics: persona.personaCharacteristics,
-      //   type: persona.type,
-      //   age: persona.age,
-      //   gender: persona.gender,
-      //   job: persona.job,
-      //   keywords: persona.keywords,
-      //   userExperience: persona.userExperience,
-      //   consumptionPattern: persona.consumptionPattern,
-      //   interests: persona.interests,
-      //   lifestyle: persona.lifestyle,
-      
-      // }));
 
       const Data = {
         type: "ix_prfaq_key_content_education",
@@ -691,11 +501,10 @@ const PagePRFAQ = () => {
         business_model_canvas_report: prfaqBusinessModelCanvas.bmCanvasGraphItems,
       }
 
-      console.log("Data", Data)
+   
 
       let response = await EducationToolsRequest (Data, isLoggedIn, signal);
-      console.log("response", response)
-
+   
       //  let retryCount = 0;
       // const maxRetries = 10;
       //   while (retryCount < maxRetries &&
@@ -716,12 +525,12 @@ const PagePRFAQ = () => {
 
       // setIdeaEvaluateComparisonEducation(response.response.idea_evaluation_comparison_education)
       setPrfaqKeyContentEducation(response.response.prfaq_key_content_education)
-      
+    
       const responseToolId = await createToolOnServer(
         {
           projectId: project._id,
           type: "ix_prfaq_education",
-          completedStep: 1,
+          completedStep: 2,
           prfaqKeyContentEducation: response.response.prfaq_key_content_education,
           selectedConceptDefinition: prfaqConceptDefinition.conceptDefinitionFinalReport,
           selectedBusinessModelCanvas: prfaqBusinessModelCanvas.bmCanvasGraphItems,
@@ -796,7 +605,7 @@ const PagePRFAQ = () => {
         };
 
         let response = await EducationToolsRequest(apiRequestData, isLoggedIn);
-        console.log("response", response);
+      
         setPrfaqFinalReport(response.response.prfaq_final_report_education);
 
         // const maxAttempts = 10;
@@ -816,14 +625,17 @@ const PagePRFAQ = () => {
 
         setIsLoadingReport(false);
 
-        // await updateToolOnServer(
-        //   toolId,
-        //   {
-        //     completedStep: 3,
-        //     psstReport: response.response,
-        //   },
-        //   isLoggedIn
-        // );
+        await updateToolOnServer(
+          toolId,
+          {
+            completedStep: 3,
+            prfaqFinalReportEducation: response.response.prfaq_final_report_education,
+          },
+          isLoggedIn
+        );
+
+        setCompletedStatus(true);
+        setCompletedSteps(prev => [...prev, 3]);
       } catch (error) {}
       setToolSteps(3);
     } catch (error) {
@@ -849,12 +661,6 @@ const PagePRFAQ = () => {
   };
 
 
-  const handleContactInputChange = (field, value) => {
-    setContactForm((prev) => ({
-      ...(prev || {}),
-      [field]: value || "",
-    }));
-  };
 
   const handleSelectBoxClick = (selectBoxId, ref) => {
     // Don't open dropdown if toolSteps >= 1 for customerList
@@ -912,17 +718,6 @@ const PagePRFAQ = () => {
       return false;
     };
 
-    // beforeunload 이벤트 핸들러
-    const handleBeforeUnload = (event) => {
-      // 이벤트 취소 (표준에 따라)
-      event.preventDefault();
-      // Chrome은 returnValue 설정 필요
-      event.returnValue = "";
-
-      // 새로고침 시 루트 페이지로 이동
-      navigate("/Project");
-    };
-
     // F5 키 또는 Ctrl+R 감지
     const handleKeyDown = (event) => {
       if (
@@ -957,24 +752,6 @@ const PagePRFAQ = () => {
     };
   }, [navigate]);
 
-  // handleInputChange 함수 수정
-  const handleInputChange = (field, value) => {
-    // formData 대신 개별 상태 업데이트
-    if (field === "projectDescription") {
-      setProjectDescription(value);
-    }
-  };
-
-
-  const handleAnswerChange = (id, option) => {
-    setQuickSurveyAnalysis((prev) => ({
-      ...prev,
-      [id]: {
-        ...prev[id],
-        answer: option,
-      },
-    }));
-  };
 
 
   useEffect(() => {
@@ -1053,7 +830,10 @@ const PagePRFAQ = () => {
               <TabButtonType5
                 Num3
                 isActive={activeTab >= 3}
-                onClick={() => completedSteps.includes(2) || completedSteps.includes(3) && setActiveTab(3)}
+                onClick={() =>
+                  (completedSteps.includes(2) || completedSteps.includes(3)) &&
+                  setActiveTab(3)
+                }
                 disabled={
                   !completedSteps.includes(3) || isLoading || isLoadingReport
                 }
@@ -1344,7 +1124,7 @@ const PagePRFAQ = () => {
                     <AtomPersonaLoader message={`분석 중이예요 ...`} />
                   </div>
                 ) : (
-                prfaqKeyContentEducation.length > 0 && (
+                prfaqKeyContentEducation && (
                  <>
                     <div className="title">
                       <H3 color="gray800">Core Value Analysis</H3>
@@ -1356,48 +1136,169 @@ const PagePRFAQ = () => {
                     <div className="content">
                       <IdeaContainer>
                         <IdeaBox>
-                          <IdeaTitle>기타 의견</IdeaTitle>
+                          <IdeaTitle>제목</IdeaTitle>
                           <IdeaContent>
-                            <IdeaText>•</IdeaText>
+                            <IdeaText>
+                              <div style={{ fontWeight: "bold", marginBottom: "10px" }}>
+                               "{prfaqKeyContentEducation?.heading?.title}"
+                              </div>
+                              {prfaqKeyContentEducation?.heading?.content.map((item, idx) => (
+                                <div key={idx}>• {item}</div>
+                              ))}
+                            </IdeaText>
                           </IdeaContent>
                         </IdeaBox>
                       </IdeaContainer>
 
-                      <InsightAnalysis>
-                        <div
-                          className="markdown-body"
-                          style={{
-                            textAlign: "left",
-                          }}
-                        >
-                          {/* <Markdown>
-                            {prepareMarkdown(
-                              prfaqKeyContentEducation ?? ""
-                            )}
-                          </Markdown> */}
-                        </div>
-                      </InsightAnalysis>
+                      <IdeaContainer>
+                        <IdeaBox>
+                          <IdeaTitle>부제</IdeaTitle>
+                          <IdeaContent>
+                            <IdeaText>
+                              <div style={{ fontWeight: "bold", marginBottom: "10px" }}>
+                                "{prfaqKeyContentEducation?.sub_heading?.title}"
+                              </div>
+                              {prfaqKeyContentEducation?.sub_heading?.content.map((item, idx) => (
+                                <div key={idx}>• {item}</div>
+                              ))}
+                            </IdeaText>
+                          </IdeaContent>
+                        </IdeaBox>
+                      </IdeaContainer>
+
+                      <IdeaContainer>
+                        <IdeaBox>
+                          <IdeaTitle>문제점의</IdeaTitle>
+                          <IdeaContent>
+                            <IdeaText>
+                              <div style={{ fontWeight: "bold", marginBottom: "10px" }}>
+                                "{prfaqKeyContentEducation?.problem?.title}"
+                              </div>
+                              {prfaqKeyContentEducation?.problem?.content.map((item, idx) => (
+                                <div key={idx}>• {item}</div>
+                              ))}
+                            </IdeaText>
+                          </IdeaContent>
+                        </IdeaBox>
+                      </IdeaContainer>
+
+                      <IdeaContainer>
+                        <IdeaBox>
+                          <IdeaTitle>솔루션 소개</IdeaTitle>
+                          <IdeaContent>
+                            <IdeaText>
+                              <div style={{ fontWeight: "bold", marginBottom: "10px" }}>
+                                "{prfaqKeyContentEducation?.solution?.title}"
+                              </div>
+                              {prfaqKeyContentEducation?.solution?.content.map((item, idx) => (
+                                <div key={idx}>• {item}</div>
+                              ))}
+                            </IdeaText>
+                          </IdeaContent>
+                        </IdeaBox>
+                      </IdeaContainer>
+
+                      <IdeaContainer>
+                        <IdeaBox>
+                          <IdeaTitle>내부 인용문</IdeaTitle>
+                          <IdeaContent>
+                            <IdeaText>
+                              <div style={{ fontWeight: "bold", marginBottom: "10px" }}>
+                                "{prfaqKeyContentEducation?.internal_quote?.title}"
+                              </div>
+                              {prfaqKeyContentEducation?.internal_quote?.content.map((item, idx) => (
+                                <div key={idx}>• {item}</div>
+                              ))}
+                            </IdeaText>
+                          </IdeaContent>
+                        </IdeaBox>
+                      </IdeaContainer>
+
+                      <IdeaContainer>
+                        <IdeaBox>
+                          <IdeaTitle>고객 후기</IdeaTitle>
+                          <IdeaContent>
+                            <IdeaText>
+                              <div style={{ fontWeight: "bold", marginBottom: "10px" }}>
+                                "{prfaqKeyContentEducation?.customer_quote?.title}"
+                              </div>
+                              {prfaqKeyContentEducation?.customer_quote?.content.map((item, idx) => (
+                                <div key={idx}>• {item}</div>
+                              ))}
+                            </IdeaText>
+                          </IdeaContent>
+                        </IdeaBox> 
+                      </IdeaContainer>
+
+                      <IdeaContainer>
+                        <IdeaBox>
+                          <IdeaTitle>이용 방법</IdeaTitle>
+                          <IdeaContent>
+                            <IdeaText>
+                              <div style={{ fontWeight: "bold", marginBottom: "10px" }}>
+                                "{prfaqKeyContentEducation?.how_to_start?.title}"
+                              </div>
+                              {prfaqKeyContentEducation?.how_to_start?.content.map((item, idx) => (
+                                <div key={idx}>• {item}</div>
+                              ))}
+                            </IdeaText>
+                          </IdeaContent>
+                        </IdeaBox>
+                      </IdeaContainer>
+
+                    <IdeaContainer>
+                        <IdeaBox>
+                          <IdeaTitle>closing</IdeaTitle>
+                          <IdeaContent>
+                            <IdeaText>
+                              <div style={{ fontWeight: "bold", marginBottom: "10px" }}>
+                                "{prfaqKeyContentEducation?.closing?.title}"
+                              </div>
+                              {prfaqKeyContentEducation?.closing?.content.map((item, idx) => (
+                                <div key={idx}>• {item}</div>
+                              ))}
+                            </IdeaText>
+                          </IdeaContent>
+                        </IdeaBox>
+                      </IdeaContainer>
+
+                      <IdeaContainer>
+                        <IdeaBox>
+                          <IdeaTitle>FAQ</IdeaTitle>
+                          <IdeaContent>
+                            <IdeaText>
+                              <div style={{ fontWeight: "bold", marginBottom: "10px" }}>
+                                "{prfaqKeyContentEducation?.faq?.title}"
+                              </div>
+                              {prfaqKeyContentEducation?.faq?.content.map((item, idx) => (
+                                <div key={idx}>• {item}</div>
+                              ))}
+                            </IdeaText>
+                          </IdeaContent>
+                        </IdeaBox>
+                      </IdeaContainer>
                     </div>
                   </>
                 )
                 )
                 }
 
-<Button
-                          Other
-                          Primary
-                          Fill
-                          Round
-                          onClick={handleReportRequest}
-                          // disabled={
-                          //   !selectedPurposes.customerList ||
-                          //   !selectedPurposes.businessModelCanvas ||
-                          //   toolSteps >= 1 
-                          // }
-                        >
-                  다음
-                        </Button>
-                  </TabContent5>
+                      {!isLoading && prfaqKeyContentEducation && (
+                      <Button
+                                                Other
+                                                Primary
+                                                Fill
+                                                Round
+                                                onClick={handleReportRequest}
+                                                disabled={
+                                                
+                                                  toolSteps > 2
+                                                }
+                                              >
+                                        다음
+                                              </Button>
+                      )}
+                                        </TabContent5>
                 )}
               
               
@@ -1439,6 +1340,19 @@ const PagePRFAQ = () => {
                           <Markdown>{prepareMarkdown(prfaqFinalReport ?? "")}</Markdown>
                         </div>
                       </InsightAnalysis>
+
+                      {completedStatus && (
+                          <Button
+                          Primary
+                          Edit
+                          Large
+                          style={{ color: "#666666", border: "1px solid #E0E4EB" }}
+                          onClick={() => navigate("/Tool")}
+                  
+                        >
+                          리서치 툴 리스트 바로가기 
+                        </Button>
+                        )}
                     </>
                   )}
                 </TabContent5>
@@ -1610,229 +1524,8 @@ const InsightAnalysis = styled.div`
   }
 `;
 
-const ViewInfo = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: $space-between;
-  gap: 4px;
-  width: 100%;
-  font-size: 0.875rem;
-  color: ${palette.gray800};
 
-  + div {
-    padding-top: 16px;
-    border-top: 1px solid ${palette.outlineGray};
-  }
 
-  .title {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
-    gap: 8px;
-    font-size: 0.875rem;
-    color: ${palette.black};
-
-    span {
-      font-size: 0.75rem;
-      font-weight: 300;
-      color: ${palette.gray500};
-    }
-  }
-
-  .info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
-
-    div {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 7px;
-      font-size: 0.875rem;
-      font-weight: 300;
-      color: ${palette.gray500};
-      line-height: 1.5;
-
-      + div:before {
-        position: absolute;
-        top: 50%;
-        left: -16px;
-        transform: translateY(-50%);
-        width: 1px;
-        height: 12px;
-        background-color: ${palette.outlineGray};
-        content: "";
-      }
-    }
-  }
-
-  .button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-
-    button {
-      font-family: "Pretendard", poppins;
-      font-size: 0.75rem;
-      font-weight: 300;
-      padding: 6px 10px;
-      border-radius: 6px;
-
-      &.view {
-        color: ${palette.black};
-        border: 1px solid ${palette.outlineGray};
-        background: ${palette.chatGray};
-      }
-
-      &.analysis {
-        color: ${palette.primary};
-        border: 1px solid ${palette.primary};
-        background: #e9f1ff;
-      }
-    }
-  }
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 12px;
-`;
-
-const EditButtonGroup = styled(ButtonGroup)`
-  justify-content: end;
-`;
-
-const TagButton = styled.div`
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 6px;
-  background-color: #f7f8fa;
-  border: none;
-  margin-right: 10px;
-  transition: all 0.2s ease;
-  &:hover {
-    background-color: ${(props) => (props.isSelected ? "#226FFF" : "#EAECF0")};
-  }
-`;
-
-const InterviewModeSelection = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  width: 100%;
-  justify-content: center;
-  margin-bottom: 48px;
-
-  .button-container {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-    margin-top: 20px;
-  }
-`;
-
-const InterviewModeCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  border-radius: 10px;
-  border: 1px solid
-    ${(props) => (props.isActive ? palette.primary : palette.outlineGray)};
-  cursor: pointer;
-  background-color: ${(props) =>
-    props.isActive ? "rgba(34, 111, 255, 0.05)" : "white"};
-  position: relative;
-  width: calc(50% - 10px);
-
-  &:hover {
-    border-color: ${palette.primary};
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    transform: translateY(-2px);
-  }
-`;
-
-const CardWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 16px;
-  height: 100%;
-`;
-
-const CardContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  gap: 8px;
-  flex: 1;
-  padding: 0;
-
-  img {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 4px;
-  }
-
-  div {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    width: 100%;
-  }
-`;
-
-const CheckboxWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-`;
-
-const CustomizationWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  width: 100%;
-  cursor: pointer;
-
-  > div {
-    width: 100%;
-  }
-
-  button span {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 1px solid ${palette.gray700};
-
-    &::before,
-    &::after {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 8px;
-      height: 1px;
-      background: ${palette.gray700};
-      content: "";
-    }
-
-    &::after {
-      transform: translate(-50%, -50%) rotate(90deg);
-    }
-  }
-`;
 
 export const CheckCircle = styled.input`
   appearance: none;
@@ -1863,139 +1556,27 @@ export const CheckCircle = styled.input`
     }
   }
 `;
-const InsightContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  border: 1px solid #e0e4e8;
-  border-radius: 10px;
-  padding: 16px;
-`;
-
-const InsightSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  border-bottom: 1px solid #e0e4e8;
-  padding-bottom: 16px;
-
-  &:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-`;
-
-const InsightContent = styled(Body3)`
-  // border-bottom: 1px solid #E0E4E8;
-  font-size: 14px;
-  line-height: 1.6;
-  white-space: pre-wrap;
-
-  // &:last-child {
-  //   border-bottom: none;
-  // }
-`;
-
-const InsightLabel = styled(Body3)`
-  font-size: 16px;
-  font-weight: 700; /* 400에서 700으로 변경하여 bold 적용 */
-  color: ${palette.gray800}; /* 직접 색상 지정 */
-`;
-
-const TooltipButton = styled.div`
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  gap: 4px;
-  padding: 12px;
-  border-radius: 15px;
-  background: ${palette.chatGray};
-  z-index: 1;
-  width: 100%;
-  text-align: left;
-
-  &:before {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    width: 14px;
-    height: 14px;
-    font-size: 0.63rem;
-    color: ${palette.gray500};
-    border: 1px solid ${palette.gray500};
-    content: "!";
-    margin-top: 3.5px; // 아래로 내리기 위해 추가
-  }
-`;
-
-const CustomButton = styled.button`
-  width: 100%;
-  padding: 16px;
-  background: ${palette.white};
-  border: 1px solid ${palette.outlineGray};
-  border-radius: 10px;
-  cursor: pointer;
-  text-align: left;
-  margin-top: 8px;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: ${palette.gray50};
-    border-color: ${palette.primary};
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
-`;
-
-const ButtonContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-items: center;
-`;
-
-const ButtonTitle = styled.div`
-  font-family: "Pretendard", "Poppins";
-  font-size: 16px;
-  font-weight: 500;
-  color: ${palette.gray700};
-`;
-
-const PlusIconWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const PlusIcon = styled.span`
-  font-size: 16px;
-  color: ${palette.gray700};
-`;
-
 
 
 
 const IdeaContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  // gap: 16px;
   width: 100%;
-  padding: 20px;
+  // padding: 20px;
 `;
 
 const IdeaBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  // gap: 12px;
   padding: 20px;
   background: ${palette.white};
   border: 1px solid ${palette.outlineGray};
   border-radius: 8px;
   text-align: left;
+  margin-bottom: -15px;
 `;
 
 const IdeaTitle = styled.h3`
@@ -2004,6 +1585,7 @@ const IdeaTitle = styled.h3`
   font-weight: 600;
   color: ${palette.gray800};
   margin: 0;
+  margin-bottom: 12px;
 `;
 
 const IdeaContent = styled.div`

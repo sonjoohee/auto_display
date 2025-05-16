@@ -219,6 +219,11 @@ import {
   NPS_REPORT,
   NPS_INTERVIEW,
   NPS_SELECTED_CONCEPT_INDEX,
+  PRFAQ_SELECTED_PURPOSE,
+  PRFAQ_FINAL_REPORT_EDUCATION,
+  PRFAQ_CONCEPT_DEFINITION,
+  PRFAQ_BUSINESS_MODEL_CANVAS,
+  PRFAQ_KEY_CONTENT_EDUCATION,
 } from "../../../AtomStates";
 import {
   updateToolOnServer,
@@ -590,6 +595,11 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [, setNpsReport] = useAtom(NPS_REPORT);
   const [, setNpsInterview] = useAtom(NPS_INTERVIEW);
   const [, setNpsSelectedConceptIndex] = useAtom(NPS_SELECTED_CONCEPT_INDEX);
+  const [, setPrfaqSelectedPurpose] = useAtom(PRFAQ_SELECTED_PURPOSE);
+  const [, setPrfaqFinalReport] = useAtom(PRFAQ_FINAL_REPORT_EDUCATION);
+  const [, setPrfaqSelectedConceptDefinition] = useAtom(PRFAQ_CONCEPT_DEFINITION);
+  const [, setPrfaqSelectedBusinessModelCanvas] = useAtom(PRFAQ_BUSINESS_MODEL_CANVAS);
+  const [, setPrfaqKeyContentEducation] = useAtom(PRFAQ_KEY_CONTENT_EDUCATION);
 
   const saveConversation = (data) => {
     // 대화 저장 로직 구현
@@ -643,6 +653,8 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           return "핵심 문제 정의";
         case "ix_needs_keywords_generation_education":
           return "통합 니즈 작성";
+        case "ix_prfaq_education":
+          return "PRFAQ";
         default:
           return tool.type;
       }
@@ -791,6 +803,10 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
               )
               .join("") || "상세 내용 없음"
           );
+        case "ix_prfaq_education":
+          return tool.prfaqKeyContentEducation?.title || "상세 내용 없음";
+        case "ix_business_model_canvas_education":
+          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
         default:
           return tool.type;
       }
@@ -1459,6 +1475,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
          setBusinessModelCanvasGraphItems([]);
          setBusinessModelCanvasInitialGraphData([]);
          setBusinessModelCanvasPopupOptions([]);
+         setCreditCreateToolLoaded(true);
          setBusinessModelCanvasSelectedConceptDefinition(chatData?.selectedConceptDefinition || {});
          setBusinessModelCanvasMarkdown(chatData?.businessModelCanvasMarkdown || "");
          setBusinessModelCanvasGraphItems(chatData?.bmCanvasGraphItems || []);
@@ -1480,6 +1497,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
          setNpsSelectedConceptIndex([]);
          setNpsReport([]);
          setNpsInterview([]);
+         setCreditCreateToolLoaded(true);
          setNpsPersonaList(chatData?.npsPersonaList || []);
          setNPSSelectedConcept(chatData?.npsSelectedConcept || []);
          setNpsSurveyMethod(chatData?.npsSurveyMethod|| {});
@@ -1503,6 +1521,27 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
          setNpsInterview(chatData?.npsInterview || []);
          setToolStep(chatData?.completedStep);
          setNpsSelectedConceptIndex(chatData?.selectedConceptIndex || []);
+         setCompletedStatus(chatData?.completedStatus || false);
+
+            //!PRFAQ
+        setToolStep(1);
+        setCompletedStatus(false);
+        setPrfaqSelectedPurpose( {});
+        setPrfaqFinalReport( "");
+        setPrfaqSelectedConceptDefinition( {});
+        setPrfaqSelectedBusinessModelCanvas( []);
+        setPrfaqKeyContentEducation([]);
+        setCreditCreateToolLoaded(true);
+        setPrfaqFinalReport(chatData?.prfaqFinalReportEducation || "");
+        setPrfaqSelectedPurpose(chatData?.selectedPurposes || {});
+        setPrfaqKeyContentEducation(chatData?.prfaqKeyContentEducation || []);
+        setPrfaqSelectedConceptDefinition(chatData?.selectedConceptDefinition || {});
+        setPrfaqSelectedBusinessModelCanvas(chatData?.selectedBusinessModelCanvas || []);
+        setToolStep(chatData?.completedStep);
+        setCompletedStatus(chatData?.completedStatus || false);
+        
+
+
 
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);
@@ -1553,7 +1592,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         } else if (chatData.type === "ix_business_model_canvas_education") {
           setToolLoading(true);
           navigate("/BusinessModelCanvas");
-        } else if (chatData.type === "ix_prfaq_key_ducation") {
+        } else if (chatData.type === "ix_prfaq_ducation") {
           setToolLoading(true);
           navigate("/PRFAQ");
         }
