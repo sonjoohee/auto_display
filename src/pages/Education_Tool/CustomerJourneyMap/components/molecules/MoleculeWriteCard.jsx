@@ -55,7 +55,7 @@ const InputContainer = styled.div`
   width: 100%;
   min-height: 56px;
   padding: 16px 20px;
-  border: 1px solid #E0E4EB;
+  border: 1px solid ${palette.outlineGray};
   border-radius: 10px;
   background-color: ${palette.white};
   box-sizing: border-box;
@@ -75,7 +75,7 @@ const InputField = styled.textarea`
   font-size: 16px;
   line-height: 1.55;
   letter-spacing: -0.03em;
-  color: #323232;
+  color: ${palette.gray700};
   border: none;
   outline: none;
   resize: none;
@@ -88,7 +88,7 @@ const InputField = styled.textarea`
   display: block;
 
   &::placeholder {
-    color: #CCCCCC;
+    color: ${palette.gray300};
   }
 `;
 
@@ -104,8 +104,8 @@ const RegisterButton = styled.button`
   font-size: 14px;
   line-height: 1.2;
   letter-spacing: -0.03em;
-  background-color: ${props => props.active ? "#F0F4FF" : "#F7F8FA"};
-  color: ${props => props.active ? palette.primary : "#8C8C8C"};
+  background-color: ${props => props.active ? palette.brightBlue : palette.chatGray};
+  color: ${props => props.active ? palette.primary : palette.gray500};
   border: none;
   border-radius: 4px;
   padding: 8px 12px;
@@ -116,7 +116,7 @@ const RegisterButton = styled.button`
   justify-content: center;
   
   &:hover {
-    background-color: ${props => props.active ? "#E6EDFF" : "#F7F8FA"};
+    background-color: ${props => props.active ? palette.brightBlue : palette.chatGray};
   }
 `;
 

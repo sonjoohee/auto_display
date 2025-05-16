@@ -1120,7 +1120,7 @@ const PagePRFAQ = () => {
                       alignItems: "center",
                     }}
                   >
-                    <AtomPersonaLoader message={`분석 중이예요 ...`} />
+                    <AtomPersonaLoader message={`컨셉 정의서와 비즈니스 모델 캔버스를 통합 분석하고 있어요`} />
                   </div>
                 ) : (
                 prfaqKeyContentEducation && (
@@ -1167,7 +1167,7 @@ const PagePRFAQ = () => {
 
                       <IdeaContainer>
                         <IdeaBox>
-                          <IdeaTitle>문제점의</IdeaTitle>
+                          <IdeaTitle>문제정의</IdeaTitle>
                           <IdeaContent>
                             <IdeaText>
                               <div style={{ fontWeight: "bold", marginBottom: "10px" }}>
@@ -1315,7 +1315,7 @@ const PagePRFAQ = () => {
                       }}
                     >
                       <AtomPersonaLoader
-                        message={`결과보고서를 작성하고 있습니다.
+                        message={`핵심 내용을 기반으로 PRFAQ 최종본을 작성하고 있어요.
                           1분 정도 소요 될 수 있어요.`}
                       />
                     </div>

@@ -1267,7 +1267,7 @@ const PageIdeaGeneration = () => {
                         Primary
                         Edit
                         Large
-                        style={{ color: "#666666", border: "1px solid #E0E4EB" }}
+                        style={{ color: palette.gray700, border: `1px solid ${palette.outlineGray}` }}
                         onClick={() => navigate("/Tool")}
                       >
                         리서치 툴 리스트 바로가기

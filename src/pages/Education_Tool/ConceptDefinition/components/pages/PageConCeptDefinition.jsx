@@ -919,7 +919,7 @@ const PageConceptDefinition = () => {
                           alignItems: "center",
                         }}
                       >
-                        <AtomPersonaLoader message={`페르소나 핵심 가치를 분석 중이예요 ...`} />
+                        <AtomPersonaLoader message={`페르소나와 핵심 가치를 분석 중이예요 ...`} />
                       </div>
                     ) : (
                       <InsightAnalysis>
@@ -1030,7 +1030,7 @@ const PageConceptDefinition = () => {
                           Primary
                           Edit
                           Large
-                          style={{ color: "#666666", border: "1px solid #E0E4EB" }}
+                          style={{ color: palette.gray700, border: "1px solid #E0E4EB" }}
                           onClick={() => navigate("/Tool")}
                   
                         >

@@ -302,13 +302,13 @@ const NumberCircle = styled.div`
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: #000000;
+  background-color: ${palette.black};
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2px;
   
-  color: white;
+  color: white;s
   font-family: 'Pretendard', 'Poppins', sans-serif;
   font-size: 10px;
   font-weight: 600;
@@ -323,7 +323,7 @@ const Title = styled.div`
   font-weight: 600;
   line-height: 1.55em;
   letter-spacing: -0.03em;
-  color: #666666;
+  color: ${palette.gray700};
 `;
 
 const ContentBox = styled.div`
@@ -338,17 +338,17 @@ const ContentBox = styled.div`
   
   /* 상태에 따른 스타일 변화 */
   background-color: ${props => {
-    if (props.hasItems) return '#FFFFFF';
-    if (props.isSelected) return '#FFFFFF'; 
-    if (props.isHovered) return '#E9F1FF';
-    return '#F7F8FA';
+    if (props.hasItems) return palette.white;
+    if (props.isSelected) return palette.white; 
+    if (props.isHovered) return palette.brightBlue;
+    return palette.chatGray;
   }};
   
   /* 테두리 색상 */
   border: 1px solid ${props => {
-    if (props.isSelected) return '#E0E4EB';
-    if (props.isHovered) return '#226FFF';
-    return '#E0E4EB';
+    if (props.isSelected) return palette.outlineGray;
+    if (props.isHovered) return palette.primary;
+    return palette.outlineGray;
   }};
   
   /* 스크롤바 스타일 */
@@ -372,9 +372,9 @@ const EmptyText = styled.div`
   
   /* 상태에 따른 텍스트 색상 변화 */
   color: ${props => {
-    if (props.isSelected) return '#666666';
-    if (props.isHovered) return '#226FFF';
-    return '#CCCCCC';
+    if (props.isSelected) return palette.gray700;
+    if (props.isHovered) return palette.blue500;
+    return palette.gray300;
   }};
 `;
 
@@ -412,7 +412,7 @@ const ItemText = styled.div`
   font-weight: 600;
   line-height: 1.55em;
   letter-spacing: -0.03em;
-  color: #666666;
+  color: ${palette.gray700};
   flex: 1;
 `;
 

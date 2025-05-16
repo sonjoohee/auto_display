@@ -1260,7 +1260,7 @@ const PageIdeaEvaluate = () => {
                               marginBottom: "8px",
                               marginRight: "50px",
                               alignSelf: "flex-start",
-                              color: "#8C8C8C",
+                              color: palette.gray500,
                             }}
                           >
                             평가할 아이디어 리스트
@@ -1280,7 +1280,7 @@ const PageIdeaEvaluate = () => {
                             <span
 
                               style={{ 
-                                color: "gray800", 
+                                color: palette.gray800, 
 
                                 marginBottom: "4px",
                                 alignSelf: "flex-start",
@@ -1564,8 +1564,8 @@ const PageIdeaEvaluate = () => {
                           Edit
                           Large
                           style={{
-                            color: "#666666",
-                            border: "1px solid #E0E4EB",
+                            color: palette.gray700,
+                            border: `1px solid ${palette.outlineGray}`,
                           }}
                           onClick={() => navigate("/Tool")}
                         >

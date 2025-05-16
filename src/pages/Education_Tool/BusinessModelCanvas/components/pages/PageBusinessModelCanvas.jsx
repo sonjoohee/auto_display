@@ -1836,7 +1836,7 @@ const NumberCircle = styled.div`
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: #323232;
+  background-color: ${palette.gray700};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1854,5 +1854,5 @@ const HeaderTitleText = styled.div`
   font-weight: 600;
   line-height: 1.3em;
   letter-spacing: -0.03em;
-  color: #666666;
+  color: ${palette.gray700};
 `;

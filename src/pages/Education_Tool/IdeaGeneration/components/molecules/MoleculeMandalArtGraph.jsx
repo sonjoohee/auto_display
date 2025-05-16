@@ -346,7 +346,7 @@ const BackNavigationText = styled.div`
   font-family: "Pretendard", sans-serif;
   font-weight: 400;
   font-size: 12px;
-  color: #8c8c8c;
+  color: ${palette.gray500};
 `;
 
 const BackIcon = styled.svg`
