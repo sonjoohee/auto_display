@@ -143,7 +143,7 @@ const PageConceptDefinition = () => {
   });
   const [showCreatePersonaPopup, setShowCreatePersonaPopup] = useState(false);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
-
+  const [selectedKanoModelData, setSelectedKanoModelData] = useState([]);
   // 초기 상태를 빈 배열로 설정
 
   useDynamicViewport("width=1280"); // 특정페이지에서만 pc화면처럼 보이기
@@ -311,18 +311,31 @@ const PageConceptDefinition = () => {
     }));
 
     try {
+ 
       const data = {
         type: "ix_concept_definition_report_education",
         business: business,
         persona_group: personaGroup,
-        kano_model: kanoModelList,
+        kano_model: selectedKanoModelData.kanoModelReportData,
       };
 
       let response = await EducationToolsRequest(data, isLoggedIn, signal);
 
-      setConceptDefinitionFirstReport(
-        response.response.concept_definition_report_education
-      );
+      const maxAttempts = 10;
+        let attempts = 0;
+
+        while (attempts < maxAttempts && (!response || !response?.response)) {
+          response = await EducationToolsRequest(data, isLoggedIn, signal);
+          attempts++;
+        }
+        if (attempts >= maxAttempts) {
+          setShowPopupError(true);
+          return;
+        }
+
+        setConceptDefinitionFirstReport(
+          response.response.concept_definition_report_education
+        ); 
 
       
     const responseToolId = await createToolOnServer(
@@ -403,9 +416,7 @@ const PageConceptDefinition = () => {
         // console.log("response", response);
         setConceptDefinitionFinalReport(
           response.response.concept_definition_final_report_education
-        );
-
-        setIsLoadingReport(false);
+        ); 
 
         await updateToolOnServer(
           toolId,
@@ -420,6 +431,7 @@ const PageConceptDefinition = () => {
         );
         setCompletedStatus(true);
         setCompletedSteps(prev => [...prev, 3]);
+        setIsLoadingReport(false);
       } catch (error) {}
       setToolSteps(3);
     } catch (error) {
@@ -444,7 +456,7 @@ const PageConceptDefinition = () => {
     }
   };
 
-  const handlePurposeSelect = (purpose, selectBoxId) => {
+  const handlePurposeSelect = (purpose, selectBoxId, item) => {
     setSelectedPurposes((prev) => ({
       ...prev,
       [selectBoxId]: purpose,
@@ -454,6 +466,8 @@ const PageConceptDefinition = () => {
       ...prev,
       [selectBoxId]: false,
     }));
+
+    setSelectedKanoModelData(item);
   };
 
   const abortControllerRef = useRef(null);
@@ -853,9 +867,9 @@ const PageConceptDefinition = () => {
                                   key={index}
                                   onClick={() => {
                                     handlePurposeSelect(
-                                      ` ${item.updateDate.split(":")[0]}:${
+                                      ` Kano Model 결과(${item.updateDate.split(":")[0]}:${
                                         item.updateDate.split(":")[1]
-                                      }-Kano Model 결과`,
+                                      })`,
                                       "customerList",
                                       item
                                     );
@@ -867,9 +881,8 @@ const PageConceptDefinition = () => {
                                     상황 중심 여정 분석 |{" "}
                                   </Body1> */}
                                   <Body2 color="gray700" align="left">
-                                    {item.updateDate.split(":")[0]}:
-                                    {item.updateDate.split(":")[1]} - Kano Model
-                                    결과
+                                  Kano Model 결과({item.updateDate.split(":")[0]}:
+                                  {item.updateDate.split(":")[1]})
                                   </Body2>
                                 </SelectBoxItem>
                               ))}

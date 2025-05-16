@@ -655,6 +655,10 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
           return "통합 니즈 작성";
         case "ix_prfaq_education":
           return "PRFAQ";
+        case "ix_nps_education":
+          return "NPS";
+        case "ix_business_model_canvas_education":
+          return "비즈니스 모델 캔버스";
         default:
           return tool.type;
       }
@@ -806,6 +810,8 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         case "ix_prfaq_education":
           return tool.prfaqKeyContentEducation?.title || "상세 내용 없음";
         case "ix_business_model_canvas_education":
+          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+        case "ix_nps_education":
           return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
         default:
           return tool.type;
@@ -1592,7 +1598,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         } else if (chatData.type === "ix_business_model_canvas_education") {
           setToolLoading(true);
           navigate("/BusinessModelCanvas");
-        } else if (chatData.type === "ix_prfaq_ducation") {
+        } else if (chatData.type === "ix_prfaq_education") {
           setToolLoading(true);
           navigate("/PRFAQ");
         }
