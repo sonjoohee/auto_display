@@ -414,9 +414,26 @@ const PageConceptDefinition = () => {
           signal
         );
         // console.log("response", response);
+
+        const maxAttempts = 10;
+        let attempts = 0;
+
+        while (attempts < maxAttempts && (!response || !response?.response || !response?.response?.concept_definition_final_report_education
+        || !response?.response?.concept_definition_final_report_education.length>0 || typeof response?.response?.concept_definition_final_report_education !== "string"
+          || !response?.response?.concept_definition_final_report_education_persona_title
+        )) {
+          response = await EducationToolsRequest(apiRequestData, isLoggedIn, signal);
+          attempts++;
+        }
+        if (attempts >= maxAttempts) {
+          setShowPopupError(true);
+          return;
+        }
         setConceptDefinitionFinalReport(
           response.response.concept_definition_final_report_education
         ); 
+
+
 
         await updateToolOnServer(
           toolId,
