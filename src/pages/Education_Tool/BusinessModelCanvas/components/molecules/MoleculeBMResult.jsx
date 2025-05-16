@@ -12,14 +12,18 @@ import { useAtom } from 'jotai';
  * @param {Array} props.data - 비즈니스 모델 데이터 배열
  * @param {number} props.initialSelectedId - 초기 선택된 ID (기본값: 1)
  * @param {Function} props.onSelectChange - 선택된 ID가 변경될 때 호출되는 콜백
+ * @param {Object} props.style - 스타일 객체
  * @returns {JSX.Element}
  */
 const MoleculeBMResult = ({ 
   data = [], 
   initialSelectedId = 1, 
-  onSelectChange = () => {} 
+  onSelectChange = () => {},
+  parentSelectedId = null, // 상위 컴포넌트에서 전달받은 선택된 ID
+  style = {} // style prop 추가
 }) => {
-  const [selectedId, setSelectedId] = useState(initialSelectedId);
+  // selectedId 상태를 parentSelectedId가 있으면 해당 값으로, 없으면 initialSelectedId로 초기화
+  const [selectedId, setSelectedId] = useState(parentSelectedId || initialSelectedId);
   const [businessModelCanvasGraphItems, setBusinessModelCanvasGraphItems] = useAtom(BUSINESS_MODEL_CANVAS_GRAPH_ITEMS);
 
   // 비즈니스 영역 정의 (MoleculeBusinessModelGraph와 동일한 순서)
@@ -34,6 +38,13 @@ const MoleculeBMResult = ({
     { id: 8, title: '핵심 파트너십' },
     { id: 9, title: '비용구조' }
   ];
+
+  // parentSelectedId가 변경되면 selectedId도 업데이트
+  useEffect(() => {
+    if (parentSelectedId) {
+      setSelectedId(parentSelectedId);
+    }
+  }, [parentSelectedId]);
 
   // 선택된 영역의 정보 가져오기
   const selectedArea = businessAreas.find(area => area.id === selectedId);
@@ -76,7 +87,7 @@ const MoleculeBMResult = ({
   };
 
   return (
-    <ResultContainer>
+    <ResultContainer style={style}>
       <ButtonColumn>
         {businessAreas.map((area) => (
           <ButtonFrame 
@@ -124,7 +135,7 @@ const ResultContainer = styled.div`
   width: 820px;
   height: 444px;
   gap: 0;
-  margin-top: 80px;
+  /* margin-top: 80px; */ /* 이 줄을 제거하거나 주석 처리 */
 `;
 
 const ButtonColumn = styled.div`
@@ -277,7 +288,7 @@ const EmptyContent = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: ${palette.gray400};
+  color: ${palette.gray500};
   font-family: 'Pretendard', sans-serif;
   font-size: 14px;
   font-weight: 400;
