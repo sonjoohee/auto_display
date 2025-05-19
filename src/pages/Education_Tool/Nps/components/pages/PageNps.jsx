@@ -797,7 +797,7 @@ const PageNps = () => {
         },
         persona_group: npsPersonaList,
         quick_survey_interview: combinedInterviews,
-     
+        survey_type: "nps",
       };
       console.log("reportData", reportData)
 
@@ -1593,7 +1593,7 @@ const PageNps = () => {
                                     </InsightContent>
                                   </InsightSection>
 
-                                  {/* <InsightSection>
+                                  <InsightSection>
                                     <InsightLabel color="gray700">
                                       페르소나별 의견 정리
                                     </InsightLabel>
@@ -1611,7 +1611,7 @@ const PageNps = () => {
                                         }
                                       </>
                                     </InsightContent>
-                                  </InsightSection> */}
+                                  </InsightSection>
                                 </InsightContainer>
                               )}
                             </div>
