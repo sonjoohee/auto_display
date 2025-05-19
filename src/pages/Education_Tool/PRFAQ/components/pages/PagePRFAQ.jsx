@@ -177,7 +177,7 @@ const PagePRFAQ = () => {
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [activeDesignTab, setActiveDesignTab] = useState("emotion");
+  const [activeDesignTab, setActiveDesignTab] = useState("PR");
   const [isLoadingReport, setIsLoadingReport] = useState(false);
   const [isLoadingDetailSetting, setIsLoadingDetailSetting] = useState(false);
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
@@ -1330,14 +1330,50 @@ const PagePRFAQ = () => {
                       </BgBoxItem>
 
                       <InsightAnalysis>
-                        <div
-                          className="markdown-body"
-                          style={{
-                            textAlign: "left",
-                          }}
-                        >
-                          <Markdown>{prepareMarkdown(prfaqFinalReport ?? "")}</Markdown>
+                        <div className="title">
+                          <div>
+                            <TabWrapType4>
+                              <TabButtonType4
+                                active={activeDesignTab === "PR"}
+                                onClick={() => setActiveDesignTab("PR")}
+                              >
+                                PR
+                              </TabButtonType4>
+                              <TabButtonType4
+                                active={activeDesignTab === "FAQ"}
+                                onClick={() => setActiveDesignTab("FAQ")}
+                              >
+                                FAQ
+                              </TabButtonType4>
+                            </TabWrapType4>
+                          </div>
                         </div>
+
+                        {activeDesignTab === "PR" && (
+                          <div
+                            className="markdown-body"
+                            style={{
+                              textAlign: "left",
+                            }}
+                          >
+                            <Markdown>
+                              {prepareMarkdown(prfaqFinalReport.prfaq_final_report_pr ?? prfaqFinalReport)}
+                            </Markdown>
+                          </div>
+                        )}
+
+                        {activeDesignTab === "FAQ" && (
+                          <div
+                            className="markdown-body"
+                            style={{
+                              textAlign: "left",
+                            }}
+                          >
+                            <Markdown>
+                              {prepareMarkdown(prfaqFinalReport.prfaq_final_report_faq ?? prfaqFinalReport)}
+                            </Markdown>
+                          </div>
+                        )}
                       </InsightAnalysis>
 
                       {completedStatus && (
