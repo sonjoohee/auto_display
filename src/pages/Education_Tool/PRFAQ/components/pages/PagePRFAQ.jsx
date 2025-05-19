@@ -510,7 +510,7 @@ const PagePRFAQ = () => {
         type: "ix_prfaq_key_content_education",
         concept_definition_final_report: prfaqConceptDefinition.conceptDefinitionFinalReport,
         business_model_canvas_report: prfaqBusinessModelCanvas.bmCanvasGraphItems,
-        companyInfo: companyInfo,
+        company_info: companyInfo,
       }
 
    
@@ -547,7 +547,7 @@ const PagePRFAQ = () => {
           selectedConceptDefinition: prfaqConceptDefinition.conceptDefinitionFinalReport,
           selectedBusinessModelCanvas: prfaqBusinessModelCanvas.bmCanvasGraphItems,
           selectedPurposes: selectedPurposes,
-          companyInfo: companyInfo,
+          company_info: companyInfo,
         },
         isLoggedIn
       );
@@ -615,7 +615,7 @@ const PagePRFAQ = () => {
           type: "ix_prfaq_final_report_education",
           business_description: businessDescription,
           prfaq_key_content: prfaqKeyContentEducation,
-          companyInfo: companyInfo,
+          company_info: companyInfo,
         };
 
         let response = await EducationToolsRequest(apiRequestData, isLoggedIn);
