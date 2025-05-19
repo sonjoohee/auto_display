@@ -70,6 +70,7 @@ import {
   PRFAQ_SELECTED_PURPOSE,
   CREDIT_CREATE_TOOL_LOADED,
   EDUCATION_TOOL_COMPLETED_STATUS,
+  PRFAQ_COMPANY_INFO,
 } from "../../../../AtomStates";
 import {
   SelectBox,
@@ -99,6 +100,7 @@ import {
 import "react-dropzone-uploader/dist/styles.css";
 
 import { useDynamicViewport } from "../../../../../assets/DynamicViewport";
+import MoleculeAddContentWriting from "../molecules/MoleculeAddContentWriting";
 
 
 
@@ -106,6 +108,7 @@ const PagePRFAQ = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
+  const [prfaqCompanyInfo, setPrfaqCompanyInfo] = useAtom(PRFAQ_COMPANY_INFO);
   const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
   const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
@@ -221,6 +224,11 @@ const PagePRFAQ = () => {
     residence: "",
     income: "",
   });
+  const [companyInfo, setCompanyInfo] = useState({
+    company: "",
+    product: "",
+    ceo: "",
+  });
   const [interviewModeType, setInterviewModeType] = useState("");
   const [isLoadingPreset, setIsLoadingPreset] = useState(false);
   const [selectedPresetCards, setSelectedPresetCards] = useState({});
@@ -292,6 +300,9 @@ const PagePRFAQ = () => {
         // 비즈니스 정보 설정 (Step 1)
         if(prfaqKeyContentEducation && prfaqKeyContentEducation.length > 0){
           setPrfaqKeyContentEducation(prfaqKeyContentEducation || []);
+        }
+        if(Object.keys(prfaqCompanyInfo).length > 0){
+          setCompanyInfo(prfaqCompanyInfo || {});
         }
         if(Object.keys(prfaqSelectedPurpose).length > 0){
           setSelectedPurposes(prfaqSelectedPurpose || {});
@@ -499,6 +510,7 @@ const PagePRFAQ = () => {
         type: "ix_prfaq_key_content_education",
         concept_definition_final_report: prfaqConceptDefinition.conceptDefinitionFinalReport,
         business_model_canvas_report: prfaqBusinessModelCanvas.bmCanvasGraphItems,
+        companyInfo: companyInfo,
       }
 
    
@@ -535,6 +547,7 @@ const PagePRFAQ = () => {
           selectedConceptDefinition: prfaqConceptDefinition.conceptDefinitionFinalReport,
           selectedBusinessModelCanvas: prfaqBusinessModelCanvas.bmCanvasGraphItems,
           selectedPurposes: selectedPurposes,
+          companyInfo: companyInfo,
         },
         isLoggedIn
       );
@@ -602,6 +615,7 @@ const PagePRFAQ = () => {
           type: "ix_prfaq_final_report_education",
           business_description: businessDescription,
           prfaq_key_content: prfaqKeyContentEducation,
+          companyInfo: companyInfo,
         };
 
         let response = await EducationToolsRequest(apiRequestData, isLoggedIn);
@@ -781,6 +795,9 @@ const PagePRFAQ = () => {
     setShowCreatePersonaPopup(false);
   };
 
+
+
+
   return (
     <>
       <DropzoneStyles />
@@ -956,7 +973,7 @@ const PagePRFAQ = () => {
                           <Body1 color="gray700">비즈니스 모델 캔버스  </Body1>
                         </div>
 
-                        <SelectBox ref={customerListRef}>
+                        <SelectBox ref={customerListRef} style={{marginBottom: "60px"}}>
                           <SelectBoxTitle
                             onClick={() =>
                               handleSelectBoxClick(
@@ -1039,7 +1056,21 @@ const PagePRFAQ = () => {
                             </SelectBoxList>
                           )}
                         </SelectBox>
+
+                       
                       </TabContent5Item>
+                      <MoleculeAddContentWriting style={{marginTop: "50px"}}
+                        company = {companyInfo.company}
+                        product = {companyInfo.product}
+                        ceo = {companyInfo.ceo}
+                        onSendChat={(field, value) => {
+                          setCompanyInfo(prev => ({
+                            ...prev,
+                            [field]: value
+                          }));
+                        }}
+                        disabled={toolSteps >= 1}
+                          />
 
 
                       {/* {isLoading ? (
@@ -1131,8 +1162,149 @@ const PagePRFAQ = () => {
                         Kano Model 결과를 기반으로 비즈니스의 주요 가치를 도출합니다
                       </Body3>
                     </div>
-
                     <div className="content">
+                    <TabContent5Item>
+                    <BoxWrap Column NoneV style={{ marginBottom: "24px" }}>
+                    <div
+                          className="selectBoxWrap"
+                          // style={{ marginTop: "12px" }}
+                        >
+                          <Body2
+                            color="gray500"
+                            style={{ width: "110px", alignSelf: "flex-start" }}
+                          >
+                           회사명
+                          </Body2>
+                          <li
+                            style={{
+                              alignSelf: "flex-start",
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "flex-start",
+                            }}
+                          >
+                            <Body2
+                              color={
+                                companyInfo.company?.length > 0
+                                  ? "gray800"
+                                  : "gray300"
+                              }
+                              style={{
+                                whiteSpace: "normal",
+                                wordBreak: "keep-all",
+                                wordWrap: "break-word",
+                                overflow: "visible",
+                                maxWidth: "94%",
+                                textAlign: "left",
+                                marginLeft: "20px",
+                                marginTop: "0",
+                                paddingTop: "0",
+                                display: "block",
+                                alignSelf: "flex-start",
+                              }}
+                            >
+                              {companyInfo.company?.length > 0
+                                ? companyInfo.company
+                                : "선택해주세요"}
+                            </Body2>
+                          </li>
+                        </div>
+                        
+
+
+                    <div
+                          className="selectBoxWrap"
+                          style={{ marginTop: "12px" }}
+                        >
+                          <Body2
+                            color="gray500"
+                            style={{ width: "110px", alignSelf: "flex-start" }}
+                          >
+                            제품명
+                          </Body2>
+                          <li
+                            style={{
+                              alignSelf: "flex-start",
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "flex-start",
+                            }}
+                          >
+                            <Body2
+                              color={
+                                companyInfo.product?.length > 0
+                                  ? "gray800"
+                                  : "gray300"
+                              }
+                              style={{
+                                whiteSpace: "normal",
+                                wordBreak: "keep-all",
+                                wordWrap: "break-word",
+                                overflow: "visible",
+                                maxWidth: "94%",
+                                textAlign: "left",
+                                marginLeft: "20px",
+                                marginTop: "0",
+                                paddingTop: "0",
+                                display: "block",
+                                alignSelf: "flex-start",
+                              }}
+                            >
+                              {companyInfo.product?.length > 0
+                                ? companyInfo.product
+                                : "선택해주세요"}
+                            </Body2>
+                          </li>
+                        </div>
+                        <div
+                          className="selectBoxWrap"
+                          style={{ marginTop: "12px" }}
+                        >
+                          <Body2
+                            color="gray500"
+                            style={{ width: "110px", alignSelf: "flex-start" }}
+                          >
+                            대표자명
+                          </Body2>
+                          <li
+                            style={{
+                              alignSelf: "flex-start",
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "flex-start",
+                            }}
+                          >
+                            <Body2
+                              color={
+                                companyInfo.ceo?.length > 0
+                                  ? "gray800"
+                                  : "gray300"
+                              }
+                              style={{
+                                whiteSpace: "normal",
+                                wordBreak: "keep-all",
+                                wordWrap: "break-word",
+                                overflow: "visible",
+                                maxWidth: "94%",
+                                textAlign: "left",
+                                marginLeft: "20px",
+                                marginTop: "0",
+                                paddingTop: "0",
+                                display: "block",
+                                alignSelf: "flex-start",
+                              }}
+                            >
+                              {companyInfo.ceo?.length > 0
+                                ? companyInfo.ceo
+                                : "선택해주세요"}
+                            </Body2>
+                          </li>
+                        </div>
+                      </BoxWrap>
+                      </TabContent5Item>
+                      </div>
+
+                    <div className="content" style={{marginTop: "-20px"}}>
                       <IdeaContainer>
                         <IdeaBox>
                           <IdeaTitle>제목</IdeaTitle>
