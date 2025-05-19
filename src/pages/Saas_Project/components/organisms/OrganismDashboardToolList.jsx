@@ -223,6 +223,7 @@ import {
   PRFAQ_CONCEPT_DEFINITION,
   PRFAQ_BUSINESS_MODEL_CANVAS,
   PRFAQ_KEY_CONTENT_EDUCATION,
+  PRFAQ_COMPANY_INFO,
 } from "../../../../pages/AtomStates";
 
 const OrganismDashboardToolList = ({ toolListSaas }) => {
@@ -585,6 +586,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
   const [, setPrfaqSelectedConceptDefinition] = useAtom(PRFAQ_CONCEPT_DEFINITION);
   const [, setPrfaqSelectedBusinessModelCanvas] = useAtom(PRFAQ_BUSINESS_MODEL_CANVAS);
   const [, setPrfaqKeyContentEducation] = useAtom(PRFAQ_KEY_CONTENT_EDUCATION);
+  const [, setPrfaqCompanyInfo] = useAtom(PRFAQ_COMPANY_INFO);
 
   const saveConversation = (data) => {};
 
@@ -1519,6 +1521,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setPrfaqSelectedConceptDefinition( {});
         setPrfaqSelectedBusinessModelCanvas( []);
         setPrfaqKeyContentEducation([]);
+        setPrfaqCompanyInfo({});
         setCreditCreateToolLoaded(true);
         setPrfaqFinalReport(chatData?.prfaqFinalReportEducation || "");
         setPrfaqSelectedPurpose(chatData?.selectedPurposes || {});
@@ -1527,6 +1530,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
         setPrfaqSelectedBusinessModelCanvas(chatData?.selectedBusinessModelCanvas || []);
         setToolStep(chatData?.completedStep);
         setCompletedStatus(chatData?.completedStatus || false);
+        setPrfaqCompanyInfo(chatData?.companyInfo || {});
         
         // 페이지를 대화가 이어지는 형태로 전환
         // navigate(`/TargetDiscovery`);

@@ -224,6 +224,7 @@ import {
   PRFAQ_CONCEPT_DEFINITION,
   PRFAQ_BUSINESS_MODEL_CANVAS,
   PRFAQ_KEY_CONTENT_EDUCATION,
+  PRFAQ_COMPANY_INFO,
 } from "../../../AtomStates";
 import {
   updateToolOnServer,
@@ -600,6 +601,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
   const [, setPrfaqSelectedConceptDefinition] = useAtom(PRFAQ_CONCEPT_DEFINITION);
   const [, setPrfaqSelectedBusinessModelCanvas] = useAtom(PRFAQ_BUSINESS_MODEL_CANVAS);
   const [, setPrfaqKeyContentEducation] = useAtom(PRFAQ_KEY_CONTENT_EDUCATION);
+  const [, setPrfaqCompanyInfo] = useAtom(PRFAQ_COMPANY_INFO);
 
   const saveConversation = (data) => {
     // 대화 저장 로직 구현
@@ -1537,6 +1539,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setPrfaqSelectedConceptDefinition( {});
         setPrfaqSelectedBusinessModelCanvas( []);
         setPrfaqKeyContentEducation([]);
+        setPrfaqCompanyInfo({});
         setCreditCreateToolLoaded(true);
         setPrfaqFinalReport(chatData?.prfaqFinalReportEducation || "");
         setPrfaqSelectedPurpose(chatData?.selectedPurposes || {});
@@ -1545,6 +1548,7 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
         setPrfaqSelectedBusinessModelCanvas(chatData?.selectedBusinessModelCanvas || []);
         setToolStep(chatData?.completedStep);
         setCompletedStatus(chatData?.completedStatus || false);
+        setPrfaqCompanyInfo(chatData?.companyInfo || {});
         
 
 
