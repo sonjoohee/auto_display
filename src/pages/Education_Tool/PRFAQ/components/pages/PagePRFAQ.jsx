@@ -1370,7 +1370,7 @@ const PagePRFAQ = () => {
                             }}
                           >
                             <Markdown>
-                              {prepareMarkdown(prfaqFinalReport.prfaq_final_report_faq ?? prfaqFinalReport)}
+                              {prepareMarkdown(prfaqFinalReport.prfaq_final_report_fqa ?? prfaqFinalReport)}
                             </Markdown>
                           </div>
                         )}
