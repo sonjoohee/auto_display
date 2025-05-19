@@ -1126,7 +1126,9 @@ const PagePRFAQ = () => {
                           disabled={
                             !selectedPurposes.customerList ||
                             !selectedPurposes.businessModelCanvas ||
-                            toolSteps >= 1 
+                            toolSteps >= 1  ||   !companyInfo.company || 
+                            !companyInfo.product || 
+                            !companyInfo.ceo
                           }
                         >
                           아이디어 방향성으로 전환
