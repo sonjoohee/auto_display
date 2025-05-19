@@ -107,6 +107,7 @@ import ParticipationTeamList2 from "../../components/Charts/ParticipationTeamLis
 import NoticeBoxContent from "../../components/Charts/NoticeBoxContent";
 import ResultTable from "../../components/Charts/ResultTable";
 import BusinessModelResult from "../../components/Charts/BusinessModelResult";
+import AddContentWriting from "../../components/Charts/AddContentWriting";
 import { useAtom } from "jotai";
 import { KANO_MODEL_GRAPH_DATA } from "../../pages/AtomStates";
 
@@ -310,6 +311,7 @@ const PageStyleGuide = () => {
           <NoticeBoxContent />
           <ResultTable /> */}
           <BusinessModelResult />
+          <AddContentWriting />
         </FlexContainer>
         <MacroSegTag />
         <StakeHolderTag />

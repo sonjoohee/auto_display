@@ -1,7 +1,7 @@
 //디자인 감성 분석기
 import React, { useEffect, useState, useRef,  } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { useAtom } from "jotai";
 import { palette } from "../../../../../assets/styles/Palette";
 import AtomPersonaLoader from "../../../../Global/atoms/AtomPersonaLoader";
@@ -86,6 +86,12 @@ import WaitLongLodingBar from "../../../../../components/Charts/WaitLongLodingBa
 import MoleculeGraphChartScale11 from "../molecules/MoleculeGraphChartScale11";
 import MoleculeBarChartLikertScale11 from "../molecules/MoleculeBarChartLikertScale11";
 import MoleculeConceptSelectCard from "../molecules/MoleculeConceptSelectCard";
+
+const GlobalStyle = createGlobalStyle`
+  .markdown-body p {
+    margin-bottom: 12px !important;
+  }
+`;
 
 const PageNps = () => {
   const navigate = useNavigate();
@@ -1657,7 +1663,7 @@ const PageNps = () => {
 
       {showPopup && (
         <>
-          <InterviewPopup>
+          <StyledInterviewPopup>
             <div style={{ 
               maxWidth: "700px",  // 기존 450px에서 변경 (원하는 크기로 조정)
               width: "100%",
@@ -1696,9 +1702,17 @@ const PageNps = () => {
               }}>
                 <div>
                   <div
-                    className="markdown-body"
+                    className="markdown-body core-value-section"
                     style={{
-                      textAlign: "left"
+                      color: palette.gray800,
+                      textAlign: "left",
+                      "& h1, & h2, & h3, & h4, & h5, & h6": {
+                        marginBottom: "0px",
+                        marginTop: "0px"
+                      },
+                      "& h1 + p, & h2 + p, & h3 + p, & h4 + p, & h5 + p, & h6 + p": {
+                        marginTop: "12px"
+                      }
                     }}
                   >
                     <Markdown>
@@ -1708,7 +1722,7 @@ const PageNps = () => {
                 </div>
               </div>
             </div>
-          </InterviewPopup>
+          </StyledInterviewPopup>
         </>
       )}
 
@@ -2249,4 +2263,49 @@ const LoadingContainer = styled.div`
 const LoadingText = styled(Body2)`
   margin-top: 12px;
   text-align: center;
+`;
+
+const StyledInterviewPopup = styled(InterviewPopup)`
+  .markdown-body {
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 0px;
+      margin-bottom: 12px;
+      color: ${palette.gray800};
+      font-weight: 600;
+    }
+    
+    h1:first-child, h2:first-child, h3:first-child {
+      margin-top: 0;
+    }
+    
+    h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
+      margin-top: 12px;
+    }
+    
+    p {
+      margin-bottom: 8px;
+    }
+    
+    h1 {
+      font-size: 24px;
+    }
+    
+    h2 {
+      font-size: 20px;
+    }
+    
+    h3 {
+      font-size: 18px;
+    }
+  }
+
+  /* 핵심 가치 섹션의 마지막 p 태그에 마진 추가 */
+  .core-value-section h2:nth-of-type(4) ~ p:last-of-type {
+    margin-bottom: 12px !important;
+  }
+
+  /* 4번 영역과 5번 영역 사이의 간격 명시적 지정 */
+  h2:nth-of-type(4) ~ h2:nth-of-type(5) {
+    margin-top: 20px; /* 4번 영역 하단과 5번 영역 상단 사이 간격 */
+  }
 `;
