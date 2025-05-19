@@ -486,9 +486,9 @@ const PageBusinessModelCanvas = () => {
         return newSelected;
       } else {
         // 새로운 아이템 추가
-        if (currentSelected.length >= 3) {
-          return currentSelected; // 3개 이상이면 현재 상태 유지
-        }
+        // if (currentSelected.length >= 3) {
+        //   return currentSelected; // 3개 이상이면 현재 상태 유지
+        // }
         const newSelected = [...currentSelected, ideaId];
         // 선택된 옵션 추가
         setBMCanvasSelectedPopupOptions(prevOptions => {
