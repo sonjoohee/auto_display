@@ -1079,6 +1079,7 @@ const businessModelItems = [
                     <div
                       className="markdown-body"
                       style={{
+                        color: palette.gray800,
                         textAlign: "left", marginTop: "40px"
                       }}
                     >
@@ -1410,6 +1411,29 @@ const InsightAnalysis = styled.div`
     flex-direction: column;
     gap: 12px;
     text-align: left;
+  }
+  
+  /* 마크다운 스타일 추가 */
+  .markdown-body {
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 0px;       /* 타이틀 위 여백 */
+      margin-bottom: 8px;    /* 타이틀 아래 여백 */
+    }
+    
+    /* 첫 번째 헤딩은 상단 여백 없음 */
+    h1:first-child, h2:first-child, h3:first-child {
+      margin-top: 0;
+    }
+    
+    /* 헤딩과 바로 아래 단락 사이 여백 */
+    h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
+      margin-top: 12px;       /* 타이틀과 본문 사이 여백 */
+    }
+    
+    /* 단락 사이 여백 */
+    p {
+      margin-bottom: 8px;    /* 단락 아래 여백 */
+    }
   }
 `;
 

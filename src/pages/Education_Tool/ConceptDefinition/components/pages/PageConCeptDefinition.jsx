@@ -1217,25 +1217,33 @@ const InsightAnalysis = styled.div`
     color: ${palette.gray800};
     font-family: "Pretendard";
     line-height: 1.65;
-    /* white-space: pre-wrap; */
-    /* max-width: 980px; */
-    /* padding: 45px; */
-    /* &,
-    p,
-    li,
-    ul,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    strong,
-    em,
-    span,
-    div {
-      color: ${palette.gray800}; 
-    } */
+    
+    /* 헤딩 요소 간의 간격 조절 */
+    h1 {
+      margin-top: 40px;       /* 대제목 위 여백 */
+      margin-bottom: 24px;    /* 대제목 아래 여백 */
+    }
+    
+    h2 {
+      margin-top: 32px;       /* 중제목 위 여백 */
+      margin-bottom: 16px;    /* 중제목 아래 여백 */
+    }
+    
+    h3 {
+      margin-top: 24px;       /* 소제목 위 여백 */
+      margin-bottom: 12px;    /* 소제목 아래 여백 */
+    }
+    
+    /* 연속된 헤딩 요소 사이의 간격 조절 */
+    h1 + h2, h2 + h3 {
+      margin-top: 16px;       /* 대제목 바로 다음에 오는 중제목의 상단 여백 */
+    }
+    
+    /* 본문과 다음 제목 사이의 간격 */
+    p + h1, p + h2, p + h3 {
+      margin-top: 32px;       /* 본문 다음에 오는 제목의 상단 여백 */
+    }
+    
     @media (max-width: 767px) {
       padding: 15px;
     }

@@ -422,7 +422,7 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClic
           <div style={{
             fontFamily: 'Pretendard, sans-serif',
             fontSize: '16px',
-            fontWeight: 600,
+            fontWeight: 500,
             lineHeight: '1.55em',
             letterSpacing: '-0.03em',
             textAlign: 'center',
