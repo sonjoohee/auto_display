@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const PRIMARY_COLOR = '#226FFF';
@@ -57,7 +57,7 @@ const ChatInputBox = styled.input`
   background: #fff;
   border: 1px solid #E0E4EB;
   border-radius: 10px;
-  padding: 8px 44px 8px 12px;
+  padding: 8px 12px;
   font-family: 'Pretendard', Poppins;
   font-size: 16px;
   color: #222;
@@ -73,32 +73,6 @@ const ChatInputBox = styled.input`
   }
 `;
 
-const CheckButton = styled.button`
-  background: none;
-  border: none;
-  padding: 0;
-  width: 40px;
-  height: 57px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  outline: none !important;
-  position: absolute;
-  right: 4px;
-  top: 0;
-`;
-
-const CheckMarkIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 12L10 17L19 8"
-      stroke={PRIMARY_COLOR}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round" />
-  </svg>
-);
-
 const MoleculeAddContentWriting = ({
   company = '',
   product = '',
@@ -106,54 +80,33 @@ const MoleculeAddContentWriting = ({
   onSendChat = () => {},
   disabled = false,
 }) => {
-  // value: 현재 입력값, submitted: 마지막 제출값, showCheck: 체크표시 노출 여부
-  const [companyState, setCompanyState] = useState({ value: company, submitted: company, showCheck: false });
-  const [productState, setProductState] = useState({ value: product, submitted: product, showCheck: false });
-  const [ceoState, setCeoState] = useState({ value: ceo, submitted: ceo, showCheck: false });
+  // 각 필드의 입력값 관리
+  const [companyValue, setCompanyValue] = useState(company);
+  const [productValue, setProductValue] = useState(product);
+  const [ceoValue, setCeoValue] = useState(ceo);
 
-  // 입력값 변경 시 체크표시 노출
+  // 입력값이 변경될 때 처리
   const handleChange = (field, value) => {
-    if (field === 'company') setCompanyState(s => ({ ...s, value, showCheck: true }));
-    if (field === 'product') setProductState(s => ({ ...s, value, showCheck: true }));
-    if (field === 'ceo') setCeoState(s => ({ ...s, value, showCheck: true }));
-  };
-
-  // 포커스 시 체크표시 노출
-  const handleFocus = (field) => {
-    if (field === 'company') setCompanyState(s => ({ ...s, showCheck: true }));
-    if (field === 'product') setProductState(s => ({ ...s, showCheck: true }));
-    if (field === 'ceo') setCeoState(s => ({ ...s, showCheck: true }));
-  };
-
-  // 체크 클릭 시: 체크표시 숨기고, 입력값을 submitted로 저장, onSendChat 호출
-  const handleSend = (field) => {
     if (field === 'company') {
-      const v = companyState.value.trim();
-      if (v) {
-        setCompanyState({ value: v, submitted: v, showCheck: false });
-        onSendChat(field, v);
-      }
+      setCompanyValue(value);
+      onSendChat(field, value);  // 입력값이 변경될 때마다 바로 상위 컴포넌트에 전달
     }
     if (field === 'product') {
-      const v = productState.value.trim();
-      if (v) {
-        setProductState({ value: v, submitted: v, showCheck: false });
-        onSendChat(field, v);
-      }
+      setProductValue(value);
+      onSendChat(field, value);  // 입력값이 변경될 때마다 바로 상위 컴포넌트에 전달
     }
     if (field === 'ceo') {
-      const v = ceoState.value.trim();
-      if (v) {
-        setCeoState({ value: v, submitted: v, showCheck: false });
-        onSendChat(field, v);
-      }
+      setCeoValue(value);
+      onSendChat(field, value);  // 입력값이 변경될 때마다 바로 상위 컴포넌트에 전달
     }
   };
 
-  // 엔터 입력 시 체크와 동일하게 동작
-  const handleKeyDown = (field, e) => {
-    if (e.key === 'Enter') handleSend(field);
-  };
+  // company, product, ceo props가 변경되면 내부 상태도 업데이트
+  useEffect(() => {
+    setCompanyValue(company);
+    setProductValue(product);
+    setCeoValue(ceo);
+  }, [company, product, ceo]);
 
   return (
     <Wrapper>
@@ -164,24 +117,12 @@ const MoleculeAddContentWriting = ({
             <ChatInputBox
               id="company"
               name="company"
-              value={companyState.value}
+              value={companyValue}
               onChange={e => handleChange('company', e.target.value)}
-              onFocus={() => handleFocus('company')}
               placeholder="회사명을 입력하세요"
               autoComplete="off"
-              onKeyDown={e => handleKeyDown('company', e)}
               disabled={disabled}
             />
-            {companyState.showCheck && (
-              <CheckButton
-                type="button"
-                onClick={() => handleSend('company')}
-                tabIndex={-1}
-                aria-label="회사명 채팅 전송"
-              >
-                <CheckMarkIcon />
-              </CheckButton>
-            )}
           </InputRow>
         </FieldRow>
         <FieldRow>
@@ -190,24 +131,12 @@ const MoleculeAddContentWriting = ({
             <ChatInputBox
               id="product"
               name="product"
-              value={productState.value}
+              value={productValue}
               onChange={e => handleChange('product', e.target.value)}
-              onFocus={() => handleFocus('product')}
               placeholder="제품명을 입력하세요"
               autoComplete="off"
-              onKeyDown={e => handleKeyDown('product', e)}
               disabled={disabled}
             />
-            {productState.showCheck && (
-              <CheckButton
-                type="button"
-                onClick={() => handleSend('product')}
-                tabIndex={-1}
-                aria-label="제품명 채팅 전송"
-              >
-                <CheckMarkIcon />
-              </CheckButton>
-            )}
           </InputRow>
         </FieldRow>
         <FieldRow>
@@ -216,24 +145,12 @@ const MoleculeAddContentWriting = ({
             <ChatInputBox
               id="ceo"
               name="ceo"
-              value={ceoState.value}
+              value={ceoValue}
               onChange={e => handleChange('ceo', e.target.value)}
-              onFocus={() => handleFocus('ceo')}
               placeholder="대표자명을 입력하세요"
               autoComplete="off"
-              onKeyDown={e => handleKeyDown('ceo', e)}
               disabled={disabled}
             />
-            {ceoState.showCheck && (
-              <CheckButton
-                type="button"
-                onClick={() => handleSend('ceo')}
-                tabIndex={-1}
-                aria-label="대표자명 채팅 전송"
-              >
-                <CheckMarkIcon />
-              </CheckButton>
-            )}
           </InputRow>
         </FieldRow>
       </FieldsFrame>
