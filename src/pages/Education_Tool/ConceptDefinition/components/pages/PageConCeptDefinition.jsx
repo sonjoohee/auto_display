@@ -919,7 +919,7 @@ const PageConceptDefinition = () => {
                           alignItems: "center",
                         }}
                       >
-                        <AtomPersonaLoader message={`페르소나와 핵심 가치를 분석 중이예요 ...`} />
+                        <AtomPersonaLoader message={`페르소나와 핵심 가치를 분석 중이에요`} />
                       </div>
                     ) : (
                       <InsightAnalysis>
@@ -1215,7 +1215,7 @@ const InsightAnalysis = styled.div`
     box-sizing: border-box;
     min-width: 200px;
     color: ${palette.gray800};
-    font-family: "Pretendard";
+    font-family: "Pretendard", "Poppins";
     line-height: 1.65;
     
     /* 헤딩 요소 간의 간격 조절 */
@@ -1225,7 +1225,7 @@ const InsightAnalysis = styled.div`
     }
     
     h2 {
-      margin-top: 32px;       /* 중제목 위 여백 */
+      margin-top: -20px;       /* 중제목 위 여백 */
       margin-bottom: 16px;    /* 중제목 아래 여백 */
     }
     
@@ -1241,7 +1241,7 @@ const InsightAnalysis = styled.div`
     
     /* 본문과 다음 제목 사이의 간격 */
     p + h1, p + h2, p + h3 {
-      margin-top: 32px;       /* 본문 다음에 오는 제목의 상단 여백 */
+      margin-top: 20px;       /* 본문 다음에 오는 제목의 상단 여백 */
     }
     
     @media (max-width: 767px) {

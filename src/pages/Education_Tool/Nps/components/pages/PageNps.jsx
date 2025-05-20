@@ -1467,7 +1467,7 @@ const PageNps = () => {
                       <BgBoxItem primaryLightest>
                         <H3 color="gray800">NPS 결과 분석</H3>
                         <Body3 color="gray800">
-                          페르소나의 점수와 의견을 종합하여 결과를를
+                          페르소나의 점수와 의견을 종합하여 결과를
                           정리했습니다.
                         </Body3>
                       </BgBoxItem>
@@ -2143,7 +2143,7 @@ export const CheckCircle = styled.input`
 const InsightContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 32px;
   border: 1px solid #e0e4e8;
   border-radius: 10px;
   padding: 16px;
@@ -2152,9 +2152,9 @@ const InsightContainer = styled.div`
 const InsightSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
   border-bottom: 1px solid #e0e4e8;
-  padding-bottom: 16px;
+  padding-bottom: 32px; // 원하는 값으로 변경
 
   &:last-child {
     border-bottom: none;
@@ -2273,32 +2273,16 @@ const StyledInterviewPopup = styled(InterviewPopup)`
       color: ${palette.gray800};
       font-weight: 600;
     }
-    
-    h1:first-child, h2:first-child, h3:first-child {
-      margin-top: 0;
+    p, li, span {
+      line-height: 1.55; /* 원하는 행간 값으로 통일 */
     }
-    
-    h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
-      margin-top: 12px;
-    }
-    
     p {
       margin-bottom: 8px;
     }
-    
-    h1 {
-      font-size: 24px;
-    }
-    
-    h2 {
-      font-size: 20px;
-    }
-    
-    h3 {
-      font-size: 18px;
-    }
+    h1 { font-size: 24px; }
+    h2 { font-size: 20px; }
+    h3 { font-size: 18px; }
   }
-
   /* 핵심 가치 섹션의 마지막 p 태그에 마진 추가 */
   .core-value-section h2:nth-of-type(4) ~ p:last-of-type {
     margin-bottom: 12px !important;

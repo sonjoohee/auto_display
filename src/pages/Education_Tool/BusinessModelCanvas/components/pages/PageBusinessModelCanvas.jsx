@@ -1434,6 +1434,10 @@ const InsightAnalysis = styled.div`
     p {
       margin-bottom: 8px;    /* 단락 아래 여백 */
     }
+
+    p, li, span {
+      line-height: 1.55; /* 또는 1.6, 1.55 등 원하는 값 */
+    }
   }
 `;
 

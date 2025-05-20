@@ -818,7 +818,7 @@ const PagePRFAQ = () => {
                 <span>01</span>
                 <div className="text">
                   <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
-                  기초 데이터 가져오기
+                  기초 정보 분석
                   </Body1>
                   {/* <Body1 color={activeTab >= 1 ? "gray700" : "gray300"}>
                     Question Select
@@ -1059,6 +1059,10 @@ const PagePRFAQ = () => {
 
                        
                       </TabContent5Item>
+                      <div className="title">
+                          <Body1 color="gray700">완성도 높은 결과물을 위해 아래 기본 정보를 입력해주세요 </Body1>
+                        </div>
+
                       <MoleculeAddContentWriting style={{marginTop: "50px"}}
                         company = {companyInfo.company}
                         product = {companyInfo.product}
@@ -1131,7 +1135,7 @@ const PagePRFAQ = () => {
                             !companyInfo.ceo
                           }
                         >
-                          아이디어 방향성으로 전환
+                          다음
                         </Button>
              
                   
@@ -1216,7 +1220,7 @@ const PagePRFAQ = () => {
 
                     <div
                           className="selectBoxWrap"
-                          style={{ marginTop: "12px" }}
+                          style={{ marginTop: "8px" }}
                         >
                           <Body2
                             color="gray500"
@@ -1489,8 +1493,7 @@ const PagePRFAQ = () => {
                       }}
                     >
                       <AtomPersonaLoader
-                        message={`핵심 내용을 기반으로 PRFAQ 최종본을 작성하고 있어요.
-                          1분 정도 소요 될 수 있어요.`}
+                        message={`핵심 내용을 기반으로 PRFAQ 최종본을 작성하고 있어요.`}
                       />
                     </div>
                   ) : (
@@ -1505,7 +1508,9 @@ const PagePRFAQ = () => {
 
                       <InsightAnalysis>
                         <div className="title">
-                          <div>
+                          <div style={{
+                            marginBottom: "20px",
+                          }}>
                             <TabWrapType4>
                               <TabButtonType4
                                 active={activeDesignTab === "PR"}
@@ -1717,19 +1722,28 @@ const InsightAnalysis = styled.div`
   flex-direction: column;
   gap: 20px;
   width: 100%;
+  text-align: left;
 
-  .title {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .content {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    text-align: left;
+  /* GitHub Markdown 스타일 적용 */
+  .markdown-body {
+    box-sizing: border-box;
+    min-width: 200px;
+    color: ${palette.gray800};
+    font-family: "Pretendard";
+    line-height: 1.55;
+    
+    /* 모든 텍스트 요소에 동일한 line-height 적용 */
+    p, li, span, div, ul, ol {
+      line-height: 1.55;
+    }
+    
+    /* 헤딩 요소 간의 간격 조절 */
+    h1 {
+      margin-top: 40px;
+      margin-bottom: 24px;
+    }
+    
+    // ... 기존 스타일 유지 ...
   }
 `;
 

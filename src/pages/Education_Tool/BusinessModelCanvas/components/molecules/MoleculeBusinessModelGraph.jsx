@@ -420,7 +420,7 @@ const ModelBox = ({ title, id, items = [], onClick, isSelected, isActive, isClic
           </ItemList>
         ) : (
           <div style={{
-            fontFamily: 'Pretendard, sans-serif',
+            fontFamily: 'Pretendard, Poppins',
             fontSize: '16px',
             fontWeight: 500,
             lineHeight: '1.55em',
@@ -639,9 +639,9 @@ const CheckMark = styled.div`
 `;
 
 const ItemText = styled.div`
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard', 'Poppins';
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.55em;
   letter-spacing: -0.03em;
   color: ${palette.gray700};
