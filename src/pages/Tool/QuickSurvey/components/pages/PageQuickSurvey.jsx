@@ -1148,7 +1148,32 @@ const [eventState] = useAtom(EVENT_STATE);
       };
 
       // API 호출
-      const response = await InterviewXQuickSurveyRequest(data, isLoggedIn);
+      let response = await InterviewXQuickSurveyRequest(data, isLoggedIn);
+
+      const maxAttempts = 10;
+            let attempts = 0;
+    
+            while (
+              attempts < maxAttempts && (
+                !response ||
+                !response?.response ||
+                !response?.response?.quick_survey_custom_question ||
+                typeof response?.response?.quick_survey_custom_question !== 'object'
+                 
+              )
+            ) {
+
+              response = await InterviewXQuickSurveyRequest(
+                data,
+                isLoggedIn
+              );  
+              attempts++;
+               }
+          
+                if (attempts >= maxAttempts) {
+                    setShowPopupError(true);
+                    return;
+                }
 
       // 응답에서 받은 옵션 중 사용자가 입력한 옵션 수만큼만 사용
       const refinedQuestion = response.response.quick_survey_custom_question;

@@ -84,9 +84,6 @@ const MoleculeAddContentWriting = ({
   const [companyValue, setCompanyValue] = useState(company);
   const [productValue, setProductValue] = useState(product);
   const [ceoValue, setCeoValue] = useState(ceo);
-   console.log("companyValue",companyValue) 
-   console.log("productValue",productValue)
-   console.log("ceoValue",ceoValue)
 
   // 입력값이 변경될 때 처리
   const handleChange = (field, value) => {

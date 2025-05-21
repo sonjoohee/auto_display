@@ -177,7 +177,7 @@ const PagePRFAQ = () => {
     window.scrollTo(0, 0);
   }, []);
 
-console.log(companyInfo)
+
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
@@ -219,7 +219,6 @@ console.log(companyInfo)
           setPrfaqKeyContentEducation(prfaqKeyContentEducation || []);
         }
         if(Object.keys(prfaqCompanyInfo).length > 0){
-          console.log("prfaqCompanyInfo222222",prfaqCompanyInfo)
           setCompanyInfo(prfaqCompanyInfo || {});
         }
         if(Object.keys(prfaqSelectedPurpose).length > 0){
@@ -456,7 +455,6 @@ console.log(companyInfo)
       // setIdeaEvaluateComparisonEducation(response.response.idea_evaluation_comparison_education)
       setPrfaqKeyContentEducation(response.response.prfaq_key_content_education)
     
-       console.log("compnayinfosave",companyInfo)
       const responseToolId = await createToolOnServer(
         {
           projectId: project._id,
@@ -867,16 +865,6 @@ console.log(companyInfo)
                                     //   toolSteps >= 1 
                                     // }
                                     key={index}
-                                    // onClick={() => {
-                                    //   handlePurposeSelect(
-                                    //     `${item.updateDate.split(":")[0]}:${
-                                    //       item.updateDate.split(":")[1]
-                                    //     } - 컨셉 정의서
-                                    // `,
-                                    //     "customerList",
-                                    //     item
-                                    //   );
-                                    // }}
                                     onClick={() => {
                                       handleConceptDefinitionSelect(
                                           `${item.personaTitle} (${item.updateDate.split(":")[0]}:${item.updateDate.split(":")[1]}) `,
@@ -956,16 +944,6 @@ console.log(companyInfo)
                                     //   toolSteps >= 1 
                                     // }
                                     key={index}
-                                    // onClick={() => {
-                                    //   handlePurposeSelect(
-                                    //     `${item.updateDate.split(":")[0]}:${
-                                    //       item.updateDate.split(":")[1]
-                                    //     } - 비즈니스 모델 캔버스 
-                                    // `,
-                                    //     "businessModelCanvas",
-                                    //     item
-                                    //   );
-                                    // }}
                                     onClick={() => {
                                       handleBusinessModelCanvasSelect(
                                         ` 비즈니스 모델 캔버스 (${item.updateDate.split(":")[0]}:${item.updateDate.split(":")[1]})`,
@@ -1017,48 +995,7 @@ console.log(companyInfo)
                       />
 
 
-                      {/* {isLoading ? (
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                        minHeight: "200px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <AtomPersonaLoader message="로딩 중..." />
-                    </div>
-                  // ) : !showKanoModelList ? (
-                  //   <BoxWrap
-                  //     NoData
-                  //     style={{ height: "300px" }}
-                  //   >
-                  //     <img src={images.PeopleFillPrimary2} alt="" />
-                  //     <Body2 color="gray700" align="center !important">
-                  //     Kano Model 결과가 보여집니다.
-                  //     </Body2>
-                     
-                  //   </BoxWrap>
-                  ) : (
-                    <>
-                    <InsightAnalysis>
-                    <div
-                      className="markdown-body"
-                      style={{
-                        textAlign: "left",
-                      }}
-                    >
-                      <Markdown>
-                        {prepareMarkdown(
-                        ideaEvaluateComparisonEducation ?? ""
-                        )}
-                      </Markdown>
-                    </div>
-                  </InsightAnalysis>
-
-                    </>
-                  )} */}
+                    
                     </TabContent5Item>
                   </div>   
                         <Button
@@ -1068,12 +1005,12 @@ console.log(companyInfo)
                           Round
                           onClick={handleSubmit}
                           disabled={
-                            !selectedPurposes.customerList ||           // 컨셉 정의서 선택 여부
-                            !selectedPurposes.businessModelCanvas ||    // 비즈니스 모델 캔버스 선택 여부
-                            toolSteps >= 1 ||                          // 이미 완료된 단계인지 여부
-                            !companyInfo.company?.trim() ||            // 회사명 입력 여부
-                            !companyInfo.product?.trim() ||            // 제품명 입력 여부
-                            !companyInfo.ceo?.trim()                   // 대표자명 입력 여부
+                            !selectedPurposes.customerList ||         
+                            !selectedPurposes.businessModelCanvas || 
+                            toolSteps >= 1 ||               
+                            !companyInfo.company?.trim() ||           
+                            !companyInfo.product?.trim() ||         
+                            !companyInfo.ceo?.trim()                   
                           }
                         >
                           다음
