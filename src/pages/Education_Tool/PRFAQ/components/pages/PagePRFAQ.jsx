@@ -547,7 +547,7 @@ const PagePRFAQ = () => {
           selectedConceptDefinition: prfaqConceptDefinition.conceptDefinitionFinalReport,
           selectedBusinessModelCanvas: prfaqBusinessModelCanvas.bmCanvasGraphItems,
           selectedPurposes: selectedPurposes,
-          company_info: companyInfo,
+          companyInfo: companyInfo,
         },
         isLoggedIn
       );
