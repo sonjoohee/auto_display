@@ -224,11 +224,7 @@ const PagePRFAQ = () => {
     residence: "",
     income: "",
   });
-  const [companyInfo, setCompanyInfo] = useState({
-    company: "",
-    product: "",
-    ceo: "",
-  });
+  const [companyInfo, setCompanyInfo] = useAtom(PRFAQ_COMPANY_INFO);
   const [interviewModeType, setInterviewModeType] = useState("");
   const [isLoadingPreset, setIsLoadingPreset] = useState(false);
   const [selectedPresetCards, setSelectedPresetCards] = useState({});
@@ -795,8 +791,17 @@ const PagePRFAQ = () => {
     setShowCreatePersonaPopup(false);
   };
 
-
-
+  useEffect(() => {
+    // 페이지에 들어왔을 때 입력란 초기화
+    setCompanyInfo({
+      company: '',
+      product: '',
+      ceo: ''
+    });
+    
+    // 주의: 여기서는 setPrfaqCompanyInfo({})와 같은 전역 상태는
+    // 초기화하지 않음 (그것이 저장된 데이터일 수 있음)
+  }, []);
 
   return (
     <>
@@ -1063,18 +1068,24 @@ const PagePRFAQ = () => {
                           <Body1 color="gray700">완성도 높은 결과물을 위해 아래 기본 정보를 입력해주세요 </Body1>
                         </div>
 
-                      <MoleculeAddContentWriting style={{marginTop: "50px"}}
-                        company = {companyInfo.company}
-                        product = {companyInfo.product}
-                        ceo = {companyInfo.ceo}
+                      <MoleculeAddContentWriting 
+                        style={{marginTop: "50px"}}
+                        company={companyInfo.company || ''}
+                        product={companyInfo.product || ''}
+                        ceo={companyInfo.ceo || ''}
                         onSendChat={(field, value) => {
-                          setCompanyInfo(prev => ({
-                            ...prev,
-                            [field]: value
-                          }));
+                          console.log(`Field ${field} updated with value: ${value}`);
+                          setCompanyInfo(prev => {
+                            const newState = {
+                              ...prev,
+                              [field]: value
+                            };
+                            console.log('Updated companyInfo:', newState);
+                            return newState;
+                          });
                         }}
                         disabled={toolSteps >= 1}
-                          />
+                      />
 
 
                       {/* {isLoading ? (
@@ -1128,11 +1139,12 @@ const PagePRFAQ = () => {
                           Round
                           onClick={handleSubmit}
                           disabled={
-                            !selectedPurposes.customerList ||
-                            !selectedPurposes.businessModelCanvas ||
-                            toolSteps >= 1  ||   !companyInfo.company || 
-                            !companyInfo.product || 
-                            !companyInfo.ceo
+                            !selectedPurposes.customerList ||           // 컨셉 정의서 선택 여부
+                            !selectedPurposes.businessModelCanvas ||    // 비즈니스 모델 캔버스 선택 여부
+                            toolSteps >= 1 ||                          // 이미 완료된 단계인지 여부
+                            !companyInfo.company?.trim() ||            // 회사명 입력 여부
+                            !companyInfo.product?.trim() ||            // 제품명 입력 여부
+                            !companyInfo.ceo?.trim()                   // 대표자명 입력 여부
                           }
                         >
                           다음
