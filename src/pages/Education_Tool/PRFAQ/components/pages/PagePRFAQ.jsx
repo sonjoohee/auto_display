@@ -108,99 +108,37 @@ const PagePRFAQ = () => {
   const navigate = useNavigate();
 
   const [toolId, setToolId] = useAtom(TOOL_ID);
-  const [prfaqCompanyInfo, setPrfaqCompanyInfo] = useAtom(PRFAQ_COMPANY_INFO);
+  const [prfaqCompanyInfo, ] = useAtom(PRFAQ_COMPANY_INFO);
   const [completedStatus, setCompletedStatus] = useAtom(EDUCATION_TOOL_COMPLETED_STATUS);
-  const [creditCreateToolLoaded, setCreditCreateToolLoaded] = useAtom(CREDIT_CREATE_TOOL_LOADED);
+  const [creditCreateToolLoaded, ] = useAtom(CREDIT_CREATE_TOOL_LOADED);
   const [userCredits, setUserCredits] = useAtom(USER_CREDITS);
   const [showCreditPopup, setShowCreditPopup] = useState(false);
   const [eventState] = useAtom(EVENT_STATE);
   const [trialState] = useAtom(TRIAL_STATE);
   const [eventTitle] = useAtom(EVENT_TITLE);
-  const [creditCreateTool, setCreditCreateTool] = useAtom(CREDIT_CREATE_TOOL);
+  const [creditCreateTool, ] = useAtom(CREDIT_CREATE_TOOL);
   const [educationState] = useAtom(EDUCATION_STATE);
-  const [toolStep, setToolStep] = useAtom(TOOL_STEP);
+  const [toolStep, ] = useAtom(TOOL_STEP);
   const [toolLoading, setToolLoading] = useAtom(TOOL_LOADING);
   const [isLoggedIn] = useAtom(IS_LOGGED_IN);
   const [projectSaas] = useAtom(PROJECT_SAAS);
-  const[personaListSaas, setPersonaListSaas] = useAtom(PERSONA_LIST_SAAS);
-  const [quickSurveyAnalysis, setQuickSurveyAnalysis] = useAtom(
-    QUICK_SURVEY_ANALYSIS
-  );
-  const [ideaEvaluateSelectedListIndex, setIdeaEvaluateSelectedListIndex] = useAtom(IDEA_EVALUATE_SELECTED_LIST_INDEX);
-  const [ideaEvaluateComparisonEducation, setIdeaEvaluateComparisonEducation] = useAtom(IDEA_EVALUATE_COMPARISON_EDUCATION)
-  const [quickSurveySelectedQuestion, setQuickSurveySelectedQuestion] = useAtom(
-    QUICK_SURVEY_SELECTED_QUESTION
-  );
-  const [quickSurveyCustomGuide, setQuickSurveyCustomGuide] = useAtom(
-    QUICK_SURVEY_CUSTOM_GUIDE
-  );
-  const [quickSurveyPresetData, setQuickSurveyPresetData] = useAtom(
-    QUICK_SURVEY_PRESET_DATA
-  );
-  const [quickSurveyPersonaGroup, setquickSurveyPersonaGroup] = useAtom(
-    QUICK_SURVEY_PERSONA_GROUP
-  );
-  const [quickSurveyInterview, setQuickSurveyInterview] = useAtom(
-    QUICK_SURVEY_INTERVIEW
-  );
-  const [quickSurveySurveyMethod, setQuickSurveySurveyMethod] = useAtom(
-    QUICK_SURVEY_SURVEY_METHOD
-  );
-  const [quickSurveyDetailInfo] = useAtom(QUICK_SURVEY_DETAIL_INFO);
-  const [quickSurveyRecruitingCondition] = useAtom(
-    QUICK_SURVEY_RECRUITING_CONDITION
-  );
-  const [quickSurveyInterviewModeType] = useAtom(
-    QUICK_SURVEY_INTERVIEW_MODE_TYPE
-  );
-  const [quickSurveyReport, setQuickSurveyReport] =
-    useAtom(QUICK_SURVEY_REPORT);
-  const [quickSurveyStaticData, setQuickSurveyStaticData] = useAtom(
-    QUICK_SURVEY_STATIC_DATA
-  );
-  const [ideaEvaluateSelectedKanoModel, setIdeaEvaluateSelectedKanoModel] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL);
-  const [ideaEvaluateSelectedList, setIdeaEvaluateSelectedList] = useAtom(IDEA_EVALUATE_SELECTED_LIST);
-  const [ideaEvaluateList, setIdeaEvaluateList] = useAtom(IDEA_EVALUATE_LIST);
-  const [quickSurveyProjectDescription, setQuickSurveyProjectDescription] =
-    useAtom(QUICK_SURVEY_PROJECT_DESCRIPTION);
-  const [quickSurveyStaticDataState, setQuickSurveyStaticDataState] = useState(
-    {}
-  );
+  const [ideaEvaluateComparisonEducation, ] = useAtom(IDEA_EVALUATE_COMPARISON_EDUCATION)
+  const [ideaEvaluateSelectedList, ] = useAtom(IDEA_EVALUATE_SELECTED_LIST);
   const [prfaqConceptDefinition, setPrfaqConceptDefinition] = useAtom(PRFAQ_CONCEPT_DEFINITION);
   const [prfaqBusinessModelCanvas, setPrfaqBusinessModelCanvas] = useAtom(PRFAQ_BUSINESS_MODEL_CANVAS);
   const [prfaqKeyContentEducation, setPrfaqKeyContentEducation] = useAtom(PRFAQ_KEY_CONTENT_EDUCATION);
   const [prfaqFinalReport, setPrfaqFinalReport] = useAtom(PRFAQ_FINAL_REPORT_EDUCATION);
-  const [prfaqSelectedPurpose, setPrfaqSelectedPurpose] = useAtom(PRFAQ_SELECTED_PURPOSE);
-
-  const [ideaEvaluateSelectedKanoModelIndex, setIdeaEvaluateSelectedKanoModelIndex] = useAtom(IDEA_EVALUATE_SELECTED_KANO_MODEL_INDEX);
+  const [prfaqSelectedPurpose, ] = useAtom(PRFAQ_SELECTED_PURPOSE);
   const [showPopupSave, setShowPopupSave] = useState(false);
   const [showPopupError, setShowPopupError] = useState(false);
-  const [selectedQuestion, setSelectedQuestion] = useState([]);
   const [activeTab, setActiveTab] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]); // 완료된 단계를 추적
   const [businessDescription, setBusinessDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [activeDesignTab, setActiveDesignTab] = useState("PR");
   const [isLoadingReport, setIsLoadingReport] = useState(false);
-  const [isLoadingDetailSetting, setIsLoadingDetailSetting] = useState(false);
   const [showPopupFileSize, setShowPopupFileSize] = useState(false);
   const [toolSteps, setToolSteps] = useState(0);
-  const [projectDescription, setProjectDescription] = useState("");
-  const [descriptionLength, setDescriptionLength] = useState(0);
-  const [recruitingCondition, setRecruitingCondition] = useState("");
-  const [quickSurveyCustomQuestion, setQuickSurveyCustomQuestion] = useState(
-    []
-  );
-  const [
-    customerJourneyMapSelectedPersona,
-    setCustomerJourneyMapSelectedPersona,
-  ] = useState([]);
-  const [customPersonaForm, setCustomPersonaForm] = useState({
-    gender: "",
-    age: [],
-    residence: [],
-    income: [],
-  });
   const [selectBoxStates, setSelectBoxStates] = useState({
     customerList: false,
     businessModelCanvas: false,
@@ -213,24 +151,7 @@ const PagePRFAQ = () => {
     customerList: false,
     businessModelCanvas: false,
   });
-  const [, setContactForm] = useState({
-    email: "",
-    purpose: "",
-    content: "",
-  });
-  const [selectedValues, setSelectedValues] = useState({
-    gender: "",
-    age: "",
-    residence: "",
-    income: "",
-  });
   const [companyInfo, setCompanyInfo] = useAtom(PRFAQ_COMPANY_INFO);
-  const [interviewModeType, setInterviewModeType] = useState("");
-  const [isLoadingPreset, setIsLoadingPreset] = useState(false);
-  const [selectedPresetCards, setSelectedPresetCards] = useState({});
-  const [shouldRegenerate, setShouldRegenerate] = useState(false);
-  const [selectedPersona, setSelectedPersona] = useState(null);
-  const [showToast, setShowToast] = useState(false);
   const [selectedKanoModelData, setSelectedKanoModelData] = useState([]);
   const [showKanoModelList, setshowKanoModelList] = useState(false);
   const [ideaEvaluateSelect, setIdeaEvaluateSelect] = useState([]);
@@ -256,7 +177,7 @@ const PagePRFAQ = () => {
     window.scrollTo(0, 0);
   }, []);
 
-
+console.log(companyInfo)
   useEffect(() => {
     const interviewLoading = async () => {
       // 비즈니스 정보 설정 (Step 1)
@@ -298,6 +219,7 @@ const PagePRFAQ = () => {
           setPrfaqKeyContentEducation(prfaqKeyContentEducation || []);
         }
         if(Object.keys(prfaqCompanyInfo).length > 0){
+          console.log("prfaqCompanyInfo222222",prfaqCompanyInfo)
           setCompanyInfo(prfaqCompanyInfo || {});
         }
         if(Object.keys(prfaqSelectedPurpose).length > 0){
@@ -534,6 +456,7 @@ const PagePRFAQ = () => {
       // setIdeaEvaluateComparisonEducation(response.response.idea_evaluation_comparison_education)
       setPrfaqKeyContentEducation(response.response.prfaq_key_content_education)
     
+       console.log("compnayinfosave",companyInfo)
       const responseToolId = await createToolOnServer(
         {
           projectId: project._id,
@@ -791,17 +714,17 @@ const PagePRFAQ = () => {
     setShowCreatePersonaPopup(false);
   };
 
-  useEffect(() => {
-    // 페이지에 들어왔을 때 입력란 초기화
-    setCompanyInfo({
-      company: '',
-      product: '',
-      ceo: ''
-    });
+  // useEffect(() => {
+  //   // 페이지에 들어왔을 때 입력란 초기화
+  //   setCompanyInfo({
+  //     company: '',
+  //     product: '',
+  //     ceo: ''
+  //   });
     
-    // 주의: 여기서는 setPrfaqCompanyInfo({})와 같은 전역 상태는
-    // 초기화하지 않음 (그것이 저장된 데이터일 수 있음)
-  }, []);
+  //   // 주의: 여기서는 setPrfaqCompanyInfo({})와 같은 전역 상태는
+  //   // 초기화하지 않음 (그것이 저장된 데이터일 수 있음)
+  // }, []);
 
   return (
     <>
@@ -1073,16 +996,22 @@ const PagePRFAQ = () => {
                         company={companyInfo.company || ''}
                         product={companyInfo.product || ''}
                         ceo={companyInfo.ceo || ''}
+                        // onSendChat={(field, value) => {
+                        //   console.log(`Field ${field} updated with value: ${value}`);
+                        //   setCompanyInfo(prev => {
+                        //     const newState = {
+                        //       ...prev,
+                        //       [field]: value
+                        //     };
+                        //     console.log('Updated companyInfo:', newState);
+                        //     return newState;
+                        //   });
+                        // }}
                         onSendChat={(field, value) => {
-                          console.log(`Field ${field} updated with value: ${value}`);
-                          setCompanyInfo(prev => {
-                            const newState = {
-                              ...prev,
-                              [field]: value
-                            };
-                            console.log('Updated companyInfo:', newState);
-                            return newState;
-                          });
+                          setCompanyInfo(prev => ({
+                            ...prev,
+                            [field]: value
+                          }));
                         }}
                         disabled={toolSteps >= 1}
                       />

@@ -188,6 +188,7 @@ import {
   BUSINESS_MODEL_CANVAS_SELECTED_CONCEPT_DEFINITION,
   BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA,
   KANO_MODEL_INSIGHT,
+  PRFAQ_COMPANY_INFO,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -559,6 +560,7 @@ const PageToolListSaas = () => {
   const [, setBMCanvasInitialGraphData] = useAtom(
     BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA
   );
+  const [, setPrfaqCompanyInfo] = useAtom(PRFAQ_COMPANY_INFO);
   // 초기화 useEffect
   useEffect(() => {
     setCreditCreateToolLoaded(false);
@@ -778,6 +780,10 @@ const PageToolListSaas = () => {
     setBMCanvasInitialGraphData([]);
     setBMCanvasPopupOptions([]);
     setBMCanvasSelectedPopupOptions([]);
+
+    //prfaq education 초기화
+    setPrfaqCompanyInfo({});
+ 
   }, []); // 컴포넌트 마운트 시 한 번만 실행
 
   useEffect(() => {
