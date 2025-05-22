@@ -1683,9 +1683,9 @@ const OrganismToastPopupSingleChat = ({
                     marginBottom: '12px',
                   }}
                 >
-                  {/* img 태그 대신 SVG 직접 사용 */}
-                  <svg width="9" height="25" viewBox="0 0 9 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7.99985 1V23.5L1 16.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  {/* 새로운 SVG 디자인 적용 */}
+                  <svg width="16" height="25" viewBox="0 0 16 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.99985 1V23.5M7.99985 23.5L1 16.5M7.99985 23.5L14.9999 16.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </ScrollToBottomButton>
               )}
@@ -2695,8 +2695,8 @@ const ScrollToBottomButton = styled.button`
   
   /* SVG 스타일 */
   svg {
-    width: 9px;
+    width: 16px;
     height: 25px;
-    margin-left: 2px;
+    /* margin-left 제거하거나 필요에 따라 조정 */
   }
 `;
