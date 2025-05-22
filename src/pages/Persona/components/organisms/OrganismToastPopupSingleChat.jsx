@@ -145,6 +145,17 @@ const OrganismToastPopupSingleChat = ({
     useState(false);
   const [indepthInterviews, setIndepthInterviews] = useState({});
 
+  // contentsRef 및 상태 관리
+  const contentsRef = useRef(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
+  const [isNewContentAdded, setIsNewContentAdded] = useState(false);
+  const [allContentLoaded, setAllContentLoaded] = useState(false);
+  const [prevInterviewDataLength, setPrevInterviewDataLength] = useState(0);
+  const [hasScroll, setHasScroll] = useState(false);
+
+  // 파일 상단에 다음 추가 (다른 상태 변수들 근처에)
+  const questionRefs = useRef({});
+
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
@@ -907,16 +918,31 @@ const OrganismToastPopupSingleChat = ({
     setVisibleAnswers((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
+  const scrollToQuestion = (index) => {
+    // 해당 문항의 상태가 Pre인 경우 스크롤하지 않음
+    if (interviewStatus[index] === "Pre") return;
+    
+    // 해당 문항 요소가 있으면 스크롤
+    if (questionRefs.current[index]) {
+      questionRefs.current[index].scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   const renderInterviewItems = () => {
     return interviewQuestionListState.map((item, index) => {
       const status = interviewStatus[index] || "Pre";
       if (status === "Ing" || status === "Complete") {
         const elements = [];
 
-        // 기존 질문/답변 렌더링
         elements.push(
           <React.Fragment key={`main-${index}`}>
-            <ChatItem Moder>
+            <ChatItem 
+              Moder
+              ref={el => questionRefs.current[index] = el} // ref 추가
+            >
               <Persona Moder color="Gainsboro" size="Medium" Round>
                 <img src={personaImages.persona_moderator} alt="모더" />
                 <span>
@@ -1295,23 +1321,93 @@ const OrganismToastPopupSingleChat = ({
     setIsGeneratingIndepth(false);
   }
 
-  const contentsRef = useRef(null);
-
-  // 채팅 내용이 업데이트될 때마다 스크롤을 최하단으로 이동
-  useEffect(() => {
-    if (contentsRef.current) {
-      contentsRef.current.scrollTop = contentsRef.current.scrollHeight;
+  // 스크롤 가능한지와 현재 스크롤 위치 확인하는 함수
+  const checkScrollPosition = () => {
+    if (!contentsRef.current) return;
+    
+    const { scrollTop, scrollHeight, clientHeight } = contentsRef.current;
+    
+    // 스크롤이 필요한지 확인 (콘텐츠가 화면보다 큰지)
+    const needsScroll = scrollHeight > clientHeight;
+    setHasScroll(needsScroll);
+    
+    // 스크롤 위치 확인 (상단에 있는지)
+    const isAtBottom = scrollHeight - scrollTop - clientHeight < 50;
+    
+    // 스크롤이 필요하고 상단에 있을 때만 버튼 표시
+    if (needsScroll && !isAtBottom) {
+      setShowScrollButton(true);
+    } else if (isAtBottom || !needsScroll) {
+      setShowScrollButton(false);
     }
-  }, [
-    answers,
-    indepthInterviews,
-    isGenerating,
-    isGeneratingIndepth,
-    isGeneratingIndepthQuestion,
-    isAnalyzing, // 분석 중 상태 추가
-    isAnalysisComplete, // 분석 완료 상태 추가
-    showRegenerateButton2, // 재시도 버튼 표시 상태 추가
-  ]);
+  };
+
+  // 스크롤 이벤트 및 콘텐츠 변경 시 스크롤 체크
+  useEffect(() => {
+    const contentElement = contentsRef.current;
+    if (contentElement) {
+      // 초기 로드 및 업데이트 시 스크롤 체크
+      checkScrollPosition();
+      
+      // 스크롤 이벤트 리스너
+      contentElement.addEventListener('scroll', checkScrollPosition);
+      
+      // 창 크기 변경 시에도 스크롤 체크
+      window.addEventListener('resize', checkScrollPosition);
+      
+      return () => {
+        contentElement.removeEventListener('scroll', checkScrollPosition);
+        window.addEventListener('resize', checkScrollPosition);
+      };
+    }
+  }, [interviewDataState, interviewStatus]);
+
+  // 새 문항이 추가되었는지 감지
+  useEffect(() => {
+    // 모든 콘텐츠가 로딩 완료되었는지 확인
+    const allComplete = interviewStatus.length > 0 && 
+      interviewStatus.every(status => status === "Complete");
+    
+    if (allComplete) {
+      setAllContentLoaded(true);
+    }
+
+    // 새 메시지가 추가되었는지 확인
+    if (!isLoadingPrepare && interviewDataState.length > prevInterviewDataLength) {
+      console.log("New content detected");
+      
+      // 스크롤이 있고 사용자가 상단에 위치할 때만 애니메이션 표시
+      if (hasScroll && showScrollButton) {
+        // 기존 애니메이션이 있다면 제거 후 재설정
+        setIsNewContentAdded(false);
+        
+        // 약간의 딜레이 후 애니메이션 트리거
+        setTimeout(() => {
+          setIsNewContentAdded(true);
+          
+          // 애니메이션 완료 후 상태 리셋 (버튼은 계속 유지)
+          setTimeout(() => {
+            setIsNewContentAdded(false);
+          }, 2100);
+        }, 50);
+      }
+      
+      setPrevInterviewDataLength(interviewDataState.length);
+      
+      // 콘텐츠가 변경되었으므로 스크롤 상태 다시 확인
+      checkScrollPosition();
+    }
+  }, [interviewDataState.length, isLoadingPrepare, hasScroll, showScrollButton]);
+
+  // 스크롤 버튼 클릭 시 하단으로 이동하는 함수
+  const scrollToBottom = () => {
+    if (contentsRef.current) {
+      contentsRef.current.scrollTo({
+        top: contentsRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   const creditUse = async () => {
     // 팝업 닫기
@@ -1360,19 +1456,20 @@ const OrganismToastPopupSingleChat = ({
             </H4>
 
             <QuestionList>
-              {/* Dynamically displaying the interview questions */}
               {interviewQuestionListState.length > 0 ? (
                 interviewQuestionListState.map((item, index) => {
-                  const status = interviewStatus[index] || "Pre"; // 현재 질문의 상태를 가져옴
+                  const status = interviewStatus[index] || "Pre";
                   return (
                     <QuestionItem
                       key={index}
-                      checked={status === "Complete" ? true : item.checked} // Complete일 때 checked를 true로 설정
+                      checked={status === "Complete" ? true : item.checked}
                       disabled={status === "Pre"}
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
+                        cursor: status !== "Pre" ? "pointer" : "default" // 클릭 가능할 때 커서 변경
                       }}
+                      onClick={() => status !== "Pre" && scrollToQuestion(index)} // 클릭 이벤트 추가
                     >
                       <Sub2 color="gray800">
                         Q{index + 1}. {item.question}
@@ -1381,10 +1478,8 @@ const OrganismToastPopupSingleChat = ({
                         {status === "Complete" ? (
                           <img src={images.CheckGreen} alt="완료" />
                         ) : status === "Ing" ? (
-                          // 진행 중일 때 표시 (텍스트 제거)
                           <span></span>
                         ) : (
-                          // 준비 중일 때 표시 (텍스트 제거)
                           <span></span>
                         )}
                       </span>
@@ -1392,7 +1487,7 @@ const OrganismToastPopupSingleChat = ({
                   );
                 })
               ) : (
-                <Sub2 color="gray800">질문 문항을 불러오는 중입니다.</Sub2> // 질문이 없을 때 메시지 표시
+                <Sub2 color="gray800">질문 문항을 불러오는 중입니다.</Sub2>
               )}
             </QuestionList>
           </QuestionListWrap>
@@ -1577,6 +1672,22 @@ const OrganismToastPopupSingleChat = ({
                     <span onClick={handleCheckResult}>지금 확인하기</span>
                   </p>
                 </LoadingBox>
+              )}
+
+              {/* 스크롤 버튼 - SVG 아이콘 변경 */}
+              {(showScrollButton || (isNewContentAdded && hasScroll)) && (
+                <ScrollToBottomButton 
+                  onClick={scrollToBottom}
+                  isAnimating={isNewContentAdded}
+                  style={{
+                    marginBottom: '12px',
+                  }}
+                >
+                  {/* img 태그 대신 SVG 직접 사용 */}
+                  <svg width="9" height="25" viewBox="0 0 9 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.99985 1V23.5L1 16.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </ScrollToBottomButton>
               )}
             </Contents>
 
@@ -2532,4 +2643,60 @@ const AddQuestionTitle = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+`;
+
+// 스타일 컴포넌트 추가 (파일 하단)
+const poke = keyframes`
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 5px); }
+`;
+
+// 스크롤 버튼 스타일
+const ScrollToBottomButton = styled.button`
+  position: absolute;
+  left: 50%;
+  bottom: 80px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  
+  /* 기존 배경색 코드 유지 */
+  background: ${props => {
+    // palette.primary 색상에 불투명도 70% 적용
+    const color = palette.gray800;
+    if (color.startsWith('#')) {
+      const r = parseInt(color.slice(1, 3), 16);
+      const g = parseInt(color.slice(3, 5), 16);
+      const b = parseInt(color.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, 0.6)`;
+    } else if (color.startsWith('rgb')) {
+      return color.replace(/rgba?\(([^)]+)\)/, 'rgba($1, 0.7)');
+    }
+    return color;
+  }};
+  
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.3s ease;
+  
+  /* 애니메이션 적용 */
+  animation: ${props => props.isAnimating ? css`${poke} 0.5s ease-in-out 2` : 'none'};
+  
+  /* 호버 효과 수정 - 검은색 80% 불투명도로 */
+  &:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  
+  /* SVG 스타일 */
+  svg {
+    width: 9px;
+    height: 25px;
+    margin-left: 2px;
+  }
 `;
