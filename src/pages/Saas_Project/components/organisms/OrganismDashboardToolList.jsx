@@ -771,7 +771,7 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
           );
 
         case "ix_concept_definition_education":
-          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+          return tool.selectedPersonas?.map(persona => persona?.personaName || '').filter(name => name).join(", ") || "상세 내용 없음";
         case "ix_issue_generation_education":
           return (
             tool.issueGenerationProblemListTitle
@@ -794,11 +794,16 @@ const OrganismDashboardToolList = ({ toolListSaas }) => {
               .join("") || "상세 내용 없음"
           );
         case "ix_nps_education":
-          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+          return (
+            (tool.fileName?.length > 0 ? tool.fileName?.[0]?.name[0] : 
+      `${tool?.npsSelectedConcept?.[0]?.personaTitle} (${tool?.npsSelectedConcept?.[0]?.createDate})`) || "상세 내용 없음"
+          );
         case "ix_business_model_canvas_education":
-          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+          return tool.selectedConceptDefinition?.customerList || "상세 내용 없음";
         case "ix_prfaq_education":
-          return tool.fileName?.[0]?.name[0] || "상세 내용 없음";
+          return [tool.companyInfo?.company, tool.companyInfo?.product, tool.companyInfo?.ceo]
+          .filter(Boolean)
+          .join(", ") || "상세 내용 없음";
         default:
           return tool.type;
       }
