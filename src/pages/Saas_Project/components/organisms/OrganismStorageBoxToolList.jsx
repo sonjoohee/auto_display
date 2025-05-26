@@ -810,9 +810,9 @@ const OrganismStorageBoxToolList = ({ toolListSaas }) => {
               .join("") || "상세 내용 없음"
           );
         case "ix_prfaq_education":
-          return [tool.companyInfo?.company, tool.companyInfo?.product, tool.companyInfo?.ceo]
+          return [tool.companyInfo?.company, tool.companyInfo?.product]
           .filter(Boolean)
-          .join(", ") || "상세 내용 없음";
+          .join(" / ") || "상세 내용 없음";
         case "ix_business_model_canvas_education":
           return tool.selectedConceptDefinition?.customerList || "상세 내용 없음";
         case "ix_nps_education":
