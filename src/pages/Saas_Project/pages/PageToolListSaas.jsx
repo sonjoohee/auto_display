@@ -189,6 +189,7 @@ import {
   BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA,
   KANO_MODEL_INSIGHT,
   PRFAQ_COMPANY_INFO,
+  SINGLE_INTERVIEW_REPORT_TAB2,
 } from "../../AtomStates";
 import {
   ContentsWrap,
@@ -561,6 +562,9 @@ const PageToolListSaas = () => {
     BUSINESS_MODEL_CANVAS_INITIAL_GRAPH_DATA
   );
   const [, setPrfaqCompanyInfo] = useAtom(PRFAQ_COMPANY_INFO);
+  const [singleInterviewReportTab2, setSingleInterviewReportTab2] = useAtom(
+    SINGLE_INTERVIEW_REPORT_TAB2
+  );
   // 초기화 useEffect
   useEffect(() => {
     setCreditCreateToolLoaded(false);
@@ -673,6 +677,9 @@ const PageToolListSaas = () => {
     setToolId("");
     setCreditCreateToolLoaded(false);
     setToolLoading(false);
+
+    //인터뷰 초기화
+    setSingleInterviewReportTab2([]);
 
     // Target Discovery 관련 atom 초기화
     setTargetDiscoveryInfo({});
