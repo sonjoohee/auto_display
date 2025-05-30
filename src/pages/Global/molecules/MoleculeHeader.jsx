@@ -358,9 +358,9 @@ const MoleculeHeader = () => {
                 style={{ cursor: "pointer" }}
                 onClick={() => {
                   if (educationState) {
-                    navigate("/DCB-education");
+                    navigate("/Login");
                   } else {
-                    navigate("/");
+                    navigate("/Login");
                   }
                 }}
               >

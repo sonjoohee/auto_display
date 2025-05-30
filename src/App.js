@@ -20,106 +20,30 @@ import styled, { css } from "styled-components";
 import images from "./assets/styles/Images";
 import { palette } from "./assets/styles/Palette";
 
-import PageLogin from "./pages/Login_Sign/components/pages/PageLogin";
-import PageSignup from "./pages/Login_Sign/components/pages/PageSignup";
-import PageLoginSuccess from "./pages/Login_Sign/components/pages/PageLoginSuccess";
-import PageVerifyEmail from "./pages/Login_Sign/components/pages/PageVerifyEmail";
-import PageEmailVerified from "./pages/Login_Sign/components/pages/PageEmailVerified";
-import PageEmailVerificationFailed from "./pages/Login_Sign/components/pages/PageEmailVerificationFailed";
-import PageResetPassword from "./pages/Login_Sign/components/pages/PageResetPassword";
-import PageRequestResetPassword from "./pages/Login_Sign/components/pages/PageRequestResetPassword";
-import PagePayTest from "./pages/Purchase_Credit/components/pages/PagePayTest";
-import PageCompletedMail from "./pages/Login_Sign/components/pages/PageCompletedMail";
-
-import PageMeetAiExpert from "./pages/Meet_Ai_Expert/components/pages/PageMeetAiExpert";
-import PageExpertInsight from "./pages/Expert_Insight/components/pages/PageExpertInsight";
-import PageMarketingExpertInsight from "./pages/Expert_Insight/components/pages/PageMarketingExpertInsight";
-import PageMarketingLanding from "./pages/Marketing/components/pages/PageMarketingLanding";
-
-import PageMarketingYesItems from "./pages/Marketing/components/pages/PageMarketingYesItems";
-import PageMarketingNoItems from "./pages/Marketing/components/pages/PageMarketingNoItems";
-import PageMarketingNoItemsResult from "./pages/Marketing/components/pages/PageMarketingNoItemsResult";
-
-// 디자인페이지
-import PageConnetWithYouTarget from "./pages/Design_Page/PageConnetWithYourTargett";
-import PageBusinessAnalysis from "./pages/Design_Page/PageBusinessAnalysis";
-import PageCustomizePersona from "./pages/Design_Page/PageCustomizePersona";
-import PageWayInterview from "./pages/Design_Page/PageWayInterview";
-import PageInterviewResult from "./pages/Design_Page/PageInterviewResult";
-import PageRecreate from "./assets/styles/PageRecreate";
-
-import PageInterviewWay from "./pages/Design_Page/PageInterviewWay";
-import PagePersonaSelect from "./pages/Design_Page/PagePersonaSelect";
-import PagePayment from "./pages/Persona/components/pages/PagePayment";
-
-import PageQuickSurvey from "./pages/Tool/QuickSurvey/components/pages/PageQuickSurvey";
-import PageTargetDiscovery from "./pages/Tool/TargetDiscovery/components/pages/PageTargetDiscovery";
-import PageCustomerValueAnalyzer from "./pages/Tool/CustomerValueAnalyzer/components/pages/PageCustomerValueAnalyzer";
-import PageIdeaGenerator from "./pages/Tool/IdeaGenerator/components/pages/PageIdeaGenerator";
-import PageDesignAnalysis from "./pages/Tool/DesignEmotionAnalyzer/components/pages/PageDesignAnalysis";
-import PageDesignSuitability from "./pages/Persona/components/pages/PageDesignSuitability";
-
-//! 교육 툴
-import PageCustomerJourneyMap from "./pages/Education_Tool/CustomerJourneyMap/components/pages/PageCustomerJourneyMap";
-import PageKanoModel from "./pages/Education_Tool/KanoModel/components/pages/PageKanoModel";
-import PageIssueGeneration from "./pages/Education_Tool/IssueGeneration/components/pages/PageIssueGeneration";
-import PageNeedsKeywordsGeneration from "./pages/Education_Tool/NeedsKeywordsGeneration/components/pages/PageNeedsKeywordsGeneration";
-import PageIdeaGeneration from "./pages/Education_Tool/IdeaGeneration/components/pages/PageIdeaGeneration";
-import PageNps from "./pages/Education_Tool/Nps/components/pages/PageNps";
-import PageIdeaEvaluate from "./pages/Education_Tool/IdeaEvaluate/components/pages/PageIdeaEvaluate";
-import PageConceptDefinition from "./pages/Education_Tool/ConceptDefinition/components/pages/PageConCeptDefinition";
-import PageBusinessModelCanvas from "./pages/Education_Tool/BusinessModelCanvas/components/pages/PageBusinessModelCanvas";
-import PagePRFAQ from "./pages/Education_Tool/PRFAQ/components/pages/PagePRFAQ";
-
-import PageMyProfile from "./pages/Persona/components/pages/PageMyProfile";
-
 import PageTerms from "./pages/PageTerms";
 import PagePolicy from "./pages/PagePolicy";
 
-import PageServiceLanding from "./pages/PageServiceLanding";
-import PageServiceLandingDCBeducation from "./pages/PageServiceLandingDCBeducation";
-import PageBlog from "./pages/PageBlog";
+// import PageServiceLanding from "./pages/PageServiceLanding";
+// import PageServiceLandingDCBeducation from "./pages/PageServiceLandingDCBeducation";
+// import PageBlog from "./pages/PageBlog";
 
-import PageToolList from "./pages/Persona/components/pages/PageToolList";
+// import PageToolList from "./pages/Persona/components/pages/PageToolList";
+import PageMyProfile from "./pages/PageMyProfile";
 
 //! SAAS 프로젝트
 import PageProject from "./pages/Saas_Project/pages/PageProject";
-import PageProjectCreate from "./pages/Saas_Project/pages/PageProjectCreate";
+// import PageProjectCreate from "./pages/Saas_Project/pages/PageProjectCreate";
 import PageDashBoard from "./pages/Saas_Project/pages/PageDashBoard";
-import PageAiPersona from "./pages/Saas_Project/pages/PageAiPersona";
-import PageStorageBox from "./pages/Saas_Project/pages/PageStorageBox";
 
 import PageStyleGuide from "./pages/Design_Page/PageStyleGuide";
-
-// 페르소나
-import PageMain from "./pages/Persona/components/pages/PageMain";
-import PagePersona from "./pages/Persona/components/pages/PagePersona";
-import PagePersona2 from "./pages/Persona/components/pages/PagePersona2";
-import PagePersona3 from "./pages/Persona/components/pages/PagePersona3";
-import PagePersona4 from "./pages/Persona/components/pages/PagePersona4";
-import PagePersona4Single from "./pages/Persona/components/pages/PagePersona4Single";
-import PageMyProject from "./pages/Persona/components/pages/PageMyProject";
-import PagePersona3Select from "./pages/Persona/components/pages/PagePersona3Select";
-import PagePersona3Single from "./pages/Persona/components/pages/PagePersona3Single";
-import PagePersona3Multiple from "./pages/Persona/components/pages/PagePersona3Multiple";
-import PagePersona4SingleLive from "./pages/Persona/components/pages/PagePersona4SingleLive";
 
 // 로그인, 회원가입
 import OrganismLogin from "./pages/Global/organisms/OrganismLogin";
 import OrganismSignin from "./pages/Global/organisms/OrganismSignin";
 import OrganismSignupEducation from "./pages/Global/organisms/OrganismSignupEducation";
 
-// 테스트 라우트 추가
-import PageMarketingNoItemsShare from "./pages/Marketing/components/pages/PageMarketingNoItemsShare";
-
-//테스트 페이지
-import DesignLens from "./pages/Persona/components/pages/DesignLens";
-import AIDesignEvaluationSystem from "./pages/Persona/components/pages/AIDesignEvaluationSystem";
-import PageToolListSaas from "./pages/Saas_Project/pages/PageToolListSaas";
-
-// 프로젝트 라우터
 import AtomProjectRouter from "./pages/Global/atoms/AtomProjectRouter";
-import PagePsstReport from "./pages/Tool/psst_report/components/pages/PagePsstReport";
+
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태를 위한 아톰
@@ -345,30 +269,30 @@ function App() {
         <AtomProjectRouter />
 
         <Routes>
-          <Route
+          {/* <Route
             path="/"
             element={
               // <RequireToken>
               <PageServiceLanding />
               // </RequireToken>
             }
-          />
-          <Route
+          /> */}
+          {/* <Route
             path="/DCB-education"
             element={
               // <RequireToken>
               <PageServiceLandingDCBeducation />
               // </RequireToken>
             }
-          />
-          <Route
+          /> */}
+          {/* <Route
             path="*"
             element={
               // <RequireToken>
               <PageServiceLanding />
               // </RequireToken>
             }
-          />
+          /> */}
 
           {/* <Route path="/ServiceLanding" element={<PageServiceLanding />} /> */}
           <Route
@@ -379,324 +303,21 @@ function App() {
               </RequireToken>
             }
           />
-          {/* <Route path="/MeetAiExpert" element={<PageMeetAiExpert />} /> */}
-          <Route
-            path="/ExpertInsight"
-            element={
-              // <RequireToken>
-              <PageExpertInsight />
-              // </RequireToken>
-            }
-          ></Route>
-          <Route
-            path="/MarketingExpertInsight"
-            element={
-              // <RequireToken>
-              <PageMarketingExpertInsight />
-              // </RequireToken>
-            }
-          ></Route>
-          {isMarketing && approachPath !== 2 ? (
-            <Route
-              path="/conversation/:conversationId"
-              element={
-                // <RequireToken>
-                <PageMarketingExpertInsight />
-                // </RequireToken>
-              }
-            />
-          ) : (
-            <Route
-              path="/conversation/:conversationId"
-              element={
-                // <RequireToken>
-                <PageExpertInsight />
-                // </RequireToken>
-              }
-            />
-          )}
-
-          {/* 테스트 라우트 추가
-        <Route path="/interview-test" element={<InterviewTest />} /> */}
-
-          {/* 마케팅 */}
-          <Route
-            path="/MarketingLanding"
-            element={<PageMarketingLanding />}
-          ></Route>
-          <Route
-            path="/MarketingSetting/1"
-            element={
-              <RequireToken>
-                <PageMarketingYesItems />
-              </RequireToken>
-            }
-          ></Route>
-          <Route
-            path="/MarketingSetting/2"
-            element={
-              <RequireToken>
-                <PageMarketingNoItems />
-              </RequireToken>
-            }
-          ></Route>
-          <Route
-            path="/MarketingSetting/2/Result"
-            element={
-              <RequireToken>
-                <PageMarketingNoItemsResult />
-              </RequireToken>
-            }
-          ></Route>
-
-          {/* 마케팅 쉐어 */}
-          <Route
-            path="/MarketingSetting/Share/:mbtiType"
-            element={<PageMarketingNoItemsShare />}
-          />
-
-          {/* 페르소나 */}
-          <Route
-            path="/Persona"
-            element={
-              <RequireToken>
-                <PagePersona />
-              </RequireToken>
-            }
-          ></Route>
-          <Route path="/" element={<PageMain />}></Route>
-          {/* <Route
-            path="/Persona"
-            element={
-              <RequireToken>
-                <PagePersona />
-              </RequireToken>
-            }
-          ></Route>
-          <Route
-            path="/Persona/2"
-            element={
-              <RequireToken>
-                <PagePersona2 />
-              </RequireToken>
-            }
-          ></Route> */}
-          {/* <Route
-            path="/Persona/3"
-            element={
-              <RequireToken>
-                <PagePersona3 />
-              </RequireToken>
-            }
-          ></Route> */}
-          <Route
-            path="/Persona/3/Select"
-            element={
-              <RequireToken>
-                <PagePersona3Select />
-              </RequireToken>
-            }
-          ></Route>
-          <Route
-            path="/Persona/4"
-            element={
-              <RequireToken>
-                <PagePersona4 />
-              </RequireToken>
-            }
-          ></Route>
-          <Route
-            path="/Persona/4/Single"
-            element={
-              <RequireToken>
-                <PagePersona4Single />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/Persona/4/SingleLive"
-            element={
-              <RequireToken>
-                <PagePersona4SingleLive />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/QuickSurvey"
-            element={
-              <RequireToken>
-                <PageQuickSurvey />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/TargetDiscovery"
-            element={
-              <RequireToken>
-                <PageTargetDiscovery />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/CustomerValueAnalyzer"
-            element={
-              <RequireToken>
-                <PageCustomerValueAnalyzer />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/IdeaGenerator"
-            element={
-              <RequireToken>
-                <PageIdeaGenerator />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/DesignAnalysis"
-            element={
-              <RequireToken>
-                <PageDesignAnalysis />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/CustomerJourneyMap"
-            element={
-              <RequireToken>
-                <PageCustomerJourneyMap />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/IssueGeneration"
-            element={
-              <RequireToken>
-                <PageIssueGeneration />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/NeedsKeywordsGeneration"
-            element={
-              <RequireToken>
-                <PageNeedsKeywordsGeneration />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/IdeaGeneration"
-            element={
-              <RequireToken>
-                <PageIdeaGeneration />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/KanoModel"
-            element={
-              <RequireToken>
-                <PageKanoModel />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/Nps"
-            element={
-              <RequireToken>
-                <PageNps />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/IdeaEvaluate"
-            element={
-              <RequireToken>
-                <PageIdeaEvaluate />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/ConceptDefinition"
-            element={
-              <RequireToken>
-                <PageConceptDefinition />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/PRFAQ"
-            element={
-              <RequireToken>
-                <PagePRFAQ />
-              </RequireToken>
-            }
-          ></Route>
-          <Route
-            path="/BusinessModelCanvas"
-            element={
-              <RequireToken>
-                <PageBusinessModelCanvas />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/DesignSuitability"
-            element={
-              <RequireToken>
-                <PageDesignSuitability />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/Persona3Single"
-            element={
-              <RequireToken>
-                <PagePersona3Single />
-              </RequireToken>
-            }
-          ></Route>
-
-          <Route
-            path="/Persona3Multiple"
-            element={
-              <RequireToken>
-                <PagePersona3Multiple />
-              </RequireToken>
-            }
-          ></Route>
-
-          {/* <Route
-            path="/MyProject"
-            element={
-              <RequireToken>
-                <PageMyProject />
-              </RequireToken>
-            }
-          /> */}
+         
 
           {/* SAAS 프로젝트 */}
+          <Route
+            path="/MyProfile"
+            element={
+              <RequireToken>
+                <PageMyProfile />
+              </RequireToken>
+            }
+          />
 
           <Route
             path="/Login"
+          // path="/"
             element={
               <RedirectIfLoggedIn>
                 <OrganismLogin />
@@ -722,14 +343,7 @@ function App() {
             }
           />
 
-          <Route
-            path="/ProjectCreate"
-            element={
-              <RequireToken>
-                <PageProjectCreate />
-              </RequireToken>
-            }
-          />
+         
 
           <Route
             path="/DashBoard"
@@ -740,113 +354,23 @@ function App() {
             }
           />
 
-          <Route
-            path="/AiPersona"
-            element={
-              <RequireToken>
-                <PageAiPersona />
-              </RequireToken>
-            }
-          />
-
-          <Route
-            path="/Tool"
-            element={
-              <RequireToken>
-                <PageToolListSaas />
-              </RequireToken>
-            }
-          />
-
-          <Route
-            path="/StorageBox"
-            element={
-              <RequireToken>
-                <PageStorageBox />
-              </RequireToken>
-            }
-          />
-
-          <Route
-            path="/PsstReport"
-            element={
-              <RequireToken>
-                <PagePsstReport />
-              </RequireToken>
-            }
-          />
-
-          {/* <Route
-            path="/CuratorStoryboard"
-            element={<CuratorStoryboard />}
-          ></Route> */}
-          {/* <Route path="/MarketingLandingPage" element={<MarketingLandingPage />}></Route> */}
-          {/* <Route path="/SamplePage" element={<SamplePage />}></Route> */}
-
-          {/* AI 패널 */}
-          {/* <Route path="/AI_Panel" element={<PageAIPanelList />} />
-            <Route path="/QuickReport" element={<BusinessTool />} />
-            <Route path="/PageAIPanelList" element={<PageAIPanelList />}></Route> */}
-
-          {/* 디자인페이지 */}
-          {/* <Route
-            path="/ConnectWithYourTarget"
-            element={<PageConnetWithYouTarget />}
-          />
-          <Route path="/BusinessAnalysis" element={<PageBusinessAnalysis />} />
-          <Route path="/CustomizePersona" element={<PageCustomizePersona />} />
-          <Route path="/WayInterview" element={<PageWayInterview />} />
-          <Route path="/InterviewResult" element={<PageInterviewResult />} />
-          <Route path="/PersonaLoader" element={<PagePersonaLoader />} />
-          <Route path="/Recreate" element={<PageRecreate />} />
-          <Route path="/InterviewWay" element={<PageInterviewWay />} /> */}
-          <Route
-            path="/PersonaSelect"
-            element={
-              <RequireToken>
-                <PagePersonaSelect />
-              </RequireToken>
-            }
-          />
-          <Route
-            path="/Payment"
-            element={
-              <RequireToken>
-                <PagePayment />
-              </RequireToken>
-            }
-          />
-
-          <Route
-            path="/MyProfile"
-            element={
-              <RequireToken>
-                <PageMyProfile />
-              </RequireToken>
-            }
-          />
-
+         
+         
           <Route path="/Terms" element={<PageTerms />} />
           <Route path="/Policy" element={<PagePolicy />} />
 
-          <Route
+          {/* <Route
             path="/blog"
             element={
               // <RequireToken>
               <PageBlog />
               // </RequireToken>
             }
-          />
+          /> */}
 
           <Route path="/style_guide" element={<PageStyleGuide />} />
 
-          {/* 테스트 페이지 */}
-          <Route path="/DesignLens" element={<DesignLens />} />
-          <Route path="/Payment" element={<PagePayment />} />
-          <Route
-            path="/AIDesignEvaluationSystem"
-            element={<AIDesignEvaluationSystem />}
-          />
+        
         </Routes>
       </BrowserRouter>
     </div>

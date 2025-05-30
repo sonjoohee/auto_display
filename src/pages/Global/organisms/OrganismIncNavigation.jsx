@@ -514,9 +514,9 @@ const OrganismIncNavigation = () => {
 
   const handleLogoutConfirm = () => {
     // 로그아웃 확인 버튼을 눌렀을 때 실행
-    let url_address = "/";
+    let url_address = "/Login";
     if (educationState) {
-      url_address = "/DCB-Education";
+      url_address = "/Login";
     }
     sessionStorage.clear(); // 세션 스토리지 모두 삭제
     localStorage.clear(); // 로컬 스토리지 모두 삭제

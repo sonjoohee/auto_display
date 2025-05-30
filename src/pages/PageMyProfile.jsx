@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
-import { palette } from "../../../../assets/styles/Palette";
-import OrganismIncNavigation from "../../../Global/organisms/OrganismIncNavigation";
-import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
-import MoleculeAccountPopup from "../../../Login_Sign/components/molecules/MoleculeAccountPopup";
-import PopupWrap from "../../../../assets/styles/Popup";
+import { palette } from "../assets/styles/Palette";
+import OrganismIncNavigation from "./Global/organisms/OrganismIncNavigation";
+import MoleculeHeader from "./Global/molecules/MoleculeHeader";
+import MoleculeAccountPopup from "./Login_Sign/components/molecules/MoleculeAccountPopup";
+import PopupWrap from "../assets/styles/Popup";
 import {
   CustomInput,
   CustomTextarea,
@@ -15,7 +15,7 @@ import {
   SelectBoxItem,
   SelectBoxTitle,
   SelectBoxList,
-} from "../../../../assets/styles/InputStyle";
+} from "../assets/styles/InputStyle";
 import {
   IS_LOGGED_IN,
   USER_NAME,
@@ -25,19 +25,19 @@ import {
   IS_SOCIAL_LOGGED_IN,
   ADMIN_STATE,
   EDUCATION_STATE,
-} from "../../../AtomStates";
+} from "./AtomStates";
 import {
   ButtonGroup,
   Button,
   IconButton,
-} from "../../../../assets/styles/ButtonStyle";
+} from "../assets/styles/ButtonStyle";
 import {
   ContentsWrap,
   MainContent,
   ToggleBox,
   ToggleList,
-} from "../../../../assets/styles/BusinessAnalysisStyle";
-import images from "../../../../assets/styles/Images";
+} from "../assets/styles/BusinessAnalysisStyle";
+import images from "../assets/styles/Images";
 import {
   H2,
   H4,
@@ -47,7 +47,7 @@ import {
   Sub3,
   Caption2,
   InputText,
-} from "../../../../assets/styles/Typography";
+} from "../assets/styles/Typography";
 import axios from "axios";
 import { unixDay } from "d3";
 

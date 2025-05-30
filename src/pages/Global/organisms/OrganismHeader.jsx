@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useAtom } from 'jotai';
-import { IS_LOGGED_IN } from "../../../../pages/AtomStates"; // Jotai 상태 임포트
-import { palette } from "../../../../assets/styles/Palette";
-import images from "../../../../assets/styles/Images";
-import MoleculeLoginPopup from "../../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 경로 수정
+import { IS_LOGGED_IN } from "../../AtomStates"; // Jotai 상태 임포트
+import { palette } from "../../../assets/styles/Palette";
+import images from "../../../assets/styles/Images";
+import MoleculeLoginPopup from "../../Login_Sign/components/molecules/MoleculeLoginPopup"; // 경로 수정
 import NotificationIcon from '../../../../assets/images/btnNotification.svg'; // 알림 아이콘 경로
 
 const HeaderWrap = styled.header`

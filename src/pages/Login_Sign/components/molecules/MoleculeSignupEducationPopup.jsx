@@ -66,7 +66,7 @@ const MoleculeSignupEducationPopup = ({ onClose, email }) => {
       setUserName("");
       setUserEmail("");
     }
-    navigate("/DCB-education");
+    navigate("/Login");
     setSignUpEmail(""); // 이메일 상태를 초기화합니다.
     // setIsLoginPopupOpen(true);
   };
@@ -92,7 +92,7 @@ const MoleculeSignupEducationPopup = ({ onClose, email }) => {
           <button type="button" onClick={handleResendEmail}>
             재발송하기
           </button>
-          <a href="/DCB-education" onClick={handleGoToLogin}>
+          <a href="/Login" onClick={handleGoToLogin}>
             로그인 바로가기
           </a>
         </div>
