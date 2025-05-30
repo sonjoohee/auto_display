@@ -190,7 +190,7 @@ function App() {
             setIsServerDown(false);
           }
         } catch (error) {
-          if (window.location.pathname !== "/ServiceLanding") {
+          if (window.location.pathname !== "/Login") {
             // 서버가 응답하지 않거나 에러 발생 시 서버 다운 처리
             setIsServerDown(true);
 
@@ -269,6 +269,10 @@ function App() {
         <AtomProjectRouter />
 
         <Routes>
+        <Route
+          path="/"
+          element={<Navigate to="/Login" replace />} // 루트 경로에서 /Login으로 리다이렉트
+        />
           {/* <Route
             path="/"
             element={
