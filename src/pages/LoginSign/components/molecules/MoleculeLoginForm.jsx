@@ -1,4 +1,4 @@
-// src/pages/Login_Sign/components/molecules/MoleculeLoginForm.jsx
+// src/pages/LoginSign/components/molecules/MoleculeLoginForm.jsx
 import React, { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +20,8 @@ import {
   USER_MEMBERSHIP,
   IS_SIGNUP_POPUP_OPEN,
   USER_CREDITS,
+  EDUCATION_STATE,
+  ADMIN_STATE,
 } from "../../../../pages/AtomStates";
 import { Link } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
@@ -29,6 +31,8 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
   const [, setUserCredits] = useAtom(USER_CREDITS);
   const [email, setEmail] = useAtom(EMAIL);
   const [, setUserMembership] = useAtom(USER_MEMBERSHIP);
+  const [educationState, setEducationState] = useAtom(EDUCATION_STATE);
+  const [adminState, setAdminState] = useAtom(ADMIN_STATE);
   const [password, setPassword] = useState("");
   const [errorStatus, setErrorStatus] = useAtom(ERROR_STATUS);
   const [showPassword, setShowPassword] = useState(false);
@@ -45,78 +49,10 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
   const [isSignPopupOpen] = useAtom(IS_SIGNUP_POPUP_OPEN); // 회원가입 팝업 상태 관리
   const [isPasswordRestPopupOpen, setIsPasswordRestPopupOpen] = useState(false); // 비밀번호 리셋 팝업 상태 관리
   const [, setIsExitPopupOpen] = useState(false);
-  const [isCommercialEmail, setIsCommercialEmail] = useState(false);
 
   useEffect(() => {
     setErrorStatus("");
   }, [setErrorStatus]);
-
-  // 상용 이메일 체크 함수 추가
-  const checkCommercialEmail = (email) => {
-    if (!email || !isValidEmail(email)) return false;
-
-    const commonEmailDomains = [
-      "gmail.com",
-      "yahoo.com",
-      "yahoo.co.jp",
-      "hotmail.com",
-      "outlook.com",
-      "aol.com",
-      "zoho.com",
-      "mail.com",
-      "mail.ru",
-      "gmx.com",
-      "yandex.com",
-      "protonmail.com",
-      "icloud.com",
-      "fastmail.com",
-      "hushmail.com",
-      "inbox.com",
-      "lycos.com",
-      "rediffmail.com",
-      "mail.ru",
-      "qq.com",
-      "163.com",
-      "126.com",
-      "sina.com",
-      "sohu.com",
-      "yeah.net",
-      "21cn.com",
-      "tom.com",
-      "foxmail.com",
-      "live.com",
-      "msn.com",
-      "naver.com",
-      "daum.net",
-      "nate.com",
-      "kakao.com",
-      "hanmail.net",
-      "korea.com",
-      "hanmir.com",
-      "empal.com",
-      "hitel.net",
-      "kebi.com",
-      "netian.com",
-      "dreamwiz.com",
-      "tistory.com",
-      "orgio.net",
-      "wail.co.kr",
-      "lycos.co.kr",
-      "chol.com",
-      "chollian.net",
-      "intizen.com",
-      "freechal.com",
-      "teramail.com",
-      "metq.com",
-      "paran.com",
-      "cyworld.com",
-      "hanafos.com",
-      "unitel.co.kr",
-    ];
-
-    const emailDomain = email.split("@")[1];
-    return commonEmailDomains.includes(emailDomain);
-  };
 
   const validateForm = () => {
     if (!email || !password) {
@@ -127,15 +63,6 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
       setErrorStatus("유효한 이메일 주소를 입력해주세요.");
       return false;
     }
-
-    // 상용 이메일 체크
-    if (checkCommercialEmail(email)) {
-      setErrorStatus("상용 이메일은 사용할 수 없습니다.");
-      setIsCommercialEmail(true);
-      return false;
-    }
-
-    setIsCommercialEmail(false);
     return true;
   };
 
@@ -224,41 +151,44 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           const userInfo = await userInfoResponse.json();
           // console.log("🚀 ~ handleLogin ~ userInfo:", userInfo);
 
-          if (
-            userInfo.email === "yspark@userconnect.kr" ||
-            userInfo.email === "jsjun0319@hanyang.ac.kr" ||
-            userInfo.email === "sjjjang00@gmail.com" ||
-            userInfo.email === "sungeun_lee@userconnect.kr" ||
-            userInfo.email === "okhyund@userconnect.kr" ||
-            userInfo.email === "hsb4557@naver.com" ||
-            userInfo.email === "choi9110@nate.com" ||
-            userInfo.email === "gusrms2346@naver.com" ||
-            userInfo.email === "08doyun@naver.com" ||
-            userInfo.email === "ehdbs08@hanyang.ac.kr" ||
-            userInfo.email === "suauncle@gmail.com" ||
-            userInfo.email === "pleasure4ur@gmail.com" ||
-            userInfo.email === "r_pleasure4u@naver.com" ||
-            userInfo.email === "lhm1186@naver.com" ||
-            userInfo.email === "pixelweb@naver.com" ||
-            userInfo.email === "hyeeun@userconnect.kr" ||
-            userInfo.email === "pasrk0821@naver.com" ||
-            userInfo.email === "okhyund@gmail.com" ||
-            userInfo.email === "sunbin12325@gmail.com" ||
-            userInfo.email === "yspark.uc@gmail.com" ||
-            userInfo.email === "uvaluator@naver.com" ||
-            userInfo.email === "jungmin_lee@userconnect.kr" ||
-            userInfo.email === "syyoon@userconnect.kr" ||
-            userInfo.email === "star7613son@gmail.com"
-          ) {
-            setAccessableExpert(true);
-          }
+          // if (
+          //   userInfo.email === "yspark@userconnect.kr" ||
+          //   userInfo.email === "jsjun0319@hanyang.ac.kr" ||
+          //   userInfo.email === "sjjjang00@gmail.com" ||
+          //   userInfo.email === "sungeun_lee@userconnect.kr" ||
+          //   userInfo.email === "okhyund@userconnect.kr" ||
+          //   userInfo.email === "hsb4557@naver.com" ||
+          //   userInfo.email === "choi9110@nate.com" ||
+          //   userInfo.email === "gusrms2346@naver.com" ||
+          //   userInfo.email === "08doyun@naver.com" ||
+          //   userInfo.email === "ehdbs08@hanyang.ac.kr" ||
+          //   userInfo.email === "suauncle@gmail.com" ||
+          //   userInfo.email === "pleasure4ur@gmail.com" ||
+          //   userInfo.email === "r_pleasure4u@naver.com" ||
+          //   userInfo.email === "lhm1186@naver.com" ||
+          //   userInfo.email === "pixelweb@naver.com" ||
+          //   userInfo.email === "hyeeun@userconnect.kr" ||
+          //   userInfo.email === "pasrk0821@naver.com" ||
+          //   userInfo.email === "okhyund@gmail.com" ||
+          //   userInfo.email === "sunbin12325@gmail.com" ||
+          //   userInfo.email === "yspark.uc@gmail.com" ||
+          //   userInfo.email === "uvaluator@naver.com" ||
+          //   userInfo.email === "jungmin_lee@userconnect.kr" ||
+          //   userInfo.email === "syyoon@userconnect.kr" ||
+          //   userInfo.email === "star7613son@gmail.com"
+          // ) {
+          //   setAccessableExpert(true);
+          // }
           // 유저 정보 저장
           setUserName(userInfo.name);
           setUserEmail(userInfo.email);
           setUserMembership(userInfo.membership);
+          setEducationState(userInfo.education_state);
+          setAdminState(userInfo.is_admin);
           sessionStorage.setItem("userName", userInfo.name);
           sessionStorage.setItem("userEmail", userInfo.email);
           sessionStorage.setItem("userCreatedAt", userInfo.signup_date); // 서버 토큰 저장
+
           const accessToken = sessionStorage.getItem("accessToken");
           if (accessToken) {
             const userCreditValue = await UserCreditInfo(true);
@@ -289,6 +219,88 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
       setErrorStatus("로그인 중 오류가 발생했습니다.");
     }
   };
+  // const validateEmail = (email) => {
+  //   if (!isValidEmail(email)) {
+  //     setErrorStatus("유효한 이메일 주소를 입력해주세요.");
+  //     setIsEmailValid(false);
+  //     setIsCommercialEmail(false);
+  //     return;
+  //   }
+
+  //   // 상용 이메일 체크 로직 추가
+  //   const commonEmailDomains = [
+  //     "gmail.com",
+  //     "yahoo.com",
+  //     "yahoo.co.jp",
+  //     "hotmail.com",
+  //     "outlook.com",
+  //     "aol.com",
+  //     "zoho.com",
+  //     "mail.com",
+  //     "mail.ru",
+  //     "gmx.com",
+  //     "yandex.com",
+  //     "protonmail.com",
+  //     "icloud.com",
+  //     "fastmail.com",
+  //     "hushmail.com",
+  //     "inbox.com",
+  //     "lycos.com",
+  //     "rediffmail.com",
+  //     "mail.ru",
+  //     "qq.com",
+  //     "163.com",
+  //     "126.com",
+  //     "sina.com",
+  //     "sohu.com",
+  //     "yeah.net",
+  //     "21cn.com",
+  //     "tom.com",
+  //     "foxmail.com",
+  //     "live.com",
+  //     "msn.com",
+  //     "naver.com",
+  //     "daum.net",
+  //     "nate.com",
+  //     "kakao.com",
+  //     "hanmail.net",
+  //     "korea.com",
+  //     "hanmir.com",
+  //     "empal.com",
+  //     "hitel.net",
+  //     "kebi.com",
+  //     "netian.com",
+  //     "dreamwiz.com",
+  //     "tistory.com",
+  //     "naver.com",
+  //     "daum.net",
+  //     "nate.com",
+  //     "orgio.net",
+  //     "wail.co.kr",
+  //     "lycos.co.kr",
+  //     "chol.com",
+  //     "chollian.net",
+  //     "intizen.com",
+  //     "freechal.com",
+  //     "teramail.com",
+  //     "metq.com",
+  //     "paran.com",
+  //     "cyworld.com",
+  //     "hanafos.com",
+  //     "unitel.co.kr",
+  //   ];
+  //   const emailDomain = email.split("@")[1];
+  //   if (commonEmailDomains.includes(emailDomain)) {
+  //     setErrorStatus("상용 이메일은 사용할 수 없습니다.");
+  //     setIsEmailValid(false);
+  //     setIsCommercialEmail(true);
+  //     return;
+  //   }
+
+  //   setIsEmailValid(true);
+  //   setIsCommercialEmail(false);
+  //   setErrorStatus("");
+  // };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -344,22 +356,6 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
     }
   };
 
-  // 이메일 입력 핸들러 수정
-  const handleEmailChange = (e) => {
-    const newEmail = e.target.value;
-    setEmail(newEmail);
-
-    if (newEmail && isValidEmail(newEmail)) {
-      const isCommercial = checkCommercialEmail(newEmail);
-      setIsCommercialEmail(isCommercial);
-      if (isCommercial) {
-        setErrorStatus("상용 이메일은 사용할 수 없습니다.");
-      } else {
-        setErrorStatus("");
-      }
-    }
-  };
-
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -368,15 +364,15 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           <LoginFormContainer>
             <div>
               <label htmlFor="email">
-                이메일<span>*</span>
+                아이디<span>*</span>
               </label>
               <CustomInput
                 Small
                 id="email"
                 type="email"
                 value={email}
-                onChange={handleEmailChange}
-                placeholder="이메일을 입력해주세요"
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="입력해주세요"
               />
             </div>
 
@@ -391,7 +387,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder="비밀번호를 입력해주세요"
+                placeholder="입력해주세요"
               />
 
               <TogglePasswordButton onClick={togglePasswordVisibility}>
@@ -400,22 +396,31 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
             </div>
 
             <PasswordResetLink>
-              <a onClick={handlePasswordRestClick}>비밀번호 찾기</a>
+              {/* <a onClick={handlePasswordRestClick}>비밀번호 찾기</a> */}
             </PasswordResetLink>
 
             <StyledLoginButton
               onClick={handleLogin}
-              disabled={!email || !password || isCommercialEmail}
+              disabled={!email || !password}
             >
               로그인
             </StyledLoginButton>
 
             {errorStatus && <ErrorMessage>{errorStatus}</ErrorMessage>}
 
-            <JoinWrap>
-              <p>아직 회원이 아니신가요?</p>
-              <Link to="/Signin">회원가입하기</Link>
-            </JoinWrap>
+            <BusinessInfoWrap>
+              <p>비즈니스 회원 전용 서비스입니다</p>
+              <a
+                style={{
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  // 가입 문의 로직
+                }}
+              >
+                가입 문의하기
+              </a>
+            </BusinessInfoWrap>
           </LoginFormContainer>
         )}
         {/* 비밀번호 재설정 팝업 */}
@@ -521,7 +526,7 @@ const ErrorMessage = styled.p`
 `;
 
 const PasswordResetLink = styled.div`
-  margin: 20px auto 40px;
+  margin: 20px auto 20px;
   text-align: right;
   cursor: pointer;
 
@@ -539,20 +544,22 @@ const StyledLoginButton = styled.button`
   width: 100%;
   font-family: "Pretendard", "Poppins";
   color: ${palette.white};
-  padding: 17px;
+  padding: 14px 16px;
   border-radius: 8px;
   border: none;
   background-color: ${palette.primary};
   font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
 
   &:disabled {
-    background: #d6d6d6;
+    background: #D0D6E1;
+    color: #FFFFFF;
     pointer-events: none;
   }
 `;
 
-const JoinWrap = styled.div`
+const BusinessInfoWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -562,9 +569,16 @@ const JoinWrap = styled.div`
   color: ${palette.gray};
   margin-top: 40px;
 
+  p {
+    font-weight: 500;
+    color: #7A7A7A;
+    margin: 0;
+  }
+
   a {
-    color: ${palette.blue};
+    color: #0453F4;
     text-decoration: underline;
+    font-weight: 700;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
@@ -708,3 +722,4 @@ const Popup = styled.div`
     }
   }
 `;
+

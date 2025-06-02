@@ -6,7 +6,7 @@ import {
   MainContent,
 } from "../../../assets/styles/BusinessAnalysisStyle";
 import { H1 } from "../../../assets/styles/Typography";
-import MoleculeSignupForm from "../../Login_Sign/components/molecules/MoleculeSignupForm";
+import MoleculeSignupForm from "../../LoginSign/components/molecules/MoleculeSignupForm";
 
 const OrganismSignin = () => {
   return (

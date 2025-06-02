@@ -1,4 +1,4 @@
-// C:\dev\Crowd_Insight-\src\pages\Login_Sign\assets\styles\Images.jsx
+// C:\dev\Crowd_Insight-\src\pages\LoginSign\assets\styles\Images.jsx
 
 import Filter from "../images/Filter.svg";
 import BgSearch from "../images/BgSearch.png";

@@ -302,6 +302,11 @@ const MoleculeHeader = () => {
   return (
     <>
       <HeaderWrap>
+        {/* Autodisplay 로고 항상 표시 */}
+        <LogoContainer>
+          <Sub1 color="gray800" style={{ fontWeight: "600" }}>Autodisplay</Sub1>
+        </LogoContainer>
+
         {!isRootPage && !isDashBoardPage && (
           <>
             <Title>
@@ -347,9 +352,10 @@ const MoleculeHeader = () => {
           </>
         )}
 
-        {isProjectCreatePage && (
+        {/* 기존 로고 주석처리 */}
+        {/* {isProjectCreatePage && (
           <images.Logo2 color={palette.black} width="170px" height="26px" />
-        )}
+        )} */}
 
         {isLoggedIn && (
           <div className="gnb">
@@ -368,7 +374,8 @@ const MoleculeHeader = () => {
               </Sub2>
             )}
 
-            <TotalCreditToggle>
+            {/* 크레딧 토글 주석처리 */}
+            {/* <TotalCreditToggle>
               <CreditTotal
                 onClick={handleCreditToggle}
                 style={{ cursor: "pointer" }}
@@ -482,16 +489,18 @@ const MoleculeHeader = () => {
                   )}
                 </CreditToggle>
               )}
-            </TotalCreditToggle>
+            </TotalCreditToggle> */}
 
-            <Notify Alarm={showRedDot} onClick={handleAlertToggle}>
+            {/* 알림 아이콘 주석처리 */}
+            {/* <Notify Alarm={showRedDot} onClick={handleAlertToggle}>
               <img src={images.IconBell} alt="" />
-            </Notify>
+            </Notify> */}
           </div>
         )}
       </HeaderWrap>
 
-      {showAlert && (
+      {/* 알림 토글 주석처리 */}
+      {/* {showAlert && (
         <AlertToogle className={isClosing ? "closing" : ""}>
           <AlertHeader>알림</AlertHeader>
           <AlertContent style={{ width: "100%" }}>
@@ -534,14 +543,23 @@ const MoleculeHeader = () => {
             )}
           </AlertContent>
         </AlertToogle>
-      )}
+      )} */}
     </>
   );
 };
 
 export default MoleculeHeader;
 
-const TotalCreditToggle = styled.div`
+// 새로운 로고 컨테이너 스타일드 컴포넌트
+const LogoContainer = styled.div`
+  position: absolute;
+  left: 28px;
+  display: flex;
+  align-items: center;
+`;
+
+// 크레딧 관련 스타일드 컴포넌트 주석처리
+/* const TotalCreditToggle = styled.div`
   position: relative;
   display: flex;
   justify-content: flex-start;
@@ -620,7 +638,7 @@ const CreditToggle = styled.div`
       }
     }
   }
-`;
+`; */
 
 const HeaderWrap = styled.div`
   position: fixed;
@@ -736,6 +754,8 @@ const CloseButton = styled.div`
   }
 `;
 
+// 알림 관련 스타일드 컴포넌트 주석처리
+/*
 const Notify = styled.div`
   position: relative;
   cursor: pointer;
@@ -931,5 +951,6 @@ const Button = styled.div`
   border-radius: 4px;
   border: 1px solid ${palette.primary};
   background: ${palette.white};
-  cursor: pointer; /* 추가된 부분 */
+  cursor: pointer;
 `;
+*/
