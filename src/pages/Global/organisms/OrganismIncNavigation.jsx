@@ -51,9 +51,9 @@ import {
   getAllConversationsFromIndexedDB,
   getToolListOnServer,
 } from "../../../utils/indexedDB";
-import MoleculeLoginPopup from "../../../pages/Login_Sign/components/molecules/MoleculeLoginPopup";
-import MoleculeAccountPopup from "../../../pages/Login_Sign/components/molecules/MoleculeAccountPopup";
-import MoleculeSignPopup from "../../../pages/Login_Sign/components/molecules/MoleculeSignPopup";
+import MoleculeLoginPopup from "../../../pages/LoginSign/components/molecules/MoleculeLoginPopup";
+import MoleculeAccountPopup from "../../../pages/LoginSign/components/molecules/MoleculeAccountPopup";
+import MoleculeSignPopup from "../../../pages/LoginSign/components/molecules/MoleculeSignPopup";
 
 const OrganismIncNavigation = () => {
   const location = useLocation();

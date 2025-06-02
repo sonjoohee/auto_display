@@ -1,4 +1,4 @@
-// src/pages/Login_Sign/components/molecules/MoleculeGoogleLoginForm.jsx
+// src/pages/LoginSign/components/molecules/MoleculeGoogleLoginForm.jsx
 
 import React from "react";
 import { auth, provider } from "../../../../firebase";

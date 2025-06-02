@@ -5,9 +5,9 @@ import {
   ContentsWrap,
   MainContent,
 } from "../../../assets/styles/BusinessAnalysisStyle";
-import MoleculeLoginPopup from "../../Login_Sign/components/molecules/MoleculeLoginPopup";
+import MoleculeLoginPopup from "../../LoginSign/components/molecules/MoleculeLoginPopup";
 import { H1 } from "../../../assets/styles/Typography";
-import MoleculeLoginEducationForm from "../../Login_Sign/components/molecules/MoleculeLoginEducationForm";
+import MoleculeLoginEducationForm from "../../LoginSign/components/molecules/MoleculeLoginEducationForm";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
 
 const OrganismIncLogin = () => {

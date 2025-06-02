@@ -5,9 +5,9 @@ import { useAtom } from "jotai";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { palette } from "../../assets/styles/Palette";
 import OrganismIncNavigation from "../Global/organisms/OrganismIncNavigation";
-// import Header from "../../../Design_Page/IncHeader";
+// import Header from "../../../DesignPage/IncHeader";
 import MoleculeHeader from "../Global/molecules/MoleculeHeader";
-import MoleculeAccountPopup from "../Login_Sign/components/molecules/MoleculeAccountPopup";
+import MoleculeAccountPopup from "../LoginSign/components/molecules/MoleculeAccountPopup";
 import PopupWrap from "../../assets/styles/Popup";
 import { Button } from "../../assets/styles/ButtonStyle";
 import {

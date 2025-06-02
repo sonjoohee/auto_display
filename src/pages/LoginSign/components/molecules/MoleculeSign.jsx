@@ -1,4 +1,4 @@
-// src/pages/Login_Sign/components/molecules/MoleculeLogin.jsx
+// src/pages/LoginSign/components/molecules/MoleculeLogin.jsx
 
 import React, { useEffect } from "react";
 import styled, { ThemeProvider } from "styled-components";

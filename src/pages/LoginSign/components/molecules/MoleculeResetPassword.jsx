@@ -1,17 +1,13 @@
-// src/pages/Login_Sign/components/molecules/MoleculeLogin.jsx
-
+// src/pages/LoginSign/components/molecules/MoleculeLogin.jsx
 import React, { useEffect } from "react";
-import styled, { ThemeProvider } from "styled-components";
-import theme from "../../../../assets/styles/Theme";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
-import MoleculeGoogleLoginForm from "./MoleculeGoogleLoginForm";
-import MoleculeLoginForm from "./MoleculeLoginForm";
+import MoleculePasswordResetForm from "../pages/PageRequestResetPassword";
 import { LOGIN_SUCCESS } from "../../../../pages/AtomStates"; // 아톰 임포트
 import { palette } from "../../../../assets/styles/Palette";
-import images from "../../../../assets/styles/Images";
 
-const MoleculeLogin = ({ onClosePopup = () => {} }) => {
+const MoleculeResetPassword = ({ onClosePopup = () => {} }) => {
   const [loginSuccess, setLoginSuccess] = useAtom(LOGIN_SUCCESS);
   const navigate = useNavigate();
 
@@ -24,30 +20,15 @@ const MoleculeLogin = ({ onClosePopup = () => {} }) => {
   }, [loginSuccess, navigate, setLoginSuccess]);
 
   return (
-    <>
-    <ThemeProvider theme={theme}>
-      <LoginContainer>
-        <h1>
-          <img src={images.Logo} alt="" />
-          <span>시작하기</span>
-        </h1>
-
-        <MoleculeGoogleLoginForm />
-        <Separator>
-          <hr />
-          <span>or</span>
-          <hr />
-        </Separator>
-        <MoleculeLoginForm onClosePopup={onClosePopup} />
-      </LoginContainer>
-    </ThemeProvider>
-    </>
+    <LoginContainer>
+      <MoleculePasswordResetForm />
+    </LoginContainer>
   );
 };
 
-export default MoleculeLogin;
+export default MoleculeResetPassword;
 
-// CSS-in-JS 스타일링
+
 const LoginContainer = styled.div`
   h1 {
     display: flex;
@@ -58,20 +39,10 @@ const LoginContainer = styled.div`
     font-weight: 400;
   }
 
-  max-width: 400px;
+  min-width: 400px;
   margin: 0 auto;
   background-color: #fff;
   text-align: center;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    h1 {
-      font-size:1.5rem;
-
-      img {
-        height:23px;
-      }
-    }
-  }
 `;
 
 const Separator = styled.div`

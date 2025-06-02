@@ -31,11 +31,11 @@ import PagePolicy from "./pages/PagePolicy";
 import PageMyProfile from "./pages/PageMyProfile";
 
 //! SAAS 프로젝트
-import PageProject from "./pages/Saas_Project/pages/PageProject";
-// import PageProjectCreate from "./pages/Saas_Project/pages/PageProjectCreate";
-import PageDashBoard from "./pages/Saas_Project/pages/PageDashBoard";
+import PageProject from "./pages/DashBoard/components/pages/PageProject";
+// import PageProjectCreate from "./pages/DashBoard/pages/PageProjectCreate";
+import PageDashBoard from "./pages/DashBoard/components/pages/PageDashBoard";
 
-import PageStyleGuide from "./pages/Design_Page/PageStyleGuide";
+import PageStyleGuide from "./pages/DesignPage/PageStyleGuide";
 
 // 로그인, 회원가입
 import OrganismLogin from "./pages/Global/organisms/OrganismLogin";
@@ -266,7 +266,7 @@ function App() {
 
       <BrowserRouter>
         {/* PROJECT_SAAS가 빈 객체일 때 리다이렉션하는 컴포넌트 */}
-        <AtomProjectRouter />
+        {/* <AtomProjectRouter /> */}
 
         <Routes>
           {/* <Route
@@ -298,9 +298,9 @@ function App() {
           <Route
             path="/Project"
             element={
-              <RequireToken>
+              // <RequireToken>
                 <PageProject />
-              </RequireToken>
+              // </RequireToken>
             }
           />
          
@@ -309,9 +309,9 @@ function App() {
           <Route
             path="/MyProfile"
             element={
-              <RequireToken>
+              // <RequireToken>
                 <PageMyProfile />
-              </RequireToken>
+              // </RequireToken>
             }
           />
 
@@ -319,38 +319,38 @@ function App() {
             path="/Login"
           // path="/"
             element={
-              <RedirectIfLoggedIn>
+              // <RedirectIfLoggedIn>
                 <OrganismLogin />
-              </RedirectIfLoggedIn>
+              // </RedirectIfLoggedIn>
             }
           />
 
-          <Route
+          {/* <Route
             path="/Signin"
             element={
               <RedirectIfLoggedIn>
                 <OrganismSignin />
               </RedirectIfLoggedIn>
             }
-          />
+          /> */}
 
-          <Route
+          {/* <Route
             path="/SignupEducation"
             element={
               <RedirectIfLoggedIn>
                 <OrganismSignupEducation />
               </RedirectIfLoggedIn>
             }
-          />
+          /> */}
 
          
 
           <Route
             path="/DashBoard"
             element={
-              <RequireToken>
+              // <RequireToken>
                 <PageDashBoard />
-              </RequireToken>
+              // </RequireToken>
             }
           />
 

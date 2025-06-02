@@ -1,4 +1,4 @@
-// src/pages/Login_Sign/components/molecules/MoleculeLoginForm.jsx
+// src/pages/LoginSign/components/molecules/MoleculeLoginForm.jsx
 import React, { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
