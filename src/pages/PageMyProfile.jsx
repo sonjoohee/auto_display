@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { palette } from "../assets/styles/Palette";
 import OrganismIncNavigation from "./Global/organisms/OrganismIncNavigation";
 import MoleculeHeader from "./Global/molecules/MoleculeHeader";
-import MoleculeAccountPopup from "./Login_Sign/components/molecules/MoleculeAccountPopup";
+import MoleculeAccountPopup from "./LoginSign/components/molecules/MoleculeAccountPopup";
 import PopupWrap from "../assets/styles/Popup";
 import {
   CustomInput,
