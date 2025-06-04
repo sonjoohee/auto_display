@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 import { palette } from "../assets/styles/Palette";
 
 import OrganismIncNavigation from "../pages/Global/organisms/OrganismIncNavigation";
-// import Header from "../../../Design_Page/IncHeader";
+// import Header from "../../../DesignPage/IncHeader";
 import MoleculeHeader from "../pages/Global/molecules/MoleculeHeader";
 import {
   ContentsWrap,

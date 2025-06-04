@@ -5,10 +5,12 @@ import {
   ContentsWrap,
   MainContent,
 } from "../../../assets/styles/BusinessAnalysisStyle";
-import MoleculeLoginPopup from "../../Login_Sign/components/molecules/MoleculeLoginPopup";
+import MoleculeLoginPopup from "../../LoginSign/components/molecules/MoleculeLoginPopup";
 import { H1 } from "../../../assets/styles/Typography";
-import MoleculeLoginForm from "../../Login_Sign/components/molecules/MoleculeLoginForm";
+import MoleculeLoginForm from "../../LoginSign/components/molecules/MoleculeLoginForm";
 import { useDynamicViewport } from "../../../assets/DynamicViewport";
+import { palette } from "../../../assets/styles/Palette";
+import MoleculeHeader from "../molecules/MoleculeHeader";
 
 const OrganismIncLogin = () => {
   useDynamicViewport("width=800"); // 특정페이지에서만 pc화면처럼 보이기
@@ -20,10 +22,16 @@ const OrganismIncLogin = () => {
 
   return (
     <>
+      <MoleculeHeader />
       <ContentsWrap>
         <MainContent Wide>
           <LoginWrap>
-            <H1>Log in</H1>
+            <TitleSection>
+              <H1>Autodisplay</H1>
+              <DescriptionText>
+                비즈니스용으로 발급된 아이디와 비밀번호를 입력해주세요
+              </DescriptionText>
+            </TitleSection>
             <MoleculeLoginForm />
           </LoginWrap>
         </MainContent>
@@ -45,10 +53,27 @@ const LoginWrap = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 40px;
+  gap: 56px;
   max-width: 610px;
   width: 100%;
   margin: 156px auto 0;
+`;
+
+const TitleSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+`;
+
+const DescriptionText = styled.p`
+  font-family: "Pretendard", "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: ${palette.gray};
+  text-align: center;
+  margin: 0;
 `;
 
 // const ViewInfo = styled.div`
