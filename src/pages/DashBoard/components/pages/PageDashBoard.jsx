@@ -5,13 +5,16 @@ import { useNavigate } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 import {
   H1,
+
   H4,
+
   Body1,
   Body2,
   Caption1,
 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
+
 import OrganismDashboardToolList from "../organisms/OrganismDashboardToolList";
 import OrganismDashboardDisplayList from "../organisms/OrganismDashboardDisplayList";
 import PopupWrap from "../../../../assets/styles/Popup";
@@ -24,6 +27,7 @@ import {
   CheckBoxButton
 } from "../../../../assets/styles/InputStyle";
 import images from "../../../../assets/styles/Images";
+
 
 const PageDashBoard = () => {
   const navigate = useNavigate();
@@ -38,6 +42,7 @@ const PageDashBoard = () => {
 
   // 탭 상태
   const [activeTab, setActiveTab] = useState("content");
+
 
   // 팝업 관련 상태
   const [isCustomizePopupOpen, setIsCustomizePopupOpen] = useState(false);
@@ -173,6 +178,7 @@ const PageDashBoard = () => {
   ]);
 
 
+
   // 기기 선택 후 콘텐츠 생성
   const handleDeviceSelect = (device) => {
     setSelectedDevice(device);
@@ -198,6 +204,7 @@ const PageDashBoard = () => {
     }
   };
 
+
   return (
     <DashboardContainer>
       <MoleculeHeader />
@@ -211,12 +218,14 @@ const PageDashBoard = () => {
             <CompanyName>회사명</CompanyName>
           </CompanyInfo>
           <ButtonGroup>
+
             <Button Large Fill PrimaryLightest onClick={showPopup}>  
               <Caption1 color="primary">새 기기 등록</Caption1>
             </Button>
             <Button Large Primary Fill onClick={() => setShowDeviceSelectPopup(true)}>
               <Caption1 color="white">새 콘텐츠</Caption1>
             </Button> 
+
           </ButtonGroup>
         </TopSection>
 
@@ -264,6 +273,7 @@ const PageDashBoard = () => {
               등록 디스플레이 (3)
             </Tab>
           </TabContainer>
+
           <OrganismDashboardDisplayList />
         </TableSection>
       </MainContent>
@@ -651,15 +661,18 @@ const PageDashBoard = () => {
           }
         />
       )}
+
     </DashboardContainer>
   );
 };
 
 export default PageDashBoard;
+
 // PopupContent 스타일 추가
 const PopupContent = styled.div`
   margin-top: 8px;
 `;
+
 
 // 스타일 컴포넌트들
 const DashboardContainer = styled.div`
@@ -797,10 +810,12 @@ const StatsSection = styled.div`
 const SectionTitle = styled.h3`
   font-family: Pretendard;
   font-weight: 700;
+
   font-size: 16px;
   color: #696969;
   margin: 0;
   text-align: left;
+
 `;
 
 const StatsGrid = styled.div`
@@ -828,9 +843,11 @@ const StatHeader = styled.div`
 const StatValue = styled.div`
   font-family: Poppins;
   font-weight: 700;
+
   font-size: 30px;
   color: #666666;
   text-align: left;
+
 `;
 
 const TableSection = styled.div`
@@ -934,6 +951,7 @@ const TableCell = styled.div`
     border-right: none;
   }
 `;
+
 
 const PopupFormContainer = styled.div`
   display: flex;
@@ -1118,3 +1136,4 @@ const EmptyMessage = styled.div`
   gap: 8px;
   text-align: center;
 `;
+
