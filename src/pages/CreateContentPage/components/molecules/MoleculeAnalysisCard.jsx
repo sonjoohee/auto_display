@@ -67,17 +67,20 @@ const MoleculeAnalysisCard = ({
   };
 
   const analysisData = getAnalysisData();
+  console.log("showButton", showButton);
 
   return (
     <AnalysisCard>
-      <CardHeader>
-        <H4 color="gray800">{title}</H4>
-        {showButton && buttonText && (
-          <Button Small Outline onClick={onButtonClick}>
-            <InputText color="gray700">{buttonText}</InputText>
-          </Button>
-        )}
-      </CardHeader>
+      {showButton && (
+        <CardHeader>
+          <H4 color="gray800">{title}</H4>
+          {buttonText && (
+            <Button Small Outline onClick={onButtonClick}>
+              <InputText color="gray700">{buttonText}</InputText>
+            </Button>
+          )}
+        </CardHeader>
+      )}
       
       <AnalysisTable>
         {analysisData.map((item, index) => (
@@ -118,7 +121,7 @@ const CardHeader = styled.div`
 const AnalysisTable = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 5px;
 `;
 
 const AnalysisRow = styled.div`
@@ -134,12 +137,15 @@ const AnalysisLabel = styled.div`
   font-size: 18px;
   font-weight: 600;
   color: black;
-  // padding: 8px 12px;
   border-radius: 4px;
   text-align: left;
   display: flex;
   align-items: center;
   white-space: nowrap;
+  height: 40px;
+  line-height: 1.4;
+  padding: 8px 0;
+  box-sizing: border-box;
 `;
 
 const AnalysisValue = styled.div`
@@ -147,10 +153,12 @@ const AnalysisValue = styled.div`
   font-size: 18px;
   color: ${palette.gray800};
   text-align: left;
-  // line-height: 1.5;
-  // padding: 8px 0;
   display: flex;
   align-items: center;
+  height: 40px;
+  line-height: 1.4;
+  padding: 8px 0;
+  box-sizing: border-box;
 `;
 
 // 링크 텍스트 스타일 추가

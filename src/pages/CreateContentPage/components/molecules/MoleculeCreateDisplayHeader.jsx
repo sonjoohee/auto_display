@@ -197,6 +197,7 @@ const MoleculeCreateDisplayHeader = ({
                 (completedSteps.includes(3) || completedSteps.includes(4) ) &&
                 setActiveTab(4)
               }
+              disabled={!(completedSteps.includes(3) || completedSteps.includes(4)) || isLoading || isLoadingReport}
             >
               <TabNumber isActive={activeTab >= 4}>4</TabNumber>
               <TabText isActive={activeTab >= 4}>화면 실행</TabText>

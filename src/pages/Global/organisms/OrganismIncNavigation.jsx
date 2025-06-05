@@ -50,6 +50,13 @@ import {
 import {
   getAllConversationsFromIndexedDB,
   getToolListOnServer,
+  updateInsightName,
+  updateChatName,
+  deleteInsight,
+  deleteChat,
+  getChatList,
+  getInsightList,
+  getInsightDetail
 } from "../../../utils/indexedDB";
 import MoleculeLoginPopup from "../../../pages/LoginSign/components/molecules/MoleculeLoginPopup";
 import MoleculeAccountPopup from "../../../pages/LoginSign/components/molecules/MoleculeAccountPopup";
@@ -159,23 +166,7 @@ const OrganismIncNavigation = () => {
   //사이드바/히스토리 섹션/ .../이름변경
   const handleChangeInsightConfirm = async () => {
     try {
-      const accessToken = sessionStorage.getItem("accessToken");
-      const PUT_DATA = {
-        id: reportIdToChangeName,
-        view_name: newReportName,
-      };
-      await axios.put(
-        `https://wishresearch.kr/panels/update_insight`,
-        PUT_DATA,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-
+      await updateInsightName(reportIdToChangeName, newReportName, isLoggedIn);
       setReportRefreshTrigger((prev) => !prev);
       setIsReportChangePopupOpen(false);
       setReportIdToChangeName(null);
@@ -187,21 +178,8 @@ const OrganismIncNavigation = () => {
 
   const handleChangeChatConfirm = async () => {
     try {
-      const accessToken = sessionStorage.getItem("accessToken");
-      const PUT_DATA = {
-        id: chatIdToChangeName,
-        view_name: newChatName,
-      };
-      await axios.put(`https://wishresearch.kr/panels/update_chat`, PUT_DATA, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
-      // Refresh the chat list after successful update
+      await updateChatName(chatIdToChangeName, newChatName, isLoggedIn);
       setChatRefreshTrigger((prev) => !prev);
-      // Close the pop-up and reset state
       setIsChatChangePopupOpen(false);
       setChatIdToChangeName(null);
       setNewChatName("");
@@ -381,34 +359,7 @@ const OrganismIncNavigation = () => {
     };
   }, [editToggleIndex]);
 
-  // // 삭제 버튼 클릭 시, 삭제 경고 팝업 열기
-  // const handleDeleteButtonClick = (reportId) => {
-  //   setReportIdToDelete(reportId); // 삭제할 reportId 저장
-  //   setIsDeletePopupOpen(true); // 팝업 열기
-  // };
-
-  // const handleChatDeleteButtonClick = (ChatId) => {
-  //   setChatIdToDelete(ChatId); // 삭제할 reportId 저장
-  //   setChatIsDeletePopupOpen(true); // 팝업 열기
-  // };
-
-  // // 인사이트 보관함용 EditBox 열기/닫기 함수
-  // const insightEditBoxToggle = (index, event) => {
-  //   setInsightEditToggleIndex((prevIndex) =>
-  //     prevIndex === index ? null : index
-  //   );
-
-  //   if (event && insightAccordionContentRef.current) {
-  //     const container = insightAccordionContentRef.current;
-  //     const clickedElement = event.currentTarget;
-
-  //     // Calculate the position considering the scroll
-  //     const top = clickedElement.offsetTop - container.scrollTop - 10;
-  //     const left = clickedElement.offsetLeft + clickedElement.offsetWidth - 30;
-
-  //     setInsightEditBoxPosition({ top, left });
-  //   }
-  // };
+ 
 
   useEffect(() => {
     const loadConversations = async () => {
@@ -418,74 +369,7 @@ const OrganismIncNavigation = () => {
     loadConversations();
   }, []);
 
-  // // 대화 리스트 가져오기 (챗 리스트)
-  // useEffect(() => {
-  //   const fetchChatList = async () => {
-  //     try {
-  //       const accessToken = sessionStorage.getItem("accessToken");
-
-  //       if (!accessToken || !isLoggedIn) {
-  //         setChatList([]); // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
-  //         return;
-  //       }
-  //       const response_chat_list = await axios.get(
-  //         "https://wishresearch.kr/panels/chat_list",
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${accessToken}`,
-  //           },
-  //         }
-  //       );
-  //       const response = await getToolListOnServer(1000, 1, isLoggedIn);
-
-  //       // 두 리스트 병합
-  //       const mergedList = [
-  //         ...response_chat_list.data.filter((item) => item.business_info),
-  //         ...response.data,
-  //       ];
-
-  //       // 날짜 기준으로 정렬
-  //       const sortedChatList = mergedList.sort((a, b) => {
-  //         const dateA = b.timestamp;
-  //         const dateB = a.timestamp;
-  //         return dateA - dateB;
-  //       }); // 최근 날짜 순으로 정렬
-
-  //       // console.log("🚀 ~ fetchChatList ~ sortedChatList:", sortedChatList);
-  //       setChatList(sortedChatList);
-  //     } catch (error) {
-  //       // console.error("대화 목록 가져오기 오류:", error);
-  //     }
-  //   };
-  //   fetchChatList();
-  // }, [chatRefreshTrigger, isLoggedIn]);
-
-  // useEffect(() => {
-  //   // 서버에서 보고서 목록을 가져오는 함수
-  //   const fetchReports = async () => {
-  //     try {
-  //       const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰 가져오기
-
-  //       if (!accessToken || !isLoggedIn) {
-  //         setReports([]); // 로그아웃 상태에서는 대화 리스트를 빈 배열로 설정
-  //         return;
-  //       }
-  //       const response = await axios.get(
-  //         "https://wishresearch.kr/panels/insight_list",
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${accessToken}`,
-  //           },
-  //         }
-  //       );
-  //       setReports(response.data); // 보고서 리스트를 상태로 설정
-  //     } catch (error) {
-  //       // console.error("보고서 목록 가져오기 오류:", error);
-  //     }
-  //   };
-  //   fetchReports();
-  // }, [reportRefreshTrigger, isLoggedIn]);
-
+ 
   const handleLoginClick = () => {
     navigate("/Login");
     // setIsLoginPopupOpen(true); // 로그인 팝업 열기
@@ -533,22 +417,7 @@ const OrganismIncNavigation = () => {
     setIsLogoutPopup(false);
   };
 
-  // const handleReportClick = async (reportId) => {
-  //   try {
-  //     const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰 가져오기
-  //     const response = await axios.get(
-  //       `https://wishresearch.kr/panels/insight/${reportId}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${accessToken}`,
-  //         },
-  //       }
-  //     );
-  //     setSelectedReport(response.data); // 선택된 보고서의 상세 데이터 상태로 설정
-  //   } catch (error) {
-  //     // console.error("보고서 상세 정보 가져오기 오류:", error);
-  //   }
-  // };
+ 
 
   // const closePopup = () => {
   //   setSelectedReport(null); // 팝업 닫기
@@ -556,24 +425,10 @@ const OrganismIncNavigation = () => {
 
   const handleDeleteInsightConfirm = async () => {
     try {
-      const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰 가져오기
-      const response = await axios.delete(
-        `https://wishresearch.kr/panels/insight/delete/${reportIdToDelete}`, // reportId를 이용해 URL 동적으로 생성
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      // 삭제가 성공적으로 이루어진 경우 처리할 코드
-
-      // 삭제 후에 상태 업데이트 (예: 삭제된 항목을 리스트에서 제거)
+      await deleteInsight(reportIdToDelete, isLoggedIn);
       setReports((prevReports) =>
         prevReports.filter((report) => report.id !== reportIdToDelete)
       );
-
-      // 팝업 닫기 및 삭제할 reportId 초기화
       setIsDeletePopupOpen(false);
       setReportIdToDelete(null);
       setReportRefreshTrigger((prev) => !prev);
@@ -584,29 +439,15 @@ const OrganismIncNavigation = () => {
 
   const handleDeleteHistoryConfirm = async () => {
     try {
-      const accessToken = sessionStorage.getItem("accessToken"); // 저장된 토큰 가져오기
-      const response = await axios.delete(
-        `https://wishresearch.kr/panels/chat/delete/${chatIdToDelete}`, // reportId를 이용해 URL 동적으로 생성
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      // 삭제가 성공적으로 이루어진 경우 처리할 코드
-
-      // 삭제 후에 상태 업데이트 (예: 삭제된 항목을 리스트에서 제거)
+      await deleteChat(chatIdToDelete, isLoggedIn);
       setReports((prevReports) =>
         prevReports.filter((chat) => chat.id !== chatIdToDelete)
       );
-
-      // 팝업 닫기 및 삭제할 reportId 초기화
       setChatIsDeletePopupOpen(false);
       setChatIdToDelete(null);
       setChatRefreshTrigger((prev) => !prev);
       if (chatIdToDelete === conversationId) {
-        navigate("/Project"); // / 경로로 이동
+        navigate("/Project");
       }
     } catch (error) {
       // console.error("삭제 요청 오류:", error);

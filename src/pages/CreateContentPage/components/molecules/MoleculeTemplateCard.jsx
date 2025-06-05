@@ -18,17 +18,17 @@ const MoleculeTemplateCard = ({
       <TemplateContent>
         <TemplateHeader>
           <TemplateCategory>
-            <Body3 color="primary">{template.category}</Body3>
+            <Body3 color="primary" style = {{fontSize: "12px"}}>{template.category}</Body3>
           </TemplateCategory>
         </TemplateHeader>
         
         <TemplateTitle>
-          <Body1 color="gray800">{template.title}</Body1>
+          <Body1 color="gray800" style = {{fontSize: "20px"}}>{template.title}</Body1>
         </TemplateTitle>
         
         <TemplateDescription>
           <Body3 color="gray600">{template.description}</Body3>
-          <LocationText>
+          <LocationText style = {{marginTop: "15px"}}>
             자료 이용 장소 : <LocationValue>{template.location}</LocationValue>
           </LocationText>
         </TemplateDescription>
@@ -68,8 +68,8 @@ const TemplateCard = styled.div`
 `;
 
 const TemplateImageContainer = styled.div`
-  width: 120px;
-  height: 120px;
+  width: 220px;
+  height: 220px;
   flex-shrink: 0;
   overflow: hidden;
   background-color: ${palette.gray100};
@@ -87,6 +87,7 @@ const TemplateContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-top: 20px;
 `;
 
 const TemplateHeader = styled.div`
@@ -97,21 +98,21 @@ const TemplateHeader = styled.div`
 `;
 
 const TemplateCategory = styled.div`
-  font-size: 8px;
   color: ${palette.primary};
   font-weight: 500;
   background-color: ${palette.primaryLightest};
-  padding: 3px;
+  padding: 3px 8px;
   border-radius: 2px;
+  margin-top: -10px;
 `;
 
 const TemplateTitle = styled.div`
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   color: ${palette.gray800};
   margin-bottom: 8px;
   text-align: left;
-  
+  margin-top: 5px;
 `;
 
 const TemplateDescription = styled.div`

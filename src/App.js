@@ -19,6 +19,7 @@ import axios from "axios";
 import styled, { css } from "styled-components";
 import images from "./assets/styles/Images";
 import { palette } from "./assets/styles/Palette";
+import { checkTokenValidity, checkBackendServerStatus } from './utils/indexedDB';
 
 import PageTerms from "./pages/PageTerms";
 import PagePolicy from "./pages/PagePolicy";
@@ -40,17 +41,19 @@ import PageStyleGuide from "./pages/DesignPage/PageStyleGuide";
 // 로그인, 회원가입
 import OrganismLogin from "./pages/Global/organisms/OrganismLogin";
 import OrganismSignin from "./pages/Global/organisms/OrganismSignin";
-import OrganismSignupEducation from "./pages/Global/organisms/OrganismSignupEducation";
+import OrganismSignupAutodisplay from "./pages/Global/organisms/OrganismSignupAutodisplay";
 
 import AtomProjectRouter from "./pages/Global/atoms/AtomProjectRouter";
 
 import PageCreateConent from "./pages/CreateContentPage/components/pages/PageCreateConent";
+import OrganismTemplatePreview from "./pages/CreateContentPage/components/organisms/OrganismTemplatePreview";
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useAtom(IS_LOGGED_IN); // 로그인 상태를 위한 아톰
   const [, setUserName] = useAtom(USER_NAME); // 유저 이름 아톰
   const [, setUserEmail] = useAtom(USER_EMAIL); // 유저 이메일 아톰
   const [, setIsSocialLoggedIn] = useAtom(IS_SOCIAL_LOGGED_IN); // 소셜 로그인 상태 아톰
-  const [isServerDown, setIsServerDown] = useState(false); // 서버 상태 관리
+  const [isServerDown, setIsServerDown] = useState(false); // 서버 상태 관리s
   const [, setExpertDetail] = useAtom(EXPERT_DETAIL_DATA); // 화면 크기를 체크하는 useEffect
   const [, setIsMobile] = useAtom(IS_MOBILE);
   const [isMarketing, setIsMarketing] = useAtom(IS_MARKETING);
@@ -158,11 +161,7 @@ function App() {
     const checkServerStatus = async () => {
       if (token) {
         try {
-          await axios.get(`https://wishresearch.kr/api/db/token_check`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          await checkTokenValidity();
         } catch (error) {
           sessionStorage.removeItem("accessToken");
           sessionStorage.removeItem("lastUrl");
@@ -179,12 +178,7 @@ function App() {
         }
       } else {
         try {
-          const response = await axios.get(
-            `https://wishresearch.kr/api/db/back_server`,
-            {
-              timeout: 3000, // 3초 타임아웃 설정
-            }
-          );
+          const response = await checkBackendServerStatus();
           // 서버가 정상일 경우
           if (response.status === 200) {
             setIsServerDown(false);
@@ -338,14 +332,14 @@ function App() {
             }
           /> */}
 
-          {/* <Route
-            path="/SignupEducation"
+          <Route
+            path="/SignupAutodisplay"
             element={
-              <RedirectIfLoggedIn>
-                <OrganismSignupEducation />
-              </RedirectIfLoggedIn>
-            }
-          /> */}
+              // <RedirectIfLoggedIn>
+                <OrganismSignupAutodisplay />
+              // </RedirectIfLoggedIn>
+              }
+          />
 
          
 
@@ -363,6 +357,15 @@ function App() {
             element={
               // <RequireToken>
                 <PageCreateConent />
+              // </RequireToken>
+            }
+          />
+
+          <Route
+            path="/TemplatePreview"
+            element={
+              // <RequireToken>
+                <OrganismTemplatePreview />
               // </RequireToken>
             }
           />

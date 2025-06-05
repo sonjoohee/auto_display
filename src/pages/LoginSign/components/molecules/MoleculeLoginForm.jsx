@@ -6,7 +6,7 @@ import styled, { css, ThemeProvider } from "styled-components";
 import theme from "../../../../assets/styles/Theme";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { isValidEmail } from "../atoms/AtomValidation";
-import { UserCreditInfo } from "../../../../utils/indexedDB";
+import { UserCreditInfo, loginNormal, loginMarketing, getUserInfo } from "../../../../utils/indexedDB";
 import { CustomInput } from "../../../../assets/styles/InputStyle";
 import images from "../../../../assets/styles/Images";
 import { EMAIL, ERROR_STATUS, ACCESSABLE_EXPERT } from "../../../AtomStates";
@@ -104,122 +104,42 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
     if (!validateForm()) return;
 
     try {
-      let response;
+      let result;
 
       // 로그인 요청
       if (isMarketing) {
-        response = await fetch(
-          "https://wishresearch.kr/api/user/defaultLogin_marketing/",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email,
-              password,
-              chatGetId: conversationId,
-            }),
-          }
-        );
+        result = await loginMarketing(email, password, conversationId);
       } else {
-        response = await fetch(
-          "https://wishresearch.kr/api/user/login/normal/",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
-          }
-        );
+        result = await loginNormal(email, password);
       }
 
-      if (response.ok) {
-        const result = await response.json();
-        const accessToken = result.access_token;
-        sessionStorage.setItem("accessToken", accessToken);
+      const accessToken = result.access_token;
+      sessionStorage.setItem("accessToken", accessToken);
 
-        const userInfoResponse = await fetch(
-          "https://wishresearch.kr/api/user/userInfo/",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+      const userInfo = await getUserInfo(accessToken);
 
-        if (userInfoResponse.ok) {
-          const userInfo = await userInfoResponse.json();
-          // console.log("🚀 ~ handleLogin ~ userInfo:", userInfo);
+      // 유저 정보 저장
+      setUserName(userInfo.name);
+      setUserEmail(userInfo.email);
+      setUserMembership(userInfo.membership);
+      setEducationState(userInfo.education_state);
+      setAdminState(userInfo.is_admin);
+      sessionStorage.setItem("userName", userInfo.name);
+      sessionStorage.setItem("userEmail", userInfo.email);
+      sessionStorage.setItem("userCreatedAt", userInfo.signup_date);
 
-          // if (
-          //   userInfo.email === "yspark@userconnect.kr" ||
-          //   userInfo.email === "jsjun0319@hanyang.ac.kr" ||
-          //   userInfo.email === "sjjjang00@gmail.com" ||
-          //   userInfo.email === "sungeun_lee@userconnect.kr" ||
-          //   userInfo.email === "okhyund@userconnect.kr" ||
-          //   userInfo.email === "hsb4557@naver.com" ||
-          //   userInfo.email === "choi9110@nate.com" ||
-          //   userInfo.email === "gusrms2346@naver.com" ||
-          //   userInfo.email === "08doyun@naver.com" ||
-          //   userInfo.email === "ehdbs08@hanyang.ac.kr" ||
-          //   userInfo.email === "suauncle@gmail.com" ||
-          //   userInfo.email === "pleasure4ur@gmail.com" ||
-          //   userInfo.email === "r_pleasure4u@naver.com" ||
-          //   userInfo.email === "lhm1186@naver.com" ||
-          //   userInfo.email === "pixelweb@naver.com" ||
-          //   userInfo.email === "hyeeun@userconnect.kr" ||
-          //   userInfo.email === "pasrk0821@naver.com" ||
-          //   userInfo.email === "okhyund@gmail.com" ||
-          //   userInfo.email === "sunbin12325@gmail.com" ||
-          //   userInfo.email === "yspark.uc@gmail.com" ||
-          //   userInfo.email === "uvaluator@naver.com" ||
-          //   userInfo.email === "jungmin_lee@userconnect.kr" ||
-          //   userInfo.email === "syyoon@userconnect.kr" ||
-          //   userInfo.email === "star7613son@gmail.com"
-          // ) {
-          //   setAccessableExpert(true);
-          // }
-          // 유저 정보 저장
-          setUserName(userInfo.name);
-          setUserEmail(userInfo.email);
-          setUserMembership(userInfo.membership);
-          setEducationState(userInfo.education_state);
-          setAdminState(userInfo.is_admin);
-          sessionStorage.setItem("userName", userInfo.name);
-          sessionStorage.setItem("userEmail", userInfo.email);
-          sessionStorage.setItem("userCreatedAt", userInfo.signup_date); // 서버 토큰 저장
+      const userCreditValue = await UserCreditInfo(true);
+      setUserCredits(userCreditValue);
+      setIsLoggedIn(true);
+      setLoginSuccess(true);
+      navigate("/DashBoard");
 
-          const accessToken = sessionStorage.getItem("accessToken");
-          if (accessToken) {
-            const userCreditValue = await UserCreditInfo(true);
-
-            // 전역 상태의 크레딧 정보 업데이트
-            setUserCredits(userCreditValue);
-          }
-          setIsLoggedIn(true);
-
-          // 모바일 기기 체크 후 처리 수정
-          // if (isMobileDevice()) {
-          //   console.log("🚀 ~ handleLogin ~ 모바일 기기 체크 후 처리 수정");
-          //   setShowMobileWarning(true); // 모바일 경고창 표시
-          //   setLoginSuccess(false); // 로그인 성공 상태를 false로 유지
-          // } else {
-          // console.log("🚀 ~ handleLogin ~ PC에서는 바로 로그인 성공 처리");
-          setLoginSuccess(true); // PC에서는 바로 로그인 성공 처리
-
-          // navigate("/Project");
-          navigate("/DashBoard");
-
-          // }
-        } else {
-          setErrorStatus("유저 정보를 불러오는 중 오류가 발생했습니다.");
-        }
-      } else {
-        const result = await response.json();
-        setErrorStatus(result.message || "로그인 중 오류가 발생했습니다.");
-      }
     } catch (error) {
-      setErrorStatus("로그인 중 오류가 발생했습니다.");
+      if (error.response && error.response.data && error.response.data.message) {
+        setErrorStatus(error.response.data.message);
+      } else {
+        setErrorStatus("로그인 중 오류가 발생했습니다.");
+      }
     }
   };
   // const validateEmail = (email) => {
@@ -418,7 +338,7 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  // 가입 문의 로직
+                 navigate("/SignupAutodisplay");
                 }}
               >
                 가입 문의하기

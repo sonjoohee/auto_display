@@ -50,6 +50,7 @@ import {
 } from "../assets/styles/Typography";
 import axios from "axios";
 import { unixDay } from "d3";
+import { submitUserSupport, submitUserLeave } from '../utils/indexedDB';
 
 const PageMyProfile = () => {
   const navigate = useNavigate();
@@ -140,22 +141,8 @@ const PageMyProfile = () => {
 
   const handleContactSubmit = async () => {
     if (isContactFormValid()) {
-      // API 호출을 위한 데이터 준비
-      const requestData = {
-        email: contactForm.email,
-        purpose: contactForm.purpose,
-        content: contactForm.content,
-      };
-
       try {
-        const response = await axios.post(
-          "https://wishresearch.kr/api/user/support/",
-          {
-            purpose: contactForm.purpose,
-            content: contactForm.content,
-          },
-          axiosConfig
-        );
+        await submitUserSupport(contactForm, isLoggedIn);
         closeContactPopup();
       } catch (error) {
         // console.error("문의하기 제출 실패:", error);
@@ -165,36 +152,21 @@ const PageMyProfile = () => {
 
   const handleMemberDeleteSubmit = async () => {
     if (isMemberDeleteFormValid()) {
-      // TODO: 회원탈퇴 제출 로직 구현
       try {
-        const response = await axios.post(
-          "https://wishresearch.kr/api/user/leave/",
-          {
-            leave_comment: memberDeleteForm.reason,
-          },
-          axiosConfig
-        );
+        await submitUserLeave(memberDeleteForm.reason, isLoggedIn);
         closeMemberDeletePopup();
 
         let url_address = "/";
         if (educationState) {
           url_address = "/DCB-Education";
         }
-        // sessionStorage.removeItem("accessToken"); // 세션 스토리지에서 토큰 삭제
-        // sessionStorage.removeItem("userName");
-        // sessionStorage.removeItem("userEmail");
-        // sessionStorage.removeItem("isSocialLogin");
-        // localStorage.removeItem("userName");
-        // localStorage.removeItem("userEmail");
+        
         sessionStorage.clear(); // 세션 스토리지 모두 삭제
         localStorage.clear(); // 로컬 스토리지 모두 삭제
-        setIsLoggedIn(false);
-        setIsSocialLoggedIn(false);
-        setUserName("");
-        setUserEmail("");
-        window.location.href = url_address; // 페이지 이동
+        
+        // 페이지 이동 또는 새로고침 로직
       } catch (error) {
-        // console.error("회원탈퇴 제출 실패:", error);
+        console.error("회원탈퇴 실패:", error);
       }
     }
   };
