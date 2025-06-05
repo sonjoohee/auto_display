@@ -206,7 +206,10 @@ const MoleculeLoginForm = ({ onClosePopup }) => {
           // } else {
           // console.log("🚀 ~ handleLogin ~ PC에서는 바로 로그인 성공 처리");
           setLoginSuccess(true); // PC에서는 바로 로그인 성공 처리
-          navigate("/Project");
+
+          // navigate("/Project");
+          navigate("/DashBoard");
+
           // }
         } else {
           setErrorStatus("유저 정보를 불러오는 중 오류가 발생했습니다.");
