@@ -1,4 +1,4 @@
-// MoleculeSignupForm.jsx
+
 import React, { useEffect, useState, useRef } from "react";
 import { useAtom } from "jotai";
 import { useNavigate, Link } from "react-router-dom";
@@ -25,7 +25,9 @@ import { palette } from "../../../../assets/styles/Palette";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import { Helptext } from "../../../../assets/styles/Typography";
 import MoleculeSignupEducationPopup from "./MoleculeSignupEducationPopup";
-const MoleculeSignupEducationForm = () => {
+import { signupAutodisplay, checkEmailExists } from "../../../../utils/indexedDB";
+
+const MoleculeSignupAutodisplayForm = () => {
   const [signUpName, setSignUpName] = useAtom(SIGN_UP_NAME);
   const [signUpEmail, setSignUpEmail] = useAtom(SIGN_UP_EMAIL);
   const [signUpPassword, setSignUpPassword] = useAtom(SIGN_UP_PASSWORD);
@@ -47,7 +49,8 @@ const MoleculeSignupEducationForm = () => {
   const [isCommercialEmail, setIsCommercialEmail] = useState(false);
   const [codeChars, setCodeChars] = useState(["", "", "", "", ""]);
   const [educationAuthCode, setEducationAuthCode] = useState("");
-  const [educationCodeError, setEducationCodeError] = useState("");
+  const [autodisplayAuthCode, setAutodisplayAuthCode] = useState("");
+  const [autodisplayCodeError, setAutodisplayCodeError] = useState("");
 
   const navigate = useNavigate();
 
@@ -67,19 +70,19 @@ const MoleculeSignupEducationForm = () => {
 
   useEffect(() => {
     const newCode = codeChars.join("");
-    setEducationAuthCode(newCode);
+    setAutodisplayAuthCode(newCode);
 
     if (newCode.length === 5) {
       const alphanumericRegex = /^[a-zA-Z0-9]{5}$/;
       if (alphanumericRegex.test(newCode)) {
-        setEducationCodeError("");
+        setAutodisplayCodeError("");
       } else {
-        setEducationCodeError("교육 코드는 5자리 영문 또는 숫자여야 합니다.");
+        setAutodisplayCodeError("교육 코드는 5자리 영문 또는 숫자여야 합니다.");
       }
     } else if (newCode.length > 0 && newCode.length < 5) {
-      setEducationCodeError("교육 코드는 5자리여야 합니다.");
+      setAutodisplayCodeError("교육 코드는 5자리여야 합니다.");
     } else {
-      setEducationCodeError("");
+      setAutodisplayCodeError("");
     }
   }, [codeChars]);
 
@@ -89,7 +92,7 @@ const MoleculeSignupEducationForm = () => {
       !signUpEmail ||
       !signUpPassword ||
       !confirmPassword ||
-      educationAuthCode.length < 5
+      autodisplayAuthCode.length < 5
     ) {
       setErrorStatus("모든 필드를 입력해주세요.");
       return false;
@@ -116,56 +119,46 @@ const MoleculeSignupEducationForm = () => {
   };
 
   const handleSignup = async (e) => {
-    let response;
     e.preventDefault();
     setErrorStatus("");
     if (!validateForm()) return;
 
-    setIsLoading(true); // 로딩 상태 시작
+    setIsLoading(true);
 
     try {
-      response = await fetch(
-        "https://wishresearch.kr/api/user/education_signup/",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: signUpName,
-            email: signUpEmail,
-            password: signUpPassword,
-            phone_number: phoneNumber,
-            education_state: true,
-            // education_code: projectEducationCode,
-            education_code: "edu_000001",
-            education_auth_code: educationAuthCode,
-            role: signUpRole,
-            status: signUpStatus,
-          }),
-        }
-      );
+      const signupData = {
+        name: signUpName,
+        email: signUpEmail,
+        password: signUpPassword,
+        phone_number: phoneNumber,
+        education_state: true,
+        autodisplay_auth_code: autodisplayAuthCode,
+        role: signUpRole,
+        status: signUpStatus,
+      };
 
-      if (response.ok) {
-        setSignupSuccessful(true); // 회원가입 성공 상태 설정
-        setSignUpName("");
-        // setSignUpEmail('');
-        setSignUpPassword("");
-        setConfirmPassword("");
-        setSignUpRole("user");
-        setSignUpStatus("inactive");
-      } else {
-        const result = await response.json();
-        if (result.email[0] === "user의 email은/는 이미 존재합니다.") {
+      await signupAutodisplay(signupData);
+      
+      setSignupSuccessful(true);
+      setSignUpName("");
+      setSignUpPassword("");
+      setConfirmPassword("");
+      setSignUpRole("user");
+      setSignUpStatus("inactive");
+
+    } catch (error) {
+      if (error.response && error.response.data) {
+        const result = error.response.data;
+        if (result.email && result.email[0] === "user의 email은/는 이미 존재합니다.") {
           setErrorStatus("이미 사용 중인 이메일 주소입니다.");
         } else {
           setErrorStatus(result.email || "회원가입 중 오류가 발생했습니다.");
         }
+      } else {
+        setErrorStatus("서버와의 통신 중 오류가 발생했습니다.");
       }
-    } catch (error) {
-      // console.log("🚀 ~ handleSignup ~ error response:", response);
-      // setErrorStatus(error);
-      setErrorStatus("서버와의 통신 중 오류가 발생했습니다.");
     } finally {
-      setIsLoading(false); // 로딩 상태 종료
+      setIsLoading(false);
     }
   };
 
@@ -278,12 +271,12 @@ const MoleculeSignupEducationForm = () => {
       "unitel.co.kr",
     ];
     const emailDomain = email.split("@")[1];
-    // if (commonEmailDomains.includes(emailDomain)) {
-    //   setErrorStatus("상용 이메일은 사용할 수 없습니다.");
-    //   setIsEmailValid(false);
-    //   setIsCommercialEmail(true);
-    //   return;
-    // }
+    if (commonEmailDomains.includes(emailDomain)) {
+      setErrorStatus("상용 이메일은 사용할 수 없습니다.");
+      setIsEmailValid(false);
+      setIsCommercialEmail(true);
+      return;
+    }
 
     setIsEmailValid(true);
     setIsCommercialEmail(false);
@@ -293,11 +286,8 @@ const MoleculeSignupEducationForm = () => {
   const handleEmailCheck = async () => {
     validateEmail(signUpEmail);
     try {
-      const response = await axios.post(
-        "https://wishresearch.kr/api/user/checkEmail/",
-        { email: signUpEmail }
-      );
-      if (response.data.exists) {
+      const response = await checkEmailExists(signUpEmail);
+      if (response.exists) {
         setErrorStatus("이미 사용 중인 이메일 주소입니다.");
       } else {
         setSuccessStatus("사용 가능한 이메일 주소입니다.");
@@ -371,12 +361,12 @@ const MoleculeSignupEducationForm = () => {
                     중복확인
                   </Button>
                 </div>
-                {/* {
+                {
                   <Helptext color="gray600" align="left">
                     공용 도메인(기업, 학교, 기관) 이메일만 사용 가능하며, 상용
                     이메일(gmail, naver, daum 등)은 사용할 수 없습니다.
                   </Helptext>
-                } */}
+                }
                 {errorStatus && (
                   <ErrorMessage style={{ color: "red", fontSize: "0.8rem" }}>
                     {errorStatus}
@@ -561,11 +551,11 @@ const MoleculeSignupEducationForm = () => {
                 />
               ))}
             </div>
-            {educationCodeError && (
+            {autodisplayCodeError && (
               <ErrorMessage
                 style={{ color: "red", textAlign: "left", marginTop: "8px" }}
               >
-                {educationCodeError}
+                {autodisplayCodeError}
               </ErrorMessage>
             )}
           </div>
@@ -625,7 +615,7 @@ const MoleculeSignupEducationForm = () => {
   );
 };
 
-export default MoleculeSignupEducationForm;
+export default MoleculeSignupAutodisplayForm;
 
 const SignupFormContainer = styled.div`
   > div {

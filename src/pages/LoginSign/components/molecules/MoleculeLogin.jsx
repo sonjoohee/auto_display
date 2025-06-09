@@ -5,7 +5,7 @@ import styled, { ThemeProvider } from "styled-components";
 import theme from "../../../../assets/styles/Theme";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
-import MoleculeGoogleLoginForm from "./MoleculeGoogleLoginForm";
+// import MoleculeGoogleLoginForm from "./MoleculeGoogleLoginForm";
 import MoleculeLoginForm from "./MoleculeLoginForm";
 import { LOGIN_SUCCESS } from "../../../../pages/AtomStates"; // 아톰 임포트
 import { palette } from "../../../../assets/styles/Palette";
@@ -32,7 +32,7 @@ const MoleculeLogin = ({ onClosePopup = () => {} }) => {
           <span>시작하기</span>
         </h1>
 
-        <MoleculeGoogleLoginForm />
+        {/* <MoleculeGoogleLoginForm /> */}
         <Separator>
           <hr />
           <span>or</span>

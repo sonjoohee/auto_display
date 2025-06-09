@@ -38,16 +38,18 @@ const OrganismDesignConceptSelector = ({
                   style={{ cursor: 'pointer', marginTop: '2px' }}
                 />
                 <div style={{ flex: 1 , textAlign: 'left' }}>
-                  <Body3 color="gray800" style={{ fontWeight: "600", marginBottom: '4px' }}>
+                  <Body3 color="gray800" style={{ fontWeight: "600" }}>
                     {concept.name}
-                  </Body3>
-                  <Body3 color="gray500" style={{ textAlign: 'left', lineHeight: '1.4' }}>
-                    {concept.description}
                   </Body3>
                 </div>
               </div>
             </ConceptHeader>
             <ConceptPreview />
+            <ConceptDescription>
+              <Body3 color="gray500" style={{ textAlign: 'left', lineHeight: '1.4' }}>
+                {concept.description}
+              </Body3>
+            </ConceptDescription>
           </ConceptCard>
         ))}
       </ConceptGrid>
@@ -102,9 +104,14 @@ const ConceptInfo = styled.div`
   text-align: left;
 `;
 
+const ConceptDescription = styled.div`
+  margin-top: 12px;
+`;
+
 const ConceptPreview = styled.div`
   width: 100%;
-  height: 80px;
-  background-color: #E9ECEF;
+  height: 120px;
+  background-color: #F8F9FA;
   border-radius: 4px;
+  border: 1px solid #E9ECEF;
 `;

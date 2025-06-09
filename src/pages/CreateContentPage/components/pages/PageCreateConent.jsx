@@ -48,10 +48,11 @@ import {
 import "react-dropzone-uploader/dist/styles.css";
 import { useDynamicViewport } from "../../../../assets/DynamicViewport";
 import MoleculeFileUpload from "../molecules/MoleculeFileUpload";
-import OrganismDesignConceptSelector from "../orangisms/OrganismDesignConceptSelector";
+import OrganismDesignConceptSelector from "../organisms/OrganismDesignConceptSelector";
 import MoleculeAnalysisCard from "../molecules/MoleculeAnalysisCard";
 import MoleculeTemplateCard from "../molecules/MoleculeTemplateCard";
 import MoleculeCreateDisplayHeader from "../molecules/MoleculeCreateDisplayHeader";
+import OrganismTemplatePreview from "../organisms/OrganismTemplatePreview";
 
 const GlobalStyle = createGlobalStyle`  
   .markdown-body p {
@@ -184,6 +185,14 @@ const dummyTemplateData = [
   }
 ];
 
+// 컴포넌트 상단에 옵션 배열 정의
+const contentTypeOptions = [
+  "정보전달형",
+  "프로세스 안내형", 
+  "흥미유도형",
+  "경고/주의형",
+  "광고/홍보형"
+];
 
 const PageNps = () => {
   const navigate = useNavigate();
@@ -311,15 +320,113 @@ const PageNps = () => {
     setShowPopupError(false);
   };
 
-  const handleSubmitConcept = async () => {
-    // setIsLoading(true);
-    
-    // 2초 후 다음 단계로 이동 (API 호출 시뮬레이션)
- 
-      handleNextStep(1);
-      setToolSteps(2);
-      setIsLoading(false);
 
+  const abortControllerRef = useRef(null);
+
+  const handleSubmitConcept = async () => {
+
+    // abortControllerRef.current = new AbortController();
+    // const signal = abortControllerRef.current.signal;
+    // const timeStamp = new Date().getTime();
+    // 2초 후 다음 단계로 이동 (API 호출 시뮬레이션)'
+    handleNextStep(1);
+    setToolSteps(2);
+    setIsLoading(false);
+
+    // let response;
+
+    // try {
+    //   if (interviewModeType === "conceptBoard") {
+    //     // 파일 업로드를 통한 콘텐츠 생성
+    //     const Data = {
+    //       business: businessDescription,
+    //       tool_id: "content_" + Date.now(),
+    //       files: uploadedFiles,
+    //       contentType: "display_content"
+    //     };
+
+    //     setFileNames(uploadedFiles.map((file) => file.name));
+       
+    //     let retryCount = 0;
+    //     const maxRetries = 5;
+
+    //     while (retryCount < maxRetries) {
+    //       try {
+    //         // 콘텐츠 생성을 위한 멀티모달 요청
+    //         response = await InterviewXContentAnalysisMultimodalRequest(
+    //           Data,
+    //           isLoggedIn
+    //         );
+
+    //         if (
+    //           response &&
+    //           response.success &&
+    //           response.data
+    //         ) {
+    //           break; // 올바른 응답 형식이면 루프 종료
+    //         }
+
+    //         retryCount++;
+    //       } catch (error) {
+    //         console.error(`Retry ${retryCount + 1} failed:`, error);
+    //         retryCount++;
+    //         if (retryCount >= maxRetries) throw error;
+    //       }
+    //     }
+
+    //     if (retryCount >= maxRetries) {
+    //       throw new Error(
+    //         "콘텐츠 분석에 실패했습니다. 다시 시도해주세요."
+    //       );
+    //     }
+
+    //   } else {
+    //     // 텍스트만으로 콘텐츠 생성
+    //     const Data = {
+    //       type: "content_analysis_text",
+    //       business: businessDescription,
+    //       contentPurpose: selectedPurposes.customerList,
+    //       contentTarget: contentTarget
+    //     };
+
+    //     let retryCount = 0;
+    //     const maxRetries = 5;
+
+    //     while (retryCount < maxRetries) {
+    //       try {
+    //         response = await InterviewXContentTextAnalysisRequest(Data, isLoggedIn);
+
+    //         if (
+    //           response &&
+    //           response.success &&
+    //           response.data
+    //         ) {
+    //           break; // 올바른 응답 형식이면 루프 종료
+    //         }
+
+    //         retryCount++;
+    //       } catch (error) {
+    //         console.error(`Retry ${retryCount + 1} failed:`, error);
+    //         retryCount++;
+    //         if (retryCount >= maxRetries) throw error;
+    //       }
+    //     }
+
+    //     if (retryCount >= maxRetries) {
+    //       throw new Error(
+    //         "텍스트 분석에 실패했습니다. 다시 시도해주세요."
+    //       );
+    //     }
+    //   }
+
+  
+
+    // } catch (error) {
+    //   console.error("콘텐츠 분석 중 오류 발생:", error);
+    //   setShowPopupError(true);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   
@@ -357,15 +464,45 @@ const PageNps = () => {
     setIsLoadingReport(true);
     
     // 3초 후 완료 (API 호출 시뮬레이션)
-  
-      handleNextStep(2);
-      setToolSteps(3);
-      setCompletedStatus(true);
-      setCompletedSteps(prev => [...prev, 3]);
-      setIsLoadingReport(false);
+    handleNextStep(2);
+    setToolSteps(3);
+    setCompletedStatus(true);
+    setCompletedSteps(prev => [...prev, 3]);
+    setIsLoadingReport(false);
+
+    console.log("selectedPurposes.customerList", selectedPurposes.customerList);
+    console.log("contentTarget", contentTarget);
+    console.log("selectedDesignConcepts", selectedDesignConcepts);
+
+    // try {
+
+    //   const data = {
+    //     purpose: selectedPurposes.customerList,
+    //     target: contentTarget,
+    //     designConcepts: selectedDesignConcepts,
+    //   };
+      
+
+
+      
+    // } catch (error) {
+    //   console.error("콘텐츠 분석 중 오류 발생:", error);
+    //   setShowPopupError(true);
+    // } finally {
+    //   setIsLoadingReport(false);
+    // }
  
   };
 
+
+  const handleRegenerateContent = async () => {
+    setIsLoadingTemplate(true);
+    // 3초 후 템플릿 선택 화면 표시
+    setTimeout(() => {
+      setIsLoadingTemplate(false);
+    }, 3000);  
+    
+  };
 
   const handleChangeStatus = ({ meta, file, remove }, status) => {
     const maxSize = 20 * 1024 * 1024; // 20MB
@@ -449,9 +586,9 @@ const PageNps = () => {
   };
 
   
-  const handlePreview = () => {
-    // 미리보기 로직
-    console.log("미리보기 실행");
+  const handleTemplatePreview = (template) => {
+    console.log("handleTemplatePreview 호출됨", template);
+    navigate('/TemplatePreview', { state: { template } });
   };
 
   const handleSave = () => {
@@ -463,6 +600,81 @@ const PageNps = () => {
     setShowPreviewPopup(false);
     setSelectedTemplate(null);
   };
+
+  
+
+
+  // useEffect(() => {
+  //   // 새로고침 감지 함수
+  //   const detectRefresh = () => {
+  //     // 현재 URL 확인
+  //     const currentUrl = window.location.href;
+  //     // console.log("currentUrl", currentUrl);
+  //     if (currentUrl.toLowerCase().includes("nps")) {
+  //       // 세션 스토리지에서 마지막 URL 가져오기
+  //       // console.log("세션 스토리지에서 마지막 URL 가져오기");
+
+  //       const lastUrl = sessionStorage.getItem("lastUrl");
+
+  //       // 마지막 URL이 현재 URL과 같으면 새로고침
+  //       if (lastUrl && lastUrl === currentUrl) {
+  //         // console.log("새로고침 감지: URL 비교");
+  //         navigate("/Project");
+  //         return true;
+  //       }
+
+  //       // 현재 URL 저장
+  //       sessionStorage.setItem("lastUrl", currentUrl);
+  //     }
+
+  //     return false;
+  //   };
+
+  //   // beforeunload 이벤트 핸들러
+  //   const handleBeforeUnload = (event) => {
+  //     // 이벤트 취소 (표준에 따라)
+  //     event.preventDefault();
+  //     // Chrome은 returnValue 설정 필요
+  //     event.returnValue = "";
+
+  //     // 새로고침 시 루트 페이지로 이동
+  //     navigate("/Project");
+  //   };
+
+  //   // F5 키 또는 Ctrl+R 감지
+  //   const handleKeyDown = (event) => {
+  //     if (
+  //       (event.key === "r" && (event.metaKey || event.ctrlKey)) ||
+  //       event.key === "F5"
+  //     ) {
+  //       // F5 키 코드
+  //       event.preventDefault();
+  //       navigate("/Project");
+  //     }
+  //   };
+
+  //   // 컴포넌트가 마운트될 때 새 AbortController 생성
+  //   abortControllerRef.current = new AbortController();
+
+  //   // 함수 실행
+  //   detectRefresh();
+
+  //   // 이벤트 리스너 등록
+  //   // window.addEventListener("beforeunload", handleBeforeUnload);
+  //   window.addEventListener("keydown", handleKeyDown);
+
+  //   // 컴포넌트 언마운트 시 이벤트 리스너 제거
+  //   return () => {
+  //     // window.removeEventListener("beforeunload", handleBeforeUnload);
+  //     window.removeEventListener("keydown", handleKeyDown);
+
+  //     // 진행 중인 모든 API 요청 중단
+  //     if (abortControllerRef.current) {
+  //       abortControllerRef.current.abort();
+  //     }
+  //   };
+  // }, [navigate]);
+
 
   return (
     <>
@@ -476,17 +688,9 @@ const PageNps = () => {
           completedSteps={completedSteps}
           isLoading={isLoading}
           isLoadingReport={isLoadingReport}
-          onPreview={handlePreview}
+          onPreview={handleTemplatePreview}
           onSave={handleSave}
         />
-    
-      {/* <MoleculeTabHeader
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              completedSteps={completedSteps}
-              isLoading={isLoading}
-              isLoadingReport={isLoadingReport}
-            /> */}
 
         <MainContent Wide1030>
           <DesignAnalysisWrap>
@@ -567,8 +771,8 @@ const PageNps = () => {
                     <H3 color="gray800" style={{textAlign: "left" }}>AI 콘텐츠 생성을 위한 자료를 업로드해주세요 </H3>
                     <InfoBox>
                       <InfoContent>
-                        <Body2 color="black" style={{ fontWeight: "600", textAlign: "left" }}>
-                          디지털 기기명
+                        <Body2 color="black" style={{ fontWeight: "600", textAlign: "left", fontSize: "20px" }}>
+                          디스플레이 기기명
                         </Body2>
                         <DeviceInfoBox>
                           <Body3 color="gray600">해상도 정보</Body3>
@@ -587,14 +791,12 @@ const PageNps = () => {
 
                   <div className="content">
                     <TabContent5Item required>
-
-                    
                       <InterviewModeSelection style={{ marginBottom: "-5px" }}>
                         <Button 
                           Medium 
                           Outline
                           style={{
-                            backgroundColor: interviewModeType === "conceptBoard" ? "#E0E4EB" : "transparent",
+                            backgroundColor: interviewModeType === "conceptBoard" ? "#F7F8FA" : "transparent",
                             borderColor: interviewModeType === "conceptBoard" ? "#E0E4EB" : "#E0E4EB"
                           }}
                           onClick={() => {
@@ -612,7 +814,7 @@ const PageNps = () => {
                           Medium 
                           Outline
                           style={{
-                            backgroundColor: interviewModeType === "explanation" ? "#E0E4EB" : "transparent",
+                            backgroundColor: interviewModeType === "explanation" ? "#F7F8FA" : "transparent",
                             borderColor: interviewModeType === "explanation" ? "#E0E4EB" : "#E0E4EB"
                           }}
                           onClick={() => {
@@ -629,7 +831,7 @@ const PageNps = () => {
 
 
                       {interviewModeType === "conceptBoard" && (
-                        <div className="content">
+                        <div className="content" style={{marginTop: "5px"}}>
                           <MoleculeFileUpload
                             fileNames={fileNames ?? []}
                             handleChangeStatus={handleChangeStatus}
@@ -642,7 +844,7 @@ const PageNps = () => {
                     {interviewModeType === "explanation" && (
                       <>
                        
-                        <FormBox Large>
+                        <FormBox Large style={{marginTop: "-20px"}}>
                             <CustomTextarea
                               Edit
                               rows={6}
@@ -657,25 +859,10 @@ const PageNps = () => {
                             
                           </FormBox>
                        
-                        
                       </>
                     )}
                   </div>
 
-                  {isLoading ? (
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                        minHeight: "200px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <AtomPersonaLoader message="로딩 중..." />
-                    </div>
-                  ) : (
-                    <>
                       <Button
                         Other
                         Primary
@@ -686,8 +873,7 @@ const PageNps = () => {
                       >
                         다음
                       </Button>
-                    </>
-                  )}
+                  
                 </>
               </TabContent5>
             )}
@@ -714,7 +900,6 @@ const PageNps = () => {
 
                         <ContentAnalysisSection>
                           <MoleculeAnalysisCard
-                            
                             onButtonClick={() => {
                               console.log("분석 상세 확인 클릭");
                             }}
@@ -730,7 +915,7 @@ const PageNps = () => {
 
                             <TabContent5Item>
                               <div className="title">
-                                <Body1 color="gray700">콘텐츠 목적</Body1>
+                                <Body3 color="gray700">콘텐츠 목적</Body3>
                               </div>
 
                               <SelectBox ref={customerListRef}>
@@ -767,31 +952,20 @@ const PageNps = () => {
 
                                 {selectBoxStates.customerList && (
                                   <SelectBoxList dropUp={dropUpStates.customerList} style={{zIndex: "1000"}}>
-                                    <SelectBoxItem onClick={() => handleContentTypeSelect("정보전달형")}>
-                                      <Body2 color="gray700" align="left">정보전달형</Body2>
-                                    </SelectBoxItem>
-                                    
-                                    <SelectBoxItem onClick={() => handleContentTypeSelect("프로세스 안내형")}>
-                                      <Body2 color="gray700" align="left">프로세스 안내형</Body2>
-                                    </SelectBoxItem>
-                                    
-                                    <SelectBoxItem onClick={() => handleContentTypeSelect("홍미유도형")}>
-                                      <Body2 color="gray700" align="left">홍미유도형</Body2>
-                                    </SelectBoxItem>
-                                    
-                                    <SelectBoxItem onClick={() => handleContentTypeSelect("경고/주의형")}>
-                                      <Body2 color="gray700" align="left">경고/주의형</Body2>
-                                    </SelectBoxItem>
-                                    
-                                    <SelectBoxItem onClick={() => handleContentTypeSelect("광고/홍보형")}>
-                                      <Body2 color="gray700" align="left">광고/홍보형</Body2>
-                                    </SelectBoxItem>
+                                    {contentTypeOptions.map((option) => (
+                                      <SelectBoxItem 
+                                        key={option}
+                                        onClick={() => handleContentTypeSelect(option)}
+                                      >
+                                        <Body2 color="gray700" align="left">{option}</Body2>
+                                      </SelectBoxItem>
+                                    ))}
                                   </SelectBoxList>
                                 )}
                               </SelectBox>
 
                               <div className="title" style={{marginTop: "24px"}}>
-                                <Body1 color="gray700">콘텐츠 대상자</Body1>
+                                <Body3 color="gray700">콘텐츠 대상자</Body3>
                               </div>
                               <FormBox Large>
                                 <CustomTextarea
@@ -807,7 +981,7 @@ const PageNps = () => {
                               </FormBox>
 
                               <div className="title" style={{marginTop: "24px"}}>
-                                <Body1 color="gray700">디자인 컨셉 (복수 선택 가능)</Body1>
+                                <Body3 color="gray700">디자인 컨셉 (복수 선택 가능)</Body3>
                               </div>
 
                               <OrganismDesignConceptSelector
@@ -891,7 +1065,7 @@ const PageNps = () => {
 
                           <ContentOptionsSection>
                             <TabContent5Item>
-                            <H3 color="gray800" style={{textAlign: "left" }}>콘텐츠 시안 ({templateData.length}개)</H3>
+                            <H3 color="gray800" style={{textAlign: "left", marginTop: "30px" }}>콘텐츠 시안 ({templateData.length}개)</H3>
                               <div style={{ 
                                 display: 'flex', 
                                 flexDirection: 'column', 
@@ -903,13 +1077,10 @@ const PageNps = () => {
                                   <MoleculeTemplateCard
                                     key={template.id}
                                     template={template}
-                                    onPreview={() => {
-                                      setShowPreviewPopup(true);
-                                      setSelectedTemplate(template);
-                                    }}
+                                    onPreview={() => handleTemplatePreview(template)}
                                   />
                                 ))} 
-                              </div>
+                            </div>
 
                             
                             </TabContent5Item>
@@ -941,102 +1112,91 @@ const PageNps = () => {
                             }}
                           />
 
-                          <ContentOptionsSection>
-                            <TabContent5Item>
-                              <div className="title">
-                                <Body1 color="gray700">콘텐츠 목적</Body1>
-                              </div>
+                            <ContentOptionsSection>
+                              <TabContent5Item>
+                                <div className="title">
+                                  <Body1 color="gray700">콘텐츠 목적</Body1>
+                                </div>
 
-                              <SelectBox ref={customerListRef}>
-                                <SelectBoxTitle
-                                  onClick={() =>
-                                    handleSelectBoxClick(
-                                      "customerList",
-                                      customerListRef
-                                    )
-                                  }
-                                >
-                                  <Body2
-                                    color={
-                                      selectedPurposes.customerList
-                                        ? "gray800"
-                                        : "gray300"
+                                <SelectBox ref={customerListRef}>
+                                  <SelectBoxTitle
+                                    onClick={() =>
+                                      handleSelectBoxClick(
+                                        "customerList",
+                                        customerListRef
+                                      )
                                     }
                                   >
-                                    {selectedPurposes.customerList ||
-                                      "선택해주세요"}
-                                  </Body2>
-                                  <images.ChevronDown
-                                    width="24px"
-                                    height="24px"
-                                    color={palette.gray500}
-                                    style={{
-                                      transform: selectBoxStates.customerList
-                                        ? "rotate(180deg)"
-                                        : "rotate(0deg)",
-                                      transition: "transform 0.3s ease",
-                                    }}
+                                    <Body2
+                                      color={
+                                        selectedPurposes.customerList
+                                          ? "gray800"
+                                          : "gray300"
+                                      }
+                                    >
+                                      {selectedPurposes.customerList ||
+                                        "선택해주세요"}
+                                    </Body2>
+                                    <images.ChevronDown
+                                      width="24px"
+                                      height="24px"
+                                      color={palette.gray500}
+                                      style={{
+                                        transform: selectBoxStates.customerList
+                                          ? "rotate(180deg)"
+                                          : "rotate(0deg)",
+                                        transition: "transform 0.3s ease",
+                                      }}
+                                    />
+                                  </SelectBoxTitle>
+
+                                  {selectBoxStates.customerList && (
+                                    <SelectBoxList dropUp={dropUpStates.customerList} style={{zIndex: "1000"}}>
+                                      {contentTypeOptions.map((option) => (
+                                        <SelectBoxItem 
+                                          key={option}
+                                          onClick={() => handleContentTypeSelect(option)}
+                                        >
+                                          <Body2 color="gray700" align="left">{option}</Body2>
+                                        </SelectBoxItem>
+                                      ))}
+                                    </SelectBoxList>
+                                  )}
+                                </SelectBox>
+
+                                <div className="title" style={{marginTop: "24px"}}>
+                                  <Body1 color="gray700">콘텐츠 대상자</Body1>
+                                </div>
+                                <FormBox Large>
+                                  <CustomTextarea
+                                    Edit
+                                    rows={1}
+                                    placeholder="작성해주세요"
+                                    value={contentTarget}
+                                    onChange={(e) =>
+                                      setContentTarget(e.target.value)
+                                    }
+                                    status="valid"
                                   />
-                                </SelectBoxTitle>
+                                </FormBox>
 
-                                {selectBoxStates.customerList && (
-                                  <SelectBoxList dropUp={dropUpStates.customerList} style={{zIndex: "1000"}}>
-                                    <SelectBoxItem onClick={() => handleContentTypeSelect("정보전달형")}>
-                                      <Body2 color="gray700" align="left">정보전달형</Body2>
-                                    </SelectBoxItem>
-                                    
-                                    <SelectBoxItem onClick={() => handleContentTypeSelect("프로세스 안내형")}>
-                                      <Body2 color="gray700" align="left">프로세스 안내형</Body2>
-                                    </SelectBoxItem>
-                                    
-                                    <SelectBoxItem onClick={() => handleContentTypeSelect("홍미유도형")}>
-                                      <Body2 color="gray700" align="left">홍미유도형</Body2>
-                                    </SelectBoxItem>
-                                    
-                                    <SelectBoxItem onClick={() => handleContentTypeSelect("경고/주의형")}>
-                                      <Body2 color="gray700" align="left">경고/주의형</Body2>
-                                    </SelectBoxItem>
-                                    
-                                    <SelectBoxItem onClick={() => handleContentTypeSelect("광고/홍보형")}>
-                                      <Body2 color="gray700" align="left">광고/홍보형</Body2>
-                                    </SelectBoxItem>
-                                  </SelectBoxList>
-                                )}
-                              </SelectBox>
+                                <div className="title" style={{marginTop: "24px"}}>
+                                  <Body1 color="gray700">콘텐츠 내용 </Body1>
+                                </div>
 
-                              <div className="title" style={{marginTop: "24px"}}>
-                                <Body1 color="gray700">콘텐츠 대상자</Body1>
-                              </div>
-                              <FormBox Large>
-                                <CustomTextarea
-                                  Edit
-                                  rows={1}
-                                  placeholder="작성해주세요"
-                                  value={contentTarget}
-                                  onChange={(e) =>
-                                    setContentTarget(e.target.value)
-                                  }
-                                  status="valid"
-                                />
-                              </FormBox>
-
-                              <div className="title" style={{marginTop: "24px"}}>
-                                <Body1 color="gray700">콘텐츠 내용 </Body1>
-                              </div>
-
-                              <FestivalInfoBox>
-                                <Markdown>
-                                  {`# 🎪 수성거리축제 안내
+                                <FestivalInfoBox>
+                                  <Markdown>
+                                    {`# 🎪 수성거리축제 안내
 
 ## 📅 축제 개요
 **강원도 고성군 간성지역**에서 매년 가을에 열리는 대표적인 지역축제입니다.
 민, 관, 군이 함께하는 화합의 장으로 지역 주민과 관광객들에게 특별한 추억을 선사합니다.
 
 *`}
-                                </Markdown>
-                              </FestivalInfoBox>
-                            </TabContent5Item>
-                          </ContentOptionsSection>
+                                  </Markdown>
+                                </FestivalInfoBox>
+                              </TabContent5Item>
+                            </ContentOptionsSection>
                         </ContentAnalysisSection>
                       </TabContent5Item>
                     </div>
@@ -1047,7 +1207,7 @@ const PageNps = () => {
                         Edit
                         Large
                         onClick={() => {
-                          handleSubmitReport();
+                          handleRegenerateContent();
                         }}
                       >
                         내용 재생성
@@ -1639,9 +1799,9 @@ const DeviceInfoBox = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 16px;
+  // padding: 12px 16px;
   border-radius: 6px;
-  margin-top: 8px;
+  // margin-top: 8px;
 
   > * {
     white-space: nowrap;

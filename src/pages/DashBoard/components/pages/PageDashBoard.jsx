@@ -5,13 +5,16 @@ import { useNavigate } from "react-router-dom";
 import { palette } from "../../../../assets/styles/Palette";
 import {
   H1,
+
   H4,
+
   Body1,
   Body2,
   Caption1,
 } from "../../../../assets/styles/Typography";
 import { Button } from "../../../../assets/styles/ButtonStyle";
 import MoleculeHeader from "../../../Global/molecules/MoleculeHeader";
+
 import OrganismDashboardToolList from "../organisms/OrganismDashboardToolList";
 import OrganismDashboardDisplayList from "../organisms/OrganismDashboardDisplayList";
 import PopupWrap from "../../../../assets/styles/Popup";
@@ -24,6 +27,7 @@ import {
   CheckBoxButton
 } from "../../../../assets/styles/InputStyle";
 import images from "../../../../assets/styles/Images";
+
 
 const PageDashBoard = () => {
   const navigate = useNavigate();
@@ -39,11 +43,12 @@ const PageDashBoard = () => {
   // 탭 상태
   const [activeTab, setActiveTab] = useState("content");
 
+
   // 팝업 관련 상태
   const [isCustomizePopupOpen, setIsCustomizePopupOpen] = useState(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [isSelectDisplayPopupOpen, setIsSelectDisplayPopupOpen] = useState(false);
-  const [customPersonaForm, setCustomPersonaForm] = useState({
+  const [addDisplayForm, setAddDisplayForm] = useState({
     deviceName: "",
     location: "",
     targetAudience: "",
@@ -82,7 +87,7 @@ const PageDashBoard = () => {
   const handleCustomizePopupClose = () => {
     setIsCustomizePopupOpen(false);
     setActiveTabIndex(0);
-    setCustomPersonaForm({
+    setAddDisplayForm({
       deviceName: "",
       location: "",
       targetAudience: "",
@@ -99,7 +104,7 @@ const PageDashBoard = () => {
       setActiveTabIndex(activeTabIndex + 1);
     } else {
       // 마지막 탭에서 확인
-      console.log("기기 등록 완료", customPersonaForm);
+      console.log("기기 등록 완료", addDisplayForm);
       handleCustomizePopupClose();
     }
   };
@@ -112,7 +117,7 @@ const PageDashBoard = () => {
   };
 
   const handleFormChange = (field, value) => {
-    setCustomPersonaForm(prev => ({
+    setAddDisplayForm(prev => ({
       ...prev,
       [field]: value
     }));
@@ -126,16 +131,16 @@ const PageDashBoard = () => {
   };
 
   const isFormValid = () => {
-    const resolutionValid = customPersonaForm.resolution && 
-      (customPersonaForm.resolution !== "기타" || customPersonaForm.customResolution);
+    const resolutionValid = addDisplayForm.resolution && 
+      (addDisplayForm.resolution !== "기타" || addDisplayForm.customResolution);
       
-    return customPersonaForm.deviceName && 
-           customPersonaForm.location && 
-           customPersonaForm.targetAudience &&
+    return addDisplayForm.deviceName && 
+           addDisplayForm.location && 
+           addDisplayForm.targetAudience &&
            resolutionValid &&
-           customPersonaForm.inch &&
-           customPersonaForm.widthSize &&
-           customPersonaForm.heightSize;
+           addDisplayForm.inch &&
+           addDisplayForm.widthSize &&
+           addDisplayForm.heightSize;
   };
 
   // 테이블 데이터 (장애인 지원금 예시)
@@ -173,6 +178,7 @@ const PageDashBoard = () => {
   ]);
 
 
+
   // 기기 선택 후 콘텐츠 생성
   const handleDeviceSelect = (device) => {
     setSelectedDevice(device);
@@ -198,6 +204,22 @@ const PageDashBoard = () => {
     }
   };
 
+  const handleDomainKeyGenerate = async () => {
+    console.log("도메인 키 생성 시작", addDisplayForm);
+    setIsCustomizePopupOpen(false);
+    try {
+      // console.log("도메인 키 생성 시작", addDisplayForm);
+      // const response = await generateDomainKey();
+      // console.log(response);
+
+    } catch (error) {
+      console.error("도메인 키 생성 오류:", error);
+    }finally{
+      setIsCustomizePopupOpen(false);
+    }
+  };
+
+
   return (
     <DashboardContainer>
       <MoleculeHeader />
@@ -211,12 +233,14 @@ const PageDashBoard = () => {
             <CompanyName>회사명</CompanyName>
           </CompanyInfo>
           <ButtonGroup>
+
             <Button Large Fill PrimaryLightest onClick={showPopup}>  
               <Caption1 color="primary">새 기기 등록</Caption1>
             </Button>
             <Button Large Primary Fill onClick={() => setShowDeviceSelectPopup(true)}>
               <Caption1 color="white">새 콘텐츠</Caption1>
             </Button> 
+
           </ButtonGroup>
         </TopSection>
 
@@ -264,6 +288,7 @@ const PageDashBoard = () => {
               등록 디스플레이 (3)
             </Tab>
           </TabContainer>
+
           <OrganismDashboardDisplayList />
         </TableSection>
       </MainContent>
@@ -290,7 +315,7 @@ const PageDashBoard = () => {
                   width="100%"
                   rows={1}
                   placeholder="입력해주세요"
-                  value={customPersonaForm.deviceName}
+                  value={addDisplayForm.deviceName}
                   onChange={(e) =>
                     handleFormChange("deviceName", e.target.value)
                   }
@@ -305,7 +330,7 @@ const PageDashBoard = () => {
                   width="100%"
                   rows={1}
                   placeholder="입력해주세요"
-                  value={customPersonaForm.location}
+                  value={addDisplayForm.location}
                   onChange={(e) =>
                     handleFormChange("location", e.target.value)
                   }
@@ -320,7 +345,7 @@ const PageDashBoard = () => {
                   width="100%"
                   rows={1}
                   placeholder="입력해주세요"
-                  value={customPersonaForm.targetAudience}
+                  value={addDisplayForm.targetAudience}
                   onChange={(e) =>
                     handleFormChange("targetAudience", e.target.value)
                   }
@@ -332,18 +357,21 @@ const PageDashBoard = () => {
                   <Body2 color="gray700" align="left">
                     디스플레이 해상도
                   </Body2>
-                  
-               
                     <SelectBox>
-                      <SelectBoxTitle
-                        onClick={() => toggleSelectBox("resolution")}
-                      >
+                    <SelectBoxTitle onClick={() => toggleSelectBox("resolution")}>
                         <Body2
                           color={
-                            customPersonaForm.resolution ? "gray800" : "gray300"
-                          }
-                        >
-                          {customPersonaForm.resolution || "선택해주세요"}
+                          (addDisplayForm.resolution && addDisplayForm.resolution !== "기타") || 
+                          (addDisplayForm.resolution === "기타" && addDisplayForm.customResolution)
+                            ? "gray800" 
+                            : "gray300"
+                        }
+                      >
+                        {addDisplayForm.resolution === "기타" && addDisplayForm.customResolution
+                          ? addDisplayForm.customResolution
+                          : addDisplayForm.resolution && addDisplayForm.resolution !== "기타"
+                          ? addDisplayForm.resolution
+                          : "선택해주세요"}
                         </Body2>
                         <images.ChevronDown
                           width="24px"
@@ -362,17 +390,19 @@ const PageDashBoard = () => {
                         <SelectBoxList>
                           <SelectBoxItem
                             onClick={() => {
-                              handleFormChange("resolution", "HD | 1280 × 720");
-                              handlePurposeSelect("HD | 1280 × 720", "resolution");
+                            handleFormChange("resolution", "HD | 1366 × 768");
+                            handleFormChange("customResolution", "");
+                            handlePurposeSelect("HD | 1366 × 768", "resolution");
                             }}
                           >
                             <Body2 color="gray700" align="left">
-                              HD | 1280 × 720
+                            HD | 1366 × 768
                             </Body2>
                           </SelectBoxItem>
                           <SelectBoxItem
                             onClick={() => {
                               handleFormChange("resolution", "FHD | 1920 × 1080");
+                            handleFormChange("customResolution", "");
                               handlePurposeSelect("FHD | 1920 × 1080", "resolution");
                             }}
                           >
@@ -383,6 +413,7 @@ const PageDashBoard = () => {
                           <SelectBoxItem
                             onClick={() => {
                               handleFormChange("resolution", "QHD (2K) | 2560 × 1440");
+                            handleFormChange("customResolution", "");
                               handlePurposeSelect("QHD (2K) | 2560 × 1440", "resolution");
                             }}
                           >
@@ -393,6 +424,7 @@ const PageDashBoard = () => {
                           <SelectBoxItem
                             onClick={() => {
                               handleFormChange("resolution", "UHD (4K) | 3840 × 2160");
+                            handleFormChange("customResolution", "");
                               handlePurposeSelect("UHD (4K) | 3840 × 2160", "resolution");
                             }}
                           >
@@ -400,34 +432,72 @@ const PageDashBoard = () => {
                               UHD (4K) | 3840 × 2160
                             </Body2>
                           </SelectBoxItem>
+                        
+                        {addDisplayForm.resolution === "기타" ? (
+                          <SelectBoxItem>
+                            <SizeInput
+                              type="text"
+                              placeholder="예: 1920 × 1080"
+                              value={addDisplayForm.customResolution}
+                              onChange={(e) =>
+                                handleFormChange("customResolution", e.target.value)
+                              }
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' && addDisplayForm.customResolution.trim()) {
+                                  setSelectBoxStates(prev => ({ ...prev, resolution: false }));
+                                }
+                                if (e.key === 'Escape') {
+                                  handleFormChange("resolution", "");
+                                  handleFormChange("customResolution", "");
+                                }
+                              }}
+                              autoFocus
+                              style={{
+                                border: 'none',
+                                background: 'transparent',
+                                width: '100%',
+                                outline: 'none',
+                                fontSize: '14px',
+                                color: palette.gray700
+                              }}
+                            />
+                          </SelectBoxItem>
+                        ) : (
                           <SelectBoxItem
                             onClick={() => {
                               handleFormChange("resolution", "기타");
-                              handlePurposeSelect("기타", "resolution");
+                              // handlePurposeSelect 호출하지 않음 - SelectBox가 열린 상태 유지
                             }}
                           >
                             <Body2 color="gray700" align="left">
                               기타 - 해상도를 입력하겠습니다
                             </Body2>
                           </SelectBoxItem>
-                        </SelectBoxList>
-                      )}
-                    </SelectBox>
-                  
+                        )}
+                      </SelectBoxList>
+                    )}
+                  </SelectBox>
                 </FormField>
 
                 <FormField flex={1}>
-                  <Body2 color="gray700" align="left">
+                <Body2 color="gray700" align="left">
                     디스플레이 인치
                   </Body2>
                   <SelectBox>
                     <SelectBoxTitle onClick={() => toggleSelectBox("inch")}>
                       <Body2
                         color={
-                          customPersonaForm.inch ? "gray800" : "gray300"
+                          (addDisplayForm.inch && addDisplayForm.inch !== "기타") || 
+                          (addDisplayForm.inch === "기타" && addDisplayForm.customInch)
+                            ? "gray800" 
+                            : "gray300"
                         }
                       >
-                        {customPersonaForm.inch || "선택해주세요"}
+                        {addDisplayForm.inch === "기타" && addDisplayForm.customInch
+                          ? addDisplayForm.customInch
+                          : addDisplayForm.inch && addDisplayForm.inch !== "기타"
+                          ? addDisplayForm.inch
+                          : "선택해주세요"}
                       </Body2>
                       <images.ChevronDown
                         width="24px"
@@ -447,6 +517,7 @@ const PageDashBoard = () => {
                         <SelectBoxItem
                           onClick={() => {
                             handleFormChange("inch", "21.5인치");
+                            handleFormChange("customInch", "");
                             handlePurposeSelect("21.5인치", "inch");
                           }}
                         >
@@ -455,6 +526,7 @@ const PageDashBoard = () => {
                         <SelectBoxItem
                           onClick={() => {
                             handleFormChange("inch", "27인치");
+                            handleFormChange("customInch", "");
                             handlePurposeSelect("27인치", "inch");
                           }}
                         >
@@ -463,6 +535,7 @@ const PageDashBoard = () => {
                         <SelectBoxItem
                           onClick={() => {
                             handleFormChange("inch", "32인치");
+                            handleFormChange("customInch", "");
                             handlePurposeSelect("32인치", "inch");
                           }}
                         >
@@ -471,6 +544,7 @@ const PageDashBoard = () => {
                         <SelectBoxItem
                           onClick={() => {
                             handleFormChange("inch", "43인치");
+                            handleFormChange("customInch", "");
                             handlePurposeSelect("43인치", "inch");
                           }}
                         >
@@ -479,6 +553,7 @@ const PageDashBoard = () => {
                         <SelectBoxItem
                           onClick={() => {
                             handleFormChange("inch", "55인치");
+                            handleFormChange("customInch", "");
                             handlePurposeSelect("55인치", "inch");
                           }}
                         >
@@ -487,28 +562,29 @@ const PageDashBoard = () => {
                         <SelectBoxItem
                           onClick={() => {
                             handleFormChange("inch", "65인치");
+                            handleFormChange("customInch", "");
                             handlePurposeSelect("65인치", "inch");
                           }}
                         >
                           <Body2 color="gray700" align="left">65 인치</Body2>
                         </SelectBoxItem>
-                        {customPersonaForm.inch === "기타" && selectBoxStates.inch ? (
+                        
+                        {addDisplayForm.inch === "기타" ? (
                           <SelectBoxItem>
                             <SizeInput
                               type="text"
-                              placeholder="기타 - 디스플레이의 인치를 입력하겠습니다"
-                              value={customPersonaForm.customInch}
+                              placeholder="예: 43인치"
+                              value={addDisplayForm.customInch}
                               onChange={(e) =>
                                 handleFormChange("customInch", e.target.value)
                               }
                               onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
+                                if (e.key === 'Enter' && addDisplayForm.customInch.trim()) {
                                   setSelectBoxStates(prev => ({ ...prev, inch: false }));
                                 }
                                 if (e.key === 'Escape') {
                                   handleFormChange("inch", "");
                                   handleFormChange("customInch", "");
-                                  setSelectBoxStates(prev => ({ ...prev, inch: false }));
                                 }
                               }}
                               autoFocus
@@ -526,7 +602,7 @@ const PageDashBoard = () => {
                           <SelectBoxItem
                             onClick={() => {
                               handleFormChange("inch", "기타");
-                              handlePurposeSelect("기타", "inch");
+                              // handlePurposeSelect 호출하지 않음 - SelectBox가 열린 상태 유지
                             }}
                           >
                             <Body2 color="gray700" align="left">
@@ -549,7 +625,7 @@ const PageDashBoard = () => {
                     <SizeInput
                       type="text"
                       placeholder="가로 사이즈"
-                      value={customPersonaForm.widthSize}
+                      value={addDisplayForm.widthSize}
                       onChange={(e) =>
                         handleFormChange("widthSize", e.target.value)
                       }
@@ -560,7 +636,7 @@ const PageDashBoard = () => {
                     <SizeInput
                       type="text"
                       placeholder="세로 사이즈"
-                      value={customPersonaForm.heightSize}
+                      value={addDisplayForm.heightSize}
                       onChange={(e) =>
                         handleFormChange("heightSize", e.target.value)
                       }
@@ -576,7 +652,7 @@ const PageDashBoard = () => {
                 </Body2>
                 <ButtonCenter>
                   <LargeButton Large Primary Fill>
-                    <Body1 color="white" style={{ fontSize: '16px', fontWeight: '400' }}>도메인 Key값 생성</Body1>
+                    <Body1 color="white" style={{ fontSize: '16px', fontWeight: '400' }} onClick={handleDomainKeyGenerate}>도메인 Key값 생성</Body1>
                   </LargeButton>
                 </ButtonCenter>
               </InfoBox>
@@ -651,15 +727,18 @@ const PageDashBoard = () => {
           }
         />
       )}
+
     </DashboardContainer>
   );
 };
 
 export default PageDashBoard;
+
 // PopupContent 스타일 추가
 const PopupContent = styled.div`
   margin-top: 8px;
 `;
+
 
 // 스타일 컴포넌트들
 const DashboardContainer = styled.div`
@@ -797,10 +876,12 @@ const StatsSection = styled.div`
 const SectionTitle = styled.h3`
   font-family: Pretendard;
   font-weight: 700;
+
   font-size: 16px;
   color: #696969;
   margin: 0;
   text-align: left;
+
 `;
 
 const StatsGrid = styled.div`
@@ -828,9 +909,11 @@ const StatHeader = styled.div`
 const StatValue = styled.div`
   font-family: Poppins;
   font-weight: 700;
+
   font-size: 30px;
   color: #666666;
   text-align: left;
+
 `;
 
 const TableSection = styled.div`
@@ -934,6 +1017,7 @@ const TableCell = styled.div`
     border-right: none;
   }
 `;
+
 
 const PopupFormContainer = styled.div`
   display: flex;
@@ -1118,3 +1202,4 @@ const EmptyMessage = styled.div`
   gap: 8px;
   text-align: center;
 `;
+

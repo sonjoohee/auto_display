@@ -1,44 +1,29 @@
-//로그인
-import React, { useState } from "react";
+//회원가입
+import React from "react";
 import styled from "styled-components";
 import {
   ContentsWrap,
   MainContent,
 } from "../../../assets/styles/BusinessAnalysisStyle";
-import MoleculeLoginPopup from "../../LoginSign/components/molecules/MoleculeLoginPopup";
 import { H1 } from "../../../assets/styles/Typography";
-import MoleculeLoginEducationForm from "../../LoginSign/components/molecules/MoleculeLoginEducationForm";
-import { useDynamicViewport } from "../../../assets/DynamicViewport";
+import MoleculeSignupAutodisplayForm from "../../LoginSign/components/molecules/MoleculeSignupAutodisplayForm";
 
-const OrganismIncLogin = () => {
-  useDynamicViewport("width=800"); // 특정페이지에서만 pc화면처럼 보이기
-  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
-
-  const closeLoginPopup = () => {
-    setIsLoginPopupOpen(false);
-  };
-
+const OrganismSignupAutodisplay = () => {
   return (
     <>
       <ContentsWrap>
         <MainContent Wide>
           <LoginWrap>
-            <H1>Log in Education</H1>
-            <MoleculeLoginEducationForm />
+            <H1>Sign up Autodisplay</H1>
+            <MoleculeSignupAutodisplayForm />
           </LoginWrap>
         </MainContent>
       </ContentsWrap>
-      {/* <button onClick={handleLoginClick} className="login">
-        <img src={images.PersonCircle} alt="로그인" />
-        로그인
-      </button> */}
-
-      {isLoginPopupOpen && <MoleculeLoginPopup onClose={closeLoginPopup} />}
     </>
   );
 };
 
-export default OrganismIncLogin;
+export default OrganismSignupAutodisplay;
 
 const LoginWrap = styled.div`
   display: flex;
@@ -49,6 +34,10 @@ const LoginWrap = styled.div`
   max-width: 610px;
   width: 100%;
   margin: 156px auto 0;
+
+  > div {
+    width: 100%;
+  }
 `;
 
 // const ViewInfo = styled.div`

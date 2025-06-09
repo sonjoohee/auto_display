@@ -5,7 +5,7 @@ import styled, { ThemeProvider } from "styled-components";
 import theme from "../../../../assets/styles/Theme";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
-import MoleculeGoogleLoginForm from "./MoleculeGoogleLoginForm";
+// import MoleculeGoogleLoginForm from "./MoleculeGoogleLoginForm";
 import MoleculeSignupForm from "./MoleculeSignupForm";
 import { LOGIN_SUCCESS } from "../../../../pages/AtomStates"; // 아톰 임포트
 import { palette } from "../../../../assets/styles/Palette";
@@ -30,8 +30,8 @@ const MoleculeSign = ({ onClosePopup = () => {} }) => {
             <img src={images.Logo} alt="" />
             <span>회원가입</span>
           </h1>
-
-          <MoleculeGoogleLoginForm />
+{/* 
+          <MoleculeGoogleLoginForm /> */}
           <Separator>
             <hr />
             <span>or</span>

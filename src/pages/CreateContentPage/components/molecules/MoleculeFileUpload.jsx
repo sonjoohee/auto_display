@@ -77,14 +77,14 @@ const MoleculeFileUpload = ({
               >
                 <div>
                   <Body2 color="gray800">
-                    업로드하려는 파일을 드래그하여 놓아주세요
+                  파일을 끌어다 놓거나 선택 버튼을 클릭해 주세요
                   </Body2>
                   <Sub3 color="gray500">
-                  컨셉보드 첨부 또는 가져오기
+                  (한글파일.hwp은 지원되지 않습니다)
                   </Sub3>
                 </div>
                 <div className="browse-button">
-                  파일 찾아보기
+                  파일 선택
                 </div>
               </div>
             )}
